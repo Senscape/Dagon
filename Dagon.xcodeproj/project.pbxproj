@@ -1,0 +1,294 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		FBC8883314574F08008D548F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
+		FBC8883D14574F08008D548F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FBC8883B14574F08008D548F /* InfoPlist.strings */; };
+		FBC8883F14574F08008D548F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FBC8883E14574F08008D548F /* main.m */; };
+		FBC8884314574F08008D548F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FBC8884114574F08008D548F /* Credits.rtf */; };
+		FBC8884614574F08008D548F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FBC8884514574F08008D548F /* AppDelegate.m */; };
+		FBC8884914574F08008D548F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FBC8884714574F08008D548F /* MainMenu.xib */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		FBC8882E14574F08008D548F /* Dagon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dagon.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		FBC8883214574F08008D548F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		FBC8883514574F08008D548F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		FBC8883614574F08008D548F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		FBC8883714574F08008D548F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FBC8883A14574F08008D548F /* Dagon-Info.plist */ = {isa = PBXFileReference; path = "Dagon-Info.plist"; sourceTree = "<group>"; };
+		FBC8883C14574F08008D548F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		FBC8883E14574F08008D548F /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FBC8884014574F08008D548F /* Dagon-Prefix.pch */ = {isa = PBXFileReference; path = "Dagon-Prefix.pch"; sourceTree = "<group>"; };
+		FBC8884214574F08008D548F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		FBC8884414574F08008D548F /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		FBC8884514574F08008D548F /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		FBC8884814574F08008D548F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		FBC8882B14574F08008D548F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FBC8883314574F08008D548F /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		FBC8882314574F07008D548F = {
+			isa = PBXGroup;
+			children = (
+				FBC8883814574F08008D548F /* Dagon */,
+				FBC8883114574F08008D548F /* Frameworks */,
+				FBC8882F14574F08008D548F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		FBC8882F14574F08008D548F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				FBC8882E14574F08008D548F /* Dagon.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		FBC8883114574F08008D548F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FBC8883214574F08008D548F /* Cocoa.framework */,
+				FBC8883414574F08008D548F /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		FBC8883414574F08008D548F /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				FBC8883514574F08008D548F /* AppKit.framework */,
+				FBC8883614574F08008D548F /* CoreData.framework */,
+				FBC8883714574F08008D548F /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		FBC8883814574F08008D548F /* Dagon */ = {
+			isa = PBXGroup;
+			children = (
+				FBC8884414574F08008D548F /* AppDelegate.h */,
+				FBC8884514574F08008D548F /* AppDelegate.m */,
+				FBC8884714574F08008D548F /* MainMenu.xib */,
+				FBC8883914574F08008D548F /* Supporting Files */,
+			);
+			path = Dagon;
+			sourceTree = "<group>";
+		};
+		FBC8883914574F08008D548F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				FBC8883A14574F08008D548F /* Dagon-Info.plist */,
+				FBC8883B14574F08008D548F /* InfoPlist.strings */,
+				FBC8883E14574F08008D548F /* main.m */,
+				FBC8884014574F08008D548F /* Dagon-Prefix.pch */,
+				FBC8884114574F08008D548F /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		FBC8882D14574F08008D548F /* Dagon */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FBC8884C14574F08008D548F /* Build configuration list for PBXNativeTarget "Dagon" */;
+			buildPhases = (
+				FBC8882A14574F08008D548F /* Sources */,
+				FBC8882B14574F08008D548F /* Frameworks */,
+				FBC8882C14574F08008D548F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Dagon;
+			productName = Dagon;
+			productReference = FBC8882E14574F08008D548F /* Dagon.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FBC8882514574F08008D548F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Senscape s.r.l.";
+			};
+			buildConfigurationList = FBC8882814574F08008D548F /* Build configuration list for PBXProject "Dagon" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = FBC8882314574F07008D548F;
+			productRefGroup = FBC8882F14574F08008D548F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				FBC8882D14574F08008D548F /* Dagon */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		FBC8882C14574F08008D548F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FBC8883D14574F08008D548F /* InfoPlist.strings in Resources */,
+				FBC8884314574F08008D548F /* Credits.rtf in Resources */,
+				FBC8884914574F08008D548F /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		FBC8882A14574F08008D548F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FBC8883F14574F08008D548F /* main.m in Sources */,
+				FBC8884614574F08008D548F /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		FBC8883B14574F08008D548F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FBC8883C14574F08008D548F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		FBC8884114574F08008D548F /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FBC8884214574F08008D548F /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		FBC8884714574F08008D548F /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				FBC8884814574F08008D548F /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		FBC8884A14574F08008D548F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		FBC8884B14574F08008D548F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		FBC8884D14574F08008D548F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Dagon/Dagon-Prefix.pch";
+				INFOPLIST_FILE = "Dagon/Dagon-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		FBC8884E14574F08008D548F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Dagon/Dagon-Prefix.pch";
+				INFOPLIST_FILE = "Dagon/Dagon-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		FBC8882814574F08008D548F /* Build configuration list for PBXProject "Dagon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBC8884A14574F08008D548F /* Debug */,
+				FBC8884B14574F08008D548F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FBC8884C14574F08008D548F /* Build configuration list for PBXNativeTarget "Dagon" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FBC8884D14574F08008D548F /* Debug */,
+				FBC8884E14574F08008D548F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FBC8882514574F08008D548F /* Project object */;
+}
