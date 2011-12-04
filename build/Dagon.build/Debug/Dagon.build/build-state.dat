@@ -1,1753 +1,0 @@
-TDagon
-v4
-r1
-cCheck dependencies
-cProcessInfoPlistFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist Info.plist
-cProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAppDelegate.o /Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGArray.o /Users/Agustin/Projects/Dagon/Dagon/DGArray.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAudio.o /Users/Agustin/Projects/Dagon/Dagon/DGAudio.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGCamera.o /Users/Agustin/Projects/Dagon/Dagon/DGCamera.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConfig.o /Users/Agustin/Projects/Dagon/Dagon/DGConfig.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConsole.o /Users/Agustin/Projects/Dagon/Dagon/DGConsole.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGControl.o /Users/Agustin/Projects/Dagon/Dagon/DGControl.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGEffects.o /Users/Agustin/Projects/Dagon/Dagon/DGEffects.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFont.o /Users/Agustin/Projects/Dagon/Dagon/DGFont.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFontData.o /Users/Agustin/Projects/Dagon/Dagon/DGFontData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGLog.o /Users/Agustin/Projects/Dagon/Dagon/DGLog.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGMemory.o /Users/Agustin/Projects/Dagon/Dagon/DGMemory.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGNode.o /Users/Agustin/Projects/Dagon/Dagon/DGNode.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGObject.o /Users/Agustin/Projects/Dagon/Dagon/DGObject.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGParticleData.o /Users/Agustin/Projects/Dagon/Dagon/DGParticleData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRender.o /Users/Agustin/Projects/Dagon/Dagon/DGRender.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRoom.o /Users/Agustin/Projects/Dagon/Dagon/DGRoom.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGScript.o /Users/Agustin/Projects/Dagon/Dagon/DGScript.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSplashData.o /Users/Agustin/Projects/Dagon/Dagon/DGSplashData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSpot.o /Users/Agustin/Projects/Dagon/Dagon/DGSpot.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGState.o /Users/Agustin/Projects/Dagon/Dagon/DGState.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTexture.o /Users/Agustin/Projects/Dagon/Dagon/DGTexture.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTextureManager.o /Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTimer.o /Users/Agustin/Projects/Dagon/Dagon/DGTimer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGVideo.o /Users/Agustin/Projects/Dagon/Dagon/DGVideo.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGViewDelegate.o /Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWindowDelegate.o /Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWorld.o /Users/Agustin/Projects/Dagon/Dagon/DGWorld.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o /Users/Agustin/Projects/Dagon/Dagon/main.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSystem.o /Users/Agustin/Projects/Dagon/Dagon/DGSystem.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-cCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/stb_image.o "/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-cLd /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/MacOS/Dagon normal x86_64
-cCompileXIB /Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib
-cCpResource Dagon/../Documents/Credits.rtf build/Debug/Dagon.app/Contents/Resources/Credits.rtf
-cCopyStringsFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/InfoPlist.strings Resources/English.lproj/InfoPlist.strings
-cCpResource Dagon/../Resources/Dagon.icns build/Debug/Dagon.app/Contents/Resources/Dagon.icns
-cTouch /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app
-
-N/Developer/SDKs/MacOSX10.7.sdk
-c000000004EC6562B00000000000000EE
-t1321621035
-s238
-
-N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Cocoa.framework/Cocoa
-c000000004E7AD7020000000000002470
-t1316673282
-s9328
-
-N/Users/Agustin/Projects/Dagon/../../../../System/Library/Frameworks/OpenAL.framework/OpenAL
-c000000004E8D804E0000000000072480
-t1317896270
-s468096
-
-N/Users/Agustin/Projects/Dagon/../../../../System/Library/Frameworks/OpenGL.framework/OpenGL
-c000000004E95E3E5000000000002D2A0
-t1318446053
-s184992
-
-N/Users/Agustin/Projects/Dagon/Dagon/../Documents/Credits.rtf
-c000000004EA7178800000000000001B4
-t1319573384
-s436
-
-N/Users/Agustin/Projects/Dagon/Dagon/../Documents/en.lproj/Credits.rtf
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/Dagon/../Resources/Dagon.icns
-c000000004D76AE2600000000000246B6
-t1299623462
-s149174
-
-N/Users/Agustin/Projects/Dagon/Dagon/../Resources/en.lproj/InfoPlist.strings
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/Dagon/../Resources/en.lproj/MainMenu.xib
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/Dagon/AppDelegate.h
-c000000004EA717880000000000000116
-t1319573384
-s278
-
-N/Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m
-c000000004EA717880000000000000194
-t1319573384
-s404
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.h
-c000000004EDBDCE40000000000000170
-t1323031780
-s368
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.m
-c000000004EDBDCE4000000000000028C
-t1323031780
-s652
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGArray.c
-c000000004EDBDCE30000000000000D58
-t1323031779
-s3416
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGArray.h
-c000000004EDBDCE4000000000000046C
-t1323031780
-s1132
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c
-c000000004EDBDCE40000000000003A3A
-t1323031780
-s14906
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGAudio.h
-c000000004EDBDCE40000000000000486
-t1323031780
-s1158
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGCamera.c
-c000000004EDBDCE40000000000004298
-t1323031780
-s17048
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGCamera.h
-c000000004EDBDCE40000000000000945
-t1323031780
-s2373
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGColors.h
-c000000004D78DBB700000000000003AE
-t1299766199
-s942
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGCommon.h
-c000000004EDBDCE4000000000000026C
-t1323031780
-s620
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGCommonGL.h
-c000000004EDBDCE400000000000002AD
-t1323031780
-s685
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGConfig.c
-c000000004EDBDCE4000000000000074C
-t1323031780
-s1868
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGConfig.h
-c000000004EDBDCE40000000000000684
-t1323031780
-s1668
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGConsole.c
-c000000004EDBDCE40000000000000BB7
-t1323031780
-s2999
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGConsole.h
-c000000004EDBDCE40000000000000345
-t1323031780
-s837
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGControl.c
-c000000004EDBDCE400000000000045C2
-t1323031780
-s17858
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGControl.h
-c000000004EDBDCE40000000000000473
-t1323031780
-s1139
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGDefines.h
-c000000004DD7CC8B000000000000061F
-t1305988235
-s1567
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c
-c000000004EDBDCE4000000000000104D
-t1323031780
-s4173
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGEffects.h
-c000000004EDBDCE40000000000000290
-t1323031780
-s656
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGFont.c
-c000000004EDBDCE400000000000018C0
-t1323031780
-s6336
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGFont.h
-c000000004EDBDCE40000000000000203
-t1323031780
-s515
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGFontData.c
-c000000004D52014B0000000000048DD3
-t1297219915
-s298451
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGLanguage.h
-c000000004D78F1800000000000000367
-t1299771776
-s871
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGLog.c
-c000000004EDBDCE400000000000014D1
-t1323031780
-s5329
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGLog.h
-c000000004EDBDCE40000000000000433
-t1323031780
-s1075
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGMemory.c
-c000000004EDBDCE400000000000002AE
-t1323031780
-s686
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGMemory.h
-c000000004EDBDCE400000000000001E8
-t1323031780
-s488
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGNode.c
-c000000004EDBDCE40000000000001E0F
-t1323031780
-s7695
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGNode.h
-c000000004EDBDCE40000000000000346
-t1323031780
-s838
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGObject.c
-c000000004EDBDCE400000000000009DA
-t1323031780
-s2522
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGObject.h
-c000000004EDBDCE400000000000004B9
-t1323031780
-s1209
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGParticleData.c
-c000000004E3EE1A50000000000005755
-t1312743845
-s22357
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGPlatform.h
-c000000004DFE8BEA0000000000000841
-t1308527594
-s2113
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGRender.c
-c000000004EDBDCE40000000000003638
-t1323031780
-s13880
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGRender.h
-c000000004EDBDCE400000000000004AF
-t1323031780
-s1199
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGRoom.c
-c000000004EDBDCE40000000000000D54
-t1323031780
-s3412
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGRoom.h
-c000000004EDBDCE400000000000002C1
-t1323031780
-s705
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGScript.c
-c000000004EDBDCE4000000000000AA49
-t1323031780
-s43593
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGScript.h
-c000000004EDBDCE40000000000000255
-t1323031780
-s597
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGSplashData.c
-c000000004D95396B0000000000101AC9
-t1301625195
-s1055433
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGSpot.c
-c000000004EDBDCE40000000000002448
-t1323031780
-s9288
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGSpot.h
-c000000004EDBDCE400000000000008CD
-t1323031780
-s2253
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGState.c
-c000000004EDBDCE40000000000000328
-t1323031780
-s808
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGState.h
-c000000004EDBDCE400000000000001E0
-t1323031780
-s480
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGSystem.h
-c000000004EDBDCE40000000000000263
-t1323031780
-s611
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGSystem.m
-c000000004EDBDCE500000000000020A7
-t1323031781
-s8359
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGTexture.c
-c000000004EDBDCE400000000000045F0
-t1323031780
-s17904
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGTexture.h
-c000000004EDBDCE4000000000000045F
-t1323031780
-s1119
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.c
-c000000004EDBDCE50000000000001160
-t1323031781
-s4448
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.h
-c000000004EDBDCE50000000000000296
-t1323031781
-s662
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGTimer.c
-c000000004EDBDCE50000000000000582
-t1323031781
-s1410
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGTimer.h
-c000000004EDBDCE500000000000001DA
-t1323031781
-s474
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGVersion.h
-c000000004EDBE18200000000000002A1
-t1323032962
-s673
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGVideo.c
-c000000004EDBDCE500000000000041DA
-t1323031781
-s16858
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGVideo.h
-c000000004EDBDCE50000000000000507
-t1323031781
-s1287
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.h
-c000000004EDBDCE50000000000000186
-t1323031781
-s390
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.m
-c000000004EDBDCE50000000000000BF4
-t1323031781
-s3060
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.h
-c000000004EDBDCE50000000000000186
-t1323031781
-s390
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.m
-c000000004EDBDCE500000000000003F2
-t1323031781
-s1010
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGWorld.c
-c000000004EDBDCE50000000000000AB8
-t1323031781
-s2744
-
-N/Users/Agustin/Projects/Dagon/Dagon/DGWorld.h
-c000000004EDBDCE500000000000003AC
-t1323031781
-s940
-
-N/Users/Agustin/Projects/Dagon/Dagon/Dagon-Prefix.pch
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/Dagon/en.lproj/Credits.rtf
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/Dagon/en.lproj/InfoPlist.strings
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/Dagon/en.lproj/MainMenu.xib
-c000000004EA717880000000000032DEA
-t1319573384
-s208362
-
-N/Users/Agustin/Projects/Dagon/Dagon/main.c
-c000000004EDBDCE500000000000003A3
-t1323031781
-s931
-
-N/Users/Agustin/Projects/Dagon/Dagon/main.m
-c00000000000000000000000000000000
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/Documents/Credits.rtf
-c000000004EA7178800000000000001B4
-t1319573384
-s436
-
-N/Users/Agustin/Projects/Dagon/Info.plist
-c000000004EA7178800000000000004AC
-t1319573384
-s1196
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/GL/glew.h
-c000000004DD5DCC000000000000C1D82
-t1305861312
-s793986
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/config/ftconfig.h
-c000000004CC4126C0000000000003554
-t1287918188
-s13652
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/config/ftheader.h
-c000000004CC4126C00000000000060B9
-t1287918188
-s24761
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/config/ftoption.h
-c000000004CC4126C000000000000A9E6
-t1287918188
-s43494
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/config/ftstdlib.h
-c000000004CC4126C0000000000001C6D
-t1287918188
-s7277
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/freetype.h
-c000000004CC4126B000000000003A9FE
-t1287918187
-s240126
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/fterrdef.h
-c000000004CC4126B0000000000002E3D
-t1287918187
-s11837
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/fterrors.h
-c000000004CC4126B00000000000024F0
-t1287918187
-s9456
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/ftglyph.h
-c000000004CC4126B0000000000009969
-t1287918187
-s39273
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/ftimage.h
-c000000004CC4126B00000000000131A3
-t1287918187
-s78243
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/ftmoderr.h
-c000000004CC4126B0000000000001D06
-t1287918187
-s7430
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/ftsystem.h
-c000000004CC4126B000000000000279C
-t1287918187
-s10140
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/freetype2/freetype/fttypes.h
-c000000004CC4126B0000000000008875
-t1287918187
-s34933
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/ft2build.h
-c000000004CC4126C0000000000000F32
-t1287918188
-s3890
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/lauxlib.h
-c000000004773A2610000000000001691
-t1198760545
-s5777
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/lua.h
-c000000004899A7640000000000002DA8
-t1218029412
-s11688
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/luaconf.h
-c000000004DD5DBE8000000000000571B
-t1305861096
-s22299
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/lualib.h
-c000000004773A2610000000000000402
-t1198760545
-s1026
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/ogg/ogg.h
-c000000004DD5DACC000000000000209B
-t1305860812
-s8347
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/ogg/os_types.h
-c000000004DD5DACC00000000000010B3
-t1305860812
-s4275
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/theora/theora.h
-c000000004DD5DBC3000000000000820D
-t1305861059
-s33293
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/vorbis/codec.h
-c000000004DD5DB790000000000002101
-t1305860985
-s8449
-
-N/Users/Agustin/Projects/Dagon/Libraries/Headers/vorbis/vorbisfile.h
-c000000004DD5DB790000000000001F79
-t1305860985
-s8057
-
-N/Users/Agustin/Projects/Dagon/Libraries/libGLEW.a
-c000000004DD5DCC0000000000009AA28
-t1305861312
-s633384
-
-N/Users/Agustin/Projects/Dagon/Libraries/liblua.a
-c000000004DD5DBED0000000000054BA8
-t1305861101
-s347048
-
-N/Users/Agustin/Projects/Dagon/Libraries/libogg.a
-c000000004DD5DACB0000000000006238
-t1305860811
-s25144
-
-N/Users/Agustin/Projects/Dagon/Libraries/libtheora.a
-c000000004DD5DBC300000000000431F8
-t1305861059
-s274936
-
-N/Users/Agustin/Projects/Dagon/Libraries/libvorbis.a
-c000000004DD5DB820000000000085788
-t1305860994
-s546696
-
-N/Users/Agustin/Projects/Dagon/Libraries/libvorbisfile.a
-c000000004DD5DB820000000000019CE0
-t1305860994
-s105696
-
-N/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch
-c000000004EA71788000000000000008D
-t1319573384
-s141
-
-N/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c
-c000000004EDBE12B0000000000025101
-t1323032875
-s151809
-
-N/Users/Agustin/Projects/Dagon/Other Sources/stb_image.h
-c000000004EDBE20E0000000000002B44
-t1323033102
-s11076
-
-N/Users/Agustin/Projects/Dagon/Resources/English.lproj/InfoPlist.strings
-c000000004EA71788000000000000002D
-t1319573384
-s45
-
-N/Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib
-c000000004D78D2B70000000000006ABB
-t1299763895
-s27323
-
-N/Users/Agustin/Projects/Dagon/Resources/Info.plist
-c000000004EA7178800000000000004AC
-t1319573384
-s1196
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/AppDelegate.o
-t1322858168
-s19852
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAppDelegate.o
-t1323031985
-s5552
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGArray.o
-t1323031984
-s6356
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAudio.o
-t1323031984
-s21376
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGCamera.o
-t1323031985
-s21800
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConfig.o
-t1323031985
-s5228
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConsole.o
-t1323031985
-s8536
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGControl.o
-t1323031984
-s24528
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGEffects.o
-t1323031985
-s9576
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFont.o
-t1323031985
-s18000
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFontData.o
-t1323031985
-s50936
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGLog.o
-t1323031985
-s14268
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGMemory.o
-t1323031985
-s3488
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGNode.o
-t1323031985
-s10464
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGObject.o
-t1323031985
-s6580
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGParticleData.o
-t1323031985
-s5572
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRender.o
-t1323031985
-s23948
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRoom.o
-t1323031985
-s5608
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGScript.o
-t1323031985
-s74416
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSplashData.o
-t1323031985
-s175388
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSpot.o
-t1323031985
-s17520
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGState.o
-t1323031985
-s3900
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSystem.o
-t1323031985
-s28800
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTexture.o
-t1323031985
-s19664
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTextureManager.o
-t1323031984
-s8876
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTimer.o
-t1323031985
-s4236
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGVideo.o
-t1323031985
-s26356
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGViewDelegate.o
-t1323031985
-s22448
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWindowDelegate.o
-t1323031985
-s15448
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWorld.o
-t1323031985
-s6604
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/Dagon.LinkFileList
-c000000004EDBDDCC0000000000000C14
-t1323032012
-s3092
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o
-t1323031985
-s2432
-
-N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/stb_image.o
-t1323032012
-s163468
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app
-t1323032647
-s102
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist
-t1323032647
-s1504
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/MacOS/Dagon
-t1323032013
-s1477024
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/PkgInfo
-t1323032647
-s8
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Credits.rtf
-t1322858382
-s436
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Dagon.icns
-t1323032013
-s149174
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/InfoPlist.strings
-t1322858169
-s92
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/MainMenu.nib
-t1319556031
-s4655
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Info.plist
-t1322858244
-s1196
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/Credits.rtf
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/InfoPlist.strings
-t2
-s0
-
-N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/MainMenu.nib
-t2
-s0
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Dagon-Prefix-afbwudskjhzawihgayzyksupefqh/Dagon-Prefix.pch.pth
-t2
-s0
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Dagon-Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Dagon-Prefix.pch.pth
-t2
-s0
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch.pth
-t1323031984
-s73608
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-bmwbtnyxddomwqccnjsjgvxewxuo/Prefix.pch.pth
-t1323031915
-s73608
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-dbifpdbpvkeizbbwkszdnzlllsvq/Prefix.pch.pth
-t1323031916
-s11075068
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Prefix.pch.pth
-t1322858168
-s11075068
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ecdagqfmetuwwwdidussgtkjwjsu/Prefix.pch.pth
-t1323031869
-s73608
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fdoljupxhbtjiydlxjlzfrviqxmz/Prefix.pch.pth
-t1323031956
-s73608
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fjrirjabgtfkkqfzjckldkvguafz/Prefix.pch.pth
-t1323031957
-s11075068
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gcqvonxtjfpribfywlwyfbrwmnxs/Prefix.pch.pth
-t1323031870
-s11075068
-
-N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch.pth
-t1323031985
-s11075068
-
-NDagon/Dagon-Info.plist
-c00000000000000000000000000000000
-t2
-s0
-
-NInfo.plist
-c000000004EDBE04600000000000004F8
-t1323032646
-s1272
-
-NResources/Info.plist
-c000000004EA7178800000000000004AC
-t1319573384
-s1196
-
-CBuild AST from "/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c"
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.m
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGArray.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGAudio.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGCamera.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGConfig.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGConsole.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGControl.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGEffects.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGFont.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGFontData.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGLog.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGMemory.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGNode.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGObject.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGParticleData.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGRender.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGRoom.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGScript.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGSplashData.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGSpot.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGState.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGSystem.m
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGTexture.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGTimer.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGVideo.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.m
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.m
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/DGWorld.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/main.c
-r0
-
-CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/main.m
-r0
-
-CCheck dependencies
-r0
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependencies39d4f78e198cb441^7408f88e198cb441^---0#1#0#--18"Check dependencies36"6AB10584-791F-4C3D-A147-823F3BFEC664-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/AppDelegate.o /Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344550968.242839
-e344550968.434367
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/AppDelegate.o
-x/Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection57"Compile /Users/Agustin/Projects/Dagon/Dagon/AppDelegate.mc9383e386e89b441^0c3c6f386e89b441^---0#0#0#-19%DVTDocumentLocation2@65"file://localhost/Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m0000000000000000^1981"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/AppDelegate.o Dagon/AppDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/AppDelegate.d -c /Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/AppDelegate.o36"FEC82E37-266C-4BC6-8687-E892B4867CF4-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAppDelegate.o /Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344725903.015578
-e344725904.292226
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAppDelegate.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection59"Compile /Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.m2c11048f198cb441^c2136690198cb441^---0#0#0#-19%DVTDocumentLocation2@67"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.m0000000000000000^2059"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAppDelegate.o Dagon/DGAppDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAppDelegate.d -c /Users/Agustin/Projects/Dagon/Dagon/DGAppDelegate.m -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAppDelegate.o36"A61553E4-C51B-4580-8EAD-67148A750D57-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGArray.o /Users/Agustin/Projects/Dagon/Dagon/DGArray.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725903.015876
-e344725904.134495
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGArray.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGArray.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /Users/Agustin/Projects/Dagon/Dagon/DGArray.c6c21048f198cb441^1e6f2290198cb441^---0#0#0#-19%DVTDocumentLocation2@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGArray.c0000000000000000^1846"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGArray.o Dagon/DGArray.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGArray.d -c /Users/Agustin/Projects/Dagon/Dagon/DGArray.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGArray.o36"0B664B6B-999E-42FF-95BA-77EF9B9CE693-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAudio.o /Users/Agustin/Projects/Dagon/Dagon/DGAudio.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725903.015885
-e344725904.148949
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAudio.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c:359:19:{359:19-359:103}{359:17-359:18}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o                                                                         result = ov_read(&audio_data->oggStream, data + size, BUFFER_SIZE - size, 0, 2, 1, & section);
-o                                                                                ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c:381:87:{381:63-381:91}{381:10-381:22}: warning: implicit conversion loses integer precision: 'long' to 'ALsizei' (aka 'int') [-Wshorten-64-to-32,3]
-o                                                                         alBufferData(buffer, audio_data->format, data, size, audio_data->vorbisInfo->rate);
-o                                                                         ~~~~~~~~~~~~                                         ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-o/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c:463:14:{463:14-463:98}{463:12-463:13}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o                                 result = ov_read(&audio_data->oggStream, data + size, BUFFER_SIZE - size, 0, 2, 1, & section);
-o                                        ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c:480:44:{480:20-480:48}{479:4-479:16}: warning: implicit conversion loses integer precision: 'long' to 'ALsizei' (aka 'int') [-Wshorten-64-to-32,3]
-o                                                  data, size, audio_data->vorbisInfo->rate);
-o                                                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~
-o4 warnings generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /Users/Agustin/Projects/Dagon/Dagon/DGAudio.ce221048f198cb441^1b2a2690198cb441^-1852"/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c:359:19:{359:19-359:103}{359:17-359:18}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]                                                                         result = ov_read(&audio_data->oggStream, data + size, BUFFER_SIZE - size, 0, 2, 1, & section);                                                                                ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c:381:87:{381:63-381:91}{381:10-381:22}: warning: implicit conversion loses integer precision: 'long' to 'ALsizei' (aka 'int') [-Wshorten-64-to-32,3]                                                                         alBufferData(buffer, audio_data->format, data, size, audio_data->vorbisInfo->rate);                                                                         ~~~~~~~~~~~~                                         ~~~~~~~~~~~~~~~~~~~~~~~~^~~~/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c:463:14:{463:14-463:98}{463:12-463:13}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]                                 result = ov_read(&audio_data->oggStream, data + size, BUFFER_SIZE - size, 0, 2, 1, & section);                                        ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c:480:44:{480:20-480:48}{479:4-479:16}: warning: implicit conversion loses integer precision: 'long' to 'ALsizei' (aka 'int') [-Wshorten-64-to-32,3]                                                  data, size, audio_data->vorbisInfo->rate);                                                              ~~~~~~~~~~~~~~~~~~~~~~~~^~~~4 warnings generated.4(21%IDEActivityLogMessage2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#0#179#-1#-23%DVTTextDocumentLocation3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^358#18#358#18#18446744073709551615#0#14"Semantic Issue2(3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^358#18#358#102#18446744073709551615#0#3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^358#16#358#17#18446744073709551615#0#-2@76"Implicit conversion loses integer precision: 'long' to 'ALsizei' (aka 'int')64"Implicit conversion loses integer precision: 'long' to 'ALsizei'344725904#514#194#-1#-3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^380#86#380#86#18446744073709551615#0#14"Semantic Issue2(3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^380#62#380#90#18446744073709551615#0#3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^380#9#380#21#18446744073709551615#0#-2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#1020#178#-1#-3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^462#13#462#13#18446744073709551615#0#14"Semantic Issue2(3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^462#13#462#97#18446744073709551615#0#3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^462#11#462#12#18446744073709551615#0#-2@76"Implicit conversion loses integer precision: 'long' to 'ALsizei' (aka 'int')64"Implicit conversion loses integer precision: 'long' to 'ALsizei'344725904#1453#193#-1#-3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^479#43#479#43#18446744073709551615#0#14"Semantic Issue2(3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^479#19#479#47#18446744073709551615#0#3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^478#3#478#15#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGAudio.c0000000000000000^1846"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAudio.o Dagon/DGAudio.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAudio.d -c /Users/Agustin/Projects/Dagon/Dagon/DGAudio.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGAudio.o36"7A77C3DD-798B-4843-85B4-CFB6272E127B-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGCamera.o /Users/Agustin/Projects/Dagon/Dagon/DGCamera.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725903.015937
-e344725904.143687
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGCamera.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGCamera.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection54"Compile /Users/Agustin/Projects/Dagon/Dagon/DGCamera.caf25048f198cb441^d9d12490198cb441^---0#0#0#-19%DVTDocumentLocation2@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGCamera.c0000000000000000^1851"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGCamera.o Dagon/DGCamera.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGCamera.d -c /Users/Agustin/Projects/Dagon/Dagon/DGCamera.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGCamera.o36"4355C604-4E25-4832-B428-EEADF10941DF-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConfig.o /Users/Agustin/Projects/Dagon/Dagon/DGConfig.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.135656
-e344725904.214234
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConfig.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGConfig.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection54"Compile /Users/Agustin/Projects/Dagon/Dagon/DGConfig.c60cc2290198cb441^76fe6590198cb441^---0#0#0#-19%DVTDocumentLocation2@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGConfig.c0000000000000000^1851"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConfig.o Dagon/DGConfig.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConfig.d -c /Users/Agustin/Projects/Dagon/Dagon/DGConfig.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConfig.o36"296840DD-2418-4FF0-8A0C-086291D1865A-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConsole.o /Users/Agustin/Projects/Dagon/Dagon/DGConsole.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.144983
-e344725904.292772
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConsole.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGConsole.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Compile /Users/Agustin/Projects/Dagon/Dagon/DGConsole.cc6322590198cb441^d7166690198cb441^---0#0#0#-19%DVTDocumentLocation2@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGConsole.c0000000000000000^1856"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConsole.o Dagon/DGConsole.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConsole.d -c /Users/Agustin/Projects/Dagon/Dagon/DGConsole.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGConsole.o36"69EAEF92-2256-4B6B-B2F3-37269FA8389F-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGControl.o /Users/Agustin/Projects/Dagon/Dagon/DGControl.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.150239
-e344725904.257396
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGControl.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGControl.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Dagon/DGControl.c:551:12:{551:12-551:24}{551:6-551:9}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]
-o         int len = strlen(text);
-o             ~~~   ^~~~~~~~~~~~
-o1 warning generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Compile /Users/Agustin/Projects/Dagon/Dagon/DGControl.ca9892690198cb441^f2086690198cb441^-288"/Users/Agustin/Projects/Dagon/Dagon/DGControl.c:551:12:{551:12-551:24}{551:6-551:9}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]         int len = strlen(text);             ~~~   ^~~~~~~~~~~~1 warning generated.1(21%IDEActivityLogMessage2@84"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int'53"Implicit conversion loses integer precision: 'size_t'344725904#0#202#-1#-23%DVTTextDocumentLocation3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGControl.c0000000000000000^550#11#550#11#18446744073709551615#0#14"Semantic Issue2(3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGControl.c0000000000000000^550#11#550#23#18446744073709551615#0#3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGControl.c0000000000000000^550#5#550#8#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGControl.c0000000000000000^1856"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGControl.o Dagon/DGControl.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGControl.d -c /Users/Agustin/Projects/Dagon/Dagon/DGControl.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGControl.o36"990F3A72-82B3-4777-A55C-3E13CFD94BF9-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGEffects.o /Users/Agustin/Projects/Dagon/Dagon/DGEffects.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.215526
-e344725904.321670
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGEffects.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c:174:12:{174:12-174:21}{174:10-174:11}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o                         count = ftell(fp);
-o                               ~ ^~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c:179:13:{179:13-179:49}{179:11-179:12}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]
-o                                 count = fread(content,sizeof(char),count,fp);
-o                                       ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-o2 warnings generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Compile /Users/Agustin/Projects/Dagon/Dagon/DGEffects.ca73f3790198cb441^58206690198cb441^-650"/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c:174:12:{174:12-174:21}{174:10-174:11}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]                         count = ftell(fp);                               ~ ^~~~~~~~~/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c:179:13:{179:13-179:49}{179:11-179:12}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]                                 count = fread(content,sizeof(char),count,fp);                                       ~ ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~2 warnings generated.2(21%IDEActivityLogMessage2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#0#180#-1#-23%DVTTextDocumentLocation3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c0000000000000000^173#11#173#11#18446744073709551615#0#14"Semantic Issue2(3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c0000000000000000^173#11#173#20#18446744073709551615#0#3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c0000000000000000^173#9#173#10#18446744073709551615#0#-2@84"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int'53"Implicit conversion loses integer precision: 'size_t'344725904#267#204#-1#-3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c0000000000000000^178#12#178#12#18446744073709551615#0#14"Semantic Issue2(3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c0000000000000000^178#12#178#48#18446744073709551615#0#3@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c0000000000000000^178#10#178#11#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGEffects.c0000000000000000^1856"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGEffects.o Dagon/DGEffects.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGEffects.d -c /Users/Agustin/Projects/Dagon/Dagon/DGEffects.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGEffects.o36"9C963971-B3E1-4BB6-AFBB-223597A51D1E-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFont.o /Users/Agustin/Projects/Dagon/Dagon/DGFont.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.258676
-e344725904.396062
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFont.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGFont.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Dagon/DGFont.c:130:53:{130:32-130:54}{130:30-130:31}: warning: implicit conversion loses integer precision: 'FT_Pos' (aka 'long') to 'int' [-Wshorten-64-to-32,3]
-o                 ft_font->glyph[ch].advance = face->glyph->advance.x;
-o                                            ~ ~~~~~~~~~~~~~~~~~~~~~^
-o1 warning generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection52"Compile /Users/Agustin/Projects/Dagon/Dagon/DGFont.cdc4b4290198cb441^80f36690198cb441^-352"/Users/Agustin/Projects/Dagon/Dagon/DGFont.c:130:53:{130:32-130:54}{130:30-130:31}: warning: implicit conversion loses integer precision: 'FT_Pos' (aka 'long') to 'int' [-Wshorten-64-to-32,3]                 ft_font->glyph[ch].advance = face->glyph->advance.x;                                            ~ ~~~~~~~~~~~~~~~~~~~~~^1 warning generated.1(21%IDEActivityLogMessage2@75"Implicit conversion loses integer precision: 'FT_Pos' (aka 'long') to 'int'53"Implicit conversion loses integer precision: 'FT_Pos'344725904#0#192#-1#-23%DVTTextDocumentLocation3@60"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGFont.c0000000000000000^129#52#129#52#18446744073709551615#0#14"Semantic Issue2(3@60"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGFont.c0000000000000000^129#31#129#53#18446744073709551615#0#3@60"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGFont.c0000000000000000^129#29#129#30#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@60"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGFont.c0000000000000000^1841"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFont.o Dagon/DGFont.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFont.d -c /Users/Agustin/Projects/Dagon/Dagon/DGFont.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFont.o36"0127C1D0-54DB-4E53-9E80-8E16CD1BA6E7-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFontData.o /Users/Agustin/Projects/Dagon/Dagon/DGFontData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344724785.147144
-e344724785.226579
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFontData.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGFontData.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"Compile /Users/Agustin/Projects/Dagon/Dagon/DGFontData.c11c42531158cb441^66f53a31158cb441^---0#0#0#-19%DVTDocumentLocation2@64"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGFontData.c0000000000000000^1861"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFontData.o Dagon/DGFontData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFontData.d -c /Users/Agustin/Projects/Dagon/Dagon/DGFontData.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGFontData.o36"8DB02806-0B42-4422-9E8A-0019F80D1090-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGLog.o /Users/Agustin/Projects/Dagon/Dagon/DGLog.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.293597
-e344725904.340037
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGLog.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGLog.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection51"Compile /Users/Agustin/Projects/Dagon/Dagon/DGLog.c323b4b90198cb441^5ddc6690198cb441^---0#0#0#-19%DVTDocumentLocation2@59"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGLog.c0000000000000000^1836"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGLog.o Dagon/DGLog.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGLog.d -c /Users/Agustin/Projects/Dagon/Dagon/DGLog.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGLog.o36"F9584A05-1BAE-454B-9E68-B5262CC1A7EA-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGMemory.o /Users/Agustin/Projects/Dagon/Dagon/DGMemory.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.294699
-e344725904.319362
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGMemory.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGMemory.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection54"Compile /Users/Agustin/Projects/Dagon/Dagon/DGMemory.cc7814b90198cb441^ac1c6690198cb441^---0#0#0#-19%DVTDocumentLocation2@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGMemory.c0000000000000000^1851"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGMemory.o Dagon/DGMemory.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGMemory.d -c /Users/Agustin/Projects/Dagon/Dagon/DGMemory.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGMemory.o36"8CD52869-09A2-4B4A-BF6F-89D909612A6C-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGNode.o /Users/Agustin/Projects/Dagon/Dagon/DGNode.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.320634
-e344725904.354194
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGNode.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGNode.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection52"Compile /Users/Agustin/Projects/Dagon/Dagon/DGNode.ca2415290198cb441^19e46690198cb441^---0#0#0#-19%DVTDocumentLocation2@60"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGNode.c0000000000000000^1841"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGNode.o Dagon/DGNode.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGNode.d -c /Users/Agustin/Projects/Dagon/Dagon/DGNode.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGNode.o36"BB35F9F2-1741-4D16-B596-546414674142-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGObject.o /Users/Agustin/Projects/Dagon/Dagon/DGObject.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.322915
-e344725904.358829
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGObject.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGObject.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Dagon/DGObject.c:29:15:{29:15-29:17}{29:13-29:14}: warning: implicit conversion loses integer precision: 'long' to 'unsigned int' [-Wshorten-64-to-32,3]
-o         object->id = id;
-o                    ~ ^~
-o1 warning generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection54"Compile /Users/Agustin/Projects/Dagon/Dagon/DGObject.c3cbd5290198cb441^92e76690198cb441^-255"/Users/Agustin/Projects/Dagon/Dagon/DGObject.c:29:15:{29:15-29:17}{29:13-29:14}: warning: implicit conversion loses integer precision: 'long' to 'unsigned int' [-Wshorten-64-to-32,3]         object->id = id;                    ~ ^~1 warning generated.1(21%IDEActivityLogMessage2@69"Implicit conversion loses integer precision: 'long' to 'unsigned int'-344725904#0#183#-1#-23%DVTTextDocumentLocation3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGObject.c0000000000000000^28#14#28#14#18446744073709551615#0#14"Semantic Issue2(3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGObject.c0000000000000000^28#14#28#16#18446744073709551615#0#3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGObject.c0000000000000000^28#12#28#13#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGObject.c0000000000000000^1851"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGObject.o Dagon/DGObject.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGObject.d -c /Users/Agustin/Projects/Dagon/Dagon/DGObject.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGObject.o36"53BCCDFB-47FD-47CD-AE09-127967B01CE8-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGParticleData.o /Users/Agustin/Projects/Dagon/Dagon/DGParticleData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344724785.266985
-e344724785.294591
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGParticleData.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGParticleData.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection60"Compile /Users/Agustin/Projects/Dagon/Dagon/DGParticleData.ce7fc4431158cb441^d1774f31158cb441^---0#0#0#-19%DVTDocumentLocation2@68"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGParticleData.c0000000000000000^1881"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGParticleData.o Dagon/DGParticleData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGParticleData.d -c /Users/Agustin/Projects/Dagon/Dagon/DGParticleData.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGParticleData.o36"99E6EB57-EDE4-4247-967B-0AFFD8619F82-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRender.o /Users/Agustin/Projects/Dagon/Dagon/DGRender.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.343534
-e344725904.461150
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRender.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGRender.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Dagon/DGRender.c:33:5: warning: no previous prototype for function 'randomize' [-Wmissing-prototypes,3]
-o int randomize(DG_BOOL full) {
-o     ^
-o1 warning generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection54"Compile /Users/Agustin/Projects/Dagon/Dagon/DGRender.c5b065890198cb441^62667790198cb441^-193"/Users/Agustin/Projects/Dagon/Dagon/DGRender.c:33:5: warning: no previous prototype for function 'randomize' [-Wmissing-prototypes,3] int randomize(DG_BOOL full) {     ^1 warning generated.1(21%IDEActivityLogMessage2@46"No previous prototype for function 'randomize'-344725904#0#134#-1#-23%DVTTextDocumentLocation3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGRender.c0000000000000000^32#4#32#4#18446744073709551615#0#14"Semantic Issue--0#0#0#-19%DVTDocumentLocation4@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGRender.c0000000000000000^1851"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRender.o Dagon/DGRender.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRender.d -c /Users/Agustin/Projects/Dagon/Dagon/DGRender.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRender.o36"47745FB1-BB34-44D9-8B12-837A15202A58-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRoom.o /Users/Agustin/Projects/Dagon/Dagon/DGRoom.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.364041
-e344725904.397107
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRoom.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGRoom.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection52"Compile /Users/Agustin/Projects/Dagon/Dagon/DGRoom.c2d5d5d90198cb441^f9f66690198cb441^---0#0#0#-19%DVTDocumentLocation2@60"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGRoom.c0000000000000000^1841"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRoom.o Dagon/DGRoom.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRoom.d -c /Users/Agustin/Projects/Dagon/Dagon/DGRoom.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGRoom.o36"0C037DAE-3958-4E65-8895-34E614AF9E19-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGScript.o /Users/Agustin/Projects/Dagon/Dagon/DGScript.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.364697
-e344725904.511986
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGScript.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGScript.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Dagon/DGScript.c:265:9:{265:9-265:25}{265:7-265:8}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]
-o         size = lua_objlen(L, 2);
-o              ~ ^~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Dagon/DGScript.c:641:9:{641:9-641:25}{641:7-641:8}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]
-o         size = lua_objlen(L, 2);
-o              ~ ^~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Dagon/DGScript.c:1461:10:{1461:10-1461:27}{1461:8-1461:9}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]
-o                 size = lua_objlen(L, -1);
-o                      ~ ^~~~~~~~~~~~~~~~~
-o3 warnings generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection54"Compile /Users/Agustin/Projects/Dagon/Dagon/DGScript.cf86c5d90198cb441^85058b90198cb441^-845"/Users/Agustin/Projects/Dagon/Dagon/DGScript.c:265:9:{265:9-265:25}{265:7-265:8}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]         size = lua_objlen(L, 2);              ~ ^~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Dagon/DGScript.c:641:9:{641:9-641:25}{641:7-641:8}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]         size = lua_objlen(L, 2);              ~ ^~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Dagon/DGScript.c:1461:10:{1461:10-1461:27}{1461:8-1461:9}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]                 size = lua_objlen(L, -1);                      ~ ^~~~~~~~~~~~~~~~~3 warnings generated.3(21%IDEActivityLogMessage2@84"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int'53"Implicit conversion loses integer precision: 'size_t'344725904#0#199#-1#-23%DVTTextDocumentLocation3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^264#8#264#8#18446744073709551615#0#14"Semantic Issue2(3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^264#8#264#24#18446744073709551615#0#3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^264#6#264#7#18446744073709551615#0#-2@84"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int'53"Implicit conversion loses integer precision: 'size_t'344725904#266#199#-1#-3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^640#8#640#8#18446744073709551615#0#14"Semantic Issue2(3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^640#8#640#24#18446744073709551615#0#3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^640#6#640#7#18446744073709551615#0#-2@84"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int'53"Implicit conversion loses integer precision: 'size_t'344725904#532#206#-1#-3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^1460#9#1460#9#18446744073709551615#0#14"Semantic Issue2(3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^1460#9#1460#26#18446744073709551615#0#3@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^1460#7#1460#8#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGScript.c0000000000000000^1851"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGScript.o Dagon/DGScript.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGScript.d -c /Users/Agustin/Projects/Dagon/Dagon/DGScript.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGScript.o36"BAE37F53-03DA-406D-9B80-DE51485BD966-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSplashData.o /Users/Agustin/Projects/Dagon/Dagon/DGSplashData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344724784.855068
-e344724785.151944
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSplashData.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGSplashData.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection58"Compile /Users/Agustin/Projects/Dagon/Dagon/DGSplashData.c780cdb30158cb441^e3c72831158cb441^---0#0#0#-19%DVTDocumentLocation2@66"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGSplashData.c0000000000000000^1871"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSplashData.o Dagon/DGSplashData.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSplashData.d -c /Users/Agustin/Projects/Dagon/Dagon/DGSplashData.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSplashData.o36"0565B206-8C58-4964-AC01-9BEB72F7B1C8-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSpot.o /Users/Agustin/Projects/Dagon/Dagon/DGSpot.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.397433
-e344725904.459103
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSpot.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGSpot.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection52"Compile /Users/Agustin/Projects/Dagon/Dagon/DGSpot.c31d06590198cb441^20627790198cb441^---0#0#0#-19%DVTDocumentLocation2@60"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGSpot.c0000000000000000^1841"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSpot.o Dagon/DGSpot.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSpot.d -c /Users/Agustin/Projects/Dagon/Dagon/DGSpot.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSpot.o36"09BA6DCD-3908-40D1-AA09-8B002A856BB5-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGState.o /Users/Agustin/Projects/Dagon/Dagon/DGState.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.398475
-e344725904.462731
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGState.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGState.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /Users/Agustin/Projects/Dagon/Dagon/DGState.c1b136690198cb441^a9697790198cb441^---0#0#0#-19%DVTDocumentLocation2@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGState.c0000000000000000^1846"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGState.o Dagon/DGState.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGState.d -c /Users/Agustin/Projects/Dagon/Dagon/DGState.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGState.o36"784E0C9B-E23B-4FE8-A6F8-829FEA53D55C-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSystem.o /Users/Agustin/Projects/Dagon/Dagon/DGSystem.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.574726
-e344725904.631490
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSystem.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGSystem.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection54"Compile /Users/Agustin/Projects/Dagon/Dagon/DGSystem.mfc379390198cb441^84d8a190198cb441^---0#0#0#-19%DVTDocumentLocation2@62"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGSystem.m0000000000000000^2034"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSystem.o Dagon/DGSystem.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSystem.d -c /Users/Agustin/Projects/Dagon/Dagon/DGSystem.m -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGSystem.o36"BB6A4AEA-6778-4AEC-B05C-BDFD1D81A090-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTexture.o /Users/Agustin/Projects/Dagon/Dagon/DGTexture.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.461237
-e344725904.543686
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTexture.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGTexture.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection55"Compile /Users/Agustin/Projects/Dagon/Dagon/DGTexture.c282b7690198cb441^efac8d90198cb441^---0#0#0#-19%DVTDocumentLocation2@63"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGTexture.c0000000000000000^1856"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTexture.o Dagon/DGTexture.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTexture.d -c /Users/Agustin/Projects/Dagon/Dagon/DGTexture.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTexture.o36"179093DF-D18A-4A2A-A76C-990134D8224E-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTextureManager.o /Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.462350
-e344725904.512761
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTextureManager.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection62"Compile /Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.c9c6d7690198cb441^300d8b90198cb441^---0#0#0#-19%DVTDocumentLocation2@70"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.c0000000000000000^1891"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTextureManager.o Dagon/DGTextureManager.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTextureManager.d -c /Users/Agustin/Projects/Dagon/Dagon/DGTextureManager.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTextureManager.o36"A77C7867-A77E-46D8-890B-F2C394330510-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTimer.o /Users/Agustin/Projects/Dagon/Dagon/DGTimer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.463974
-e344725904.492260
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTimer.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGTimer.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /Users/Agustin/Projects/Dagon/Dagon/DGTimer.c2e027790198cb441^86008090198cb441^---0#0#0#-19%DVTDocumentLocation2@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGTimer.c0000000000000000^1846"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTimer.o Dagon/DGTimer.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTimer.d -c /Users/Agustin/Projects/Dagon/Dagon/DGTimer.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGTimer.o36"C5FC3ECD-7342-41CE-92D6-57408E46DB09-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGVideo.o /Users/Agustin/Projects/Dagon/Dagon/DGVideo.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.500163
-e344725904.551607
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGVideo.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGVideo.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Dagon/DGVideo.c:462:14:{462:14-462:40}{462:6-462:11}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]
-o         int bytes = fread(buffer, 1, 4096, in);
-o             ~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~
-o1 warning generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /Users/Agustin/Projects/Dagon/Dagon/DGVideo.c834e8090198cb441^6cb38d90198cb441^-319"/Users/Agustin/Projects/Dagon/Dagon/DGVideo.c:462:14:{462:14-462:40}{462:6-462:11}: warning: implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int' [-Wshorten-64-to-32,3]         int bytes = fread(buffer, 1, 4096, in);             ~~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~1 warning generated.1(21%IDEActivityLogMessage2@84"Implicit conversion loses integer precision: 'size_t' (aka 'unsigned long') to 'int'53"Implicit conversion loses integer precision: 'size_t'344725904#0#201#-1#-23%DVTTextDocumentLocation3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGVideo.c0000000000000000^461#13#461#13#18446744073709551615#0#14"Semantic Issue2(3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGVideo.c0000000000000000^461#13#461#39#18446744073709551615#0#3@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGVideo.c0000000000000000^461#5#461#10#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGVideo.c0000000000000000^1846"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGVideo.o Dagon/DGVideo.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGVideo.d -c /Users/Agustin/Projects/Dagon/Dagon/DGVideo.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGVideo.o36"F1A678E6-A4DE-456A-969F-E36A5D5D63CE-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGViewDelegate.o /Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.513242
-e344725904.607072
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGViewDelegate.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection60"Compile /Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.md5768390198cb441^da719b90198cb441^---0#0#0#-19%DVTDocumentLocation2@68"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.m0000000000000000^2064"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGViewDelegate.o Dagon/DGViewDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGViewDelegate.d -c /Users/Agustin/Projects/Dagon/Dagon/DGViewDelegate.m -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGViewDelegate.o36"E12C3FC3-EF43-4FDB-9DA6-38317F59A809-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWindowDelegate.o /Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.513664
-e344725904.603802
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWindowDelegate.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection62"Compile /Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.m048f8390198cb441^bf9b9a90198cb441^---0#0#0#-19%DVTDocumentLocation2@70"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.m0000000000000000^2074"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWindowDelegate.o Dagon/DGWindowDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWindowDelegate.d -c /Users/Agustin/Projects/Dagon/Dagon/DGWindowDelegate.m -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWindowDelegate.o36"2EA6CB3C-5290-4E0F-837C-803FC536E654-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWorld.o /Users/Agustin/Projects/Dagon/Dagon/DGWorld.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.544978
-e344725904.573424
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWorld.o
-x/Users/Agustin/Projects/Dagon/Dagon/DGWorld.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection53"Compile /Users/Agustin/Projects/Dagon/Dagon/DGWorld.c3d998b90198cb441^ebaa9490198cb441^---0#0#0#-19%DVTDocumentLocation2@61"file://localhost/Users/Agustin/Projects/Dagon/Dagon/DGWorld.c0000000000000000^1846"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWorld.o Dagon/DGWorld.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWorld.d -c /Users/Agustin/Projects/Dagon/Dagon/DGWorld.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/DGWorld.o36"03F1CDE1-CBB6-4595-8FD9-72388CEA41D1-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o /Users/Agustin/Projects/Dagon/Dagon/main.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.552953
-e344725904.575009
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o
-x/Users/Agustin/Projects/Dagon/Dagon/main.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection50"Compile /Users/Agustin/Projects/Dagon/Dagon/main.c62a28d90198cb441^d5af9490198cb441^---0#0#0#-19%DVTDocumentLocation2@58"file://localhost/Users/Agustin/Projects/Dagon/Dagon/main.c0000000000000000^1831"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o Dagon/main.c normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.d -c /Users/Agustin/Projects/Dagon/Dagon/main.c -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o36"5942C36F-C449-4DC5-B575-C80AFDE9BFF5-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o /Users/Agustin/Projects/Dagon/Dagon/main.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344550968.242438
-e344550968.434260
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o
-x/Users/Agustin/Projects/Dagon/Dagon/main.m
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection50"Compile /Users/Agustin/Projects/Dagon/Dagon/main.m2d223e386e89b441^aa2b6f386e89b441^---0#0#0#-19%DVTDocumentLocation2@58"file://localhost/Users/Agustin/Projects/Dagon/Dagon/main.m0000000000000000^1946"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o Dagon/main.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.d -c /Users/Agustin/Projects/Dagon/Dagon/main.m -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o36"7A97445E-B469-4F80-9D53-A2207A8994E0-
-
-CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/stb_image.o "/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344725904.576296
-e344725904.731091
-r1
-xCompileC
-xbuild/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/stb_image.o
-x/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-o/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:591:8: warning: no previous prototype for function 'stbi_loadf_main' [-Wmissing-prototypes,3]
-o float *stbi_loadf_main(stbi *s, int *x, int *y, int *comp, int req_comp)
-o        ^
-o/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:760:18:{760:18-760:51}{760:11-760:15}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o       int blen = s->img_buffer_end - s->img_buffer;
-o           ~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:773:18:{773:18-773:51}{773:11-773:15}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o       int blen = s->img_buffer_end - s->img_buffer;
-o           ~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:2324:7: warning: no previous prototype for function 'stbi_zlib_decode_malloc_guesssize_headerflag' [-Wmissing-prototypes,3]
-o char *stbi_zlib_decode_malloc_guesssize_headerflag(const char *buffer, int len, int initial_size, int *outlen, int parse_header)
-o       ^
-o/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:4296:13:{4296:13-4296:38}{4296:11-4296:12}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o    height = strtol(token, &token, 10);
-o           ~ ^~~~~~~~~~~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:4300:12:{4300:12-4300:35}{4300:10-4300:11}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o    width = strtol(token, NULL, 10);
-o          ~ ^~~~~~~~~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:4408:9:{4408:9-4408:34}{4408:7-4408:8}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o    *y = strtol(token, &token, 10);
-o       ~ ^~~~~~~~~~~~~~~~~~~~~~~~~
-o/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:4415:9:{4415:9-4415:32}{4415:7-4415:8}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]
-o    *x = strtol(token, NULL, 10);
-o       ~ ^~~~~~~~~~~~~~~~~~~~~~~
-o8 warnings generated.
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection63"Compile /Users/Agustin/Projects/Dagon/Other Sources/stb_image.c85989390198cb441^9528bb90198cb441^-2215"/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:591:8: warning: no previous prototype for function 'stbi_loadf_main' [-Wmissing-prototypes,3] float *stbi_loadf_main(stbi *s, int *x, int *y, int *comp, int req_comp)        ^/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:760:18:{760:18-760:51}{760:11-760:15}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]       int blen = s->img_buffer_end - s->img_buffer;           ~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:773:18:{773:18-773:51}{773:11-773:15}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]       int blen = s->img_buffer_end - s->img_buffer;           ~~~~   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:2324:7: warning: no previous prototype for function 'stbi_zlib_decode_malloc_guesssize_headerflag' [-Wmissing-prototypes,3] char *stbi_zlib_decode_malloc_guesssize_headerflag(const char *buffer, int len, int initial_size, int *outlen, int parse_header)       ^/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:4296:13:{4296:13-4296:38}{4296:11-4296:12}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]    height = strtol(token, &token, 10);           ~ ^~~~~~~~~~~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:4300:12:{4300:12-4300:35}{4300:10-4300:11}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]    width = strtol(token, NULL, 10);          ~ ^~~~~~~~~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:4408:9:{4408:9-4408:34}{4408:7-4408:8}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]    *y = strtol(token, &token, 10);       ~ ^~~~~~~~~~~~~~~~~~~~~~~~~/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c:4415:9:{4415:9-4415:32}{4415:7-4415:8}: warning: implicit conversion loses integer precision: 'long' to 'int' [-Wshorten-64-to-32,3]    *x = strtol(token, NULL, 10);       ~ ^~~~~~~~~~~~~~~~~~~~~~~8 warnings generated.8(21%IDEActivityLogMessage2@52"No previous prototype for function 'stbi_loadf_main'-344725904#0#150#-1#-23%DVTTextDocumentLocation3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^590#7#590#7#18446744073709551615#0#14"Semantic Issue--2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#234#188#-1#-3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^759#17#759#17#18446744073709551615#0#14"Semantic Issue2(3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^759#17#759#50#18446744073709551615#0#3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^759#10#759#14#18446744073709551615#0#-2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#527#188#-1#-3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^772#17#772#17#18446744073709551615#0#14"Semantic Issue2(3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^772#17#772#50#18446744073709551615#0#3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^772#10#772#14#18446744073709551615#0#-2@81"No previous prototype for function 'stbi_zlib_decode_malloc_guesssize_headerflag'-344725904#820#180#-1#-3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^2323#6#2323#6#18446744073709551615#0#14"Semantic Issue--2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#1139#193#-1#-3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4295#12#4295#12#18446744073709551615#0#14"Semantic Issue2(3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4295#12#4295#37#18446744073709551615#0#3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4295#10#4295#11#18446744073709551615#0#-2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#1411#193#-1#-3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4299#11#4299#11#18446744073709551615#0#14"Semantic Issue2(3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4299#11#4299#34#18446744073709551615#0#3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4299#9#4299#10#18446744073709551615#0#-2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#1677#189#-1#-3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4407#8#4407#8#18446744073709551615#0#14"Semantic Issue2(3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4407#8#4407#33#18446744073709551615#0#3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4407#6#4407#7#18446744073709551615#0#-2@60"Implicit conversion loses integer precision: 'long' to 'int'-344725904#1937#189#-1#-3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4414#8#4414#8#18446744073709551615#0#14"Semantic Issue2(3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4414#8#4414#31#18446744073709551615#0#3@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^4414#6#4414#7#18446744073709551615#0#-0#0#0#-19%DVTDocumentLocation4@73"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/stb_image.c0000000000000000^1876"CompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/stb_image.o "Other Sources/stb_image.c" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -include /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch -MMD -MT dependencies -MF /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/stb_image.d -c "/Users/Agustin/Projects/Dagon/Other Sources/stb_image.c" -o /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/stb_image.o36"D16A00E9-A65C-49AF-84C8-7C9A899A83A6-
-
-CCompileXIB /Users/Agustin/Projects/Dagon/Dagon/../Resources/en.lproj/MainMenu.xib
-r0
-
-CCompileXIB /Users/Agustin/Projects/Dagon/Dagon/en.lproj/MainMenu.xib
-r0
-
-CCompileXIB /Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib
-s344550969.276397
-e344550970.712352
-r1
-xCompileXIB
-x/Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection76"Compiling /Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib68ce46396e89b441^075db63a6e89b441^---0#0#0#-19%DVTDocumentLocation2@82"file://localhost/Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib0000000000000000^451"CompileXIB Resources/English.lproj/MainMenu.xib    cd /Users/Agustin/Projects/Dagon    setenv XCODE_DEVELOPER_USR_PATH /Developer/usr/bin/..    /Developer/usr/bin/ibtool --errors --warnings --notices --output-format human-readable-text --compile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/MainMenu.nib /Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib --sdk /Developer/SDKs/MacOSX10.7.sdk36"85641749-80D0-4718-BE84-BC19C3090D22-
-
-CCopyPlistFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Info.plist Info.plist
-s344551044.425761
-e344551044.434229
-r1
-xCopyPlistFile
-x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Info.plist
-xInfo.plist
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection15"Copy Info.plist7b4b6d846e89b441^a94e6f846e89b441^---0#0#0#-19%DVTDocumentLocation2@56"file://localhost/Users/Agustin/Projects/Dagon/Info.plist0000000000000000^230"CopyPlistFile build/Debug/Dagon.app/Contents/Resources/Info.plist Info.plist    cd /Users/Agustin/Projects/Dagon    builtin-copyPlist --outdir /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources -- Info.plist36"88FDF3B2-9E43-4EF9-BAEA-F6E259EA441E-
-
-CCopyPlistFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Info.plist Resources/Info.plist
-s344550969.277932
-e344550969.310122
-r1
-xCopyPlistFile
-x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Info.plist
-xResources/Info.plist
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection25"Copy Resources/Info.plist483247396e89b441^c7664f396e89b441^---0#0#0#-19%DVTDocumentLocation2@66"file://localhost/Users/Agustin/Projects/Dagon/Resources/Info.plist0000000000000000^250"CopyPlistFile build/Debug/Dagon.app/Contents/Resources/Info.plist Resources/Info.plist    cd /Users/Agustin/Projects/Dagon    builtin-copyPlist --outdir /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources -- Resources/Info.plist36"BD7A6138-43D5-4661-8E52-857C81F5C6AF-
-
-CCopyStringsFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/InfoPlist.strings Resources/English.lproj/InfoPlist.strings
-s344550969.276682
-e344550969.342848
-r1
-xCopyStringsFile
-x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/InfoPlist.strings
-xResources/English.lproj/InfoPlist.strings
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection46"Copy Resources/English.lproj/InfoPlist.stringse7df46396e89b441^15c557396e89b441^---0#0#0#-19%DVTDocumentLocation2@87"file://localhost/Users/Agustin/Projects/Dagon/Resources/English.lproj/InfoPlist.strings0000000000000000^388"CopyStringsFile build/Debug/Dagon.app/Contents/Resources/English.lproj/InfoPlist.strings Resources/English.lproj/InfoPlist.strings    cd /Users/Agustin/Projects/Dagon    builtin-copyStrings --validate --inputencoding utf-8 --outputencoding UTF-16 --outdir /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj -- Resources/English.lproj/InfoPlist.strings36"D64A31AA-B90E-4AB4-8063-09E2E5921B4C-
-
-CCopyStringsFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/InfoPlist.strings Dagon/../Resources/en.lproj/InfoPlist.strings
-r0
-
-CCopyStringsFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/InfoPlist.strings Dagon/en.lproj/InfoPlist.strings
-r0
-
-CCpResource Dagon/../Documents/Credits.rtf build/Debug/Dagon.app/Contents/Resources/Credits.rtf
-s344551182.443057
-e344551182.455637
-r1
-xCpResource
-xDagon/../Documents/Credits.rtf
-xbuild/Debug/Dagon.app/Contents/Resources/Credits.rtf
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection57"Copy build/Debug/Dagon.app/Contents/Resources/Credits.rtfd977710e6f89b441^feb9740e6f89b441^---0#0#0#-19%DVTDocumentLocation2@98"file://localhost/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Credits.rtf0000000000000000^376"CpResource Dagon/../Documents/Credits.rtf build/Debug/Dagon.app/Contents/Resources/Credits.rtf    cd /Users/Agustin/Projects/Dagon    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/Agustin/Projects/Dagon/Dagon/../Documents/Credits.rtf /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources36"93D07357-9D40-4A8A-A2E0-3468340A194F-
-
-CCpResource Dagon/../Documents/en.lproj/Credits.rtf build/Debug/Dagon.app/Contents/Resources/en.lproj/Credits.rtf
-r0
-
-CCpResource Dagon/../Resources/Dagon.icns build/Debug/Dagon.app/Contents/Resources/Dagon.icns
-s344724813.066829
-e344724813.072380
-r1
-xCpResource
-xDagon/../Resources/Dagon.icns
-xbuild/Debug/Dagon.app/Contents/Resources/Dagon.icns
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection56"Copy build/Debug/Dagon.app/Contents/Resources/Dagon.icns4a28114d158cb441^2f8a124d158cb441^---0#0#0#-19%DVTDocumentLocation2@97"file://localhost/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Dagon.icns00f4ccd9dfffdf42^373"CpResource Dagon/../Resources/Dagon.icns build/Debug/Dagon.app/Contents/Resources/Dagon.icns    cd /Users/Agustin/Projects/Dagon    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/Agustin/Projects/Dagon/Dagon/../Resources/Dagon.icns /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources36"4E24EBB9-C499-4BCA-8D39-6A6CFA04E104-
-
-CCpResource Dagon/en.lproj/Credits.rtf build/Debug/Dagon.app/Contents/Resources/en.lproj/Credits.rtf
-r0
-
-CCpResource Documents/Credits.rtf build/Debug/Dagon.app/Contents/Resources/Credits.rtf
-s344550969.276332
-e344550969.309227
-r1
-xCpResource
-xDocuments/Credits.rtf
-xbuild/Debug/Dagon.app/Contents/Resources/Credits.rtf
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection57"Copy build/Debug/Dagon.app/Contents/Resources/Credits.rtf0ccc46396e89b441^6f294f396e89b441^---0#0#0#-19%DVTDocumentLocation2@98"file://localhost/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Credits.rtf00f4d062dcffdf42^358"CpResource Documents/Credits.rtf build/Debug/Dagon.app/Contents/Resources/Credits.rtf    cd /Users/Agustin/Projects/Dagon    builtin-copy -exclude .DS_Store -exclude CVS -exclude .svn -exclude .git -exclude .hg -resolve-src-symlinks /Users/Agustin/Projects/Dagon/Documents/Credits.rtf /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources36"BC7C3168-F6FE-402C-8F60-EC502312995C-
-
-CLd /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/MacOS/Dagon normal x86_64
-s344725904.737978
-e344725905.527428
-r1
-xLd
-x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/MacOS/Dagon
-xnormal
-xx86_64
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection77"Link /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/MacOS/Dagon61fcbc90198cb441^d9058791198cb441^---0#0#0#--729"Ld build/Debug/Dagon.app/Contents/MacOS/Dagon normal x86_64    cd /Users/Agustin/Projects/Dagon    setenv MACOSX_DEPLOYMENT_TARGET 10.7    /Developer/usr/bin/clang -arch x86_64 -isysroot /Developer/SDKs/MacOSX10.7.sdk -L/Users/Agustin/Projects/Dagon/build/Debug -L/Users/Agustin/Projects/Dagon/Libraries -L/Developer/SDKs/MacOSX10.7.sdk/usr/X11/lib -F/Users/Agustin/Projects/Dagon/build/Debug -filelist /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/Dagon.LinkFileList -mmacosx-version-min=10.7 -lfreetype -framework Cocoa -framework OpenAL -framework OpenGL -lGLEW -llua -logg -ltheora -lvorbis -lvorbisfile -o /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/MacOS/Dagon36"06652EBB-C757-4C70-8D65-D5C5C8600E1D-
-
-CProcessInfoPlistFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist Dagon/Dagon-Info.plist
-s344550722.745016
-e344550722.800399
-r0
-xProcessInfoPlistFile
-x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist
-xDagon/Dagon-Info.plist
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection30"Process Dagon/Dagon-Info.plistbc92c8426d89b441^5bcfcc426d89b441^-172"error: could not read data from '/Users/Agustin/Projects/Dagon/Dagon/Dagon-Info.plist': The file “Dagon-Info.plist” couldn’t be opened because there is no such file.1(21%IDEActivityLogMessage2@164"could not read data from '/Users/Agustin/Projects/Dagon/Dagon/Dagon-Info.plist': The file “Dagon-Info.plist” couldn’t be opened because there is no such file.-344550722#18446744073709551615#0#-2#-23%DVTTextDocumentLocation3@-0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#---0#0#0#-19%DVTDocumentLocation4@68"file://localhost/Users/Agustin/Projects/Dagon/Dagon/Dagon-Info.plist00f4d062dcffdf42^369"ProcessInfoPlistFile build/Debug/Dagon.app/Contents/Info.plist Dagon/Dagon-Info.plist    cd /Users/Agustin/Projects/Dagon    builtin-infoPlistUtility Dagon/Dagon-Info.plist -genpkginfo /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist36"6285CD74-FBE5-4C3E-A30D-FEA7A47B1FF9-
-
-CProcessInfoPlistFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist Info.plist
-s344725447.439304
-e344725447.443238
-r1
-xProcessInfoPlistFile
-x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist
-xInfo.plist
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Process Info.plist808170c7178cb441^80ba71c7178cb441^---0#0#0#-19%DVTDocumentLocation2@56"file://localhost/Users/Agustin/Projects/Dagon/Info.plist0000000000000000^345"ProcessInfoPlistFile build/Debug/Dagon.app/Contents/Info.plist Info.plist    cd /Users/Agustin/Projects/Dagon    builtin-infoPlistUtility Info.plist -genpkginfo /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist36"983BA955-2045-449D-865C-33E37D3D6266-
-
-CProcessInfoPlistFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist Resources/Info.plist
-s344550964.974620
-e344550964.995118
-r1
-xProcessInfoPlistFile
-x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist
-xResources/Info.plist
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection28"Process Resources/Info.plistb08cf9346e89b441^62c0fe346e89b441^---0#0#0#-19%DVTDocumentLocation2@66"file://localhost/Users/Agustin/Projects/Dagon/Resources/Info.plist0000000000000000^365"ProcessInfoPlistFile build/Debug/Dagon.app/Contents/Info.plist Resources/Info.plist    cd /Users/Agustin/Projects/Dagon    builtin-infoPlistUtility Resources/Info.plist -genpkginfo /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist36"09EA6FCD-F6ED-401F-A074-0F08CA95B12B-
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Dagon-Prefix-amlxudxzxzfqrpgndeniawxcdpjc_ast/Dagon-Prefix.pch.pth Dagon/Dagon-Prefix.pch normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Dagon-Prefix-efmevmvthnfqbdbuvwwthxoudvlb_ast/Dagon-Prefix.pch.pth Dagon/Dagon-Prefix.pch normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-biqdrpcoikvfkzbqgkzndrmknjea_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-bjlrrvlkvwiwovbtoqgveaxgolqp_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-bsrbeutwzfiluxbmwtrgpwiizdjr_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-btgqpxziofvvesgdzlolcytfcpnn_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-bucedskfgqeyvedvobwuubqbjayj_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-cxrjruiubtlqlodicxoyhgvzmlji_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-efmevmvthnfqbdbuvwwthxoudvlb_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-esbnqjrgcktrrxhdweljnnsccjki_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Prefix-galwkuwyyudhgggxyujhbqowvjhl_ast/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
-r0
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Dagon-Prefix-afbwudskjhzawihgayzyksupefqh/Dagon-Prefix.pch.pth Dagon/Dagon-Prefix.pch normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-r0
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Dagon-Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Dagon-Prefix.pch.pth Dagon/Dagon-Prefix.pch normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-r0
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344724784.828781
-e344724784.841752
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pch4f3bd430158cb441^4703d830158cb441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^1896"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-agafshfsuzjmjncmblxjfvpfownx/Prefix.pch.d36"3E37D7E7-D9FC-4002-A150-9C2CF1A1F015-
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-bmwbtnyxddomwqccnjsjgvxewxuo/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344724715.648997
-e344724715.661492
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-bmwbtnyxddomwqccnjsjgvxewxuo/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pch1134a6eb148cb441^0457a9eb148cb441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^1878"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-bmwbtnyxddomwqccnjsjgvxewxuo/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-bmwbtnyxddomwqccnjsjgvxewxuo/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-bmwbtnyxddomwqccnjsjgvxewxuo/Prefix.pch.d36"3F5ADF69-2B46-4FA6-B699-544BC4555982-
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-dbifpdbpvkeizbbwkszdnzlllsvq/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344724715.648936
-e344724716.439324
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-dbifpdbpvkeizbbwkszdnzlllsvq/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pch9c33a6eb148cb441^f8aa71ec148cb441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^2061"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-dbifpdbpvkeizbbwkszdnzlllsvq/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-dbifpdbpvkeizbbwkszdnzlllsvq/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-dbifpdbpvkeizbbwkszdnzlllsvq/Prefix.pch.d36"5F98EA63-9BDB-476E-BE7C-10A55F37844B-
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344550965.003462
-e344550968.235519
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pch765401356e89b441^6a4c3c386e89b441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^2011"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Prefix.pch.d36"7B763CCC-F29C-4BDB-BDAB-B5A4ABA141E8-
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ecdagqfmetuwwwdidussgtkjwjsu/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344724669.730119
-e344724669.912870
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ecdagqfmetuwwwdidussgtkjwjsu/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pch00e4bcbd148cb441^31b1e9bd148cb441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^1848"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ecdagqfmetuwwwdidussgtkjwjsu/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ecdagqfmetuwwwdidussgtkjwjsu/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-ecdagqfmetuwwwdidussgtkjwjsu/Prefix.pch.d36"3883EA2D-CB11-4F5E-BDF7-CD236ECBE659-
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fdoljupxhbtjiydlxjlzfrviqxmz/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler
-s344724756.853400
-e344724756.867042
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fdoljupxhbtjiydlxjlzfrviqxmz/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xc
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pch4489da14158cb441^d34dde14158cb441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^1896"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fdoljupxhbtjiydlxjlzfrviqxmz/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 -IOther -ISources -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fdoljupxhbtjiydlxjlzfrviqxmz/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fdoljupxhbtjiydlxjlzfrviqxmz/Prefix.pch.d36"77AB5C96-8256-49ED-90C7-5D8E35388FC4-
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fjrirjabgtfkkqfzjckldkvguafz/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344724756.853365
-e344724757.688750
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fjrirjabgtfkkqfzjckldkvguafz/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pch0189da14158cb441^84bab015158cb441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^2079"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fjrirjabgtfkkqfzjckldkvguafz/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 -IOther -ISources -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fjrirjabgtfkkqfzjckldkvguafz/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-fjrirjabgtfkkqfzjckldkvguafz/Prefix.pch.d36"F89EB852-DACC-4DD7-8413-DDD42282C233-
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gcqvonxtjfpribfywlwyfbrwmnxs/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344724669.730112
-e344724670.755899
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gcqvonxtjfpribfywlwyfbrwmnxs/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pch26e3bcbd148cb441^f584c1be148cb441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^2031"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gcqvonxtjfpribfywlwyfbrwmnxs/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gcqvonxtjfpribfywlwyfbrwmnxs/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gcqvonxtjfpribfywlwyfbrwmnxs/Prefix.pch.d36"1F6D2318-A34A-46D3-9277-D81A6EF6785D-
-
-CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
-s344724784.828753
-e344724785.616720
-r1
-xProcessPCH
-x/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch.pth
-xOther Sources/Prefix.pch
-xnormal
-xx86_64
-xobjective-c
-xcom.apple.compilers.llvm.clang.1_0.compiler
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection35"Precompile Other Sources/Prefix.pchb43bd430158cb441^c766a331158cb441^---0#0#0#-19%DVTDocumentLocation2@72"file://localhost/Users/Agustin/Projects/Dagon/Other%20Sources/Prefix.pch0000000000000000^2079"ProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch.pth "Other Sources/Prefix.pch" normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler    cd /Users/Agustin/Projects/Dagon    setenv LANG en_US.US-ASCII    /Developer/usr/bin/clang -x objective-c-header -arch x86_64 -fmessage-length=0 -fdiagnostics-print-source-range-info -fdiagnostics-show-category=id -fdiagnostics-parseable-fixits -std=gnu99 -Wno-trigraphs -fpascal-strings -O0 -Wmissing-prototypes -Wreturn-type -Wparentheses -Wswitch -Wno-unused-parameter -Wunused-variable -Wunused-value -Wshorten-64-to-32 -DDEBUG=1 -isysroot /Developer/SDKs/MacOSX10.7.sdk -fasm-blocks -mmacosx-version-min=10.7 -gdwarf-2 -Wno-sign-conversion "-DIBOutlet=__attribute__((iboutlet))" "-DIBOutletCollection(ClassName)=__attribute__((iboutletcollection(ClassName)))" "-DIBAction=void)__attribute__((ibaction)" -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-generated-files.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-own-target-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-all-target-headers.hmap -iquote /Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Dagon-project-headers.hmap -I/Users/Agustin/Projects/Dagon/build/Debug/include -ILibraries/Headers -ILibraries/Headers/freetype2 "-IOther Sources" -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources/x86_64 -I/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/DerivedSources -F/Users/Agustin/Projects/Dagon/build/Debug -c "/Users/Agustin/Projects/Dagon/Other Sources/Prefix.pch" -o /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch.pth -MMD -MT dependencies -MF /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Prefix-gvkhvdvyxvmlqqdswqgvzeynjakn/Prefix.pch.d36"654B0C97-A880-4ECF-BAA2-371BE6FE87A3-
-
-CTouch /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app
-s344725905.544853
-e344725905.580920
-r1
-xTouch
-x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app
-lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection57"Touch /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app38878b91198cb441^27bc9491198cb441^---0#0#0#--139"Touch build/Debug/Dagon.app    cd /Users/Agustin/Projects/Dagon    /usr/bin/touch -c /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app36"91E33C68-1A2A-44E0-B0B9-9A9F4F66BA1F-
-
