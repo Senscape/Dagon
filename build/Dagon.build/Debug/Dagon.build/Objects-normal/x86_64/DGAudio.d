@@ -1,0 +1,14 @@
+dependencies: /Users/Agustin/Projects/Dagon/Dagon/DGAudio.c \
+  /Users/Agustin/Projects/Dagon/Dagon/DGArray.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGCommon.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGColors.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGDefines.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGLanguage.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGPlatform.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGVersion.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGObject.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGAudio.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGConfig.h \
+  /Users/Agustin/Projects/Dagon/Dagon/DGLog.h \
+  Libraries/Headers/ogg/ogg.h Libraries/Headers/ogg/os_types.h \
+  Libraries/Headers/vorbis/codec.h Libraries/Headers/vorbis/vorbisfile.h

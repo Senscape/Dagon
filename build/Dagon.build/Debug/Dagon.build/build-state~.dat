@@ -1,0 +1,202 @@
+TDagon
+v4
+r1
+cCheck dependencies
+cProcessInfoPlistFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist Dagon/Dagon-Info.plist
+
+N/Developer/SDKs/MacOSX10.7.sdk
+c000000004EC6562B00000000000000EE
+t1321621035
+s238
+
+N/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Cocoa.framework/Cocoa
+c000000004E7AD7020000000000002470
+t1316673282
+s9328
+
+N/Users/Agustin/Projects/Dagon/Dagon/../Documents/en.lproj/Credits.rtf
+c00000000000000000000000000000000
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/Dagon/../Resources/en.lproj/InfoPlist.strings
+c00000000000000000000000000000000
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/Dagon/../Resources/en.lproj/MainMenu.xib
+c00000000000000000000000000000000
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m
+c000000004EA717880000000000000194
+t1319573384
+s404
+
+N/Users/Agustin/Projects/Dagon/Dagon/Dagon-Prefix.pch
+c000000004EA71788000000000000008D
+t1319573384
+s141
+
+N/Users/Agustin/Projects/Dagon/Dagon/en.lproj/Credits.rtf
+c00000000000000000000000000000000
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/Dagon/en.lproj/InfoPlist.strings
+c00000000000000000000000000000000
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/Dagon/en.lproj/MainMenu.xib
+c000000004EA717880000000000032DEA
+t1319573384
+s208362
+
+N/Users/Agustin/Projects/Dagon/Dagon/main.m
+c000000004EA7178800000000000000FE
+t1319573384
+s254
+
+N/Users/Agustin/Projects/Dagon/Documents/Credits.rtf
+c000000004EA7178800000000000001B4
+t1319573384
+s436
+
+N/Users/Agustin/Projects/Dagon/Resources/English.lproj/InfoPlist.strings
+c000000004EA71788000000000000002D
+t1319573384
+s45
+
+N/Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib
+c000000004EA717880000000000032DEA
+t1319573384
+s208362
+
+N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/AppDelegate.o
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/Dagon.LinkFileList
+c000000004ED935C200000000000000C5
+t1322857922
+s197
+
+N/Users/Agustin/Projects/Dagon/build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/MacOS/Dagon
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/PkgInfo
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/Credits.rtf
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/InfoPlist.strings
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/MainMenu.nib
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/Credits.rtf
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/InfoPlist.strings
+t2
+s0
+
+N/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/MainMenu.nib
+t2
+s0
+
+N/var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Dagon-Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Dagon-Prefix.pch.pth
+t2
+s0
+
+NDagon/Dagon-Info.plist
+c00000000000000000000000000000000
+t2
+s0
+
+CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m
+r0
+
+CBuild AST from /Users/Agustin/Projects/Dagon/Dagon/main.m
+r0
+
+CCheck dependencies
+r0
+lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection18"Check dependenciesb34390426d89b441^a241a6426d89b441^---0#1#0#--18"Check dependencies36"F46F9D2C-66A7-4B2B-B635-3B25F851EB79-
+
+CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/AppDelegate.o /Users/Agustin/Projects/Dagon/Dagon/AppDelegate.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileC build/Dagon.build/Debug/Dagon.build/Objects-normal/x86_64/main.o /Users/Agustin/Projects/Dagon/Dagon/main.m normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CCompileXIB /Users/Agustin/Projects/Dagon/Dagon/../Resources/en.lproj/MainMenu.xib
+r0
+
+CCompileXIB /Users/Agustin/Projects/Dagon/Dagon/en.lproj/MainMenu.xib
+r0
+
+CCompileXIB /Users/Agustin/Projects/Dagon/Resources/English.lproj/MainMenu.xib
+r0
+
+CCopyStringsFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/English.lproj/InfoPlist.strings Resources/English.lproj/InfoPlist.strings
+r0
+
+CCopyStringsFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/InfoPlist.strings Dagon/../Resources/en.lproj/InfoPlist.strings
+r0
+
+CCopyStringsFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Resources/en.lproj/InfoPlist.strings Dagon/en.lproj/InfoPlist.strings
+r0
+
+CCpResource Dagon/../Documents/en.lproj/Credits.rtf build/Debug/Dagon.app/Contents/Resources/en.lproj/Credits.rtf
+r0
+
+CCpResource Dagon/en.lproj/Credits.rtf build/Debug/Dagon.app/Contents/Resources/en.lproj/Credits.rtf
+r0
+
+CCpResource Documents/Credits.rtf build/Debug/Dagon.app/Contents/Resources/Credits.rtf
+r0
+
+CLd /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/MacOS/Dagon normal x86_64
+r0
+
+CProcessInfoPlistFile /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist Dagon/Dagon-Info.plist
+s344550722.745016
+e344550722.800399
+r0
+xProcessInfoPlistFile
+x/Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist
+xDagon/Dagon-Info.plist
+lSLF04#21%IDEActivityLogSection1@2#32"com.apple.dt.IDE.BuildLogSection30"Process Dagon/Dagon-Info.plistbc92c8426d89b441^5bcfcc426d89b441^-172"error: could not read data from '/Users/Agustin/Projects/Dagon/Dagon/Dagon-Info.plist': The file “Dagon-Info.plist” couldn’t be opened because there is no such file.1(21%IDEActivityLogMessage2@164"could not read data from '/Users/Agustin/Projects/Dagon/Dagon/Dagon-Info.plist': The file “Dagon-Info.plist” couldn’t be opened because there is no such file.-344550722#18446744073709551615#0#-2#-23%DVTTextDocumentLocation3@-0000000000000000^18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#18446744073709551615#0#---0#0#0#-19%DVTDocumentLocation4@68"file://localhost/Users/Agustin/Projects/Dagon/Dagon/Dagon-Info.plist00f4d062dcffdf42^369"ProcessInfoPlistFile build/Debug/Dagon.app/Contents/Info.plist Dagon/Dagon-Info.plist    cd /Users/Agustin/Projects/Dagon    builtin-infoPlistUtility Dagon/Dagon-Info.plist -genpkginfo /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/PkgInfo -expandbuildsettings -platform macosx -o /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app/Contents/Info.plist36"6285CD74-FBE5-4C3E-A30D-FEA7A47B1FF9-
+
+CProcessPCH /Users/Agustin/Library/Developer/Xcode/DerivedData/Dagon-dqazdkkiamquuubweibecycfvigu/Index/PrecompiledHeaders/Dagon-Prefix-efmevmvthnfqbdbuvwwthxoudvlb_ast/Dagon-Prefix.pch.pth Dagon/Dagon-Prefix.pch normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.astbuilder
+r0
+
+CProcessPCH /var/folders/_l/8h1p0znx6b3_fd2gjybzxgrm0000gn/C/com.apple.Xcode.501/SharedPrecompiledHeaders/Dagon-Prefix-ddwrwkwnossfwvakjxfrgrfwuelb/Dagon-Prefix.pch.pth Dagon/Dagon-Prefix.pch normal x86_64 objective-c com.apple.compilers.llvm.clang.1_0.compiler
+r0
+
+CTouch /Users/Agustin/Projects/Dagon/build/Debug/Dagon.app
+r0
+
