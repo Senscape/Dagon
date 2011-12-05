@@ -1,0 +1,60 @@
+#include "DGversion.h"
+
+#define mkstr(a) # a
+#define in_between(a, b) mkstr(a) "." mkstr(b)
+
+#define	FILEVER	DG_VERSION_MAJOR,DG_VERSION_MINOR,DG_VERSION_RELEASE,DG_VERSION_BUILD
+#define	PRODVER	FILEVER
+
+#define	STRFILEVER	"Dagon " in_between(DG_VERSION_MAJOR, DG_VERSION_MINOR)
+#define	STRPRODVER	STRFILEVER
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+A ICON MOVEABLE PURE LOADONCALL DISCARDABLE "dagon.ico"
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+1 VERSIONINFO
+ FILEVERSION FILEVER
+ PRODUCTVERSION PRODVER
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904E4"
+        BEGIN
+            VALUE "Comments", "Dagon Engine\0"
+            VALUE "CompanyName", "Senscape s.r.l.\0"
+            VALUE "FileDescription", "Dagon\0"
+            VALUE "FileVersion", STRFILEVER
+            VALUE "InternalName", "Dagon\0"
+            VALUE "LegalCopyright", "© 2011\0"
+            VALUE "LegalTrademarks", "Copyright © 2011\0"
+            VALUE "OriginalFilename", "Dagon.exe\0"
+            VALUE "PrivateBuild", "Developed by Senscape s.r.l.\0"
+            VALUE "ProductName", "Dagon\0"
+            VALUE "ProductVersion", STRPRODVER
+            VALUE "SpecialBuild", "Developed by Senscape s.r.l.\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+		 VALUE "Translation", 0x409, 1252
+    END
+END
