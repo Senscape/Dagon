@@ -36,7 +36,7 @@
 #define in_between(a) mkstr(a)
 
 // Since we map these to the positions in arrays, we must be extra-careful about their values
-enum DG_Cube_Faces {
+enum DG_CUBE_FACES {
 	DG_FRONT = 0,
 	DG_RIGHT = 1,
 	DG_BACK = 2,
@@ -47,7 +47,7 @@ enum DG_Cube_Faces {
 
 // The first four elements are the same as the faces of the cube
 
-enum DG_Directions {
+enum DG_DIRECTIONS {
 	DG_NORTH,
 	DG_EAST,
 	DG_SOUTH,
@@ -58,7 +58,7 @@ enum DG_Directions {
 	DG_NORTHWEST
 };
 
-enum DG_Spot_Flags {
+enum DG_SPOT_FLAGS {
 	DG_NONE, // This one could be global
 	DG_HAS_ACTION,
 	DG_HAS_AUDIO,
@@ -68,15 +68,15 @@ enum DG_Spot_Flags {
 
 // Default state is node unless a menu is specified
 
-enum DG_Global_States {
-	DG_ST_CUTSCENE,
-	DG_ST_INVENTORY,
-	DG_ST_MENU,
-	DG_ST_NODE,
-    DG_ST_SPLASH,
-	DG_ST_TIMER,
-	DG_ST_VIDEO,
-	DG_ST_ZOOM
+enum DG_GLOBAL_STATES {
+	DG_STATE_CUTSCENE,
+	DG_STATE_INVENTORY,
+	DG_STATE_MENU,
+	DG_STATE_NODE,
+    DG_STATE_SPLASH,
+	DG_STATE_TIMER,
+	DG_STATE_VIDEO,
+	DG_STATE_ZOOM
 };
 
 #endif // DG_DEFINES_H

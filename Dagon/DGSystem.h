@@ -8,21 +8,21 @@
  *
  */
 
-#ifndef DG_SYSTEM_H
-#define	DG_SYSTEM_H
+#ifndef dg_SYSTEM_H
+#define	dg_SYSTEM_H
 
 #include "DGCommon.h"
 
 
-void	dg_system_init(void);
-void	dg_system_release(void);
+void	DGSystemInitialize(void);
+void	DGSystemTerminate(void);
 
-void	dg_system_find_paths(void);
-void	dg_system_lock(void);
-void	dg_system_run(void);
-void	dg_system_set_title(const char* title);
-void	dg_system_toggle_fullscreen(void);
-void	dg_system_unlock(void);
-void	dg_system_update(void);
+void	DGSystemFindPaths(void);
+void	DGSystemLock(void);
+void	DGSystemRun(void);
+void	DGSystemSetTitle(const char* theTitle);
+void	DGSystemToggleFullscreen(void);
+void	DGSystemUnlock(void);
+void	DGSystemUpdate(void);
 
 #endif // DG_SYSTEM_H

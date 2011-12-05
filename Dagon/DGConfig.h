@@ -14,7 +14,7 @@
 #include "DGCommon.h"
 
 
-enum DG_Config_Defaults {
+enum DG_CONFIG_DEFAULTS {
 	DG_DEF_ANTIALIASING = DG_YES,
 	DG_DEF_DISPLAYWIDTH = 1024,
 	DG_DEF_DISPLAYHEIGHT = 768,
@@ -34,10 +34,10 @@ enum DG_Config_Defaults {
 	DG_DEF_VERTICALSYNC = DG_YES
 };
 
-enum DG_Paths {
-	DG_APP,
-    DG_RES,
-    DG_USER
+enum DG_PATHS {
+	DG_PATH_APP,
+    DG_PATH_RES,
+    DG_PATH_USER
 };
 
 typedef struct {
@@ -50,29 +50,29 @@ typedef struct {
 	int display_height;
 	int display_depth;
 	
-    DG_BOOL dust;
-	DG_BOOL effects;
+    DGBool dust;
+	DGBool effects;
 	int framerate;
-	DG_BOOL fullscreen;
+	DGBool fullscreen;
 	float global_speed;
-	DG_BOOL tex_compression;
+	DGBool tex_compression;
 	char tex_extension[4];
-    DG_BOOL scare;
-    DG_BOOL throb;
-	DG_BOOL vertical_sync;
+    DGBool scare;
+    DGBool throb;
+	DGBool vertical_sync;
 	
-	DG_BOOL antialiasing;
-	DG_BOOL debug_mode;
-	DG_BOOL log;
-	DG_BOOL multithread;
-	DG_BOOL show_splash;
-	DG_BOOL show_spots;
+	DGBool antialiasing;
+	DGBool debug_mode;
+	DGBool log;
+	DGBool multithread;
+	DGBool show_splash;
+	DGBool show_spots;
 } DG_CONFIG;
 
-extern DG_CONFIG config;
+extern DG_CONFIG DGConfig;
 
-void			dg_config_init(void);
-void			dg_config_finalize(void);
-const char*		dg_config_get_path(int type, const char* file);
+void			DGConfigInitialize(void);
+void			DGConfigTerminate(void);
+const char*		DGConfigGetPath(int withType, const char* forFile);
 
 #endif // DG_CONFIG_H

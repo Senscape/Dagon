@@ -17,26 +17,26 @@
 
 // New / Release
 
-DG_OBJECT*	dg_texture_new(const char* name, short compression_level);
-void		dg_texture_release(DG_OBJECT* texture);
+DGObject*	DGTextureNew(const char* withName, short andCompressionLevel);
+void		DGTextureRelease(DGObject* texture);
 
 // State Changes
 
-void		dg_texture_bind(DG_OBJECT* texture);
-void		dg_texture_append(DG_OBJECT* texture, const char* file);
-void		dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index);
-void		dg_texture_load_from_memory(DG_OBJECT* texture, const unsigned char* data);
-void		dg_texture_save(DG_OBJECT* texture, const char* file);
+void		DGTextureBind(DGObject* texture); // This should be probably handled by the manager
+void		DGTextureAppend(DGObject* texture, const char* fileNameToAppend);
+void		DGTextureLoad(DGObject* texture, const char* fromFileName, unsigned atIndex);
+void		DGTextureLoadFromMemory(DGObject* texture, const unsigned char* dataToLoad);
+void		DGTextureSaveToFile(DGObject* texture, const char* fileName);
 
 // Checks
 
-unsigned	dg_texture_count(const char* file);
-unsigned	dg_texture_height(DG_OBJECT* texture);
-DG_BOOL		dg_texture_is_loaded(DG_OBJECT* texture);
-unsigned	dg_texture_width(DG_OBJECT* texture);
+unsigned	DGTextureItemsInBundle(const char* fileName);
+unsigned	DGTextureHeight(DGObject* texture);
+DGBool		DGTextureIsLoaded(DGObject* texture);
+unsigned	DGTextureWidth(DGObject* texture);
 
 // Sets
 
-void		dg_texture_clear(DG_OBJECT* texture, int width, int height, int depth);
+void		DGTextureClear(DGObject* texture, int width, int height, int depth);
 
 #endif // DG_TEXTURE_H

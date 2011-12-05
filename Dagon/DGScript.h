@@ -14,15 +14,15 @@
 #include "DGCommon.h"
 
 
-void	dg_script_init(void);
-void	dg_script_release(void);
+void	DGScriptInitialize(void);
+void	DGScriptTerminate(void);
 
-void	dg_script_callback(int ref);
-void	dg_script_doline(const char* line);
-void    dg_script_hack(void);
-void	dg_script_loop(void);
-void	dg_script_resume(void);
-void	dg_script_run(void);
-void	dg_script_yield(void);
+void	DGScriptCallback(int theHandler);
+void	DGScriptDoLine(const char* aLine);
+void    DGScriptHack(void); // Temporary hack to support quick creation of rooms
+void	DGScriptLoop(void);
+void	DGScriptResume(void);
+void	DGScriptRun(void);
+void	DGScriptYield(void);
 
 #endif // DG_SCRIPT_H

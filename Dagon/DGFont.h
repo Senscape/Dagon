@@ -15,8 +15,8 @@
 
 extern const unsigned char _binary_def_font_start[];
 
-void	dg_font_init(const char *file, unsigned int height);
-void	dg_font_clean(void);
-void	dg_font_print(float x, float y, const char* text, ...);
+void	DGFontInitialize(const char *fileName, unsigned int heightOfFont);
+void	DGFontClean(void);
+void	DGFontPrint(float xPosition, float yPosition, const char* textToPrint, ...);
 
 #endif // DG_FONT_H

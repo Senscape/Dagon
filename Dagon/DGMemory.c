@@ -13,26 +13,26 @@
 
 static long mem_usage = 0;
 
-void* dg_alloc(size_t size) {
+void* DGAlloc(size_t size) {
 	mem_usage += size;
 	return malloc(size);
 }
 
-void dg_free(void* ptr) {
+void DGFree(void* ptr) {
 	mem_usage -= sizeof(ptr);
 	free(ptr);
 }
 
-void* dg_realloc(void* ptr, size_t size) {
+void* DGRealloc(void* ptr, size_t size) {
 	mem_usage += (size - sizeof(ptr));
 	return realloc(ptr, size);
 }
 
-long dg_reportmem() {
+long DGReportMem() {
 	return mem_usage;
 }
 
-void* dg_zeromem(size_t num, size_t size) {
+void* DGZeroMem(size_t num, size_t size) {
 	mem_usage += (num * size);
 	return calloc(num, size);
 }

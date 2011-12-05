@@ -61,15 +61,15 @@
 
 // Our fancy BOOL type
 
-typedef signed char DG_BOOL;
+typedef signed char DGBool;
 
-#define DG_YES  ((DG_BOOL)1)
-#define DG_NO   ((DG_BOOL)0)
+#define DG_YES  ((DGBool)1)
+#define DG_NO   ((DGBool)0)
 
 
 // Key definitions
 
-enum DG_Keys {
+enum DG_KEYS {
 #ifdef DG_PLATFORM_IOS
 	DG_KEY_BACKSPACE = 0,
 	DG_KEY_F1 = 0,

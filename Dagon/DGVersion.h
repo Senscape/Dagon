@@ -18,7 +18,7 @@
 
 // This assumes that there will never be more than 9999 builds
 
-#define DG_VERSIONNUM ((DG_VERSION_MAJOR)*100000 + (DG_VERSION_MINOR)*10000 + \
+#define DG_VERSION_FULL ((DG_VERSION_MAJOR)*100000 + (DG_VERSION_MINOR)*10000 + \
                         (DG_VERSION_RELEASE)*1000 + (DG_VERSION_BUILD))
 
 #endif // DG_VERSION_H

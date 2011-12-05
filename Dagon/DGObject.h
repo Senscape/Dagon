@@ -15,14 +15,14 @@
 
 
 // TODO: Each module should have its own type, not here
-enum DG_Object_Types {
-	DG_OBJ_GENERIC,
-	DG_OBJ_AUDIO,
-	DG_OBJ_NODE,
-	DG_OBJ_ROOM,
-	DG_OBJ_SPOT,
-	DG_OBJ_TEXTURE,
-	DG_OBJ_VIDEO
+enum DG_OBJECT_TYPES {
+	DG_OBJECT_GENERIC,
+	DG_OBJECT_AUDIO,
+	DG_OBJECT_NODE,
+	DG_OBJECT_ROOM,
+	DG_OBJECT_SPOT,
+	DG_OBJECT_TEXTURE,
+	DG_OBJECT_VIDEO
 };
 
 typedef struct {
@@ -31,29 +31,29 @@ typedef struct {
 	unsigned ref;
 	char name[DG_MAX_OBJNAME];
 	void* data;
-} DG_OBJECT;
+} DGObject;
 
 
 // New / Release
 
-DG_OBJECT*		dg_object_new(unsigned type, void* data, size_t num);
-DG_OBJECT*		dg_object_new_named(unsigned type, const char* name, void* data, size_t num);
-void			dg_object_release(DG_OBJECT* object);
+DGObject*		DGObjectNew(unsigned withType, void* dataToStore, size_t sizeOfData);
+DGObject*		DGObjectNewNamed(unsigned withType, const char* andName, void* dataToStore, size_t sizeOfData);
+void			DGObjectRelease(DGObject* object);
 
 // Checks
 
-DG_BOOL			dg_object_check(DG_OBJECT* object, unsigned type);
+DGBool			DGObjectIsType(DGObject* object, unsigned typeToCompare);
 
 // Gets
 
-void*			dg_object_data(DG_OBJECT* object);
-unsigned		dg_object_id(DG_OBJECT* object);
-const char*		dg_object_name(DG_OBJECT* object);
-unsigned		dg_object_refcount(DG_OBJECT* object);
+void*			DGObjectData(DGObject* object);
+unsigned		DGObjectID(DGObject* object);
+const char*		DGObjectName(DGObject* object);
+unsigned		DGObjectReferenceCount(DGObject* object);
 
 // Sets
 
-void			dg_object_ref(DG_OBJECT* object);
-void			dg_object_unref(DG_OBJECT* object);
+void			DGObjectAddReference(DGObject* object);
+void			DGObjectRemoveReference(DGObject* object);
 
 #endif // DG_OBJECT_H

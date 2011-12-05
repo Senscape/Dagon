@@ -22,40 +22,40 @@ static long id = 1;
 ///// Standard New / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_OBJECT* dg_object_new(unsigned type, void* data, size_t num) {
-	DG_OBJECT* object;
+DGObject* DGObjectNew(unsigned withType, void* dataToStore, size_t sizeOfData) {
+	DGObject* object;
 	
-	object = (DG_OBJECT*)dg_alloc(sizeof(DG_OBJECT));
+	object = (DGObject*)DGAlloc(sizeof(DGObject));
 	object->id = id;
-	object->type = type;
+	object->type = withType;
 	object->ref = 0;
-	object->data = dg_alloc(num);
-	memcpy(object->data, data, num);
+	object->data = DGAlloc(sizeOfData);
+	memcpy(object->data, dataToStore, sizeOfData);
 	
 	id++;
 	
 	return object;
 }
 
-DG_OBJECT* dg_object_new_named(unsigned type, const char* name, void* data, size_t num) {
-	DG_OBJECT* object = dg_object_new(type, data, num);
+DGObject* DGObjectNewNamed(unsigned withType, const char* andName, void* dataToStore, size_t sizeOfData) {
+	DGObject* object = DGObjectNew(withType, dataToStore, sizeOfData);
 	
-	strcpy(object->name, name);
+	strcpy(object->name, andName);
 	
 	return object;
 }
 
-void dg_object_release(DG_OBJECT* object) {
+void DGObjectRelease(DGObject* object) {
 	if (object) {
 		object->ref--;
 		if (!object->ref) {
-			dg_free(object->data);
-			dg_free(object);
+			DGFree(object->data);
+			DGFree(object);
 		}
 	}
 }
 
-unsigned dg_object_refcount(DG_OBJECT* object) {
+unsigned DGObjectReferenceCount(DGObject* object) {
 	if (object)
 		return object->ref;
 	
@@ -66,9 +66,9 @@ unsigned dg_object_refcount(DG_OBJECT* object) {
 ///// Implementation - Checks											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_BOOL dg_object_check(DG_OBJECT* object, unsigned type) {
+DGBool DGObjectIsType(DGObject* object, unsigned typeToCompare) {
 	if (object) {
-		if (object->type == type)
+		if (object->type == typeToCompare)
 			return DG_YES;
 		else
 			return DG_NO;
@@ -80,33 +80,33 @@ DG_BOOL dg_object_check(DG_OBJECT* object, unsigned type) {
 ///// Implementation - Gets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void* dg_object_data(DG_OBJECT* object) {
+void* DGObjectData(DGObject* object) {
 	if (object)
 		return object->data;
 	else
 		return NULL;
 }
 
-unsigned dg_object_id(DG_OBJECT* object) {
+unsigned DGObjectID(DGObject* object) {
 	if (object)
 		return object->id;
 	else
 		return 0;	
 }
 
-const char*	dg_object_name(DG_OBJECT* object) {
+const char*	DGObjectName(DGObject* object) {
 	if (object)
 		return object->name;
 	else
 		return NULL;
 }
 
-void dg_object_ref(DG_OBJECT* object) {
+void DGObjectAddReference(DGObject* object) {
 	if (object)
 		object->ref++;
 }
 
-void dg_object_unref(DG_OBJECT* object) {
+void DGObjectRemoveReference(DGObject* object) {
 	if (object)
 		object->ref--;	
 }

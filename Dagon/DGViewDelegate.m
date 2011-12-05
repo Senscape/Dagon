@@ -13,7 +13,7 @@
 #import "DGViewDelegate.h"
 
 
-@implementation DagonViewDelegate
+@implementation DGViewDelegate
 
 - (id)initWithFrame:(NSRect)frame {
 	// Pixel Format Attributes for the View-based (Non-FullScreen) NSOpenGLContext
@@ -61,31 +61,31 @@
 - (void)keyDown:(NSEvent *)theEvent {
 	if ([theEvent modifierFlags] & NSFunctionKeyMask) {
 		int keyCode = [theEvent keyCode];
-		dg_control_process_key(keyCode);
+		DGControlProcessKey(keyCode);
 	}
 	else {
         const char* keyCode = [[theEvent charactersIgnoringModifiers] UTF8String];
         if ([theEvent modifierFlags] & NSCommandKeyMask)
-            dg_control_process_char(keyCode, DG_YES);
+            DGControlProcessCharKey(keyCode, DG_YES);
         else
-            dg_control_process_char(keyCode, DG_NO);
+            DGControlProcessCharKey(keyCode, DG_NO);
 	}
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
 	NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	DG_BOOL isInside = [self mouse:mouseLoc inRect:[self bounds]];
+	DGBool isInside = [self mouse:mouseLoc inRect:[self bounds]];
 	
 	if (isInside)
-		dg_control_process_mouse(mouseLoc.x, mouseLoc.y, DG_YES);
+		DGControlProcessMouse(mouseLoc.x, mouseLoc.y, DG_YES);
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent {
 	NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	DG_BOOL isInside = [self mouse:mouseLoc inRect:[self bounds]];
+	DGBool isInside = [self mouse:mouseLoc inRect:[self bounds]];
 	
 	if (isInside) {
-		dg_control_process_mouse(mouseLoc.x, mouseLoc.y, DG_NO);
+		DGControlProcessMouse(mouseLoc.x, mouseLoc.y, DG_NO);
 		
 		[NSCursor hide];
 	}
@@ -95,15 +95,15 @@
 
 - (void)reshape {
 	NSSize	size = [[self superview] bounds].size;
-	DG_BOOL	setCtx = [NSOpenGLContext currentContext] != glContext;
+	DGBool	setCtx = [NSOpenGLContext currentContext] != glContext;
 	
 	[glContext update];
 	
 	if (setCtx)
 		[glContext makeCurrentContext];
 	
-	config.display_width = size.width;
-	config.display_height = size.height;
+	DGConfig.display_width = size.width;
+	DGConfig.display_height = size.height;
 	
 	if (setCtx)
 		[NSOpenGLContext clearCurrentContext];

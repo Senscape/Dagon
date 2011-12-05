@@ -17,13 +17,13 @@
 
 // Init / Release
 
-void		dg_texture_manager_init(void);
-void		dg_texture_manager_release(void);
+void		DGTextureManagerInitialize(void);
+void		DGTextureManagerTerminate(void);
 
 // State Changes
 
-void		dg_texture_manager_bind(DG_OBJECT* texture);
-DG_OBJECT*	dg_texture_manager_load(const char* name);
-DG_OBJECT*	dg_texture_manager_new(int width, int height, int depth);
+void		DGTextureManagerBind(DGObject* theTexture);
+DGObject*	DGTextureManagerLoad(const char* nameOfTexture);
+DGObject*	DGTextureManagerNew(int width, int height, int depth);
 
 #endif // DG_TEXTURE_MANAGER_H

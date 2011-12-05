@@ -15,24 +15,24 @@
 
 
 typedef struct {
-	DG_BOOL can_process;
+	DGBool can_process;
 	char command[DG_MAX_LOGLEN];
-	DG_BOOL enabled;
+	DGBool enabled;
 	char input[DG_MAX_LOGLEN];
 	short slide;
-} DG_CONSOLE_STATE;
+} DGConsoleState;
 
-void	dg_console_init(void);
-void	dg_console_release(void);
+void	DGConsoleInitialize(void);
+void	DGConsoleTerminate(void);
 
-void	dg_console_enable(void);
-void	dg_console_delete(void);
-void	dg_console_disable(void);
-void	dg_console_input(const char* key);
-DG_BOOL	dg_console_is_enabled(void);
-DG_BOOL	dg_console_output(char* buffer);
-void	dg_console_execute(void);
-void	dg_console_toggle(void);
-void	dg_console_update(void);
+void	DGConsoleEnable(void);
+void	DGConsoleDeleteChar(void);
+void	DGConsoleDisable(void);
+void	DGConsoleInputChar(const char* aKey);
+DGBool	DGConsoleIsEnabled(void);
+DGBool	DGConsoleOutput(char* pointerToBuffer);
+void	DGConsoleExecute(void);
+void	DGConsoleToggleState(void);
+void	DGConsoleUpdate(void);
 
 #endif // DG_CONSOLE_H

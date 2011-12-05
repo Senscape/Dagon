@@ -12,8 +12,8 @@
 #import "DGViewDelegate.h"
 
 
-@interface DagonWindowDelegate : NSWindow {
-    DagonViewDelegate* viewDelegate;
+@interface DGWindowDelegate : NSWindow {
+    DGViewDelegate* viewDelegate;
 }
 
 - (id)view;

@@ -19,15 +19,15 @@ int dg_main(int argc, char *argv[]) {
 
     // Should allow automatically loading the default script dagon
     // Debug mode doesn't work as planned this way
-    dg_config_init();
+    DGConfigInitialize();
     
     // On Mac OS X, check if launched by Finder (non-standard)
     if ( argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 ) {
-        dg_system_find_paths();
+        DGSystemFindPaths();
     }
     
-	dg_script_init();
-	dg_script_run();
+	DGScriptInitialize();
+	DGScriptRun();
 	
 	return 0;
 }

@@ -66,22 +66,22 @@ int luaopen_timer(lua_State *L);
 
 // TODO: Also add the posibility to reference objects per id and name
 
-static DG_OBJECT* checkobject(lua_State *L, unsigned type, int index) {
+static DGObject* checkobject(lua_State *L, unsigned type, int index) {
 	luaL_checktype(L, index, LUA_TUSERDATA);
 	lua_getmetatable(L, index);
 	
 	if (!lua_equal(L, lua_upvalueindex(1), -1)) {
 		switch (type) {
-			case DG_OBJ_AUDIO:
+			case DG_OBJECT_AUDIO:
 				luaL_typerror(L, index, AUDIO_OBJ);  /* die */
 				break;
-			case DG_OBJ_ROOM:
+			case DG_OBJECT_ROOM:
 				luaL_typerror(L, index, ROOM);  /* die */
 				break;
-			case DG_OBJ_NODE:
+			case DG_OBJECT_NODE:
 				luaL_typerror(L, index, NODE);  /* die */
 				break;
-			case DG_OBJ_SPOT:
+			case DG_OBJECT_SPOT:
 				luaL_typerror(L, index, SPOT);  /* die */
 				break;             
 		}
@@ -89,11 +89,11 @@ static DG_OBJECT* checkobject(lua_State *L, unsigned type, int index) {
 	
 	lua_pop(L, 1);
 	
-	return (DG_OBJECT*)lua_unboxpointer(L, index);
+	return (DGObject*)lua_unboxpointer(L, index);
 }
 
-static DG_OBJECT* pushobject(lua_State *L, DG_OBJECT* obj) {
-	dg_object_ref(obj);
+static DGObject* pushobject(lua_State *L, DGObject* obj) {
+	DGObjectAddReference(obj);
 	
 	lua_boxpointer(L, obj);
 	lua_pushvalue(L, lua_upvalueindex(1));
@@ -103,7 +103,7 @@ static DG_OBJECT* pushobject(lua_State *L, DG_OBJECT* obj) {
 }
 
 static int protectobject(lua_State *L) {
-	dg_log_error(DG_MOD_SCRIPT, "Operation not permitted");
+	DGLogError(DG_MOD_SCRIPT, "Operation not permitted");
 	
 	return 0;
 }
@@ -119,18 +119,18 @@ static int object_desc(lua_State *L) {
 ////////////////////////////////////////////////////////////////////////////////
 
 static int audio_new(lua_State *L) {
-	DG_OBJECT* audio;
-	DG_BOOL loop;
+	DGObject* audio;
+	DGBool loop;
 	
 	if (lua_isboolean(L, 2))
 		loop = lua_toboolean(L, 2);
 	else
 		loop = DG_NO;
 	
-	audio = dg_audio_new(luaL_checkstring(L, 1), loop);
+	audio = DGAudioNew(luaL_checkstring(L, 1), loop);
 	pushobject(L, audio);
 	
-	dg_audio_load(audio);
+	DGAudioLoad(audio);
 	
 	return 1;
 }
@@ -138,34 +138,34 @@ static int audio_new(lua_State *L) {
 static int audio_destroy(lua_State *L) {
 	// WARNING: Very, very careful with this! Could break the arrays...
 	
-	DG_OBJECT* obj = (DG_OBJECT*)lua_unboxpointer(L, 1);
+	DGObject* obj = (DGObject*)lua_unboxpointer(L, 1);
 	//if (obj) dg_audio_release(obj);
-	if (obj) dg_audio_unload(obj);
+	if (obj) DGAudioUnload(obj);
 	
 	return 0;
 }
 
 static int audio_fade_in(lua_State *L) {
-	DG_OBJECT* audio = checkobject(L, DG_OBJ_AUDIO, 1);
+	DGObject* audio = checkobject(L, DG_OBJECT_AUDIO, 1);
 	
-	dg_audio_fade_in(audio, (int)lua_tonumber(L, 2));
+	DGAudioFadeIn(audio, (int)lua_tonumber(L, 2));
 	
 	return 0;
 }
 
 static int audio_fade_out(lua_State *L) {
-	DG_OBJECT* audio = checkobject(L, DG_OBJ_AUDIO, 1);
+	DGObject* audio = checkobject(L, DG_OBJECT_AUDIO, 1);
 	
-	dg_audio_fade_out(audio, (int)lua_tonumber(L, 2));
+	DGAudioFadeOut(audio, (int)lua_tonumber(L, 2));
 	
 	return 0;
 }
 
 static int audio_is_playing(lua_State *L) {
-	DG_OBJECT* audio = checkobject(L, DG_OBJ_AUDIO, 1);
-	DG_BOOL playing;
+	DGObject* audio = checkobject(L, DG_OBJECT_AUDIO, 1);
+	DGBool playing;
 	
-	playing = dg_audio_is_playing(audio);
+	playing = DGAudioIsPlaying(audio);
 	
 	lua_pushboolean(L, playing);
 	lua_pushvalue(L, -1);
@@ -174,33 +174,33 @@ static int audio_is_playing(lua_State *L) {
 }
 
 static int audio_play(lua_State *L) {
-	DG_OBJECT* audio = checkobject(L, DG_OBJ_AUDIO, 1);
+	DGObject* audio = checkobject(L, DG_OBJECT_AUDIO, 1);
 	
-	dg_audio_play(audio);
+	DGAudioPlay(audio);
 	
 	return 0;
 }
 
 static int audio_pause(lua_State *L) {
-	DG_OBJECT* audio = checkobject(L, DG_OBJ_AUDIO, 1);
+	DGObject* audio = checkobject(L, DG_OBJECT_AUDIO, 1);
 	
-	dg_audio_pause(audio);
+	DGAudioPause(audio);
 	
 	return 0;
 }
 
 static int audio_stop(lua_State *L) {
-	DG_OBJECT* audio = checkobject(L, DG_OBJ_AUDIO, 1);
+	DGObject* audio = checkobject(L, DG_OBJECT_AUDIO, 1);
 	
-	dg_audio_stop(audio);
+	DGAudioStop(audio);
 	
 	return 0;
 }
 
 static int audio_volume(lua_State *L) {
-	DG_OBJECT* audio = checkobject(L, DG_OBJ_AUDIO, 1);
+	DGObject* audio = checkobject(L, DG_OBJECT_AUDIO, 1);
 	
-	dg_audio_set_volume(audio, (float)lua_tonumber(L, 2));
+	DGAudioSetVolume(audio, (float)lua_tonumber(L, 2));
 	
 	return 0;
 }
@@ -252,7 +252,7 @@ int luaopen_audio(lua_State *L) {
 ////////////////////////////////////////////////////////////////////////////////
 
 static int spot_new(lua_State *L) {
-	DG_OBJECT* spot;
+	DGObject* spot;
 	int i, size, face;
 	short* coords;
 	
@@ -264,7 +264,7 @@ static int spot_new(lua_State *L) {
 	
 	size = lua_objlen(L, 2);
 	
-	coords = (short*)dg_alloc(size * sizeof(short));
+	coords = (short*)DGAlloc(size * sizeof(short));
 	lua_pushnil(L);  /* first key */
 	i = 0;
 	while (lua_next(L, 2) != 0) {
@@ -285,15 +285,15 @@ static int spot_new(lua_State *L) {
 		case DG_CAM_TOP: face = 4; break;			
 		case DG_CAM_BOTTOM: face = 5; break;
 		default:
-			dg_log_error(DG_MOD_SCRIPT, "Invalid face specified");
+			DGLogError(DG_MOD_SCRIPT, "Invalid face specified");
 			return 0;
 			break;
 	}
 	
-	spot = dg_spot_new(coords, size, face, 0);
+	spot = DGSpotNew(coords, size, face, 0);
 	pushobject(L, spot);
 	
-	dg_free(coords);
+	DGFree(coords);
 	
 	return 1;
 }
@@ -310,7 +310,7 @@ static int spot_destroy(lua_State *L) {
 }
 
 static int spot_current(lua_State *L) {
-	DG_OBJECT* spot = dg_world_current_spot();
+	DGObject* spot = DGWorldCurrentSpot();
 	pushobject(L, spot);
 	
 	return 1;
@@ -318,7 +318,7 @@ static int spot_current(lua_State *L) {
 
 static int spot_desc(lua_State *L) {
 	char aux[DG_MAX_LOGLEN];
-	DG_OBJECT* self = lua_unboxpointer(L, 1);
+	DGObject* self = lua_unboxpointer(L, 1);
 	
 	if (strcmp(self->name, "") == 0)
 		sprintf(aux, "spot");
@@ -332,14 +332,14 @@ static int spot_desc(lua_State *L) {
 
 
 static int spot_attach(lua_State *L) {
-	DG_ACTION action;
-	DG_OBJECT* spot = checkobject(L, DG_OBJ_SPOT, 1);
-    DG_OBJECT* audio;
-	DG_OBJECT* video;
+	DGAction action;
+	DGObject* spot = checkobject(L, DG_OBJECT_SPOT, 1);
+    DGObject* audio;
+	DGObject* video;
 	
-	DG_BOOL autoplay = DG_NO;
-	DG_BOOL loop = DG_NO;
-	DG_BOOL sync = DG_NO;
+	DGBool autoplay = DG_NO;
+	DGBool loop = DG_NO;
+	DGBool sync = DG_NO;
     float volume = 1.0f;
 	
 	int ref, type = (int)luaL_checknumber(L, 2);
@@ -363,51 +363,51 @@ static int spot_attach(lua_State *L) {
 				//volume = lua_tonumber(L, 5); Should be max if this is nil
 			}
             
-            audio = dg_audio_new(luaL_checkstring(L, 3), loop);
-            dg_audio_set_volume(audio, volume);
-			dg_spot_set_audio(spot, audio);
+            audio = DGAudioNew(luaL_checkstring(L, 3), loop);
+            DGAudioSetVolume(audio, volume);
+			DGSpotSetAudio(spot, audio);
             
 			break;
 		case CUSTOM:
 			if (!lua_isfunction(L, -1)) {
-				dg_log_error(DG_MOD_SCRIPT, "Function expected as second parameter in attach()");
+				DGLogError(DG_MOD_SCRIPT, "Function expected as second parameter in attach()");
 				
 				return 0;
 			}
 			
 			ref = luaL_ref(L, LUA_REGISTRYINDEX);  // pop and return a reference to the table.
 			
-			action.type = DG_ACT_CUSTOM;
+			action.type = DG_ACTION_CUSTOM;
 			action.custom_handler = ref;
 			
-			dg_spot_set_action(checkobject(L, DG_OBJ_SPOT, 1), &action);
-			if (!dg_spot_has_color(spot))
-				dg_spot_set_color(spot, 0);
+			DGSpotSetAction(checkobject(L, DG_OBJECT_SPOT, 1), &action);
+			if (!DGSpotHasColor(spot))
+				DGSpotSetColor(spot, 0);
 			
 			break;
 		case IMAGE:
-			dg_spot_set_image(spot, luaL_checkstring(L, 3));
+			DGSpotSetImage(spot, luaL_checkstring(L, 3));
 			break;
 		case FEEDBACK:
-			action.type = DG_ACT_FEEDBACK;
+			action.type = DG_ACTION_FEEDBACK;
 			
 			strcpy(action.feedback, luaL_checkstring(L, 3));
 			
 			if (lua_isstring(L, 4))
 				strcpy(action.feedback_audio, lua_tostring(L, 4));
 			
-			dg_spot_set_action(checkobject(L, DG_OBJ_SPOT, 1), &action);
-			if (!dg_spot_has_color(spot))
-				dg_spot_set_color(spot, 0);
+			DGSpotSetAction(checkobject(L, DG_OBJECT_SPOT, 1), &action);
+			if (!DGSpotHasColor(spot))
+				DGSpotSetColor(spot, 0);
 			
 			break;
 		case SWITCH:
-			action.type = DG_ACT_SWITCH;
-			action.target = (DG_OBJECT*)lua_unboxpointer(L, 3);
+			action.type = DG_ACTION_SWITCH;
+			action.target = (DGObject*)lua_unboxpointer(L, 3);
 			
-			dg_spot_set_action(checkobject(L, DG_OBJ_SPOT, 1), &action);
-			if (!dg_spot_has_color(spot))
-				dg_spot_set_color(spot, 0);
+			DGSpotSetAction(checkobject(L, DG_OBJECT_SPOT, 1), &action);
+			if (!DGSpotHasColor(spot))
+				DGSpotSetColor(spot, 0);
 			
 			break;
 		case VIDEO:
@@ -430,15 +430,15 @@ static int spot_attach(lua_State *L) {
 				sync = lua_toboolean(L, 6);
 			}
 
-			video = dg_video_new(luaL_checkstring(L, 3), autoplay, loop, sync);
-			dg_spot_set_video(spot, video);
+			video = DGVideoNew(luaL_checkstring(L, 3), autoplay, loop, sync);
+			DGSpotSetVideo(spot, video);
 			
 			if (autoplay)
-				dg_spot_play(spot);
+				DGSpotPlay(spot);
 			
 			break;
 		default:
-			dg_log_error(DG_MOD_SCRIPT, "Invalid type in attach() function");
+			DGLogError(DG_MOD_SCRIPT, "Invalid type in attach() function");
 			break;
 	}
 	
@@ -446,19 +446,19 @@ static int spot_attach(lua_State *L) {
 }
 
 static int spot_enable(lua_State *L) {
-	dg_spot_enable(checkobject(L, DG_OBJ_SPOT, 1));
+	DGSpotEnable(checkobject(L, DG_OBJECT_SPOT, 1));
 	
 	return 0;
 }
 
 static int spot_disable(lua_State *L) {
-	dg_spot_disable(checkobject(L, DG_OBJ_SPOT, 1));
+	DGSpotDisable(checkobject(L, DG_OBJECT_SPOT, 1));
 	
 	return 0;
 }
 
 static int spot_is_enabled(lua_State *L) {
-	DG_BOOL ret = dg_spot_is_enabled(checkobject(L, DG_OBJ_SPOT, 1));
+	DGBool ret = DGSpotIsEnabled(checkobject(L, DG_OBJECT_SPOT, 1));
 	
 	lua_pushboolean(L, ret);
 	
@@ -466,16 +466,16 @@ static int spot_is_enabled(lua_State *L) {
 }
 
 static int spot_play(lua_State *L) {
-	DG_OBJECT* spot = checkobject(L, DG_OBJ_SPOT, 1);
+	DGObject* spot = checkobject(L, DG_OBJECT_SPOT, 1);
 	//DG_OBJECT* video = dg_spot_video(spot);
 	
-	dg_spot_play(spot);
+	DGSpotPlay(spot);
     
-    if (dg_spot_has_audio(spot)) {
-        DG_OBJECT* audio = dg_spot_audio(spot);
+    if (DGSpotHasAudio(spot)) {
+        DGObject* audio = DGSpotAudio(spot);
         
-        if (!dg_audio_is_playing(audio)) {
-            dg_audio_play(audio);
+        if (!DGAudioIsPlaying(audio)) {
+            DGAudioPlay(audio);
         }
     }
     
@@ -488,20 +488,20 @@ static int spot_play(lua_State *L) {
 
 static int spot_stop(lua_State *L) {
     
-    DG_OBJECT* spot = checkobject(L, DG_OBJ_SPOT, 1);
-	dg_spot_stop(spot);
+    DGObject* spot = checkobject(L, DG_OBJECT_SPOT, 1);
+	DGSpotStop(spot);
     
     // Hack: too many tasks performed here
-    if (dg_spot_has_video(spot)) {
-        DG_OBJECT* video = dg_spot_video(spot);
-        dg_video_stop(video);
+    if (DGSpotHasVideo(spot)) {
+        DGObject* video = DGSpotVideo(spot);
+        DGVideoStop(video);
     }
 	
 	return 0;
 }
 
 static int spot_is_playing(lua_State *L) {
-	DG_BOOL ret = dg_spot_is_playing(checkobject(L, DG_OBJ_SPOT, 1));
+	DGBool ret = DGSpotIsPlaying(checkobject(L, DG_OBJECT_SPOT, 1));
 	
 	lua_pushboolean(L, ret);
 	
@@ -509,7 +509,7 @@ static int spot_is_playing(lua_State *L) {
 }
 
 static int spot_toggle(lua_State *L) {
-	dg_spot_toggle(checkobject(L, DG_OBJ_SPOT, 1));
+	DGSpotToggle(checkobject(L, DG_OBJECT_SPOT, 1));
 	
 	return 0;
 }
@@ -562,11 +562,11 @@ int luaopen_spot(lua_State *L) {
 ////////////////////////////////////////////////////////////////////////////////
 
 static int node_new(lua_State *L) {
-	DG_OBJECT* node = dg_node_new(luaL_checkstring(L, 1));
+	DGObject* node = DGNodeNew(luaL_checkstring(L, 1));
 	pushobject(L, node);
 	
 	// Temporary
-	dg_world_add_node(node);
+	DGWorldAdd(node);
 	
 	return 1;
 }
@@ -574,14 +574,14 @@ static int node_new(lua_State *L) {
 static int node_destroy(lua_State *L) {
 	// WARNING: Very, very careful with this! Could break the arrays...
 	
-	DG_OBJECT* obj = (DG_OBJECT*)lua_unboxpointer(L, 1);
-	if (obj) dg_node_release(obj);
+	DGObject* obj = (DGObject*)lua_unboxpointer(L, 1);
+	if (obj) DGNodeRelease(obj);
 	
 	return 0;
 }
 
 static int node_current(lua_State *L) {
-	DG_OBJECT* node = dg_world_current_node();
+	DGObject* node = DGWorldCurrentNode();
 	pushobject(L, node);
 	
 	return 1;
@@ -589,7 +589,7 @@ static int node_current(lua_State *L) {
 
 static int node_desc(lua_State *L) {
 	char aux[DG_MAX_LOGLEN];
-	DG_OBJECT* self = lua_unboxpointer(L, 1);
+	DGObject* self = lua_unboxpointer(L, 1);
 	
 	if (strcmp(self->name, "") == 0)
 		sprintf(aux, "node");
@@ -602,8 +602,8 @@ static int node_desc(lua_State *L) {
 }
 
 static int node_equal(lua_State *L) {
-	DG_OBJECT* node1 = lua_unboxpointer(L, 1);
-    DG_OBJECT* node2 = lua_unboxpointer(L, 2);
+	DGObject* node1 = lua_unboxpointer(L, 1);
+    DGObject* node2 = lua_unboxpointer(L, 2);
 	
 	if (strcmp(node1->name, node2->name) == 0)
         return 1;
@@ -612,8 +612,8 @@ static int node_equal(lua_State *L) {
 }
 
 static int node_add_spot(lua_State *L) {
-	DG_OBJECT* target;
-	DG_OBJECT* self = checkobject(L, DG_OBJ_NODE, 1);
+	DGObject* target;
+	DGObject* self = checkobject(L, DG_OBJECT_NODE, 1);
 	
 	if (lua_isnumber(L, 2)) { // Using the convenience syntax
 		// Doesn't work yet!!
@@ -621,16 +621,16 @@ static int node_add_spot(lua_State *L) {
 		spot_new(L);
 	}
 
-	target = (DG_OBJECT*)lua_unboxpointer(L, -1);
+	target = (DGObject*)lua_unboxpointer(L, -1);
 
-	dg_node_add_spot(self, target);
+	DGNodeAddSpot(self, target);
 	
 	return 1;
 }
 
 static int node_link(lua_State *L) {
 	int size;
-	DG_OBJECT* self = checkobject(L, DG_OBJ_NODE, 1);
+	DGObject* self = checkobject(L, DG_OBJECT_NODE, 1);
 	
 	if (!lua_istable(L, 2)) {
 		luaL_error(L, "Table with coordinates expected to link node");
@@ -647,29 +647,29 @@ static int node_link(lua_State *L) {
 			int ref = luaL_ref(L, LUA_REGISTRYINDEX);
 			
 			// Ugly nesting of strcmps() but there's probably no better way of doing this...
-			if (strcmp(key, "N") == 0) dg_node_add_custom_link(self, DG_NORTH, ref);
-			else if (strcmp(key, "W") == 0) dg_node_add_custom_link(self, DG_WEST, ref);
-			else if (strcmp(key, "S") == 0) dg_node_add_custom_link(self, DG_SOUTH, ref);
-			else if (strcmp(key, "E") == 0) dg_node_add_custom_link(self, DG_EAST, ref);
-			else if (strcmp(key, "NW") == 0) dg_node_add_custom_link(self, DG_NORTHWEST, ref);
-			else if (strcmp(key, "SW") == 0) dg_node_add_custom_link(self, DG_SOUTHWEST, ref);
-			else if (strcmp(key, "SE") == 0) dg_node_add_custom_link(self, DG_SOUTHEAST, ref);
-			else if (strcmp(key, "NE") == 0) dg_node_add_custom_link(self, DG_NORTHEAST, ref);
+			if (strcmp(key, "N") == 0) DGNodeAddCustomLink(self, DG_NORTH, ref);
+			else if (strcmp(key, "W") == 0) DGNodeAddCustomLink(self, DG_WEST, ref);
+			else if (strcmp(key, "S") == 0) DGNodeAddCustomLink(self, DG_SOUTH, ref);
+			else if (strcmp(key, "E") == 0) DGNodeAddCustomLink(self, DG_EAST, ref);
+			else if (strcmp(key, "NW") == 0) DGNodeAddCustomLink(self, DG_NORTHWEST, ref);
+			else if (strcmp(key, "SW") == 0) DGNodeAddCustomLink(self, DG_SOUTHWEST, ref);
+			else if (strcmp(key, "SE") == 0) DGNodeAddCustomLink(self, DG_SOUTHEAST, ref);
+			else if (strcmp(key, "NE") == 0) DGNodeAddCustomLink(self, DG_NORTHEAST, ref);
 			
 			// Runtime error if we pop the 1st value here. Why?
 		}
 		else {
-			DG_OBJECT* target = (DG_OBJECT*)lua_unboxpointer(L, -1);
+			DGObject* target = (DGObject*)lua_unboxpointer(L, -1);
 			
 			// Ugly nesting of strcmps() but there's probably no better way of doing this...
-			if (strcmp(key, "N") == 0) dg_node_add_link(self, DG_NORTH, target);
-			else if (strcmp(key, "W") == 0) dg_node_add_link(self, DG_WEST, target);
-			else if (strcmp(key, "S") == 0) dg_node_add_link(self, DG_SOUTH, target);
-			else if (strcmp(key, "E") == 0) dg_node_add_link(self, DG_EAST, target);
-			else if (strcmp(key, "NW") == 0) dg_node_add_link(self, DG_NORTHWEST, target);
-			else if (strcmp(key, "SW") == 0) dg_node_add_link(self, DG_SOUTHWEST, target);
-			else if (strcmp(key, "SE") == 0) dg_node_add_link(self, DG_SOUTHEAST, target);
-			else if (strcmp(key, "NE") == 0) dg_node_add_link(self, DG_NORTHEAST, target);
+			if (strcmp(key, "N") == 0) DGNodeAddLink(self, DG_NORTH, target);
+			else if (strcmp(key, "W") == 0) DGNodeAddLink(self, DG_WEST, target);
+			else if (strcmp(key, "S") == 0) DGNodeAddLink(self, DG_SOUTH, target);
+			else if (strcmp(key, "E") == 0) DGNodeAddLink(self, DG_EAST, target);
+			else if (strcmp(key, "NW") == 0) DGNodeAddLink(self, DG_NORTHWEST, target);
+			else if (strcmp(key, "SW") == 0) DGNodeAddLink(self, DG_SOUTHWEST, target);
+			else if (strcmp(key, "SE") == 0) DGNodeAddLink(self, DG_SOUTHEAST, target);
+			else if (strcmp(key, "NE") == 0) DGNodeAddLink(self, DG_NORTHEAST, target);
 			
 			lua_pop(L, 1);
 		}
@@ -679,7 +679,7 @@ static int node_link(lua_State *L) {
 }
 
 static int node_switch(lua_State *L) {
-	dg_control_switch(lua_unboxpointer(L, 1));
+	DGControlSwitchTo(lua_unboxpointer(L, 1));
 	
 	return 0;
 }
@@ -728,9 +728,9 @@ int luaopen_node(lua_State *L) {
 ////////////////////////////////////////////////////////////////////////////////
 
 static int room_new(lua_State *L) {
-	DG_OBJECT* room = dg_room_new(luaL_checkstring(L, 1));
+	DGObject* room = DGRoomNew(luaL_checkstring(L, 1));
 	pushobject(L, room);
-	dg_world_add_room(room);
+	DGWorldAdd(room);
 	
 	return 1;
 }
@@ -738,14 +738,14 @@ static int room_new(lua_State *L) {
 static int room_destroy(lua_State *L) {
 	// WARNING: Very, very careful with this! Could break the arrays...
 	
-	DG_OBJECT* obj = (DG_OBJECT*)lua_unboxpointer(L, 1);
-	if (obj) dg_room_release(obj);
+	DGObject* obj = (DGObject*)lua_unboxpointer(L, 1);
+	if (obj) DGRoomRelease(obj);
 	
 	return 0;
 }
 
 static int room_current(lua_State *L) {
-	DG_OBJECT* room = dg_world_current_room();
+	DGObject* room = DGWorldCurrentRoom();
 	pushobject(L, room);
 	
 	return 1;
@@ -753,7 +753,7 @@ static int room_current(lua_State *L) {
 
 static int room_desc(lua_State *L) {
 	char aux[DG_MAX_LOGLEN];
-	DG_OBJECT* self = lua_unboxpointer(L, 1);
+	DGObject* self = lua_unboxpointer(L, 1);
 	
 	if (strcmp(self->name, "") == 0)
 		sprintf(aux, "room");
@@ -767,10 +767,10 @@ static int room_desc(lua_State *L) {
 
 
 static int room_add_node(lua_State *L) {
-	DG_OBJECT* self = checkobject(L, DG_OBJ_ROOM, 1);
-	DG_OBJECT* target = (DG_OBJECT*)lua_unboxpointer(L, -1);
+	DGObject* self = checkobject(L, DG_OBJECT_ROOM, 1);
+	DGObject* target = (DGObject*)lua_unboxpointer(L, -1);
 	
-	dg_room_add_node(self, target);
+	DGRoomAdd(self, target);
 	
 	return 1;
 }
@@ -819,22 +819,22 @@ static int camera_set(lua_State *L) {
 	const char *key = luaL_checkstring(L, 2);
 	
 	if (strcmp(key, "breathe") == 0)
-		dg_camera_set_breathe_fx(lua_toboolean(L, 3));
+		DGCameraEnableBreathing(lua_toboolean(L, 3));
 	
 	if (strcmp(key, "fov") == 0)
-		dg_camera_set_fov((float)luaL_checknumber(L, 3));
+		DGCameraSetFieldOfView((float)luaL_checknumber(L, 3));
 	
 	if (strcmp(key, "neutral_zone") == 0)
-		dg_camera_set_neutral_zone((int)luaL_checknumber(L, 3));
+		DGCameraSetNeutralZone((int)luaL_checknumber(L, 3));
 	
 	if (strcmp(key, "pan_speed") == 0)
-		dg_camera_set_pan_speed((int)luaL_checknumber(L, 3));
+		DGCameraSetPanningSpeed((int)luaL_checknumber(L, 3));
 	
 	if (strcmp(key, "vertical_limit") == 0)
-		dg_camera_set_vertical_limit((int)luaL_checknumber(L, 3));
+		DGCameraSetVerticalLimit((int)luaL_checknumber(L, 3));
 	
 	if (strcmp(key, "walk") == 0)
-		dg_camera_set_walk_fx(lua_toboolean(L, 3));
+		DGCameraEnableWalking(lua_toboolean(L, 3));
 	
 	return 0;
 }
@@ -854,32 +854,32 @@ static int camera_get(lua_State *L) {
 	lua_settop(L, 2);
 	
 	if (strcmp(key, "breathe") == 0) {
-		lua_pushboolean(L, dg_camera_breathe_fx());
+		lua_pushboolean(L, DGCameraIsBreathingEnabled());
 		return 1;
 	}
 	
 	if (strcmp(key, "fov") == 0) {
-		lua_pushnumber(L, dg_camera_fov());
+		lua_pushnumber(L, DGCameraFieldOfView());
 		return 1;
 	}
 	
 	if (strcmp(key, "neutral_zone") == 0) {
-		lua_pushnumber(L, dg_camera_neutral_zone());
+		lua_pushnumber(L, DGCameraNeutralZone());
 		return 1;
 	}
 	
 	if (strcmp(key, "pan_speed") == 0) {
-		lua_pushnumber(L, dg_camera_pan_speed());
+		lua_pushnumber(L, DGCameraPanningSpeed());
 		return 1;
 	}
 	
 	if (strcmp(key, "vertical_limit") == 0) {
-		lua_pushnumber(L, dg_camera_vertical_limit());
+		lua_pushnumber(L, DGCameraVerticalLimit());
 		return 1;
 	}
 	
 	if (strcmp(key, "walk") == 0) {
-		lua_pushboolean(L, dg_camera_walk_fx());
+		lua_pushboolean(L, DGCameraIsWalkingEnabled());
 		return 1;
 	}
 	
@@ -888,12 +888,12 @@ static int camera_get(lua_State *L) {
 
 static int camera_lookat(lua_State *L) {
 	int angle_h = (int)luaL_checknumber(L, 1);
-	DG_BOOL instant = lua_toboolean(L, 3);
+	DGBool instant = lua_toboolean(L, 3);
 	
 	if (lua_isnumber(L, 2))
-		dg_camera_lookat(angle_h, (int)lua_tonumber(L, 2), instant);
+		DGCameraLookAt(angle_h, (int)lua_tonumber(L, 2), instant);
 	else
-		dg_camera_lookat(angle_h, DG_CAM_CURRENT, instant);
+		DGCameraLookAt(angle_h, DG_CAM_CURRENT, instant);
 	
 	if (instant)
 		return 0;
@@ -902,8 +902,8 @@ static int camera_lookat(lua_State *L) {
 }
 
 static int camera_get_angle(lua_State *L) {
-	int angleh = dg_camera_angle_h();
-	int anglev = dg_camera_angle_v();
+	int angleh = DGCameraHorizontalAngle();
+	int anglev = DGCameraVerticalAngle();
 	
 	lua_pushnumber(L, angleh);
 	lua_pushnumber(L, anglev);
@@ -912,7 +912,7 @@ static int camera_get_angle(lua_State *L) {
 }
 
 static int camera_get_origin(lua_State *L) {
-	DG_POINT point = dg_camera_origin();
+	DGPoint point = DGCameraOrigin();
 	
 	lua_pushnumber(L, point.x);
 	lua_pushnumber(L, point.y);
@@ -921,13 +921,13 @@ static int camera_get_origin(lua_State *L) {
 }
 
 static int camera_set_origin(lua_State *L) {
-	dg_camera_set_origin((int)luaL_checknumber(L, 1), (int)luaL_checknumber(L, 2));
+	DGCameraSetOrigin((int)luaL_checknumber(L, 1), (int)luaL_checknumber(L, 2));
 	
 	return 0;
 }
 
 static int camera_get_viewport(lua_State *L) {
-	DG_SIZE size = dg_camera_viewport();
+	DGSize size = DGCameraViewport();
 	
 	lua_pushnumber(L, size.width);
 	lua_pushnumber(L, size.height);
@@ -936,19 +936,19 @@ static int camera_get_viewport(lua_State *L) {
 }
 
 static int camera_set_ortho(lua_State *L) {
-	dg_camera_set_ortho();
+	DGCameraSetOrthoView();
 	
 	return 0;
 }
 
 static int camera_set_perspective(lua_State *L) {
-	dg_camera_set_perspective();
+	DGCameraSetPerspectiveView();
 	
 	return 0;
 }
 
 static int camera_set_viewport(lua_State *L) {
-	dg_camera_set_viewport((int)luaL_checknumber(L, 1), (int)luaL_checknumber(L, 2));
+	DGCameraSetViewport((int)luaL_checknumber(L, 1), (int)luaL_checknumber(L, 2));
 	
 	return 0;
 }
@@ -1000,70 +1000,70 @@ static int l_set(lua_State *L) {
 	const char *key = luaL_checkstring(L, 2);
 	
 	if (strcmp(key, "antialiasing") == 0)
-		config.antialiasing = lua_toboolean(L, 3);
+		DGConfig.antialiasing = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "display_width") == 0)
-		config.display_width = (int)luaL_checknumber(L, 3);
+		DGConfig.display_width = (int)luaL_checknumber(L, 3);
 	
 	if (strcmp(key, "display_height") == 0)
-		config.display_height = (int)luaL_checknumber(L, 3);
+		DGConfig.display_height = (int)luaL_checknumber(L, 3);
 	
 	if (strcmp(key, "display_depth") == 0)
-		config.display_depth = (int)luaL_checknumber(L, 3);
+		DGConfig.display_depth = (int)luaL_checknumber(L, 3);
 	
 	if (strcmp(key, "debug_mode") == 0)
-		config.debug_mode = lua_toboolean(L, 3);
+		DGConfig.debug_mode = lua_toboolean(L, 3);
 
     if (strcmp(key, "dust") == 0)
-		config.dust = lua_toboolean(L, 3);
+		DGConfig.dust = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "effects") == 0)
-		config.effects = lua_toboolean(L, 3);
+		DGConfig.effects = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "framerate") == 0)
-		config.framerate = (int)luaL_checknumber(L, 3);
+		DGConfig.framerate = (int)luaL_checknumber(L, 3);
 	
 	if (strcmp(key, "fullscreen") == 0)
-		config.fullscreen = lua_toboolean(L, 3);
+		DGConfig.fullscreen = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "log") == 0)
-		config.log = lua_toboolean(L, 3);
+		DGConfig.log = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "multithread") == 0)
-		config.multithread = lua_toboolean(L, 3);
+		DGConfig.multithread = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "path") == 0) {
-        if (config.debug_mode)
-            strcpy(config.res_path, luaL_checkstring(L, 3));
+        if (DGConfig.debug_mode)
+            strcpy(DGConfig.res_path, luaL_checkstring(L, 3));
         else
             // Protect the current path
-            strcat(config.res_path, luaL_checkstring(L, 3));
+            strcat(DGConfig.res_path, luaL_checkstring(L, 3));
     }
     
 	if (strcmp(key, "scare") == 0)
-		config.scare = lua_toboolean(L, 3);
+		DGConfig.scare = lua_toboolean(L, 3);
    
     if (strcmp(key, "script") == 0)
-		strcpy(config.script, luaL_checkstring(L, 3));
+		strcpy(DGConfig.script, luaL_checkstring(L, 3));
 	
 	if (strcmp(key, "show_splash") == 0)
-		config.show_splash = lua_toboolean(L, 3);
+		DGConfig.show_splash = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "show_spots") == 0)
-		config.show_spots = lua_toboolean(L, 3);
+		DGConfig.show_spots = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "tex_compression") == 0)
-		config.tex_compression = lua_toboolean(L, 3);
+		DGConfig.tex_compression = lua_toboolean(L, 3);
 	
 	if (strcmp(key, "tex_extension") == 0)
 		// Careful with the length
-		strcpy(config.tex_extension, luaL_checkstring(L, 3));
+		strcpy(DGConfig.tex_extension, luaL_checkstring(L, 3));
     
 	if (strcmp(key, "throb") == 0)
-		config.throb = lua_toboolean(L, 3);    
+		DGConfig.throb = lua_toboolean(L, 3);    
 	
 	if (strcmp(key, "vertical_sync") == 0)
-		config.vertical_sync = lua_toboolean(L, 3);	
+		DGConfig.vertical_sync = lua_toboolean(L, 3);	
 	
 	return 0;
 }
@@ -1072,102 +1072,102 @@ static int l_get(lua_State *L) {
 	const char *key = luaL_checkstring(L, 2);
 	
 	if (strcmp(key, "antialiasing") == 0) {
-		lua_pushboolean(L, config.antialiasing);
+		lua_pushboolean(L, DGConfig.antialiasing);
 		return 1;
 	}
 	
 	if (strcmp(key, "display_width") == 0) {
-		lua_pushnumber(L, config.display_width);
+		lua_pushnumber(L, DGConfig.display_width);
 		return 1;
 	}
 	
 	if (strcmp(key, "display_height") == 0) {
-		lua_pushnumber(L, config.display_height);
+		lua_pushnumber(L, DGConfig.display_height);
 		return 1;
 	}
 	
 	if (strcmp(key, "display_depth") == 0) {
-		lua_pushnumber(L, config.display_depth);
+		lua_pushnumber(L, DGConfig.display_depth);
 		return 1;
 	}
 	
 	if (strcmp(key, "debug_mode") == 0) {
-		lua_pushboolean(L, config.debug_mode);
+		lua_pushboolean(L, DGConfig.debug_mode);
 		return 1;
 	}
     
     if (strcmp(key, "dust") == 0) {
-		lua_pushboolean(L, config.dust);
+		lua_pushboolean(L, DGConfig.dust);
 		return 1;
 	}
 	
 	if (strcmp(key, "effects") == 0) {
-		lua_pushboolean(L, config.effects);
+		lua_pushboolean(L, DGConfig.effects);
 		return 1;
 	}
 	
 	if (strcmp(key, "framerate") == 0) {
-		lua_pushnumber(L, config.framerate);
+		lua_pushnumber(L, DGConfig.framerate);
 		return 1;
 	}
 	
 	if (strcmp(key, "fullscreen") == 0) {
-		lua_pushboolean(L, config.fullscreen);
+		lua_pushboolean(L, DGConfig.fullscreen);
 		return 1;
 	}
 	
 	if (strcmp(key, "log") == 0) {
-		lua_pushboolean(L, config.log);
+		lua_pushboolean(L, DGConfig.log);
 		return 1;
 	}
 	
 	if (strcmp(key, "multithread") == 0) {
-		lua_pushboolean(L, config.multithread);
+		lua_pushboolean(L, DGConfig.multithread);
 		return 1;
 	}
 	
 	if (strcmp(key, "path") == 0) {
-		lua_pushstring(L, config.user_path);
+		lua_pushstring(L, DGConfig.user_path);
 		return 1;
 	}
 	
     if (strcmp(key, "scare") == 0) {
-		lua_pushboolean(L, config.scare);
+		lua_pushboolean(L, DGConfig.scare);
 		return 1;
 	}    
     
 	if (strcmp(key, "script") == 0) {
-		lua_pushstring(L, config.script);
+		lua_pushstring(L, DGConfig.script);
 		return 1;
 	}
 	
 	if (strcmp(key, "show_splash") == 0) {
-		lua_pushboolean(L, config.show_splash);
+		lua_pushboolean(L, DGConfig.show_splash);
 		return 1;
 	}
 	
 	if (strcmp(key, "show_spots") == 0) {
-		lua_pushboolean(L, config.show_spots);
+		lua_pushboolean(L, DGConfig.show_spots);
 		return 1;
 	}
 	
 	if (strcmp(key, "tex_compression") == 0) {
-		lua_pushboolean(L, config.tex_compression);
+		lua_pushboolean(L, DGConfig.tex_compression);
 		return 1;
 	}
 
 	if (strcmp(key, "tex_extension") == 0) {
-		lua_pushstring(L, config.tex_extension);
+		lua_pushstring(L, DGConfig.tex_extension);
 		return 1;
 	}
     
 	if (strcmp(key, "throb") == 0) {
-		lua_pushboolean(L, config.throb);
+		lua_pushboolean(L, DGConfig.throb);
 		return 1;
 	}    
 	
 	if (strcmp(key, "vertical_sync") == 0) {
-		lua_pushboolean(L, config.vertical_sync);
+		lua_pushboolean(L, DGConfig.vertical_sync);
 		return 1;
 	}
 	
@@ -1210,25 +1210,25 @@ int luaopen_config(lua_State *L) {
 ////////////////////////////////////////////////////////////////////////////////
 
 static int system_init(lua_State *L) {
-	dg_system_init();
-	dg_console_init();
-	dg_control_init();
+	DGSystemInitialize();
+	DGConsoleInitialize();
+	DGControlInitialize();
 	
-	if (config.show_splash)
+	if (DGConfig.show_splash)
 		return lua_yield(L, 0);
 	else
 		return 0;
 }
 
 static int system_run(lua_State *L) {
-	dg_system_run();
+	DGSystemRun();
 	
 	return 0;
 }
 
 static int system_update(lua_State *L) {
-	dg_control_update(); // Necessary?
-	dg_system_update();
+	DGControlUpdate(); // Necessary?
+	DGSystemUpdate();
 	
 	return 0;
 }
@@ -1259,7 +1259,7 @@ static int timer_start(lua_State *L) {
 	int ref;
 	
 	if (!lua_isfunction(L, -1)) {
-		dg_log_error(DG_MOD_SCRIPT, "Function expected as second parameter in timer.start()");
+		DGLogError(DG_MOD_SCRIPT, "Function expected as second parameter in timer.start()");
 		
 		return 0;
 	}
@@ -1292,13 +1292,13 @@ int luaopen_timer(lua_State *L) {
 ////////////////////////////////////////////////////////////////////////////////
 
 static int global_error(lua_State *L) {
-	dg_log_error(DG_MOD_NONE, luaL_checkstring(L, 1));
+	DGLogError(DG_MOD_NONE, luaL_checkstring(L, 1));
 	
 	return 0;
 }
 
 static int global_feedback(lua_State *L) {
-	dg_control_feedback(luaL_checkstring(L, 1));
+	DGControlShowFeedback(luaL_checkstring(L, 1));
 	
 	/*if (lua_isstring(L, 2)) {
 		// TODO: 0 must look for next free channel
@@ -1311,13 +1311,13 @@ static int global_feedback(lua_State *L) {
 }
 
 static int global_hotkey(lua_State *L) {
-	dg_control_register_hotkey((int)luaL_checknumber(L, 1), luaL_checkstring(L, 2));
+	DGControlRegisterHotkey((int)luaL_checknumber(L, 1), luaL_checkstring(L, 2));
 	
 	return 0;
 }
 
 static int global_log(lua_State *L) {
-	dg_log_trace(DG_MOD_NONE, luaL_checkstring(L, 1));
+	DGLogTrace(DG_MOD_NONE, luaL_checkstring(L, 1));
 	
 	return 0;
 }
@@ -1336,7 +1336,7 @@ static int global_print (lua_State *L) {
 			return luaL_error(L, LUA_QL("tostring") " must return a string to "
 							  LUA_QL("print"));
 		if (i>1) fputs("\t", stdout);
-		dg_log_trace(DG_MOD_NONE, "%s", s);
+		DGLogTrace(DG_MOD_NONE, "%s", s);
 		lua_pop(L, 1);  /* pop result */
 	}
 	return 0;
@@ -1346,14 +1346,14 @@ static int global_register(lua_State *L) {
 	int ref;
 	
 	if (!lua_isfunction(L, -1)) {
-		dg_log_error(DG_MOD_SCRIPT, "Function expected as second parameter in register()");
+		DGLogError(DG_MOD_SCRIPT, "Function expected as second parameter in register()");
 		
 		return 0;
 	}
 	
 	ref = luaL_ref(L, LUA_REGISTRYINDEX);  // pop and return a reference to the table.
 	
-	dg_control_register_global_handler((unsigned int)luaL_checknumber(L, 1), ref);
+	DGControlRegisterGlobalHandler((unsigned int)luaL_checknumber(L, 1), ref);
 	
 	return 0;
 }
@@ -1363,7 +1363,7 @@ static int global_room(lua_State *L) {
     char aux[256], room[80];
     
     if (room_idx > 80) {
-        dg_log_error(DG_MOD_SCRIPT, "Maximum numbers of rooms reached... This is wrong. Fix ASAP.");
+        DGLogError(DG_MOD_SCRIPT, "Maximum numbers of rooms reached... This is wrong. Fix ASAP.");
         
         return 0;
     }
@@ -1386,26 +1386,26 @@ static int global_room(lua_State *L) {
 }
 
 static int global_snap(lua_State *L) {
-	dg_control_snap();
+	DGControlTakeSnapshot();
 	
 	return 0;
 }
 
 static int global_sleep(lua_State *L) {
-	dg_control_sleep((int)luaL_checknumber(L, 1));
+	DGControlSleep((int)luaL_checknumber(L, 1));
 	
 	return lua_yield(thread, 0);
 }
 
 static int global_switch(lua_State *L) {
-	DG_OBJECT* target = (DG_OBJECT*)lua_unboxpointer(L, 1);
-	dg_control_switch(target);
+	DGObject* target = (DGObject*)lua_unboxpointer(L, 1);
+	DGControlSwitchTo(target);
 	
 	return 0;
 }
 
 static int global_warning(lua_State *L) {
-	dg_log_warning(DG_MOD_NONE, luaL_checkstring(L, 1));
+	DGLogWarning(DG_MOD_NONE, luaL_checkstring(L, 1));
 	
 	return 0;
 }
@@ -1434,7 +1434,7 @@ int luaopen_global(lua_State *L) {
 }
 
 static int on_error(lua_State *L) {
-	dg_log_info(DG_MOD_SCRIPT, "Critical Lua error, halting everything");
+	DGLogInfo(DG_MOD_SCRIPT, "Critical Lua error, halting everything");
 	
 	return 1;
 }
@@ -1443,13 +1443,13 @@ static int on_error(lua_State *L) {
 ///// Toolkit Functions -- END										       /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_script_init() {
+void DGScriptInitialize() {
 	int ref, size;
 	L = lua_open();
     
 	luaopen_config(L);
 	
-	if (luaL_loadfile(L, dg_config_get_path(DG_USER, "dagon.cfg")) == 0) {	
+	if (luaL_loadfile(L, DGConfigGetPath(DG_PATH_USER, "dagon.cfg")) == 0) {	
 		lua_newtable(L);
 		lua_pushvalue(L,-1);
 		ref = lua_ref(L, LUA_REGISTRYINDEX);
@@ -1468,9 +1468,9 @@ void dg_script_init() {
 		}
 	}
 
-	dg_log_init();
-	dg_log_trace(DG_MOD_SCRIPT, "Initializing script loader...");
-	dg_log_info(DG_MOD_SCRIPT, "Lua version: %s", LUA_VERSION);
+	DGLogInitialize();
+	DGLogTrace(DG_MOD_SCRIPT, "Initializing script loader...");
+	DGLogInfo(DG_MOD_SCRIPT, "Lua version: %s", LUA_VERSION);
 	
 	luaL_openlibs(L);
 	luaopen_camera(L);
@@ -1490,24 +1490,24 @@ void dg_script_init() {
 	lua_atpanic(L, on_error);
 }
 
-void dg_script_release() {
+void DGScriptTerminate() {
 	// This causes a crash on Windows (GC problem, objects needs a ref count)
 	lua_close(L);
 	
-	dg_control_release();
-	dg_console_release();
-	dg_config_finalize();
-	dg_log_release();
-	dg_system_release();
+	DGControlTerminate();
+	DGConsoleTerminate();
+	DGConfigTerminate();
+	DGLogTerminate();
+	DGSystemTerminate();
 }
 
-void dg_script_callback(int ref) {
-	static DG_BOOL in_process = DG_NO;
+void DGScriptCallback(int theHandler) {
+	static DGBool in_process = DG_NO;
 	int result;
 	
 	if (thread) {		
 		luaL_dostring(thread, "self = Spot.current()");
-		lua_rawgeti(thread, LUA_REGISTRYINDEX, ref);
+		lua_rawgeti(thread, LUA_REGISTRYINDEX, theHandler);
 		if (in_process) {
 			result = lua_pcall(thread, 0, 0, 0);
 		}
@@ -1517,13 +1517,13 @@ void dg_script_callback(int ref) {
 		}
 		switch (result) {
 			case LUA_ERRRUN:
-				dg_log_error(DG_MOD_SCRIPT, "Runtime error");
+				DGLogError(DG_MOD_SCRIPT, "Runtime error");
 				break;
 			case LUA_ERRMEM:
-				dg_log_error(DG_MOD_SCRIPT, "Memory allocation error");
+				DGLogError(DG_MOD_SCRIPT, "Memory allocation error");
 				break;
 			case LUA_ERRERR:
-				dg_log_error(DG_MOD_SCRIPT, "Error while running handler");
+				DGLogError(DG_MOD_SCRIPT, "Error while running handler");
 				break;
 			case LUA_YIELD:
 				break;
@@ -1535,23 +1535,23 @@ void dg_script_callback(int ref) {
 	}
 }
 
-void dg_script_doline(const char* line) {
+void DGScriptDoLine(const char* aLine) {
 	int result;
 	
     
     
 	if (thread) {
-		luaL_loadbuffer(thread, line, strlen(line), "line");
+		luaL_loadbuffer(thread, aLine, strlen(aLine), "line");
         result = lua_resume(thread, 0);
 		switch (result) {
 			case LUA_ERRRUN:
-				dg_log_error(DG_MOD_SCRIPT, "Runtime error");
+				DGLogError(DG_MOD_SCRIPT, "Runtime error");
 				break;
 			case LUA_ERRMEM:
-				dg_log_error(DG_MOD_SCRIPT, "Memory allocation error");
+				DGLogError(DG_MOD_SCRIPT, "Memory allocation error");
 				break;
 			case LUA_ERRERR:
-				dg_log_error(DG_MOD_SCRIPT, "Error while running handler");
+				DGLogError(DG_MOD_SCRIPT, "Error while running handler");
 				break;
 			case LUA_YIELD:
 				lua_yield(thread, 0);
@@ -1560,55 +1560,55 @@ void dg_script_doline(const char* line) {
 	}
 }
 
-void dg_script_loop() {
+void DGScriptLoop() {
     int ref;
     
-	if (dg_control_is_running()) {
-		if (dg_console_is_enabled()) {
+	if (DGControlIsRunning()) {
+		if (DGConsoleIsEnabled()) {
 			int error;
 			char buff[256];
 			
-			if (dg_console_output(buff)) {
-				dg_log_command(DG_MOD_SCRIPT, buff);
+			if (DGConsoleOutput(buff)) {
+				DGLogCommand(DG_MOD_SCRIPT, buff);
 				error = luaL_loadbuffer(L, buff, strlen(buff), "line") ||
 				lua_pcall(L, 0, 0, 0);
 				if (error) {
-					dg_log_trace(DG_MOD_SCRIPT, "%s", lua_tostring(L, -1));
+					DGLogTrace(DG_MOD_SCRIPT, "%s", lua_tostring(L, -1));
 					lua_pop(L, 1);  /* pop error message from the stack */
 				}
 			}
 		}
 		
-		dg_control_update();
-		dg_console_update(); // Avoid this if not in debug mode
-		dg_system_update();
+		DGControlUpdate();
+		DGConsoleUpdate(); // Avoid this if not in debug mode
+		DGSystemUpdate();
         
-        if ((dg_camera_state() != DG_CAM_LOOKAT) && dg_state_current() != DG_ST_TIMER){
+        if ((DGCameraState() != DG_CAM_LOOKAT) && DGStateCurrent() != DG_STATE_TIMER){
             ref = dg_timer_check();
             if (ref) {
-                dg_script_callback(ref);
+                DGScriptCallback(ref);
             }
         }
 	}
 	else {
-		dg_script_release();
+		DGScriptTerminate();
 	}
 }
 
-void dg_script_resume() {
+void DGScriptResume() {
 	int result;
 	
 	if (thread) {
         result = lua_resume(thread, 0);
 		switch (result) {
 			case LUA_ERRRUN:
-				dg_log_error(DG_MOD_SCRIPT, "Runtime error");
+				DGLogError(DG_MOD_SCRIPT, "Runtime error");
 				break;
 			case LUA_ERRMEM:
-				dg_log_error(DG_MOD_SCRIPT, "Memory allocation error");
+				DGLogError(DG_MOD_SCRIPT, "Memory allocation error");
 				break;
 			case LUA_ERRERR:
-				dg_log_error(DG_MOD_SCRIPT, "Error while running handler");
+				DGLogError(DG_MOD_SCRIPT, "Error while running handler");
 				break;
 			case LUA_YIELD:
 				break;
@@ -1619,7 +1619,7 @@ void dg_script_resume() {
 	}
 }
 
-void dg_script_hack() {
+void DGScriptHack() {
     int i;
     
     // FIXME: Temporary hack
@@ -1631,13 +1631,13 @@ void dg_script_hack() {
 lua_pushnumber(L, val); \
 lua_setfield(L, -2, #name);
 
-void dg_script_run() {
+void DGScriptRun() {
 	FILE* file = NULL;
 	char script[DG_MAX_PATHLEN];
 	int error, i = 0;
-	DG_BOOL can_process;
+	DGBool can_process;
 	
-    strcpy(script, dg_config_get_path(DG_APP, config.script));
+    strcpy(script, DGConfigGetPath(DG_PATH_APP, DGConfig.script));
 	strcat(script, ".lua");
 	
 	lua_getglobal(L, "_G");
@@ -1687,7 +1687,7 @@ void dg_script_run() {
 	LUA_ENUM(L, SWITCH, i++);
 	LUA_ENUM(L, VIDEO, i++);
     
-	dg_log_trace(DG_MOD_SCRIPT, "Executing script %s", config.script);
+	DGLogTrace(DG_MOD_SCRIPT, "Executing script %s", DGConfig.script);
 	
 	file = fopen(script, "r");
 	
@@ -1699,44 +1699,44 @@ void dg_script_run() {
 		if (error > 1) {	// Hacky; 1 is LUA_YIELD
 			switch (error) {
 				case LUA_ERRRUN:
-					dg_log_error(DG_MOD_SCRIPT, "Runtime error");
+					DGLogError(DG_MOD_SCRIPT, "Runtime error");
 					break;
 				case LUA_ERRMEM:
-					dg_log_error(DG_MOD_SCRIPT, "Memory allocation error");
+					DGLogError(DG_MOD_SCRIPT, "Memory allocation error");
 					break;
 				case LUA_ERRERR:
-					dg_log_error(DG_MOD_SCRIPT, "Problem with error handler");
+					DGLogError(DG_MOD_SCRIPT, "Problem with error handler");
 					break;					
 				default:
-					dg_log_error(DG_MOD_SCRIPT, "Undefined error");
+					DGLogError(DG_MOD_SCRIPT, "Undefined error");
 					break;
 			}
 			
 			// TODO: Must do traceback here
-			dg_log_trace(DG_MOD_SCRIPT, "%s", lua_tostring(L, -1));
+			DGLogTrace(DG_MOD_SCRIPT, "%s", lua_tostring(L, -1));
 			lua_pop(L, 1);
 			
 			// Force manual mode
-			if (!dg_control_is_running())
+			if (!DGControlIsRunning())
 				system_init(L);
 			
-			dg_console_enable();
+			DGConsoleEnable();
 		}
 		fclose(file);
         
-        dg_script_hack();
+        DGScriptHack();
         
-        dg_system_run();
+        DGSystemRun();
 	}
 	else {
-		dg_log_warning(DG_MOD_SCRIPT, "Script not found");
+		DGLogWarning(DG_MOD_SCRIPT, "Script not found");
 		system_init(L);
-		dg_console_enable();
-        dg_system_run();
+		DGConsoleEnable();
+        DGSystemRun();
 	}
 }
 
-void dg_script_yield() {
+void DGScriptYield() {
     lua_yield(thread, 0); 
 }
 

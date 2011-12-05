@@ -30,30 +30,30 @@
 struct {
 	int x;
 	int y;
-	DG_BOOL queued;
+	DGBool queued;
 	uint32_t color;
 	float timer;
 	char buffer[DG_MAX_FEEDBACK];
 } feedback;
 
 struct {
-	DG_BOOL	has_enter_node;
-	DG_BOOL	has_leave_node;
+	DGBool	has_enter_node;
+	DGBool	has_leave_node;
 	int	enter_node;
 	int	leave_node;
 	
-	DG_BOOL	has_enter_room;
-	DG_BOOL	has_leave_room;
+	DGBool	has_enter_room;
+	DGBool	has_leave_room;
 	int	enter_room;
 	int	leave_room;
 	
-	DG_BOOL	has_pre_render;
-	DG_BOOL	has_post_render;
+	DGBool	has_pre_render;
+	DGBool	has_post_render;
 	int	pre_render;
 	int	post_render;
 	
-	DG_BOOL	has_mouse_move;
-	DG_BOOL	has_mouse_button;
+	DGBool	has_mouse_move;
+	DGBool	has_mouse_button;
 	int	mouse_move;
 	int	mouse_button;	
 } global_events;
@@ -61,18 +61,18 @@ struct {
 struct mouse_coords {
 	short x;
 	short y;
-	DG_BOOL on_spot;
+	DGBool on_spot;
 } mouse_coords;
 
-static DG_BOOL running = DG_NO;
+static DGBool running = DG_NO;
 
 void _parse_feedback(const char* text);
-DG_BOOL _scan(DG_ACTION** action);
+DGBool _scan(DGAction** action);
 void _update_feedback(void);
 void _updateScene(void);
 
 typedef struct {
-	DG_BOOL enabled;
+	DGBool enabled;
 	int value;
 	char line[DG_MAX_LOGLEN];
 } DG_KEY_EVENT;
@@ -84,27 +84,27 @@ static int timer = 0;
 ///
 
 
-void dg_control_init() {
+void DGControlInitialize() {
 	int i;
 	
-	dg_log_info(DG_MOD_CONTROL, "Dagon Version %d.%d.%d Build %d", DG_VERSION_MAJOR, DG_VERSION_MINOR, DG_VERSION_RELEASE, DG_VERSION_BUILD);
-	dg_log_trace(DG_MOD_CONTROL, "Initializing main controller...");
-	dg_world_new();
-	dg_state_init();
-	dg_render_init();
+	DGLogInfo(DG_MOD_CONTROL, "Dagon Version %d.%d.%d Build %d", DG_VERSION_MAJOR, DG_VERSION_MINOR, DG_VERSION_RELEASE, DG_VERSION_BUILD);
+	DGLogTrace(DG_MOD_CONTROL, "Initializing main controller...");
+	DGWorldInitialize();
+	DGStateInitialize();
+	DGRenderInitialize();
     
-	dg_texture_manager_init();
-	dg_camera_init(config.display_width, config.display_height);
-	dg_font_init("veramobd.ttf", 10);
-	dg_audio_init();
-	dg_video_init();
+	DGTextureManagerInitialize();
+	DGCameraInitialize(DGConfig.display_width, DGConfig.display_height);
+	DGFontInitialize("veramobd.ttf", 10);
+	DGAudioInitialize();
+	DGVideoInitialize();
 	
-	dg_log_trace(DG_MOD_CONTROL, "Initialization complete!");
+	DGLogTrace(DG_MOD_CONTROL, "Initialization complete!");
 	
 	feedback.queued = DG_NO;
 	
-	mouse_coords.x = config.display_width/2;
-	mouse_coords.y = config.display_height/2;
+	mouse_coords.x = DGConfig.display_width/2;
+	mouse_coords.y = DGConfig.display_height/2;
 	mouse_coords.on_spot = DG_NO;
 	
 	running = DG_NO;
@@ -112,57 +112,57 @@ void dg_control_init() {
 	for (i = 0; i <= 12; i++)
 		hotkey[i].enabled = DG_NO;
     
-	if (config.show_splash) {
-		dg_state_set(DG_ST_SPLASH);
-		dg_render_set_splash();
+	if (DGConfig.show_splash) {
+		DGStateSet(DG_STATE_SPLASH);
+		DGRenderSetSplash();
 	}
 	
     running = DG_YES;
 }
 
-void dg_control_feedback(const char* text) {
-	_parse_feedback(text);
+void DGControlShowFeedback(const char* theText) {
+	_parse_feedback(theText);
 }
 
-DG_BOOL dg_control_is_running() {
+DGBool DGControlIsRunning() {
 	return running;
 }
 
 // TODO: Should merge this functions and use key codes only...
 
-void dg_control_process_char(const char* key, DG_BOOL modified) {
-	switch (*key) {
+void DGControlProcessCharKey(const char* aKey, DGBool isModified) {
+	switch (*aKey) {
 		case DG_KEY_ESC:
 			running = DG_NO;
 			break;
 		case DG_KEY_QUOTE:
-			dg_console_toggle();
+			DGConsoleToggleState();
 			break;
 		case DG_KEY_BACKSPACE:
-			dg_console_delete();
+			DGConsoleDeleteChar();
 			break;
 		case DG_KEY_ENTER:
-			dg_console_execute();
+			DGConsoleExecute();
 			break;
         case 'f':
         case 'F':
-            if (modified) {
-                if (config.fullscreen) config.fullscreen = DG_NO;
-                else config.fullscreen = DG_YES;
-                dg_system_toggle_fullscreen();
+            if (isModified) {
+                if (DGConfig.fullscreen) DGConfig.fullscreen = DG_NO;
+                else DGConfig.fullscreen = DG_YES;
+                DGSystemToggleFullscreen();
             }
-            else dg_console_input(key);
+            else DGConsoleInputChar(aKey);
             break;
 		default:
-			dg_console_input(key);
+			DGConsoleInputChar(aKey);
 			break;
 	}
 }
 
-void dg_control_process_key(const char key) {
+void DGControlProcessKey(const char aKey) {
 	int idx;
 	
-	switch (key) {
+	switch (aKey) {
 		case DG_KEY_F1: idx = 1; break;
 		case DG_KEY_F2: idx = 2; break;
 		case DG_KEY_F3: idx = 3; break;
@@ -179,64 +179,64 @@ void dg_control_process_key(const char key) {
 	}
 	
 	if (hotkey[idx].enabled)
-		dg_script_doline(hotkey[idx].line);
+		DGScriptDoLine(hotkey[idx].line);
 }
 
 /////////////////////////////////////////////////////////////
 
-void dg_control_process_mouse(short x, short y, DG_BOOL button) {
-	DG_BOOL foundAction = DG_NO; // Let's try to avoid this...
-	DG_ACTION* action;
-    DG_OBJECT* audio;
+void DGControlProcessMouse(short xPosition, short yPosition, DGBool isButtonPressed) {
+	DGBool foundAction = DG_NO; // Let's try to avoid this...
+	DGAction* action;
+    DGObject* audio;
 	
 	if (global_events.has_mouse_move) 
-		dg_script_callback(global_events.mouse_move);
+		DGScriptCallback(global_events.mouse_move);
 	
-	mouse_coords.x = x;
-	mouse_coords.y = y;
+	mouse_coords.x = xPosition;
+	mouse_coords.y = yPosition;
 	
 	// TODO: Only under certain states
-	if (dg_state_current() != DG_ST_NODE)
+	if (DGStateCurrent() != DG_STATE_NODE)
 		return;
 	
-	dg_camera_pan(x, y);
+	DGCameraPan(xPosition, yPosition);
 	
 	foundAction = _scan(&action);
 	
-	if (button) {
+	if (isButtonPressed) {
 		if (global_events.has_mouse_button) 
-			dg_script_callback(global_events.mouse_button);
+			DGScriptCallback(global_events.mouse_button);
 		
 		if (foundAction) {
 			//_updateScene(); // Draw without the cursor
 			//dg_render_copy_scene();
 			
 			switch (action->type) {
-				case DG_ACT_CUSTOM:
-					dg_script_callback(action->custom_handler);
+				case DG_ACTION_CUSTOM:
+					DGScriptCallback(action->custom_handler);
 					break;
-				case DG_ACT_FEEDBACK:
+				case DG_ACTION_FEEDBACK:
 					_parse_feedback(action->feedback);
                     if (strcmp(action->feedback_audio, "") != 0) {
-                        audio = dg_audio_new(action->feedback_audio, DG_NO);
-                        dg_audio_load(audio);
-                        dg_audio_play(audio);
+                        audio = DGAudioNew(action->feedback_audio, DG_NO);
+                        DGAudioLoad(audio);
+                        DGAudioPlay(audio);
                     }
 					break;
-				case DG_ACT_SWITCH:
+				case DG_ACTION_SWITCH:
 					// Uncomment to take snapshots per click
 					//dg_control_snap();
-					dg_control_switch(action->target); // Ugly
+					DGControlSwitchTo(action->target); // Ugly
 					break;
 			}
 		}
 	}
 }
 
-void dg_control_register_hotkey(int value, const char* line) {
+void DGControlRegisterHotkey(int theKey, const char* luaCommandToExecute) {
 	int idx;
 	
-	switch (value) {
+	switch (theKey) {
 		case DG_KEY_F1: idx = 1; break;
 		case DG_KEY_F2: idx = 2; break;
 		case DG_KEY_F3: idx = 3; break;
@@ -253,181 +253,181 @@ void dg_control_register_hotkey(int value, const char* line) {
 	}
 	
 	hotkey[idx].enabled = DG_YES;
-	hotkey[idx].value = value;
-	strcpy(hotkey[idx].line, line);
+	hotkey[idx].value = theKey;
+	strcpy(hotkey[idx].line, luaCommandToExecute);
 }
 
-void dg_control_register_global_handler(unsigned type, int ref) {
-	switch (type) {
+void DGControlRegisterGlobalHandler(unsigned forEvent, int handlerForLua) {
+	switch (forEvent) {
 		case DG_EVENT_ENTER_NODE:
-			global_events.enter_node = ref;
+			global_events.enter_node = handlerForLua;
 			global_events.has_enter_node = DG_YES;
 			break;
 		case DG_EVENT_LEAVE_NODE:
-			global_events.leave_node = ref;
+			global_events.leave_node = handlerForLua;
 			global_events.has_leave_node = DG_YES;
 			break;
 		case DG_EVENT_ENTER_ROOM:
-			global_events.enter_room = ref;
+			global_events.enter_room = handlerForLua;
 			global_events.has_enter_room = DG_YES;
 			break;
 		case DG_EVENT_LEAVE_ROOM:
-			global_events.leave_room = ref;
+			global_events.leave_room = handlerForLua;
 			global_events.has_leave_room = DG_YES;
 			break;
 		case DG_EVENT_PRE_RENDER:
-			global_events.pre_render = ref;
+			global_events.pre_render = handlerForLua;
 			global_events.has_pre_render = DG_YES;
 			break;
 		case DG_EVENT_POST_RENDER:
-			global_events.post_render = ref;
+			global_events.post_render = handlerForLua;
 			global_events.has_post_render = DG_YES;
 			break;
 		case DG_EVENT_MOUSE_BUTTON:
-			global_events.mouse_button = ref;
+			global_events.mouse_button = handlerForLua;
 			global_events.has_mouse_button = DG_YES;
 			break;			
 		case DG_EVENT_MOUSE_MOVE:
-			global_events.mouse_move = ref;
+			global_events.mouse_move = handlerForLua;
 			global_events.has_mouse_move = DG_YES;
 			break;			
 	}
 }
 
-void dg_control_release() {
-	dg_log_trace(DG_MOD_CONTROL, "Finalizing...");
+void DGControlTerminate() {
+	DGLogTrace(DG_MOD_CONTROL, "Finalizing...");
 	
-	dg_audio_terminate();
-    dg_video_terminate();
-	dg_world_release();
-	dg_font_clean();
-	dg_texture_manager_release();
-	dg_render_release();
-	dg_reportmem();
+	DGAudioTerminate();
+    DGVideoTerminate();
+	DGWorldTerminate();
+	DGFontClean();
+	DGTextureManagerTerminate();
+	DGRenderTerminate();
+	DGReportMem();
 }
 
-void dg_control_sleep(int msecs) {
-	timer = msecs;
-	dg_state_set(DG_ST_TIMER);
+void DGControlSleep(int forMilliseconds) {
+	timer = forMilliseconds;
+	DGStateSet(DG_STATE_TIMER);
 }
 
-void dg_control_snap() {
+void DGControlTakeSnapshot() {
 	_updateScene();
-	dg_render_copy_scene();
-	dg_render_save_scene();
+	DGRenderCopyScene();
+	DGRenderSaveScene();
 }
 
-void dg_control_switch(DG_OBJECT* target) {
-	static DG_BOOL first = DG_YES; // Fix this, please...
-	DG_OBJECT* spot;
-	DG_OBJECT* node;
+void DGControlSwitchTo(DGObject* theTarget) {
+	static DGBool first = DG_YES; // Fix this, please...
+	DGObject* spot;
+	DGObject* node;
 	
     // Ugly workaround for now
-    if (dg_state_current() == DG_ST_NODE) {
+    if (DGStateCurrent() == DG_STATE_NODE) {
         _updateScene(); // Draw without the cursor
-        dg_render_copy_scene();
+        DGRenderCopyScene();
     }
 	
 	if (global_events.has_leave_node) 
-		dg_script_callback(global_events.leave_node);
+		DGScriptCallback(global_events.leave_node);
 	
-	while (dg_world_get_spot(&spot)) {
-        if (dg_spot_has_audio(spot)) {
-            DG_OBJECT* audio = dg_spot_audio(spot);
-            dg_audio_unload(audio);
+	while (DGWorldGetSpot(&spot)) {
+        if (DGSpotHasAudio(spot)) {
+            DGObject* audio = DGSpotAudio(spot);
+            DGAudioUnload(audio);
         }
         
-		if (dg_spot_has_video(spot)) {
-			DG_OBJECT* video = dg_spot_video(spot);
-			dg_video_unload(video);
+		if (DGSpotHasVideo(spot)) {
+			DGObject* video = DGSpotVideo(spot);
+			DGVideoUnload(video);
             
             // Should not call this if video is set to autoplay... WRONG now
-            if (!dg_video_has_loop(video))
-                dg_spot_stop(spot);
+            if (!DGVideoIsLoopable(video))
+                DGSpotStop(spot);
 		}
 	}
 	
-	if (target) {
-		switch (target->type) {
-			case DG_OBJ_NODE:
-				dg_log_trace(DG_MOD_CONTROL, "Loading node %s", target->name);
-				dg_world_switch(target);
+	if (theTarget) {
+		switch (theTarget->type) {
+			case DG_OBJECT_NODE:
+				DGLogTrace(DG_MOD_CONTROL, "Loading node %s", theTarget->name);
+				DGWorldSwitchTo(theTarget);
 				break;
-			case DG_OBJ_ROOM:
+			case DG_OBJECT_ROOM:
 				if (global_events.has_leave_room) 
-					dg_script_callback(global_events.leave_room);
+					DGScriptCallback(global_events.leave_room);
 				
-				dg_log_trace(DG_MOD_CONTROL, "Loading room %s", target->name);
-				dg_world_switch(target);
+				DGLogTrace(DG_MOD_CONTROL, "Loading room %s", theTarget->name);
+				DGWorldSwitchTo(theTarget);
 				
 				// Hack until we sort out the texture loading process
-				target = dg_world_current_node();
+				theTarget = DGWorldCurrentNode();
 				
 				if (global_events.has_enter_room) 
-					dg_script_callback(global_events.enter_room);
+					DGScriptCallback(global_events.enter_room);
                 
 				break;
 		}
 	}
     
     // Only in debug mode
-    node = dg_world_current_node();
-    dg_system_set_title(node->name);
+    node = DGWorldCurrentNode();
+    DGSystemSetTitle(node->name);
 	
-	while (dg_world_get_spot(&spot)) {
-		if (dg_spot_has_image(spot)) {
-			DG_OBJECT* texture = dg_texture_manager_load(dg_spot_image(spot));
+	while (DGWorldGetSpot(&spot)) {
+		if (DGSpotHasImage(spot)) {
+			DGObject* texture = DGTextureManagerLoad(DGSpotImage(spot));
 			if (texture)
-				dg_spot_set_texture(spot, texture);
+				DGSpotSetTexture(spot, texture);
 		}
         
-        if (dg_spot_has_audio(spot)) {
-			DG_OBJECT* audio = dg_spot_audio(spot);
-			dg_audio_load(audio);
+        if (DGSpotHasAudio(spot)) {
+			DGObject* audio = DGSpotAudio(spot);
+			DGAudioLoad(audio);
             
-            if (dg_spot_is_playing(spot)) {
-                dg_audio_play(audio);
+            if (DGSpotIsPlaying(spot)) {
+                DGAudioPlay(audio);
             }
         }
 		
-		if (dg_spot_has_video(spot)) {
+		if (DGSpotHasVideo(spot)) {
 			//DG_OBJECT* video = dg_video_new(dg_spot_video(spot), DG_NO, DG_NO, DG_NO);
 			//dg_video_load(video);
 			//dg_spot_set_video(spot, video);
-			DG_OBJECT* video = dg_spot_video(spot);
-			dg_video_load(video);
+			DGObject* video = DGSpotVideo(spot);
+			DGVideoLoad(video);
 			
-			if (!dg_spot_has_texture(spot)) {
-				DG_FRAME* frame = dg_video_get_frame(video);
-				DG_OBJECT* texture = dg_texture_manager_new(frame->width, frame->height, frame->bpp);
+			if (!DGSpotHasTexture(spot)) {
+				DGFrame* frame = DGVideoGetFrame(video);
+				DGObject* texture = DGTextureManagerNew(frame->width, frame->height, frame->bpp);
 				if (texture)
-					dg_spot_set_texture(spot, texture);
+					DGSpotSetTexture(spot, texture);
 				
-				if (dg_spot_elements(spot) == 2) {
-					short* origin = dg_spot_coords(spot);
+				if (DGSpotSizeOfArray(spot) == 2) {
+					short* origin = DGSpotArrayOfCoordinates(spot);
 					short x = origin[0];
 					short y = origin[1];
 					short coords [] = { x, y, x + frame->width, y, x + frame->width, y + frame->height, x, y + frame->height };
-					dg_spot_resize(spot, coords, 8);
+					DGSpotResize(spot, coords, 8);
 				}
 			}
 		}
 	}
 	
 	if (global_events.has_enter_node) 
-		dg_script_callback(global_events.enter_node);
+		DGScriptCallback(global_events.enter_node);
 	
 	// Avoid blending the first switch
 	if (first) {
 		first = DG_NO;
 	}
 	else {
-		dg_render_blend();
-		dg_camera_walk();
+		DGRenderBlendNextUpdate();
+		DGCameraSimulateWalk();
 	}
 }
 
-void dg_control_update() {
+void DGControlUpdate() {
 	/// Move to timer.c
 	// Timer (waiting) is a state, update should call update(last) -> wait
 	double duration;
@@ -440,7 +440,7 @@ void dg_control_update() {
     static float nextUpdate = 0;
     ///
     
-    if (config.throb) {
+    if (DGConfig.throb) {
         /// Move to timer.c
         if (!lastTime2) {
             lastTime2 = clock();
@@ -450,43 +450,43 @@ void dg_control_update() {
         duration2 = (double)(currentTime2 - lastTime2) / CLOCKS_PER_SEC * 1000;
         if (duration2 > nextUpdate) {
             int aux = (rand() % 1000) + 1500;
-            dg_effects_set_gamma(aux / 1000.0f);
+            DGEffectsSetGamma(aux / 1000.0f);
             lastTime2 = 0;
         }
         ///
     }
-    else dg_effects_set_gamma(2.5f);
+    else DGEffectsSetGamma(2.5f);
 	
     while (running) {
-		switch (dg_state_current()) {
-			case DG_ST_NODE:
-			case DG_ST_VIDEO: // WRONG                
-				dg_camera_loop();
+		switch (DGStateCurrent()) {
+			case DG_STATE_NODE:
+			case DG_STATE_VIDEO: // WRONG                
+				DGCameraLoop();
 				
 				_scan(NULL);
 				_updateScene();
 				
 				// All ortographic projections
-				dg_render_begin(DG_NO);
+				DGRenderBegin(DG_NO);
 				
-				if (dg_camera_state() != DG_CAM_LOOKAT) {
+				if (DGCameraState() != DG_CAM_LOOKAT) {
 					if (mouse_coords.on_spot)
 						//dg_render_with_color(DG_COLOR_BRIGHTCYAN);
-						dg_render_with_color(DG_COLOR_BRIGHTRED);
+						DGRenderSetColor(DG_COLOR_BRIGHTRED);
 					else
-						dg_render_with_color(DG_COLOR_DARKGRAY);
+						DGRenderSetColor(DG_COLOR_DARKGRAY);
 					
-					dg_render_draw_cursor(mouse_coords.x, mouse_coords.y);
+					DGRenderDrawCursor(mouse_coords.x, mouse_coords.y);
 				}
 				
 				_update_feedback();
 				
-				dg_render_end();
+				DGRenderEnd();
 				
-				if (dg_camera_state() == DG_CAM_LOOKAT_OVER)
-					dg_script_resume();
+				if (DGCameraState() == DG_CAM_LOOKAT_OVER)
+					DGScriptResume();
 				break;
-			case DG_ST_SPLASH:
+			case DG_STATE_SPLASH:
 				/// Move to timer.c
 				if (!lastTime)
 					lastTime = clock();
@@ -495,21 +495,21 @@ void dg_control_update() {
 				///
 				
 				if (duration < 2.0f) {
-					dg_render_clear();
-					dg_render_begin(DG_YES);
-					dg_camera_set_ortho();
-					dg_render_splash();
-					dg_render_end();
+					DGRenderClearScene();
+					DGRenderBegin(DG_YES);
+					DGCameraSetOrthoView();
+					DGRenderDrawSplash();
+					DGRenderEnd();
 				}
 				else {
-					dg_render_blend();
-					dg_state_set(DG_ST_NODE);
-					dg_script_resume();
-                    dg_script_hack();
+					DGRenderBlendNextUpdate();
+					DGStateSet(DG_STATE_NODE);
+					DGScriptResume();
+                    DGScriptHack();
 					lastTime = 0;
 				}
 				break;
-			case DG_ST_TIMER:
+			case DG_STATE_TIMER:
 				/// Move to timer.c
 				if (!lastTime)
 					lastTime = clock();
@@ -518,26 +518,26 @@ void dg_control_update() {
 				///
 				
 				// Patch to avoid rotating
-				dg_camera_pan(config.display_width / 2, config.display_height / 2);
+				DGCameraPan(DGConfig.display_width / 2, DGConfig.display_height / 2);
 				
-				dg_camera_loop();
+				DGCameraLoop();
 				_updateScene();
 				
 				// All ortographic projections
-				dg_render_begin(DG_NO);
+				DGRenderBegin(DG_NO);
 				_update_feedback();
-				dg_render_end();
+				DGRenderEnd();
 				
 				if (duration > timer) {
 					timer = 0;
 					lastTime = 0;
-					dg_state_return();
-					dg_script_resume();
+					DGStateReturn();
+					DGScriptResume();
 				}
 				break;
 		}
 		
-		if (!config.multithread)
+		if (!DGConfig.multithread)
 			break;
     }
 }
@@ -546,7 +546,7 @@ void _parse_feedback(const char* text) {
 	// This goes elsewhere
 	const int margin = 10;
 	const int size = 10;
-	const int max_chars = config.display_width / size;
+	const int max_chars = DGConfig.display_width / size;
 	
 	int len = strlen(text);
 	strcpy(feedback.buffer, text);
@@ -567,12 +567,12 @@ void _parse_feedback(const char* text) {
 			*p = '\n';
 		}
 		
-		feedback.x = (config.display_width / 2) - ((even / 2) * size) + margin;
-		feedback.y = config.display_height - ((split + 1) * size) - margin;
+		feedback.x = (DGConfig.display_width / 2) - ((even / 2) * size) + margin;
+		feedback.y = DGConfig.display_height - ((split + 1) * size) - margin;
 	}
 	else {
-		feedback.x = (config.display_width / 2) - ((len / 2) * size) + margin;
-		feedback.y = config.display_height - size - margin;
+		feedback.x = (DGConfig.display_width / 2) - ((len / 2) * size) + margin;
+		feedback.y = DGConfig.display_height - size - margin;
 	}
 	
 	feedback.queued = DG_YES;
@@ -580,34 +580,34 @@ void _parse_feedback(const char* text) {
 	feedback.color = DG_COLOR_WHITE;
 }
 
-DG_BOOL _scan(DG_ACTION** action) {
+DGBool _scan(DGAction** action) {
 	int color;
-	DG_BOOL foundAction = DG_NO; // Let's try to avoid this...
-	DG_OBJECT* spot;
+	DGBool foundAction = DG_NO; // Let's try to avoid this...
+	DGObject* spot;
 	mouse_coords.on_spot = DG_NO;
 	
 	// TODO: Completely broken in multithread!!
 	// TODO: Process only if cursor within client window
-	dg_render_clear();
-	dg_camera_set_viewport(config.display_width, config.display_height);	
-	dg_camera_update();
-	dg_render_begin(DG_NO);
+	DGRenderClearScene();
+	DGCameraSetViewport(DGConfig.display_width, DGConfig.display_height);	
+	DGCameraUpdate();
+	DGRenderBegin(DG_NO);
 	
-	while (dg_world_get_spot(&spot)) {
-		if (dg_spot_has_color(spot) && dg_spot_is_enabled(spot) && !foundAction) {
-			dg_render_with_color(dg_spot_color(spot));
-			dg_render_draw_poly(dg_spot_coords(spot), 
-								  dg_spot_elements(spot), 
-								  dg_spot_face(spot), 
+	while (DGWorldGetSpot(&spot)) {
+		if (DGSpotHasColor(spot) && DGSpotIsEnabled(spot) && !foundAction) {
+			DGRenderSetColor(DGSpotColor(spot));
+			DGRenderDrawPolygon(DGSpotArrayOfCoordinates(spot), 
+								  DGSpotSizeOfArray(spot), 
+								  DGSpotFace(spot), 
 								  DG_NO);
 			
-			color = dg_render_test_color(mouse_coords.x, mouse_coords.y);
+			color = DGRenderTestColor(mouse_coords.x, mouse_coords.y);
 			if (color) {
-				DG_ACTION* aux;
-				if (dg_world_get_action(color, &aux)) {
+				DGAction* aux;
+				if (DGWorldGetAction(color, &aux)) {
 					if (action) {
 						*action = aux;
-						dg_world_set_current_spot(spot);
+						DGWorldSetCurrentSpot(spot);
 					}
 					foundAction = DG_YES;
 					mouse_coords.on_spot = DG_YES;
@@ -621,7 +621,7 @@ DG_BOOL _scan(DG_ACTION** action) {
 			}
 		}
 	}
-	dg_render_end();
+	DGRenderEnd();
 	
 	return foundAction;
 }
@@ -629,10 +629,10 @@ DG_BOOL _scan(DG_ACTION** action) {
 void _update_feedback() {
 	// TODO: Must revise this camera thing... too many changes
 	if (feedback.queued) {
-		dg_camera_set_ortho();
-		dg_render_with_color(feedback.color);
-		dg_font_print((float)feedback.x, (float)feedback.y, feedback.buffer);
-		dg_camera_set_perspective();
+		DGCameraSetOrthoView();
+		DGRenderSetColor(feedback.color);
+		DGFontPrint((float)feedback.x, (float)feedback.y, feedback.buffer);
+		DGCameraSetPerspectiveView();
 		
 		if (feedback.timer <= 0) {
 			feedback.color -= 0x05000000;
@@ -646,22 +646,22 @@ void _update_feedback() {
 }
 
 void _updateScene() {
-	DG_OBJECT* spot;
+	DGObject* spot;
     
-	if (!config.show_spots)
-		dg_render_clear();
+	if (!DGConfig.show_spots)
+		DGRenderClearScene();
     
-	dg_camera_set_viewport(config.display_width, config.display_height);
-	dg_camera_update();
+	DGCameraSetViewport(DGConfig.display_width, DGConfig.display_height);
+	DGCameraUpdate();
 	
 	if (global_events.has_pre_render) 
-		dg_script_callback(global_events.pre_render);
+		DGScriptCallback(global_events.pre_render);
 	
-	dg_render_begin(DG_YES);
-	while (dg_world_get_spot(&spot)) {
-		if (dg_spot_is_enabled(spot)) {
-			if (dg_spot_has_texture(spot)) {
-				dg_texture_manager_bind(dg_spot_texture(spot));
+	DGRenderBegin(DG_YES);
+	while (DGWorldGetSpot(&spot)) {
+		if (DGSpotIsEnabled(spot)) {
+			if (DGSpotHasTexture(spot)) {
+				DGTextureManagerBind(DGSpotTexture(spot));
                 
                 /*if (dg_spot_has_audio(spot)) {
                     DG_OBJECT* audio = dg_spot_audio(spot);
@@ -673,32 +673,32 @@ void _updateScene() {
                     }
                 }*/
 				
-				if (dg_spot_has_video(spot)) {
-					DG_OBJECT* video = dg_spot_video(spot);
+				if (DGSpotHasVideo(spot)) {
+					DGObject* video = DGSpotVideo(spot);
 					
-					if (dg_spot_is_playing(spot)) {
-						dg_video_play(video); // Unnecessary
+					if (DGSpotIsPlaying(spot)) {
+						DGVideoPlay(video); // Unnecessary
 						
                         // Create a state machine for the video...
                         
 						// THIS IS PATCHY AND NOT GENERIC ENOUGH
 						// Should not be tested always and only works for nodes
-						if (dg_video_is_synced(video)) {
-							//dg_state_set(DG_ST_VIDEO);
-							if (dg_video_has_reset(video)) {
-								dg_script_resume(); // Must do this once
+						if (DGVideoIsSynced(video)) {
+							//dg_state_set(DG_STATE_VIDEO);
+							if (DGVideoIsReset(video)) {
+								DGScriptResume(); // Must do this once
 							}
 						}
 						
-						if (dg_video_has_frame(video)) {
-							dg_render_cutscene(video);	
+						if (DGVideoHasFrame(video)) {
+							DGRenderShowCutscene(video);	
 						}
                         
                         // TODO: Clean code
-                        if (dg_video_is_frame_ready(video)) {
-                            dg_render_draw_poly(dg_spot_coords(spot), 
-                                                  dg_spot_elements(spot), 
-                                                  dg_spot_face(spot), 
+                        if (DGVideoIsFrameReady(video)) {
+                            DGRenderDrawPolygon(DGSpotArrayOfCoordinates(spot), 
+                                                  DGSpotSizeOfArray(spot), 
+                                                  DGSpotFace(spot), 
                                                   DG_NO);
                         }
 					}
@@ -709,9 +709,9 @@ void _updateScene() {
 
 				}
 				else {
-					dg_render_draw_poly(dg_spot_coords(spot), 
-										  dg_spot_elements(spot), 
-										  dg_spot_face(spot), 
+					DGRenderDrawPolygon(DGSpotArrayOfCoordinates(spot), 
+										  DGSpotSizeOfArray(spot), 
+										  DGSpotFace(spot), 
 										  DG_NO);
 				}
 			}
@@ -719,9 +719,9 @@ void _updateScene() {
 	}
 	
     
-	dg_render_end();
-	dg_render_update_scene();
+	DGRenderEnd();
+	DGRenderUpdateScene();
     
 	if (global_events.has_post_render) 
-		dg_script_callback(global_events.post_render);
+		DGScriptCallback(global_events.post_render);
 }

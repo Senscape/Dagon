@@ -15,22 +15,22 @@
 #import "DGAppDelegate.h"
 
 
-@implementation DagonAppDelegate
+@implementation DGAppDelegate
 
 - (void)audioLoop {
-	while (dg_audio_loop()) {
+	while (DGAudioLoop()) {
 		[NSThread sleepForTimeInterval:0.01f];
 	}
 }
 
 - (void)mainLoop {
-	dg_script_loop();
+	DGScriptLoop();
 }
 
 - (void)videoLoop {
-	while (dg_video_loop()) {
+	while (DGVideoLoop()) {
 		//[NSThread sleepForTimeInterval:0.0000001f];
-        [NSThread sleepForTimeInterval:0.000001f];
+        [NSThread sleepForTimeInterval:0.0000001f];
 	}
 }
 

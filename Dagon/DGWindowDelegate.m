@@ -10,18 +10,18 @@
 #import "DGWindowDelegate.h"
 
 
-@implementation DagonWindowDelegate
+@implementation DGWindowDelegate
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)windowStyle 
                   backing:(NSBackingStoreType)bufferingType defer:(BOOL)defer {
     
     NSRect mainDisplayRect, viewRect;
-	mainDisplayRect = NSMakeRect(0, 0, config.display_width, config.display_height);
+	mainDisplayRect = NSMakeRect(0, 0, DGConfig.display_width, DGConfig.display_height);
     
     self = [super initWithContentRect:contentRect styleMask:windowStyle backing:bufferingType defer:defer];
     if (self) {
         viewRect = NSMakeRect(0.0, 0.0, mainDisplayRect.size.width, mainDisplayRect.size.height);
-        viewDelegate = [[DagonViewDelegate alloc] initWithFrame:viewRect];
+        viewDelegate = [[DGViewDelegate alloc] initWithFrame:viewRect];
     }
     
     return self;

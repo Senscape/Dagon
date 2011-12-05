@@ -44,41 +44,41 @@ typedef struct {
 	GLint height;
 	GLint depth;
 	GLubyte* bitmap;
-	DG_BOOL loaded;
+	DGBool loaded;
 } DG_TEXTURE;
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Private Prototypes												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_TEXTURE* _totexture(DG_OBJECT* texture);
+DG_TEXTURE* _totexture(DGObject* texture);
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Standard New / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_OBJECT* dg_texture_new(const char* name, short compression_level) {
-	DG_OBJECT* texture;
+DGObject* DGTextureNew(const char* withName, short andCompressionLevel) {
+	DGObject* texture;
 	DG_TEXTURE texture_data;
 	
 	glGenTextures(1, &texture_data.ident);  // Better put this on load
-	texture_data.compression_level = compression_level;
+	texture_data.compression_level = andCompressionLevel;
 	texture_data.loaded = DG_NO;
 	
 	// Store data into object and return
-	texture = dg_object_new_named(DG_OBJ_TEXTURE, name, &texture_data, sizeof(texture_data));
+	texture = DGObjectNewNamed(DG_OBJECT_TEXTURE, withName, &texture_data, sizeof(texture_data));
 	
 	return texture;
 }
 
-void dg_texture_release(DG_OBJECT* texture) {
+void DGTextureRelease(DGObject* texture) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {
 		if (texture_data->loaded)
 			glDeleteTextures(1, &texture_data->ident);
 		
-		dg_object_release(texture);
+		DGObjectRelease(texture);
 	}
 }
 
@@ -86,7 +86,7 @@ void dg_texture_release(DG_OBJECT* texture) {
 ///// Implementation - State Changes									   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_texture_append(DG_OBJECT* texture, const char* file) {
+void DGTextureAppend(DGObject* texture, const char* fileNameToAppend) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {
@@ -106,18 +106,18 @@ void dg_texture_append(DG_OBJECT* texture, const char* file) {
 		
 		if (texture_data->compression_level) {
 			glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED_IMAGE_SIZE, &size);
-			texture_data->bitmap = (GLubyte*)dg_alloc(size * sizeof(GLubyte)); 
+			texture_data->bitmap = (GLubyte*)DGAlloc(size * sizeof(GLubyte)); 
 			glGetCompressedTexImage(GL_TEXTURE_2D, 0, texture_data->bitmap);
 		}
 		else {
 			size = texture_data->width * texture_data->height * texture_data->depth;
-			texture_data->bitmap = (GLubyte*)dg_alloc(size * sizeof(GLubyte)); 
+			texture_data->bitmap = (GLubyte*)DGAlloc(size * sizeof(GLubyte)); 
 			glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data->bitmap);
 		}
 		
-		fh = fopen(file, "r+b");
+		fh = fopen(fileNameToAppend, "r+b");
 		if (!fh) {
-			fh = fopen(file, "wb");
+			fh = fopen(fileNameToAppend, "wb");
 			
 			strcpy(header.name, texture->name); // This is the object name
 			header.width = (short)texture_data->width;
@@ -146,17 +146,17 @@ void dg_texture_append(DG_OBJECT* texture, const char* file) {
 		subheader.format = (int)internalformat;
 		position++;
 		
-		fh = fopen(file, "ab");
+		fh = fopen(fileNameToAppend, "ab");
 		if (fh) {
 			fwrite(&subheader, 1, sizeof(subheader), fh);
 			fwrite(texture_data->bitmap, 1, sizeof(GLubyte) * size, fh);
-			dg_free(texture_data->bitmap);
+			DGFree(texture_data->bitmap);
 			fclose(fh);
 		}
 	}
 }
 
-void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
+void DGTextureLoad(DGObject* texture, const char* fromFileName, unsigned atIndex) {
 	DG_TEXTURE* texture_data = _totexture(texture);
     
 	if (texture_data) {	
@@ -167,12 +167,12 @@ void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
 		if (texture_data->loaded)
 			return;
 		
-		fh = fopen(file, "rb");	
+		fh = fopen(fromFileName, "rb");	
 		
 		if (fh != NULL) {
 			if (fread(&magic, sizeof(magic), 1, fh) == 0) {
 				// Couldn't read magic number
-				dg_log_error(DG_MOD_TEXTURE, "%s", MSG210002, file);
+				DGLogError(DG_MOD_TEXTURE, "%s", MSG210002, fromFileName);
 			}
 			
 			if (memcmp(TEXIdent, &magic, 7) == 0) {
@@ -190,10 +190,10 @@ void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
 				texture_data->height = (GLuint)header.height;
 				
 				// Skip subheaders based on the index
-				if (index) {
+				if (atIndex) {
 					unsigned int i;
 					
-					for (i = 0; i < index; i++) {
+					for (i = 0; i < atIndex; i++) {
 						if (!fread(&subheader, 1, sizeof(subheader), fh))
 							return;
 						fseek(fh, sizeof(char) * subheader.size, SEEK_CUR);
@@ -207,7 +207,7 @@ void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
 				size = (GLint)subheader.size;
 				internalformat = (GLint)subheader.format;
 				
-				texture_data->bitmap = (GLubyte*)dg_alloc(size * sizeof(GLubyte)); 
+				texture_data->bitmap = (GLubyte*)DGAlloc(size * sizeof(GLubyte)); 
 				if (!fread(texture_data->bitmap, 1, sizeof(GLubyte) * size, fh))
 					return;
 				
@@ -221,7 +221,7 @@ void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
 					if (compressed == GL_TRUE)
 						texture_data->loaded = DG_YES;
 					else
-						dg_log_error(DG_MOD_TEXTURE, "%s", MSG210002, fh);
+						DGLogError(DG_MOD_TEXTURE, "%s", MSG210002, fh);
 				}
 				else {
 					glTexImage2D(GL_TEXTURE_2D, 0, internalformat, texture_data->width, texture_data->height,
@@ -234,7 +234,7 @@ void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 				
 				
-				dg_free(texture_data->bitmap);
+				DGFree(texture_data->bitmap);
 			}
 			else {
 				int x, y, comp;
@@ -277,7 +277,7 @@ void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
 								internalformat = GL_RGBA;
 							break;
 						default:
-							dg_log_warning(DG_MOD_TEXTURE, "%s (%s) %d", MSG210003, file, comp);
+							DGLogWarning(DG_MOD_TEXTURE, "%s (%s) %d", MSG210003, fromFileName, comp);
 							break;
 					}
 					
@@ -288,12 +288,12 @@ void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 					glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 					
-					dg_free(texture_data->bitmap);
+					DGFree(texture_data->bitmap);
 					texture_data->loaded = DG_YES;
 				}
 				else {
 					// Nothing loaded
-					dg_log_error(DG_MOD_TEXTURE, "%s (%s) %s", MSG210001, file, stbi_failure_reason());
+					DGLogError(DG_MOD_TEXTURE, "%s (%s) %s", MSG210001, fromFileName, stbi_failure_reason());
 				}
 			}
 			
@@ -301,12 +301,12 @@ void dg_texture_load(DG_OBJECT* texture, const char* file, unsigned index) {
 		}
 		else {
 			// File not found
-			dg_log_error(DG_MOD_TEXTURE, "%s %s", MSG210000, file);
+			DGLogError(DG_MOD_TEXTURE, "%s %s", MSG210000, fromFileName);
 		}
 	}
 }
 
-void dg_texture_load_from_memory(DG_OBJECT* texture, const unsigned char* data) {
+void DGTextureLoadFromMemory(DGObject* texture, const unsigned char* dataToLoad) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {	
@@ -316,7 +316,7 @@ void dg_texture_load_from_memory(DG_OBJECT* texture, const unsigned char* data) 
 		if (texture_data->loaded)
 			return;
 
-		texture_data->bitmap = (GLubyte*)stbi_load_from_memory(data, 173487, &x, &y, &comp, STBI_default);
+		texture_data->bitmap = (GLubyte*)stbi_load_from_memory(dataToLoad, 173487, &x, &y, &comp, STBI_default);
 		
 		if (texture_data->bitmap) {
 			texture_data->width = x;
@@ -353,7 +353,7 @@ void dg_texture_load_from_memory(DG_OBJECT* texture, const unsigned char* data) 
 						internalformat = GL_RGBA;
 					break;
 				default:
-					dg_log_warning(DG_MOD_TEXTURE, "%s %d", MSG210003, comp);
+					DGLogWarning(DG_MOD_TEXTURE, "%s %d", MSG210003, comp);
 					break;
 			}
 			
@@ -364,17 +364,17 @@ void dg_texture_load_from_memory(DG_OBJECT* texture, const unsigned char* data) 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			
-			dg_free(texture_data->bitmap);
+			DGFree(texture_data->bitmap);
 			texture_data->loaded = DG_YES;
 		}
 		else {
 			// Nothing loaded
-			dg_log_error(DG_MOD_TEXTURE, "%s %s", MSG210001, stbi_failure_reason());
+			DGLogError(DG_MOD_TEXTURE, "%s %s", MSG210001, stbi_failure_reason());
 		}
 	}
 }
 
-void dg_texture_save(DG_OBJECT* texture, const char* file) {
+void DGTextureSaveToFile(DGObject* texture, const char* fileName) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {	
@@ -429,7 +429,7 @@ void dg_texture_save(DG_OBJECT* texture, const char* file) {
 		GLint size;
 		FILE* fh;
 		
-		fh = fopen(file, "wb");
+		fh = fopen(fileName, "wb");
 		if (fh == NULL)
 			return;
 		
@@ -467,7 +467,7 @@ void dg_texture_save(DG_OBJECT* texture, const char* file) {
 		texture_data->depth = mode;
 		
 		size = texture_data->width * texture_data->height * texture_data->depth;
-		texture_data->bitmap = (GLubyte*)dg_alloc(size * sizeof(GLubyte)); 
+		texture_data->bitmap = (GLubyte*)DGAlloc(size * sizeof(GLubyte)); 
 		glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, texture_data->bitmap);
 		
 		if (mode >= 3)
@@ -480,7 +480,7 @@ void dg_texture_save(DG_OBJECT* texture, const char* file) {
 		fwrite(texture_data->bitmap, 1, sizeof(GLubyte) * size, fh);
 		fclose(fh);
 
-		dg_free(texture_data->bitmap);
+		DGFree(texture_data->bitmap);
 	}
 }
 
@@ -488,16 +488,16 @@ void dg_texture_save(DG_OBJECT* texture, const char* file) {
 ///// Implementation - Checks											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-unsigned dg_texture_count(const char* file) {
+unsigned DGTextureItemsInBundle(const char* fileName) {
 	FILE* fh;
 	char magic[10]; // Used to identity file types
 
-	fh = fopen(file, "rb");	
+	fh = fopen(fileName, "rb");	
 	
 	if (fh != NULL) {
 		if (fread(&magic, sizeof(magic), 1, fh) == 0) {
 			// Couldn't read magic number
-			dg_log_error(DG_MOD_TEXTURE, "%s", MSG210002, file);
+			DGLogError(DG_MOD_TEXTURE, "%s", MSG210002, fileName);
 		}
 		
 		if (memcmp(TEXIdent, &magic, 7) == 0) {
@@ -516,7 +516,7 @@ unsigned dg_texture_count(const char* file) {
 	return -1; // Undefined error
 }
 
-unsigned dg_texture_height(DG_OBJECT* texture) {
+unsigned DGTextureHeight(DGObject* texture) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {	
@@ -526,7 +526,7 @@ unsigned dg_texture_height(DG_OBJECT* texture) {
 	return 0;
 }
 
-DG_BOOL dg_texture_is_loaded(DG_OBJECT* texture) {
+DGBool DGTextureIsLoaded(DGObject* texture) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {	
@@ -536,7 +536,7 @@ DG_BOOL dg_texture_is_loaded(DG_OBJECT* texture) {
 	return DG_NO;
 }
 
-unsigned dg_texture_width(DG_OBJECT* texture) {
+unsigned DGTextureWidth(DGObject* texture) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {	
@@ -550,7 +550,7 @@ unsigned dg_texture_width(DG_OBJECT* texture) {
 ///// Implementation - Sets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_texture_bind(DG_OBJECT* texture) {
+void DGTextureBind(DGObject* texture) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {		
@@ -558,7 +558,7 @@ void dg_texture_bind(DG_OBJECT* texture) {
 	}
 }
 
-void dg_texture_clear(DG_OBJECT* texture, int width, int height, int depth) {
+void DGTextureClear(DGObject* texture, int width, int height, int depth) {
 	DG_TEXTURE* texture_data = _totexture(texture);
 	
 	if (texture_data) {	
@@ -575,7 +575,7 @@ void dg_texture_clear(DG_OBJECT* texture, int width, int height, int depth) {
 			if (!depth) comp = 3;
 			else comp = depth / 8;
 			
-			data = (unsigned int*)dg_zeromem(width * height * comp, sizeof(GLuint));
+			data = (unsigned int*)DGZeroMem(width * height * comp, sizeof(GLuint));
 			
 			// WARNING: This code doesn't handle components properly
 			// Generating textures twice?
@@ -595,9 +595,9 @@ void dg_texture_clear(DG_OBJECT* texture, int width, int height, int depth) {
 ///// Private Functions													   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_TEXTURE* _totexture(DG_OBJECT* texture) {
-	if (dg_object_check(texture, DG_OBJ_TEXTURE)) {
-		DG_TEXTURE* texture_data = (DG_TEXTURE*)dg_object_data(texture);
+DG_TEXTURE* _totexture(DGObject* texture) {
+	if (DGObjectIsType(texture, DG_OBJECT_TEXTURE)) {
+		DG_TEXTURE* texture_data = (DG_TEXTURE*)DGObjectData(texture);
 		return texture_data;
 	}
 	else {

@@ -12,60 +12,60 @@
 #include "DGLog.h"
 
 
-DG_CONFIG config;
+DG_CONFIG DGConfig;
 
-void dg_config_init() {	
-	strcpy(config.script, DG_DEF_SCRIPTFILE);
+void DGConfigInitialize() {	
+	strcpy(DGConfig.script, DG_DEF_SCRIPTFILE);
     
-    strcpy(config.app_path, "");
-    strcpy(config.res_path, "catalog/");
-    strcpy(config.user_path, "");
+    strcpy(DGConfig.app_path, "");
+    strcpy(DGConfig.res_path, "catalog/");
+    strcpy(DGConfig.user_path, "");
 	
-	config.antialiasing = DG_DEF_ANTIALIASING;
-	config.display_width = DG_DEF_DISPLAYWIDTH;
-	config.display_height = DG_DEF_DISPLAYHEIGHT;
-	config.display_depth = DG_DEF_DISPLAYDEPTH;
-	config.debug_mode = DG_DEF_DEBUGMODE;
-	config.dust = DG_DEF_DUST;
-	config.fullscreen = DG_DEF_FULLSCREEN;
-	config.effects = DG_DEF_EFFECTS;
-	config.log = DG_DEF_LOG;
-	config.multithread = DG_DEF_MULTITHREAD;
-	config.framerate = DG_DEF_FRAMERATE;
-	config.show_splash = DG_DEF_SHOWSPLASH;
-	config.show_spots = DG_DEF_SHOWSPOTS;
-	config.tex_compression = DG_DEF_TEXCOMPRESSION;
-	strcpy(config.tex_extension, DG_DEF_EXTENSION);
-    config.scare = DG_DEF_SCARE;
-    config.throb = DG_DEF_THROB;
-	config.vertical_sync = DG_DEF_VERTICALSYNC;
+	DGConfig.antialiasing = DG_DEF_ANTIALIASING;
+	DGConfig.display_width = DG_DEF_DISPLAYWIDTH;
+	DGConfig.display_height = DG_DEF_DISPLAYHEIGHT;
+	DGConfig.display_depth = DG_DEF_DISPLAYDEPTH;
+	DGConfig.debug_mode = DG_DEF_DEBUGMODE;
+	DGConfig.dust = DG_DEF_DUST;
+	DGConfig.fullscreen = DG_DEF_FULLSCREEN;
+	DGConfig.effects = DG_DEF_EFFECTS;
+	DGConfig.log = DG_DEF_LOG;
+	DGConfig.multithread = DG_DEF_MULTITHREAD;
+	DGConfig.framerate = DG_DEF_FRAMERATE;
+	DGConfig.show_splash = DG_DEF_SHOWSPLASH;
+	DGConfig.show_spots = DG_DEF_SHOWSPOTS;
+	DGConfig.tex_compression = DG_DEF_TEXCOMPRESSION;
+	strcpy(DGConfig.tex_extension, DG_DEF_EXTENSION);
+    DGConfig.scare = DG_DEF_SCARE;
+    DGConfig.throb = DG_DEF_THROB;
+	DGConfig.vertical_sync = DG_DEF_VERTICALSYNC;
 	
 	//TODO: If vertical sync is enabled this should not be necessary!
 	// This is a readonly setting
-	config.global_speed = 60.0f / (float)config.framerate;
+	DGConfig.global_speed = 60.0f / (float)DGConfig.framerate;
 }
 
-void dg_config_finalize() {
+void DGConfigTerminate() {
 	fclose(stdout);
 	fclose(stderr);
 }
 
-const char*	dg_config_get_path(int type, const char* file) {
+const char*	DGConfigGetPath(int withType, const char* forFile) {
 	static char full_path[DG_MAX_PATHLEN];
 	
-    switch (type) {
-        case DG_APP:
-            strcpy(full_path, config.app_path);
+    switch (withType) {
+        case DG_PATH_APP:
+            strcpy(full_path, DGConfig.app_path);
             break;
-        case DG_RES:
-            strcpy(full_path, config.res_path);
+        case DG_PATH_RES:
+            strcpy(full_path, DGConfig.res_path);
             break;
-        case DG_USER:
-            strcpy(full_path, config.user_path);
+        case DG_PATH_USER:
+            strcpy(full_path, DGConfig.user_path);
             break;
     }
 	
-	strcat(full_path, file);
+	strcat(full_path, forFile);
 	
 	return full_path;
 }

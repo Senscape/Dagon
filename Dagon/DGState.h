@@ -14,10 +14,10 @@
 #include "DGCommon.h"
 
 
-void		dg_state_init(void);
-unsigned	dg_state_current(void);
-unsigned	dg_state_last(void);
-void		dg_state_return(void);
-void		dg_state_set(unsigned new_state);
+void		DGStateInitialize(void);
+unsigned	DGStateCurrent(void);
+unsigned	DGStateLast(void);
+void		DGStateReturn(void);
+void		DGStateSet(unsigned theState);
 
 #endif // DG_STATE_H

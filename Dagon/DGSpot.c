@@ -18,20 +18,20 @@
 typedef struct {
 	int color;
 	int flags;
-	DG_ACTION* action;
-	DG_OBJECT* texture;
-    DG_OBJECT* audio_obj;
-	DG_OBJECT* video_obj;
+	DGAction* action;
+	DGObject* texture;
+    DGObject* audio_obj;
+	DGObject* video_obj;
 	
-	DG_BOOL is_enabled;
-	DG_BOOL is_playing;
+	DGBool is_enabled;
+	DGBool is_playing;
 	
-	DG_BOOL has_action;
-	DG_BOOL has_audio;
-	DG_BOOL has_color;
-	DG_BOOL has_image;
-	DG_BOOL has_texture;
-	DG_BOOL has_video;
+	DGBool has_action;
+	DGBool has_audio;
+	DGBool has_color;
+	DGBool has_image;
+	DGBool has_texture;
+	DGBool has_video;
 	
 	char image[DG_MAX_OBJNAME];
 	
@@ -49,19 +49,19 @@ typedef struct {
 ///// Private Prototypes												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_SPOT* _tospot(DG_OBJECT* spot);
+DG_SPOT* _tospot(DGObject* spot);
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Standard New / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_OBJECT* dg_spot_new(short* coords, unsigned elements, unsigned face, int flags) {
-	DG_OBJECT* spot;
+DGObject* DGSpotNew(short* withArrayOfCoordinates, unsigned sizeOfArray, unsigned onFace, int withFlags) {
+	DGObject* spot;
 	DG_SPOT spot_data;
 	
 	// Init data with default values
 	spot_data.color = DG_COLOR_BLACK;
-	spot_data.flags = flags;
+	spot_data.flags = withFlags;
 	spot_data.action = NULL;
 	spot_data.texture = NULL;
 	
@@ -77,43 +77,43 @@ DG_OBJECT* dg_spot_new(short* coords, unsigned elements, unsigned face, int flag
 	
 	strcpy(spot_data.image, "");
 	
-	spot_data.coords = dg_alloc(sizeof(short) * elements);
-	memcpy(spot_data.coords, coords, sizeof(short) * elements);
-	spot_data.elements = elements;
-	spot_data.face = face;
+	spot_data.coords = DGAlloc(sizeof(short) * sizeOfArray);
+	memcpy(spot_data.coords, withArrayOfCoordinates, sizeof(short) * sizeOfArray);
+	spot_data.elements = sizeOfArray;
+	spot_data.face = onFace;
 	
 	spot_data.x_origin = 0;
 	spot_data.y_origin = 0;
 	spot_data.z_order = 0;
 	
 	// Store data into object and return
-	spot = dg_object_new(DG_OBJ_SPOT, &spot_data, sizeof(spot_data));
+	spot = DGObjectNew(DG_OBJECT_SPOT, &spot_data, sizeof(spot_data));
 	
 	return spot;
 }
 
-void dg_spot_release(DG_OBJECT* spot) {
+void DGSpotRelease(DGObject* spot) {
 	// If refcount is zero then is means the object was never used, so it's valid
-	if (dg_object_refcount(spot) <= 1) {
+	if (DGObjectReferenceCount(spot) <= 1) {
 		DG_SPOT* spot_data = _tospot(spot);
 		
 		if (spot_data) {
-			dg_free(spot_data->coords);
+			DGFree(spot_data->coords);
 			if (spot_data->has_action)
-				dg_free(spot_data->action);
+				DGFree(spot_data->action);
 
-			dg_object_release(spot);
+			DGObjectRelease(spot);
 		}
 	}
 	else
-		dg_object_unref(spot);
+		DGObjectRemoveReference(spot);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Implementation - State Changes									   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_spot_disable(DG_OBJECT* spot) {
+void DGSpotDisable(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -121,7 +121,7 @@ void dg_spot_disable(DG_OBJECT* spot) {
 	}
 }
 
-void dg_spot_enable(DG_OBJECT* spot) {
+void DGSpotEnable(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -129,7 +129,7 @@ void dg_spot_enable(DG_OBJECT* spot) {
 	}
 }
 
-void dg_spot_play(DG_OBJECT* spot) {
+void DGSpotPlay(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -137,7 +137,7 @@ void dg_spot_play(DG_OBJECT* spot) {
 	}
 }
 
-void dg_spot_stop(DG_OBJECT* spot) {
+void DGSpotStop(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -145,7 +145,7 @@ void dg_spot_stop(DG_OBJECT* spot) {
 	}
 }
 
-void dg_spot_toggle(DG_OBJECT* spot) {
+void DGSpotToggle(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -160,7 +160,7 @@ void dg_spot_toggle(DG_OBJECT* spot) {
 ///// Implementation - Checks											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_BOOL	dg_spot_has_action(DG_OBJECT* spot) {
+DGBool	DGSpotHasAction(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -170,7 +170,7 @@ DG_BOOL	dg_spot_has_action(DG_OBJECT* spot) {
 	return DG_NO;	
 }
 
-DG_BOOL	dg_spot_has_audio(DG_OBJECT* spot) {
+DGBool	DGSpotHasAudio(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -180,7 +180,7 @@ DG_BOOL	dg_spot_has_audio(DG_OBJECT* spot) {
 	return DG_NO;
 }
 
-DG_BOOL	dg_spot_has_color(DG_OBJECT* spot) {
+DGBool	DGSpotHasColor(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -190,7 +190,7 @@ DG_BOOL	dg_spot_has_color(DG_OBJECT* spot) {
 	return DG_NO;
 }
 
-DG_BOOL dg_spot_has_image(DG_OBJECT* spot) {
+DGBool DGSpotHasImage(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -200,7 +200,7 @@ DG_BOOL dg_spot_has_image(DG_OBJECT* spot) {
 	return DG_NO;	
 }
 
-DG_BOOL dg_spot_has_texture(DG_OBJECT* spot) {
+DGBool DGSpotHasTexture(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -210,7 +210,7 @@ DG_BOOL dg_spot_has_texture(DG_OBJECT* spot) {
 	return DG_NO;	
 }
 
-DG_BOOL	dg_spot_has_video(DG_OBJECT* spot) {
+DGBool	DGSpotHasVideo(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -220,7 +220,7 @@ DG_BOOL	dg_spot_has_video(DG_OBJECT* spot) {
 	return DG_NO;	
 }
 
-DG_BOOL	dg_spot_is_enabled(DG_OBJECT* spot) {
+DGBool	DGSpotIsEnabled(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -230,7 +230,7 @@ DG_BOOL	dg_spot_is_enabled(DG_OBJECT* spot) {
 	return DG_NO;	
 }
 
-DG_BOOL	dg_spot_is_playing(DG_OBJECT* spot) {
+DGBool	DGSpotIsPlaying(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -244,7 +244,7 @@ DG_BOOL	dg_spot_is_playing(DG_OBJECT* spot) {
 ///// Implementation - Gets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_ACTION*	dg_spot_action(DG_OBJECT* spot) {
+DGAction*	DGSpotAction(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -254,7 +254,7 @@ DG_ACTION*	dg_spot_action(DG_OBJECT* spot) {
 	return NULL;
 }
 
-DG_OBJECT*	dg_spot_audio(DG_OBJECT* spot) {
+DGObject*	DGSpotAudio(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -264,7 +264,7 @@ DG_OBJECT*	dg_spot_audio(DG_OBJECT* spot) {
 	return NULL;
 }
 
-int	dg_spot_color(DG_OBJECT* spot) {
+int	DGSpotColor(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -274,7 +274,7 @@ int	dg_spot_color(DG_OBJECT* spot) {
 	return DG_COLOR_BLACK;
 }
 
-short* dg_spot_coords(DG_OBJECT* spot) {
+short* DGSpotArrayOfCoordinates(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -284,7 +284,7 @@ short* dg_spot_coords(DG_OBJECT* spot) {
 	return NULL;	
 }
 
-unsigned dg_spot_elements(DG_OBJECT* spot) {
+unsigned DGSpotSizeOfArray(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -294,7 +294,7 @@ unsigned dg_spot_elements(DG_OBJECT* spot) {
 	return 0;	
 }
 
-unsigned dg_spot_face(DG_OBJECT* spot) {
+unsigned DGSpotFace(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -304,7 +304,7 @@ unsigned dg_spot_face(DG_OBJECT* spot) {
 	return 0;	
 }
 
-const char*	dg_spot_image(DG_OBJECT* spot) {
+const char*	DGSpotImage(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -314,7 +314,7 @@ const char*	dg_spot_image(DG_OBJECT* spot) {
 	return "";
 }
 
-DG_OBJECT* dg_spot_texture(DG_OBJECT* spot) {
+DGObject* DGSpotTexture(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -324,7 +324,7 @@ DG_OBJECT* dg_spot_texture(DG_OBJECT* spot) {
 	return NULL;
 }
 
-DG_OBJECT* dg_spot_video(DG_OBJECT* spot) {
+DGObject* DGSpotVideo(DGObject* spot) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
@@ -338,44 +338,44 @@ DG_OBJECT* dg_spot_video(DG_OBJECT* spot) {
 ///// Implementation - Sets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_spot_resize(DG_OBJECT* spot, short* coords, unsigned elements) {
+void DGSpotResize(DGObject* spot, short* withNewArrayOfCoordinates, unsigned sizeOfNewArray) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
-		spot_data->coords = dg_realloc(spot_data->coords, sizeof(short) * elements);
-		memcpy(spot_data->coords, coords, sizeof(short) * elements);
-		spot_data->elements = elements;
+		spot_data->coords = DGRealloc(spot_data->coords, sizeof(short) * sizeOfNewArray);
+		memcpy(spot_data->coords, withNewArrayOfCoordinates, sizeof(short) * sizeOfNewArray);
+		spot_data->elements = sizeOfNewArray;
 	}
 }
 
-void dg_spot_set_action(DG_OBJECT* spot, DG_ACTION* action) {
+void DGSpotSetAction(DGObject* spot, DGAction* anAction) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
-		spot_data->action = dg_alloc(sizeof(DG_ACTION));
-		memcpy(spot_data->action, action, sizeof(DG_ACTION));
+		spot_data->action = DGAlloc(sizeof(DGAction));
+		memcpy(spot_data->action, anAction, sizeof(DGAction));
 		spot_data->has_action = DG_YES;
 	}
 }
 
-void dg_spot_set_audio(DG_OBJECT* spot, DG_OBJECT* audio) {
+void DGSpotSetAudio(DGObject* spot, DGObject* anAudio) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
-		spot_data->audio_obj = audio;
+		spot_data->audio_obj = anAudio;
 		spot_data->has_audio = DG_YES;
 	}
 }
 
-void dg_spot_set_color(DG_OBJECT* spot, int color) {
+void DGSpotSetColor(DGObject* spot, int aColor) {
 	// TODO: Must avoid repetition of color (ugly patch)
 	static int c = 1;
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
-		if (!color) {
+		if (!aColor) {
 #ifdef DG_PLATFORM_MAC	
-			color = (arc4random() % 0x0000AA) + (0x002200 * c); // Lesser than blue but avoiding black
+			aColor = (arc4random() % 0x0000AA) + (0x002200 * c); // Lesser than blue but avoiding black
 #else
 			color = (rand() % 0x0000AA) + (0x002200 * c); // Lesser than blue but avoiding black
 #endif
@@ -385,34 +385,34 @@ void dg_spot_set_color(DG_OBJECT* spot, int color) {
 				c = 1;
 		}
 		
-		spot_data->color = color;
+		spot_data->color = aColor;
 		spot_data->has_color = DG_YES;
 	}
 }
 
-void dg_spot_set_image(DG_OBJECT* spot, const char* file) {
+void DGSpotSetImage(DGObject* spot, const char* anImageFilename) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
-		strcpy(spot_data->image, file);
+		strcpy(spot_data->image, anImageFilename);
 		spot_data->has_image = DG_YES;
 	}
 }
 
-void dg_spot_set_texture(DG_OBJECT* spot, DG_OBJECT* texture) {
+void DGSpotSetTexture(DGObject* spot, DGObject* aTexture) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
-		spot_data->texture = texture;
+		spot_data->texture = aTexture;
 		spot_data->has_texture = DG_YES;
 	}
 }
 
-void dg_spot_set_video(DG_OBJECT* spot, DG_OBJECT* video) {
+void DGSpotSetVideo(DGObject* spot, DGObject* aVideo) {
 	DG_SPOT* spot_data = _tospot(spot);
 	
 	if (spot_data) {
-		spot_data->video_obj = video;
+		spot_data->video_obj = aVideo;
 		spot_data->has_video = DG_YES;
 	}
 }
@@ -421,9 +421,9 @@ void dg_spot_set_video(DG_OBJECT* spot, DG_OBJECT* video) {
 ///// Private Functions													   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_SPOT* _tospot(DG_OBJECT* spot) {
-	if (dg_object_check(spot, DG_OBJ_SPOT)) {
-		DG_SPOT* spot_data = (DG_SPOT*)dg_object_data(spot);
+DG_SPOT* _tospot(DGObject* spot) {
+	if (DGObjectIsType(spot, DG_OBJECT_SPOT)) {
+		DG_SPOT* spot_data = (DG_SPOT*)DGObjectData(spot);
 		return spot_data;
 	}
 	else {
