@@ -17,21 +17,21 @@
 #include "DGRender.h"
 
 
-static DG_CONSOLE_STATE state;
+static DGConsoleState state;
 
-void dg_console_init() {
+void DGConsoleInitialize() {
 	state.can_process = DG_NO;
 	state.enabled = DG_NO;
 	strcpy(state.command, "");
 	strcpy(state.input, "");
-	state.slide = config.display_height / 2;
+	state.slide = DGConfig.display_height / 2;
 }
 
-void dg_console_release() {
+void DGConsoleTerminate() {
 	state.enabled = DG_NO;
 }
 
-void dg_console_delete() {
+void DGConsoleDeleteChar() {
 	if (state.enabled && strlen(state.input) > 0) {
 		char aux[DG_MAX_LOGLEN];
 		
@@ -41,23 +41,23 @@ void dg_console_delete() {
 	}
 }
 
-void dg_console_enable() {
+void DGConsoleEnable() {
 	state.enabled = DG_YES;
 }
 
-void dg_console_input(const char* key) {
+void DGConsoleInputChar(const char* aKey) {
 	if (state.enabled) {
-		strncat(state.input, key, 1);
+		strncat(state.input, aKey, 1);
 	}
 }
 
-DG_BOOL dg_console_is_enabled() {
+DGBool DGConsoleIsEnabled() {
 	return state.enabled;
 }
 
-DG_BOOL dg_console_output(char* buffer) {
+DGBool DGConsoleOutput(char* pointerToBuffer) {
 	if (state.can_process) {
-		strcpy(buffer, state.command);
+		strcpy(pointerToBuffer, state.command);
 		strcpy(state.command, "");
 		state.can_process = DG_NO;
 		
@@ -67,7 +67,7 @@ DG_BOOL dg_console_output(char* buffer) {
 	return DG_NO;
 }
 
-void dg_console_execute() {
+void DGConsoleExecute() {
 	if (state.enabled) {
 		strcpy(state.command, state.input);
 		strcpy(state.input, "");
@@ -75,42 +75,42 @@ void dg_console_execute() {
 	}
 }
 
-void dg_console_toggle() {
+void DGConsoleToggleState() {
 	if (state.enabled)
 		state.enabled = DG_NO;
 	else {
-		state.slide = config.display_height / 2;
+		state.slide = DGConfig.display_height / 2;
 		state.enabled = DG_YES;
 	}
 }
 
-void dg_console_update() {
-	if (state.enabled || (state.slide != (config.display_height / 2))) {
+void DGConsoleUpdate() {
+	if (state.enabled || (state.slide != (DGConfig.display_height / 2))) {
 		char buffer[DG_MAX_LOGLEN];
 		unsigned int index = 0, row = 2; // Row is two to avoid sticking to the margin and leave space for input
 		
-		dg_render_begin(DG_NO);
-		dg_camera_set_ortho();
-		while (dg_log_history(&index, buffer)) {
-			short coords[] = { 0, config.display_height, 
-				config.display_width, config.display_height,
-				config.display_width, (config.display_height / 2) + state.slide,
-				0, (config.display_height / 2) + state.slide };
+		DGRenderBegin(DG_NO);
+		DGCameraSetOrthoView();
+		while (DGLogHistory(&index, buffer)) {
+			short coords[] = { 0, DGConfig.display_height, 
+				DGConfig.display_width, DGConfig.display_height,
+				DGConfig.display_width, (DGConfig.display_height / 2) + state.slide,
+				0, (DGConfig.display_height / 2) + state.slide };
 			
-			dg_render_with_color(0x88221111); // Put this into a "shade" type of color... oooor better use masks!! DG_COLOR_SHADE
+			DGRenderSetColor(0x88221111); // Put this into a "shade" type of color... oooor better use masks!! DG_COLOR_SHADE
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			dg_render_draw_quad(coords, DG_NO);
+			DGRenderDrawOverlay(coords, DG_NO);
 			 
-			dg_render_with_color(dg_log_color(index));
-			dg_font_print(10, (float)((config.display_height / 2) - state.slide - (15 * row)), buffer);
+			DGRenderSetColor(DGLogColor(index));
+			DGFontPrint(10, (float)((DGConfig.display_height / 2) - state.slide - (15 * row)), buffer);
 			
 			row++;
 		}
 		
-		dg_render_with_color(DG_COLOR_BRIGHTGREEN);
-		dg_font_print(10, (float)((config.display_height / 2) - state.slide - 15), ">%s_", state.input);
-		dg_camera_set_perspective();
-		dg_render_end();
+		DGRenderSetColor(DG_COLOR_BRIGHTGREEN);
+		DGFontPrint(10, (float)((DGConfig.display_height / 2) - state.slide - 15), ">%s_", state.input);
+		DGCameraSetPerspectiveView();
+		DGRenderEnd();
 		
 		if (state.enabled) {
 			if ((state.slide - 10) > 0)
@@ -119,10 +119,10 @@ void dg_console_update() {
 				state.slide = 0;
 		}
 		else {
-			if ((state.slide + 10) < (config.display_height / 2))
+			if ((state.slide + 10) < (DGConfig.display_height / 2))
 				state.slide += 10;
 			else
-				state.slide = config.display_height / 2;
+				state.slide = DGConfig.display_height / 2;
 		}
 	}
 }

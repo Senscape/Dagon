@@ -56,14 +56,14 @@ GLuint p;
 
 char *textFileRead(char *fn);
 
-static DG_BOOL active = DG_NO;
+static DGBool active = DG_NO;
 
-void dg_effects_init() {
+void DGEffectsInit() {
 #ifndef DG_PLATFORM_IOS
 	const char * ff = fs;
 	//const char * ff = fs_file;
 
-	dg_log_trace(DG_MOD_EFFECTS, "Initializing effects manager...");
+	DGLogTrace(DG_MOD_EFFECTS, "Initializing effects manager...");
 	
 	f = glCreateShader(GL_FRAGMENT_SHADER);	
 	
@@ -82,7 +82,7 @@ void dg_effects_init() {
 	
 	glLinkProgram(p);
 
-	if (config.effects) {
+	if (DGConfig.effects) {
 		glUseProgram(p);
 		
 		active = DG_YES;
@@ -90,7 +90,7 @@ void dg_effects_init() {
 #endif
 }
 
-void dg_effects_pause() {
+void DGEffectsPause() {
 #ifndef DG_PLATFORM_IOS  
 	if (active) {
 		glUseProgram(0);
@@ -99,18 +99,18 @@ void dg_effects_pause() {
 #endif    
 }
 
-void dg_effects_play() {
+void DGEffectsPlay() {
 #ifndef DG_PLATFORM_IOS    
-	if (config.effects && !active) {
+	if (DGConfig.effects && !active) {
 		glUseProgram(p);
 		active = DG_YES;
 	}
 #endif    
 }
 
-void dg_effects_release() {
+void DGEffectsTerminate() {
 #ifndef DG_PLATFORM_IOS    
-	if (config.effects && active) {
+	if (DGConfig.effects && active) {
 		glUseProgram(0);
 	
 		glDetachShader(p, f);
@@ -121,22 +121,22 @@ void dg_effects_release() {
 #endif    
 }
 
-void dg_effects_set_blur(int offsetx, int offsety) {
+void DGEffectsSetBlur(int horizontalOffset, int verticalOffset) {
 #ifndef DG_PLATFORM_IOS    
-	if (config.effects && active) {
+	if (DGConfig.effects && active) {
 		GLint ox;
 		GLint oy;
         
         GLfloat ox_aux;
         GLfloat oy_aux;
         
-        if (config.scare) {
-            ox_aux = (GLfloat)abs(offsetx) / (GLfloat)config.display_width / 5.0f; // Last value is intensity...
-            oy_aux = (GLfloat)abs(offsety) / (GLfloat)config.display_height / 10.0f; // Last value is intensity...
+        if (DGConfig.scare) {
+            ox_aux = (GLfloat)abs(horizontalOffset) / (GLfloat)DGConfig.display_width / 5.0f; // Last value is intensity...
+            oy_aux = (GLfloat)abs(verticalOffset) / (GLfloat)DGConfig.display_height / 10.0f; // Last value is intensity...
         }
         else {
-            ox_aux = (GLfloat)abs(offsetx) / (GLfloat)config.display_width / 20.0f; 
-            oy_aux = (GLfloat)abs(offsety) / (GLfloat)config.display_height / 40.0f;
+            ox_aux = (GLfloat)abs(horizontalOffset) / (GLfloat)DGConfig.display_width / 20.0f; 
+            oy_aux = (GLfloat)abs(verticalOffset) / (GLfloat)DGConfig.display_height / 40.0f;
         }
 		
 		ox = glGetUniformLocation(p, "offsetx");
@@ -147,13 +147,13 @@ void dg_effects_set_blur(int offsetx, int offsety) {
 #endif    
 }
 
-void dg_effects_set_gamma(float level) {
+void DGEffectsSetGamma(float intensity) {
 #ifndef DG_PLATFORM_IOS    
-	if (config.effects && active) {
+	if (DGConfig.effects && active) {
 		GLint ol;
 		
 		ol = glGetUniformLocation(p, "gamma");
-		glUniform1f(ol, level);
+		glUniform1f(ol, intensity);
 	}
 #endif
 }
@@ -175,7 +175,7 @@ char *textFileRead(char *fn) {
 			rewind(fp);
 			
 			if (count > 0) {
-				content = (char *)dg_alloc(sizeof(char) * (count+1));
+				content = (char *)DGAlloc(sizeof(char) * (count+1));
 				count = fread(content,sizeof(char),count,fp);
 				content[count] = '\0';
 			}

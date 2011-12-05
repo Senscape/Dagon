@@ -18,39 +18,39 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 struct {
-	DG_OBJECT* current_room;
-	DG_OBJECT* current_spot;
-	DG_ARRAY* rooms;
+	DGObject* current_room;
+	DGObject* current_spot;
+	DGArray* rooms;
 } DG_WORLD;
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Standard New / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_world_new() {
-	dg_log_trace(DG_MOD_CORE, "Initializing core model...");
+void DGWorldInitialize() {
+	DGLogTrace(DG_MOD_CORE, "Initializing core model...");
 	
 	DG_WORLD.current_room = NULL;
 	
-	DG_WORLD.rooms = dg_array_new(0);
+	DG_WORLD.rooms = DGArrayNew(0);
 }
 
-void dg_world_release() {
-	dg_array_release(DG_WORLD.rooms);
+void DGWorldTerminate() {
+	DGArrayRelease(DG_WORLD.rooms);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Implementation - State Changes									   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_world_switch(DG_OBJECT* target) {
-	if (target) {
-		switch (target->type) {
-			case DG_OBJ_NODE:
-				dg_room_switch(DG_WORLD.current_room, target);
+void DGWorldSwitchTo(DGObject* theTarget) {
+	if (theTarget) {
+		switch (theTarget->type) {
+			case DG_OBJECT_NODE:
+				DGRoomSwitchTo(DG_WORLD.current_room, theTarget);
 				break;
-			case DG_OBJ_ROOM:
-				DG_WORLD.current_room = target;
+			case DG_OBJECT_ROOM:
+				DG_WORLD.current_room = theTarget;
 				break;
 		}
 	}
@@ -61,24 +61,24 @@ void dg_world_switch(DG_OBJECT* target) {
 ///// Implementation - Gets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_OBJECT* dg_world_current_node() {
-	return dg_room_current_node(DG_WORLD.current_room);
+DGObject* DGWorldCurrentNode() {
+	return DGRoomCurrentNode(DG_WORLD.current_room);
 }
 
-DG_OBJECT* dg_world_current_room() {
+DGObject* DGWorldCurrentRoom() {
 	return DG_WORLD.current_room;
 }
 
-DG_OBJECT* dg_world_current_spot() {
+DGObject* DGWorldCurrentSpot() {
 	return DG_WORLD.current_spot;
 }
 
-DG_BOOL	dg_world_get_action(int color, DG_ACTION** action) {
-	return dg_node_get_action(dg_room_current_node(DG_WORLD.current_room), color, action);
+DGBool	DGWorldGetAction(int forColor, DGAction** pointerToAction) {
+	return DGNodeGetAction(DGRoomCurrentNode(DG_WORLD.current_room), forColor, pointerToAction);
 }
 
-DG_BOOL dg_world_get_spot(DG_OBJECT** spot) {
-	DG_BOOL ret = dg_room_get_spot(DG_WORLD.current_room, spot);
+DGBool DGWorldGetSpot(DGObject** pointerToSpot) {
+	DGBool ret = DGRoomGetSpot(DG_WORLD.current_room, pointerToSpot);
 	return ret;
 }
 
@@ -86,16 +86,17 @@ DG_BOOL dg_world_get_spot(DG_OBJECT** spot) {
 ///// Implementation - Sets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_world_add_node(DG_OBJECT* node) {
-	dg_room_add_node(DG_WORLD.current_room, node);
+void DGWorldAdd(DGObject* anObject) {
+    if (DGObjectIsType(anObject, DG_OBJECT_NODE)) {
+        DGRoomAdd(DG_WORLD.current_room, anObject);
+    }
+    else if (DGObjectIsType(anObject, DG_OBJECT_ROOM)) {
+        DGArrayAddObject(DG_WORLD.rooms, anObject);
+        if (!DG_WORLD.current_room)
+            DG_WORLD.current_room = anObject;
+    }
 }
 
-void dg_world_add_room(DG_OBJECT* room) {
-	dg_array_add_object(DG_WORLD.rooms, room);
-	if (!DG_WORLD.current_room)
-		DG_WORLD.current_room = room;
-}
-
-void dg_world_set_current_spot(DG_OBJECT* spot) {
-	DG_WORLD.current_spot = spot;
+void DGWorldSetCurrentSpot(DGObject* aSpot) {
+	DG_WORLD.current_spot = aSpot;
 }

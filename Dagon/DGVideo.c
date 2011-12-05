@@ -53,22 +53,22 @@ typedef struct {
 	char file[DG_MAX_OBJNAME];
 	FILE* fh;
 	float fps_factor;
-	DG_BOOL autoplay;
-	DG_BOOL has_frame;
-	DG_BOOL	has_reset;
-	DG_BOOL loaded;
-	DG_BOOL loop;
-    DG_BOOL is_frame_ready;
-	DG_BOOL is_playing;
-	DG_BOOL sync;
-	DG_FRAME frame;
+	DGBool autoplay;
+	DGBool has_frame;
+	DGBool	has_reset;
+	DGBool loaded;
+	DGBool loop;
+    DGBool is_frame_ready;
+	DGBool is_playing;
+	DGBool sync;
+	DGFrame frame;
 	DG_THEORA theora;
     clock_t lastTime;
 } DG_VIDEO;
 
-DG_ARRAY* videos;
+DGArray* videos;
 
-static DG_BOOL active = DG_NO;
+static DGBool active = DG_NO;
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Private Prototypes												   /////
@@ -87,23 +87,23 @@ void yuv2rgb_24(uint8_t *puc_y, int stride_y,
 				uint8_t *puc_out, int width_y, int height_y,
 				unsigned int _stride_out);
 
-DG_VIDEO* _tovideo(DG_OBJECT* video);
+DG_VIDEO* _tovideo(DGObject* video);
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Init																   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_video_init() {
-	dg_log_trace(DG_MOD_VIDEO, "Initializing video manager...");
+void DGVideoInitialize() {
+	DGLogTrace(DG_MOD_VIDEO, "Initializing video manager...");
 	
 	init_yuv2rgb();
 	
-	videos = dg_array_new(0);
+	videos = DGArrayNew(0);
     
     active = DG_YES;
 }
 
-void dg_video_terminate() {
+void DGVideoTerminate() {
     active = DG_NO;
 }
 
@@ -111,19 +111,19 @@ void dg_video_terminate() {
 ///// Standard New / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_OBJECT* dg_video_new(const char* name, DG_BOOL autoplay, DG_BOOL loop, DG_BOOL sync) {
-	DG_OBJECT* video;
+DGObject* DGVideoNew(const char* withName, DGBool doesAutoplay, DGBool isLoopable, DGBool isSynced) {
+	DGObject* video;
 	DG_VIDEO video_data;
 	
-	strcpy(video_data.file, name);
-	video_data.autoplay = autoplay;
+	strcpy(video_data.file, withName);
+	video_data.autoplay = doesAutoplay;
 	video_data.loaded = DG_NO;
-	video_data.loop = loop;
+	video_data.loop = isLoopable;
 	video_data.has_frame = DG_NO;
 	video_data.has_reset = DG_NO;
     video_data.is_frame_ready = DG_NO;
 	video_data.is_playing = DG_NO;
-	video_data.sync = sync;
+	video_data.sync = isSynced;
 	
     video_data.theora.bos = 0;
 	video_data.theora.theora_p = 0;
@@ -132,20 +132,20 @@ DG_OBJECT* dg_video_new(const char* name, DG_BOOL autoplay, DG_BOOL loop, DG_BOO
 	video_data.theora.videobuf_time = 0;
 	
 	// Store data into object and return
-	video = dg_object_new(DG_OBJ_VIDEO, &video_data, sizeof(video_data));
-	dg_array_add_object(videos, video);
+	video = DGObjectNew(DG_OBJECT_VIDEO, &video_data, sizeof(video_data));
+	DGArrayAddObject(videos, video);
 	
 	return video;
 }
 
-void dg_video_release(DG_OBJECT* video) {
+void DGVideoRelease(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
 		if (video_data->loaded)
-			dg_video_unload(video);
+			DGVideoUnload(video);
 		
-		dg_object_release(video);
+		DGObjectRelease(video);
 	}
 }
 
@@ -153,18 +153,18 @@ void dg_video_release(DG_OBJECT* video) {
 ///// Implementation													   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_video_load(DG_OBJECT* video) {
+void DGVideoLoad(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
 		int stateflag = 0;
 		
-		dg_log_trace(DG_MOD_VIDEO, "Loading %s", video_data->file);
+		DGLogTrace(DG_MOD_VIDEO, "Loading %s", video_data->file);
 		
-		video_data->fh = fopen(dg_config_get_path(DG_RES, video_data->file), "rb");
+		video_data->fh = fopen(DGConfigGetPath(DG_PATH_RES, video_data->file), "rb");
 		
 		if (video_data->fh == NULL) {
-			dg_log_error(DG_MOD_VIDEO, "File %s not found", video_data->file);
+			DGLogError(DG_MOD_VIDEO, "File %s not found", video_data->file);
 			return;
 		}
 		
@@ -207,11 +207,11 @@ void dg_video_load(DG_OBJECT* video) {
 			while (video_data->theora.theora_p && (video_data->theora.theora_p < 3) && 
 				   (ret = ogg_stream_packetout(&video_data->theora.to, &video_data->theora.op))) {
 				if (ret < 0) {
-					dg_log_error(DG_MOD_VIDEO, "Error parsing stream headers");
+					DGLogError(DG_MOD_VIDEO, "Error parsing stream headers");
 					return;
 				}
 				if (theora_decode_header(&video_data->theora.ti, &video_data->theora.tc, &video_data->theora.op)) {
-					dg_log_error(DG_MOD_VIDEO, "Error parsing stream headers");
+					DGLogError(DG_MOD_VIDEO, "Error parsing stream headers");
 					return;
 				}
 				video_data->theora.theora_p++;
@@ -224,7 +224,7 @@ void dg_video_load(DG_OBJECT* video) {
 			} else {
 				int ret = buffer_data(video_data->fh, &video_data->theora.oy);
 				if (ret == 0) {
-					dg_log_error(DG_MOD_VIDEO, "End of file while searching for codec headers");
+					DGLogError(DG_MOD_VIDEO, "End of file while searching for codec headers");
 					return;
 				}
 			}
@@ -254,12 +254,12 @@ void dg_video_load(DG_OBJECT* video) {
 	}
 }
 
-void dg_video_unload(DG_OBJECT*	video) {
+void DGVideoUnload(DGObject*	video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
 		if (video_data->loaded) {
-			dg_system_lock();
+			DGSystemLock();
 			video_data->loaded = DG_NO;
             video_data->is_frame_ready = DG_NO;
 			video_data->is_playing = DG_NO;
@@ -283,18 +283,18 @@ void dg_video_unload(DG_OBJECT*	video) {
 			video_data->theora.theora_p = 0;
 			
 			free(video_data->frame.data);
-			dg_system_unlock();
+			DGSystemUnlock();
 		}
 	}
 	
 	return;
 }
 
-DG_FRAME* dg_video_get_frame(DG_OBJECT* video) {
+DGFrame* DGVideoGetFrame(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
-		static DG_FRAME frame;
+		static DGFrame frame;
 		
 		frame.width = video_data->frame.width;
 		frame.height = video_data->frame.height;
@@ -307,14 +307,14 @@ DG_FRAME* dg_video_get_frame(DG_OBJECT* video) {
 	return NULL;
 }
 
-DG_BOOL dg_video_has_frame(DG_OBJECT* video) {
+DGBool DGVideoHasFrame(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
 		if (video_data->has_frame) {
-			dg_system_lock();
+			DGSystemLock();
 			video_data->has_frame = DG_NO;
-			dg_system_unlock();
+			DGSystemUnlock();
 			return DG_YES;
 		}
 	}
@@ -322,7 +322,7 @@ DG_BOOL dg_video_has_frame(DG_OBJECT* video) {
 	return DG_NO;
 }
 
-DG_BOOL dg_video_has_loop(DG_OBJECT* video) {
+DGBool DGVideoIsLoopable(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
@@ -334,7 +334,7 @@ DG_BOOL dg_video_has_loop(DG_OBJECT* video) {
 	return DG_NO;
 }
 
-DG_BOOL	dg_video_has_reset(DG_OBJECT* video) {
+DGBool	DGVideoIsReset(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
@@ -344,7 +344,7 @@ DG_BOOL	dg_video_has_reset(DG_OBJECT* video) {
 	return DG_NO;
 }
 
-DG_BOOL dg_video_is_frame_ready(DG_OBJECT* video) {
+DGBool DGVideoIsFrameReady(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
@@ -354,7 +354,7 @@ DG_BOOL dg_video_is_frame_ready(DG_OBJECT* video) {
 	return DG_NO;
 }
 
-DG_BOOL dg_video_is_playing(DG_OBJECT* video) {
+DGBool DGVideoIsPlaying(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
@@ -364,7 +364,7 @@ DG_BOOL dg_video_is_playing(DG_OBJECT* video) {
 	return DG_NO;
 }
 
-DG_BOOL	dg_video_is_synced(DG_OBJECT* video) {
+DGBool	DGVideoIsSynced(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data)
@@ -373,16 +373,16 @@ DG_BOOL	dg_video_is_synced(DG_OBJECT* video) {
 	return DG_NO;
 }
 
-DG_BOOL dg_video_loop() {
+DGBool DGVideoLoop() {
 	clock_t         currentTime;
 	double          duration;
 	int				i, frames;
 	
     if (active) {
-        int idx, num_vids = dg_array_count(videos);
+        int idx, num_vids = DGArrayCount(videos);
         
         for (idx = 0; idx < num_vids; idx++) {		
-            DG_VIDEO* video_data = _tovideo(dg_array_get_object(videos, idx));
+            DG_VIDEO* video_data = _tovideo(DGArrayGetObject(videos, idx));
             
             if (video_data->loaded && video_data->is_playing) {
                 if (video_data->has_reset) {
@@ -396,7 +396,7 @@ DG_BOOL dg_video_loop() {
                 if (duration >= video_data->fps_factor) {
                     yuv_buffer yuv;
                     
-                    dg_system_lock();
+                    DGSystemLock();
                     frames = (int)floor(duration / video_data->fps_factor);
                     for (i = 1; i <= frames; i++)
                         prepare_frame(video_data);
@@ -410,7 +410,7 @@ DG_BOOL dg_video_loop() {
                         video_data->has_frame = DG_YES;
                         video_data->is_frame_ready = DG_YES;
                     //}
-                    dg_system_unlock();
+                    DGSystemUnlock();
                     
                     video_data->lastTime = currentTime;
                 }
@@ -422,7 +422,7 @@ DG_BOOL dg_video_loop() {
 	return active;
 }
 
-void dg_video_play(DG_OBJECT* video) {
+void DGVideoPlay(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
@@ -430,7 +430,7 @@ void dg_video_play(DG_OBJECT* video) {
 	}
 }
 
-void dg_video_pause(DG_OBJECT* video) {
+void DGVideoPause(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
@@ -439,7 +439,7 @@ void dg_video_pause(DG_OBJECT* video) {
 	}	
 }
 
-void dg_video_stop(DG_OBJECT* video) {
+void DGVideoStop(DGObject* video) {
 	DG_VIDEO* video_data = _tovideo(video);
 	
 	if (video_data) {
@@ -627,9 +627,9 @@ void yuv2rgb_24(uint8_t *puc_y, int stride_y,
 	}
 }
 
-DG_VIDEO* _tovideo(DG_OBJECT* video) {
-	if (dg_object_check(video, DG_OBJ_VIDEO)) {
-		DG_VIDEO* video_data = (DG_VIDEO*)dg_object_data(video);
+DG_VIDEO* _tovideo(DGObject* video) {
+	if (DGObjectIsType(video, DG_OBJECT_VIDEO)) {
+		DG_VIDEO* video_data = (DG_VIDEO*)DGObjectData(video);
 		return video_data;
 	}
 	else {

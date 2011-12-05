@@ -17,29 +17,29 @@ struct dg_state_info {
 	int last;
 } state;
 
-void dg_state_init() {
-	dg_log_trace(DG_MOD_STATE, "Initializing state machine...");
+void DGStateInitialize() {
+	DGLogTrace(DG_MOD_STATE, "Initializing state machine...");
 	
-	state.current = DG_ST_NODE;
+	state.current = DG_STATE_NODE;
 	state.last = state.current;
 }
 
-unsigned dg_state_current() {
+unsigned DGStateCurrent() {
 	return state.current;
 }
 
-unsigned dg_state_last() {
+unsigned DGStateLast() {
 	return state.last;
 }
 
-void dg_state_return() {
+void DGStateReturn() {
 	unsigned auxState = state.current;
 	
 	state.current = state.last;
 	state.last = auxState;
 }
 
-void dg_state_set(unsigned new_state) {
+void DGStateSet(unsigned theState) {
 	state.last = state.current;
-	state.current = new_state;
+	state.current = theState;
 }

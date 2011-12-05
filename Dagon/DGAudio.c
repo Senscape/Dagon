@@ -43,8 +43,8 @@
 
 typedef struct {
 	char			file[DG_MAX_OBJNAME];
-	DG_BOOL			loaded;
-	DG_BOOL			loop;
+	DGBool			loaded;
+	DGBool			loop;
 	FILE*           oggFile;       // file handle
 	OggVorbis_File  oggStream;     // stream handle
 	vorbis_info*    vorbisInfo;    // some formatting data
@@ -62,9 +62,9 @@ typedef struct {
 	float	target_gain;
 } DG_AUDIO;
 
-DG_ARRAY* channels;
+DGArray* channels;
 
-static DG_BOOL active = DG_NO;
+static DGBool active = DG_NO;
 ALCdevice* pDevice;
 ALCcontext* pContext;
 
@@ -72,7 +72,7 @@ ALCcontext* pContext;
 ///// Private Prototypes												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_AUDIO* _toaudio(DG_OBJECT* audio);
+DG_AUDIO* _toaudio(DGObject* audio);
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Init																   /////
@@ -108,12 +108,12 @@ long int  alcASASetSourceProc(const ALuint property, ALuint source, ALvoid *data
     return (err);
 }*/
 
-void dg_audio_init() {
+void DGAudioInitialize() {
 	pDevice = alcOpenDevice(NULL);
 	pContext = alcCreateContext(pDevice, NULL);
 	alcMakeContextCurrent(pContext);
 	
-	channels = dg_array_new(0);
+	channels = DGArrayNew(0);
 	
 	// MAC ONLY
 	// Reverb and Effects
@@ -138,13 +138,13 @@ void dg_audio_init() {
 ///// Standard New / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_OBJECT* dg_audio_new(const char* name, DG_BOOL loop) {
-	DG_OBJECT* audio;
+DGObject* DGAudioNew(const char* withName, DGBool isLoopable) {
+	DGObject* audio;
 	DG_AUDIO audio_data;
 	
-	strcpy(audio_data.file, name);
+	strcpy(audio_data.file, withName);
 	audio_data.loaded = DG_NO;
-	audio_data.loop = loop;
+	audio_data.loop = isLoopable;
     audio_data.gain = 1.0f;
     audio_data.last_gain = 1.0f;
     audio_data.target_gain = 1.0f;
@@ -152,20 +152,20 @@ DG_OBJECT* dg_audio_new(const char* name, DG_BOOL loop) {
 	audio_data.oggFile = NULL;
 	
 	// Store data into object and return
-	audio = dg_object_new(DG_OBJ_AUDIO, &audio_data, sizeof(audio_data));
-	dg_array_add_object(channels, audio);
+	audio = DGObjectNew(DG_OBJECT_AUDIO, &audio_data, sizeof(audio_data));
+	DGArrayAddObject(channels, audio);
 	
 	return audio;
 }
 
-void dg_audio_release(DG_OBJECT* audio) {
+void DGAudioRelease(DGObject* audio) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {
 		if (audio_data->loaded)
-			dg_audio_unload(audio);
+			DGAudioUnload(audio);
 		
-		dg_object_release(audio);
+		DGObjectRelease(audio);
 		// Delete from array?
 	}
 }
@@ -174,7 +174,7 @@ void dg_audio_release(DG_OBJECT* audio) {
 ///// Implementation													   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_BOOL dg_audio_is_loaded(DG_OBJECT* audio) {
+DGBool DGAudioIsLoaded(DGObject* audio) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {
@@ -184,7 +184,7 @@ DG_BOOL dg_audio_is_loaded(DG_OBJECT* audio) {
 	return DG_NO;
 }
 
-DG_BOOL dg_audio_is_playing(DG_OBJECT* audio) {
+DGBool DGAudioIsPlaying(DGObject* audio) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {
@@ -200,20 +200,20 @@ DG_BOOL dg_audio_is_playing(DG_OBJECT* audio) {
 	return DG_NO;
 }
 
-void dg_audio_load(DG_OBJECT* audio) {
+void DGAudioLoad(DGObject* audio) {
     int error;
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {
 		int result;
 		
-		if (!(audio_data->oggFile = fopen(dg_config_get_path(DG_RES, audio_data->file), "rb")))
-			dg_log_error(DG_MOD_AUDIO, "Could not open Ogg file");
+		if (!(audio_data->oggFile = fopen(DGConfigGetPath(DG_PATH_RES, audio_data->file), "rb")))
+			DGLogError(DG_MOD_AUDIO, "Could not open Ogg file");
 		
 		if ((result = ov_open(audio_data->oggFile, &audio_data->oggStream, NULL, 0)) < 0) {
 			fclose(audio_data->oggFile);
 			
-			dg_log_error(DG_MOD_AUDIO, "Could not open Ogg stream");
+			DGLogError(DG_MOD_AUDIO, "Could not open Ogg stream");
 			
 			/*const char* ogg_stream::errorString(int code) {
 			 switch(code)
@@ -259,7 +259,7 @@ void dg_audio_load(DG_OBJECT* audio) {
         
         error = alGetError();
         if (error != AL_NO_ERROR)
-            dg_log_error(DG_MOD_AUDIO, "OpenAL error while loading file: %s (%d)", audio_data->file, error);
+            DGLogError(DG_MOD_AUDIO, "OpenAL error while loading file: %s (%d)", audio_data->file, error);
 	}
 }
 
@@ -267,7 +267,7 @@ void dg_audio_load(DG_OBJECT* audio) {
 
 #if defined DG_PLATFORM_MAC
 
-#define FADE_STEP 1.0f
+#define FADE_STEP 10.0f
 
 #elif defined DG_PLATFORM_WIN
 
@@ -277,69 +277,69 @@ void dg_audio_load(DG_OBJECT* audio) {
 
 /////
 
-void dg_audio_fade_in(DG_OBJECT* audio, int msecs) {
+void DGAudioFadeIn(DGObject* audio, int forMilliseconds) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {
 		//audio_data->target_gain = audio_data->last_gain; // This is broken
 		audio_data->target_gain = 1.0f;
-		if (!msecs)
+		if (!forMilliseconds)
 			audio_data->fade_step = 1.0f; // Instant fade
 		else
-			audio_data->fade_step = FADE_STEP / (float)msecs; // NOT ACCURATE, 1.0 Windows, 100.0 Mac
+			audio_data->fade_step = FADE_STEP / (float)forMilliseconds; // NOT ACCURATE, 1.0 Windows, 10.0 Mac
 		
 		audio_data->fade_style = DG_FADE_IN;
 	}
 }
 
-void dg_audio_fade_out(DG_OBJECT* audio, int msecs) {
+void DGAudioFadeOut(DGObject* audio, int forMilliseconds) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {
 		audio_data->last_gain = audio_data->gain;
 		audio_data->target_gain = 0.0f;
-		if (!msecs)
+		if (!forMilliseconds)
 			audio_data->fade_step = 1.0f; // Instant fade
 		else
-			audio_data->fade_step = FADE_STEP / (float)msecs; // NOT ACCURATE, 1.0 Windows, 100.0 Mac
+			audio_data->fade_step = FADE_STEP / (float)forMilliseconds; // NOT ACCURATE, 1.0 Windows, 10.0 Mac
 		
 		audio_data->fade_style = DG_FADE_OUT;
 	}	
 }
 
-void dg_audio_set_volume(DG_OBJECT* audio, float volume) {
+void DGAudioSetVolume(DGObject* audio, float theVolume) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {
         if (audio_data->loaded) {
-            alSourcef(audio_data->source, AL_GAIN, volume);
+            alSourcef(audio_data->source, AL_GAIN, theVolume);
         }
         
-		audio_data->gain = volume;
-		audio_data->target_gain = volume;
+		audio_data->gain = theVolume;
+		audio_data->target_gain = theVolume;
 		
-		if (volume == 0)
+		if (theVolume == 0)
 			audio_data->last_gain = 1.0f;
 		else
-			audio_data->last_gain = volume;
+			audio_data->last_gain = theVolume;
 	}
 }
 
-DG_BOOL dg_audio_loop() {
+DGBool DGAudioLoop() {
 	int error;
-	DG_BOOL keep_processing = DG_YES;
+	DGBool keep_processing = DG_YES;
     DG_AUDIO* audio_data;
 	
 	if (active) {
-		int idx, num_channels = dg_array_count(channels);
+		int idx, num_channels = DGArrayCount(channels);
 		
 		for (idx = 0; idx < num_channels; idx++) {
-			DG_OBJECT* audio = dg_array_get_object(channels, idx);
+			DGObject* audio = DGArrayGetObject(channels, idx);
 			audio_data = _toaudio(audio);
 			
 			if (audio_data) {
 				if (audio_data->loaded) {
-					if (dg_audio_is_playing(audio)) {
+					if (DGAudioIsPlaying(audio)) {
 						int j;
 						int processed;
 						
@@ -362,7 +362,7 @@ DG_BOOL dg_audio_loop() {
 										size += result;
 									else
 										if (result < 0)
-											dg_log_error(DG_MOD_AUDIO, "Generic error");
+											DGLogError(DG_MOD_AUDIO, "Generic error");
 										else
 											break;
 								}
@@ -371,7 +371,7 @@ DG_BOOL dg_audio_loop() {
 									if (audio_data->loop)
 										ov_raw_seek(&audio_data->oggStream, 0);
 									else {
-										dg_audio_stop(audio); // Shouldn't stop before processing the buffers
+										DGAudioStop(audio); // Shouldn't stop before processing the buffers
 										keep_processing = DG_NO;
 									}
 									break;
@@ -417,17 +417,17 @@ DG_BOOL dg_audio_loop() {
 		
 		error = alGetError();
 		if (error != AL_NO_ERROR)
-			dg_log_error(DG_MOD_AUDIO, "OpenAL error was raised: %d - at index: %d", error, idx);
+			DGLogError(DG_MOD_AUDIO, "OpenAL error was raised: %d - at index: %d", error, idx);
 	}
 	
 	return active;
 }
 
-void dg_audio_pause(DG_OBJECT* audio) {
+void DGAudioPause(DGObject* audio) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {	
-		if (dg_audio_is_playing(audio)) {
+		if (DGAudioIsPlaying(audio)) {
 			int queued;
 			
 			//dg_log_trace(DG_MOD_AUDIO, "Pausing audio at channel %d", channel);
@@ -442,13 +442,13 @@ void dg_audio_pause(DG_OBJECT* audio) {
 	}
 }
 
-void dg_audio_play(DG_OBJECT* audio) {
+void DGAudioPlay(DGObject* audio) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {		
 		int i;
 		
-		if (dg_audio_is_playing(audio) || !audio_data->loaded)
+		if (DGAudioIsPlaying(audio) || !audio_data->loaded)
 			return;
 		
 		//dg_log_trace(DG_MOD_AUDIO, "Playing audio at channel %d", channel);
@@ -466,7 +466,7 @@ void dg_audio_play(DG_OBJECT* audio) {
 					size += result;
 				else
 					if (result < 0)
-						dg_log_error(DG_MOD_AUDIO, "Generic error");
+						DGLogError(DG_MOD_AUDIO, "Generic error");
 					else
 						break;
 			}
@@ -483,28 +483,28 @@ void dg_audio_play(DG_OBJECT* audio) {
 		alSourceQueueBuffers(audio_data->source, 2, audio_data->buffers);
 		alSourcePlay(audio_data->source);
 		
-		if (!dg_audio_is_playing(audio))
-			dg_log_error(DG_MOD_AUDIO, "Ogg refused to play");
+		if (!DGAudioIsPlaying(audio))
+			DGLogError(DG_MOD_AUDIO, "Ogg refused to play");
 	}
 }
 
-void dg_audio_queue(unsigned int channel, const char* file) {
+void DGAudioQueue(unsigned int inChannel, DGObject* anAudio) {
     // TODO: Must implement
 	// This is now a different object
 }
 
-void dg_audio_terminate() {
-	int idx, num_channels = dg_array_count(channels);
+void DGAudioTerminate() {
+	int idx, num_channels = DGArrayCount(channels);
 
 	active = DG_NO;
 	
 	for (idx = 0; idx < num_channels; idx++) {
-		DG_OBJECT* audio = dg_array_get_object(channels, idx);
+		DGObject* audio = DGArrayGetObject(channels, idx);
 		DG_AUDIO* audio_data = _toaudio(audio);
 	
 		if (audio_data) {
 			if (audio_data->loaded)
-				dg_audio_unload(audio);
+				DGAudioUnload(audio);
 		}
 	}
 
@@ -513,11 +513,11 @@ void dg_audio_terminate() {
 	alcCloseDevice(pDevice);
 }
 
-void dg_audio_stop(DG_OBJECT* audio) {
+void DGAudioStop(DGObject* audio) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {	
-		if (dg_audio_is_playing(audio)) {
+		if (DGAudioIsPlaying(audio)) {
 			int queued;
 			
 			alSourceStop(audio_data->source);
@@ -533,13 +533,13 @@ void dg_audio_stop(DG_OBJECT* audio) {
 	}
 }
 
-void dg_audio_unload(DG_OBJECT* audio) {
+void DGAudioUnload(DGObject* audio) {
 	DG_AUDIO* audio_data = _toaudio(audio);
 	
 	if (audio_data) {	
 		audio_data->loaded = DG_NO;
 		
-		dg_audio_stop(audio);
+		DGAudioStop(audio);
 		
 		alDeleteSources(1, &audio_data->source);
 		alDeleteBuffers(1, audio_data->buffers);
@@ -553,9 +553,9 @@ void dg_audio_unload(DG_OBJECT* audio) {
 ///// Private Functions													   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_AUDIO* _toaudio(DG_OBJECT* audio) {
-	if (dg_object_check(audio, DG_OBJ_AUDIO)) {
-		DG_AUDIO* audio_data = (DG_AUDIO*)dg_object_data(audio);
+DG_AUDIO* _toaudio(DGObject* audio) {
+	if (DGObjectIsType(audio, DG_OBJECT_AUDIO)) {
+		DG_AUDIO* audio_data = (DG_AUDIO*)DGObjectData(audio);
 		return audio_data;
 	}
 	else {

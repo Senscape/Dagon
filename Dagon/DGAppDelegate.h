@@ -11,7 +11,7 @@
 #import "DGPlatform.h"
 
 
-@interface DagonAppDelegate : NSObject {
+@interface DGAppDelegate : NSObject {
 
 }
 

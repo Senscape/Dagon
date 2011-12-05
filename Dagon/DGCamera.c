@@ -47,13 +47,13 @@ struct dg_camera_data {
 	int pan_region_down;
 	int state;
 	
-	DG_BOOL breathe_enabled;
+	DGBool breathe_enabled;
 	float breathe_factor;
 	float breathe_pos;
 	int breathe_state;
 	
-	DG_BOOL walk_enabled;
-	DG_BOOL is_walking;
+	DGBool walk_enabled;
+	DGBool is_walking;
 	float walk_time;
 	
 	int neutral_zone;
@@ -78,9 +78,9 @@ void _update_pan_regions(void);
 ///// Init																   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_camera_init(int width, int height) {
-	dg_log_trace(DG_MOD_CAMERA, "Initializing camera manager...");
-	dg_log_info(DG_MOD_CAMERA, "Viewport size: %dx%d", width, height);
+void DGCameraInitialize(int withWidth, int andHeight) {
+	DGLogTrace(DG_MOD_CAMERA, "Initializing camera manager...");
+	DGLogInfo(DG_MOD_CAMERA, "Viewport size: %dx%d", withWidth, andHeight);
 	
 	data.pan_speed = DG_CAM_MAXPANSPEED;
 	data.h_angle = 0.0f;
@@ -93,8 +93,8 @@ void dg_camera_init(int width, int height) {
 	
 	data.norm_fov = 55.0f;
 	data.curr_fov = 55.0f;
-	data.view_width = (GLint)width;
-	data.view_height = (GLint)height;
+	data.view_width = (GLint)withWidth;
+	data.view_height = (GLint)andHeight;
 	data.h_angle_limit = (float)M_PI*2;
 	data.v_angle_limit = (float)M_PI/2;
 	data.pan_origin_x = (int)data.view_width / 2;
@@ -120,38 +120,38 @@ void dg_camera_init(int width, int height) {
 ///// Implementation - State Changes									   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-int	dg_camera_angle_h() {
+int	DGCameraHorizontalAngle() {
 	return (int)((data.h_angle * 360.0f) / data.h_angle_limit);
 }
 
-int	dg_camera_angle_v() {
+int	DGCameraVerticalAngle() {
 	return (int)((data.v_angle * 360.0f) / data.v_angle_limit);
 }
 
-void dg_camera_lookat(int angle_h, int angle_v, DG_BOOL instant) {
-	if (instant) {
-		if (angle_h != DG_CAM_CURRENT)
-			data.h_angle = (angle_h * data.h_angle_limit) / 360.0f;
+void DGCameraLookAt(int horizontalAngle, int verticalAngle, DGBool isInstantTransition) {
+	if (isInstantTransition) {
+		if (horizontalAngle != DG_CAM_CURRENT)
+			data.h_angle = (horizontalAngle * data.h_angle_limit) / 360.0f;
 
-		if (angle_v != DG_CAM_CURRENT)
-			data.v_angle = (angle_v * data.v_angle_limit) / 360.0f;
+		if (verticalAngle != DG_CAM_CURRENT)
+			data.v_angle = (verticalAngle * data.v_angle_limit) / 360.0f;
 	}
 	else {
 		data.state = DG_CAM_LOOKAT;
 		
-		if (angle_h != DG_CAM_CURRENT)
-			data.h_angle_target = (angle_h * data.h_angle_limit) / 360.0f;
+		if (horizontalAngle != DG_CAM_CURRENT)
+			data.h_angle_target = (horizontalAngle * data.h_angle_limit) / 360.0f;
 		else
 			data.h_angle_target = data.h_angle;
 			
-		if (angle_v != DG_CAM_CURRENT)
-			data.v_angle_target = (angle_v * data.v_angle_limit) / 360.0f;
+		if (verticalAngle != DG_CAM_CURRENT)
+			data.v_angle_target = (verticalAngle * data.v_angle_limit) / 360.0f;
 		else
 			data.v_angle_target = data.v_angle;
 	}
 }
 
-void dg_camera_loop() {
+void DGCameraLoop() {
 	static short h_dir;
 	static short v_dir;
 	
@@ -160,14 +160,14 @@ void dg_camera_loop() {
 	
 	if (data.state == DG_CAM_LOOKAT) {
 		// Put all of this in another struct...
-		static DG_BOOL h_done = DG_NO;
-		static DG_BOOL v_done = DG_NO;
+		static DGBool h_done = DG_NO;
+		static DGBool v_done = DG_NO;
 		static float lookat_accel = 0.0f;
 		static float lookat_speed = 0.02f;
 		float error = 0.02f;
 		
         // Failsafe
-        if (!data.is_walking && !config.scare) {
+        if (!data.is_walking && !DGConfig.scare) {
             // FIXME: lookat overrides but this whole loop is sucky... revise!
             
             // The speed in each direction should be proportional to the distances.
@@ -184,25 +184,25 @@ void dg_camera_loop() {
             
             if (!h_done) {
                 if (data.h_angle < data.h_angle_target)
-                    data.h_angle += lookat_speed * config.global_speed * lookat_accel;
+                    data.h_angle += lookat_speed * DGConfig.global_speed * lookat_accel;
                 else if (data.h_angle > data.h_angle_target)
-                    data.h_angle -= lookat_speed * config.global_speed * lookat_accel;
+                    data.h_angle -= lookat_speed * DGConfig.global_speed * lookat_accel;
             }
             
             if (!v_done) {
                 if (data.v_angle < data.v_angle_target)
-                    data.v_angle += lookat_speed/2 * config.global_speed * lookat_accel;
+                    data.v_angle += lookat_speed/2 * DGConfig.global_speed * lookat_accel;
                 else if (data.v_angle > data.v_angle_target)
-                    data.v_angle -= lookat_speed/2 * config.global_speed * lookat_accel;
+                    data.v_angle -= lookat_speed/2 * DGConfig.global_speed * lookat_accel;
             }
             
             lookat_accel += 0.02f;
             
             // Fix to avoid vertical accumulation
             if (data.breathe_pos > 0.0f)
-                data.breathe_pos -= lookat_speed/2 * config.global_speed * lookat_accel;
+                data.breathe_pos -= lookat_speed/2 * DGConfig.global_speed * lookat_accel;
             if (data.breathe_pos < 0.0f)
-                data.breathe_pos += lookat_speed/2 * config.global_speed * lookat_accel;
+                data.breathe_pos += lookat_speed/2 * DGConfig.global_speed * lookat_accel;
             
             if ((data.h_angle > (data.h_angle_target - error)) && (data.h_angle < (data.h_angle_target + error)))
                 h_done = DG_YES;
@@ -259,7 +259,7 @@ void dg_camera_loop() {
 				break;
 			case DG_CAM_ACCEL:
 				if (data.accel < 1.0f)
-					data.accel += 0.01f * config.global_speed;
+					data.accel += 0.01f * DGConfig.global_speed;
 				else {
 					data.state = DG_CAM_PAN;
 					data.accel = 1.0f;
@@ -275,7 +275,7 @@ void dg_camera_loop() {
 			if (abs(data.delta_x) > data.pan_speed)
 				data.delta_x = data.pan_speed * h_dir;
 			
-			data.h_angle += ((float)data.delta_x / (float)DG_CAM_HPANFACTOR) * data.accel * config.global_speed;
+			data.h_angle += ((float)data.delta_x / (float)DG_CAM_HPANFACTOR) * data.accel * DGConfig.global_speed;
 			
 			// Limit rotation
 			if (data.h_angle > (GLfloat)data.h_angle_limit)
@@ -289,7 +289,7 @@ void dg_camera_loop() {
 			if (abs(data.delta_y) > data.pan_speed)
 				data.delta_y = data.pan_speed * v_dir;
 			
-			data.v_angle += ((float)data.delta_y / (float)DG_CAM_VPANFACTOR) * data.accel * config.global_speed;
+			data.v_angle += ((float)data.delta_y / (float)DG_CAM_VPANFACTOR) * data.accel * DGConfig.global_speed;
 			
 			// Limit rotation
 			if (data.v_angle > (GLfloat)data.v_angle_limit)
@@ -307,7 +307,7 @@ void dg_camera_loop() {
 			case DG_CAM_DEACCEL:
 			case DG_CAM_IDLE:	
 				if (data.accel > 0.0f) {
-					data.accel -= 0.01f * config.global_speed;
+					data.accel -= 0.01f * DGConfig.global_speed;
 					data.h_angle += data.accel * (2 / (float)DG_CAM_HPANFACTOR) * h_dir;
 					data.v_angle += data.accel * (2 / (float)DG_CAM_VPANFACTOR) * v_dir;
 				}
@@ -326,19 +326,19 @@ void dg_camera_loop() {
 	_breathe();
 }
 
-void dg_camera_pan(int x, int y) {
-	data.pan_coord_x = x;
-	data.pan_coord_y = y;
+void DGCameraPan(int xPosition, int yPosition) {
+	data.pan_coord_x = xPosition;
+	data.pan_coord_y = yPosition;
 }
 
-void dg_camera_update() {
+void DGCameraUpdate() {
 	float lx;
     float lz;
 	
 	lx = (float)sin(data.h_angle);
     lz = (float)-cos(data.h_angle);
 	
-    if (config.scare)
+    if (DGConfig.scare)
         gluLookAt(0.0f, data.breathe_pos/4, 0.0f,
                   lx, data.v_angle + data.breathe_pos, lz,
                   0.0f, 1.0f, 0.0f);
@@ -348,7 +348,7 @@ void dg_camera_update() {
                   0.0f, 1.0f, 0.0f);
 }
 
-void dg_camera_walk() {
+void DGCameraSimulateWalk() {
 	if (!data.is_walking) 
 		data.is_walking = DG_YES;
 	else
@@ -359,12 +359,12 @@ void dg_camera_walk() {
 ///// Implementation - Checks											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-int	dg_camera_delta_x() {
+int	DGCameraDeltaX() {
 	// This is momentum rather than delta...
 	return (int)(data.delta_x * data.accel);
 }
 
-int	dg_camera_delta_y() {
+int	DGCameraDeltaY() {
 	// This is momentum rather than delta...
 	if (abs((int)data.v_angle) < abs((int)data.v_angle_limit))
 		return (int)(data.delta_y * data.accel);
@@ -372,7 +372,7 @@ int	dg_camera_delta_y() {
 		return 0;
 }
 
-int	dg_camera_state() {
+int	DGCameraState() {
 	return data.state;
 }
 
@@ -380,20 +380,20 @@ int	dg_camera_state() {
 ///// Implementation - Gets											       /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_BOOL	dg_camera_breathe_fx() {
+DGBool	DGCameraIsBreathingEnabled() {
 	return data.breathe_enabled;
 }
 
-float dg_camera_fov() {
+float DGCameraFieldOfView() {
 	return data.norm_fov;
 }
 
-int	dg_camera_neutral_zone() {
+int	DGCameraNeutralZone() {
 	return data.neutral_zone;
 }
 
-DG_POINT dg_camera_origin() {
-	static DG_POINT point;
+DGPoint DGCameraOrigin() {
+	static DGPoint point;
 	
 	point.x = data.pan_origin_x;
 	point.y = data.pan_origin_y;
@@ -401,16 +401,16 @@ DG_POINT dg_camera_origin() {
 	return point;
 }
 
-int	dg_camera_pan_speed() {
+int	DGCameraPanningSpeed() {
 	return data.pan_speed;
 }
 
-int dg_camera_vertical_limit() {
+int DGCameraVerticalLimit() {
 	return (int)(data.v_angle_limit * 180);
 }
 
-DG_SIZE	dg_camera_viewport() {
-	static DG_SIZE size;
+DGSize	DGCameraViewport() {
+	static DGSize size;
 	
 	size.width = data.view_width;
 	size.height = data.view_height;
@@ -418,7 +418,7 @@ DG_SIZE	dg_camera_viewport() {
 	return size;
 }
 
-DG_BOOL	dg_camera_walk_fx() {
+DGBool	DGCameraIsWalkingEnabled() {
 	return data.walk_enabled;
 }
 
@@ -426,27 +426,27 @@ DG_BOOL	dg_camera_walk_fx() {
 ///// Implementation - Sets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_camera_set_breathe_fx(DG_BOOL flag) {
+void DGCameraEnableBreathing(DGBool flag) {
 	data.breathe_enabled = flag;
 }
 
-void dg_camera_set_fov(float value) {
-	data.norm_fov = value;
-	data.curr_fov = value;
+void DGCameraSetFieldOfView(float angle) {
+	data.norm_fov = angle;
+	data.curr_fov = angle;
 }
 
-void dg_camera_set_neutral_zone(int value) {
-	data.neutral_zone = value;
+void DGCameraSetNeutralZone(int size) {
+	data.neutral_zone = size;
 	_update_pan_regions();
 }
 
-void dg_camera_set_origin(int x, int y) {
-	data.pan_origin_x = x;
-	data.pan_origin_y = y;
+void DGCameraSetOrigin(int xPosition, int yPosition) {
+	data.pan_origin_x = xPosition;
+	data.pan_origin_y = yPosition;
 	_update_pan_regions();
 }
 
-void dg_camera_set_ortho() {
+void DGCameraSetOrthoView() {
 	glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 #ifdef DG_PLATFORM_IOS
@@ -457,24 +457,24 @@ void dg_camera_set_ortho() {
     glMatrixMode(GL_MODELVIEW);
 }
 
-void dg_camera_set_pan_speed(int value) {
-	data.pan_speed = value;
+void DGCameraSetPanningSpeed(int speed) {
+	data.pan_speed = speed;
 }
 
-void dg_camera_set_perspective() {
+void DGCameraSetPerspectiveView() {
 	glViewport(0, 0, data.view_width, data.view_height);
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 }
 
-void dg_camera_set_vertical_limit(int value) {
-	data.v_angle_limit = value / (float)180.0f;
+void DGCameraSetVerticalLimit(int verticalAngle) {
+	data.v_angle_limit = verticalAngle / (float)180.0f;
 }
 
-void dg_camera_set_viewport(int width, int height) {
-	data.view_width = (GLint)width;
-	data.view_height = (GLint)height;
+void DGCameraSetViewport(int withWidth, int andHeight) {
+	data.view_width = (GLint)withWidth;
+	data.view_height = (GLint)andHeight;
 	
 	data.view_width_factor = (float)data.view_width / (float)DG_DEF_DISPLAYWIDTH;
 	data.view_height_factor = (float)data.view_height / (float)DG_DEF_DISPLAYHEIGHT;
@@ -497,7 +497,7 @@ void dg_camera_set_viewport(int width, int height) {
 	_update_pan_regions();
 }
 
-void dg_camera_set_walk_fx(DG_BOOL flag) {
+void DGCameraEnableWalking(DGBool flag) {
 	data.walk_enabled = flag;
 }
 
@@ -513,12 +513,12 @@ void _breathe() {
     
     // HACK -- enable for heavy breathing
     // Close but both are not compatible -- height is gradually increased
-    if (config.scare) {
+    if (DGConfig.scare) {
         if (data.breathe_state == DG_CAM_PAUSE)
             data.breathe_state = DG_CAM_INSPIRE;
         
         limit_factor = 15.0f;
-        walk_factor = 50.0f * config.global_speed;
+        walk_factor = 50.0f * DGConfig.global_speed;
     }
 	
 	if (data.walk_enabled) {
@@ -530,10 +530,10 @@ void _breathe() {
 				data.breathe_state = DG_CAM_INSPIRE;
 			
             limit_factor = 10.0f;
-			walk_factor = 50.0f * config.global_speed;
+			walk_factor = 50.0f * DGConfig.global_speed;
 			
             data.curr_fov = aperture - (data.walk_time * (aperture - data.norm_fov));   // Disable in heavy breathing
-			data.walk_time += 0.01f * config.global_speed;
+			data.walk_time += 0.01f * DGConfig.global_speed;
 			
 			if (data.walk_time > 1.0f) {
 				data.curr_fov = data.norm_fov;
@@ -543,15 +543,15 @@ void _breathe() {
 			}
 		}
 		else {
-            if (!config.scare) {
+            if (!DGConfig.scare) {
                 limit_factor = 1.0f;
                 walk_factor = 1.0f;
                 
                 // Correct the breathing factor and position with the last "step"
                 if (data.breathe_factor > 0.085f)
-                    data.breathe_factor -= 0.1f * config.global_speed;
+                    data.breathe_factor -= 0.1f * DGConfig.global_speed;
                 else if (data.breathe_factor < -0.075f)
-                    data.breathe_factor += 0.1f * config.global_speed;
+                    data.breathe_factor += 0.1f * DGConfig.global_speed;
             }
 		}
 	}
@@ -559,12 +559,12 @@ void _breathe() {
 	if (data.breathe_enabled) {
 		switch (data.breathe_state) {
 			case DG_CAM_INSPIRE:
-				data.breathe_factor += 0.0018f * walk_factor * config.global_speed;
+				data.breathe_factor += 0.0018f * walk_factor * DGConfig.global_speed;
 				data.breathe_pos += (float)(cos(data.breathe_factor) * (data.breathe_factor / 250.0f));
 				if (data.breathe_factor >= 0.075f * limit_factor) data.breathe_state = DG_CAM_EXPIRE;
 				break;
 			case DG_CAM_EXPIRE:
-				data.breathe_factor -= 0.0008f * walk_factor * config.global_speed;
+				data.breathe_factor -= 0.0008f * walk_factor * DGConfig.global_speed;
 				data.breathe_pos += (float)(cos(data.breathe_factor) * (data.breathe_factor / 250.0f));
 				if (data.breathe_factor <= -0.065f * limit_factor) {
 					j = 0.0f;
@@ -578,7 +578,7 @@ void _breathe() {
 				}
 				break;
 			case DG_CAM_PAUSE:
-				data.breathe_factor += 0.0001f * config.global_speed;
+				data.breathe_factor += 0.0001f * DGConfig.global_speed;
 				data.breathe_pos += (float)(cos(data.breathe_factor) * (data.breathe_factor / 500.0f));
 				j += 0.1f;
 				if (j >= breathe_wait)

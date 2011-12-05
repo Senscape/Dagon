@@ -14,39 +14,41 @@
 #include "DGCommon.h"
 #include "DGObject.h"
 
+// We should have a separate audio manager for all the audio objects...
+// It's currently all mixed up here
 
 // Init / Terminate
 
-void		dg_audio_init(void);
-void		dg_audio_terminate(void);
+void		DGAudioInitialize(void);
+void		DGAudioTerminate(void);
 
 // New / Release
 
-DG_OBJECT*	dg_audio_new(const char* name, DG_BOOL loop);
-void		dg_audio_release(DG_OBJECT* audio);
+DGObject*	DGAudioNew(const char* withName, DGBool isLoopable);
+void		DGAudioRelease(DGObject* audio);
 
 // Load / Unload
 
-void		dg_audio_load(DG_OBJECT* audio);
-void		dg_audio_unload(DG_OBJECT* audio);
+void		DGAudioLoad(DGObject* audio);
+void		DGAudioUnload(DGObject* audio);
 
 // Checks
 
-DG_BOOL		dg_audio_is_loaded(DG_OBJECT* audio);
-DG_BOOL		dg_audio_is_playing(DG_OBJECT* audio);
+DGBool		DGAudioIsLoaded(DGObject* audio);
+DGBool		DGAudioIsPlaying(DGObject* audio);
 
 // Sets
 
-void		dg_audio_fade_in(DG_OBJECT* audio, int msecs);
-void		dg_audio_fade_out(DG_OBJECT* audio, int msecs);
-void		dg_audio_set_volume(DG_OBJECT* audio, float volume);
+void		DGAudioFadeIn(DGObject* audio, int forMilliseconds);
+void		DGAudioFadeOut(DGObject* audio, int forMilliseconds);
+void		DGAudioSetVolume(DGObject* audio, float theVolume);
 
 // State Changes
 
-DG_BOOL		dg_audio_loop(void);
-void		dg_audio_pause(DG_OBJECT* audio);
-void		dg_audio_play(DG_OBJECT* audio);
-void        dg_audio_queue(unsigned int channel, const char* file);
-void		dg_audio_stop(DG_OBJECT* audio);
+DGBool		DGAudioLoop(void);
+void		DGAudioPause(DGObject* audio);
+void		DGAudioPlay(DGObject* audio);
+void        DGAudioQueue(unsigned int inChannel, DGObject* anAudio);
+void		DGAudioStop(DGObject* audio);
 
 #endif // DG_AUDIO_H

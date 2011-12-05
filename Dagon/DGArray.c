@@ -16,31 +16,31 @@
 ///// Standard New / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_ARRAY* dg_array_new(unsigned capacity) {
-	DG_ARRAY* array = dg_alloc(sizeof(DG_ARRAY));
+DGArray* DGArrayNew(unsigned withCapacity) {
+	DGArray* array = DGAlloc(sizeof(DGArray));
 	
-	if (!capacity)
-		capacity = DG_DEF_ARRAYSIZE;
+	if (!withCapacity)
+		withCapacity = DG_DEF_ARRAYSIZE;
 	
-	array->capacity = capacity;
+	array->capacity = withCapacity;
 	array->count = 0;
 	array->objects = NULL;
-	array->objects = dg_alloc(sizeof(DG_OBJECT**) * capacity);
+	array->objects = DGAlloc(sizeof(DGObject**) * withCapacity);
 	
 	return array;
 }
 
-void dg_array_release(DG_ARRAY* array) {
+void DGArrayRelease(DGArray* array) {
 	if (array) {
 		unsigned c = array->count;
 		
 		while (c-- > 0) {
-			// TODO: Objects NOT being free, it is the responsibility of each module
+			// TODO: Objects NOT being freed, it is the responsibility of each module
 			// NOTE: Perhaps can provide a special function...
 			//dg_object_release(array->objects[c]);
 		}
 		
-		dg_free(array);
+		DGFree(array);
 	}
 }
 
@@ -48,16 +48,16 @@ void dg_array_release(DG_ARRAY* array) {
 ///// Implementation - Checks											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-unsigned dg_array_count(DG_ARRAY* array) {
+unsigned DGArrayCount(DGArray* array) {
 	return array->count;
 }
 
-DG_BOOL dg_array_has_object(DG_ARRAY* array, DG_OBJECT* object) {
+DGBool DGArrayHasObject(DGArray* array, DGObject* anObject) {
 	if (array) {
 		unsigned i;
 		
 		for (i = 0; i < array->count; i++)
-			if (array->objects[i] == object)
+			if (array->objects[i] == anObject)
 				return DG_YES;
 	}
 	
@@ -68,34 +68,34 @@ DG_BOOL dg_array_has_object(DG_ARRAY* array, DG_OBJECT* object) {
 ///// Implementation - Gets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_OBJECT* dg_array_first(DG_ARRAY* array) {
+DGObject* DGArrayFirst(DGArray* array) {
 	if (array->count == 0)
 		return NULL;
 	
 	return array->objects[0];
 }
 
-DG_OBJECT* dg_array_last(DG_ARRAY* array) {
+DGObject* DGArrayLast(DGArray* array) {
 	if (array->count == 0)
 		return NULL;
 	
 	return array->objects[array->count - 1];
 }
 
-DG_OBJECT* dg_array_get_object(DG_ARRAY* array, unsigned index) {
-	if (index >= array->count) {
+DGObject* DGArrayGetObject(DGArray* array, unsigned atIndex) {
+	if (atIndex >= array->count) {
 		// TODO: Raise exception
 		return NULL;
 	}
 	
-	return array->objects[index];
+	return array->objects[atIndex];
 }
 
-DG_OBJECT* dg_array_get_object_by_name(DG_ARRAY* array, const char* name) {
+DGObject* DGArrayGetObjectByName(DGArray* array, const char* theName) {
 	unsigned int i;
 	
 	for (i = 0; i < array->count; i++)
-		if (strcmp(array->objects[i]->name, name) == 0)
+		if (strcmp(array->objects[i]->name, theName) == 0)
 			return array->objects[i];
 	
 	return NULL;
@@ -105,34 +105,34 @@ DG_OBJECT* dg_array_get_object_by_name(DG_ARRAY* array, const char* name) {
 ///// Implementation - Sets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_array_add_object(DG_ARRAY* array, DG_OBJECT* object) {
-	if (object == NULL) {
+void DGArrayAddObject(DGArray* array, DGObject* anObject) {
+	if (anObject == NULL) {
 		// TODO: Raise exception
 		return;
 	}
 	
-	array->objects[array->count] = object;
+	array->objects[array->count] = anObject;
 	array->count++;
 	
 	if (array->count > array->capacity) {
 		// WARNING: There seems to be some problems with this...
-		DG_OBJECT** newObjects;
+		DGObject** newObjects;
 		array->capacity = array->capacity * 2;
-		newObjects = dg_realloc(array->objects, sizeof(DG_OBJECT**) * array->capacity);
+		newObjects = DGRealloc(array->objects, sizeof(DGObject**) * array->capacity);
 		array->objects = newObjects;
 	}
 }
 
-void dg_array_delete_object(DG_ARRAY* array, unsigned index) {
+void DGArrayDeleteObject(DGArray* array, unsigned atIndex) {
 	unsigned int i, last = array->count - 1;
 	
-	if (index > last)
+	if (atIndex > last)
 		return;
 	
-	for (i = index; i < last - 1; i++)
+	for (i = atIndex; i < last - 1; i++)
 		array->objects[i] = array->objects[i+1];
 	
-	dg_object_release(array->objects[last]);
+	DGObjectRelease(array->objects[last]);
 	
 	array->count--;
 }

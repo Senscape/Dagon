@@ -14,20 +14,20 @@
 #include "DGCommon.h"
 
 
-enum DG_Effects {
-	DG_FX_BLUR,
-	DG_FX_COLORIZE,
-	DG_FX_CONTRAST,
-	DG_FX_CONVOLUTION,
-	DG_FX_NOISE,
-	DG_FX_SHARPEN
+enum DG_EFFECTS {
+	DG_EFFECT_BLUR,
+	DG_EFFECT_COLORIZE,
+	DG_EFFECT_CONTRAST,
+	DG_EFFECT_CONVOLUTION,
+	DG_EFFECT_NOISE,
+	DG_EFFECT_SHARPEN
 };
 
-void	dg_effects_init(void);
-void	dg_effects_pause(void);
-void	dg_effects_play(void);
-void	dg_effects_release(void);
-void	dg_effects_set_blur(int offsetx, int offsety);
-void    dg_effects_set_gamma(float level);
+void	DGEffectsInit(void);
+void	DGEffectsPause(void);
+void	DGEffectsPlay(void);
+void	DGEffectsSetBlur(int horizontalOffset, int verticalOffset);
+void    DGEffectsSetGamma(float intensity);
+void	DGEffectsTerminate(void);
 
 #endif // DG_EFFECTS_H

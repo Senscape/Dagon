@@ -14,7 +14,7 @@
 #include "DGCommon.h"
 
 
-enum DG_Log_Modules {
+enum DG_LOG_MODULES {
 	DG_MOD_AUDIO,
 	DG_MOD_CAMERA,
 	DG_MOD_CONFIG,
@@ -31,20 +31,21 @@ enum DG_Log_Modules {
 	DG_MOD_NONE
 };
 
-enum DG_Log_Types {
+enum DG_LOG_TYPES {
 	DG_LOG_TRACE,
 	DG_LOG_ERROR,
 	DG_LOG_WARNING
 };
 
-void			dg_log_init(void);
-void			dg_log_release(void);
-unsigned int	dg_log_color(int index);
-DG_BOOL			dg_log_history(unsigned int* index, char* buffer);
-void			dg_log_command(int module, const char* string, ...);
-void			dg_log_info(int module, const char* string, ...);
-void			dg_log_error(int module, const char* string, ...);
-void			dg_log_trace(int module, const char* string, ...);
-void			dg_log_warning(int module, const char* string, ...);
+void    DGLogInitialize(void);
+void    DGLogTerminate(void);
+void    DGLogCommand(int forModule, const char* theString, ...);
+void    DGLogInfo(int forModule, const char* theString, ...);
+void    DGLogError(int forModule, const char* theString, ...);
+void    DGLogTrace(int forModule, const char* theString, ...);
+void    DGLogWarning(int forModule, const char* theString, ...);
+
+unsigned int	DGLogColor(int atIndex); // Retrieves the color for the console feature
+DGBool			DGLogHistory(unsigned int* pointerToIndex, char* pointerToBuffer); // Cycles through the current buffer
 
 #endif // DG_LOG_H

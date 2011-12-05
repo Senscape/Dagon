@@ -21,7 +21,7 @@
 #define N_DUST 1000
 #define DUST_FACTOR 32767.0f
 
-DG_OBJECT* dustTexture;
+DGObject* dustTexture;
 
 static struct particle {
 	GLfloat x,y,z;
@@ -30,7 +30,7 @@ static struct particle {
 	GLfloat cs;
 } p[N_DUST];
 
-int randomize(DG_BOOL full) {
+int randomize(DGBool full) {
     int n = 32768;
     if (full)
         while (n > 32767)
@@ -41,12 +41,12 @@ int randomize(DG_BOOL full) {
     return n;
 }
 
-void dg_render_dust() {
+void DGRenderDrawDust() {
     int i;
     float s = 0.0015f;
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-    dg_texture_bind(dustTexture);
+    DGTextureBind(dustTexture);
     for (i = 0; i < N_DUST; i++)
     {
         p[i].x+=p[i].xd/100.0f;
@@ -76,24 +76,24 @@ void dg_render_dust() {
 }
 
 // TODO: This should obviously go in the Texture manager
-DG_OBJECT* blendTexture;
+DGObject* blendTexture;
 
-static DG_BOOL blendNextUpdate;
+static DGBool blendNextUpdate;
 static int cubeTextureSize;
-static DG_BOOL texturesEnabled;
+static DGBool texturesEnabled;
 
 #define NUM_VERTS 40
 GLfloat circle[(NUM_VERTS * 2) + 2];
 
-DG_BOOL _isExtensionSupported(const char *extension);
-static DG_BOOL supports_shaders = DG_NO;
+DGBool _isExtensionSupported(const char *extension);
+static DGBool supports_shaders = DG_NO;
 
-void dg_render_init() {
+void DGRenderInitialize() {
 	int i;
 	const GLubyte* version = glGetString(GL_VERSION);
 	
-	dg_log_trace(DG_MOD_RENDER, "Initializing render system...");
-	dg_log_info(DG_MOD_RENDER, "OpenGL version: %s", version);
+	DGLogTrace(DG_MOD_RENDER, "Initializing render system...");
+	DGLogInfo(DG_MOD_RENDER, "OpenGL version: %s", version);
 	
 	/*GLint texSize;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &texSize);
@@ -104,17 +104,17 @@ void dg_render_init() {
 	glewInit();
 	
 	if (glewIsSupported("GL_VERSION_2_0")) {
-		dg_effects_init();
-        dg_effects_set_gamma(2.5f);
+		DGEffectsInit();
+        DGEffectsSetGamma(2.5f);
 		supports_shaders = DG_YES;
 	}
 	else {
-		dg_log_warning(DG_MOD_RENDER, "Visual effects not supported on this system");
+		DGLogWarning(DG_MOD_RENDER, "Visual effects not supported on this system");
 		supports_shaders = DG_NO;
 	}
 	
 	glEnable(GL_BLEND);
-	if (config.antialiasing) {
+	if (DGConfig.antialiasing) {
 		// TODO: Some of these options may be introducing black lines
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
@@ -140,8 +140,8 @@ void dg_render_init() {
 	
 	blendNextUpdate = DG_NO;
 	
-	blendTexture = dg_texture_new("", 0);   // Please note the compression level here
-	dg_texture_clear(blendTexture, 0, 0, 0);
+	blendTexture = DGTextureNew("", 0);   // Please note the compression level here
+	DGTextureClear(blendTexture, 0, 0, 0);
 	
 	for (i = 0; i < (NUM_VERTS+1)*2; i+=2) {
 		circle[i] = (GLfloat)((.0075 * cosf(i*2*3.14159/NUM_VERTS)) * DG_DEF_DISPLAYWIDTH);
@@ -157,30 +157,30 @@ void dg_render_init() {
         p[i].z=(randomize(DG_YES)/DUST_FACTOR-0.5f);
     }
     
-    dustTexture = dg_texture_new("", 0);
-    dg_texture_load_from_memory(dustTexture, _binary_def_particle_start);
+    dustTexture = DGTextureNew("", 0);
+    DGTextureLoadFromMemory(dustTexture, _binary_def_particle_start);
 }
 
-void dg_render_begin(DG_BOOL with_textures) {    
+void DGRenderBegin(DGBool usingTextures) {    
 	glEnableClientState(GL_VERTEX_ARRAY);
-	if (with_textures) {
+	if (usingTextures) {
 		texturesEnabled = DG_YES;
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glEnable(GL_TEXTURE_2D);
 		// Need to define "rendering states" to properly handle this: ie, normal, blending, etc.
-		if (config.show_spots)
+		if (DGConfig.show_spots)
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		else
 			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	else {
 		if (supports_shaders) 
-			dg_effects_pause();
+			DGEffectsPause();
 		glBlendFunc(GL_ONE, GL_ZERO);
 	}
 }
 
-void dg_render_end() {
+void DGRenderEnd() {
 	glDisableClientState(GL_VERTEX_ARRAY);
 	
 	if (texturesEnabled) {
@@ -190,21 +190,21 @@ void dg_render_end() {
 	}
 	else {
 		if (supports_shaders)
-			dg_effects_play();
+			DGEffectsPlay();
 	}
 }
 
-void dg_render_blend() {
+void DGRenderBlendNextUpdate() {
 	blendNextUpdate = DG_YES;
 }
 
-void dg_render_clear() {	
+void DGRenderClearScene() {	
 	glClear(GL_COLOR_BUFFER_BIT);
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     glFlush();
 }
 
-void dg_render_draw_cursor(short x, short y) {
+void DGRenderDrawCursor(short xPosition, short yPosition) {
 	/*short cursor_size = 64;
 	short coords[] = {0, 0, cursor_size, 0, 
 	 cursor_size, cursor_size, 0, cursor_size};
@@ -219,10 +219,10 @@ void dg_render_draw_cursor(short x, short y) {
 	dg_camera_set_perspective();*/
 	
 	glDisable(GL_LINE_SMOOTH);
-	dg_camera_set_ortho();
+	DGCameraSetOrthoView();
 	glPushMatrix();
-	glTranslatef(x - (circle[((NUM_VERTS * 2) + 2) / 2] / 2), 
-				 y - (circle[((NUM_VERTS * 2) + 2) / 2] / 2), 0);
+	glTranslatef(xPosition - (circle[((NUM_VERTS * 2) + 2) / 2] / 2), 
+				 yPosition - (circle[((NUM_VERTS * 2) + 2) / 2] / 2), 0);
 	glVertexPointer(2, GL_FLOAT, 0, circle);
 	glBlendFunc(GL_ONE, GL_ZERO);
 	glDrawArrays(GL_LINE_LOOP, 0, (NUM_VERTS / 2) + 2);
@@ -230,75 +230,75 @@ void dg_render_draw_cursor(short x, short y) {
 	glBlendFunc(GL_ONE, GL_ONE);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, (NUM_VERTS / 2) + 2);
 	glPopMatrix();
-	dg_camera_set_perspective();
+	DGCameraSetPerspectiveView();
 	glEnable(GL_LINE_SMOOTH);
 	
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-void dg_render_draw_poly(short* coords, short elements, short face, DG_BOOL invert) {
+void DGRenderDrawPolygon(short* withArrayOfCoordinates, short sizeOfArray, short onFace, DGBool isInverted) {
 	const float x = 1.0f;
 	const float y = 1.0f;
 	
 	int i, j;
-	int numVertices = elements + (elements / 2);
-	GLfloat* spotVertCoords = dg_alloc(numVertices * sizeof(int));
+	int numVertices = sizeOfArray + (sizeOfArray / 2);
+	GLfloat* spotVertCoords = DGAlloc(numVertices * sizeof(int));
 	int invertY;
 		
-	if (invert)
+	if (isInverted)
 		invertY = -1;
 	else
 		invertY = 1;
 
 	glPushMatrix();
 	
-	switch (face) {
+	switch (onFace) {
 		case DG_FRONT:
 			glTranslatef(-x, y, -x);
-			for (i = 0, j = 0; i < elements; i+=2, j+=3) {
-				spotVertCoords[j] = (GLfloat)coords[i] / (GLfloat)(cubeTextureSize/2);			// Size is divided in half because of the way we draw the cube
-				spotVertCoords[j+1] = (GLfloat)coords[i+1] / (GLfloat)(cubeTextureSize/2) * -1;	// We must invert the coordinates in some cases
+			for (i = 0, j = 0; i < sizeOfArray; i+=2, j+=3) {
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize/2);			// Size is divided in half because of the way we draw the cube
+				spotVertCoords[j+1] = (GLfloat)withArrayOfCoordinates[i+1] / (GLfloat)(cubeTextureSize/2) * -1;	// We must invert the coordinates in some cases
 				spotVertCoords[j+2] = 0.0f;
 			}
 			break;
 		case DG_RIGHT:
 			glTranslatef(x, y, -x);
-			for (i = 0, j = 0; i < elements; i+=2, j+=3) {
+			for (i = 0, j = 0; i < sizeOfArray; i+=2, j+=3) {
 				spotVertCoords[j] = 0.0f;
-				spotVertCoords[j+1] = (GLfloat)coords[i+1] / (GLfloat)(cubeTextureSize/2) * -1;
-				spotVertCoords[j+2] = (GLfloat)coords[i] / (GLfloat)(cubeTextureSize/2);
+				spotVertCoords[j+1] = (GLfloat)withArrayOfCoordinates[i+1] / (GLfloat)(cubeTextureSize/2) * -1;
+				spotVertCoords[j+2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize/2);
 			}
 			break;
 		case DG_BACK:
 			glTranslatef(x, y, x);
-			for (i = 0, j = 0; i < elements; i+=2, j+=3) {
-				spotVertCoords[j] = (GLfloat)coords[i] / (GLfloat)(cubeTextureSize/2) * -1;
-				spotVertCoords[j+1] = (GLfloat)coords[i+1] / (GLfloat)(cubeTextureSize/2) * -1;
+			for (i = 0, j = 0; i < sizeOfArray; i+=2, j+=3) {
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize/2) * -1;
+				spotVertCoords[j+1] = (GLfloat)withArrayOfCoordinates[i+1] / (GLfloat)(cubeTextureSize/2) * -1;
 				spotVertCoords[j+2] = 0.0f;
 			}			
 			break;
 		case DG_LEFT:
 			glTranslatef(-x, y, x);
-			for (i = 0, j = 0; i < elements; i+=2, j+=3) {
+			for (i = 0, j = 0; i < sizeOfArray; i+=2, j+=3) {
 				spotVertCoords[j] = 0.0f;
-				spotVertCoords[j+1] = (GLfloat)coords[i+1] / (GLfloat)(cubeTextureSize/2) * -1;
-				spotVertCoords[j+2] = (GLfloat)coords[i] / (GLfloat)(cubeTextureSize/2) * -1;
+				spotVertCoords[j+1] = (GLfloat)withArrayOfCoordinates[i+1] / (GLfloat)(cubeTextureSize/2) * -1;
+				spotVertCoords[j+2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize/2) * -1;
 			}
 			break;
 		case DG_TOP:
 			glTranslatef(-x, y, x);
-			for (i = 0, j = 0; i < elements; i+=2, j+=3) {
-				spotVertCoords[j] = (GLfloat)coords[i] / (GLfloat)(cubeTextureSize/2);
+			for (i = 0, j = 0; i < sizeOfArray; i+=2, j+=3) {
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize/2);
 				spotVertCoords[j+1] = 0.0f;
-				spotVertCoords[j+2] = (GLfloat)coords[i+1] / (GLfloat)(cubeTextureSize/2) * -1;
+				spotVertCoords[j+2] = (GLfloat)withArrayOfCoordinates[i+1] / (GLfloat)(cubeTextureSize/2) * -1;
 			}
 			break;
 		case DG_BOTTOM:
 			glTranslatef(-x, -y, -x);
-			for (i = 0, j = 0; i < elements; i+=2, j+=3) {
-				spotVertCoords[j] = (GLfloat)coords[i] / (GLfloat)(cubeTextureSize/2);
+			for (i = 0, j = 0; i < sizeOfArray; i+=2, j+=3) {
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize/2);
 				spotVertCoords[j+1] = 0.0f;
-				spotVertCoords[j+2] = (GLfloat)coords[i+1] / (GLfloat)(cubeTextureSize/2);
+				spotVertCoords[j+2] = (GLfloat)withArrayOfCoordinates[i+1] / (GLfloat)(cubeTextureSize/2);
 			}
 			break;				
 	}
@@ -311,15 +311,15 @@ void dg_render_draw_poly(short* coords, short elements, short face, DG_BOOL inve
 		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 	}
 	glVertexPointer(3, GL_FLOAT, 0, spotVertCoords);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, elements / 2);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray / 2);
 	
 	glPopMatrix();
 }
 
-void dg_render_draw_quad(short* coords, DG_BOOL invert) {
+void DGRenderDrawOverlay(short* withArrayOfCoordinates, DGBool isInverted) {
 	int invertY;
 		
-	if (invert)
+	if (isInverted)
 		invertY = -1;
 	else
 		invertY = 1;
@@ -330,27 +330,27 @@ void dg_render_draw_quad(short* coords, DG_BOOL invert) {
 		GLfloat texCoords[] = {0.0f, (0.0f*invertY), 1.0f, (0.0f*invertY), 1.0f, (1.0f*invertY), 0.0f, (1.0f*invertY)};
 		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 	}
-	glVertexPointer(2, GL_SHORT, 0, coords);
+	glVertexPointer(2, GL_SHORT, 0, withArrayOfCoordinates);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	
 	glPopMatrix();
 }
 
 // TODO: This is unnecessary... let's try to avoid this extra method
-void dg_render_copy_scene() {
-	dg_texture_bind(blendTexture);
-	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config.display_width, config.display_height, 0);
+void DGRenderCopyScene() {
+	DGTextureBind(blendTexture);
+	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, DGConfig.display_width, DGConfig.display_height, 0);
 }
 
-void dg_render_cutscene(DG_OBJECT* video) {
-	DG_FRAME* frame = dg_video_get_frame(video);
+void DGRenderShowCutscene(DGObject* withVideo) {
+	DGFrame* frame = DGVideoGetFrame(withVideo);
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, frame->width, frame->height, GL_BGR, GL_UNSIGNED_BYTE, frame->data);
 	
 	// Alpha is not supported for videos, so we set the next drawing cycle to be fully opaque
 	glBlendFunc(GL_ONE, GL_ZERO);
 }
 
-void dg_render_save_scene() {
+void DGRenderSaveScene() {
 	// Should move this elsewhere, but what the heck...
 	time_t rawtime;
 	struct tm* timeinfo;
@@ -361,14 +361,14 @@ void dg_render_save_scene() {
 	
 	strftime(buffer, 80, "snap-%Y-%m-%d-%Hh%Mm%Ss.tga", timeinfo);
 	
-    dg_texture_save(blendTexture, buffer);
+    DGTextureSaveToFile(blendTexture, buffer);
 }
 
-void dg_render_set_splash() {
-    dg_texture_load_from_memory(blendTexture, _binary_def_splash_start);
+void DGRenderSetSplash() {
+    DGTextureLoadFromMemory(blendTexture, _binary_def_splash_start);
 }
 
-void dg_render_splash() {
+void DGRenderDrawSplash() {
     static float j = 0.0f;
 	
 	/*short width = config.display_width;
@@ -376,30 +376,30 @@ void dg_render_splash() {
     short height = dg_texture_height(blendTexture) / factor;
 	short off = config.display_height - height;*/
 	
-    short coords[] = {0, 0, config.display_width, 0, 
-        config.display_width, config.display_height, 0, config.display_height};
+    short coords[] = {0, 0, DGConfig.display_width, 0, 
+        DGConfig.display_width, DGConfig.display_height, 0, DGConfig.display_height};
     
     if (supports_shaders)
-		dg_effects_pause();
+		DGEffectsPause();
     
     glColor4f(1.0f, 1.0f, 1.0f, j);
     
-    dg_texture_bind(blendTexture);
-    dg_render_draw_quad(coords, DG_NO);
+    DGTextureBind(blendTexture);
+    DGRenderDrawOverlay(coords, DG_NO);
     
     if (j < 1.0f)
-        j += 0.01f * config.global_speed;
+        j += 0.01f * DGConfig.global_speed;
     
     if (supports_shaders)
-		dg_effects_play();
+		DGEffectsPlay();
 }
 
-void dg_render_release() {
+void DGRenderTerminate() {
 	if (supports_shaders)
-		dg_effects_release();
+		DGEffectsTerminate();
 }
 
-void dg_render_with_color(int color) {
+void DGRenderSetColor(int color) {
 	uint32_t aux = color;
 	
 	uint8_t b = (aux & 0x000000ff);
@@ -410,12 +410,12 @@ void dg_render_with_color(int color) {
 	glColor4f((float)(r/255.0f), (float)(g/255.0f), (float)(b/255.0f), (float)(a/255.f));
 }
 
-int	dg_render_test_color(int x, int y) {
+int	DGRenderTestColor(int xPosition, int yPosition) {
 	GLubyte pixel[3];
 	GLint r, g, b;
 	uint32_t aux;
 	
-	glReadPixels(x, y, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+	glReadPixels(xPosition, yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
 	
 	r = (GLint)pixel[0];
 	g = (GLint)pixel[1];
@@ -426,40 +426,40 @@ int	dg_render_test_color(int x, int y) {
 	return aux;
 }
 
-void dg_render_update_scene() {
+void DGRenderUpdateScene() {
 	GLenum errCode;
 	const GLubyte *errString;
 
-    if (config.dust)
-        dg_render_dust();
+    if (DGConfig.dust)
+        DGRenderDrawDust();
     
 	if (supports_shaders) {
 		// Badly placed...
-		dg_effects_set_blur(dg_camera_delta_x(), dg_camera_delta_y());
+		DGEffectsSetBlur(DGCameraDeltaX(), DGCameraDeltaY());
 		// TODO: Noise should remain on top of the blend
-		dg_effects_pause();
+		DGEffectsPause();
 	}
 
 	if (blendNextUpdate) {
 		static float j = 0.0f;
-		short xStretch = (short)(j * (config.display_width/4));
-		short yStretch = (short)(j * (config.display_height/4));
-		short coords[] = {-xStretch, -yStretch, config.display_width+xStretch, -yStretch, 
-			config.display_width+xStretch, config.display_height+yStretch, -xStretch, config.display_height+yStretch}; 
+		short xStretch = (short)(j * (DGConfig.display_width/4));
+		short yStretch = (short)(j * (DGConfig.display_height/4));
+		short coords[] = {-xStretch, -yStretch, DGConfig.display_width+xStretch, -yStretch, 
+			DGConfig.display_width+xStretch, DGConfig.display_height+yStretch, -xStretch, DGConfig.display_height+yStretch}; 
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f - j);
 		
-		dg_camera_set_ortho();
+		DGCameraSetOrthoView();
 		
-		dg_render_begin(DG_YES);
-		dg_texture_bind(blendTexture);
-		dg_render_draw_quad(coords, DG_NO);
-		dg_render_end();
+		DGRenderBegin(DG_YES);
+		DGTextureBind(blendTexture);
+		DGRenderDrawOverlay(coords, DG_NO);
+		DGRenderEnd();
 		
-		dg_camera_set_perspective();
+		DGCameraSetPerspectiveView();
 		
 		// This should a bit faster than the walk_time factor
-		j += 0.015f * config.global_speed;
+		j += 0.015f * DGConfig.global_speed;
 		if (j >= 1.0f) {
 			j = 0.0f;
 			blendNextUpdate = DG_NO;
@@ -467,16 +467,16 @@ void dg_render_update_scene() {
 	}
 
 	if (supports_shaders)
-		dg_effects_play();
+		DGEffectsPlay();
 	
 	// Check for errors in loop
 	if ((errCode = glGetError()) != GL_NO_ERROR) {
 		errString = gluErrorString(errCode);
-		dg_log_error(DG_MOD_RENDER, "%s %s", MSG220001, errString);
+		DGLogError(DG_MOD_RENDER, "%s %s", MSG220001, errString);
 	}
 }
 
-DG_BOOL _isExtensionSupported(const char *extension) {	
+DGBool _isExtensionSupported(const char *extension) {	
 	const GLubyte *extensions = NULL;
 	const GLubyte *start;
 	GLubyte *where, *terminator;

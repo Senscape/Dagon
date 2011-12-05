@@ -11,7 +11,7 @@
 #import "DGPlatform.h"
 
 
-@interface DagonViewDelegate : NSView {
+@interface DGViewDelegate : NSView {
 	NSOpenGLPixelFormat* pixelFormat;
 	NSOpenGLContext* glContext;
 }

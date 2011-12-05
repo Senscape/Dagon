@@ -15,7 +15,7 @@ typedef struct {
     unsigned id;
 	unsigned trigger;
     unsigned elapsed;
-    DG_BOOL enabled;
+    DGBool enabled;
     int ref;
 } DG_TIMER;
 

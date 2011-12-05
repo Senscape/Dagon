@@ -17,27 +17,28 @@
 
 // Init / Release
 
-void		dg_render_init(void);
-void		dg_render_release(void);
+void		DGRenderInitialize(void);
+void		DGRenderTerminate(void);
 
 // State Changes
 
-void		dg_render_begin(DG_BOOL with_textures);
-void		dg_render_blend(void);
-void		dg_render_clear(void);
-void		dg_render_copy_scene(void);
-void		dg_render_cutscene(DG_OBJECT* video);
-void		dg_render_draw_cursor(short x, short y);
-void		dg_render_draw_poly(short* coords, short elements, short face, DG_BOOL invert);
-void		dg_render_draw_quad(short* coords, DG_BOOL invert);
-void		dg_render_dust(void);
-void		dg_render_end(void);
-void		dg_render_save_scene(void);
-void		dg_render_set_splash(void);
-void		dg_render_splash(void);
-int			dg_render_test_color(int x, int y);
-void		dg_render_update_scene(void);
-void		dg_render_with_color(int color);
+void		DGRenderBegin(DGBool usingTextures);
+void		DGRenderBlendNextUpdate(void);
+void		DGRenderShowCutscene(DGObject* withVideo);
+void		DGRenderDrawDust(void);
+void		DGRenderDrawCursor(short xPosition, short yPosition);
+void		DGRenderDrawOverlay(short* withArrayOfCoordinates, DGBool isInverted);
+void		DGRenderDrawPolygon(short* withArrayOfCoordinates, short sizeOfArray, short onFace, DGBool isInverted);
+void		DGRenderDrawSplash(void);
+void		DGRenderEnd(void);
+void		DGRenderSetColor(int color);
+void		DGRenderSetSplash(void);
+int			DGRenderTestColor(int xPosition, int yPosition);
+
+void		DGRenderClearScene(void);
+void		DGRenderCopyScene(void);
+void		DGRenderSaveScene(void);
+void		DGRenderUpdateScene(void);
 
 extern const unsigned char _binary_def_particle_start[];
 extern const unsigned char _binary_def_splash_start[];

@@ -20,8 +20,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 struct {
-	DG_OBJECT* binded;
-	DG_ARRAY* textures;
+	DGObject* binded;
+	DGArray* textures;
 	unsigned active_textures;
 } Manager;
 
@@ -36,22 +36,22 @@ void _generate_filename(const char* filename, char* fileindexed, unsigned idx);
 ///// Standard Init / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_texture_manager_init() {
+void DGTextureManagerInitialize() {
 	//dg_log_trace(DG_MOD_TEXTURE, "Initializing texture manager...");
 	
-	Manager.textures = dg_array_new(0);
+	Manager.textures = DGArrayNew(0);
 	Manager.active_textures = 0;
 	Manager.binded = NULL;
 }
 
-void dg_texture_manager_release() {
+void DGTextureManagerTerminate() {
 	unsigned c;
 	
-	for (c = 0; c < dg_array_count(Manager.textures); c++) {
-		dg_texture_release(dg_array_get_object(Manager.textures, c));
+	for (c = 0; c < DGArrayCount(Manager.textures); c++) {
+		DGTextureRelease(DGArrayGetObject(Manager.textures, c));
 	}
 	
-	dg_array_release(Manager.textures);
+	DGArrayRelease(Manager.textures);
 	Manager.active_textures = 0;
 	Manager.binded = NULL;
 }
@@ -60,72 +60,72 @@ void dg_texture_manager_release() {
 ///// Implementation - State Changes									   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_texture_manager_bind(DG_OBJECT* texture) {
-	dg_texture_bind(texture);
-	Manager.binded = texture;
+void DGTextureManagerBind(DGObject* theTexture) {
+	DGTextureBind(theTexture);
+	Manager.binded = theTexture;
 }
 
-DG_OBJECT* dg_texture_manager_load(const char* name) {
+DGObject* DGTextureManagerLoad(const char* nameOfTexture) {
 	static unsigned position = 0;
 	static char curr_name[DG_MAX_FILELEN];
 	char tex_name[DG_MAX_FILELEN];
 	char file_to_load[DG_MAX_FILELEN];
-	DG_OBJECT* texture;
+	DGObject* texture;
 	
-	if (strchr(name, '.')) { // We have a full filename, nothing else to be done
-		strcpy(tex_name, name);
-		strcpy(file_to_load, dg_config_get_path(DG_RES, name));
+	if (strchr(nameOfTexture, '.')) { // We have a full filename, nothing else to be done
+		strcpy(tex_name, nameOfTexture);
+		strcpy(file_to_load, DGConfigGetPath(DG_PATH_RES, nameOfTexture));
 		position = 0; // Force position to 0 just in case
 	}
 	else {
 		FILE* fh = NULL;
 		
 		// Calculate the position
-		if (strcmp(curr_name, name) == 0) {
+		if (strcmp(curr_name, nameOfTexture) == 0) {
 			position++;
 		}
 		else {
 			// TODO: Really ugly, revise. Must avoid deleting active textures (load seq.)
 			if (Manager.active_textures >= 18) {
-				dg_texture_manager_release();
-				dg_texture_manager_init();
+				DGTextureManagerTerminate();
+				DGTextureManagerInitialize();
 			}
 			
 			position = 0;
-			strcpy(curr_name, name);
+			strcpy(curr_name, nameOfTexture);
 		}
 		
 		// Generate the indexed filename
-		_generate_filename(name, tex_name, position);
+		_generate_filename(nameOfTexture, tex_name, position);
         
 		// Test for pack
-		strcpy(file_to_load, dg_config_get_path(DG_RES, _add_extension(name)));
+		strcpy(file_to_load, DGConfigGetPath(DG_PATH_RES, _add_extension(nameOfTexture)));
 		fh = fopen(file_to_load, "r");
 		if (fh) { // Has a pack
 			fclose(fh);
 		}
 		else { // No pack, so we use the indexed filename
-			strcpy(file_to_load, dg_config_get_path(DG_RES, tex_name));
+			strcpy(file_to_load, DGConfigGetPath(DG_PATH_RES, tex_name));
 		}
 	}
 	
-	if (!(texture = dg_array_get_object_by_name(Manager.textures, tex_name))) {
-		texture = dg_texture_new(tex_name, config.tex_compression); // Not very safe
-		dg_array_add_object(Manager.textures, texture);
+	if (!(texture = DGArrayGetObjectByName(Manager.textures, tex_name))) {
+		texture = DGTextureNew(tex_name, DGConfig.tex_compression); // Not very safe
+		DGArrayAddObject(Manager.textures, texture);
 		Manager.active_textures++;
 	}
 	
-	if (!dg_texture_is_loaded(texture)) {
-		dg_texture_load(texture, file_to_load, position);
+	if (!DGTextureIsLoaded(texture)) {
+		DGTextureLoad(texture, file_to_load, position);
     }
 	
 	return texture;
 }
 
-DG_OBJECT* dg_texture_manager_new(int width, int height, int depth) {
-	DG_OBJECT* texture = dg_texture_new("", 1);
-	dg_texture_clear(texture, width, height, depth);
-	dg_array_add_object(Manager.textures, texture);
+DGObject* DGTextureManagerNew(int width, int height, int depth) {
+	DGObject* texture = DGTextureNew("", 1);
+	DGTextureClear(texture, width, height, depth);
+	DGArrayAddObject(Manager.textures, texture);
 	Manager.active_textures++;
 	
 	return texture;
@@ -138,7 +138,7 @@ DG_OBJECT* dg_texture_manager_new(int width, int height, int depth) {
 const char* _add_extension(const char* filename) {
 	static char aux[DG_MAX_FILELEN];
 	
-	sprintf(aux, "%s.%s", filename, config.tex_extension);
+	sprintf(aux, "%s.%s", filename, DGConfig.tex_extension);
 	
 	return aux;
 }									
@@ -147,5 +147,5 @@ void _generate_filename(const char* filename, char* fileindexed, unsigned idx) {
 	char aux[DG_MAX_FILELEN];
 	
 	strcpy(aux, filename);
-	sprintf(fileindexed, "%s%0" in_between(DG_FILESEQZERO) "d.%s", strtok(aux, "."), idx + DG_FILESEQSTART, config.tex_extension);
+	sprintf(fileindexed, "%s%0" in_between(DG_FILESEQZERO) "d.%s", strtok(aux, "."), idx + DG_FILESEQSTART, DGConfig.tex_extension);
 }

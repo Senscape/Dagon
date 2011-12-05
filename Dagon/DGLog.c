@@ -27,27 +27,27 @@ struct {
 
 void _log(DG_LOG_DATA* data);
 
-void dg_log_init() {
+void DGLogInitialize() {
 	FILE* result;
 	
 	history.size = 0;
 	
-	if (config.log) {
+	if (DGConfig.log) {
 		// TODO: Optionally redirect all output (should go in config)
 		result = freopen(DG_DEF_LOGFILE, "a", stdout);
 		result = freopen(DG_DEF_LOGFILE, "a", stderr);
 	}
 }
 
-void dg_log_release() {
+void DGLogTerminate() {
 	unsigned int i;
 	
 	for (i = 0; i < history.size; i++)
-		dg_free(history.data[i]);
+		DGFree(history.data[i]);
 }
 
-unsigned int dg_log_color(int index) {
-	unsigned int i = index;
+unsigned int DGLogColor(int atIndex) {
+	unsigned int i = atIndex;
 
 	if (i < history.size) {
 		return history.data[i]->color;
@@ -55,10 +55,10 @@ unsigned int dg_log_color(int index) {
 	else return DG_COLOR_WHITE;
 }
 
-DG_BOOL dg_log_history(unsigned int* index, char* buffer) {
+DGBool DGLogHistory(unsigned int* pointerToIndex, char* pointerToBuffer) {
 	unsigned int my_index;
 	
-	my_index = *index;
+	my_index = *pointerToIndex;
 	
 	// TODO: the first line is not showing
 	
@@ -67,9 +67,9 @@ DG_BOOL dg_log_history(unsigned int* index, char* buffer) {
 
 	my_index--;
 	if (my_index < history.size) {
-		memcpy(buffer, history.data[my_index]->line, strlen(history.data[my_index]->line) + 1); // Last 1 is the NULL char
+		memcpy(pointerToBuffer, history.data[my_index]->line, strlen(history.data[my_index]->line) + 1); // Last 1 is the NULL char
 
-		*index = my_index;
+		*pointerToIndex = my_index;
 		if (my_index > 0)
 			return DG_YES;
 		else
@@ -79,76 +79,76 @@ DG_BOOL dg_log_history(unsigned int* index, char* buffer) {
 	return DG_NO;
 }
 
-void dg_log_command(int module, const char* string, ...) {
+void DGLogCommand(int forModule, const char* theString, ...) {
 	DG_LOG_DATA data;
 	va_list ap;
 	
-	va_start(ap, string);
-	vsprintf(data.line, string, ap);
+	va_start(ap, theString);
+	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
 	data.color = DG_COLOR_BRIGHTMAGENTA;
-	data.module = module;
+	data.module = forModule;
 	data.type = DG_LOG_TRACE;
 	
 	_log(&data);	
 }
 
-void dg_log_info(int module, const char* string, ...) {
+void DGLogInfo(int forModule, const char* theString, ...) {
 	DG_LOG_DATA data;
 	va_list ap;
 	
-	va_start(ap, string);
-	vsprintf(data.line, string, ap);
+	va_start(ap, theString);
+	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
 	data.color = DG_COLOR_BRIGHTCYAN;
-	data.module = module;
+	data.module = forModule;
 	data.type = DG_LOG_TRACE;
 	
 	_log(&data);	
 }
 
-void dg_log_trace(int module, const char* string, ...) {
+void DGLogTrace(int forModule, const char* theString, ...) {
 	DG_LOG_DATA data;
 	va_list ap;
 	
-	va_start(ap, string);
-	vsprintf(data.line, string, ap);
+	va_start(ap, theString);
+	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
 	data.color = DG_COLOR_WHITE;
-	data.module = module;
+	data.module = forModule;
 	data.type = DG_LOG_TRACE;
 	
 	_log(&data);	
 }
 
-void dg_log_error(int module, const char* string, ...) {
+void DGLogError(int forModule, const char* theString, ...) {
 	DG_LOG_DATA data;
 	va_list ap;
 	
-	va_start(ap, string);
-	vsprintf(data.line, string, ap);
+	va_start(ap, theString);
+	vsprintf(data.line, theString, ap);
 	va_end(ap);
 
 	data.color = DG_COLOR_BRIGHTRED;
-	data.module = module;
+	data.module = forModule;
 	data.type = DG_LOG_ERROR;
 	
 	_log(&data);	
 }
 
-void dg_log_warning(int module, const char* string, ...) {
+void DGLogWarning(int forModule, const char* theString, ...) {
 	DG_LOG_DATA data;
 	va_list ap;
 	
-	va_start(ap, string);
-	vsprintf(data.line, string, ap);
+	va_start(ap, theString);
+	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
 	data.color = DG_COLOR_YELLOW;
-	data.module = module;
+	data.module = forModule;
 	data.type = DG_LOG_WARNING;
 	
 	_log(&data);	
@@ -157,7 +157,7 @@ void dg_log_warning(int module, const char* string, ...) {
 void _log(DG_LOG_DATA* data) {
 	// TODO: Instead of opening and closing handles, we should flush the stream each time
 	
-	if (config.log) {
+	if (DGConfig.log) {
 		FILE*       file;
 		time_t      rawtime;
 		char*		p;
@@ -226,7 +226,7 @@ void _log(DG_LOG_DATA* data) {
 				break;
 		}
 
-		file = fopen(dg_config_get_path(DG_USER, DG_DEF_LOGFILE), "a");
+		file = fopen(DGConfigGetPath(DG_PATH_USER, DG_DEF_LOGFILE), "a");
 		if (file != NULL) {
 			fprintf(file, "[%s] %s -> %s%s\n", timeFormatted, moduleName, logType, data->line);
 			fclose(file);
@@ -237,7 +237,7 @@ void _log(DG_LOG_DATA* data) {
 	}
 	
 	if (history.size < DG_MAX_LOGHIST) {
-		history.data[history.size] = (DG_LOG_DATA*)dg_alloc(sizeof(DG_LOG_DATA));
+		history.data[history.size] = (DG_LOG_DATA*)DGAlloc(sizeof(DG_LOG_DATA));
 		memcpy(history.data[history.size], data, sizeof(DG_LOG_DATA));
 		history.size++;
 	}
@@ -247,7 +247,7 @@ void _log(DG_LOG_DATA* data) {
 		for (i = 0; i < (DG_MAX_LOGHIST - 1); i++)
 			memcpy(history.data[i], history.data[i + 1], sizeof(DG_LOG_DATA));
 		
-		history.data[DG_MAX_LOGHIST - 1] = (DG_LOG_DATA*)dg_alloc(sizeof(DG_LOG_DATA));
+		history.data[DG_MAX_LOGHIST - 1] = (DG_LOG_DATA*)DGAlloc(sizeof(DG_LOG_DATA));
 		memcpy(history.data[DG_MAX_LOGHIST - 1], data, sizeof(DG_LOG_DATA));
 	}
 	

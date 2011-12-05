@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef dg_node_H
-#define	dg_node_H
+#ifndef DG_NODE_H
+#define	DG_NODE_H
 
 #include "DGCommon.h"
 #include "DGObject.h"
@@ -18,18 +18,18 @@
 
 // New / Release
 
-DG_OBJECT*	dg_node_new(const char* name);
-void		dg_node_release(DG_OBJECT* node);
+DGObject*	DGNodeNew(const char* withName);
+void		DGNodeRelease(DGObject* node);
 
 // Gets
 
-DG_BOOL		dg_node_get_action(DG_OBJECT* node, int color, DG_ACTION** action);
-DG_BOOL		dg_node_get_spot(DG_OBJECT* node, DG_OBJECT** spot);
+DGBool		DGNodeGetAction(DGObject* node, int forColor, DGAction** pointerToAction);
+DGBool		DGNodeGetSpot(DGObject* node, DGObject** pointerToSpot);
 
 // Sets
 
-void		dg_node_add_custom_link(DG_OBJECT* node, unsigned direction, int handler);
-void		dg_node_add_link(DG_OBJECT* node, unsigned direction, DG_OBJECT* target);
-void		dg_node_add_spot(DG_OBJECT* node, DG_OBJECT* spot);
+void		DGNodeAddCustomLink(DGObject* node, unsigned withDirection, int handlerForLua);
+void		DGNodeAddLink(DGObject* node, unsigned withDirection, DGObject* theTarget);
+void		DGNodeAddSpot(DGObject* node, DGObject* aSpot);
 
-#endif // dg_node_H
+#endif // DG_NODE_H

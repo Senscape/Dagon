@@ -18,8 +18,8 @@
 #ifndef	DG_USE_SDL
 
 
-DagonAppDelegate* appDelegate;
-DagonWindowDelegate* window;
+DGAppDelegate* appDelegate;
+DGWindowDelegate* window;
 
 NSLock *theLock;
 NSTimer* timer;
@@ -32,16 +32,16 @@ NSString * const BXSessionDidEnterFullScreenNotification	= @"BXSessionDidEnterFu
 NSString * const BXSessionWillExitFullScreenNotification	= @"BXSessionWillExitFullScreen";
 NSString * const BXSessionDidExitFullScreenNotification		= @"BXSessionDidExitFullScreen";
 
-void dg_system_init() {    
-	dg_log_trace(DG_MOD_SYSTEM, "Initializing system interface...");
+void DGSystemInitialize() {    
+	DGLogTrace(DG_MOD_SYSTEM, "Initializing system interface...");
 	
 	[NSApplication sharedApplication];
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
-	appDelegate = [[DagonAppDelegate alloc] init];
+	appDelegate = [[DGAppDelegate alloc] init];
 	
 #ifndef DG_TOOL    
-    window = [[DagonWindowDelegate alloc] initWithContentRect:NSMakeRect(50, 100, config.display_width, config.display_height) 
+    window = [[DGWindowDelegate alloc] initWithContentRect:NSMakeRect(50, 100, DGConfig.display_width, DGConfig.display_height) 
                                          styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
                                            backing:NSBackingStoreBuffered defer:TRUE];
     
@@ -54,15 +54,15 @@ void dg_system_init() {
 	[window setContentView:[window view]];
 	[window makeFirstResponder:[window view]];
 
-    dg_render_clear();
+    DGRenderClearScene();
     [[window view] update];
     
-    [window setTitle:[NSString stringWithUTF8String:config.script]];
+    [window setTitle:[NSString stringWithUTF8String:DGConfig.script]];
     
     // Hide cursor
     
-    if (config.fullscreen)
-        dg_system_toggle_fullscreen();
+    if (DGConfig.fullscreen)
+        DGSystemToggleFullscreen();
     
 	[NSBundle loadNibNamed:@"MainMenu" owner:NSApp];
 #endif
@@ -70,10 +70,10 @@ void dg_system_init() {
 	[pool release];
 }
 
-void dg_system_find_paths() {
+void DGSystemFindPaths() {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
-	if (config.debug_mode) {
+	if (DGConfig.debug_mode) {
 		// Set working directory to parent of bundle
 		NSString *bundleDirectory = [[NSBundle mainBundle] bundlePath];
 		NSString *parentDirectory = [bundleDirectory stringByDeletingLastPathComponent];
@@ -98,23 +98,23 @@ void dg_system_find_paths() {
 			[[NSFileManager defaultManager] createDirectoryAtPath:appSupportDirectory withIntermediateDirectories:YES attributes:nil error:nil];
 		}
 		
-		strcpy(config.user_path, [appSupportDirectory UTF8String]);
+		strcpy(DGConfig.user_path, [appSupportDirectory UTF8String]);
 		
 		// Get resource folder in bundle path
 		NSString *resDirectory = [[NSBundle mainBundle] resourcePath];
         resDirectory = [resDirectory stringByAppendingString:@"/"];
-        strcpy(config.app_path, [resDirectory UTF8String]); // Maybe this isn't necessary after all...
-		strcpy(config.res_path, [resDirectory UTF8String]);
+        strcpy(DGConfig.app_path, [resDirectory UTF8String]); // Maybe this isn't necessary after all...
+		strcpy(DGConfig.res_path, [resDirectory UTF8String]);
 	}   
     
     [pool release];
 }
 
-void dg_system_lock() {
+void DGSystemLock() {
     [theLock lock];
 }
 
-void dg_system_run() {
+void DGSystemRun() {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     theLock = [[NSLock alloc] init];
@@ -125,12 +125,12 @@ void dg_system_run() {
 	[NSThread detachNewThreadSelector:@selector(videoLoop)
 							 toTarget:appDelegate withObject:nil];
 	
-	if (config.multithread) {
+	if (DGConfig.multithread) {
 		[NSThread detachNewThreadSelector:@selector(mainLoop)
 								 toTarget:appDelegate withObject:nil];
 	}
 	else {
-		timer = [NSTimer scheduledTimerWithTimeInterval:1.0f/config.framerate // WARNING: This value should be closer to 60fps
+		timer = [NSTimer scheduledTimerWithTimeInterval:1.0f/DGConfig.framerate // WARNING: This value should be closer to 60fps
 												 target:appDelegate selector:@selector(mainLoop) userInfo:nil repeats:DG_YES];
 	}
 
@@ -139,9 +139,9 @@ void dg_system_run() {
 	[NSApp run];
 }
 
-void dg_system_release() {
+void DGSystemTerminate() {
 #ifndef DG_TOOL
-	if (!config.multithread) {
+	if (!DGConfig.multithread) {
 		[timer invalidate];
 	}
 	
@@ -158,14 +158,14 @@ void dg_system_release() {
 	[NSApp terminate: nil];
 }
 
-void dg_system_set_title(const char* title) {
+void DGSystemSetTitle(const char* theTitle) {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     NSString* aux = [NSString string];
     
-    aux = [aux stringByAppendingString:[NSString stringWithUTF8String:config.script]];
+    aux = [aux stringByAppendingString:[NSString stringWithUTF8String:DGConfig.script]];
     aux = [aux stringByAppendingString:@" ("];
-    aux = [aux stringByAppendingString:[NSString stringWithUTF8String:title]];
+    aux = [aux stringByAppendingString:[NSString stringWithUTF8String:theTitle]];
     aux = [aux stringByAppendingString:@")"];
     
     [window setTitle:aux];
@@ -173,14 +173,14 @@ void dg_system_set_title(const char* title) {
     [pool release];
 }
 
-void dg_system_toggle_fullscreen() {
+void DGSystemToggleFullscreen() {
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     NSDictionary* FullScreen_Options; // Not in the pool
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     NSString *startNotification, *endNotification;
     
-    if (config.fullscreen) 
+    if (DGConfig.fullscreen) 
     {
         startNotification	= BXSessionWillEnterFullScreenNotification;
         endNotification		= BXSessionDidEnterFullScreenNotification;
@@ -213,7 +213,7 @@ void dg_system_toggle_fullscreen() {
     
     FullScreen_Options = [NSDictionary dictionaryWithObject: [NSNumber numberWithBool: YES] forKey: NSFullScreenModeAllScreens];
     
-    if (config.fullscreen) {
+    if (DGConfig.fullscreen) {
         [[window view] enterFullScreenMode: [NSScreen mainScreen] withOptions: FullScreen_Options];
     }
     else {
@@ -221,7 +221,7 @@ void dg_system_toggle_fullscreen() {
         [window makeFirstResponder:[window view]];
     }
         
-    dg_render_clear();
+    DGRenderClearScene();
     
     [[window view] update];
     
@@ -243,15 +243,15 @@ void dg_system_toggle_fullscreen() {
     [pool release];
 }
 
-void dg_system_unlock() {  
+void DGSystemUnlock() {  
     [theLock unlock];
 }
 
-void dg_system_update() {
+void DGSystemUpdate() {
 	[[window view] update];
 	
-	if (config.multithread) 
-		[NSThread sleepForTimeInterval:1.0f/config.framerate];
+	if (DGConfig.multithread) 
+		[NSThread sleepForTimeInterval:1.0f/DGConfig.framerate];
 }
 
 #endif

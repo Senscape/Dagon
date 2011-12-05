@@ -18,7 +18,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 typedef struct {
-	DG_ARRAY* spots;
+	DGArray* spots;
 	unsigned int marker;
 } DG_NODE;
 
@@ -26,60 +26,60 @@ typedef struct {
 ///// Private Prototypes												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_NODE* _tonode(DG_OBJECT* node);
+DG_NODE* _tonode(DGObject* node);
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Standard New / Release											   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_OBJECT* dg_node_new(const char* name) {
+DGObject* DGNodeNew(const char* withName) {
 	int i;
-	DG_OBJECT* node;
+	DGObject* node;
 	DG_NODE node_data;
 	
 	node_data.marker = 0;
-	node_data.spots = dg_array_new(0);
+	node_data.spots = DGArrayNew(0);
 	
 	// Create six spots for the texture pack feature
 	for (i = 0; i < 6; i++) {
 		short coords[] = {0, 0, DG_DEF_TEXSIZE, 0, DG_DEF_TEXSIZE, DG_DEF_TEXSIZE, 0, DG_DEF_TEXSIZE};
-		DG_OBJECT* spot = dg_spot_new(coords, 8, i, DG_NONE);
-		dg_spot_set_image(spot, name);
-		dg_array_add_object(node_data.spots, spot);
+		DGObject* spot = DGSpotNew(coords, 8, i, DG_NONE);
+		DGSpotSetImage(spot, withName);
+		DGArrayAddObject(node_data.spots, spot);
 	}
 	
-	node = dg_object_new_named(DG_OBJ_NODE, name, &node_data, sizeof(node_data));
+	node = DGObjectNewNamed(DG_OBJECT_NODE, withName, &node_data, sizeof(node_data));
 	
 	return node;
 }
 
-void dg_node_release(DG_OBJECT* node) {
+void DGNodeRelease(DGObject* node) {
 	// If refcount is zero then is means the object was never used, so it's valid
-	if (dg_object_refcount(node) <= 1) {
+	if (DGObjectReferenceCount(node) <= 1) {
 		DG_NODE* node_data = _tonode(node);
 		
 		if (node_data) {
-			dg_array_release(node_data->spots);
-			dg_object_release(node);
+			DGArrayRelease(node_data->spots);
+			DGObjectRelease(node);
 		}
 	}
 	else
-		dg_object_unref(node);		
+		DGObjectRemoveReference(node);		
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 ///// Implementation - Gets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_BOOL dg_node_get_action(DG_OBJECT* node, int color, DG_ACTION** action) {
+DGBool DGNodeGetAction(DGObject* node, int forColor, DGAction** pointerToAction) {
 	DG_NODE* node_data = _tonode(node);
 	
 	if (node_data) {
 		unsigned int i;
-		for (i = 0; i < dg_array_count(node_data->spots); i++) {
-			DG_OBJECT* spot = dg_array_get_object(node_data->spots, i);
-			if ((dg_spot_color(spot) == color) && dg_spot_has_action(spot)) {
-				*action = dg_spot_action(spot);
+		for (i = 0; i < DGArrayCount(node_data->spots); i++) {
+			DGObject* spot = DGArrayGetObject(node_data->spots, i);
+			if ((DGSpotColor(spot) == forColor) && DGSpotHasAction(spot)) {
+				*pointerToAction = DGSpotAction(spot);
 				return DG_YES;
 			}
 		}
@@ -88,12 +88,12 @@ DG_BOOL dg_node_get_action(DG_OBJECT* node, int color, DG_ACTION** action) {
 	return DG_NO;
 }
 
-DG_BOOL dg_node_get_spot(DG_OBJECT* node, DG_OBJECT** spot) {
+DGBool DGNodeGetSpot(DGObject* node, DGObject** pointerToSpot) {
 	DG_NODE* node_data = _tonode(node);
 	
 	if (node_data) {
-		if (node_data->marker < dg_array_count(node_data->spots)) {
-			*spot = dg_array_get_object(node_data->spots, node_data->marker);
+		if (node_data->marker < DGArrayCount(node_data->spots)) {
+			*pointerToSpot = DGArrayGetObject(node_data->spots, node_data->marker);
 			node_data->marker++;
 			return DG_YES;
 		}
@@ -110,7 +110,7 @@ DG_BOOL dg_node_get_spot(DG_OBJECT* node, DG_OBJECT** spot) {
 ///// Implementation - Sets												   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-void dg_node_add_custom_link(DG_OBJECT* node, unsigned direction, int handler) {
+void DGNodeAddCustomLink(DGObject* node, unsigned withDirection, int handlerForLua) {
 	DG_NODE* node_data = _tonode(node);
 	
 	if (node_data) {
@@ -122,50 +122,50 @@ void dg_node_add_custom_link(DG_OBJECT* node, unsigned direction, int handler) {
 		short coordsShiftRight[] = {minorBound+offset, minorBound, majorBound+offset, minorBound, majorBound+offset, majorBound, minorBound+offset, majorBound};
 		short coordsShiftLeft[] = {minorBound-offset, minorBound, majorBound-offset, minorBound, majorBound-offset, majorBound, minorBound-offset, majorBound};
 		
-		DG_OBJECT* newSpot = NULL;
-		DG_OBJECT* auxSpot = NULL;
-		DG_ACTION action;
-		action.type = DG_ACT_CUSTOM;
-		action.custom_handler = handler;
+		DGObject* newSpot = NULL;
+		DGObject* auxSpot = NULL;
+		DGAction action;
+		action.type = DG_ACTION_CUSTOM;
+		action.custom_handler = handlerForLua;
 		
-		switch (direction) {
+		switch (withDirection) {
 			case DG_NORTH:		
 			case DG_EAST:		
 			case DG_SOUTH:	
 			case DG_WEST:
-				newSpot = dg_spot_new(coordsNormal, 8, direction, DG_NONE);
+				newSpot = DGSpotNew(coordsNormal, 8, withDirection, DG_NONE);
 				break;
 			case DG_NORTHEAST:
-				newSpot = dg_spot_new(coordsShiftRight, 8, DG_FRONT, DG_NONE);
-				auxSpot = dg_spot_new(coordsShiftLeft, 8, DG_RIGHT, DG_NONE);
+				newSpot = DGSpotNew(coordsShiftRight, 8, DG_FRONT, DG_NONE);
+				auxSpot = DGSpotNew(coordsShiftLeft, 8, DG_RIGHT, DG_NONE);
 				break;
 			case DG_SOUTHEAST:
-				newSpot = dg_spot_new(coordsShiftRight, 8, DG_RIGHT, DG_NONE);
-				auxSpot = dg_spot_new(coordsShiftLeft, 8, DG_BACK, DG_NONE);
+				newSpot = DGSpotNew(coordsShiftRight, 8, DG_RIGHT, DG_NONE);
+				auxSpot = DGSpotNew(coordsShiftLeft, 8, DG_BACK, DG_NONE);
 				break;
 			case DG_SOUTHWEST:
-				newSpot = dg_spot_new(coordsShiftRight, 8, DG_BACK, DG_NONE);
-				auxSpot = dg_spot_new(coordsShiftLeft, 8, DG_LEFT, DG_NONE);
+				newSpot = DGSpotNew(coordsShiftRight, 8, DG_BACK, DG_NONE);
+				auxSpot = DGSpotNew(coordsShiftLeft, 8, DG_LEFT, DG_NONE);
 				break;
 			case DG_NORTHWEST:
-				newSpot = dg_spot_new(coordsShiftRight, 8, DG_LEFT, DG_NONE);
-				auxSpot = dg_spot_new(coordsShiftLeft, 8, DG_FRONT, DG_NONE);
+				newSpot = DGSpotNew(coordsShiftRight, 8, DG_LEFT, DG_NONE);
+				auxSpot = DGSpotNew(coordsShiftLeft, 8, DG_FRONT, DG_NONE);
 				break;	
 		}
 		
-		dg_spot_set_action(newSpot, &action);
-		dg_spot_set_color(newSpot, 0);
-		dg_array_add_object(node_data->spots, newSpot);
+		DGSpotSetAction(newSpot, &action);
+		DGSpotSetColor(newSpot, 0);
+		DGArrayAddObject(node_data->spots, newSpot);
 		
 		if (auxSpot) {
-			dg_spot_set_action(auxSpot, &action);
-			dg_spot_set_color(auxSpot, 0);
-			dg_array_add_object(node_data->spots, auxSpot);
+			DGSpotSetAction(auxSpot, &action);
+			DGSpotSetColor(auxSpot, 0);
+			DGArrayAddObject(node_data->spots, auxSpot);
 		}
 	}
 }
 
-void dg_node_add_link(DG_OBJECT* node, unsigned direction, DG_OBJECT* target) {
+void DGNodeAddLink(DGObject* node, unsigned withDirection, DGObject* theTarget) {
 	DG_NODE* node_data = _tonode(node);
 	
 	if (node_data) {
@@ -177,54 +177,54 @@ void dg_node_add_link(DG_OBJECT* node, unsigned direction, DG_OBJECT* target) {
 		short coordsShiftRight[] = {minorBound+offset, minorBound, majorBound+offset, minorBound, majorBound+offset, majorBound, minorBound+offset, majorBound};
 		short coordsShiftLeft[] = {minorBound-offset, minorBound, majorBound-offset, minorBound, majorBound-offset, majorBound, minorBound-offset, majorBound};
 		
-		DG_OBJECT* newSpot = NULL;
-		DG_OBJECT* auxSpot = NULL;
-		DG_ACTION action;
-		action.type = DG_ACT_SWITCH;
-		action.target = target;
+		DGObject* newSpot = NULL;
+		DGObject* auxSpot = NULL;
+		DGAction action;
+		action.type = DG_ACTION_SWITCH;
+		action.target = theTarget;
 		
-		switch (direction) {
+		switch (withDirection) {
 			case DG_NORTH:		
 			case DG_EAST:		
 			case DG_SOUTH:	
 			case DG_WEST:
-				newSpot = dg_spot_new(coordsNormal, 8, direction, DG_NONE);
+				newSpot = DGSpotNew(coordsNormal, 8, withDirection, DG_NONE);
 				break;
 			case DG_NORTHEAST:
-				newSpot = dg_spot_new(coordsShiftRight, 8, DG_FRONT, DG_NONE);
-				auxSpot = dg_spot_new(coordsShiftLeft, 8, DG_RIGHT, DG_NONE);
+				newSpot = DGSpotNew(coordsShiftRight, 8, DG_FRONT, DG_NONE);
+				auxSpot = DGSpotNew(coordsShiftLeft, 8, DG_RIGHT, DG_NONE);
 				break;
 			case DG_SOUTHEAST:
-				newSpot = dg_spot_new(coordsShiftRight, 8, DG_RIGHT, DG_NONE);
-				auxSpot = dg_spot_new(coordsShiftLeft, 8, DG_BACK, DG_NONE);
+				newSpot = DGSpotNew(coordsShiftRight, 8, DG_RIGHT, DG_NONE);
+				auxSpot = DGSpotNew(coordsShiftLeft, 8, DG_BACK, DG_NONE);
 				break;
 			case DG_SOUTHWEST:
-				newSpot = dg_spot_new(coordsShiftRight, 8, DG_BACK, DG_NONE);
-				auxSpot = dg_spot_new(coordsShiftLeft, 8, DG_LEFT, DG_NONE);
+				newSpot = DGSpotNew(coordsShiftRight, 8, DG_BACK, DG_NONE);
+				auxSpot = DGSpotNew(coordsShiftLeft, 8, DG_LEFT, DG_NONE);
 				break;
 			case DG_NORTHWEST:
-				newSpot = dg_spot_new(coordsShiftRight, 8, DG_LEFT, DG_NONE);
-				auxSpot = dg_spot_new(coordsShiftLeft, 8, DG_FRONT, DG_NONE);
+				newSpot = DGSpotNew(coordsShiftRight, 8, DG_LEFT, DG_NONE);
+				auxSpot = DGSpotNew(coordsShiftLeft, 8, DG_FRONT, DG_NONE);
 				break;	
 		}
 		
-		dg_spot_set_action(newSpot, &action);
-		dg_spot_set_color(newSpot, 0);
-		dg_array_add_object(node_data->spots, newSpot);
+		DGSpotSetAction(newSpot, &action);
+		DGSpotSetColor(newSpot, 0);
+		DGArrayAddObject(node_data->spots, newSpot);
 		
 		if (auxSpot) {
-			dg_spot_set_action(auxSpot, &action);
-			dg_spot_set_color(auxSpot, 0);
-			dg_array_add_object(node_data->spots, auxSpot);
+			DGSpotSetAction(auxSpot, &action);
+			DGSpotSetColor(auxSpot, 0);
+			DGArrayAddObject(node_data->spots, auxSpot);
 		}
 	}
 }
 
-void dg_node_add_spot(DG_OBJECT* node, DG_OBJECT* spot) {
+void DGNodeAddSpot(DGObject* node, DGObject* aSpot) {
 	DG_NODE* node_data = _tonode(node);
 	
 	if (node_data) {
-		dg_array_add_object(node_data->spots, spot);
+		DGArrayAddObject(node_data->spots, aSpot);
 	}
 }
 
@@ -232,9 +232,9 @@ void dg_node_add_spot(DG_OBJECT* node, DG_OBJECT* spot) {
 ///// Private Functions													   /////
 ////////////////////////////////////////////////////////////////////////////////
 
-DG_NODE* _tonode(DG_OBJECT* node) {
-	if (dg_object_check(node, DG_OBJ_NODE)) {
-		DG_NODE* node_data = (DG_NODE*)dg_object_data(node);
+DG_NODE* _tonode(DGObject* node) {
+	if (DGObjectIsType(node, DG_OBJECT_NODE)) {
+		DG_NODE* node_data = (DG_NODE*)DGObjectData(node);
 		return node_data;
 	}
 	else {

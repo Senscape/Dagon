@@ -17,20 +17,20 @@
 
 // New / Release
 
-DG_OBJECT*	dg_room_new(const char* name);
-void		dg_room_release(DG_OBJECT* room);
+DGObject*	DGRoomNew(const char* withName);
+void		DGRoomRelease(DGObject* room);
 
 // State Changes
 
-void		dg_room_switch(DG_OBJECT* room, DG_OBJECT* node);
+void		DGRoomSwitchTo(DGObject* room, DGObject* theNode);
 
 // Gets
 
-DG_OBJECT*	dg_room_current_node(DG_OBJECT* room);
-DG_BOOL		dg_room_get_spot(DG_OBJECT* room, DG_OBJECT** spot);
+DGObject*	DGRoomCurrentNode(DGObject* room);
+DGBool		DGRoomGetSpot(DGObject* room, DGObject** pointerToSpot);
 
 // Sets
 
-void		dg_room_add_node(DG_OBJECT* room, DG_OBJECT* node);
+void		DGRoomAdd(DGObject* room, DGObject* aNode);
 
 #endif // DG_ROOM_H

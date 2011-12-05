@@ -8,8 +8,8 @@
  *
  */
 
-#ifndef dg_array_H
-#define	dg_array_H
+#ifndef DG_ARRAY_H
+#define	DG_ARRAY_H
 
 #include "DGCommon.h"
 #include "DGObject.h"
@@ -22,30 +22,30 @@
 typedef struct {
 	unsigned capacity;
 	unsigned count;
-	DG_OBJECT** objects;
-} DG_ARRAY;
+	DGObject** objects;
+} DGArray;
 
 
 // New / Release
 
-DG_ARRAY*			dg_array_new(unsigned capacity);
-void				dg_array_release(DG_ARRAY* array);
+DGArray*			DGArrayNew(unsigned withCapacity);
+void				DGArrayRelease(DGArray* array);
 
 // Checks
 
-unsigned			dg_array_count(DG_ARRAY* array);
-DG_BOOL				dg_array_has_object(DG_ARRAY* array, DG_OBJECT* object);
+unsigned			DGArrayCount(DGArray* array);
+DGBool				DGArrayHasObject(DGArray* array, DGObject* anObject);
 
 // Gets
 
-DG_OBJECT*			dg_array_first(DG_ARRAY* array);
-DG_OBJECT*			dg_array_last(DG_ARRAY* array);
-DG_OBJECT*			dg_array_get_object(DG_ARRAY* array, unsigned index);
-DG_OBJECT*			dg_array_get_object_by_name(DG_ARRAY* array, const char* name);	
+DGObject*			DGArrayFirst(DGArray* array);
+DGObject*			DGArrayLast(DGArray* array);
+DGObject*			DGArrayGetObject(DGArray* array, unsigned atIndex);
+DGObject*			DGArrayGetObjectByName(DGArray* array, const char* theName);	
 
 // Sets
 
-void				dg_array_add_object(DG_ARRAY* array, DG_OBJECT* object);
-void				dg_array_delete_object(DG_ARRAY* array, unsigned index);
+void				DGArrayAddObject(DGArray* array, DGObject* anObject);
+void				DGArrayDeleteObject(DGArray* array, unsigned atIndex);
 
-#endif // dg_array_H
+#endif // DG_ARRAY_H

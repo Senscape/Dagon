@@ -20,25 +20,24 @@
 
 // New / Release
 
-void		dg_world_new(void); // Should be init...
-void		dg_world_release(void);
+void		DGWorldInitialize(void);
+void		DGWorldTerminate(void);
 
 // State Changes
 
-void		dg_world_switch(DG_OBJECT* target);
+void		DGWorldSwitchTo(DGObject* theTarget);
 
 // Gets
 
-DG_OBJECT*	dg_world_current_node(void);
-DG_OBJECT*	dg_world_current_room(void);
-DG_OBJECT*	dg_world_current_spot(void);
-DG_BOOL		dg_world_get_action(int color, DG_ACTION** action);
-DG_BOOL		dg_world_get_spot(DG_OBJECT** spot);
+DGObject*	DGWorldCurrentNode(void);
+DGObject*	DGWorldCurrentRoom(void);
+DGObject*	DGWorldCurrentSpot(void);
+DGBool		DGWorldGetAction(int forColor, DGAction** pointerToAction);
+DGBool		DGWorldGetSpot(DGObject** pointerToSpot);
 
 // Sets
 
-void		dg_world_add_node(DG_OBJECT* node);
-void		dg_world_add_room(DG_OBJECT* room);
-void		dg_world_set_current_spot(DG_OBJECT* spot);
+void		DGWorldAdd(DGObject* anObject);
+void		DGWorldSetCurrentSpot(DGObject* aSpot); // This is an ugly hack
 
 #endif // DG_WORLD_H

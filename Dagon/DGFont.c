@@ -49,21 +49,21 @@ int next_p2 (int a) {
 	return rval;
 }
 
-void dg_font_init(const char *file, unsigned int height) {
+void DGFontInitialize(const char *fileName, unsigned int heightOfFont) {
 	unsigned char ch;	
 	FT_Library library;
 	FT_Face face;
 	/*FT_Byte* buffer;
 	long size;*/
 	
-	dg_log_trace(DG_MOD_FONT, "Initializing font manager...");
-	dg_log_info(DG_MOD_FONT, "Freetype version: %d.%d.%d", FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
+	DGLogTrace(DG_MOD_FONT, "Initializing font manager...");
+	DGLogInfo(DG_MOD_FONT, "Freetype version: %d.%d.%d", FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
 	
 	ft_font = &font_data; // Temp
-	ft_font->textures = (GLuint*)dg_alloc(128 * sizeof(GLuint));
-	ft_font->h = (float)height;
+	ft_font->textures = (GLuint*)DGAlloc(128 * sizeof(GLuint));
+	ft_font->h = (float)heightOfFont;
 
-	/*fh = fopen(dg_config_get_path(DG_RES, file), "rb");
+	/*fh = fopen(dg_config_get_path(DG_PATH_RES, file), "rb");
 	 if (fh) {
 	 fseek(fh, 0L, SEEK_END);
 	 size = ftell(fh);
@@ -75,13 +75,13 @@ void dg_font_init(const char *file, unsigned int height) {
 	 else return;*/
 	
 	if (FT_Init_FreeType(&library)) 
-		dg_log_error(DG_MOD_FONT, "Failed to initialize font library!");
+		DGLogError(DG_MOD_FONT, "Failed to initialize font library!");
 
 	// WARNING: No way of determining that 49052.. Careful!
 	if (FT_New_Memory_Face(library, _binary_def_font_start, 49052, 0, &face)) 
-		dg_log_error(DG_MOD_FONT, "Requested font is corrupt: %s", file);
+		DGLogError(DG_MOD_FONT, "Requested font is corrupt: %s", fileName);
 	
-	FT_Set_Char_Size(face, height << 6, height << 6, 96, 96);
+	FT_Set_Char_Size(face, heightOfFont << 6, heightOfFont << 6, 96, 96);
 
 	glGenTextures(128, ft_font->textures);
 	
@@ -95,10 +95,10 @@ void dg_font_init(const char *file, unsigned int height) {
 		GLubyte* expanded_data;
 		
 		if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT))
-			dg_log_error(DG_MOD_FONT, "Error loading glyph: %c", ch);
+			DGLogError(DG_MOD_FONT, "Error loading glyph: %c", ch);
 		
 		if (FT_Get_Glyph(face->glyph, &glyph))
-			dg_log_error(DG_MOD_FONT, "Error getting glyph: %c", ch);
+			DGLogError(DG_MOD_FONT, "Error getting glyph: %c", ch);
 		
 		FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);
 		bitmap_glyph = (FT_BitmapGlyph)glyph;
@@ -108,7 +108,7 @@ void dg_font_init(const char *file, unsigned int height) {
 		width = next_p2(bitmap.width);
 		height = next_p2(bitmap.rows);
 		
-		expanded_data = (GLubyte*)dg_alloc(2 * width * height); // Is there a sizeof() missing here?
+		expanded_data = (GLubyte*)DGAlloc(2 * width * height); // Is there a sizeof() missing here?
 		
 		for (j = 0; j < height; j++) {
 			for (i = 0; i < width; i++) {
@@ -136,19 +136,19 @@ void dg_font_init(const char *file, unsigned int height) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
 					 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, expanded_data);
 		
-		dg_free(expanded_data);
+		DGFree(expanded_data);
 	}
 	
 	FT_Done_Face(face);
 	FT_Done_FreeType(library);
 }
 
-void dg_font_clean() {
+void DGFontClean() {
 	glDeleteTextures(128, ft_font->textures);
-	dg_free(ft_font->textures);
+	DGFree(ft_font->textures);
 }
 
-void dg_font_print(float x, float y, const char* text, ...) {
+void DGFontPrint(float xPosition, float yPosition, const char* textToPrint, ...) {
 	// TODO: Maybe there should be a dg_render_print() function, and use this one...
 	
 	unsigned int i, j;
@@ -165,11 +165,11 @@ void dg_font_print(float x, float y, const char* text, ...) {
 	
 	h = ft_font->h / .63f;
 	
-	if (text == NULL)
+	if (textToPrint == NULL)
 		*line=0;
 	else {
-		va_start(ap, text);
-	    vsprintf(line, text, ap);
+		va_start(ap, textToPrint);
+	    vsprintf(line, textToPrint, ap);
 		va_end(ap);
 	}
 	
@@ -189,7 +189,7 @@ void dg_font_print(float x, float y, const char* text, ...) {
 	strcpy(lines[size], aux);
 	size++;
 	
-	dg_camera_set_ortho();
+	DGCameraSetOrthoView();
 	
 	glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -198,13 +198,13 @@ void dg_font_print(float x, float y, const char* text, ...) {
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	//y = (config.display_height - y) - 32; // Not sure why we have to substract 32 on Mac...
-	y = (config.display_height - y);
+	yPosition = (DGConfig.display_height - yPosition);
 	
 	for (i = 0; i < size; i++) {
 		c = lines[i];
 			
 		glPushMatrix();
-		glTranslatef(x, y - h * i, 0);
+		glTranslatef(xPosition, yPosition - h * i, 0);
 		
 		// Uncomment to calculate length
 		//glRasterPos2f(0, 0);
@@ -252,5 +252,5 @@ void dg_font_print(float x, float y, const char* text, ...) {
 	
 	glPopAttrib();
 	
-	dg_camera_set_perspective();
+	DGCameraSetPerspectiveView();
 }
