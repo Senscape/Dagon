@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{F560EA9F-3802-46FF-9460-39262216EBC2}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Dagon</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\Dagon;..\Libraries\Headers;..\Libraries\Headers\freetype2;..\Other Sources;$(IncludePath)</IncludePath>
+    <LibraryPath>Libraries;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
+    <IntDir>build\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\Dagon;..\Libraries\Headers;..\Libraries\Headers\freetype2;..\Other Sources;$(IncludePath)</IncludePath>
+    <LibraryPath>Libraries;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
+    <IntDir>build\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>freetype.lib;glew32s.lib;glu32.lib;libogg_static.lib;libtheora_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;lua.lib;opengl32.lib;openal32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>freetype.lib;glew32s.lib;glu32.lib;libogg_static.lib;libtheora_static.lib;libvorbis_static.lib;libvorbisfile_static.lib;lua.lib;opengl32.lib;openal32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Dagon\DGArray.c" />
+    <ClCompile Include="..\Dagon\DGAudio.c" />
+    <ClCompile Include="..\Dagon\DGCamera.c" />
+    <ClCompile Include="..\Dagon\DGConfig.c" />
+    <ClCompile Include="..\Dagon\DGConsole.c" />
+    <ClCompile Include="..\Dagon\DGControl.c" />
+    <ClCompile Include="..\Dagon\DGEffects.c" />
+    <ClCompile Include="..\Dagon\DGFont.c" />
+    <ClCompile Include="..\Dagon\DGFontData.c" />
+    <ClCompile Include="..\Dagon\DGLog.c" />
+    <ClCompile Include="..\Dagon\DGMemory.c" />
+    <ClCompile Include="..\Dagon\DGNode.c" />
+    <ClCompile Include="..\Dagon\DGObject.c" />
+    <ClCompile Include="..\Dagon\DGParticleData.c" />
+    <ClCompile Include="..\Dagon\DGRender.c" />
+    <ClCompile Include="..\Dagon\DGRoom.c" />
+    <ClCompile Include="..\Dagon\DGScript.c" />
+    <ClCompile Include="..\Dagon\DGSplashData.c" />
+    <ClCompile Include="..\Dagon\DGSpot.c" />
+    <ClCompile Include="..\Dagon\DGState.c" />
+    <ClCompile Include="..\Dagon\DGSystemWindows.c" />
+    <ClCompile Include="..\Dagon\DGTexture.c" />
+    <ClCompile Include="..\Dagon\DGTextureManager.c" />
+    <ClCompile Include="..\Dagon\DGTimer.c" />
+    <ClCompile Include="..\Dagon\DGVideo.c" />
+    <ClCompile Include="..\Dagon\DGWorld.c" />
+    <ClCompile Include="..\Dagon\main.c" />
+    <ClCompile Include="..\Other Sources\stb_image.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Dagon\DGArray.h" />
+    <ClInclude Include="..\Dagon\DGAudio.h" />
+    <ClInclude Include="..\Dagon\DGCamera.h" />
+    <ClInclude Include="..\Dagon\DGColors.h" />
+    <ClInclude Include="..\Dagon\DGCommon.h" />
+    <ClInclude Include="..\Dagon\DGCommonGL.h" />
+    <ClInclude Include="..\Dagon\DGConfig.h" />
+    <ClInclude Include="..\Dagon\DGConsole.h" />
+    <ClInclude Include="..\Dagon\DGControl.h" />
+    <ClInclude Include="..\Dagon\DGDefines.h" />
+    <ClInclude Include="..\Dagon\DGEffects.h" />
+    <ClInclude Include="..\Dagon\DGFont.h" />
+    <ClInclude Include="..\Dagon\DGLanguage.h" />
+    <ClInclude Include="..\Dagon\DGLog.h" />
+    <ClInclude Include="..\Dagon\DGMemory.h" />
+    <ClInclude Include="..\Dagon\DGNode.h" />
+    <ClInclude Include="..\Dagon\DGObject.h" />
+    <ClInclude Include="..\Dagon\DGPlatform.h" />
+    <ClInclude Include="..\Dagon\DGRender.h" />
+    <ClInclude Include="..\Dagon\DGRoom.h" />
+    <ClInclude Include="..\Dagon\DGScript.h" />
+    <ClInclude Include="..\Dagon\DGSpot.h" />
+    <ClInclude Include="..\Dagon\DGState.h" />
+    <ClInclude Include="..\Dagon\DGSystem.h" />
+    <ClInclude Include="..\Dagon\DGTexture.h" />
+    <ClInclude Include="..\Dagon\DGTextureManager.h" />
+    <ClInclude Include="..\Dagon\DGTimer.h" />
+    <ClInclude Include="..\Dagon\DGVersion.h" />
+    <ClInclude Include="..\Dagon\DGVideo.h" />
+    <ClInclude Include="..\Dagon\DGWorld.h" />
+    <ClInclude Include="..\Other Sources\stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dagon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\dagon.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
