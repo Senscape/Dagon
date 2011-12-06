@@ -103,7 +103,7 @@ void DGConsoleUpdate() {
 			 
 			DGRenderSetColor(DGLogColor(index));
 			DGFontPrint(10, (float)((DGConfig.display_height / 2) - state.slide - (15 * row)), buffer);
-			
+            
 			row++;
 		}
 		
