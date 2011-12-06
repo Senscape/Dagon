@@ -377,7 +377,7 @@ void DGSpotSetColor(DGObject* spot, int aColor) {
 #ifdef DG_PLATFORM_MAC	
 			aColor = (arc4random() % 0x0000AA) + (0x002200 * c); // Lesser than blue but avoiding black
 #else
-			color = (rand() % 0x0000AA) + (0x002200 * c); // Lesser than blue but avoiding black
+			aColor = (rand() % 0x0000AA) + (0x002200 * c); // Lesser than blue but avoiding black
 #endif
 			c++;
 			
