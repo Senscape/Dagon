@@ -87,7 +87,8 @@ static int timer = 0;
 void DGControlInitialize() {
 	int i;
 	
-	DGLogInfo(DG_MOD_CONTROL, "Dagon Version %d.%d.%d Build %d", DG_VERSION_MAJOR, DG_VERSION_MINOR, DG_VERSION_RELEASE, DG_VERSION_BUILD);
+	DGLogInfo(DG_MOD_CONTROL, "Dagon version: %d.%d.%d%s%d", DG_VERSION_MAJOR, DG_VERSION_MINOR, DG_VERSION_RELEASE,
+                                                            DG_VERSION_TYPE, DG_VERSION_BUILD);
 	DGLogTrace(DG_MOD_CONTROL, "Initializing main controller...");
 	DGWorldInitialize();
 	DGStateInitialize();
