@@ -90,7 +90,59 @@ static DGBool supports_shaders = DG_NO;
 
 unsigned int frameBuffer;
 unsigned int frameBufferDepth;
-unsigned int frameBufferTexture;
+unsigned int frameBufferTexture;	
+
+
+
+// GH: Init the framebuffer depth 
+void DGInitFrameBufferDepth()
+{
+	glGenRenderbuffersEXT(1, &frameBufferDepth);
+	// GH: Init the depth setting
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, frameBufferDepth);
+	// GH: set the size of the depth
+	glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, DGConfig.display_width, DGConfig.display_height);
+	// GH: Actually set it as the depth for the framebuffer object
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, frameBufferDepth); 
+	glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0);
+	// GH: End the frame buffer depth
+}
+
+// GH: Create the framebuffer texture
+void DGInitFrameBuffetTexture()
+{
+	// GH: Init texture creation
+	glGenTextures(1, &frameBufferTexture);
+	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
+	
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);  
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
+  
+	glBindTexture(GL_TEXTURE_2D, 0);  
+}
+
+void DGInitFrameBuffer()
+{
+	DGInitFrameBufferDepth();
+	DGInitFrameBuffetTexture();
+
+	glGenFramebuffersEXT(1, &frameBuffer);
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
+	glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, frameBufferTexture, 0);
+	glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, frameBufferDepth); 
+
+/*	GLenum status;
+	status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);   
+	if (status != GL_FRAMEBUFFER_COMPLETE_EXT) 
+	{  
+		DGLogError(DG_MOD_RENDER, "Failed to create the framebuffer correctly");
+	}  */
+  
+	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); 
+}
+
 
 void DGRenderInitialize() {
 	int i;
@@ -116,6 +168,9 @@ void DGRenderInitialize() {
 		DGLogWarning(DG_MOD_RENDER, "Visual effects not supported on this system");
 		supports_shaders = DG_NO;
 	}
+
+	//glEnable(GL_TEXTURE_2D);	
+	
 	
 	glEnable(GL_BLEND);
 	if (DGConfig.antialiasing) {
@@ -132,9 +187,15 @@ void DGRenderInitialize() {
 	
 	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 	
-	glDisable(GL_DEPTH_TEST);
+
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_DEPTH_TEST);
+	glCullFace(GL_BACK);
+	DGInitFrameBuffer();
+	
+	/*glDisable(GL_DEPTH_TEST);
 	glDisable(GL_MULTISAMPLE);
-	glDisable(GL_DITHER);
+	glDisable(GL_DITHER);*/
 	
 	//glShadeModel(GL_SMOOTH);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -203,7 +264,7 @@ void DGRenderBlendNextUpdate() {
 }
 
 void DGRenderClearScene() {	
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
     glFlush();
 }
@@ -433,7 +494,7 @@ int	DGRenderTestColor(int xPosition, int yPosition) {
 void DGRenderUpdateScene() {
 	GLenum errCode;
 	const GLubyte *errString;
-
+	
     if (DGConfig.dust)
         DGRenderDrawDust();
     
@@ -456,7 +517,9 @@ void DGRenderUpdateScene() {
 		DGCameraSetOrthoView();
 		
 		DGRenderBegin(DG_YES);
+		
 		DGTextureBind(blendTexture);
+
 		DGRenderDrawOverlay(coords, DG_NO);
 		DGRenderEnd();
 		
