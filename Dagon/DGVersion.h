@@ -13,12 +13,8 @@
 
 #define DG_VERSION_MAJOR 0
 #define DG_VERSION_MINOR 6
-#define DG_VERSION_RELEASE 0 // TODO: Put this in the bundle version
-#define DG_VERSION_BUILD 1000
-
-// This assumes that there will never be more than 9999 builds
-
-#define DG_VERSION_FULL ((DG_VERSION_MAJOR)*100000 + (DG_VERSION_MINOR)*10000 + \
-                        (DG_VERSION_RELEASE)*1000 + (DG_VERSION_BUILD))
+#define DG_VERSION_RELEASE 0
+#define DG_VERSION_BUILD 3
+#define DG_VERSION_TYPE "a"
 
 #endif // DG_VERSION_H
