@@ -88,6 +88,10 @@ GLfloat circle[(NUM_VERTS * 2) + 2];
 DGBool _isExtensionSupported(const char *extension);
 static DGBool supports_shaders = DG_NO;
 
+unsigned int frameBuffer;
+unsigned int frameBufferDepth;
+unsigned int frameBufferTexture;
+
 void DGRenderInitialize() {
 	int i;
 	const GLubyte* version = glGetString(GL_VERSION);
