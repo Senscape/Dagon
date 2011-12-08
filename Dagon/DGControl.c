@@ -322,6 +322,13 @@ void DGControlSwitchTo(DGObject* theTarget) {
 	static DGBool first = DG_YES; // Fix this, please...
 	DGObject* spot;
 	DGObject* node;
+    
+    if (theTarget == DGWorldCurrentNode()) {
+        // We should also check if the target is the current room, but first
+        // we must sort out the creation of several rooms
+        DGLogWarning(DG_MOD_CONTROL, "Can't switch to the current node");
+        return;
+    }
 	
     // Ugly workaround for now
     if (DGStateCurrent() == DG_STATE_NODE) {
