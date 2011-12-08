@@ -67,29 +67,24 @@ int luaopen_timer(lua_State *L);
 // TODO: Also add the posibility to reference objects per id and name
 
 static DGObject* checkobject(lua_State *L, unsigned type, int index) {
-	luaL_checktype(L, index, LUA_TUSERDATA);
-	lua_getmetatable(L, index);
-	
-	if (!lua_equal(L, lua_upvalueindex(1), -1)) {
-		switch (type) {
-			case DG_OBJECT_AUDIO:
-				luaL_typerror(L, index, AUDIO_OBJ);  /* die */
-				break;
-			case DG_OBJECT_ROOM:
-				luaL_typerror(L, index, ROOM);  /* die */
-				break;
-			case DG_OBJECT_NODE:
-				luaL_typerror(L, index, NODE);  /* die */
-				break;
-			case DG_OBJECT_SPOT:
-				luaL_typerror(L, index, SPOT);  /* die */
-				break;             
-		}
-	}
-	
-	lua_pop(L, 1);
-	
-	return (DGObject*)lua_unboxpointer(L, index);
+	if (lua_isuserdata(L, index)) {
+        DGObject* obj = (DGObject*)lua_unboxpointer(L, index);
+        lua_getmetatable(L, index);
+        
+        if (!lua_equal(L, lua_upvalueindex(1), -1)) {
+            if (!DGObjectIsType(obj, type))
+                return NULL;
+        }
+        
+        lua_pop(L, 1);
+        
+        return obj;
+    }
+    
+    DGLogError(DG_MOD_SCRIPT, "Object does not exist");
+    lua_error(L);
+    
+    return NULL;
 }
 
 static DGObject* pushobject(lua_State *L, DGObject* obj) {
@@ -679,7 +674,19 @@ static int node_link(lua_State *L) {
 }
 
 static int node_switch(lua_State *L) {
-	DGControlSwitchTo(lua_unboxpointer(L, 1));
+    if (!checkobject(L, DG_OBJECT_NODE, 1)) {
+        if (!checkobject(L, DG_OBJECT_ROOM, 1)) {
+            DGLogError(DG_MOD_SCRIPT, "Object is not a room or node");
+            
+            return 0;
+        }
+        
+         DGControlSwitchTo(checkobject(L, DG_OBJECT_ROOM, 1));
+        
+        return 0;
+    }
+            
+    DGControlSwitchTo(checkobject(L, DG_OBJECT_NODE, 1));
 	
 	return 0;
 }
