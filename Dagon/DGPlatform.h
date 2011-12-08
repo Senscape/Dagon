@@ -105,6 +105,7 @@ enum DG_KEYS {
 	DG_KEY_F12 = 0x6f,
 	DG_KEY_ESC = 0x1b,
 	DG_KEY_QUOTE = 0x60,
+	DG_KEY_NUMERIC = -62,    
 	DG_KEY_ENTER = 0xd
 #endif
 
@@ -124,6 +125,7 @@ enum DG_KEYS {
 	DG_KEY_F12 = VK_F12,
 	DG_KEY_ESC = 0x1b,
 	DG_KEY_QUOTE = 0x60,
+	DG_KEY_NUMERIC = -62,    
 	DG_KEY_ENTER = 0xd
 #endif
 };
