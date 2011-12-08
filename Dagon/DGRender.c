@@ -18,6 +18,7 @@
 #include "DGTexture.h"
 #include "DGVideo.h"
 
+#include <GL\GLU.h>
 #define N_DUST 1000
 #define DUST_FACTOR 32767.0f
 
@@ -109,7 +110,7 @@ void DGInitFrameBufferDepth()
 }
 
 // GH: Create the framebuffer texture
-void DGInitFrameBuffetTexture()
+void DGInitFrameBufferTexture()
 {
 	// GH: Init texture creation
 	glGenTextures(1, &frameBufferTexture);
@@ -126,7 +127,7 @@ void DGInitFrameBuffetTexture()
 void DGInitFrameBuffer()
 {
 	DGInitFrameBufferDepth();
-	DGInitFrameBuffetTexture();
+	DGInitFrameBufferTexture();
 
 	glGenFramebuffersEXT(1, &frameBuffer);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, frameBuffer);
@@ -519,9 +520,12 @@ void DGRenderUpdateScene() {
 		DGRenderBegin(DG_YES);
 		
 		DGTextureBind(blendTexture);
-
+	//	glBindTexture(GL_TEXTURE_2D, frameBufferTexture);
 		DGRenderDrawOverlay(coords, DG_NO);
+		
+//		glBindTexture(GL_TEXTURE_2D, 0);
 		DGRenderEnd();
+		
 		
 		DGCameraSetPerspectiveView();
 		
