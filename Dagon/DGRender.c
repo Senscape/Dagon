@@ -18,7 +18,6 @@
 #include "DGTexture.h"
 #include "DGVideo.h"
 
-#include <GL\GLU.h>
 #define N_DUST 1000
 #define DUST_FACTOR 32767.0f
 
@@ -190,7 +189,7 @@ void DGRenderInitialize() {
 	
 
 	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 	DGInitFrameBuffer();
 	
