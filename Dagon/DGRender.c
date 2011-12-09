@@ -189,7 +189,7 @@ void DGRenderInitialize() {
 	
 
 	glEnable(GL_TEXTURE_2D);
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 	DGInitFrameBuffer();
 	

@@ -14,24 +14,46 @@
 
 #import "DGAppDelegate.h"
 
+#import <dispatch/dispatch.h>
+
 
 @implementation DGAppDelegate
 
+dispatch_queue_t queue;
+
 - (void)audioLoop {
-	while (DGAudioLoop()) {
-		[NSThread sleepForTimeInterval:0.01f];
-	}
+    /*dispatch_queue_t queue = dispatch_get_global_queue(0,0);
+    
+    while (1) {
+        dispatch_sync(queue,^{
+            DGAudioLoop();
+        });
+        [NSThread sleepForTimeInterval:0.01f];
+    }*/
+    
+    queue = dispatch_get_global_queue(0,0);
 }
 
 - (void)mainLoop {
-	DGScriptLoop();
+    dispatch_async(queue,^{
+        DGAudioLoop();
+    });
+    
+    dispatch_async(queue,^{
+        DGVideoLoop();
+    });
+    
+    DGScriptLoop();
 }
 
 - (void)videoLoop {
-	while (DGVideoLoop()) {
-		//[NSThread sleepForTimeInterval:0.0000001f];
-        [NSThread sleepForTimeInterval:0.0000001f];
-	}
+    /*dispatch_queue_t queue = dispatch_get_global_queue(0,0);
+    while (1) {
+        dispatch_sync(queue,^{
+            DGVideoLoop();
+        });
+        [NSThread sleepForTimeInterval:0.00001f];
+    }*/
 }
 
 @end
