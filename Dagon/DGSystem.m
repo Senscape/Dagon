@@ -46,13 +46,14 @@ void DGSystemInitialize() {
                                            backing:NSBackingStoreBuffered defer:TRUE];
     
 	//[window setLevel:NSMainMenuWindowLevel+1];
-	[window setOpaque:YES];
-	[window setHidesOnDeactivate:YES];
+	//[window setOpaque:YES];
+	//[window setHidesOnDeactivate:YES];
 	[window setAcceptsMouseMovedEvents:YES];
     [window makeKeyAndOrderFront:window];
     
 	[window setContentView:[window view]];
 	[window makeFirstResponder:[window view]];
+    [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
 
     DGRenderClearScene();
     [[window view] update];
@@ -213,13 +214,15 @@ void DGSystemToggleFullscreen() {
     
     FullScreen_Options = [NSDictionary dictionaryWithObject: [NSNumber numberWithBool: YES] forKey: NSFullScreenModeAllScreens];
     
-    if (DGConfig.fullscreen) {
+    /*if (DGConfig.fullscreen) {
         [[window view] enterFullScreenMode: [NSScreen mainScreen] withOptions: FullScreen_Options];
     }
     else {
         [[window view] exitFullScreenModeWithOptions: FullScreen_Options];
         [window makeFirstResponder:[window view]];
-    }
+    }*/
+    
+    [window toggleFullScreen:nil];
         
     DGRenderClearScene();
     

@@ -132,11 +132,14 @@ DGBool DGControlIsRunning() {
 // TODO: Should merge this functions and use key codes only...
 
 void DGControlProcessCharKey(const char* aKey, DGBool isModified) {
-	switch (*aKey) {
+    int auxKey = *aKey;
+    
+	switch (auxKey) {
 		case DG_KEY_ESC:
 			running = DG_NO;
 			break;
 		case DG_KEY_QUOTE:
+		case DG_KEY_NUMERIC:         
 			DGConsoleToggleState();
 			break;
 		case DG_KEY_BACKSPACE:
