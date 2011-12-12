@@ -189,7 +189,7 @@ void DGRenderInitialize() {
 	
 
 	glEnable(GL_TEXTURE_2D);
-	//glEnable(GL_DEPTH_TEST);
+	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 	DGInitFrameBuffer();
 	
@@ -524,7 +524,7 @@ void DGRenderUpdateScene() {
 		
 		glBindTexture(GL_TEXTURE_2D, 0);
 		DGRenderEnd();
-		
+		//s
 		DGCameraSetPerspectiveView();
 		
 		// This should a bit faster than the walk_time factor
