@@ -19,7 +19,8 @@
 
 @implementation DGAppDelegate
 
-dispatch_queue_t queue;
+dispatch_queue_t audio_queue;
+dispatch_queue_t video_queue;
 
 - (void)audioLoop {
     /*dispatch_queue_t queue = dispatch_get_global_queue(0,0);
@@ -31,15 +32,17 @@ dispatch_queue_t queue;
         [NSThread sleepForTimeInterval:0.01f];
     }*/
     
-    queue = dispatch_get_global_queue(0,0);
+    audio_queue = dispatch_get_global_queue(0,0);
+    
+
 }
 
 - (void)mainLoop {
-    dispatch_async(queue,^{
+    dispatch_async(audio_queue,^{
         DGAudioLoop();
     });
     
-    dispatch_async(queue,^{
+    dispatch_async(video_queue,^{
         DGVideoLoop();
     });
     
@@ -54,6 +57,8 @@ dispatch_queue_t queue;
         });
         [NSThread sleepForTimeInterval:0.00001f];
     }*/
+    
+    video_queue = dispatch_get_global_queue(0,0);
 }
 
 @end
