@@ -1,17 +1,36 @@
-/*
- *  DAGON
- *  Copyright (c) 2011 Senscape s.r.l.
- *	All rights reserved.
- *
- *  NOTICE: Senscape permits you to use, modify, and distribute this
- *  file in accordance with the terms of the license agreement accompanying it.
- *
- */
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
 
-#import "DGPlatform.h"
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
 
+#import <Cocoa/Cocoa.h>
+#import "DGConfig.h"
+
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
+
+class DGControl;
+
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
 
 @interface DGViewDelegate : NSView {
+    DGConfig* config;
+    DGControl* control;
+    
 	NSOpenGLPixelFormat* pixelFormat;
 	NSOpenGLContext* glContext;
 }

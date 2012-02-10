@@ -1,43 +1,49 @@
-/*
- *  DAGON
- *  Copyright (c) 2011 Senscape s.r.l.
- *	All rights reserved.
- *
- *  NOTICE: Senscape permits you to use, modify, and distribute this
- *  file in accordance with the terms of the license agreement accompanying it.
- *
- */
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
 
 #ifndef DG_WORLD_H
-#define	DG_WORLD_H
+#define DG_WORLD_H
 
-#include "DGCommon.h"
-#include "DGObject.h"
-#include "DGNode.h"
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#include <vector>
 #include "DGRoom.h"
-#include "DGSpot.h"
 
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
 
-// New / Release
+class DGWorld {
+    std::vector<DGRoom*> _arrayOfRooms;
+    DGRoom* _currentRoom;
+    
+public:
+    DGWorld();
+    ~DGWorld();
+    
+    // Checks
+    
+    bool hasRooms();
+    
+    // Gets
+    
+    DGRoom* currentRoom();    
 
-void		DGWorldInitialize(void);
-void		DGWorldTerminate(void);
-
-// State Changes
-
-void		DGWorldSwitchTo(DGObject* theTarget);
-
-// Gets
-
-DGObject*	DGWorldCurrentNode(void);
-DGObject*	DGWorldCurrentRoom(void);
-DGObject*	DGWorldCurrentSpot(void);
-DGBool		DGWorldGetAction(int forColor, DGAction** pointerToAction);
-DGBool		DGWorldGetSpot(DGObject** pointerToSpot);
-
-// Sets
-
-void		DGWorldAdd(DGObject* anObject);
-void		DGWorldSetCurrentSpot(DGObject* aSpot); // This is an ugly hack
+    // State changes
+    
+    DGRoom* addRoom(DGRoom* aRoom);
+    bool switchTo(DGRoom* theRoom);
+};
 
 #endif // DG_WORLD_H

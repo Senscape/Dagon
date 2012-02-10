@@ -1,23 +1,51 @@
-/*
- *  DAGON
- *  Copyright (c) 2011 Senscape s.r.l.
- *	All rights reserved.
- *
- *  NOTICE: Senscape permits you to use, modify, and distribute this
- *  file in accordance with the terms of the license agreement accompanying it.
- *
- */
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
 
 #ifndef DG_STATE_H
-#define	DG_STATE_H
+#define DG_STATE_H
 
-#include "DGCommon.h"
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
 
+// Default state is node unless a menu is specified
 
-void		DGStateInitialize(void);
-unsigned	DGStateCurrent(void);
-unsigned	DGStateLast(void);
-void		DGStateReturn(void);
-void		DGStateSet(unsigned theState);
+enum DGGlobalStates {
+	DGStateCutscene,
+	DGStateInventory,
+	DGStateMenu,
+	DGStateNode,
+    DGStateSplash,
+	DGStateTimer,
+	DGStateVideo,
+	DGStateZoom
+};
+
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
+
+class DGState {
+    int _current;
+    int _previous;
+    
+public:
+    DGState();
+    ~DGState();
+    
+    int current();
+    int previous();
+    void set(int theState);    
+    void setPrevious();
+};
 
 #endif // DG_STATE_H
