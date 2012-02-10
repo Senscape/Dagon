@@ -1,4 +1,4 @@
 *.DS_store
 *.log
-*.xcuserdatad
 build/
+xcuserdata/
