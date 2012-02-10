@@ -1,0 +1,234 @@
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#import <Cocoa/Cocoa.h>
+#import "DGDefines.h"
+#import "DGLanguage.h"
+#import "DGControl.h"
+#import "DGScript.h"
+#import "DGSystem.h"
+#import "DGViewDelegate.h"
+
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
+
+// These are private in order to keep a clean and portable
+// header
+
+NSWindow* window;
+DGViewDelegate* view;
+
+dispatch_source_t mainTimer;
+
+dispatch_source_t CreateDispatchTimer(uint64_t interval,
+                                      uint64_t leeway,
+                                      dispatch_queue_t queue,
+                                      dispatch_block_t block);
+
+////////////////////////////////////////////////////////////
+// Implementation - Constructor
+////////////////////////////////////////////////////////////
+
+DGSystem::DGSystem() {  
+    log = &DGLog::getInstance();
+    config = &DGConfig::getInstance();
+    
+    _isInitialized = false;
+    _isRunning = false;
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Destructor
+////////////////////////////////////////////////////////////
+
+DGSystem::~DGSystem() {
+    // The shutdown sequence is performed in the terminate() method
+}
+
+////////////////////////////////////////////////////////////
+// Implementation
+////////////////////////////////////////////////////////////
+
+void DGSystem::init(int argc, const char *argv[]) {
+    log->trace(DGModSystem, "========================================");
+    log->trace(DGModSystem, "%s", DGMsg040000);
+    
+    // Check if launched by Finder (non-standard)
+    if (argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 ) {
+        _findPaths();
+    }
+    
+    // We manually create our NSApplication instance
+    [NSApplication sharedApplication];
+    
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    // Programmatically create a window
+    window = [[NSWindow alloc] initWithContentRect:NSMakeRect(50, 100, config->displayWidth, config->displayHeight) 
+                                                 styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
+                                                   backing:NSBackingStoreBuffered defer:TRUE];
+    
+    // Programmatically create our NSView delegate
+    NSRect mainDisplayRect, viewRect;
+	mainDisplayRect = NSMakeRect(0, 0, config->displayWidth, config->displayHeight);
+    
+    viewRect = NSMakeRect(0.0, 0.0, mainDisplayRect.size.width, mainDisplayRect.size.height);
+    view = [[DGViewDelegate alloc] initWithFrame:viewRect];
+    
+    // Now we're ready to init the controller instance
+    DGControl::getInstance().init();
+    
+    // And the script module
+    DGScript::getInstance().init();
+    
+	[window setAcceptsMouseMovedEvents:YES];
+	[window setContentView:view];
+	[window makeFirstResponder:view];
+    [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
+    [window setTitle:[NSString stringWithUTF8String:config->script()]];
+    [window makeKeyAndOrderFront:window];
+    
+    if (config->fullScreen) {
+        // Just one update before going fullscreen
+        [view update];
+        [window toggleFullScreen:nil];
+    }
+	
+    [NSBundle loadNibNamed:@"MainMenu" owner:NSApp];
+	[pool release];
+    
+    _isInitialized = true;
+    log->trace(DGModSystem, "%s", DGMsg040001);
+}
+
+void DGSystem::run() {
+    DGScript::getInstance().run();
+    
+    mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
+                                    0,
+                                    dispatch_get_main_queue(),
+                                    ^{ _update(); });
+    
+    _isRunning = true;
+    [NSApp run];
+}
+
+void DGSystem::setTitle(const char* title) {
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    NSString* aux = [NSString stringWithUTF8String:title];
+    
+    [window setTitle:aux];
+
+    [pool release];
+}
+
+void DGSystem::terminate() {
+    static bool isTerminating = false;
+    
+    if (!isTerminating) {
+        // This is crappy, yes, but the only way to peacefully
+        // coexist with our delegate in some situations
+        isTerminating = true;
+        int r = arc4random() % 8; // Double the replies, so that the default one appears often
+        
+        if (_isRunning)
+            dispatch_source_cancel(mainTimer);
+        
+        if (_isInitialized) {
+            [view release];
+            [window release];
+        }
+        
+        switch (r) {
+            default:
+            case 0: log->trace(DGModSystem, "%s", DGMsg040100); break;
+            case 1: log->trace(DGModSystem, "%s", DGMsg040101); break;
+            case 2: log->trace(DGModSystem, "%s", DGMsg040102); break;
+            case 3: log->trace(DGModSystem, "%s", DGMsg040103); break;
+        }
+        
+        [NSApp terminate:nil];
+    }
+}
+
+void DGSystem::toggleFullScreen() {
+    config->fullScreen = !config->fullScreen;
+    if (_isRunning) {
+        // Suspend the timer to avoid multiple redraws
+        dispatch_suspend(mainTimer);
+        [window toggleFullScreen:nil];
+        dispatch_resume(mainTimer);
+    }
+    else [window toggleFullScreen:nil];
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Private methods
+////////////////////////////////////////////////////////////
+
+dispatch_source_t CreateDispatchTimer(uint64_t interval,
+                                      uint64_t leeway,
+                                      dispatch_queue_t queue,
+                                      dispatch_block_t block) {
+    dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER,
+                                                     0, 0, queue);
+    if (timer) {
+        dispatch_source_set_timer(timer, dispatch_time(NULL, 0), interval, leeway);
+        dispatch_source_set_event_handler(timer, block);
+        dispatch_resume(timer);
+    }
+    
+    return timer;
+}
+
+void DGSystem::_findPaths() {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    if (config->debugMode) {
+		// Set working directory to parent of bundle
+		NSString *bundleDirectory = [[NSBundle mainBundle] bundlePath];
+		NSString *parentDirectory = [bundleDirectory stringByDeletingLastPathComponent];
+        chdir([parentDirectory UTF8String]);
+	}
+	else {
+		// Get Application Support folder
+		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+		NSString *appSupportDirectory = [paths objectAtIndex:0];
+		
+		appSupportDirectory = [appSupportDirectory stringByAppendingString:@"/Dagon/"];
+		
+		// Create if it doesn't exist
+		if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportDirectory]) {
+			[[NSFileManager defaultManager] createDirectoryAtPath:appSupportDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+		}
+		
+        config->setPath(DGPathUser, [appSupportDirectory UTF8String]);
+		
+		// Get resource folder in bundle path
+		NSString *resDirectory = [[NSBundle mainBundle] resourcePath];
+        resDirectory = [resDirectory stringByAppendingString:@"/"];
+        config->setPath(DGPathApp, [resDirectory UTF8String]); // Maybe this isn't necessary after all...
+        config->setPath(DGPathRes, [resDirectory UTF8String]);
+	}   
+	
+	[pool release];
+}
+
+void DGSystem::_update() {
+    [view update];
+}
