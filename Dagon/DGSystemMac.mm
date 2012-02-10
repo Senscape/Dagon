@@ -15,10 +15,10 @@
 ////////////////////////////////////////////////////////////
 
 #import <Cocoa/Cocoa.h>
+#import <string.h>
 #import "DGDefines.h"
 #import "DGLanguage.h"
 #import "DGControl.h"
-#import "DGScript.h"
 #import "DGSystem.h"
 #import "DGViewDelegate.h"
 
@@ -63,61 +63,90 @@ DGSystem::~DGSystem() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-void DGSystem::init(int argc, const char *argv[]) {
-    log->trace(DGModSystem, "========================================");
-    log->trace(DGModSystem, "%s", DGMsg040000);
-    
-    // Check if launched by Finder (non-standard)
+void DGSystem::findPaths(int argc, char* argv[]) {
+    // Check if launched by Finder (non-standard but safe)
     if (argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 ) {
-        _findPaths();
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        
+        if (config->debugMode) {
+            // Set working directory to parent of bundle
+            NSString *bundleDirectory = [[NSBundle mainBundle] bundlePath];
+            NSString *parentDirectory = [bundleDirectory stringByDeletingLastPathComponent];
+            chdir([parentDirectory UTF8String]);
+        }
+        else {
+            // Get Application Support folder
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+            NSString *appSupportDirectory = [paths objectAtIndex:0];
+            
+            appSupportDirectory = [appSupportDirectory stringByAppendingString:@"/Dagon/"];
+            
+            // Create if it doesn't exist
+            if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportDirectory]) {
+                [[NSFileManager defaultManager] createDirectoryAtPath:appSupportDirectory withIntermediateDirectories:YES attributes:nil error:nil];
+            }
+            
+            config->setPath(DGPathUser, [appSupportDirectory UTF8String]);
+            
+            // Get resource folder in bundle path
+            NSString *resDirectory = [[NSBundle mainBundle] resourcePath];
+            resDirectory = [resDirectory stringByAppendingString:@"/"];
+            config->setPath(DGPathApp, [resDirectory UTF8String]); // Maybe this isn't necessary after all...
+            config->setPath(DGPathRes, [resDirectory UTF8String]);
+        }   
+        
+        [pool release];
     }
-    
-    // We manually create our NSApplication instance
-    [NSApplication sharedApplication];
-    
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    // Programmatically create a window
-    window = [[NSWindow alloc] initWithContentRect:NSMakeRect(50, 100, config->displayWidth, config->displayHeight) 
-                                                 styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
-                                                   backing:NSBackingStoreBuffered defer:TRUE];
-    
-    // Programmatically create our NSView delegate
-    NSRect mainDisplayRect, viewRect;
-	mainDisplayRect = NSMakeRect(0, 0, config->displayWidth, config->displayHeight);
-    
-    viewRect = NSMakeRect(0.0, 0.0, mainDisplayRect.size.width, mainDisplayRect.size.height);
-    view = [[DGViewDelegate alloc] initWithFrame:viewRect];
-    
-    // Now we're ready to init the controller instance
-    DGControl::getInstance().init();
-    
-    // And the script module
-    DGScript::getInstance().init();
-    
-	[window setAcceptsMouseMovedEvents:YES];
-	[window setContentView:view];
-	[window makeFirstResponder:view];
-    [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
-    [window setTitle:[NSString stringWithUTF8String:config->script()]];
-    [window makeKeyAndOrderFront:window];
-    
-    if (config->fullScreen) {
-        // Just one update before going fullscreen
-        [view update];
-        [window toggleFullScreen:nil];
+}
+
+void DGSystem::init() {
+    if (!_isInitialized) {
+        log->trace(DGModSystem, "========================================");
+        log->trace(DGModSystem, "%s", DGMsg040000);
+        
+        // We manually create our NSApplication instance
+        [NSApplication sharedApplication];
+        
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        
+        // Programmatically create a window
+        window = [[NSWindow alloc] initWithContentRect:NSMakeRect(50, 100, config->displayWidth, config->displayHeight) 
+                                                     styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
+                                                       backing:NSBackingStoreBuffered defer:TRUE];
+        
+        // Programmatically create our NSView delegate
+        NSRect mainDisplayRect, viewRect;
+        mainDisplayRect = NSMakeRect(0, 0, config->displayWidth, config->displayHeight);
+        
+        viewRect = NSMakeRect(0.0, 0.0, mainDisplayRect.size.width, mainDisplayRect.size.height);
+        view = [[DGViewDelegate alloc] initWithFrame:viewRect];
+        
+        // Now we're ready to init the controller instance
+        DGControl::getInstance().init();
+        
+        [window setAcceptsMouseMovedEvents:YES];
+        [window setContentView:view];
+        [window makeFirstResponder:view];
+        [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
+        [window setTitle:[NSString stringWithUTF8String:config->script()]];
+        [window makeKeyAndOrderFront:window];
+        
+        if (config->fullScreen) {
+            // Just one update before going fullscreen
+            [view update];
+            [window toggleFullScreen:nil];
+        }
+        
+        [NSBundle loadNibNamed:@"MainMenu" owner:NSApp];
+        [pool release];
+        
+        _isInitialized = true;
+        log->trace(DGModSystem, "%s", DGMsg040001);
     }
-	
-    [NSBundle loadNibNamed:@"MainMenu" owner:NSApp];
-	[pool release];
-    
-    _isInitialized = true;
-    log->trace(DGModSystem, "%s", DGMsg040001);
+    else log->error(DGModSystem, "%s", DGMsg040002);
 }
 
 void DGSystem::run() {
-    DGScript::getInstance().run();
-    
     mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
                                     0,
                                     dispatch_get_main_queue(),
@@ -194,39 +223,6 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval,
     }
     
     return timer;
-}
-
-void DGSystem::_findPaths() {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    if (config->debugMode) {
-		// Set working directory to parent of bundle
-		NSString *bundleDirectory = [[NSBundle mainBundle] bundlePath];
-		NSString *parentDirectory = [bundleDirectory stringByDeletingLastPathComponent];
-        chdir([parentDirectory UTF8String]);
-	}
-	else {
-		// Get Application Support folder
-		NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-		NSString *appSupportDirectory = [paths objectAtIndex:0];
-		
-		appSupportDirectory = [appSupportDirectory stringByAppendingString:@"/Dagon/"];
-		
-		// Create if it doesn't exist
-		if (![[NSFileManager defaultManager] fileExistsAtPath:appSupportDirectory]) {
-			[[NSFileManager defaultManager] createDirectoryAtPath:appSupportDirectory withIntermediateDirectories:YES attributes:nil error:nil];
-		}
-		
-        config->setPath(DGPathUser, [appSupportDirectory UTF8String]);
-		
-		// Get resource folder in bundle path
-		NSString *resDirectory = [[NSBundle mainBundle] resourcePath];
-        resDirectory = [resDirectory stringByAppendingString:@"/"];
-        config->setPath(DGPathApp, [resDirectory UTF8String]); // Maybe this isn't necessary after all...
-        config->setPath(DGPathRes, [resDirectory UTF8String]);
-	}   
-	
-	[pool release];
 }
 
 void DGSystem::_update() {

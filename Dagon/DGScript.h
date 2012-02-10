@@ -57,7 +57,7 @@ public:
         return instance;
     }
 
-    void init();
+    void init(int argc, char* argv[]);
     const char* module();
     bool isExecutingModule();
     void run();

@@ -1,0 +1,48 @@
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
+
+#ifndef DG_SYSTEMLIB_H
+#define DG_SYSTEMLIB_H
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#include "DGSystem.h"
+
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
+
+static int DGSystemLibInit(lua_State *L) {
+    DGSystem::getInstance().init();
+    
+    return 0;
+}
+
+static int DGSystemLibRun(lua_State *L) {
+    DGSystem::getInstance().run();
+	
+	return 0;
+}
+
+////////////////////////////////////////////////////////////
+// Static definitions
+////////////////////////////////////////////////////////////
+
+static const struct luaL_reg DGSystemLib [] = {
+	{"init", DGSystemLibInit},
+    {"run", DGSystemLibRun},
+	{NULL, NULL}
+};
+
+#endif // DG_SYSTEMLIB_H

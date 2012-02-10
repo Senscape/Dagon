@@ -10,15 +10,15 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include "DGSystem.h"
+#include "DGScript.h"
 
 int main(int argc, char *argv[]) {
-    DGSystem* system;
+    DGScript* script;
     
-    system = &DGSystem::getInstance();
+    script = &DGScript::getInstance();
     
-    system->init(argc, (const char **) argv);
-    system->run();
+    script->init(argc, argv);
+    script->run();
     
 	return 0;
 }

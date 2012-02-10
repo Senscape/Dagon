@@ -103,6 +103,7 @@
 		FBC8883514574F08008D548F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		FBC8883614574F08008D548F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		FBC8883714574F08008D548F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSystemLib.h; sourceTree = "<group>"; };
 		FBD3A58614DF27C600CA2756 /* DGGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGGeometry.h; sourceTree = "<group>"; };
 		FBFCC9EC14BB1F87003211AD /* DGWorld.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGWorld.cpp; sourceTree = "<group>"; };
 		FBFCC9EE14BB1F95003211AD /* DGWorld.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGWorld.h; sourceTree = "<group>"; };
@@ -185,6 +186,7 @@
 				E8E0194814E366B800173A2D /* DGProxy.h */,
 				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
 				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
+				FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */,
 				E8ECDFCC14E216B900A6BA8D /* DGScript.h */,
 				E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */,
 				FB26300A14D3491000EAD41A /* DGState.h */,
