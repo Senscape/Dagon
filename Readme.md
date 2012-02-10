@@ -1,11 +1,11 @@
-# DAGON - An Adventure Game Engine
+## DAGON - An Adventure Game Engine
 
-## Description
+### Description
 
 Dagon is a game engine especially tailored for adventure games and based on open
 technologies. Featuring a deceptively simple scripting language, blazing fast performance and high portability supporting Windows, Linux, Mac OS X and iOS devices, the project aims to become a referendum of the genre.
 
-## Installation
+### Installation
 
 The source code is first and foremost distributed as an Xcode project for Mac OS X. It should compile right out of the box on 10.6 Snow Leopard or 10.7 Lion as all the
 required libraries are included.
@@ -19,7 +19,7 @@ DGSystemWin.cpp.
 **Please note:** Linux is not supported as of this writing. A tested module will be
 uploaded shortly.
 
-## Running
+### Running
 
 A sample project is included to try the engine. Either copy the Dagon binary inside the
 Sample folder or make sure the working directory is set to this folder when running from
@@ -32,13 +32,13 @@ script in a dagon.cfg file.
 is a commercial project from Senscape and may not be re-used in any way. They are solely
 provided for educational purposes.
 
-## Support
+### Support
 
 Feel free to visit our forums to discuss the engine and request technical support:
 
 http://www.senscape.com/forums/
 
-## Copyright
+### Copyright
 
 Copyright (c) 2011 Senscape s.r.l.
 All rights reserved.
