@@ -368,14 +368,14 @@
 /* Begin PBXShellScriptBuildPhase section */
 		FBF06C27148FBBFD00DAE958 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 8;
 			files = (
 			);
 			inputPaths = (
 			);
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = "/usr/bin/perl -w";
 			shellScript = "# Auto increment version number from build common file\n\ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n\n# Get the current build number\n$version_file=\"Dagon/DGVersion.h\";\n\nopen(FH, $version_file) || die(\"Cannot open file\");\n@raw_data = <FH>; \nclose(FH);\n\n@version_major = split(/ /, $raw_data[15]);\n@version_minor = split(/ /, $raw_data[16]);\n@version_release = split(/ /, $raw_data[17]);\n@version_build = split(/ /, $raw_data[18]);\n\nprint \"Build $version_build[2]\\n\"; \n++$version_build[2];\n\nsplice(@raw_data, 18, 1, \"#define DGVersionBuild $version_build[2]\\n\");\n\nopen(FH, \">$version_file\") || die(\"Cannot Open File\");\nflock(FH, LOCK_EX);\nseek(FH, 0, SEEK_SET); \nprint FH @raw_data;\nclose(FH);\n\n$plist_bin = \"/usr/libexec/PlistBuddy\";\n$plist_file =\"Info.plist\";\n\nchomp($version_major[2]);\nchomp($version_minor[2]);\n\nsystem(\"$plist_bin -c 'Set :CFBundleShortVersionString $version_major[2].$version_minor[2]' $plist_file\");\nsystem(\"$plist_bin -c 'Set :CFBundleVersion $version_build[2]' $plist_file\");";
 		};
