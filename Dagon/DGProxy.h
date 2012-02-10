@@ -1,0 +1,103 @@
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
+
+#ifndef DG_PROXY_H
+#define DG_PROXY_H
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+extern "C" {
+#include "lua.h"
+#include "lauxlib.h"
+}
+#include "Luna.h"
+
+#include "DGDefines.h"
+#include "DGObject.h"
+
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
+
+#define DGNodeProxyName "Node"
+#define DGRoomProxyName "Room"
+
+#define method(class, name) {#name, &class::name}
+
+static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
+static DGNode* DGProxyToNode(lua_State *L, int idx);
+static DGRoom* DGProxyToRoom(lua_State *L, int idx);
+
+// Now that the proxy functions has been declared, we
+// proceed to include the remaining headers
+
+#include "DGNodeProxy.h"
+#include "DGRoomProxy.h"
+
+////////////////////////////////////////////////////////////
+// Implementation
+////////////////////////////////////////////////////////////
+
+// NOTE: This isn't so efficient because the operations required
+// to check the type of object are essentially the same as those
+// required to perform the cast (via Luna). Since we don't do this
+// very often, it will do for now.
+//
+// In the future, we should find some way to safely try a cast
+// without triggering an assertion in Lua.
+
+// Custom check user type function that simply returns true if the
+// object in the given index is the desired one
+static bool _checkutype(lua_State *L, int idx, const char* name) {
+    int v1, v2;
+    
+    lua_getfield(L, LUA_REGISTRYINDEX, name);  // Get correct metatable
+    v1 = lua_getmetatable(L, idx);
+    v2 = lua_rawequal(L, -1, -2);
+    lua_pop(L, 2);  // Remove both metatables
+    
+    if (!v1 || !v2) 
+        return false; // Not the type
+    else 
+        return true; // Correct type
+}
+
+int DGCheckProxy(lua_State *L, int idx) {
+    // Let's make sure this is a userdata first
+    if (lua_isuserdata(L, idx)) {                
+        // Good, now check against each user type
+
+        if (_checkutype(L, idx, DGNodeProxy::className))
+            return DGObjectNode; // It's a node
+        
+        if (_checkutype(L, idx, DGRoomProxy::className))
+            return DGObjectRoom; // It's a room
+        
+        return DGObjectGeneric; // None of the above, we return a generic type
+    }
+    
+    return DGObjectNone;
+}
+
+DGNode* DGProxyToNode(lua_State *L, int idx) {
+    DGNodeProxy* n = Luna<DGNodeProxy>::check(L, idx);
+    return n->ptr();
+}
+
+DGRoom* DGProxyToRoom(lua_State *L, int idx) {
+    DGRoomProxy* r = Luna<DGRoomProxy>::check(L, idx);
+    return r->ptr();    
+}
+
+#endif // DG_PROXY_H
