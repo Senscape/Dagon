@@ -15,10 +15,12 @@
 ////////////////////////////////////////////////////////////
 
 #include <string.h>
+#include "DGConfig.h"
 #include "DGControl.h"
 #include "DGLanguage.h"
 #include "DGProxy.h"
 #include "DGScript.h"
+#include "DGSystemLib.h"
 #include "Luna.h"
 
 using namespace std;
@@ -51,16 +53,32 @@ DGScript::~DGScript() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-void DGScript::init() {
+// TODO: Support loading script from parameters
+void DGScript::init(int argc, char* argv[]) {
+    char script[DGMaxFileLength];
+    
+    // First thing we do is get the paths to load the script
+    // (note that it's not necessary to init the system)
+    DGSystem::getInstance().findPaths(argc, argv);
+    
+    // If autorun is enabled, automatically init the system
+    if (DGConfig::getInstance().autorun)
+        DGSystem::getInstance().init();
+    
     _L = lua_open();
     luaL_openlibs(_L);
     
     Luna<DGNodeProxy>::Register(_L);
     Luna<DGRoomProxy>::Register(_L);
+    luaL_register(_L, "system", DGSystemLib);
     
     _registerGlobals();
     
-    _isInitialized = true;
+    snprintf(script, DGMaxFileLength, "%s.lua", DGConfig::getInstance().script());
+    if (luaL_loadfile(_L, script) == 0)
+        _isInitialized = true;
+    else
+        DGLog::getInstance().error(DGModScript, "%s: %s", DGMsg250003, script);
 }
 
 const char* DGScript::module() {
@@ -74,12 +92,13 @@ bool DGScript::isExecutingModule() {
 }
 
 void DGScript::run() {
-    // Prepare the name for the window
-    char script[DGMaxFileLength];
-    snprintf(script, DGMaxFileLength, "%s.lua", DGConfig::getInstance().script());
-             
-    if (luaL_loadfile(_L, script) == 0)
+    if (_isInitialized) {
         lua_pcall(_L, 0, 0, 0);
+        
+        // Check if we must start the main loop ourselves
+        if (DGConfig::getInstance().autorun)
+            DGSystem::getInstance().run();
+    }
 }
 
 void DGScript::setModule(const char* module) {
@@ -137,11 +156,11 @@ int DGScript::_globalSwitch(lua_State *L) {
             DGControl::getInstance().switchTo(DGProxyToRoom(L, 1));
             break;
         case DGObjectGeneric:
-            DGLog::getInstance().trace(DGModScript, "%s", DGMsg250000);
+            DGLog::getInstance().error(DGModScript, "%s", DGMsg250000);
             break;
             
         case DGObjectNone:
-            DGLog::getInstance().trace(DGModScript, "%s", DGMsg250001);
+            DGLog::getInstance().error(DGModScript, "%s", DGMsg250001);
             break;
     }
     

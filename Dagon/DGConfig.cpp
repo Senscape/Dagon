@@ -29,6 +29,7 @@ DGConfig::DGConfig() {
     strncpy(_texExtension, DGDefTexExtension, 4);
 	
 	antialiasing = DGDefAntialiasing;
+    autorun = DGDefAutorun;
     bundleEnabled = DGDefBundleEnabled;
 	displayWidth = DGDefDisplayWidth;
 	displayHeight = DGDefDisplayHeight;

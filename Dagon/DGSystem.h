@@ -30,8 +30,6 @@ class DGSystem {
     
     bool _isInitialized;
     bool _isRunning;
-    
-    void _findPaths();
     void _update();
     
     // Private constructor/destructor
@@ -50,7 +48,8 @@ public:
         return instance;
     }
     
-    void init(int argc, const char *argv[]);
+    void findPaths(int argc, char* argv[]);
+    void init();
     void run();
     void setTitle(const char* title);
     void terminate();

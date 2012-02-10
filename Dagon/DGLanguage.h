@@ -65,6 +65,7 @@
 
 #define DGMsg040000 "Initializing system..."
 #define DGMsg040001 "System ready!"
+#define DGMsg040002 "System already initialized"
 
 // Funny messages when shutting down
 
@@ -78,6 +79,7 @@
 #define DGMsg250000 "Switch: Not a room or node"
 #define DGMsg250001 "Switch: Not an object"
 #define DGMsg250002 "Link: Table with coordinates expected to link node"
+#define DGMsg250003 "Error loading script file"
 
 #endif
 

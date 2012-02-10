@@ -25,6 +25,7 @@
 
 enum DGConfigDefaults {
 	DGDefAntialiasing = true,
+    DGDefAutorun = true,
     DGDefBundleEnabled = true,
 	DGDefDisplayWidth = 1024,
 	DGDefDisplayHeight = 768,
@@ -79,6 +80,7 @@ public:
     }
     
     bool antialiasing;
+    bool autorun;
     bool bundleEnabled;
     int displayWidth;
 	int displayHeight;
