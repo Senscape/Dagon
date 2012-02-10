@@ -183,6 +183,7 @@
 // The three functions you must define are "read" (reads some bytes of data),
 // "skip" (skips some bytes of data), "eof" (reports if the stream is at the end).
 
+#define STBI_NO_HDR
 
 #ifndef STBI_NO_STDIO
 
@@ -301,7 +302,8 @@ extern int   stbi_zlib_decode_buffer(char *obuffer, int olen, const char *ibuffe
 extern char *stbi_zlib_decode_noheader_malloc(const char *buffer, int len, int *outlen);
 extern int   stbi_zlib_decode_noheader_buffer(char *obuffer, int olen, const char *ibuffer, int ilen);
 
-
+extern char *stbi_zlib_decode_malloc_guesssize_headerflag(const char *buffer, int len, int initial_size, int *outlen, int parse_header);
+    
 // define faster low-level operations (typically SIMD support)
 #ifdef STBI_SIMD
 typedef void (*stbi_idct_8x8)(stbi_uc *out, int out_stride, short data[64], unsigned short *dequantize);
@@ -757,7 +759,7 @@ stbi_inline static uint8 get8u(stbi *s)
 static void skip(stbi *s, int n)
 {
    if (s->io.read) {
-      int blen = s->img_buffer_end - s->img_buffer;
+      int blen = (int)(s->img_buffer_end - s->img_buffer);
       if (blen < n) {
          s->img_buffer = s->img_buffer_end;
          (s->io.skip)(s->io_user_data, n - blen);
@@ -770,7 +772,7 @@ static void skip(stbi *s, int n)
 static int getn(stbi *s, stbi_uc *buffer, int n)
 {
    if (s->io.read) {
-      int blen = s->img_buffer_end - s->img_buffer;
+      int blen = (int)(s->img_buffer_end - s->img_buffer);
       if (blen < n) {
          int res, count;
 

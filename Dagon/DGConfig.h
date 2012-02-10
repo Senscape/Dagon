@@ -1,78 +1,111 @@
-/*
- *  DAGON
- *  Copyright (c) 2011 Senscape s.r.l.
- *	All rights reserved.
- *
- *  NOTICE: Senscape permits you to use, modify, and distribute this
- *  file in accordance with the terms of the license agreement accompanying it.
- *
- */
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
 
 #ifndef DG_CONFIG_H
-#define	DG_CONFIG_H
+#define DG_CONFIG_H
 
-#include "DGCommon.h"
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
 
+#include "DGDefines.h"
 
-enum DG_CONFIG_DEFAULTS {
-	DG_DEF_ANTIALIASING = DG_YES,
-	DG_DEF_DISPLAYWIDTH = 1024,
-	DG_DEF_DISPLAYHEIGHT = 768,
-	DG_DEF_DISPLAYDEPTH = 32,
-	DG_DEF_DEBUGMODE = DG_YES, // This shouldn't default to yes, careful while finding paths
-    DG_DEF_DUST = DG_NO,
-	DG_DEF_FRAMERATE = 60,
-	DG_DEF_FULLSCREEN = DG_NO,
-	DG_DEF_EFFECTS = DG_YES,
-	DG_DEF_LOG = DG_YES,
-	DG_DEF_MULTITHREAD = DG_NO, // NOT SUPPORTED YET!!
-    DG_DEF_SCARE = DG_NO,
-	DG_DEF_SHOWSPLASH = DG_YES,
-	DG_DEF_SHOWSPOTS = DG_NO,
-	DG_DEF_TEXCOMPRESSION = DG_YES,
-	DG_DEF_THROB = DG_NO,    
-	DG_DEF_VERTICALSYNC = DG_YES
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
+
+enum DGConfigDefaults {
+	DGDefAntialiasing = true,
+    DGDefBundleEnabled = true,
+	DGDefDisplayWidth = 1024,
+	DGDefDisplayHeight = 768,
+	DGDefDisplayDepth = 32,
+	DGDefDebugMode = true, // This shouldn't default to true, careful while finding paths
+    DGDefDust = false,
+    DGDefEffects = true,
+	DGDefFramerate = 60,
+	DGDefFullScreen = false,
+	DGDefLog = true,
+    DGDefScare = false,
+	DGDefShowSplash = true,
+	DGDefShowSpots = false,
+	DGDefTexCompression = true,
+	DGDefThrob = false,    
+	DGDefVerticalSync = true
 };
 
-enum DG_PATHS {
-	DG_PATH_APP,
-    DG_PATH_RES,
-    DG_PATH_USER
+enum DGPaths {
+	DGPathApp,
+    DGPathRes,
+    DGPathUser
 };
 
-typedef struct {
-	char script[DG_MAX_PATHLEN];
-    char app_path[DG_MAX_PATHLEN];
-	char res_path[DG_MAX_PATHLEN];
-	char user_path[DG_MAX_PATHLEN];
-	
-	int display_width;
-	int display_height;
-	int display_depth;
-	
-    DGBool dust;
-	DGBool effects;
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
+
+class DGConfig {
+    char _appPath[DGMaxPathLength];
+    char _resPath[DGMaxPathLength];
+    char _scriptName[DGMaxFileLength];
+	char _userPath[DGMaxPathLength];
+    char _texExtension[4];
+    
+    float _globalSpeed;
+    
+    // Private constructor/destructor
+    DGConfig();
+    ~DGConfig();
+    // Stop the compiler generating methods of copy the object
+    DGConfig(DGConfig const& copy);            // Not implemented
+    DGConfig& operator=(DGConfig const& copy); // Not implemented
+    
+public:
+    static DGConfig& getInstance() {
+        // The only instance
+        // Guaranteed to be lazy initialized
+        // Guaranteed that it will be destroyed correctly
+        static DGConfig instance;
+        return instance;
+    }
+    
+    bool antialiasing;
+    bool bundleEnabled;
+    int displayWidth;
+	int displayHeight;
+	int displayDepth;
+    bool debugMode;
+    bool dust;
+    bool effects;
 	int framerate;
-	DGBool fullscreen;
-	float global_speed;
-	DGBool tex_compression;
-	char tex_extension[4];
-    DGBool scare;
-    DGBool throb;
-	DGBool vertical_sync;
-	
-	DGBool antialiasing;
-	DGBool debug_mode;
-	DGBool log;
-	DGBool multithread;
-	DGBool show_splash;
-	DGBool show_spots;
-} DG_CONFIG;
-
-extern DG_CONFIG DGConfig;
-
-void			DGConfigInitialize(void);
-void			DGConfigTerminate(void);
-const char*		DGConfigGetPath(int withType, const char* forFile);
+	bool fullScreen;
+    bool log;
+	bool texCompression;
+    bool scare;
+    bool showSplash;
+	bool showSpots;
+    bool throb;
+	bool verticalSync;
+    
+    float globalSpeed();
+    
+    const char* path(int ofType, const char* forFile);
+    void setPath(int forType, const char* path);
+    
+    const char*	script();
+    void setScript(const char* name);    
+    
+    const char*	texExtension();
+    void setTexExtension(const char* ext);
+};
 
 #endif // DG_CONFIG_H

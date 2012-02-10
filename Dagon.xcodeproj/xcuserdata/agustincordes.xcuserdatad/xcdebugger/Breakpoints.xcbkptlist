@@ -8,14 +8,14 @@
          ignoreCount = "0"
          continueAfterRunningActions = "No"
          isPathRelative = "1"
-         filePath = "Dagon/DGControl.c"
-         timestampString = "345046716.557345"
+         filePath = "Dagon/DGNodeProxy.h"
+         timestampString = "350538069.797623"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "137"
-         endingLineNumber = "137"
-         landmarkName = "DGControlProcessCharKey()"
-         landmarkType = "7">
+         startingLineNumber = "85"
+         endingLineNumber = "85"
+         landmarkName = "link(lua_State *L)"
+         landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>
 </Bucket>

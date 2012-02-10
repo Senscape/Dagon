@@ -1,42 +1,112 @@
-/*
- *  DAGON
- *  Copyright (c) 2011 Senscape s.r.l.
- *	All rights reserved.
- *
- *  NOTICE: Senscape permits you to use, modify, and distribute this
- *  file in accordance with the terms of the license agreement accompanying it.
- *
- */
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
 
 #ifndef DG_TEXTURE_H
-#define	DG_TEXTURE_H
+#define DG_TEXTURE_H
 
-#include "DGCommon.h"
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#include <GL/glew.h>
+#include "DGConfig.h"
+#include "DGDefines.h"
+#include "DGLog.h"
 #include "DGObject.h"
 
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
 
-// New / Release
+// TODO: We should convert all short vars to int
 
-DGObject*	DGTextureNew(const char* withName, short andCompressionLevel);
-void		DGTextureRelease(DGObject* texture);
+typedef struct {
+	char	name[DGMaxFileLength];
+	short	width;
+	short	height;
+	short	compressionLevel; // 0: None, 1: GL only, 2: GL & zlib
+	short	numTextures;
+} TEXMainHeader;
 
-// State Changes
+typedef struct {
+	short	cubePosition;
+	short	depth;
+	int		size;
+	int		format;
+} TEXSubHeader;
 
-void		DGTextureBind(DGObject* texture); // This should be probably handled by the manager
-void		DGTextureAppend(DGObject* texture, const char* fileNameToAppend);
-void		DGTextureLoad(DGObject* texture, const char* fromFileName, unsigned atIndex);
-void		DGTextureLoadFromMemory(DGObject* texture, const unsigned char* dataToLoad);
-void		DGTextureSaveToFile(DGObject* texture, const char* fileName);
+typedef struct {
+    char	file[DGMaxFileLength];
+    int     index;
+} DGResource;
 
-// Checks
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
 
-unsigned	DGTextureItemsInBundle(const char* fileName);
-unsigned	DGTextureHeight(DGObject* texture);
-DGBool		DGTextureIsLoaded(DGObject* texture);
-unsigned	DGTextureWidth(DGObject* texture);
+class DGTexture : public DGObject {
+    DGConfig* config;
+    DGLog* log;
+    
+    GLubyte* _bitmap;
+    unsigned int _compressionLevel;
+	GLuint _ident;
+	GLint _width;
+	GLint _height;
+	GLint _depth;
+    bool _hasResource;
+    int _indexInBundle;
+	bool _isLoaded;
+    
+    // This is used to keep trace of the most used textures
+    unsigned int _usageCount;
+    
+    // Eventually all file management will be handled by a DGResourceManager object
+    char _resource[DGMaxFileLength];
+    
+public:
+    DGTexture();
+    DGTexture(int width, int height, int depth);
+    ~DGTexture();
+    
+    // Checks
 
-// Sets
-
-void		DGTextureClear(DGObject* texture, int width, int height, int depth);
+    bool hasResource();
+    bool isLoaded();
+    
+    // Gets
+    
+    int depth();
+    int indexInBundle();
+    int height();
+    const char* resource();
+    unsigned int usageCount();
+    int width();
+    
+    // Sets
+    
+    void increaseUsageCount();
+    void setIndexInBundle(int index);
+    void setResource(const char* fromFileName);
+    
+    // State changes
+    
+    void bind();
+    void load();
+    
+    // Textures loaded from memory are not managed
+    void loadFromMemory(const unsigned char* dataToLoad);
+    void saveToFile(const char* fileName);
+    void unload();
+};
 
 #endif // DG_TEXTURE_H

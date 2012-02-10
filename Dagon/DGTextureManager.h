@@ -1,29 +1,60 @@
-/*
- *  DAGON
- *  Copyright (c) 2011 Senscape s.r.l.
- *	All rights reserved.
- *
- *  NOTICE: Senscape permits you to use, modify, and distribute this
- *  file in accordance with the terms of the license agreement accompanying it.
- *
- */
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
 
 #ifndef DG_TEXTURE_MANAGER_H
-#define	DG_TEXTURE_MANAGER_H
+#define DG_TEXTURE_MANAGER_H
 
-#include "DGCommon.h"
-#include "DGObject.h"
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
 
+#include <vector>
+#include "DGConfig.h"
+#include "DGLog.h"
+#include "DGTexture.h"
 
-// Init / Release
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
 
-void		DGTextureManagerInitialize(void);
-void		DGTextureManagerTerminate(void);
+// This is temporary until we actually test how much memory is available
+// NOT accurate! This is only a reference value since textures are flushed
+// before the next switch
+#define DGMaxActiveTextures 6
 
-// State Changes
+class DGNode;
 
-void		DGTextureManagerBind(DGObject* theTexture);
-DGObject*	DGTextureManagerLoad(const char* nameOfTexture);
-DGObject*	DGTextureManagerNew(int width, int height, int depth);
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
+
+class DGTextureManager {
+    DGConfig* config;
+    DGLog* log;
+    
+    std::vector<DGTexture*> _arrayOfActiveTextures;
+    std::vector<DGTexture*> _arrayOfTextures;
+    
+public:
+    DGTextureManager();
+    ~DGTextureManager();
+    
+    void appendTextureToBundle(const char* nameOfBundle, DGTexture* textureToAppend);
+    void createBundle(const char* nameOfBundle);
+    int itemsInBundle(const char* nameOfBundle);
+    void flush();
+    void requestNewBundle(DGNode* forNode);
+    void requestNewTexture(DGTexture* target);
+    void requireTextureToLoad(DGTexture* target);
+};
 
 #endif // DG_TEXTURE_MANAGER_H
