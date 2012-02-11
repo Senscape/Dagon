@@ -15,12 +15,10 @@
 ////////////////////////////////////////////////////////////
 
 #include <string.h>
-#include "DGConfig.h"
 #include "DGControl.h"
 #include "DGLanguage.h"
 #include "DGProxy.h"
 #include "DGScript.h"
-#include "DGSystemLib.h"
 #include "Luna.h"
 
 using namespace std;
@@ -68,9 +66,28 @@ void DGScript::init(int argc, char* argv[]) {
     _L = lua_open();
     luaL_openlibs(_L);
     
+    // Register all proxys
     Luna<DGNodeProxy>::Register(_L);
     Luna<DGRoomProxy>::Register(_L);
+    
+    // Register all libs
     luaL_register(_L, "system", DGSystemLib);
+    
+    // The config lib requires a special treatment
+    
+    lua_newuserdata(_L, sizeof(void *));
+    
+    lua_pushvalue(_L, -1);
+    lua_ref(_L, LUA_REGISTRYINDEX);
+	
+	luaL_newmetatable(_L, "DGConfigLib");
+	luaL_register(_L, NULL, DGConfigLib);
+	lua_setmetatable(_L, -2);
+	
+	lua_newtable(_L);
+    lua_setfenv(_L, -2);
+	
+	lua_setglobal(_L, "config");
     
     _registerGlobals();
     

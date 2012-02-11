@@ -26,21 +26,21 @@
 enum DGConfigDefaults {
 	DGDefAntialiasing = true,
     DGDefAutorun = true,
-    DGDefBundleEnabled = true,
+    DGDefBundleEnabled = true, // Not exported to Lua
 	DGDefDisplayWidth = 1024,
 	DGDefDisplayHeight = 768,
 	DGDefDisplayDepth = 32,
 	DGDefDebugMode = true, // This shouldn't default to true, careful while finding paths
-    DGDefDust = false,
+    DGDefDust = false,  // Move to effects
     DGDefEffects = true,
 	DGDefFramerate = 60,
 	DGDefFullScreen = false,
 	DGDefLog = true,
-    DGDefScare = false,
+    DGDefScare = false, // Move to effects
 	DGDefShowSplash = true,
 	DGDefShowSpots = false,
 	DGDefTexCompression = true,
-	DGDefThrob = false,    
+	DGDefThrob = false,  // Move to effects    
 	DGDefVerticalSync = true
 };
 

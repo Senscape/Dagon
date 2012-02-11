@@ -42,6 +42,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E817433514E6030A002CF502 /* DGConfigLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGConfigLib.h; sourceTree = "<group>"; };
 		E8E0194714E366B800173A2D /* DGNodeProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGNodeProxy.h; sourceTree = "<group>"; };
 		E8E0194814E366B800173A2D /* DGProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGProxy.h; sourceTree = "<group>"; };
 		E8E0194914E366B800173A2D /* DGRoomProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRoomProxy.h; sourceTree = "<group>"; };
@@ -186,6 +187,7 @@
 				E8E0194814E366B800173A2D /* DGProxy.h */,
 				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
 				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
+				E817433514E6030A002CF502 /* DGConfigLib.h */,
 				FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */,
 				E8ECDFCC14E216B900A6BA8D /* DGScript.h */,
 				E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */,
