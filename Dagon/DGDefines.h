@@ -17,18 +17,19 @@
 
 #define	DGDefScriptFile     "main" // Also window name
 #define	DGDefCatalogPath	"catalog/"
-#define	DGDefLogFile		"dagon.log" // No extension here
+#define	DGDefConfigFile		"dagon.cfg"
+#define	DGDefLogFile		"dagon.log"
 #define DGDefTexExtension	"tex"
 #define DGDefTexSize		2048 // TODO: We should be able to read this value from each texture
 
 // Maximums
 
 #define DGMaxFeedback		512
-#define DGMaxFileLength		80
+#define DGMaxFileLength		256
 #define DGMaxLogLength		256
 #define DGMaxLogHistory		80
 #define	DGMaxObjectName		80
-#define	DGMaxPathLength		256
+#define	DGMaxPathLength		512
 
 // Others
 

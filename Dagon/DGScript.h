@@ -25,14 +25,20 @@ extern "C" {
 
 #include <string>
 #include <vector>
+#include "DGConfig.h"
 #include "DGDefines.h"
 #include "DGLog.h"
+#include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
 class DGScript {
+    DGConfig* config;
+    DGLog* log;
+    DGSystem* system;
+    
     std::vector<std::string> _arrayOfModuleNames;
     bool _isInitialized;
     lua_State* _L;

@@ -56,7 +56,7 @@ enum DGPaths {
 
 class DGConfig {
     char _appPath[DGMaxPathLength];
-    char _resPath[DGMaxPathLength];
+    char _resPath[DGMaxPathLength]; // Not to be confused with catalog
     char _scriptName[DGMaxFileLength];
 	char _userPath[DGMaxPathLength];
     char _texExtension[4];

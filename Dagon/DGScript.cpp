@@ -35,6 +35,10 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGScript::DGScript() {
+    log = &DGLog::getInstance();
+    config = &DGConfig::getInstance();
+    system = &DGSystem::getInstance();
+    
     _isInitialized = false;
 }
 
@@ -52,19 +56,35 @@ DGScript::~DGScript() {
 ////////////////////////////////////////////////////////////
 
 // TODO: Support loading script from parameters
+// TODO: Consider seeking paths again if debug mode was enabled
 void DGScript::init(int argc, char* argv[]) {
     char script[DGMaxFileLength];
     
     // First thing we do is get the paths to load the script
     // (note that it's not necessary to init the system)
-    DGSystem::getInstance().findPaths(argc, argv);
-    
-    // If autorun is enabled, automatically init the system
-    if (DGConfig::getInstance().autorun)
-        DGSystem::getInstance().init();
+    system->findPaths(argc, argv);
     
     _L = lua_open();
     luaL_openlibs(_L);
+    
+    // The following code attempts to load a config file, and if it does exist
+    // copy the created table to the DGConfig metatable
+    if (luaL_loadfile(_L, config->path(DGPathUser, DGDefConfigFile)) == 0) {
+		lua_newtable(_L);
+		lua_pushvalue(_L, -1);
+		int ref = lua_ref(_L, LUA_REGISTRYINDEX);
+		lua_setfenv(_L, -2);
+		
+		lua_pcall(_L, 0, 0, 0);
+		
+		lua_rawgeti(_L, LUA_REGISTRYINDEX, ref);
+		lua_pushnil(_L);
+		while (lua_next(_L, 1) != 0) {
+			DGConfigLibSet(_L);
+			
+			lua_pop(_L, 1);
+		}
+	}
     
     // Register all proxys
     Luna<DGNodeProxy>::Register(_L);
@@ -73,8 +93,8 @@ void DGScript::init(int argc, char* argv[]) {
     // Register all libs
     luaL_register(_L, "system", DGSystemLib);
     
-    // The config lib requires a special treatment
-    
+    // The config lib requires a special treatment because
+    // it exports properties, not methods
     lua_newuserdata(_L, sizeof(void *));
     
     lua_pushvalue(_L, -1);
@@ -89,13 +109,21 @@ void DGScript::init(int argc, char* argv[]) {
 	
 	lua_setglobal(_L, "config");
     
+    // Now we register the global functions that don't belong to any library
     _registerGlobals();
     
-    snprintf(script, DGMaxFileLength, "%s.lua", DGConfig::getInstance().script());
-    if (luaL_loadfile(_L, script) == 0)
+    // If autorun is enabled, automatically init the system
+    if (config->autorun)
+        system->init();
+    
+    // We're ready to roll, let's attempt to load the script
+    
+    snprintf(script, DGMaxFileLength, "%s.lua", config->script());
+    if (luaL_loadfile(_L, config->path(DGPathApp, script)) == 0)
         _isInitialized = true;
     else
-        DGLog::getInstance().error(DGModScript, "%s: %s", DGMsg250003, script);
+        // Not found!
+        log->error(DGModScript, "%s: %s", DGMsg250003, script);
 }
 
 const char* DGScript::module() {
@@ -113,8 +141,8 @@ void DGScript::run() {
         lua_pcall(_L, 0, 0, 0);
         
         // Check if we must start the main loop ourselves
-        if (DGConfig::getInstance().autorun)
-            DGSystem::getInstance().run();
+        if (config->autorun)
+            system->run();
     }
 }
 
@@ -152,7 +180,7 @@ int DGScript::_globalRoom(lua_State *L) {
         // TODO: Read rooms from path
         snprintf(script, DGMaxFileLength, "%s.lua", module);
         
-        if (luaL_loadfile(L, script) == 0) {
+        if (luaL_loadfile(L, DGConfig::getInstance().path(DGPathApp, script)) == 0) {
             DGScript::getInstance().setModule(module);
             lua_pcall(L, 0, 0, 0);
             DGScript::getInstance().unsetModule();

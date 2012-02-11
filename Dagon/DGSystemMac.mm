@@ -43,6 +43,8 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval,
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
+// TODO: At this point the system module should copy the config file
+// into the user folder
 DGSystem::DGSystem() {  
     log = &DGLog::getInstance();
     config = &DGConfig::getInstance();
@@ -88,10 +90,13 @@ void DGSystem::findPaths(int argc, char* argv[]) {
             
             config->setPath(DGPathUser, [appSupportDirectory UTF8String]);
             
+            NSString *appDirectory = [[NSBundle mainBundle] resourcePath];
+            appDirectory = [appDirectory stringByAppendingString:@"/"];
+            config->setPath(DGPathApp, [appDirectory UTF8String]);
+            
             // Get resource folder in bundle path
             NSString *resDirectory = [[NSBundle mainBundle] resourcePath];
-            resDirectory = [resDirectory stringByAppendingString:@"/"];
-            config->setPath(DGPathApp, [resDirectory UTF8String]); // Maybe this isn't necessary after all...
+            resDirectory = [[resDirectory stringByAppendingString:@"/"] stringByAppendingString:@DGDefCatalogPath];
             config->setPath(DGPathRes, [resDirectory UTF8String]);
         }   
         

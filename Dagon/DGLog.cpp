@@ -43,7 +43,7 @@ DGLog::~DGLog() {
 void DGLog::_log(DGLogData* data) {
 	if (config->log) {
         if (!_filestr.is_open())
-            _filestr.open(DGDefLogFile, fstream::app);
+            _filestr.open(config->path(DGPathUser, DGDefLogFile), fstream::app);
         
         time_t now = time(0);
         struct tm* tm = localtime(&now);

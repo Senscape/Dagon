@@ -238,9 +238,10 @@ void DGRender::init() {
     
 	_blendTexture = new DGTexture(0, 0, 0); // All default values
     
+    // NOTE: Here we read the default screen values to calculate the aspect ratio
 	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
-		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 2 * 3.14159 / DGDefCursorDetail)) * config->displayWidth);
-		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 2 * 3.14159 / DGDefCursorDetail)) * config->displayHeight);
+		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 2 * 3.14159 / DGDefCursorDetail)) * DGDefDisplayWidth);
+		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 2 * 3.14159 / DGDefCursorDetail)) * DGDefDisplayHeight);
 	}    
 }
 
