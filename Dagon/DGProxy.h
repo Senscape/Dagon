@@ -26,6 +26,11 @@ extern "C" {
 #include "DGDefines.h"
 #include "DGObject.h"
 
+// We include non-proxy libraries here as well
+
+#include "DGConfigLib.h"
+#include "DGSystemLib.h"
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
