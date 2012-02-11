@@ -65,7 +65,11 @@
 
 #define DGMsg040000 "Initializing system..."
 #define DGMsg040001 "System ready!"
-#define DGMsg040002 "System already initialized"
+#define DGMsg140002 "System already initialized"
+#define DGMsg240003 "Could not set vertical sync"
+#define DGMsg240004 "Could not create controller thread"
+#define DGMsg240005 "Could not enter fullscreen"
+#define DGMsg240006 "Could not exit fullscreen"
 
 // Funny messages when shutting down
 

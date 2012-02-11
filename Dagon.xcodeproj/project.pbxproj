@@ -43,6 +43,8 @@
 
 /* Begin PBXFileReference section */
 		E817433514E6030A002CF502 /* DGConfigLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGConfigLib.h; sourceTree = "<group>"; };
+		E897912314E6DD49003C47BE /* DGSystemWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DGSystemWin.cpp; sourceTree = "<group>"; };
+		E897912614E6E338003C47BE /* DGSystemUnix.cpp */ = {isa = PBXFileReference; path = DGSystemUnix.cpp; sourceTree = "<group>"; };
 		E8E0194714E366B800173A2D /* DGNodeProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGNodeProxy.h; sourceTree = "<group>"; };
 		E8E0194814E366B800173A2D /* DGProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGProxy.h; sourceTree = "<group>"; };
 		E8E0194914E366B800173A2D /* DGRoomProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRoomProxy.h; sourceTree = "<group>"; };
@@ -289,6 +291,8 @@
 		FBC8883914574F08008D548F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				E897912614E6E338003C47BE /* DGSystemUnix.cpp */,
+				E897912314E6DD49003C47BE /* DGSystemWin.cpp */,
 				FB0F421F14896D3C00BE880D /* InfoPlist.strings */,
 				FB0F422514896E6D00BE880D /* Info.plist */,
 				E8ECDFCF14E216D900A6BA8D /* Luna.h */,
