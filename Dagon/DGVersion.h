@@ -16,7 +16,7 @@
 #define DGVersionMajor 0
 #define DGVersionMinor 6
 #define DGVersionRelease 0
-#define DGVersionBuild 1005
+#define DGVersionBuild 1006
 #define DGVersionType "a"
 
 #endif // DG_VERSION_H

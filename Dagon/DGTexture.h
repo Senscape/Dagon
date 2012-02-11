@@ -27,10 +27,11 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// TODO: We should convert all short vars to int
+// TODO: We should convert all short vars to int, also read all the new defines
 
 typedef struct {
-	char	name[DGMaxFileLength];
+	//char	name[DGMaxFileLength];
+    char	name[80];
 	short	width;
 	short	height;
 	short	compressionLevel; // 0: None, 1: GL only, 2: GL & zlib
