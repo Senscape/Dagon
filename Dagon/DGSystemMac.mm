@@ -15,10 +15,8 @@
 ////////////////////////////////////////////////////////////
 
 #import <Cocoa/Cocoa.h>
-#import <string.h>
 #import "DGDefines.h"
 #import "DGLanguage.h"
-#import "DGControl.h"
 #import "DGSystem.h"
 #import "DGViewDelegate.h"
 
@@ -127,7 +125,8 @@ void DGSystem::init() {
         view = [[DGViewDelegate alloc] initWithFrame:viewRect];
         
         // Now we're ready to init the controller instance
-        DGControl::getInstance().init();
+        control = &DGControl::getInstance();
+        control->init();
         
         [window setAcceptsMouseMovedEvents:YES];
         [window setContentView:view];
@@ -148,7 +147,7 @@ void DGSystem::init() {
         _isInitialized = true;
         log->trace(DGModSystem, "%s", DGMsg040001);
     }
-    else log->error(DGModSystem, "%s", DGMsg040002);
+    else log->warning(DGModSystem, "%s", DGMsg140002);
 }
 
 void DGSystem::run() {
