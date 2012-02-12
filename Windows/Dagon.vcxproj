@@ -10,6 +10,62 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Dagon\DGAction.h" />
+    <ClInclude Include="..\Dagon\DGAudio.h" />
+    <ClInclude Include="..\Dagon\DGCamera.h" />
+    <ClInclude Include="..\Dagon\DGColors.h" />
+    <ClInclude Include="..\Dagon\DGConfig.h" />
+    <ClInclude Include="..\Dagon\DGConfigLib.h" />
+    <ClInclude Include="..\Dagon\DGControl.h" />
+    <ClInclude Include="..\Dagon\DGDefines.h" />
+    <ClInclude Include="..\Dagon\DGGeometry.h" />
+    <ClInclude Include="..\Dagon\DGLanguage.h" />
+    <ClInclude Include="..\Dagon\DGLog.h" />
+    <ClInclude Include="..\Dagon\DGNode.h" />
+    <ClInclude Include="..\Dagon\DGNodeProxy.h" />
+    <ClInclude Include="..\Dagon\DGObject.h" />
+    <ClInclude Include="..\Dagon\DGPlatform.h" />
+    <ClInclude Include="..\Dagon\DGProxy.h" />
+    <ClInclude Include="..\Dagon\DGRender.h" />
+    <ClInclude Include="..\Dagon\DGRoom.h" />
+    <ClInclude Include="..\Dagon\DGRoomProxy.h" />
+    <ClInclude Include="..\Dagon\DGScript.h" />
+    <ClInclude Include="..\Dagon\DGSpot.h" />
+    <ClInclude Include="..\Dagon\DGState.h" />
+    <ClInclude Include="..\Dagon\DGSystem.h" />
+    <ClInclude Include="..\Dagon\DGSystemLib.h" />
+    <ClInclude Include="..\Dagon\DGTexture.h" />
+    <ClInclude Include="..\Dagon\DGTextureManager.h" />
+    <ClInclude Include="..\Dagon\DGVersion.h" />
+    <ClInclude Include="..\Other Sources\Luna.h" />
+    <ClInclude Include="..\Other Sources\stb_image.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Dagon\DGAudio.cpp" />
+    <ClCompile Include="..\Dagon\DGCamera.cpp" />
+    <ClCompile Include="..\Dagon\DGConfig.cpp" />
+    <ClCompile Include="..\Dagon\DGControl.cpp" />
+    <ClCompile Include="..\Dagon\DGLog.cpp" />
+    <ClCompile Include="..\Dagon\DGNode.cpp" />
+    <ClCompile Include="..\Dagon\DGObject.cpp" />
+    <ClCompile Include="..\Dagon\DGRender.cpp" />
+    <ClCompile Include="..\Dagon\DGRoom.cpp" />
+    <ClCompile Include="..\Dagon\DGScript.cpp" />
+    <ClCompile Include="..\Dagon\DGSpot.cpp" />
+    <ClCompile Include="..\Dagon\DGState.cpp" />
+    <ClCompile Include="..\Dagon\DGSystemWin.cpp" />
+    <ClCompile Include="..\Dagon\DGTexture.cpp" />
+    <ClCompile Include="..\Dagon\DGTextureManager.cpp" />
+    <ClCompile Include="..\Dagon\main.cpp" />
+    <ClCompile Include="..\Other Sources\stb_image.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dagon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\dagon.rc" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F560EA9F-3802-46FF-9460-39262216EBC2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
@@ -87,75 +143,6 @@
       <OutputFile>$(OutDir)\$(TargetName)$(TargetExt)</OutputFile>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Dagon\DGArray.c" />
-    <ClCompile Include="..\Dagon\DGAudio.c" />
-    <ClCompile Include="..\Dagon\DGCamera.c" />
-    <ClCompile Include="..\Dagon\DGConfig.c" />
-    <ClCompile Include="..\Dagon\DGConsole.c" />
-    <ClCompile Include="..\Dagon\DGControl.c" />
-    <ClCompile Include="..\Dagon\DGEffects.c" />
-    <ClCompile Include="..\Dagon\DGFont.c" />
-    <ClCompile Include="..\Dagon\DGFontData.c" />
-    <ClCompile Include="..\Dagon\DGLog.c" />
-    <ClCompile Include="..\Dagon\DGMemory.c" />
-    <ClCompile Include="..\Dagon\DGNode.c" />
-    <ClCompile Include="..\Dagon\DGObject.c" />
-    <ClCompile Include="..\Dagon\DGParticleData.c" />
-    <ClCompile Include="..\Dagon\DGRender.c" />
-    <ClCompile Include="..\Dagon\DGRoom.c" />
-    <ClCompile Include="..\Dagon\DGScript.c" />
-    <ClCompile Include="..\Dagon\DGSplashData.c" />
-    <ClCompile Include="..\Dagon\DGSpot.c" />
-    <ClCompile Include="..\Dagon\DGState.c" />
-    <ClCompile Include="..\Dagon\DGSystemWindows.c" />
-    <ClCompile Include="..\Dagon\DGTexture.c" />
-    <ClCompile Include="..\Dagon\DGTextureManager.c" />
-    <ClCompile Include="..\Dagon\DGTimer.c" />
-    <ClCompile Include="..\Dagon\DGVideo.c" />
-    <ClCompile Include="..\Dagon\DGWorld.c" />
-    <ClCompile Include="..\Dagon\main.c" />
-    <ClCompile Include="..\Other Sources\stb_image.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\Dagon\DGArray.h" />
-    <ClInclude Include="..\Dagon\DGAudio.h" />
-    <ClInclude Include="..\Dagon\DGCamera.h" />
-    <ClInclude Include="..\Dagon\DGColors.h" />
-    <ClInclude Include="..\Dagon\DGCommon.h" />
-    <ClInclude Include="..\Dagon\DGCommonGL.h" />
-    <ClInclude Include="..\Dagon\DGConfig.h" />
-    <ClInclude Include="..\Dagon\DGConsole.h" />
-    <ClInclude Include="..\Dagon\DGControl.h" />
-    <ClInclude Include="..\Dagon\DGDefines.h" />
-    <ClInclude Include="..\Dagon\DGEffects.h" />
-    <ClInclude Include="..\Dagon\DGFont.h" />
-    <ClInclude Include="..\Dagon\DGLanguage.h" />
-    <ClInclude Include="..\Dagon\DGLog.h" />
-    <ClInclude Include="..\Dagon\DGMemory.h" />
-    <ClInclude Include="..\Dagon\DGNode.h" />
-    <ClInclude Include="..\Dagon\DGObject.h" />
-    <ClInclude Include="..\Dagon\DGPlatform.h" />
-    <ClInclude Include="..\Dagon\DGRender.h" />
-    <ClInclude Include="..\Dagon\DGRoom.h" />
-    <ClInclude Include="..\Dagon\DGScript.h" />
-    <ClInclude Include="..\Dagon\DGSpot.h" />
-    <ClInclude Include="..\Dagon\DGState.h" />
-    <ClInclude Include="..\Dagon\DGSystem.h" />
-    <ClInclude Include="..\Dagon\DGTexture.h" />
-    <ClInclude Include="..\Dagon\DGTextureManager.h" />
-    <ClInclude Include="..\Dagon\DGTimer.h" />
-    <ClInclude Include="..\Dagon\DGVersion.h" />
-    <ClInclude Include="..\Dagon\DGVideo.h" />
-    <ClInclude Include="..\Dagon\DGWorld.h" />
-    <ClInclude Include="..\Other Sources\stb_image.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\dagon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resources\dagon.rc" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

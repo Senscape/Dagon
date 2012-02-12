@@ -32,7 +32,6 @@ class DGSystem {
     
     bool _isInitialized;
     bool _isRunning;
-    void _update();
     
     // Private constructor/destructor
     DGSystem();
@@ -56,6 +55,7 @@ public:
     void setTitle(const char* title);
     void terminate();
     void toggleFullScreen();
+	void update();
 };
 
 #endif // DG_SYSTEM_H

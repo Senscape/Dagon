@@ -16,6 +16,7 @@
 
 #include <math.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include "DGColors.h"
 #include "DGLanguage.h"
 #include "DGRender.h"

@@ -14,6 +14,9 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <stdarg.h>
+#include <stdio.h>
+#include <time.h>
 #include "DGColors.h"
 #include "DGLog.h"
 

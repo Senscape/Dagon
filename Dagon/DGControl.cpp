@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <string.h>
+#include <time.h>
 #include "DGCamera.h"
 #include "DGColors.h"
 #include "DGControl.h"

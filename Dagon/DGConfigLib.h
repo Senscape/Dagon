@@ -118,7 +118,7 @@ static int DGConfigLibSet(lua_State *L) {
 		DGConfig::getInstance().antialiasing = lua_toboolean(L, 3);
     
     if (strcmp(key, "autorun") == 0)
-		DGConfig::getInstance().antialiasing = lua_toboolean(L, 3);
+		DGConfig::getInstance().antialiasing = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "display_width") == 0)
 		DGConfig::getInstance().displayWidth = (int)luaL_checknumber(L, 3);
@@ -130,37 +130,37 @@ static int DGConfigLibSet(lua_State *L) {
 		DGConfig::getInstance().displayDepth = (int)luaL_checknumber(L, 3);
 	
 	if (strcmp(key, "debug_mode") == 0)
-		DGConfig::getInstance().debugMode = lua_toboolean(L, 3);
+		DGConfig::getInstance().debugMode = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "effects") == 0)
-		DGConfig::getInstance().effects = lua_toboolean(L, 3);
+		DGConfig::getInstance().effects = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "framerate") == 0)
 		DGConfig::getInstance().framerate = (int)luaL_checknumber(L, 3);
 	
 	if (strcmp(key, "fullscreen") == 0)
-		DGConfig::getInstance().fullScreen = lua_toboolean(L, 3);
+		DGConfig::getInstance().fullScreen = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "log") == 0)
-		DGConfig::getInstance().log = lua_toboolean(L, 3);
+		DGConfig::getInstance().log = (bool)lua_toboolean(L, 3);
     
     if (strcmp(key, "script") == 0)
         DGConfig::getInstance().setScript(luaL_checkstring(L, 3));
 	
 	if (strcmp(key, "show_splash") == 0)
-		DGConfig::getInstance().showSplash = lua_toboolean(L, 3);
+		DGConfig::getInstance().showSplash = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "show_spots") == 0)
-		DGConfig::getInstance().showSpots = lua_toboolean(L, 3);
+		DGConfig::getInstance().showSpots = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "tex_compression") == 0)
-		DGConfig::getInstance().texCompression = lua_toboolean(L, 3);
+		DGConfig::getInstance().texCompression = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "tex_extension") == 0)
         DGConfig::getInstance().setTexExtension(luaL_checkstring(L, 3));
     
 	if (strcmp(key, "vertical_sync") == 0)
-		DGConfig::getInstance().verticalSync = lua_toboolean(L, 3);
+		DGConfig::getInstance().verticalSync = (bool)lua_toboolean(L, 3);
 	
 	return 0;
 }

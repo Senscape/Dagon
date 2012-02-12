@@ -17,6 +17,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <stdint.h>
 #include <vector>
 #include "DGConfig.h"
 #include "DGDefines.h"

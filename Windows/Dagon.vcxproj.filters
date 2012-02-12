@@ -25,111 +25,40 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Dagon\DGArray.c">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGNode.c">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGObject.c">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGRoom.c">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGSpot.c">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGWorld.c">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGAudio.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGLog.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGMemory.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGScript.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGState.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGSystemWindows.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGTimer.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGCamera.c">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGConsole.c">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGEffects.c">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGFont.c">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGRender.c">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGTexture.c">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGTextureManager.c">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGVideo.c">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGConfig.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGControl.c">
-      <Filter>Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Other Sources\stb_image.c">
-      <Filter>Other Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\main.c">
-      <Filter>Other Sources</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGFontData.c">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGSplashData.c">
-      <Filter>Data</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Dagon\DGParticleData.c">
-      <Filter>Data</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="..\Dagon\DGVersion.h">
+      <Filter>Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\Dagon\DGColors.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dagon\DGCommon.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGCommonGL.h">
+    <ClInclude Include="..\Dagon\DGConfig.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Dagon\DGDefines.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="..\Dagon\DGGeometry.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dagon\DGLanguage.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dagon\DGLog.h">
+      <Filter>Common</Filter>
+    </ClInclude>
     <ClInclude Include="..\Dagon\DGPlatform.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dagon\DGVersion.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="..\Dagon\DGSpot.h">
+      <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dagon\DGArray.h">
+    <ClInclude Include="..\Dagon\DGTexture.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dagon\DGAction.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dagon\DGAudio.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="..\Dagon\DGNode.h">
@@ -141,19 +70,22 @@
     <ClInclude Include="..\Dagon\DGRoom.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dagon\DGSpot.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGWorld.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGAudio.h">
+    <ClInclude Include="..\Dagon\DGTextureManager.h">
       <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dagon\DGLog.h">
+    <ClInclude Include="..\Dagon\DGConfigLib.h">
       <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dagon\DGMemory.h">
+    <ClInclude Include="..\Dagon\DGControl.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dagon\DGNodeProxy.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dagon\DGProxy.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Dagon\DGRoomProxy.h">
       <Filter>Controller</Filter>
     </ClInclude>
     <ClInclude Include="..\Dagon\DGScript.h">
@@ -165,45 +97,72 @@
     <ClInclude Include="..\Dagon\DGSystem.h">
       <Filter>Controller</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dagon\DGTimer.h">
+    <ClInclude Include="..\Dagon\DGSystemLib.h">
       <Filter>Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGCamera.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGConsole.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGEffects.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGFont.h">
-      <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="..\Dagon\DGRender.h">
       <Filter>View</Filter>
     </ClInclude>
-    <ClInclude Include="..\Dagon\DGTexture.h">
+    <ClInclude Include="..\Dagon\DGCamera.h">
       <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGTextureManager.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGVideo.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGConfig.h">
-      <Filter>Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGControl.h">
-      <Filter>Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Dagon\DGLanguage.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="..\Other Sources\stb_image.h">
       <Filter>Other Sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\Other Sources\Luna.h">
+      <Filter>Other Sources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Dagon\DGConfig.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGLog.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGSpot.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGTexture.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGAudio.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGNode.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGObject.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGRoom.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGTextureManager.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGControl.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGScript.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGState.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\main.cpp" />
+    <ClCompile Include="..\Dagon\DGRender.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGCamera.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Other Sources\stb_image.c">
+      <Filter>Other Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Dagon\DGSystemWin.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\dagon.ico">
