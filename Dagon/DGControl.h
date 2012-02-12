@@ -17,12 +17,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <stdint.h>
-#include <vector>
-#include "DGConfig.h"
-#include "DGDefines.h"
-#include "DGLog.h"
-#include "DGObject.h"
+#include "DGPlatform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -31,6 +26,8 @@
 #define DGMaxHotKeys 12
 
 class DGCamera;
+class DGConfig;
+class DGLog;
 class DGNode;
 class DGRoom;
 class DGRender;

@@ -14,21 +14,17 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <string.h>
-#include <time.h>
 #include "DGCamera.h"
-#include "DGColors.h"
+#include "DGConfig.h"
 #include "DGControl.h"
-#include "DGLanguage.h"
+#include "DGLog.h"
 #include "DGNode.h"
-#include "DGPlatform.h"
 #include "DGRender.h"
 #include "DGRoom.h"
 #include "DGSpot.h"
 #include "DGState.h"
 #include "DGSystem.h"
 #include "DGTextureManager.h"
-#include "DGVersion.h"
 
 using namespace std;
 

@@ -23,12 +23,15 @@ extern "C" {
 #include "lauxlib.h"
 }
 
-#include <string>
-#include <vector>
-#include "DGConfig.h"
-#include "DGDefines.h"
-#include "DGLog.h"
-#include "DGSystem.h"
+#include "DGPlatform.h"
+
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
+
+class DGConfig;
+class DGLog;
+class DGSystem;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class

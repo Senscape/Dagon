@@ -14,11 +14,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <algorithm>
-#include <string.h>
-#include "DGDefines.h"
-#include "DGLanguage.h"
+#include "DGConfig.h"
+#include "DGLog.h"
 #include "DGNode.h"
+#include "DGSpot.h"
 #include "DGTextureManager.h"
 
 using namespace std;

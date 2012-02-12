@@ -18,10 +18,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <GL/glew.h>
-#include "DGConfig.h"
-#include "DGDefines.h"
-#include "DGLog.h"
-#include "DGObject.h"
+#include "DGPlatform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -49,6 +46,9 @@ typedef struct {
     char	file[DGMaxFileLength];
     int     index;
 } DGResource;
+
+class DGConfig;
+class DGLog;
 
 ////////////////////////////////////////////////////////////
 // Interface

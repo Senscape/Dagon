@@ -14,10 +14,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <stdarg.h>
-#include <stdio.h>
-#include <time.h>
-#include "DGColors.h"
+#include "DGConfig.h"
 #include "DGLog.h"
 
 using namespace std;

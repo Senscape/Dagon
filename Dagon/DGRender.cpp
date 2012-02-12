@@ -14,11 +14,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <math.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include "DGColors.h"
-#include "DGLanguage.h"
+#include "DGConfig.h"
+#include "DGLog.h"
 #include "DGRender.h"
 #include "DGTexture.h"
 

@@ -17,20 +17,20 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <vector>
-#include "DGConfig.h"
-#include "DGLog.h"
+#include "DGPlatform.h"
 #include "DGTexture.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// This is temporary until we actually test how much memory is available
-// NOT accurate! This is only a reference value since textures are flushed
-// before the next switch
+// This is temporary until we actually test how much memory is available.
+// NOT accurate! It's only a reference value since textures are flushed
+// before the next switch.
 #define DGMaxActiveTextures 6
 
+class DGConfig;
+class DGLog;
 class DGNode;
 
 ////////////////////////////////////////////////////////////
