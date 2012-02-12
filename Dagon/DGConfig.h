@@ -34,7 +34,7 @@ enum DGConfigDefaults {
     DGDefDust = false,  // Move to effects
     DGDefEffects = true,
 	DGDefFramerate = 60,
-	DGDefFullScreen = false,
+	DGDefFullScreen = true,
 	DGDefLog = true,
     DGDefScare = false, // Move to effects
 	DGDefShowSplash = true,

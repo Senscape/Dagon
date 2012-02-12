@@ -150,11 +150,19 @@ void DGSystem::init() {
     else log->warning(DGModSystem, "%s", DGMsg140002);
 }
 
+// TODO: Note this isn't quite multithreaded yet.
+// The timer is running in the main process and thus the OpenGL context doesn't
+// have to be shared.
 void DGSystem::run() {
     mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
                                     0,
                                     dispatch_get_main_queue(),
                                     ^{ update(); });
+    
+    /*mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
+                                    0,
+                                    dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                                    ^{ update(); });*/
     
     _isRunning = true;
     [NSApp run];

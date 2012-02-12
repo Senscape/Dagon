@@ -115,8 +115,9 @@
     }
 }
 
-- (void)update {
+- (void)update {    
     control->update();
+    
 	[glContext flushBuffer];
 }
 
