@@ -21,12 +21,12 @@ xcuserdata/
 
 # Visual Studio Express
 *.csproj
-#*.filters
+*.filters
 *.ncb
 *.scc
 *.sdf
 *.suo
-#*.user
+*.user
 *.vbproj
 *.vsscc
 *.vspscc
