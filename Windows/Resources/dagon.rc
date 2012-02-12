@@ -3,11 +3,11 @@
 #define mkstr(a) # a
 #define in_between(a, b) mkstr(a) "." mkstr(b)
 
-#define	FILEVER	DG_VERSION_MAJOR,DG_VERSION_MINOR,DG_VERSION_RELEASE,DG_VERSION_BUILD
+#define	FILEVER	DGVersionMajor, DGVersionMinor, DGVersionRelease, DGVersionBuild
 #define	PRODVER	FILEVER
 
-#define	STRFILEVER	"Dagon " in_between(DG_VERSION_MAJOR, DG_VERSION_MINOR)
-#define	STRPRODVER	STRFILEVER
+#define	STRFILEVER "Dagon " in_between(DGVersionMajor, DGVersionMinor)
+#define	STRPRODVER STRFILEVER
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -55,6 +55,6 @@ BEGIN
     END
     BLOCK "VarFileInfo"
     BEGIN
-		 VALUE "Translation", 0x409, 1252
+	VALUE "Translation", 0x409, 1252
     END
 END
