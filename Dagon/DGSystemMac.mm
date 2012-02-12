@@ -154,7 +154,7 @@ void DGSystem::run() {
     mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
                                     0,
                                     dispatch_get_main_queue(),
-                                    ^{ _update(); });
+                                    ^{ update(); });
     
     _isRunning = true;
     [NSApp run];
@@ -210,6 +210,10 @@ void DGSystem::toggleFullScreen() {
     else [window toggleFullScreen:nil];
 }
 
+void DGSystem::update() {
+    [view update];
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
@@ -227,8 +231,4 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval,
     }
     
     return timer;
-}
-
-void DGSystem::_update() {
-    [view update];
 }

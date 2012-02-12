@@ -14,10 +14,13 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#import <string.h>
-#import "DGDefines.h"
-#import "DGLanguage.h"
-#import "DGSystem.h"
+#include <GL/glew.h>
+#include <string.h>
+#include <Windows.h>
+#include "DGDefines.h"
+#include "DGLanguage.h"
+#include "DGPlatform.h"
+#include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -33,6 +36,7 @@ HWND g_hWnd = NULL;
 HDC g_hDC = NULL;
 HGLRC g_hRC = NULL;
 
+DWORD WINAPI _systemThread(LPVOID lpParam);
 LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // Get pointers to functions for setting vertical sync
@@ -78,7 +82,7 @@ void DGSystem::init() {
         log->trace(DGModSystem, "%s", DGMsg040000);        
 
         // Prepare the string to set the window title
-        WCHAR title[DG_MAX_PATHLEN];
+        WCHAR title[DGMaxPathLength];
         MultiByteToWideChar(0, 0, config->script(), DGMaxFileLength, title, DGMaxFileLength);
         
         WNDCLASSEX winClass;        
@@ -168,8 +172,8 @@ void DGSystem::run() {
 	MSG uMsg;
 	
     // Create the thread to update the controller module
-	if (!(hThread = CreateThread(NULL, 0, _update, NULL, 0, &dwControlThreadId)))
-        log->error(DGModSystem, "%s", DGMsg240004);
+	if (!(hThread = CreateThread(NULL, 0, _systemThread, NULL, 0, &dwControlThreadId)))
+		log->error(DGModSystem, "%s", DGMsg240004);
 	
     // Now launch the main loop
 	memset(&uMsg,0,sizeof(uMsg));
@@ -219,50 +223,62 @@ void DGSystem::toggleFullScreen() {
         fullscreenSettings.dmDisplayFrequency = 60; // For compatibility purposes, we always force 60 fps here
         fullscreenSettings.dmFields           = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;
         
-        SetWindowLongPtr(hwnd, GWL_EXSTYLE, WS_EX_APPWINDOW | WS_EX_TOPMOST);
-        SetWindowLongPtr(hwnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
-        SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, config->displayWidth, config->displayHeight, SWP_SHOWWINDOW);
+        SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, WS_EX_APPWINDOW | WS_EX_TOPMOST);
+        SetWindowLongPtr(g_hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
+        SetWindowPos(g_hWnd, HWND_TOPMOST, 0, 0, config->displayWidth, config->displayHeight, SWP_SHOWWINDOW);
         if (ChangeDisplaySettings(&fullscreenSettings, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL) {
-            ShowWindow(hwnd, SW_MAXIMIZE);
+            ShowWindow(g_hWnd, SW_MAXIMIZE);
         }
         else log->error(DGModSystem, "%s", DGMsg240005);
     }
     else {
         // Exit fullscreen
-        SetWindowLongPtr(hwnd, GWL_EXSTYLE, WS_EX_LEFT);
-        SetWindowLongPtr(hwnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
+        SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, WS_EX_LEFT);
+        SetWindowLongPtr(g_hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
         if (ChangeDisplaySettings(NULL, CDS_RESET) == DISP_CHANGE_SUCCESSFUL) {
-            SetWindowPos(hwnd, HWND_NOTOPMOST, 0, 0, config->displayWidth, config->displayHeight, SWP_SHOWWINDOW);
-            ShowWindow(hwnd, SW_RESTORE);
+            SetWindowPos(g_hWnd, HWND_NOTOPMOST, 0, 0, config->displayWidth, config->displayHeight, SWP_SHOWWINDOW);
+            ShowWindow(g_hWnd, SW_RESTORE);
         }
         else log->error(DGModSystem, "%s", DGMsg240006);        
     }
+}
+
+void DGSystem::update() {
+	// Update the controller
+	control->update();
+
+    // Now swap the OpenGL buffers
+    SwapBuffers(g_hDC);
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-void DGSystem::_update() {
-    // All we have to do here is swap the OpenGL buffers
-    SwapBuffers(g_hDC);
+DWORD WINAPI _systemThread(LPVOID lpParam) {
+	while (true) {
+		DGSystem::getInstance().update();
+		Sleep(1);
+	}
+	
+	return 0;
 }
 
 // This function processes the main loop
 LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {	
     switch(msg) {
 		case WM_SIZE:
-			config->displayWidth = LOWORD(lParam);
-			config->displayHeight = HIWORD(lParam);
+			DGConfig::getInstance().displayWidth = LOWORD(lParam);
+			DGConfig::getInstance().displayHeight = HIWORD(lParam);
 			break;
 		case WM_MOUSEMOVE:
-            control->processMouse(LOWORD(lParam), HIWORD(lParam), false);
+            DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), false);
 			break;
 		case WM_LBUTTONDOWN:
             // We ignore this message
 			break;
 		case WM_LBUTTONUP:
-			control->processMouse(LOWORD(lParam), HIWORD(lParam), true);
+			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), true);
 			break;
 		case WM_KEYDOWN:
             // A different switch to handle keystrokes
@@ -279,7 +295,7 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case VK_F10:
 				case VK_F11:
 				case VK_F12:
-					control->processKey(wParam, false);
+					DGControl::getInstance().processKey(wParam, false);
 					break;
 				case VK_SHIFT:
 					// Ignored when pressed alone
@@ -291,12 +307,10 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				default:
                     WORD ch;
                     BYTE kbs[256];
-                    char key[2];
                     
 					GetKeyboardState(kbs);
 					ToAscii(wParam, MapVirtualKey(wParam, 0), kbs, &ch, 0);
-					sprintf(key, "%c", ch);
-					control->processKey(key, false);
+					DGControl::getInstance().processKey(ch, false);
 					break;
 			}			
 			break;
@@ -304,7 +318,7 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
         case WM_DESTROY:
 		case WM_QUIT:
             // Simulate the ESC key
-            control->processKey(DGKeyEsc, false);
+            DGControl::getInstance().processKey(DGKeyEsc, false);
 			break;			
         default:
             // Any other messages are passed to the default window process
