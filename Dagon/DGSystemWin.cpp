@@ -15,6 +15,9 @@
 ////////////////////////////////////////////////////////////
 
 #include <GL/glew.h>
+#include "DGConfig.h"
+#include "DGControl.h"
+#include "DGLog.h"
 #include "DGPlatform.h"
 #include "DGSystem.h"
 
@@ -31,6 +34,8 @@
 HWND g_hWnd = NULL;
 HDC g_hDC = NULL;
 HGLRC g_hRC = NULL;
+
+HANDLE hSystemThread;
 
 DWORD WINAPI _systemThread(LPVOID lpParam);
 LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -155,7 +160,7 @@ void DGSystem::init() {
             toggleFullScreen();
         
         ShowCursor(FALSE);        
-        
+
         _isInitialized = true;
         log->trace(DGModSystem, "%s", DGMsg040001);
     }
@@ -164,11 +169,12 @@ void DGSystem::init() {
 
 void DGSystem::run() {
     DWORD dwControlThreadId;
-	HANDLE hThread;
 	MSG uMsg;
+
+	wglMakeCurrent(NULL, NULL);
 	
     // Create the thread to update the controller module
-	if (!(hThread = CreateThread(NULL, 0, _systemThread, NULL, 0, &dwControlThreadId)))
+	if (!(hSystemThread = CreateThread(NULL, 0, _systemThread, NULL, 0, &dwControlThreadId)))
 		log->error(DGModSystem, "%s", DGMsg240004);
 	
     // Now launch the main loop
@@ -187,6 +193,12 @@ void DGSystem::setTitle(const char* title) {
 
 // TODO: We must delete the thread here too
 void DGSystem::terminate() {
+	if (hSystemThread != NULL) {
+		DWORD lpExitCode;
+		GetExitCodeThread(hSystemThread, &lpExitCode);
+		TerminateThread(hSystemThread, lpExitCode);
+	}
+
 	if (g_hRC != NULL) {
         wglMakeCurrent(NULL, NULL);
         wglDeleteContext(g_hRC);
@@ -205,9 +217,7 @@ void DGSystem::terminate() {
 }
 
 // TODO: We should try and get the best possible resolution here
-void DGSystem::toggleFullScreen() {
-    config->fullScreen = !config->fullScreen;
-    
+void DGSystem::toggleFullScreen() { 
     if (config->fullScreen) {
         // Enter fullscreen        
         DEVMODE fullscreenSettings;
@@ -216,7 +226,7 @@ void DGSystem::toggleFullScreen() {
         fullscreenSettings.dmPelsWidth        = config->displayWidth;
         fullscreenSettings.dmPelsHeight       = config->displayHeight;
         fullscreenSettings.dmBitsPerPel       = config->displayDepth;
-        fullscreenSettings.dmDisplayFrequency = 60; // For compatibility purposes, we always force 60 fps here
+        fullscreenSettings.dmDisplayFrequency = config->framerate;
         fullscreenSettings.dmFields           = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;
         
         SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, WS_EX_APPWINDOW | WS_EX_TOPMOST);
@@ -252,9 +262,12 @@ void DGSystem::update() {
 ////////////////////////////////////////////////////////////
 
 DWORD WINAPI _systemThread(LPVOID lpParam) {
+	DWORD dwPause = (1.0f / DGConfig::getInstance().framerate) * 1000;
+
+	wglMakeCurrent(g_hDC, g_hRC);
 	while (true) {
 		DGSystem::getInstance().update();
-		Sleep(1);
+		Sleep(dwPause);
 	}
 	
 	return 0;
