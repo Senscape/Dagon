@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGAudio.h"
+#include "DGNode.h"
 #include "DGRoom.h"
 
 using namespace std;

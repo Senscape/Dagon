@@ -13,6 +13,10 @@
 #ifndef DG_PLATFORM_H
 #define DG_PLATFORM_H
 
+////////////////////////////////////////////////////////////
+// Detect the current OS
+////////////////////////////////////////////////////////////
+
 #ifdef __APPLE__
 
 #include <TargetConditionals.h>
@@ -39,7 +43,14 @@
 #elif ((_WIN32) || (_WIN64))
 
 #define DGPlatformWindows
-#include <windows.h>
+#include <Windows.h>
+
+// We use this function a lot but its standard isn't supported
+// by MSVC (go figure). While this isn't entirely correct, it
+// does the trick.
+#if _MSC_VER
+#define snprintf _snprintf
+#endif
 
 #elif __linux
 
@@ -49,7 +60,42 @@
 
 #endif
 
+////////////////////////////////////////////////////////////
+// Include standard C libraries
+////////////////////////////////////////////////////////////
+
+#include <math.h>
+#include <stdarg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
+#include <time.h>
+
+////////////////////////////////////////////////////////////
+// Include standard C++ libraries
+////////////////////////////////////////////////////////////
+
+#include <algorithm>
+#include <fstream>
+#include <string>
+#include <vector>
+
+////////////////////////////////////////////////////////////
+// Include common Dagon headers
+////////////////////////////////////////////////////////////
+
+#include "DGColors.h"
+#include "DGDefines.h"
+#include "DGGeometry.h"
+#include "DGLanguage.h"
+// This is such a common module that we're including it here too
+#include "DGObject.h"
+#include "DGVersion.h"
+
+////////////////////////////////////////////////////////////
 // Key definitions
+////////////////////////////////////////////////////////////
 
 #ifdef DGPlatformMac
 enum DGKeys {

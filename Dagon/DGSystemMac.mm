@@ -14,9 +14,9 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#import <Cocoa/Cocoa.h>
-#import "DGDefines.h"
-#import "DGLanguage.h"
+#import "DGConfig.h"
+#import "DGControl.h"
+#import "DGLog.h"
 #import "DGSystem.h"
 #import "DGViewDelegate.h"
 

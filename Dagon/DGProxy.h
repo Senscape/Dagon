@@ -23,13 +23,7 @@ extern "C" {
 }
 #include "Luna.h"
 
-#include "DGDefines.h"
-#include "DGObject.h"
-
-// We include non-proxy libraries here as well
-
-#include "DGConfigLib.h"
-#include "DGSystemLib.h"
+#include "DGPlatform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -49,6 +43,11 @@ static DGRoom* DGProxyToRoom(lua_State *L, int idx);
 
 #include "DGNodeProxy.h"
 #include "DGRoomProxy.h"
+
+// We include non-proxy libraries here as well
+
+#include "DGConfigLib.h"
+#include "DGSystemLib.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation

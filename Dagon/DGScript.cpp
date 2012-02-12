@@ -14,11 +14,12 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <string.h>
+#include "DGConfig.h"
 #include "DGControl.h"
-#include "DGLanguage.h"
+#include "DGLog.h"
 #include "DGProxy.h"
 #include "DGScript.h"
+#include "DGSystem.h"
 #include "Luna.h"
 
 using namespace std;

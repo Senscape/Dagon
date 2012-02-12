@@ -15,10 +15,6 @@
 ////////////////////////////////////////////////////////////
 
 #include <GL/glew.h>
-#include <string.h>
-#include <Windows.h>
-#include "DGDefines.h"
-#include "DGLanguage.h"
 #include "DGPlatform.h"
 #include "DGSystem.h"
 

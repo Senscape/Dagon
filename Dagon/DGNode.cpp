@@ -14,9 +14,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAction.h"
-#include "DGDefines.h"
 #include "DGNode.h"
+#include "DGSpot.h"
 #include "DGTexture.h"
 
 using namespace std;

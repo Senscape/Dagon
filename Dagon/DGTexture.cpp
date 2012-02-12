@@ -14,10 +14,9 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "DGConfig.h"
 #include "DGLanguage.h"
+#include "DGLog.h"
 #include "DGTexture.h"
 #include "stb_image.h"
 

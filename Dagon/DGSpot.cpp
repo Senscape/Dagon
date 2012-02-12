@@ -14,7 +14,6 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGColors.h"
 #include "DGSpot.h"
 
 using namespace std;
