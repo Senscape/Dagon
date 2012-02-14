@@ -23,11 +23,54 @@ extern "C" {
 #include "lauxlib.h"
 }
 
+#include "DGAction.h"
 #include "DGPlatform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
+
+// These are all strings we export to Lua to handle directions and types
+
+enum DGShortDirections {
+    N = DGNorth,
+    E = DGEast,
+    W = DGWest,
+    S = DGSouth,
+    U = DGUp,
+    D = DGDown,
+    NE = DGNorthEast,
+    SE = DGSouthEast,
+    NW = DGNorthWest,
+    SW = DGSouthWest
+};
+
+enum DGLongDirections {
+    NORTH = DGNorth,
+    EAST = DGEast,
+    WEST = DGWest,
+    SOUTH = DGSouth,
+    UP = DGUp,
+    DOWN = DGDown,
+    NORTHEAST = DGNorthEast,
+    SOUTHEAST = DGSouthEast,
+    NORTHWEST = DGNorthWest,
+    SOUTHWEST = DGSouthWest
+};
+
+enum DGAttachTypes {
+    AUDIO = DGObjectAudio,
+    CUSTOM = DGActionCustom,
+    IMAGE = DGObjectTexture,
+    FEEDBACK = DGActionFeedback,
+    SWITCH = DGActionSwitch,
+    VIDEO = DGObjectVideo
+};
+
+// Helper to push values to Lua
+#define DGLuaEnum(L, name, val) \
+lua_pushnumber(L, val); \
+lua_setfield(L, -2, #name);
 
 class DGConfig;
 class DGLog;
