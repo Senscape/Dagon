@@ -63,7 +63,7 @@
         [notificationCenter addObserver: self
                                selector: @selector(_windowWillClose:)
                                    name: NSWindowWillCloseNotification
-                                 object: _window];
+                                 object: _window];    
     }
 	
     return self;
@@ -91,31 +91,34 @@
 	}
 }
 
-- (void)mouseDown:(NSEvent *)theEvent {
-	NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	bool isInside = [self mouse:mouseLoc inRect:[self bounds]];
-	
-	if (isInside)
-		control->processMouse(mouseLoc.x, mouseLoc.y, true);
+- (void)mouseEntered:(NSEvent *)theEvent {
+    if (!config->fullScreen)    
+        [NSCursor hide];
 }
 
-- (void)mouseMoved:(NSEvent *)theEvent {
-	NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	bool isInside = [self mouse:mouseLoc inRect:[self bounds]];
-	
-	if (isInside) {
-		control->processMouse(mouseLoc.x, mouseLoc.y, false);
-		
-		[NSCursor hide];
-	}
-	else {
-        control->processMouse(config->displayWidth/2, config->displayHeight/2, false);
-        
-		[NSCursor unhide];
+- (void)mouseExited:(NSEvent *)theEvent {
+    if (!config->fullScreen) {
+        control->processMouse(config->displayWidth / 2, config->displayHeight / 2, false);
+        [NSCursor unhide];
     }
 }
 
-- (void)update {    
+- (void)mouseDown:(NSEvent *)theEvent {
+    if (isMouseInside) {
+        NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        control->processMouse(mouseLoc.x, mouseLoc.y, true);
+    }
+}
+
+- (void)mouseMoved:(NSEvent *)theEvent {
+    NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+    isMouseInside = ([self hitTest:mouseLoc] == self);
+    
+    if (isMouseInside)
+        control->processMouse(mouseLoc.x, mouseLoc.y, false);
+}
+
+- (void)update {
     control->update();
     
 	[glContext flushBuffer];
@@ -135,6 +138,9 @@
     
 	if (setCtx)
 		[NSOpenGLContext clearCurrentContext];
+    
+    [self removeTrackingRect:boundsTrackingTag];
+    boundsTrackingTag = [self addTrackingRect:[self visibleRect] owner:self userData:nil assumeInside:isMouseInside];
     
     // TODO: Ensure this is thread-safe
     // (It probably is but everything is being drawn twice!)

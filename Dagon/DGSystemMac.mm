@@ -30,8 +30,7 @@
 NSWindow* window;
 DGViewDelegate* view;
 
-dispatch_source_t mainTimer;
-
+dispatch_source_t _mainTimer;
 dispatch_source_t CreateDispatchTimer(uint64_t interval,
                                       uint64_t leeway,
                                       dispatch_queue_t queue,
@@ -134,11 +133,14 @@ void DGSystem::init() {
         [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
         [window setTitle:[NSString stringWithUTF8String:config->script()]];
         [window makeKeyAndOrderFront:window];
-        
+    
         if (config->fullScreen) {
             // Just one update before going fullscreen
             [view update];
             [window toggleFullScreen:nil];
+            
+            // Finally, force hiding the cursor
+            [NSCursor hide];
         }
         
         [NSBundle loadNibNamed:@"MainMenu" owner:NSApp];
@@ -154,7 +156,7 @@ void DGSystem::init() {
 // The timer is running in the main process and thus the OpenGL context doesn't
 // have to be shared.
 void DGSystem::run() {
-    mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
+    _mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
                                     0,
                                     dispatch_get_main_queue(),
                                     ^{ update(); });
@@ -188,7 +190,7 @@ void DGSystem::terminate() {
         int r = arc4random() % 8; // Double the replies, so that the default one appears often
         
         if (_isRunning)
-            dispatch_source_cancel(mainTimer);
+            dispatch_source_cancel(_mainTimer);
         
         if (_isInitialized) {
             [view release];
@@ -211,9 +213,9 @@ void DGSystem::toggleFullScreen() {
     config->fullScreen = !config->fullScreen;
     if (_isRunning) {
         // Suspend the timer to avoid multiple redraws
-        dispatch_suspend(mainTimer);
+        dispatch_suspend(_mainTimer);
         [window toggleFullScreen:nil];
-        dispatch_resume(mainTimer);
+        dispatch_resume(_mainTimer);
     }
     else [window toggleFullScreen:nil];
 }
