@@ -31,8 +31,10 @@ class DGControl;
     DGConfig* config;
     DGControl* control;
     
+    BOOL isMouseInside; 
 	NSOpenGLPixelFormat* pixelFormat;
 	NSOpenGLContext* glContext;
+    NSTrackingRectTag boundsTrackingTag;
 }
 
 - (void)update;
