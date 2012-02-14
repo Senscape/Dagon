@@ -87,8 +87,10 @@ void DGScript::init(int argc, char* argv[]) {
 		}
 	}
     
+    lua_getglobal(_L, "_G");
+    
     // Push all enum values
-    /*DGLuaEnum(_L, N, DGNorth);
+    DGLuaEnum(_L, N, DGNorth);
     DGLuaEnum(_L, E, DGEast);
     DGLuaEnum(_L, W, DGWest);
     DGLuaEnum(_L, S, DGSouth);
@@ -97,9 +99,7 @@ void DGScript::init(int argc, char* argv[]) {
     DGLuaEnum(_L, NE, DGNorthEast);
     DGLuaEnum(_L, SE, DGSouthEast);
     DGLuaEnum(_L, NW, DGNorthWest);
-    DGLuaEnum(_L, SW, DGSouthWest);*/
-    
-    luaL_dostring(_L, "NE = 5");
+    DGLuaEnum(_L, SW, DGSouthWest);
     
     // Register all proxys
     Luna<DGNodeProxy>::Register(_L);
