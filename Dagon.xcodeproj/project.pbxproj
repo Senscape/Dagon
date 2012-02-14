@@ -53,6 +53,7 @@
 		FB0F422014896D3C00BE880D /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		FB0F422414896E2300BE880D /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prefix.pch; path = "../Other Sources/Prefix.pch"; sourceTree = "<group>"; };
 		FB0F422514896E6D00BE880D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
+		FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSpotProxy.h; sourceTree = "<group>"; };
 		FB24727D148C054C00F7D1B6 /* Dagon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Dagon.entitlements; path = ../Resources/Dagon.entitlements; sourceTree = "<group>"; };
 		FB247286148C061F00F7D1B6 /* Dagon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Dagon.icns; sourceTree = "<group>"; };
 		FB24728C148C09F400F7D1B6 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = Libraries/libGLEW.a; sourceTree = "<group>"; };
@@ -185,6 +186,7 @@
 				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
 				E8E0194814E366B800173A2D /* DGProxy.h */,
 				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
+				FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */,
 				E8ECDFCC14E216B900A6BA8D /* DGScript.h */,
 				E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */,
 				FB26300A14D3491000EAD41A /* DGState.h */,

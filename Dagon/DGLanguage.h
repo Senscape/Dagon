@@ -84,6 +84,7 @@
 #define DGMsg250001 "Switch: Not an object"
 #define DGMsg250002 "Link: Table with coordinates expected to link node"
 #define DGMsg250003 "Error loading script file"
+#define DGMsg250004 "Table with coordinates expected to create spot"
 
 #endif
 
