@@ -46,7 +46,6 @@ public:
             }
             
             s = new DGSpot(arrayOfCoords, luaL_checknumber(L, 1), 0);
-            s->setLuaObject(luaL_ref(L, LUA_GLOBALSINDEX));
         }
         else luaL_error(L, DGMsg250004);
     }
@@ -118,7 +117,7 @@ public:
     DGSpot* ptr() { return s; }
     
 private:
-    DGSpot* s;    
+    DGSpot* s;  
 };
 
 ////////////////////////////////////////////////////////////

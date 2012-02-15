@@ -121,7 +121,6 @@ void DGScript::init(int argc, char* argv[]) {
     lua_newuserdata(_L, sizeof(void*));
     
     lua_pushvalue(_L, -1);
-    lua_ref(_L, LUA_REGISTRYINDEX);
 	
 	luaL_newmetatable(_L, "DGConfigLib");
 	luaL_register(_L, NULL, DGConfigLib);
@@ -150,10 +149,11 @@ void DGScript::init(int argc, char* argv[]) {
 }
 
 void DGScript::callback(int handler, int object) {
-    lua_rawgeti(_L, LUA_REGISTRYINDEX, handler);
-    
+    // Grab the reference to the Lua object and set it as 'self'
     lua_rawgeti(_L, LUA_REGISTRYINDEX, object);
     lua_setglobal(_L, "self");
+    
+    lua_rawgeti(_L, LUA_REGISTRYINDEX, handler);
     
     if (int result = lua_pcall(_L, 0, 0, 0))
         _error(result);
@@ -173,7 +173,7 @@ void DGScript::run() {
     if (_isInitialized) {
         if (int result = lua_pcall(_L, 0, 0, 0))
             _error(result);
-        
+
         // Check if we must start the main loop ourselves
         if (config->autorun)
             system->run();

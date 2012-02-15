@@ -76,6 +76,7 @@ class DGScript {
     bool _isInitialized;
     lua_State* _L;
     
+    int _ref;
     void _error(int result);
     static int _globalRoom(lua_State *L);
     static int _globalSwitch(lua_State *L);
