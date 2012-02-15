@@ -37,7 +37,7 @@ using namespace std;
 
 DGScript::DGScript() {
     log = &DGLog::getInstance();
-    config = &DGConfig::getInstance();
+    config = &DGConfig::getInstance();    
     system = &DGSystem::getInstance();
     
     _isInitialized = false;
@@ -90,16 +90,23 @@ void DGScript::init(int argc, char* argv[]) {
     lua_getglobal(_L, "_G");
     
     // Push all enum values
-    DGLuaEnum(_L, N, DGNorth);
-    DGLuaEnum(_L, E, DGEast);
-    DGLuaEnum(_L, W, DGWest);
-    DGLuaEnum(_L, S, DGSouth);
-    DGLuaEnum(_L, U, DGUp);
-    DGLuaEnum(_L, D, DGDown);
-    DGLuaEnum(_L, NE, DGNorthEast);
-    DGLuaEnum(_L, SE, DGSouthEast);
-    DGLuaEnum(_L, NW, DGNorthWest);
-    DGLuaEnum(_L, SW, DGSouthWest);
+    DGLuaEnum(_L, NORTH, DGNorth);
+    DGLuaEnum(_L, EAST, DGEast);
+    DGLuaEnum(_L, WEST, DGWest);
+    DGLuaEnum(_L, SOUTH, DGSouth);
+    DGLuaEnum(_L, UP, DGUp);
+    DGLuaEnum(_L, DOWN, DGDown);
+    DGLuaEnum(_L, NORTHEAST, DGNorthEast);
+    DGLuaEnum(_L, SOUTHEAST, DGSouthEast);
+    DGLuaEnum(_L, NORTHWEST, DGNorthWest);
+    DGLuaEnum(_L, SOUTHWEST, DGSouthWest);
+
+    DGLuaEnum(_L, AUDIO, DGObjectAudio);
+    DGLuaEnum(_L, CUSTOM, DGActionCustom);
+    DGLuaEnum(_L, IMAGE, DGObjectTexture);
+    DGLuaEnum(_L, FEEDBACK, DGActionFeedback);
+    DGLuaEnum(_L, SWITCH, DGActionSwitch);
+    DGLuaEnum(_L, VIDEO, DGObjectVideo);
     
     // Register all proxys
     Luna<DGNodeProxy>::Register(_L);
@@ -111,7 +118,7 @@ void DGScript::init(int argc, char* argv[]) {
     
     // The config lib requires a special treatment because
     // it exports properties, not methods
-    lua_newuserdata(_L, sizeof(void *));
+    lua_newuserdata(_L, sizeof(void*));
     
     lua_pushvalue(_L, -1);
     lua_ref(_L, LUA_REGISTRYINDEX);
@@ -142,6 +149,16 @@ void DGScript::init(int argc, char* argv[]) {
         log->error(DGModScript, "%s: %s", DGMsg250003, script);
 }
 
+void DGScript::callback(int handler, int object) {
+    lua_rawgeti(_L, LUA_REGISTRYINDEX, handler);
+    
+    lua_rawgeti(_L, LUA_REGISTRYINDEX, object);
+    lua_setglobal(_L, "self");
+    
+    if (int result = lua_pcall(_L, 0, 0, 0))
+        _error(result);
+}
+
 const char* DGScript::module() {
     return _arrayOfModuleNames.back().c_str();
 }
@@ -154,7 +171,8 @@ bool DGScript::isExecutingModule() {
 
 void DGScript::run() {
     if (_isInitialized) {
-        lua_pcall(_L, 0, 0, 0);
+        if (int result = lua_pcall(_L, 0, 0, 0))
+            _error(result);
         
         // Check if we must start the main loop ourselves
         if (config->autorun)
@@ -173,6 +191,23 @@ void DGScript::unsetModule() {
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
+
+void DGScript::_error(int result) {
+    switch (result) {
+        case LUA_ERRRUN:
+            log->error(DGModScript, "%s", DGMsg250007);
+            break;
+        case LUA_ERRMEM:
+            log->error(DGModScript, "%s", DGMsg250008);
+            break;
+        case LUA_ERRERR:
+            log->error(DGModScript, "%s", DGMsg250009);
+            break;
+    }
+    
+    // Now print the last Lua string in the stack, which should indicate the error
+    log->error(DGModScript, "%s", lua_tostring(_L, -1));
+}
 
 int DGScript::_globalRoom(lua_State *L) {
     // NOTE: This is a convenience Lua hack, which in theory is 100% safe.

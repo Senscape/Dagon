@@ -52,6 +52,10 @@ bool DGObject::isType(unsigned int typeToCheck) {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
+int DGObject::luaObject() {
+    return _luaObject;
+}
+
 const char* DGObject::name() {
     return _name.c_str();
 }
@@ -67,6 +71,10 @@ unsigned int DGObject::type() {
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
+
+void DGObject::setLuaObject(int object) {
+    _luaObject = object;
+}
 
 void DGObject::setName(const char* aName) {
     _name = aName;

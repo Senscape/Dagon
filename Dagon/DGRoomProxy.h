@@ -40,6 +40,7 @@ public:
         
         r = new DGRoom;
         r->setName(luaL_checkstring(L, 1));
+        r->setLuaObject(luaL_ref(L, LUA_GLOBALSINDEX));
         
         // Register the new room
         DGControl::getInstance().registerObject(r);

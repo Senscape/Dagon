@@ -30,20 +30,7 @@ extern "C" {
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// These are all strings we export to Lua to handle directions and types
-
-enum DGShortDirections {
-    N = DGNorth,
-    E = DGEast,
-    W = DGWest,
-    S = DGSouth,
-    U = DGUp,
-    D = DGDown,
-    NE = DGNorthEast,
-    SE = DGSouthEast,
-    NW = DGNorthWest,
-    SW = DGSouthWest
-};
+// These are all values we export to Lua to handle directions and types
 
 enum DGLongDirections {
     NORTH = DGNorth,
@@ -89,6 +76,7 @@ class DGScript {
     bool _isInitialized;
     lua_State* _L;
     
+    void _error(int result);
     static int _globalRoom(lua_State *L);
     static int _globalSwitch(lua_State *L);
     void _registerGlobals();
@@ -110,6 +98,7 @@ public:
     }
 
     void init(int argc, char* argv[]);
+    void callback(int handler, int object);
     const char* module();
     bool isExecutingModule();
     void run();

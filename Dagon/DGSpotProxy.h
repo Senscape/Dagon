@@ -46,33 +46,69 @@ public:
             }
             
             s = new DGSpot(arrayOfCoords, luaL_checknumber(L, 1), 0);
+            s->setLuaObject(luaL_ref(L, LUA_GLOBALSINDEX));
         }
         else luaL_error(L, DGMsg250004);
     }
     
     // TODO: In the future we should return a pointer to an attached object
     int attach(lua_State *L) {
+        DGAction action;
         int type = (int)luaL_checknumber(L, 1);
         
         switch (type) {
-            case 0:
-                if (lua_isfunction(L, 2)) {
-                    
+            case CUSTOM:
+                if (!lua_isfunction(L, 2)) {
+                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
                     return 0;
                 }
                 
-               /* ref = luaL_ref(L, LUA_REGISTRYINDEX);  // pop and return a reference to the table.
+                action.type = DGActionCustom;
+                action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
                 
-                action.type = DG_ACTION_CUSTOM;
-                action.custom_handler = ref;
+                s->setAction(&action);
+                if (!s->hasColor())
+                    s->setColor(0);
                 
-                DGSpotSetAction(checkobject(L, DG_OBJECT_SPOT, 1), &action);
-                if (!DGSpotHasColor(spot))
-                    DGSpotSetColor(spot, 0);*/
+                break;
+            case SWITCH:
+                int type = DGCheckProxy(L, 2);
+                if (type == DGObjectNode)
+                    action.target = DGProxyToNode(L, 2);
+                else if (type == DGObjectRoom)
+                    action.target = DGProxyToRoom(L, 2);
+                else {
+                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250005);
+                    return 0;
+                }
+                
+                action.type = DGActionSwitch;
+                
+                s->setAction(&action);
+                if (!s->hasColor())
+                    s->setColor(0);
                 
                 break;
         }
 
+        return 0;
+    }
+    
+    // Disable the spot
+    int disable(lua_State *L) {
+        s->disable();
+        return 0;
+    }
+
+    // Enable the spot
+    int enable(lua_State *L) {
+        s->enable();
+        return 0;
+    }
+
+    // Toggle enabled/disabled state
+    int toggle(lua_State *L) {
+        s->toggle();
         return 0;
     }
     
@@ -93,6 +129,9 @@ const char DGSpotProxy::className[] = DGSpotProxyName;
 
 Luna<DGSpotProxy>::RegType DGSpotProxy::methods[] = {
     method(DGSpotProxy, attach),
+    method(DGSpotProxy, disable),    
+    method(DGSpotProxy, enable),
+    method(DGSpotProxy, toggle),   
     {0,0}
 };
 
