@@ -43,7 +43,8 @@ enum DGObjectTypes {
 class DGObject {
     unsigned int _id;
     unsigned int _type;
-    std::string _name;    
+    std::string _name;
+    int _luaObject;
     int _retainCount;
     
 public:
@@ -56,12 +57,14 @@ public:
     
     // Gets
     
+    int luaObject();
     const char* name();
     int retainCount();
     unsigned int type();
     
     // Sets
     
+    void setLuaObject(int object);
     void setType(unsigned int type);
     void setName(const char* aName);
     

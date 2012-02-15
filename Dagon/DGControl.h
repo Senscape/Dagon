@@ -31,6 +31,7 @@ class DGLog;
 class DGNode;
 class DGRoom;
 class DGRender;
+class DGScript;
 class DGState;
 class DGSystem;
 class DGTextureManager;
@@ -94,6 +95,7 @@ typedef struct {
 class DGControl {
     DGConfig* config;
     DGLog* log;
+    DGScript* script;
     DGSystem* system;
     
     std::vector<DGRoom*> _arrayOfRooms;

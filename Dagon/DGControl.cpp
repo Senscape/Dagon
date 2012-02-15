@@ -21,6 +21,7 @@
 #include "DGNode.h"
 #include "DGRender.h"
 #include "DGRoom.h"
+#include "DGScript.h"
 #include "DGSpot.h"
 #include "DGState.h"
 #include "DGSystem.h"
@@ -35,6 +36,7 @@ using namespace std;
 DGControl::DGControl() {
     log = &DGLog::getInstance();
     config = &DGConfig::getInstance();
+    script = &DGScript::getInstance();
     system = &DGSystem::getInstance();
     
     _feedbackData.queued = false;
@@ -164,6 +166,9 @@ void DGControl::processMouse(int xPosition, int yPosition, bool isButtonPressed)
                 DGAction* action = spot->action();
                 
                 switch (action->type) {
+                    case DGActionCustom:
+                        script->callback(action->luaHandler, spot->luaObject());
+                        break;
                     case DGActionSwitch:
                         // As a precaution, we reset the onSpot flag
                         _mouseData.onSpot = false;
@@ -422,7 +427,7 @@ void DGControl::_scanSpots() {
         do {
             DGSpot* spot = currentNode->currentSpot();
             
-            if (spot->hasColor()) {
+            if (spot->hasColor() && spot->isEnabled()) {
                 _render->setColor(spot->color());
                 _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
             }
@@ -451,7 +456,7 @@ void DGControl::_updateScene() {
         do {
             DGSpot* spot = currentNode->currentSpot();
             
-            if (spot->hasTexture()) {
+            if (spot->hasTexture() && spot->isEnabled()) {
                 spot->texture()->bind();
                 _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
             }

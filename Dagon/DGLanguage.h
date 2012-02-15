@@ -85,6 +85,11 @@
 #define DGMsg250002 "Link: Table with coordinates expected to link node"
 #define DGMsg250003 "Error loading script file"
 #define DGMsg250004 "Table with coordinates expected to create spot"
+#define DGMsg250005 "Attach: Cannot switch to object"
+#define DGMsg250006 "Attach: Expected function as second parameter"
+#define DGMsg250007 "Runtime error"
+#define DGMsg250008 "Memory allocation error"
+#define DGMsg250009 "Error while executing callback"
 
 #endif
 

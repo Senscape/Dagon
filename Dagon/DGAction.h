@@ -26,17 +26,18 @@
 class DGAudio;
 class DGObject;
 
+// Enum begins at 100 to avoid conflicts with objects
 enum DGActionTypes {
-	DGActionCustom,
+	DGActionCustom = 100,
 	DGActionFeedback,
 	DGActionSwitch
 };
 
 typedef struct {
 	unsigned int type;
-	int luaHandler;
     std::string feedback;
-	DGAudio* feedbackAudio;
+    DGAudio* feedbackAudio;
+    int luaHandler;
 	DGObject* target;
 } DGAction;
 
