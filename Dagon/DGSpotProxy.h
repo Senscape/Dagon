@@ -23,6 +23,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGSpot.h"
+#include "DGTexture.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -46,7 +47,6 @@ public:
             }
             
             s = new DGSpot(arrayOfCoords, luaL_checknumber(L, 1), 0);
-            s->setLuaObject(luaL_ref(L, LUA_GLOBALSINDEX));
         }
         else luaL_error(L, DGMsg250004);
     }
@@ -54,9 +54,28 @@ public:
     // TODO: In the future we should return a pointer to an attached object
     int attach(lua_State *L) {
         DGAction action;
+        DGTexture* texture;
+        
         int type = (int)luaL_checknumber(L, 1);
         
         switch (type) {
+            case IMAGE:
+                // FIXME: This texture isn't managed. We should be able to communicate with the
+                // texture manager, register this texture, and parse its path if necessary, OR
+                // use the DGControl register method.
+                
+                // TODO: Decide here if we have an extension and therefore set the name or the
+                // resource of the texture.
+                
+                texture = new DGTexture;
+                texture->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2)));
+                
+                // If we have a third parameter, use it to set the index inside a bundle
+                if (lua_isnumber(L, 3))
+                    texture->setIndexInBundle(lua_tonumber(L, 3));
+                
+                s->setTexture(texture);
+                break;
             case CUSTOM:
                 if (!lua_isfunction(L, 2)) {
                     DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
@@ -118,7 +137,7 @@ public:
     DGSpot* ptr() { return s; }
     
 private:
-    DGSpot* s;    
+    DGSpot* s;  
 };
 
 ////////////////////////////////////////////////////////////
