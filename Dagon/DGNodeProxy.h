@@ -52,7 +52,7 @@ public:
     static Luna<DGNodeProxy>::RegType methods[];
     
     // Constructor
-    DGNodeProxy(lua_State *L) { 
+    DGNodeProxy(lua_State *L) {
         n = new DGNode;
         n->setBundleName(luaL_checkstring(L, 1));
         
@@ -60,8 +60,6 @@ public:
             n->setName(luaL_checkstring(L, 2));
         else
             n->setName(luaL_checkstring(L, 1));
-        
-        n->setLuaObject(luaL_ref(L, LUA_GLOBALSINDEX));
         
         // Register the node in the controller (generates the bundle)
         DGControl::getInstance().registerObject(n);
@@ -148,7 +146,7 @@ public:
     DGNode* ptr() { return n; }
     
 private:
-    DGNode* n;    
+    DGNode* n;
 };
 
 ////////////////////////////////////////////////////////////

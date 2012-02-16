@@ -94,6 +94,14 @@ private:
         ud->pT = obj;  // store pointer to object in userdata
         luaL_getmetatable(L, T::className);  // lookup metatable in Lua registry
         lua_setmetatable(L, -2);
+        
+        // This is our modification to the Luna template. We grab a reference to the newly
+        // created object and store it in our internal Dagon object, so that it's later set
+        // as the "self" global when executing callbacks.
+        int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+        obj->ptr()->setLuaObject(ref);
+        lua_rawgeti(L, LUA_REGISTRYINDEX, ref); // Leave everything as it was
+        
         return 1;  // userdata containing pointer to T object
     }
     
@@ -109,7 +117,9 @@ private:
         char buff[32];
         userdataType *ud = static_cast<userdataType*>(lua_touserdata(L, 1));
         T *obj = ud->pT;
-        sprintf(buff, "%p", obj);
+        // Another modification: print the name of the Dagon object instead
+        // of its pointer
+        sprintf(buff, "%s", obj->ptr()->name());
         lua_pushfstring(L, "%s (%s)", T::className, buff);
         return 1;
     }
