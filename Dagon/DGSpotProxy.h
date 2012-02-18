@@ -125,6 +125,30 @@ public:
         return 0;
     }
 
+    // Check if enabled
+    int isEnabled(lua_State *L) {
+        lua_pushboolean(L, s->isEnabled());
+        return 1;
+    }
+    
+    // Check if playing
+    int isPlaying(lua_State *L) {
+        lua_pushboolean(L, s->isPlaying());
+        return 1;
+    }    
+    
+    // Play the spot
+    int play(lua_State *L) {
+        s->play();
+        return 0;
+    }
+    
+    // Stop the spot
+    int stop(lua_State *L) {
+        s->stop();
+        return 0;
+    }
+
     // Toggle enabled/disabled state
     int toggle(lua_State *L) {
         s->toggle();
@@ -150,6 +174,10 @@ Luna<DGSpotProxy>::RegType DGSpotProxy::methods[] = {
     method(DGSpotProxy, attach),
     method(DGSpotProxy, disable),    
     method(DGSpotProxy, enable),
+    method(DGSpotProxy, isEnabled),
+    method(DGSpotProxy, isPlaying),    
+    method(DGSpotProxy, play),
+    method(DGSpotProxy, stop),
     method(DGSpotProxy, toggle),   
     {0,0}
 };
