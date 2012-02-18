@@ -43,22 +43,22 @@ static int DGConfigLibGet(lua_State *L) {
 		return 1;
 	}
 	
-	if (strcmp(key, "display_width") == 0) {
+	if (strcmp(key, "displayWidth") == 0) {
 		lua_pushnumber(L, DGConfig::getInstance().displayWidth);
 		return 1;
 	}
 	
-	if (strcmp(key, "display_height") == 0) {
+	if (strcmp(key, "displayHeight") == 0) {
 		lua_pushnumber(L, DGConfig::getInstance().displayHeight);
 		return 1;
 	}
 	
-	if (strcmp(key, "display_depth") == 0) {
+	if (strcmp(key, "displayDepth") == 0) {
 		lua_pushnumber(L, DGConfig::getInstance().displayDepth);
 		return 1;
 	}
 	
-	if (strcmp(key, "debug_mode") == 0) {
+	if (strcmp(key, "debugMode") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().debugMode);
 		return 1;
 	}
@@ -88,27 +88,27 @@ static int DGConfigLibGet(lua_State *L) {
 		return 1;
 	}
 	
-	if (strcmp(key, "show_splash") == 0) {
+	if (strcmp(key, "showSplash") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().showSplash);
 		return 1;
 	}
 	
-	if (strcmp(key, "show_spots") == 0) {
+	if (strcmp(key, "showSpots") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().showSpots);
 		return 1;
 	}
 	
-	if (strcmp(key, "tex_compression") == 0) {
+	if (strcmp(key, "texCompression") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().texCompression);
 		return 1;
 	}
     
-	if (strcmp(key, "tex_extension") == 0) {
+	if (strcmp(key, "texExtension") == 0) {
 		lua_pushstring(L, DGConfig::getInstance().texExtension());
 		return 1;
 	}
 
-	if (strcmp(key, "vertical_sync") == 0) {
+	if (strcmp(key, "verticalSync") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().verticalSync);
 		return 1;
 	}
@@ -125,16 +125,16 @@ static int DGConfigLibSet(lua_State *L) {
     if (strcmp(key, "autorun") == 0)
 		DGConfig::getInstance().antialiasing = (bool)lua_toboolean(L, 3);
 	
-	if (strcmp(key, "display_width") == 0)
+	if (strcmp(key, "displayWidth") == 0)
 		DGConfig::getInstance().displayWidth = (int)luaL_checknumber(L, 3);
 	
-	if (strcmp(key, "display_height") == 0)
+	if (strcmp(key, "displayHeight") == 0)
 		DGConfig::getInstance().displayHeight = (int)luaL_checknumber(L, 3);
 	
-	if (strcmp(key, "display_depth") == 0)
+	if (strcmp(key, "displayDepth") == 0)
 		DGConfig::getInstance().displayDepth = (int)luaL_checknumber(L, 3);
 	
-	if (strcmp(key, "debug_mode") == 0)
+	if (strcmp(key, "debugMode") == 0)
 		DGConfig::getInstance().debugMode = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "effects") == 0)
@@ -152,19 +152,19 @@ static int DGConfigLibSet(lua_State *L) {
     if (strcmp(key, "script") == 0)
         DGConfig::getInstance().setScript(luaL_checkstring(L, 3));
 	
-	if (strcmp(key, "show_splash") == 0)
+	if (strcmp(key, "showSplash") == 0)
 		DGConfig::getInstance().showSplash = (bool)lua_toboolean(L, 3);
 	
-	if (strcmp(key, "show_spots") == 0)
+	if (strcmp(key, "showSpots") == 0)
 		DGConfig::getInstance().showSpots = (bool)lua_toboolean(L, 3);
 	
-	if (strcmp(key, "tex_compression") == 0)
+	if (strcmp(key, "texCompression") == 0)
 		DGConfig::getInstance().texCompression = (bool)lua_toboolean(L, 3);
 	
-	if (strcmp(key, "tex_extension") == 0)
+	if (strcmp(key, "texExtension") == 0)
         DGConfig::getInstance().setTexExtension(luaL_checkstring(L, 3));
     
-	if (strcmp(key, "vertical_sync") == 0)
+	if (strcmp(key, "verticalSync") == 0)
 		DGConfig::getInstance().verticalSync = (bool)lua_toboolean(L, 3);
 	
 	return 0;
