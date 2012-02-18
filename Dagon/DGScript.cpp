@@ -223,7 +223,6 @@ int DGScript::_globalRoom(lua_State *L) {
         char line[DGMaxLogLength], script[DGMaxFileLength];
         
         // Parse line to automatically create the room
-        // TODO: Decide later if we should enforce the user to manually create the room
         snprintf(line, DGMaxLogLength, "%s = Room(\"%s\")", module, module);
         luaL_dostring(L, line);
         

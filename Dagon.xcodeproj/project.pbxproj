@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E8CF666B14EFE7B100B4562B /* DGFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666914EFE7B100B4562B /* DGFont.cpp */; };
+		E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666D14EFE7F100B4562B /* DGFontData.c */; };
 		E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */; };
 		FB0F421B14896D0A00BE880D /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421A14896D0A00BE880D /* Credits.rtf */; };
 		FB0F421E14896D3600BE880D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421C14896D3600BE880D /* MainMenu.xib */; };
@@ -42,6 +44,9 @@
 
 /* Begin PBXFileReference section */
 		E817433514E6030A002CF502 /* DGConfigLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGConfigLib.h; sourceTree = "<group>"; };
+		E8CF666914EFE7B100B4562B /* DGFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGFont.cpp; sourceTree = "<group>"; };
+		E8CF666A14EFE7B100B4562B /* DGFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGFont.h; sourceTree = "<group>"; };
+		E8CF666D14EFE7F100B4562B /* DGFontData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGFontData.c; sourceTree = "<group>"; };
 		E8E0194714E366B800173A2D /* DGNodeProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGNodeProxy.h; sourceTree = "<group>"; };
 		E8E0194814E366B800173A2D /* DGProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGProxy.h; sourceTree = "<group>"; };
 		E8E0194914E366B800173A2D /* DGRoomProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRoomProxy.h; sourceTree = "<group>"; };
@@ -163,6 +168,8 @@
 				FB279DB014AB81F8002D48FC /* DGAction.h */,
 				FB279DB914AE1555002D48FC /* DGAudio.h */,
 				FB279DB714AE14AF002D48FC /* DGAudio.cpp */,
+				E8CF666A14EFE7B100B4562B /* DGFont.h */,
+				E8CF666914EFE7B100B4562B /* DGFont.cpp */,
 				FB279DB314ACD230002D48FC /* DGNode.h */,
 				FB279DB114ACD223002D48FC /* DGNode.cpp */,
 				FB279DAA14AA8CF1002D48FC /* DGObject.h */,
@@ -304,6 +311,7 @@
 		FBDF7B71148C69E4003A96B3 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				E8CF666D14EFE7F100B4562B /* DGFontData.c */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -409,6 +417,8 @@
 				FBA2C78114DC654B0098E334 /* DGControl.cpp in Sources */,
 				FBA2C78814DD801A0098E334 /* DGCamera.cpp in Sources */,
 				E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */,
+				E8CF666B14EFE7B100B4562B /* DGFont.cpp in Sources */,
+				E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
