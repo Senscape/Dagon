@@ -75,6 +75,10 @@
 	[super dealloc];
 }
 
+- (BOOL) isFlipped {
+    return YES;
+}
+
 - (void)keyDown:(NSEvent *)theEvent {
     int keyCode;
     
@@ -118,9 +122,7 @@
         control->processMouse(mouseLoc.x, mouseLoc.y, false);
 }
 
-- (void)update {
-    control->update();
-    
+- (void)update {    
 	[glContext flushBuffer];
 }
 
@@ -144,7 +146,8 @@
     
     // TODO: Ensure this is thread-safe
     // (It probably is but everything is being drawn twice!)
-    [self update];
+    control->updateView();
+    
     [super viewWillDraw];
 } 
 

@@ -28,6 +28,7 @@
  *  30 - Control
  *  40 - System
  *  50 - Script
+ *  60 - Font
  *
  */
 
@@ -62,7 +63,6 @@
 #define DGMsg230001 "No current room specified"
 
 // System module
-
 #define DGMsg040000 "Initializing system..."
 #define DGMsg040001 "System ready!"
 #define DGMsg140002 "System already initialized"
@@ -72,24 +72,31 @@
 #define DGMsg240006 "Could not exit fullscreen"
 
 // Funny messages when shutting down
-
 #define DGMsg040100 "Shutdown complete"
 #define DGMsg040101 "GAME OVER"
 #define DGMsg040102 "You'll be back..."
 #define DGMsg040103 "I'm afraid, Dave"
 
 // Script module
-
 #define DGMsg250000 "Switch: Not a room or node"
 #define DGMsg250001 "Switch: Not an object"
-#define DGMsg250002 "Link: Table with coordinates expected to link node"
+#define DGMsg250002 "Table with coordinates expected to link node"
 #define DGMsg250003 "Error loading script file"
 #define DGMsg250004 "Table with coordinates expected to create spot"
-#define DGMsg250005 "Attach: Cannot switch to object"
-#define DGMsg250006 "Attach: Expected function as second parameter"
+#define DGMsg250005 "Cannot switch to object"
+#define DGMsg250006 "Expected function as second parameter"
 #define DGMsg250007 "Runtime error"
 #define DGMsg250008 "Memory allocation error"
 #define DGMsg250009 "Error while executing callback"
+
+// Font module
+#define DGMsg060000 "Initializing font manager..."
+#define DGMsg060001 "Freetype version"
+#define DGMsg260002 "Failed to initialize font library"
+#define DGMsg260003 "Requested font is corrupt"
+#define DGMsg260004 "Default font is corrupt"
+#define DGMsg260005 "Error loading glyph"
+#define DGMsg260006 "Error getting glyph"
 
 #endif
 

@@ -149,9 +149,11 @@ void DGScript::init(int argc, char* argv[]) {
 }
 
 void DGScript::callback(int handler, int object) {
-    // Grab the reference to the Lua object and set it as 'self'
-    lua_rawgeti(_L, LUA_REGISTRYINDEX, object);
-    lua_setglobal(_L, "self");
+    if (object) {
+        // Grab the reference to the Lua object and set it as 'self'
+        lua_rawgeti(_L, LUA_REGISTRYINDEX, object);
+        lua_setglobal(_L, "self");
+    }
     
     lua_rawgeti(_L, LUA_REGISTRYINDEX, handler);
     
@@ -262,10 +264,26 @@ int DGScript::_globalSwitch(lua_State *L) {
 	return 0;
 }
 
+int DGScript::_globalTimer(lua_State *L) {
+	if (!lua_isfunction(L, -1)) {
+		DGLog::getInstance().trace(DGModScript, "%s", DGMsg250006);
+        
+		return 0;
+	}
+	
+	int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
+	int handle = DGControl::getInstance().registerTimer(luaL_checknumber(L, 1), ref);
+    
+    lua_pushnumber(L, handle);
+	
+	return 1;
+}
+
 void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
         {"room", _globalRoom},
         {"switch", _globalSwitch},
+        {"timer", _globalTimer},
         {NULL, NULL}
     };
     

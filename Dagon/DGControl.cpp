@@ -17,6 +17,7 @@
 #include "DGCamera.h"
 #include "DGConfig.h"
 #include "DGControl.h"
+#include "DGFont.h"
 #include "DGLog.h"
 #include "DGNode.h"
 #include "DGRender.h"
@@ -26,6 +27,7 @@
 #include "DGState.h"
 #include "DGSystem.h"
 #include "DGTextureManager.h"
+#include "DGTimer.h"
 
 using namespace std;
 
@@ -38,14 +40,15 @@ DGControl::DGControl() {
     config = &DGConfig::getInstance();
     script = &DGScript::getInstance();
     system = &DGSystem::getInstance();
-    
-    _feedbackData.queued = false;
 	
 	_mouseData.x = config->displayWidth / 2;
 	_mouseData.y = config->displayHeight / 2;
 	_mouseData.onSpot = false;
     
     _currentRoom = NULL;
+    
+    _fpsCount = 0;
+    _fpsLastCount = 0;
     
     _isInitialized = false;
     
@@ -67,6 +70,7 @@ DGControl::~DGControl() {
         delete _render;
         delete _state;
         delete _textureManager;
+        delete _timer;
     }
 }
 
@@ -87,8 +91,14 @@ void DGControl::init() {
     _camera = new DGCamera;
     _camera->setViewport(config->displayWidth, config->displayHeight);
     
+    // Load the default font with a small height
+    _defaultFont = new DGFont;
+    _defaultFont->init();
+    _defaultFont->setDefault(DGDefFontSize);
+    
     _state = new DGState;
     _textureManager = new DGTextureManager;
+    _timer = new DGTimer;
     
     _canDrawSpots = false;
     _isInitialized = true;
@@ -152,7 +162,7 @@ void DGControl::processKey(int aKey, bool isModified) {
     }
 }
 
-void DGControl::processMouse(int xPosition, int yPosition, bool isButtonPressed) {
+void DGControl::processMouse(int x, int y, bool isButtonPressed) {
     if (isButtonPressed && _mouseData.onSpot) {
         // We can safely assume that all data is in place now,
         // so we execute the action
@@ -181,8 +191,8 @@ void DGControl::processMouse(int xPosition, int yPosition, bool isButtonPressed)
         } while (currentNode->iterateSpots());
     }
     
-    _mouseData.x = xPosition;
-    _mouseData.y = yPosition;
+    _mouseData.x = x;
+    _mouseData.y = y;
     _camera->pan(_mouseData.x, _mouseData.y);
 }
 
@@ -259,48 +269,15 @@ void DGControl::registerObject(DGObject* theTarget) {
     }
 }
 
+int DGControl::registerTimer(double trigger, int handlerForLua) {
+    return _timer->create(trigger, handlerForLua);
+}
+
 void DGControl::reshape(int width, int height) {
     config->displayWidth = width;
     config->displayHeight = height;
     
     _camera->setViewport(width, height);
-}
-
-void DGControl::showFeedback(const char* feedback) {
-    const int margin = 10;
-	const int size = 10;
-	const int max_chars = config->displayWidth / size;
-	
-	int len = (int)strlen(feedback);
-	strncpy(_feedbackData.buffer, feedback, DGMaxFeedback);
-	
-	if (len > max_chars) {
-		char* p = _feedbackData.buffer;
-		int split = len / max_chars;
-		int even = len / (split + 1);
-		
-		int c, s;
-		for (s = 0; s < split; s++) {
-			for (c = 0; c < even; c++)
-				p++;
-			
-			while (*p != ' ')
-				p++;
-			
-			*p = '\n';
-		}
-		
-		_feedbackData.x = (config->displayWidth / 2) - ((even / 2) * size) + margin;
-		_feedbackData.y = config->displayHeight - ((split + 1) * size) - margin;
-	}
-	else {
-		_feedbackData.x = (config->displayWidth / 2) - ((len / 2) * size) + margin;
-		_feedbackData.y = config->displayHeight - size - margin;
-	}
-	
-	_feedbackData.queued = true;
-	_feedbackData.timer = (float)(len * 5); // Should be configurable
-	_feedbackData.color = DGColorWhite;
 }
 
 void DGControl::sleep(int forMilliseconds) {
@@ -382,21 +359,33 @@ void DGControl::takeSnapshot() {
 }
 
 void DGControl::update() {
+    _timer->update();
+    
+    if (config->debugMode) {
+        // Store the last FPS count and reset
+        _fpsLastCount = _fpsCount;
+        _fpsCount = 0;
+    }
+}
+
+void DGControl::updateView() {
     // Suspend all operations when doing a switch
     
     // Setup the scene
     _render->clearScene();
     
+    // Do this in a viewtimer
     switch (_state->current()) {
         case DGStateNode:
             // This is the first method we call because it sets the view
             _camera->update();
             
             // Drawing the node is handled by a separate function
-            _updateScene();
+            _drawScene();
             
             // We now proceed with all the orthogonal projections
             _camera->beginOrthoView();
+                
             _render->beginDrawing(false);
             if (_mouseData.onSpot)
                 _render->setColor(DGColorBrightRed);
@@ -404,44 +393,36 @@ void DGControl::update() {
                 _render->setColor(DGColorDarkGray);
             _render->drawCursor(_mouseData.x, _mouseData.y);
             _render->endDrawing();
+            
+            if (config->debugMode) {
+                // Set the color used for information
+                _render->setColor(DGColorBrightCyan);
+                _defaultFont->print(DGInfoMarginLeft, DGInfoMarginUp, 
+                                    "Viewport size: %d x %d", config->displayWidth, config->displayHeight);                
+                _defaultFont->print(DGInfoMarginLeft, (DGInfoMarginUp * 2) + DGDefFontSize, 
+                                    "Coordinates: (%d, %d)", _mouseData.x, _mouseData.y);
+                _defaultFont->print(DGInfoMarginLeft, (DGInfoMarginUp * 3) + (DGDefFontSize * 2), 
+                                    "Viewing angle: %2.1f", _camera->fieldOfView());
+                _defaultFont->print(DGInfoMarginLeft, (DGInfoMarginUp * 4) + (DGDefFontSize * 3), 
+                                    "FPS: %d", _fpsLastCount);                
+            }
+            
             _camera->endOrthoView();
             
             break;
     }
+    
+    // Flush the buffers
+    system->update();
+    
+    _fpsCount++;
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-void DGControl::_scanSpots() {
-    // TODO: To make this function more efficient, we should
-    // stop drawing once a spot has been detected
-    
-    if (_canDrawSpots) {
-        DGNode* currentNode = _currentRoom->currentNode();
-        
-        _render->beginDrawing(false);
-    
-        currentNode->beginIteratingSpots();
-        do {
-            DGSpot* spot = currentNode->currentSpot();
-            
-            if (spot->hasColor() && spot->isEnabled()) {
-                _render->setColor(spot->color());
-                _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
-            }
-        } while (currentNode->iterateSpots());
-        
-        if ((_mouseData.color = _render->testColor(_mouseData.x, _mouseData.y)))
-            _mouseData.onSpot = true;
-        else _mouseData.onSpot = false;
-    
-        _render->endDrawing();
-    }
-}
-
-void DGControl::_updateScene() {
+void DGControl::_drawScene() {
     // IMPORTANT: Ensure this function is thread-safe when
     // switching rooms or nodes
     
@@ -468,4 +449,31 @@ void DGControl::_updateScene() {
     // FIXME: This should go between begin and endOrthoView calls because
     // the blending texture is drawn here
     _render->updateScene();
+}
+
+void DGControl::_scanSpots() {
+    // TODO: To make this function more efficient, we should
+    // stop drawing once a spot has been detected
+    
+    if (_canDrawSpots) {
+        DGNode* currentNode = _currentRoom->currentNode();
+        
+        _render->beginDrawing(false);
+    
+        currentNode->beginIteratingSpots();
+        do {
+            DGSpot* spot = currentNode->currentSpot();
+            
+            if (spot->hasColor() && spot->isEnabled()) {
+                _render->setColor(spot->color());
+                _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+            }
+        } while (currentNode->iterateSpots());
+        
+        if ((_mouseData.color = _render->testColor(_mouseData.x, _mouseData.y)))
+            _mouseData.onSpot = true;
+        else _mouseData.onSpot = false;
+    
+        _render->endDrawing();
+    }
 }

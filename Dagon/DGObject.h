@@ -28,6 +28,7 @@ enum DGObjectTypes {
     DGObjectNone = 0,
 	DGObjectGeneric,
 	DGObjectAudio,
+	DGObjectFont,    
 	DGObjectNode,
 	DGObjectRoom,
     DGObjectSlide,

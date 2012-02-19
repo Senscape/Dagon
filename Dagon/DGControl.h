@@ -18,15 +18,20 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGPlatform.h"
+#include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
+#define DGDefFontSize 10
+#define DGInfoMarginLeft 5
+#define DGInfoMarginUp 5
 #define DGMaxHotKeys 12
 
 class DGCamera;
 class DGConfig;
+class DGFont;
 class DGLog;
 class DGNode;
 class DGRoom;
@@ -35,6 +40,7 @@ class DGScript;
 class DGState;
 class DGSystem;
 class DGTextureManager;
+class DGTimer;
 
 enum DGEvents {
 	DGEventEnterNode = 1,
@@ -67,15 +73,6 @@ typedef struct {
 } DGEventsLuaFunctions;
 
 typedef struct {
-	int x;
-	int y;
-	bool queued;
-	uint32_t color;
-	float timer;
-	char buffer[DGMaxFeedback];
-} DGFeedbackData;
-
-typedef struct {
 	bool enabled;
 	int value;
 	char line[DGMaxLogLength];
@@ -102,21 +99,25 @@ class DGControl {
     DGRoom* _currentRoom;
     
     DGCamera* _camera;
+    DGFont* _defaultFont;
     DGRender* _render;
     DGState* _state;
     DGTextureManager* _textureManager;
+    DGTimer* _timer;
     
     DGEventsLuaFunctions _eventsLuaFunctions;
-    DGFeedbackData _feedbackData;
     DGHotKeyData _hotKeyData[DGMaxHotKeys];
     DGMouseData _mouseData;
     
     // This boolean helps to simplify our lengthy update cycle
     bool _canDrawSpots;
+    int _feedbackTimer;
+    int _fpsCount;
+    int _fpsLastCount;
     bool _isInitialized;
     
+    void _drawScene();
     void _scanSpots();
-    void _updateScene();
     
     // Private constructor/destructor
     DGControl();
@@ -138,19 +139,20 @@ public:
     DGNode* currentNode();
     DGRoom* currentRoom();
     void processKey(int aKey, bool isModified);
-    void processMouse(int xPosition, int yPosition, bool isButtonPressed);
+    void processMouse(int x, int y, bool isButtonPressed);
     void registerGlobalHandler(int forEvent, int handlerForLua);
     void registerHotKey(int aKey, const char* luaCommandToExecute);
     void registerObject(DGObject* theTarget);
+    int registerTimer(double trigger, int handlerForLua);    
     void reshape(int width, int height);
-    void showFeedback(const char* feedback);
     void sleep(int forMilliseconds);
     // TODO: Add an explicit switchToNode() method
     void switchTo(DGObject* theTarget); 
     void takeSnapshot();
     
-    // This method is called asynchronously
+    // These methods are called asynchronously
     void update();
+    void updateView();
 };
 
 #endif // DG_CONTROL_H
