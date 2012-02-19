@@ -32,6 +32,8 @@ char TEXIdent[] = "KS_TEX"; // Tex files identifier
 ////////////////////////////////////////////////////////////
 
 DGTexture::DGTexture() {
+    this->setType(DGObjectTexture);
+    
     config = &DGConfig::getInstance();
     log = &DGLog::getInstance();
 
@@ -44,6 +46,8 @@ DGTexture::DGTexture() {
 
 DGTexture::DGTexture(int width, int height, int depth) {
     int comp;
+    
+    this->setType(DGObjectTexture);
     
     config = &DGConfig::getInstance();
     log = &DGLog::getInstance();

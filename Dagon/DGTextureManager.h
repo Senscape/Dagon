@@ -10,8 +10,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_TEXTURE_MANAGER_H
-#define DG_TEXTURE_MANAGER_H
+#ifndef DG_TEXTUREMANAGER_H
+#define DG_TEXTUREMANAGER_H
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -57,4 +57,4 @@ public:
     void requireTextureToLoad(DGTexture* target);
 };
 
-#endif // DG_TEXTURE_MANAGER_H
+#endif // DG_TEXTUREMANAGER_H
