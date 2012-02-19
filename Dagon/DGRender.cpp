@@ -76,8 +76,7 @@ void DGRender::drawCursor(int xPosition, int yPosition) {
 
     // TODO: Test later if push & pop is necessary at this point
 	glPushMatrix();
-	glTranslatef(xPosition - (_defCursor[((DGDefCursorDetail * 2) + 2) / 2] / 2), 
-				 yPosition - (_defCursor[((DGDefCursorDetail * 2) + 2) / 2] / 2), 0);
+	glTranslatef(xPosition, yPosition, 0);
     
 	glVertexPointer(2, GL_FLOAT, 0, _defCursor);
 	glBlendFunc(GL_ONE, GL_ZERO);
@@ -202,7 +201,7 @@ void DGRender::init() {
 	const GLubyte* version = glGetString(GL_VERSION);
 
 	log->trace(DGModRender, "%s", DGMsg020000);
-	log->trace(DGModRender, "%s: %s", DGMsg020001, version);
+	log->info(DGModRender, "%s: %s", DGMsg020001, version);
     
 	glewInit();
     
@@ -259,7 +258,8 @@ int	DGRender::testColor(int xPosition, int yPosition) {
 	GLint r, g, b;
 	uint32_t aux;
     
-	glReadPixels(xPosition, yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+    // Note we flip the Y coordinate here because only the orthogonal projection is flipped
+	glReadPixels(xPosition, config->displayHeight - yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
     
 	r = (GLint)pixel[0];
 	g = (GLint)pixel[1];
