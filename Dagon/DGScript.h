@@ -80,6 +80,7 @@ class DGScript {
     void _error(int result);
     static int _globalRoom(lua_State *L);
     static int _globalSwitch(lua_State *L);
+    static int _globalTimer(lua_State *L);    
     void _registerGlobals();
     
     // Private constructor/destructor

@@ -80,11 +80,11 @@ void DGCamera::pan(int xPosition, int yPosition) {
 	
 	if (yPosition > _panRegion.size.height) {
 		_deltaY = abs(yPosition - _panRegion.size.height);
-        _panDirV = DGCamPanUp;
+        _panDirV = DGCamPanDown;
 	}
 	else if (yPosition < _panRegion.origin.y) {
 		_deltaY = abs(yPosition - _panRegion.origin.y);
-        _panDirV = DGCamPanDown;
+        _panDirV = DGCamPanUp;
 	}
 	else {
         _deltaY = 0;
@@ -101,7 +101,7 @@ void DGCamera::beginOrthoView() {
     glLoadIdentity();
     
     // Now we prepare our orthogonal projection
-    glOrtho(0, _viewport.width, 0, _viewport.height, -1, 1);
+    glOrtho(0, _viewport.width, _viewport.height, 0, -1, 1);
     glMatrixMode(GL_MODELVIEW);
     
     // Note that transformations have been applied to the GL_MODELVIEW
@@ -153,7 +153,7 @@ void DGCamera::setViewport(int width, int height) {
     setNeutralZone(_neutralZone);
     
     glViewport(0, 0, (GLint)_viewport.width, (GLint)_viewport.height);
-    
+
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     

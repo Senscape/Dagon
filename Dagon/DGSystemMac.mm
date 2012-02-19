@@ -31,6 +31,7 @@ NSWindow* window;
 DGViewDelegate* view;
 
 dispatch_source_t _mainTimer;
+dispatch_source_t _viewTimer;
 dispatch_source_t CreateDispatchTimer(uint64_t interval,
                                       uint64_t leeway,
                                       dispatch_queue_t queue,
@@ -156,10 +157,13 @@ void DGSystem::init() {
 // The timer is running in the main process and thus the OpenGL context doesn't
 // have to be shared.
 void DGSystem::run() {
-    _mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
-                                    0,
-                                    dispatch_get_main_queue(),
-                                    ^{ update(); });
+    _mainTimer = CreateDispatchTimer(1.0f * NSEC_PER_SEC, 0,
+                                     dispatch_get_main_queue(),
+                                     ^{ control->update(); });
+    
+    _viewTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC, 0,
+                                     dispatch_get_main_queue(),
+                                     ^{ control->updateView(); });
     
     /*mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
                                     0,
@@ -189,8 +193,10 @@ void DGSystem::terminate() {
         isTerminating = true;
         int r = arc4random() % 8; // Double the replies, so that the default one appears often
         
-        if (_isRunning)
+        if (_isRunning) {
             dispatch_source_cancel(_mainTimer);
+            dispatch_source_cancel(_viewTimer);
+        }    
         
         if (_isInitialized) {
             [view release];
@@ -213,9 +219,9 @@ void DGSystem::toggleFullScreen() {
     config->fullScreen = !config->fullScreen;
     if (_isRunning) {
         // Suspend the timer to avoid multiple redraws
-        dispatch_suspend(_mainTimer);
+        dispatch_suspend(_viewTimer);
         [window toggleFullScreen:nil];
-        dispatch_resume(_mainTimer);
+        dispatch_resume(_viewTimer);
     }
     else [window toggleFullScreen:nil];
 }
