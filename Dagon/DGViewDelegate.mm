@@ -146,7 +146,7 @@
     
     // TODO: Ensure this is thread-safe
     // (It probably is but everything is being drawn twice!)
-    control->updateView();
+    control->update();
     
     [super viewWillDraw];
 } 
