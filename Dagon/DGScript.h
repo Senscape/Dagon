@@ -49,7 +49,7 @@ enum DGAttachTypes {
     AUDIO = DGObjectAudio,
     CUSTOM = DGActionCustom,
     IMAGE = DGObjectTexture,
-    FEEDBACK = DGActionFeedback,
+    FEED = DGActionFeed,
     SWITCH = DGActionSwitch,
     VIDEO = DGObjectVideo
 };
@@ -78,6 +78,7 @@ class DGScript {
     
     int _ref;
     void _error(int result);
+    static int _globalFeed(lua_State *L);
     static int _globalRoom(lua_State *L);
     static int _globalSwitch(lua_State *L);
     static int _globalTimer(lua_State *L);    
