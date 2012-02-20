@@ -17,6 +17,7 @@
 #include "DGCamera.h"
 #include "DGConfig.h"
 #include "DGControl.h"
+#include "DGFeedManager.h"
 #include "DGFont.h"
 #include "DGLog.h"
 #include "DGNode.h"
@@ -27,7 +28,7 @@
 #include "DGState.h"
 #include "DGSystem.h"
 #include "DGTextureManager.h"
-#include "DGTimer.h"
+#include "DGTimerManager.h"
 
 using namespace std;
 
@@ -40,6 +41,7 @@ DGControl::DGControl() {
     config = &DGConfig::getInstance();
     script = &DGScript::getInstance();
     system = &DGSystem::getInstance();
+    timerManager = &DGTimerManager::getInstance();
 	
 	_mouseData.x = config->displayWidth / 2;
 	_mouseData.y = config->displayHeight / 2;
@@ -67,10 +69,10 @@ DGControl::DGControl() {
 DGControl::~DGControl() {
     if (_isInitialized) {
         delete _camera;
+        delete _feedManager;
         delete _render;
         delete _state;
         delete _textureManager;
-        delete _timer;
     }
 }
 
@@ -96,9 +98,9 @@ void DGControl::init() {
     _defaultFont->init();
     _defaultFont->setDefault(DGDefFontSize);
     
+    _feedManager = new DGFeedManager;
     _state = new DGState;
     _textureManager = new DGTextureManager;
-    _timer = new DGTimer;
     
     _canDrawSpots = false;
     _isInitialized = true;
@@ -178,6 +180,9 @@ void DGControl::processMouse(int x, int y, bool isButtonPressed) {
                 switch (action->type) {
                     case DGActionCustom:
                         script->callback(action->luaHandler, spot->luaObject());
+                        break;
+                    case DGActionFeed:
+                        _feedManager->parse(action->feed);
                         break;
                     case DGActionSwitch:
                         // As a precaution, we reset the onSpot flag
@@ -270,7 +275,7 @@ void DGControl::registerObject(DGObject* theTarget) {
 }
 
 int DGControl::registerTimer(double trigger, int handlerForLua) {
-    return _timer->create(trigger, handlerForLua);
+    return timerManager->create(trigger, handlerForLua);
 }
 
 void DGControl::reshape(int width, int height) {
@@ -278,6 +283,10 @@ void DGControl::reshape(int width, int height) {
     config->displayHeight = height;
     
     _camera->setViewport(width, height);
+}
+
+void DGControl::showFeed(const char* text) {
+    _feedManager->parse(text);
 }
 
 void DGControl::sleep(int forMilliseconds) {
@@ -358,18 +367,14 @@ void DGControl::takeSnapshot() {
     config->texCompression = previousTexCompression;
 }
 
-void DGControl::update() {
-    _timer->update();
-    
-    if (config->debugMode) {
-        // Store the last FPS count and reset
-        _fpsLastCount = _fpsCount;
-        _fpsCount = 0;
-    }
+void DGControl::profiler() {    
+    // Store the last FPS count and reset
+    _fpsLastCount = _fpsCount;
+    _fpsCount = 0;
 }
 
-void DGControl::updateView() {
-    // Suspend all operations when doing a switch
+void DGControl::update() {
+    // TODO: Suspend all operations when doing a switch
     
     // Setup the scene
     _render->clearScene();
@@ -385,6 +390,12 @@ void DGControl::updateView() {
             
             // We now proceed with all the orthogonal projections
             _camera->beginOrthoView();
+            
+            if (_feedManager->isQueued()) {
+                DGPoint location = _feedManager->location();
+                _render->setColor(_feedManager->color());
+                _defaultFont->print(location.x, location.y, _feedManager->text());
+            }
                 
             _render->beginDrawing(false);
             if (_mouseData.onSpot)
@@ -397,13 +408,13 @@ void DGControl::updateView() {
             if (config->debugMode) {
                 // Set the color used for information
                 _render->setColor(DGColorBrightCyan);
-                _defaultFont->print(DGInfoMarginLeft, DGInfoMarginUp, 
+                _defaultFont->print(DGInfoMargin, DGInfoMargin, 
                                     "Viewport size: %d x %d", config->displayWidth, config->displayHeight);                
-                _defaultFont->print(DGInfoMarginLeft, (DGInfoMarginUp * 2) + DGDefFontSize, 
+                _defaultFont->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize, 
                                     "Coordinates: (%d, %d)", _mouseData.x, _mouseData.y);
-                _defaultFont->print(DGInfoMarginLeft, (DGInfoMarginUp * 3) + (DGDefFontSize * 2), 
+                _defaultFont->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2), 
                                     "Viewing angle: %2.1f", _camera->fieldOfView());
-                _defaultFont->print(DGInfoMarginLeft, (DGInfoMarginUp * 4) + (DGDefFontSize * 3), 
+                _defaultFont->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
                                     "FPS: %d", _fpsLastCount);                
             }
             
@@ -412,10 +423,15 @@ void DGControl::updateView() {
             break;
     }
     
+    timerManager->update();
+    _feedManager->update();
+    
     // Flush the buffers
     system->update();
     
-    _fpsCount++;
+    if (config->debugMode) {
+        _fpsCount++;
+    }
 }
 
 ////////////////////////////////////////////////////////////

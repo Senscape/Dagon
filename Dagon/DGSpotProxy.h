@@ -59,6 +59,29 @@ public:
         int type = (int)luaL_checknumber(L, 1);
         
         switch (type) {
+            case CUSTOM:
+                if (!lua_isfunction(L, 2)) {
+                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
+                    return 0;
+                }
+                
+                action.type = DGActionCustom;
+                action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
+                
+                s->setAction(&action);
+                if (!s->hasColor())
+                    s->setColor(0);
+                
+                break;
+            case FEED:
+                action.type = DGActionFeed;
+                strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
+                
+                s->setAction(&action);
+                if (!s->hasColor())
+                    s->setColor(0);
+                
+                break;
             case IMAGE:
                 // FIXME: This texture isn't managed. We should be able to communicate with the
                 // texture manager, register this texture, and parse its path if necessary, OR
@@ -75,20 +98,6 @@ public:
                     texture->setIndexInBundle(lua_tonumber(L, 3));
                 
                 s->setTexture(texture);
-                break;
-            case CUSTOM:
-                if (!lua_isfunction(L, 2)) {
-                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
-                    return 0;
-                }
-                
-                action.type = DGActionCustom;
-                action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
-                
-                s->setAction(&action);
-                if (!s->hasColor())
-                    s->setColor(0);
-                
                 break;
             case SWITCH:
                 int type = DGCheckProxy(L, 2);

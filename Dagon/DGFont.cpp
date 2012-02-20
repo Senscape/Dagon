@@ -95,9 +95,9 @@ void DGFont::setResource(const char* fromFileName, unsigned int heightOfFont) {
 
 void DGFont::print(int x, int y, const char* text, ...) {
 	// We should keep this entire buffer separated from this function
-	char aux[DGMaxFeedback];
-	char line[DGMaxFeedback];
-	char lines[DGMaxLogHistory][DGMaxFeedback]; // Max rows of text
+	char aux[DGMaxFeedLength];
+	char line[DGMaxFeedLength];
+	char lines[DGMaxLogHistory][DGMaxFeedLength]; // Max rows of text
     
     const char* c;
     float h = (float)_height / .63f;

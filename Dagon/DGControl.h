@@ -18,20 +18,19 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGPlatform.h"
-#include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
 #define DGDefFontSize 10
-#define DGInfoMarginLeft 5
-#define DGInfoMarginUp 5
+#define DGInfoMargin 5
 #define DGMaxHotKeys 12
 
 class DGCamera;
 class DGConfig;
 class DGFont;
+class DGFeedManager;
 class DGLog;
 class DGNode;
 class DGRoom;
@@ -40,7 +39,7 @@ class DGScript;
 class DGState;
 class DGSystem;
 class DGTextureManager;
-class DGTimer;
+class DGTimerManager;
 
 enum DGEvents {
 	DGEventEnterNode = 1,
@@ -94,16 +93,17 @@ class DGControl {
     DGLog* log;
     DGScript* script;
     DGSystem* system;
+    DGTimerManager* timerManager;
     
     std::vector<DGRoom*> _arrayOfRooms;
     DGRoom* _currentRoom;
     
     DGCamera* _camera;
+    DGFeedManager* _feedManager;
     DGFont* _defaultFont;
     DGRender* _render;
     DGState* _state;
     DGTextureManager* _textureManager;
-    DGTimer* _timer;
     
     DGEventsLuaFunctions _eventsLuaFunctions;
     DGHotKeyData _hotKeyData[DGMaxHotKeys];
@@ -111,7 +111,6 @@ class DGControl {
     
     // This boolean helps to simplify our lengthy update cycle
     bool _canDrawSpots;
-    int _feedbackTimer;
     int _fpsCount;
     int _fpsLastCount;
     bool _isInitialized;
@@ -145,14 +144,15 @@ public:
     void registerObject(DGObject* theTarget);
     int registerTimer(double trigger, int handlerForLua);    
     void reshape(int width, int height);
+    void showFeed(const char* text);
     void sleep(int forMilliseconds);
     // TODO: Add an explicit switchToNode() method
     void switchTo(DGObject* theTarget); 
     void takeSnapshot();
     
     // These methods are called asynchronously
+    void profiler();
     void update();
-    void updateView();
 };
 
 #endif // DG_CONTROL_H

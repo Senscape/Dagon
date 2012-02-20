@@ -24,7 +24,7 @@
 
 // Maximums
 
-#define DGMaxFeedback		512
+#define DGMaxFeedLength		512
 #define DGMaxFileLength		256
 #define DGMaxLogLength		256
 #define DGMaxLogHistory		80

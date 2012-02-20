@@ -104,7 +104,7 @@ void DGScript::init(int argc, char* argv[]) {
     DGLuaEnum(_L, AUDIO, DGObjectAudio);
     DGLuaEnum(_L, CUSTOM, DGActionCustom);
     DGLuaEnum(_L, IMAGE, DGObjectTexture);
-    DGLuaEnum(_L, FEEDBACK, DGActionFeedback);
+    DGLuaEnum(_L, FEED, DGActionFeed);
     DGLuaEnum(_L, SWITCH, DGActionSwitch);
     DGLuaEnum(_L, VIDEO, DGObjectVideo);
     
@@ -211,6 +211,12 @@ void DGScript::_error(int result) {
     log->error(DGModScript, "%s", lua_tostring(_L, -1));
 }
 
+int DGScript::_globalFeed(lua_State *L) {
+    DGControl::getInstance().showFeed(luaL_checkstring(L, 1));
+	
+	return 0;
+}
+
 int DGScript::_globalRoom(lua_State *L) {
     // NOTE: This is a convenience Lua hack, which in theory is 100% safe.
     // Must do losts of testing. Basically, this helper creates a room instance,
@@ -281,6 +287,7 @@ int DGScript::_globalTimer(lua_State *L) {
 
 void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
+        {"feed", _globalFeed},
         {"room", _globalRoom},
         {"switch", _globalSwitch},
         {"timer", _globalTimer},
