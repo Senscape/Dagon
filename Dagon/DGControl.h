@@ -23,7 +23,6 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDefFontSize 10
 #define DGInfoMargin 5
 #define DGMaxHotKeys 12
 
@@ -31,6 +30,7 @@ class DGCamera;
 class DGConfig;
 class DGFont;
 class DGFeedManager;
+class DGFontManager;
 class DGLog;
 class DGNode;
 class DGRoom;
@@ -90,6 +90,8 @@ typedef struct {
 
 class DGControl {
     DGConfig* config;
+    DGFeedManager* feedManager;
+    DGFontManager* fontManager;    
     DGLog* log;
     DGScript* script;
     DGSystem* system;
@@ -99,8 +101,7 @@ class DGControl {
     DGRoom* _currentRoom;
     
     DGCamera* _camera;
-    DGFeedManager* _feedManager;
-    DGFont* _defaultFont;
+    DGFont* _consoleFont;
     DGRender* _render;
     DGState* _state;
     DGTextureManager* _textureManager;
@@ -141,10 +142,8 @@ public:
     void processMouse(int x, int y, bool isButtonPressed);
     void registerGlobalHandler(int forEvent, int handlerForLua);
     void registerHotKey(int aKey, const char* luaCommandToExecute);
-    void registerObject(DGObject* theTarget);
-    int registerTimer(double trigger, int handlerForLua);    
+    void registerObject(DGObject* theTarget);    
     void reshape(int width, int height);
-    void showFeed(const char* text);
     void sleep(int forMilliseconds);
     // TODO: Add an explicit switchToNode() method
     void switchTo(DGObject* theTarget); 

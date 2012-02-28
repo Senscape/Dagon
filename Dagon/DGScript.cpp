@@ -16,10 +16,12 @@
 
 #include "DGConfig.h"
 #include "DGControl.h"
+#include "DGFeedManager.h"
 #include "DGLog.h"
 #include "DGProxy.h"
 #include "DGScript.h"
 #include "DGSystem.h"
+#include "DGTimerManager.h"
 #include "Luna.h"
 
 using namespace std;
@@ -212,7 +214,7 @@ void DGScript::_error(int result) {
 }
 
 int DGScript::_globalFeed(lua_State *L) {
-    DGControl::getInstance().showFeed(luaL_checkstring(L, 1));
+    DGFeedManager::getInstance().parse(luaL_checkstring(L, 1));
 	
 	return 0;
 }
@@ -250,6 +252,16 @@ int DGScript::_globalRoom(lua_State *L) {
     return 0;
 }
 
+int DGScript::_globalSetFont(lua_State *L) {
+    switch ((int)luaL_checknumber(L, 1)) {
+        case FEED:
+            DGFeedManager::getInstance().setFont(luaL_checkstring(L, 2), luaL_checknumber(L, 3));
+            break;
+    }
+    
+    return 0;
+}
+
 int DGScript::_globalSwitch(lua_State *L) {
     switch (DGCheckProxy(L, 1)) {
         case DGObjectNode:
@@ -278,7 +290,7 @@ int DGScript::_globalTimer(lua_State *L) {
 	}
 	
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
-	int handle = DGControl::getInstance().registerTimer(luaL_checknumber(L, 1), ref);
+	int handle = DGTimerManager::getInstance().create(luaL_checknumber(L, 1), ref);
     
     lua_pushnumber(L, handle);
 	
@@ -289,6 +301,7 @@ void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
         {"feed", _globalFeed},
         {"room", _globalRoom},
+        {"setFont", _globalSetFont},        
         {"switch", _globalSwitch},
         {"timer", _globalTimer},
         {NULL, NULL}

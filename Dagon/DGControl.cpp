@@ -18,7 +18,7 @@
 #include "DGConfig.h"
 #include "DGControl.h"
 #include "DGFeedManager.h"
-#include "DGFont.h"
+#include "DGFontManager.h"
 #include "DGLog.h"
 #include "DGNode.h"
 #include "DGRender.h"
@@ -37,8 +37,10 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGControl::DGControl() {
-    log = &DGLog::getInstance();
     config = &DGConfig::getInstance();
+    feedManager = &DGFeedManager::getInstance();
+    fontManager = &DGFontManager::getInstance();
+    log = &DGLog::getInstance();
     script = &DGScript::getInstance();
     system = &DGSystem::getInstance();
     timerManager = &DGTimerManager::getInstance();
@@ -69,7 +71,6 @@ DGControl::DGControl() {
 DGControl::~DGControl() {
     if (_isInitialized) {
         delete _camera;
-        delete _feedManager;
         delete _render;
         delete _state;
         delete _textureManager;
@@ -94,11 +95,11 @@ void DGControl::init() {
     _camera->setViewport(config->displayWidth, config->displayHeight);
     
     // Load the default font with a small height
-    _defaultFont = new DGFont;
-    _defaultFont->init();
-    _defaultFont->setDefault(DGDefFontSize);
+    fontManager->init();
+    _consoleFont = fontManager->loadDefault();
     
-    _feedManager = new DGFeedManager;
+    feedManager->init();
+    
     _state = new DGState;
     _textureManager = new DGTextureManager;
     
@@ -182,7 +183,7 @@ void DGControl::processMouse(int x, int y, bool isButtonPressed) {
                         script->callback(action->luaHandler, spot->luaObject());
                         break;
                     case DGActionFeed:
-                        _feedManager->parse(action->feed);
+                        feedManager->parse(action->feed);
                         break;
                     case DGActionSwitch:
                         // As a precaution, we reset the onSpot flag
@@ -274,19 +275,11 @@ void DGControl::registerObject(DGObject* theTarget) {
     }
 }
 
-int DGControl::registerTimer(double trigger, int handlerForLua) {
-    return timerManager->create(trigger, handlerForLua);
-}
-
 void DGControl::reshape(int width, int height) {
     config->displayWidth = width;
     config->displayHeight = height;
     
     _camera->setViewport(width, height);
-}
-
-void DGControl::showFeed(const char* text) {
-    _feedManager->parse(text);
 }
 
 void DGControl::sleep(int forMilliseconds) {
@@ -391,11 +384,7 @@ void DGControl::update() {
             // We now proceed with all the orthogonal projections
             _camera->beginOrthoView();
             
-            if (_feedManager->isQueued()) {
-                DGPoint location = _feedManager->location();
-                _render->setColor(_feedManager->color());
-                _defaultFont->print(location.x, location.y, _feedManager->text());
-            }
+            feedManager->update();
                 
             _render->beginDrawing(false);
             if (_mouseData.onSpot)
@@ -408,13 +397,13 @@ void DGControl::update() {
             if (config->debugMode) {
                 // Set the color used for information
                 _render->setColor(DGColorBrightCyan);
-                _defaultFont->print(DGInfoMargin, DGInfoMargin, 
+                _consoleFont->print(DGInfoMargin, DGInfoMargin, 
                                     "Viewport size: %d x %d", config->displayWidth, config->displayHeight);                
-                _defaultFont->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize, 
+                _consoleFont->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize, 
                                     "Coordinates: (%d, %d)", _mouseData.x, _mouseData.y);
-                _defaultFont->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2), 
+                _consoleFont->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2), 
                                     "Viewing angle: %2.1f", _camera->fieldOfView());
-                _defaultFont->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
+                _consoleFont->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
                                     "FPS: %d", _fpsLastCount);                
             }
             
@@ -424,7 +413,6 @@ void DGControl::update() {
     }
     
     timerManager->update();
-    _feedManager->update();
     
     // Flush the buffers
     system->update();

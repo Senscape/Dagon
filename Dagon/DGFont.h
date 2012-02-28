@@ -57,9 +57,8 @@ class DGFont : public DGObject {
     FT_Face _face;
     DGGlyph _glyph[128];
     int _height;
-    bool _isInitialized;
     bool _isLoaded;
-    FT_Library _library;
+    FT_Library* _library;
 	GLuint* _textures;
     
     void _loadFont();
@@ -69,10 +68,13 @@ public:
     DGFont();
     ~DGFont();
 
-    void init(); // TEMP: This goes in the font manager
-    void setDefault(unsigned int heightOfFont);
-    void setResource(const char* fromFileName, unsigned int heightOfFont);
+    void clear();
+    bool isLoaded();
     void print(int x, int y, const char* text, ...);
+    void setColor(int color);
+    void setDefault(unsigned int heightOfFont);
+    void setLibrary(FT_Library* library);
+    void setResource(const char* fromFileName, unsigned int heightOfFont);
 };
 
 #endif // DG_FONT_H

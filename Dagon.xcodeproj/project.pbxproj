@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		E8362A6714F099B3005B20EF /* DGTimerManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8362A6614F099B3005B20EF /* DGTimerManager.cpp */; };
 		E8362A6A14F1B1A1005B20EF /* DGFeedManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8362A6914F1B1A1005B20EF /* DGFeedManager.cpp */; };
+		E8362A6C14F2FBE1005B20EF /* DGFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8362A6B14F2FBE1005B20EF /* DGFontManager.cpp */; };
 		E8CF666B14EFE7B100B4562B /* DGFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666914EFE7B100B4562B /* DGFont.cpp */; };
 		E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666D14EFE7F100B4562B /* DGFontData.c */; };
 		E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */; };
@@ -46,10 +47,12 @@
 
 /* Begin PBXFileReference section */
 		E817433514E6030A002CF502 /* DGConfigLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGConfigLib.h; sourceTree = "<group>"; };
-		E8362A6414F099A6005B20EF /* DGTimerManager.h */ = {isa = PBXFileReference; path = DGTimerManager.h; sourceTree = "<group>"; };
+		E8362A6414F099A6005B20EF /* DGTimerManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGTimerManager.h; sourceTree = "<group>"; };
 		E8362A6614F099B3005B20EF /* DGTimerManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGTimerManager.cpp; sourceTree = "<group>"; };
 		E8362A6814F1B182005B20EF /* DGFeedManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGFeedManager.h; sourceTree = "<group>"; };
 		E8362A6914F1B1A1005B20EF /* DGFeedManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGFeedManager.cpp; sourceTree = "<group>"; };
+		E8362A6B14F2FBE1005B20EF /* DGFontManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGFontManager.cpp; sourceTree = "<group>"; };
+		E8362A6D14F2FBFB005B20EF /* DGFontManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGFontManager.h; sourceTree = "<group>"; };
 		E8CF666914EFE7B100B4562B /* DGFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGFont.cpp; sourceTree = "<group>"; };
 		E8CF666A14EFE7B100B4562B /* DGFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGFont.h; sourceTree = "<group>"; };
 		E8CF666D14EFE7F100B4562B /* DGFontData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGFontData.c; sourceTree = "<group>"; };
@@ -198,6 +201,8 @@
 				FBA2C78014DC654B0098E334 /* DGControl.cpp */,
 				E8362A6814F1B182005B20EF /* DGFeedManager.h */,
 				E8362A6914F1B1A1005B20EF /* DGFeedManager.cpp */,
+				E8362A6D14F2FBFB005B20EF /* DGFontManager.h */,
+				E8362A6B14F2FBE1005B20EF /* DGFontManager.cpp */,
 				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
 				E8E0194814E366B800173A2D /* DGProxy.h */,
 				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
@@ -431,6 +436,7 @@
 				E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */,
 				E8362A6714F099B3005B20EF /* DGTimerManager.cpp in Sources */,
 				E8362A6A14F1B1A1005B20EF /* DGFeedManager.cpp in Sources */,
+				E8362A6C14F2FBE1005B20EF /* DGFontManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
