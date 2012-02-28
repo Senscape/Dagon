@@ -98,9 +98,12 @@ void DGTimerManager::update() {
         clock_t currentTime = clock();
         double duration = (double)(currentTime - (*it).lastTime) / CLOCKS_PER_SEC;
         
-        if (duration > (*it).trigger && (*it).luaHandler) {
+        if ((duration > (*it).trigger) && (*it).luaHandler && (*it).isEnabled) {
             (*it).lastTime = currentTime;
             DGScript::getInstance().callback((*it).luaHandler, 0);
+            
+            // We break the loop because it's possible the timers array has changed
+            break;
         }
         
         it++;

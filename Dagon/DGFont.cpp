@@ -26,7 +26,6 @@ DGFont::DGFont() {
     config = &DGConfig::getInstance();
     log = &DGLog::getInstance();
     
-    _isInitialized = false;
     _isLoaded = false;
     
     this->setType(DGObjectFont);
@@ -37,60 +36,23 @@ DGFont::DGFont() {
 ////////////////////////////////////////////////////////////
 
 DGFont::~DGFont() {
-    if (_isLoaded) {
-        glDeleteTextures(128, _textures);
-        free(_textures);
-    }
-    
-    if (_isInitialized) {
-       	FT_Done_Face(_face);
-        FT_Done_FreeType(_library); 
-    }
+    // Nothing to do here
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
 
-void DGFont::init() {
-    log->trace(DGModFont, "%s", DGMsg060000);
-	log->info(DGModFont, "%s: %d.%d.%d", DGMsg060001, FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
-
-	_textures = (GLuint*)malloc(128 * sizeof(GLuint));
-	
-	if (FT_Init_FreeType(&_library)) {
-		log->error(DGModFont, "%s", DGMsg260002);
-        return;
-    }
-    
-    _isInitialized = true;
+void DGFont::clear() {
+    if (_isLoaded) {
+        glDeleteTextures(128, _textures);
+        free(_textures);
+        FT_Done_Face(_face);
+    }   
 }
 
-void DGFont::setDefault(unsigned int heightOfFont) {	
-    _height = (float)heightOfFont;
-    
-	// WARNING: No way of determining that 49052.. Careful!
-	if (FT_New_Memory_Face(_library, DGDefFontBinary, 49052, 0, &_face)) {
-        log->error(DGModFont, "%s", DGMsg260004);
-        return;
-    }
-	
-    _loadFont();
-    
-    _isLoaded = true;
-}
-
-void DGFont::setResource(const char* fromFileName, unsigned int heightOfFont) {
-    _height = (float)heightOfFont;
-    
-    if (FT_New_Face(_library, fromFileName, 0, &_face)) {
-        log->error(DGModFont, "%s: %s", DGMsg260003, fromFileName);
-        return;
-    }
-	
-    _loadFont();
-    
-    _isLoaded = true;  
+bool DGFont::isLoaded() {
+    return _isLoaded;
 }
 
 void DGFont::print(int x, int y, const char* text, ...) {
@@ -102,7 +64,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
     const char* c;
     float h = (float)_height / .63f;
 	unsigned int size = 0;
-
+    
 	va_list	ap;
 	
 	if (text == NULL)
@@ -157,7 +119,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
 			glBindTexture(GL_TEXTURE_2D, _textures[ch]);
 			
 			glTranslatef((GLfloat)_glyph[ch].left, 0, 0);
-
+            
 			glPushMatrix();
 			glTranslatef(0, -(GLfloat)_glyph[ch].top + _height, 0);
 			
@@ -181,6 +143,49 @@ void DGFont::print(int x, int y, const char* text, ...) {
 	glPopAttrib();  
 }
 
+// FIXME: This is a repeated method from DGRender - it would be best to avoid this
+void DGFont::setColor(int color) {
+    uint32_t aux = color;
+    
+	uint8_t b = (aux & 0x000000ff);
+	uint8_t g = (aux & 0x0000ff00) >> 8;
+	uint8_t r = (aux & 0x00ff0000) >> 16;
+	uint8_t a = (aux & 0xff000000) >> 24;
+    
+	glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
+}
+
+void DGFont::setDefault(unsigned int heightOfFont) {	
+    _height = (float)heightOfFont;
+    
+	// WARNING: No way of determining that 49052.. Careful!
+	if (FT_New_Memory_Face(*_library, DGDefFontBinary, 49052, 0, &_face)) {
+        log->error(DGModFont, "%s", DGMsg260004);
+        return;
+    }
+	
+    _loadFont();
+    
+    _isLoaded = true;
+}
+
+void DGFont::setLibrary(FT_Library* library) {
+    _library = library;
+}
+
+void DGFont::setResource(const char* fromFileName, unsigned int heightOfFont) {
+    _height = (float)heightOfFont;
+    
+    if (FT_New_Face(*_library, fromFileName, 0, &_face)) {
+        log->error(DGModFont, "%s: %s", DGMsg260003, fromFileName);
+        return;
+    }
+	
+    _loadFont();
+    
+    _isLoaded = true;  
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
@@ -190,6 +195,7 @@ void DGFont::_loadFont() {
     
     FT_Set_Char_Size(_face, _height << 6, _height << 6, 96, 96);
     
+    _textures = (GLuint*)malloc(128 * sizeof(GLuint));
 	glGenTextures(128, _textures);
 	
 	for (ch = 0; ch < 128; ch++) {

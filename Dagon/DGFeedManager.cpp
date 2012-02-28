@@ -16,6 +16,7 @@
 
 #include "DGConfig.h"
 #include "DGFeedManager.h"
+#include "DGFontManager.h"
 #include "DGTimerManager.h"
 
 using namespace std;
@@ -26,6 +27,7 @@ using namespace std;
 
 DGFeedManager::DGFeedManager() {	
     config = &DGConfig::getInstance();
+    fontManager = &DGFontManager::getInstance();    
     timerManager = &DGTimerManager::getInstance();    
 }
 
@@ -41,15 +43,8 @@ DGFeedManager::~DGFeedManager() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-int DGFeedManager::color() {
-    return (*it).color;
-}
-
-DGPoint DGFeedManager::location() {
-    DGPoint location;
-    location = (*it).location;
-    location.y += (it - _arrayOfFeeds.end()) * DGDefFeedSize;
-    return location;
+void DGFeedManager::init() {
+    _feedFont = fontManager->loadDefault();
 }
 
 bool DGFeedManager::isQueued() {
@@ -93,12 +88,11 @@ void DGFeedManager::parse(const char* text) {
 	feed.timerHandle = timerManager->create((float)(length * DGFeedSpeed), 0); // Trigger should be configurable  
 
     _arrayOfFeeds.push_back(feed);
-    
-    it = _arrayOfFeeds.begin();
 }
 
-const char* DGFeedManager::text() {
-    return (*it).text;    
+// TODO: Note the font manager should purge unused fonts
+void DGFeedManager::setFont(const char* fromFileName, unsigned int heightOfFont) {
+    _feedFont = fontManager->load(fromFileName, heightOfFont);
 }
 
 void DGFeedManager::update() {
@@ -125,8 +119,15 @@ void DGFeedManager::update() {
                 break;
             case DGFeedDiscard:
                 _arrayOfFeeds.erase(it);
+                // If it was the last one, then stop everything
+                if (it == _arrayOfFeeds.end())
+                    return;                
                 break;        
         }
+        
+        int displace = (it - _arrayOfFeeds.end() + 1) * (DGDefFeedSize + DGFeedMargin);
+        _feedFont->setColor((*it).color);
+        _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         
         it++;
     }

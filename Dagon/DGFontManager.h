@@ -10,76 +10,59 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_FEEDMANAGER_H
-#define DG_FEEDMANAGER_H
+#ifndef DG_FONTMANAGER_H
+#define	DG_FONTMANAGER_H
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include FT_GLYPH_H
+
+#include "DGFont.h"
 #include "DGPlatform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDefFeedSize 10
-#define DGFeedMargin 10
-#define DGFeedSpeed 0.25f
+#define DGDefFontSize 10
 
-enum DGFeedStates {
-    DGFeedFadeIn,
-    DGFeedIdle,
-    DGFeedFadeOut,
-    DGFeedDiscard
-};
-
-typedef struct {
-	DGPoint location;
-	uint32_t color;
-    int state;
-	char text[DGMaxFeedLength];
-	int timerHandle;    
-} DGFeed;
-
-class DGConfig;
 class DGFont;
-class DGFontManager;
-class DGTimerManager;
+class DGLog;
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGFeedManager {
-    DGConfig* config;
-    DGFontManager* fontManager;
-    DGTimerManager* timerManager;
+class DGFontManager {
+    DGLog* log;
     
-    std::vector<DGFeed> _arrayOfFeeds;
-    DGFont* _feedFont;
+    DGFont _defaultFont;
+    bool _isInitialized;
+    FT_Library _library;
     
     // Private constructor/destructor
-    DGFeedManager();
-    ~DGFeedManager();
+    DGFontManager();
+    ~DGFontManager();
     // Stop the compiler generating methods of copy the object
-    DGFeedManager(DGFeedManager const& copy);            // Not implemented
-    DGFeedManager& operator=(DGFeedManager const& copy); // Not implemented
+    DGFontManager(DGFontManager const& copy);            // Not implemented
+    DGFontManager& operator=(DGFontManager const& copy); // Not implemented
     
 public:
-    static DGFeedManager& getInstance() {
+    static DGFontManager& getInstance() {
         // The only instance
         // Guaranteed to be lazy initialized
         // Guaranteed that it will be destroyed correctly
-        static DGFeedManager instance;
+        static DGFontManager instance;
         return instance;
     }
-
+    
     void init();
-    bool isQueued();
-    void parse(const char* text);
-    void setFont(const char* fromFileName, unsigned int heightOfFont);
-    void update();
+    DGFont* load(const char* fromFileName, unsigned int heightOfFont);
+    DGFont* loadDefault();
 };
 
-#endif // DG_FEEDMANAGER_H
+#endif // DG_FONTMANAGER_H
