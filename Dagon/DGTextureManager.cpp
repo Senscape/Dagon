@@ -45,8 +45,11 @@ DGTextureManager::~DGTextureManager() {
     if (!_arrayOfTextures.empty()) {
         vector<DGTexture*>::iterator it;
         
-        for (it = _arrayOfTextures.begin(); it < _arrayOfTextures.end(); it++) {
+        it = _arrayOfTextures.begin();
+        
+        while (it != _arrayOfTextures.end()) {
             delete *it;
+            it++;
         }   
     }
 }

@@ -64,7 +64,9 @@ int DGTimerManager::create(double trigger, int handlerForLua) {
     
     // IMPORTANT: Trigger is divided by 10 to comply with the current update scheme.
     // For precision above 1 second, control would have to be updated often.
-    timer.trigger = trigger / 10;
+    // Actually, it looks like the math here is 10 per pair of cores. ie: 20 for
+    // quad-core. Why the hell is that?
+    timer.trigger = trigger / 20;
     timer.luaHandler = handlerForLua;
     
     _arrayOfTimers.push_back(timer);

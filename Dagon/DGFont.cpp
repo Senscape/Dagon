@@ -216,7 +216,17 @@ void DGFont::_loadFont() {
 			log->error(DGModFont, "%s: %c", DGMsg260006, ch);
             return;
         }
-		
+        
+        // Test code to define a stroke
+        /*FT_Stroker stroker = NULL;
+        FT_Stroker_New(*_library, &stroker);
+        FT_Stroker_Set(stroker, 32, 
+                       FT_STROKER_LINECAP_BUTT, 
+                       FT_STROKER_LINEJOIN_MITER, 
+                       0);
+        FT_Glyph_Stroke(&glyph, stroker, 1);
+		FT_Stroker_Done(stroker);*/
+        
 		FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);
 		bitmapGlyph = (FT_BitmapGlyph)glyph;
 		
