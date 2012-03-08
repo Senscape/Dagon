@@ -41,6 +41,7 @@
 		FBA2C78114DC654B0098E334 /* DGControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78014DC654B0098E334 /* DGControl.cpp */; };
 		FBA2C78814DD801A0098E334 /* DGCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78714DD801A0098E334 /* DGCamera.cpp */; };
 		FBC8883314574F08008D548F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
+		FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */; };
 		FBFCC9F114BB3624003211AD /* DGTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFCC9F014BB3624003211AD /* DGTexture.cpp */; };
 		FBFD855914C4CCE9000E82B2 /* DGTextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFD855814C4CCE9000E82B2 /* DGTextureManager.cpp */; };
 /* End PBXBuildFile section */
@@ -121,6 +122,8 @@
 		FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSystemLib.h; sourceTree = "<group>"; };
 		FBCD18B314E763300039BC92 /* DGSystemUnix.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DGSystemUnix.cpp; sourceTree = "<group>"; };
 		FBCD18B414E763300039BC92 /* DGSystemWin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = DGSystemWin.cpp; sourceTree = "<group>"; };
+		FBD2F64815064FD000AB6C31 /* DGAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGAudioManager.h; sourceTree = "<group>"; };
+		FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGAudioManager.cpp; sourceTree = "<group>"; };
 		FBD3A58614DF27C600CA2756 /* DGGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGGeometry.h; sourceTree = "<group>"; };
 		FBFCC9EF14BB361B003211AD /* DGTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGTexture.h; sourceTree = "<group>"; };
 		FBFCC9F014BB3624003211AD /* DGTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGTexture.cpp; sourceTree = "<group>"; };
@@ -196,6 +199,8 @@
 		FB247318148C676A00F7D1B6 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				FBD2F64815064FD000AB6C31 /* DGAudioManager.h */,
+				FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */,
 				E817433514E6030A002CF502 /* DGConfigLib.h */,
 				FBA2C78214DC65660098E334 /* DGControl.h */,
 				FBA2C78014DC654B0098E334 /* DGControl.cpp */,
@@ -437,6 +442,7 @@
 				E8362A6714F099B3005B20EF /* DGTimerManager.cpp in Sources */,
 				E8362A6A14F1B1A1005B20EF /* DGFeedManager.cpp in Sources */,
 				E8362A6C14F2FBE1005B20EF /* DGFontManager.cpp in Sources */,
+				FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

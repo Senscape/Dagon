@@ -26,6 +26,7 @@
 #define DGInfoMargin 5
 #define DGMaxHotKeys 12
 
+class DGAudioManager;
 class DGCamera;
 class DGConfig;
 class DGFont;
@@ -89,6 +90,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////
 
 class DGControl {
+    DGAudioManager* audioManager;
     DGConfig* config;
     DGFeedManager* feedManager;
     DGFontManager* fontManager;    
