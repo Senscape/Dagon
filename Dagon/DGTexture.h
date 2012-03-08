@@ -42,11 +42,6 @@ typedef struct {
 	int		format;
 } TEXSubHeader;
 
-typedef struct {
-    char	file[DGMaxFileLength];
-    int     index;
-} DGResource;
-
 class DGConfig;
 class DGLog;
 
