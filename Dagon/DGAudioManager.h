@@ -10,67 +10,68 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SYSTEM_H
-#define	DG_SYSTEM_H
+#ifndef DG_AUDIOMANAGER_H
+#define DG_AUDIOMANAGER_H
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGAudio.h"
 #include "DGPlatform.h"
+
+#ifdef DGPlatformMac
+
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+
+#else
+
+#include <AL/al.h>
+#include <AL/alc.h>
+
+#endif
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// NOTE: Let's find a more elegant and optimal way to do this
-#define DGMaxSystemSemaphores 64
-
-class DGAudioManager;
 class DGConfig;
-class DGControl;
 class DGLog;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
-class DGSystem {
-    DGAudioManager* audioManager;
-    DGControl* control;
+class DGAudioManager : public DGObject {
     DGConfig* config;
     DGLog* log;
     
-    int _semaphoresIndex;
+    ALCdevice* _alDevice;
+    ALCcontext* _alContext;
+    std::vector<DGAudio*> _arrayOfAudios;
     bool _isInitialized;
-    bool _isRunning;
     
     // Private constructor/destructor
-    DGSystem();
-    ~DGSystem();
+    DGAudioManager();
+    ~DGAudioManager();
     // Stop the compiler generating methods of copy the object
-    DGSystem(DGSystem const& copy);            // Not implemented
-    DGSystem& operator=(DGSystem const& copy); // Not implemented
+    DGAudioManager(DGAudioManager const& copy);            // Not implemented
+    DGAudioManager& operator=(DGAudioManager const& copy); // Not implemented
     
 public:
-    static DGSystem& getInstance() {
+    static DGAudioManager& getInstance() {
         // The only instance
         // Guaranteed to be lazy initialized
         // Guaranteed that it will be destroyed correctly
-        static DGSystem instance;
+        static DGAudioManager instance;
         return instance;
     }
     
-    void findPaths(int argc, char* argv[]);
-    bool getSemaphore(int* pointerToID);
     void init();
-    void releaseSemaphore(int ID);
-    void run();
-    void setTitle(const char* title);
-    void terminate();
-    void toggleFullScreen();
-	void update();
-    void waitForSemaphore(int ID);
+    void requestNewAudio(DGAudio* target);
+    void requireAudioToLoad(DGAudio* target);
+    void update();
 };
 
-#endif // DG_SYSTEM_H
+#endif // DG_AUDIOMANAGER_H

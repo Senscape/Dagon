@@ -14,6 +14,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#import "DGAudioManager.h"
 #import "DGConfig.h"
 #import "DGControl.h"
 #import "DGLog.h"
@@ -24,12 +25,15 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// These are private in order to keep a clean and portable
-// header
+// These are static private in order to keep a clean and
+// portable header
 
 NSWindow* window;
 DGViewDelegate* view;
 
+dispatch_semaphore_t _semaphores[DGMaxSystemSemaphores];
+
+dispatch_source_t _audioTimer;
 dispatch_source_t _mainTimer;
 dispatch_source_t _profilerTimer;
 dispatch_source_t CreateDispatchTimer(uint64_t interval,
@@ -44,8 +48,11 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval,
 // TODO: At this point the system module should copy the config file
 // into the user folder
 DGSystem::DGSystem() {  
+    audioManager = &DGAudioManager::getInstance();
     log = &DGLog::getInstance();
     config = &DGConfig::getInstance();
+    
+    _semaphoresIndex = 0;
     
     _isInitialized = false;
     _isRunning = false;
@@ -102,6 +109,18 @@ void DGSystem::findPaths(int argc, char* argv[]) {
     }
 }
 
+bool DGSystem::getSemaphore(int* pointerToID) {
+    if (_semaphoresIndex + 1 > DGMaxSystemSemaphores)
+        return false;
+    
+    _semaphores[_semaphoresIndex] = dispatch_semaphore_create(0);
+    *pointerToID = _semaphoresIndex;
+    
+    _semaphoresIndex++;
+    
+    return true;
+}
+
 void DGSystem::init() {
     if (!_isInitialized) {
         log->trace(DGModSystem, "========================================");
@@ -153,6 +172,10 @@ void DGSystem::init() {
     else log->warning(DGModSystem, "%s", DGMsg140002);
 }
 
+void DGSystem::releaseSemaphore(int ID) {
+    dispatch_semaphore_signal(_semaphores[ID]);
+}
+
 // TODO: Note this isn't quite multithreaded yet.
 // The timer is running in the main process and thus the OpenGL context doesn't
 // have to be shared.
@@ -160,6 +183,10 @@ void DGSystem::run() {
     _mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC, 0,
                                      dispatch_get_main_queue(),
                                      ^{ control->update(); });
+
+    _audioTimer = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
+                                     dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                                     ^{ audioManager->update(); });
     
     if (config->debugMode) {
         _profilerTimer = CreateDispatchTimer(1.0f * NSEC_PER_SEC, 0,
@@ -167,12 +194,8 @@ void DGSystem::run() {
                                              ^{ control->profiler(); });
     }
     
-    /*mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC,
-                                    0,
-                                    dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-                                    ^{ update(); });*/
-    
     _isRunning = true;
+    
     [NSApp run];
 }
 
@@ -197,6 +220,7 @@ void DGSystem::terminate() {
         
         if (_isRunning) {
             dispatch_source_cancel(_mainTimer);
+            dispatch_source_cancel(_audioTimer);
             
             if (config->debugMode)
                 dispatch_source_cancel(_profilerTimer);
@@ -232,6 +256,10 @@ void DGSystem::toggleFullScreen() {
 
 void DGSystem::update() {
     [view update];
+}
+
+void DGSystem::waitForSemaphore(int ID) {
+    dispatch_semaphore_wait(_semaphores[ID], DISPATCH_TIME_FOREVER);
 }
 
 ////////////////////////////////////////////////////////////

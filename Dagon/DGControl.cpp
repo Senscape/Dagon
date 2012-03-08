@@ -14,6 +14,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGAudioManager.h"
 #include "DGCamera.h"
 #include "DGConfig.h"
 #include "DGControl.h"
@@ -37,6 +38,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGControl::DGControl() {
+    audioManager = &DGAudioManager::getInstance();
     config = &DGConfig::getInstance();
     feedManager = &DGFeedManager::getInstance();
     fontManager = &DGFontManager::getInstance();
@@ -93,6 +95,9 @@ void DGControl::init() {
     
     _camera = new DGCamera;
     _camera->setViewport(config->displayWidth, config->displayHeight);
+    
+    // Init the audio manager
+    audioManager->init();
     
     // Load the default font with a small height
     fontManager->init();
