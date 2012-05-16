@@ -272,7 +272,7 @@ void DGControl::registerHotKey(int aKey, const char* luaCommandToExecute) {
 void DGControl::registerObject(DGObject* theTarget) {
     switch (theTarget->type()) {
         case DGObjectNode:
-             _textureManager->requestNewBundle((DGNode*)theTarget);
+             _textureManager->requestBundle((DGNode*)theTarget);
             break;
         case DGObjectRoom: 
             _arrayOfRooms.push_back((DGRoom*)theTarget);
@@ -292,6 +292,8 @@ void DGControl::sleep(int forMilliseconds) {
 }
 
 void DGControl::switchTo(DGObject* theTarget) {
+    audioManager->clear();
+    
     switch (theTarget->type()) {
         case DGObjectRoom:
             _currentRoom = (DGRoom*)theTarget;
@@ -325,7 +327,19 @@ void DGControl::switchTo(DGObject* theTarget) {
                     DGSpot* spot = currentNode->currentSpot();
                     
                     if (spot->hasTexture())
-                        _textureManager->requireTextureToLoad(spot->texture());
+                        _textureManager->requestTexture(spot->texture());
+                    
+                    if (spot->hasAudio()) {
+                        DGAudio* audio = spot->audio();
+                        
+                        // Request the audio
+                        audioManager->requestAudio(audio);
+                        audio->setPosition(spot->face());
+                        audio->setVolume(spot->volume());
+                        
+                        if (spot->hasFlag(DGSpotAuto))
+                            audio->play();
+                    }
                 } while (currentNode->iterateSpots());
             }
             else {
@@ -340,7 +354,24 @@ void DGControl::switchTo(DGObject* theTarget) {
             system->setTitle(title);
         }
         else _canDrawSpots = false;
+        
+        // This has to be done every time so that room audios keep playing
+        if (!_currentRoom->hasAudios()) {
+            vector<DGAudio*>::iterator it;
+            vector<DGAudio*> arrayOfAudios = _currentRoom->arrayOfAudios();
+            
+            it = arrayOfAudios.begin();
+            
+            while (it != arrayOfAudios.end()) {
+                audioManager->requestAudio((*it));
+                (*it)->play();
+                
+                it++;
+            }
+        }
     }
+    
+    audioManager->flush();
 }
 
 void DGControl::takeSnapshot() {
@@ -417,6 +448,7 @@ void DGControl::update() {
             break;
     }
     
+    audioManager->setOrientation(_camera->orientation());
     timerManager->update();
     
     // Flush the buffers

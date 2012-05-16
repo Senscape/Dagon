@@ -29,6 +29,7 @@
  *  40 - System
  *  50 - Script
  *  60 - Font
+ *  70 - Audio
  *
  */
 
@@ -97,6 +98,16 @@
 #define DGMsg260004 "Default font is corrupt"
 #define DGMsg260005 "Error loading glyph"
 #define DGMsg260006 "Error getting glyph"
+
+// Audio module
+#define DGMsg070000 "Initializing audio manager..."
+#define DGMsg270001 "Failed to initialize OpenAL device"
+#define DGMsg270002 "Failed to create OpenAL context"
+#define DGMsg270003 "OpenAL error"
+#define DGMsg270004 "Streaming error"
+#define DGMsg270005 "File not found"
+#define DGMsg270006 "Unsupported number of channels in file"
+#define DGMsg270007 "Unable to initialize Ogg callbacks"
 
 #endif
 

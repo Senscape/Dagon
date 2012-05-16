@@ -14,6 +14,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGAudio.h"
 #include "DGSpot.h"
 
 using namespace std;
@@ -110,7 +111,7 @@ int DGSpot::color() {
     return _color;
 }
 
-std::vector<int> DGSpot::arrayOfCoordinates() {
+vector<int> DGSpot::arrayOfCoordinates() {
     return _arrayOfCoordinates;
 }
 
@@ -126,11 +127,15 @@ DGVideo* DGSpot::video() {
     return _attachedVideo;
 }
 
+float DGSpot::volume() {
+    return _volume;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void DGSpot::resize(std::vector<int> newArrayOfCoordinates) {
+void DGSpot::resize(vector<int> newArrayOfCoordinates) {
     _arrayOfCoordinates = newArrayOfCoordinates;
 }
 
@@ -166,6 +171,10 @@ void DGSpot::setTexture(DGTexture* aTexture) {
     _hasTexture = true;
 }
 
+void DGSpot::setVolume(float theVolume) {
+    _volume = theVolume;
+}
+
 void DGSpot::setVideo(DGVideo* aVideo) {
     _attachedVideo = aVideo;
     _hasVideo = true;
@@ -185,10 +194,16 @@ void DGSpot::enable() {
 
 void DGSpot::play() {
     _isPlaying = true;
+    
+    if (_hasAudio)
+        _attachedAudio->play();
 }
 
 void DGSpot::stop() {
     _isPlaying = false;
+    
+    if (_hasAudio)
+        _attachedAudio->stop();    
 }
 
 void DGSpot::toggle() {

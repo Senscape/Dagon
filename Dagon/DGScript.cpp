@@ -111,6 +111,7 @@ void DGScript::init(int argc, char* argv[]) {
     DGLuaEnum(_L, VIDEO, DGObjectVideo);
     
     // Register all proxys
+    Luna<DGAudioProxy>::Register(_L);
     Luna<DGNodeProxy>::Register(_L);
     Luna<DGRoomProxy>::Register(_L);
     Luna<DGSpotProxy>::Register(_L);

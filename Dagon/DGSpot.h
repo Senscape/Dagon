@@ -25,10 +25,10 @@
 ////////////////////////////////////////////////////////////
 
 enum DGSpotFlags {
-    DGSpotAuto,
-	DGSpotClass,
-	DGSpotSync,    
-	DGSpotUser
+    DGSpotAuto = 0x1,
+	DGSpotClass = 0x2,
+	DGSpotSync = 0x4,    
+	DGSpotUser = 0x8
 };
 
 class DGAudio;
@@ -56,6 +56,8 @@ class DGSpot : public DGObject {
 	bool _hasColor;
 	bool _hasTexture;
 	bool _hasVideo;
+    
+    float _volume;
 	
     std::vector<int> _arrayOfCoordinates;
 	unsigned int _onFace;
@@ -88,6 +90,7 @@ public:
     unsigned int face();
     DGTexture* texture();
     DGVideo* video();
+    float volume();
     
     // Sets
     
@@ -96,6 +99,7 @@ public:
     void setColor(int aColor);
     void setTexture(DGTexture* aTexture);
     void setVideo(DGVideo* aVideo);
+    void setVolume(float theVolume);
     
     // State changes
     

@@ -36,6 +36,21 @@ public:
     
     // Constructor
     DGSpotProxy(lua_State *L) {
+        int flags = DGSpotUser;
+        
+        if (lua_istable(L, 3)) {
+            lua_pushnil(L);
+            while (lua_next(L, 3) != 0) {
+                const char* key = lua_tostring(L, -2);
+                
+                // We can only read the key as a string, so we have no choice but
+                // do an ugly nesting of strcmps()
+                if (strcmp(key, "autostart") == 0) flags = flags | DGSpotAuto;
+                
+                lua_pop(L, 1);
+            }
+        }
+        
         if (lua_istable(L, 2)) {
             std::vector<int> arrayOfCoords;
             
@@ -46,7 +61,8 @@ public:
                 lua_pop(L, 1);
             }
             
-            s = new DGSpot(arrayOfCoords, luaL_checknumber(L, 1), 0);
+            s = new DGSpot(arrayOfCoords, luaL_checknumber(L, 1), flags);
+            s->setVolume(1.0f); // Default volume
         }
         else luaL_error(L, DGMsg250004);
     }
@@ -59,6 +75,46 @@ public:
         int type = (int)luaL_checknumber(L, 1);
         
         switch (type) {
+            case AUDIO:
+                if (DGCheckProxy(L, 2) == DGObjectAudio) {
+                    // Just set the audio object
+                    s->setAudio(DGProxyToAudio(L, 2));
+                }
+                else {
+                    // If not, create and set
+                    DGAudio* audio = new DGAudio;
+                    
+                    audio->setResource(luaL_checkstring(L, 2));
+                    
+                    DGAudioManager::getInstance().registerAudio(audio);
+                    
+                    s->setAudio(audio);
+                }
+                
+                // Check if we have flags to add
+                // TODO: We probably have to review the entire syntax here,
+                // and check flags for any object
+                if (lua_istable(L, 3)) {
+                    lua_pushnil(L);
+                    while (lua_next(L, 3) != 0) {
+                        const char* key = lua_tostring(L, -2);
+                        
+                        // We can only read the key as a string, so we have no choice but
+                        // do an ugly nesting of strcmps()
+                        if (strcmp(key, "volume") == 0) s->setVolume((float)(lua_tonumber(L, -1) / 100));
+                        
+                        lua_pop(L, 1);
+                    }
+                }
+                
+                // Now we get the metatable of the added audio and set it
+                // as a return value
+                lua_getfield(L, LUA_REGISTRYINDEX, DGAudioProxyName);
+                lua_setmetatable(L, -2);
+                
+                return 1;
+                
+                break;
             case CUSTOM:
                 if (!lua_isfunction(L, 2)) {
                     DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);

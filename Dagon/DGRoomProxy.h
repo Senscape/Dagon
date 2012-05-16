@@ -48,6 +48,22 @@ public:
     // Destructor
     ~DGRoomProxy() { delete r; }
     
+    // Add an audio to the room
+    int addAudio(lua_State *L) {
+        if (DGCheckProxy(L, 1) == DGObjectAudio) {
+            r->addAudio(DGProxyToAudio(L, 1));
+            
+            // Now we get the metatable of the added audio and set it
+            // as a return value
+            lua_getfield(L, LUA_REGISTRYINDEX, DGAudioProxyName);
+            lua_setmetatable(L, -2);
+            
+            return 1;
+        }
+        
+        return 0;
+    }
+    
     // Add a node to the room
     int addNode(lua_State *L) {
         if (DGCheckProxy(L, 1) == DGObjectNode) {
@@ -78,6 +94,7 @@ private:
 const char DGRoomProxy::className[] = DGRoomProxyName;
 
 Luna<DGRoomProxy>::RegType DGRoomProxy::methods[] = {
+    method(DGRoomProxy, addAudio),
     method(DGRoomProxy, addNode),
     {0,0}
 };
