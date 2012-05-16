@@ -93,7 +93,7 @@ public:
     
     void beginIteratingHistory();
     bool iterateHistory();
-    bool getCurrentLine(DGLogData* pointerToLogData);
+    void getCurrentLine(DGLogData* pointerToLogData);
 };
 
 #endif // DG_LOG_H

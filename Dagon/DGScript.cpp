@@ -174,6 +174,12 @@ bool DGScript::isExecutingModule() {
     return !_arrayOfModuleNames.empty();
 }
 
+void DGScript::processCommand(const char *command) {
+    if (int result = luaL_loadbuffer(_L, command, strlen(command), "command") ||
+                    lua_pcall(_L, 0, 0, 0))
+        _error(result);
+}
+
 void DGScript::run() {
     if (_isInitialized) {
         if (int result = lua_pcall(_L, 0, 0, 0))
@@ -208,6 +214,9 @@ void DGScript::_error(int result) {
         case LUA_ERRERR:
             log->error(DGModScript, "%s", DGMsg250009);
             break;
+        case LUA_ERRSYNTAX:
+            log->error(DGModScript, "%s", DGMsg250010);
+            break;            
     }
     
     // Now print the last Lua string in the stack, which should indicate the error

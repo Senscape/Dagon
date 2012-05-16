@@ -237,27 +237,21 @@ void DGLog::warning(int forModule, const char* theString, ...) {
 ////////////////////////////////////////////////////////////
 
 void DGLog::beginIteratingHistory() {
-    _it = _history.begin();
+    _it = _history.end();
 }
 
 bool DGLog::iterateHistory() {
-    _it++;
+    _it--;
     
-    if (_it == _history.end())
+    if (_it == _history.begin() || _history.empty())
         return false;
     else
         return true;
 }
 
-bool DGLog::getCurrentLine(DGLogData* pointerToLogData) {
-    if (!_history.empty() && _it != _history.end()) {
-        strcpy(pointerToLogData->line, _it->line);
-        pointerToLogData->color = _it->color;
-        pointerToLogData->module = _it->module;
-        pointerToLogData->type = _it->type;
-        
-        return true;
-    }
-    
-    return false;
+void DGLog::getCurrentLine(DGLogData* pointerToLogData) {
+    strcpy(pointerToLogData->line, _it->line);
+    pointerToLogData->color = _it->color;
+    pointerToLogData->module = _it->module;
+    pointerToLogData->type = _it->type;
 }

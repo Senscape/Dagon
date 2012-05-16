@@ -105,6 +105,7 @@ public:
     void callback(int handler, int object);
     const char* module();
     bool isExecutingModule();
+    void processCommand(const char* command);
     void run();
     void setModule(const char* module);
     void unsetModule();

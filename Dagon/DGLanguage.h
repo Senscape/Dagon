@@ -89,6 +89,7 @@
 #define DGMsg250007 "Runtime error"
 #define DGMsg250008 "Memory allocation error"
 #define DGMsg250009 "Error while executing callback"
+#define DGMsg250010 "Syntax error"
 
 // Font module
 #define DGMsg060000 "Initializing font manager..."
