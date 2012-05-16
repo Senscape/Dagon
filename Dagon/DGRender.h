@@ -43,7 +43,7 @@ class DGRender {
     bool _shadersEnabled;
     bool _texturesEnabled;
     
-    DGTexture* _blendTexture;
+    DGTexture* _blendTexture;  
     
 public:
     DGRender();

@@ -101,13 +101,11 @@
 enum DGKeys {
     // These are all Mac key codes
 	DGKeyBackspace = 0x7f,
-	DGKeyF1 = 0x7a,
+    DGKeyF1 = 0x7a,
 	DGKeyF2 = 0x78,
 	DGKeyF3 = 0x63,	
 	DGKeyF4 = 0x76,
-    // There is a conflict here between Unicode and Mac key codes
-    //DGKeyF5 = 0x60,
-	DGKeyF5 = 0,
+    DGKeyF5 = 0x60,
 	DGKeyF6 = 0x61,	
 	DGKeyF7 = 0x62,	
 	DGKeyF8 = 0x64,	

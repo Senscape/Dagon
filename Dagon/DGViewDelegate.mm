@@ -84,7 +84,7 @@
     
 	if ([theEvent modifierFlags] & NSFunctionKeyMask) {
 		keyCode = [theEvent keyCode];
-		control->processKey(keyCode, false);
+		control->processFunctionKey(keyCode);
 	}
 	else {
         keyCode = *[[theEvent charactersIgnoringModifiers] UTF8String];

@@ -23,12 +23,13 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGInfoMargin 5
+#define DGInfoMargin 6
 #define DGMaxHotKeys 12
 
 class DGAudioManager;
 class DGCamera;
 class DGConfig;
+class DGConsole;
 class DGFont;
 class DGFeedManager;
 class DGFontManager;
@@ -103,6 +104,7 @@ class DGControl {
     DGRoom* _currentRoom;
     
     DGCamera* _camera;
+    DGConsole* _console;
     DGFont* _consoleFont;
     DGRender* _render;
     DGState* _state;
@@ -140,6 +142,7 @@ public:
     void init();
     DGNode* currentNode();
     DGRoom* currentRoom();
+    void processFunctionKey(int aKey);
     void processKey(int aKey, bool isModified);
     void processMouse(int x, int y, bool isButtonPressed);
     void registerGlobalHandler(int forEvent, int handlerForLua);

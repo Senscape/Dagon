@@ -17,6 +17,7 @@
 #include "DGAudioManager.h"
 #include "DGCamera.h"
 #include "DGConfig.h"
+#include "DGConsole.h"
 #include "DGControl.h"
 #include "DGFeedManager.h"
 #include "DGFontManager.h"
@@ -39,7 +40,7 @@ using namespace std;
 
 DGControl::DGControl() {
     audioManager = &DGAudioManager::getInstance();
-    config = &DGConfig::getInstance();
+    config = &DGConfig::getInstance();  
     feedManager = &DGFeedManager::getInstance();
     fontManager = &DGFontManager::getInstance();
     log = &DGLog::getInstance();
@@ -73,6 +74,7 @@ DGControl::DGControl() {
 DGControl::~DGControl() {
     if (_isInitialized) {
         delete _camera;
+        delete _console;
         delete _render;
         delete _state;
         delete _textureManager;
@@ -91,7 +93,7 @@ void DGControl::init() {
     
     _render = new DGRender;
     _render->init();
-    _render->updateScene();
+    _render->updateScene(); // Test for errors
     
     _camera = new DGCamera;
     _camera->setViewport(config->displayWidth, config->displayHeight);
@@ -101,6 +103,9 @@ void DGControl::init() {
     
     // Load the default font with a small height
     fontManager->init();
+    
+    _console = new DGConsole;
+    _console->init(); // Must be initialized after the Font Manager
     _consoleFont = fontManager->loadDefault();
     
     feedManager->init();
@@ -123,7 +128,7 @@ DGRoom* DGControl::currentRoom() {
     return _currentRoom;
 }
 
-void DGControl::processKey(int aKey, bool isModified) {
+void DGControl::processFunctionKey(int aKey) {
     int idx = 0;
     
     switch (aKey) {
@@ -138,36 +143,42 @@ void DGControl::processKey(int aKey, bool isModified) {
 		case DGKeyF9: idx = 9; break;
 		case DGKeyF10: idx = 10; break;
 		case DGKeyF11: idx = 11; break;
-		case DGKeyF12: idx = 12; break;
+		case DGKeyF12: idx = 12; break;         
+	}
+	
+    if (idx) {
+        //if (_hotKeyData[idx].enabled)
+        //DGScriptDoLine(hotkey[idx].line);
+        log->trace(DGModControl, "Index = %d", idx); // Temp
+    }
+}
+
+void DGControl::processKey(int aKey, bool isModified) {
+    switch (aKey) {
 		case DGKeyEsc:
             system->terminate();
 			break;
 		case DGKeyQuote:
 		case DGKeyTab:         
-			//DGConsoleToggleState();
+			_console->toggle();
 			break;
 		case DGKeyBackspace:
-			//DGConsoleDeleteChar();
+			_console->deleteChar();
 			break;
 		case DGKeyEnter:
-			//DGConsoleExecute();
+			_console->execute();
 			break;
         case 'f':
         case 'F':
             if (isModified) {
                 system->toggleFullScreen();
             }
-            //else DGConsoleInputChar(aKey);
+            else _console->inputChar(aKey);
             break;
 		default:
-			//DGConsoleInputChar(aKey);
+            _console->inputChar(aKey);
 			break;            
 	}
-	
-    if (idx) {
-        //if (_hotKeyData[idx].enabled)
-            //DGScriptDoLine(hotkey[idx].line);
-    }
 }
 
 void DGControl::processMouse(int x, int y, bool isButtonPressed) {
@@ -417,20 +428,46 @@ void DGControl::update() {
             // Drawing the node is handled by a separate function
             _drawScene();
             
-            // We now proceed with all the orthogonal projections
-            _camera->beginOrthoView();
+            break;
+    }
+    
+    // We now proceed with all the orthogonal projections,
+    // standard to all states
+    
+    // TODO: Optimize all the begin / end drawing calls, especially for fonts
+    _camera->beginOrthoView();
+    
+    // Blends, gamma, etc.
+    _render->updateScene();
+    
+    // Feedback
+    feedManager->update();
+    
+    // Mouse cursor
+    _render->beginDrawing(false); // Textures disabled (only for default cursor)
+    if (_mouseData.onSpot)
+        _render->setColor(DGColorBrightRed);
+    else
+        _render->setColor(DGColorDarkGray);
+    _render->drawCursor(_mouseData.x, _mouseData.y);
+    _render->endDrawing();
+      
+    // Debug info, if enabled
+    if (config->debugMode) {
+        _fpsCount++;
+        
+        if (_console->isEnabled()) {
+            _console->update();
             
-            feedManager->update();
+            if (_console->isReadyToProcess()) {
+                char command[DGMaxLogLength];
                 
-            _render->beginDrawing(false);
-            if (_mouseData.onSpot)
-                _render->setColor(DGColorBrightRed);
-            else
-                _render->setColor(DGColorDarkGray);
-            _render->drawCursor(_mouseData.x, _mouseData.y);
-            _render->endDrawing();
-            
-            if (config->debugMode) {
+                _console->getCommand(command);
+                script->processCommand(command);
+            }
+        }
+        else {
+            if (_console->isHidden()) {
                 // Set the color used for information
                 _render->setColor(DGColorBrightCyan);
                 _consoleFont->print(DGInfoMargin, DGInfoMargin, 
@@ -440,23 +477,20 @@ void DGControl::update() {
                 _consoleFont->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2), 
                                     "Viewing angle: %2.1f", _camera->fieldOfView());
                 _consoleFont->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
-                                    "FPS: %d", _fpsLastCount);                
+                                    "FPS: %d", _fpsLastCount); 
             }
-            
-            _camera->endOrthoView();
-            
-            break;
+            else
+                _console->update(); // Keep updating until done...
+        }
     }
+    
+    _camera->endOrthoView();
     
     audioManager->setOrientation(_camera->orientation());
     timerManager->update();
     
     // Flush the buffers
     system->update();
-    
-    if (config->debugMode) {
-        _fpsCount++;
-    }
 }
 
 ////////////////////////////////////////////////////////////
@@ -486,10 +520,6 @@ void DGControl::_drawScene() {
         
         _render->endDrawing();
     }
-    
-    // FIXME: This should go between begin and endOrthoView calls because
-    // the blending texture is drawn here
-    _render->updateScene();
 }
 
 void DGControl::_scanSpots() {
