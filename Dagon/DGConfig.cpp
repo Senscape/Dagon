@@ -35,10 +35,11 @@ DGConfig::DGConfig() {
 	displayDepth = DGDefDisplayDepth;
 	debugMode = DGDefDebugMode;
 	dust = DGDefDust;
+    framerate = DGDefFramerate;
 	fullScreen = DGDefFullScreen;
 	effects = DGDefEffects;
 	log = DGDefLog;
-	framerate = DGDefFramerate;
+    mute = DGDefMute;
 	showSplash = DGDefShowSplash;
 	showSpots = DGDefShowSpots;
 	texCompression = DGDefTexCompression;

@@ -193,7 +193,11 @@ void DGAudio::load() {
             alGenBuffers(DGAudioNumberOfBuffers, _alBuffers);
             alGenSources(1, &_alSource);
             
-            alSourcef (_alSource, AL_GAIN,			  _currentVolume);
+            if (config->mute)
+                alSourcef(_alSource, AL_GAIN, 0.0f);
+            else
+                alSourcef(_alSource, AL_GAIN, _currentVolume);
+            
             alSource3f(_alSource, AL_POSITION,        0.0, 0.0, 0.0);
             alSource3f(_alSource, AL_VELOCITY,        0.0, 0.0, 0.0);
             alSource3f(_alSource, AL_DIRECTION,       0.0, 0.0, 0.0);
@@ -314,7 +318,10 @@ void DGAudio::update() {
         }
         
         // FIXME: Not very elegant as we're doing this every time
-        alSourcef (_alSource, AL_GAIN, _currentVolume);
+        if (config->mute)
+            alSourcef(_alSource, AL_GAIN, 0.0f);
+        else
+            alSourcef(_alSource, AL_GAIN, _currentVolume);
     }
 }
 

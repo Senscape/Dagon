@@ -43,7 +43,7 @@ class DGLog;
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
-class DGAudioManager : public DGObject {
+class DGAudioManager {
     DGConfig* config;
     DGLog* log;
     

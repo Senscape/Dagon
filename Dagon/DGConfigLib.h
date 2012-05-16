@@ -82,6 +82,11 @@ static int DGConfigLibGet(lua_State *L) {
 		lua_pushboolean(L, DGConfig::getInstance().log);
 		return 1;
 	}
+    
+    if (strcmp(key, "mute") == 0) {
+		lua_pushboolean(L, DGConfig::getInstance().mute);
+		return 1;
+	}
 	
 	if (strcmp(key, "script") == 0) {
 		lua_pushstring(L, DGConfig::getInstance().script());
@@ -148,6 +153,9 @@ static int DGConfigLibSet(lua_State *L) {
 	
 	if (strcmp(key, "log") == 0)
 		DGConfig::getInstance().log = (bool)lua_toboolean(L, 3);
+    
+    if (strcmp(key, "mute") == 0)
+		DGConfig::getInstance().mute = (bool)lua_toboolean(L, 3);
     
     if (strcmp(key, "script") == 0)
         DGConfig::getInstance().setScript(luaL_checkstring(L, 3));
