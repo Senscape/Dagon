@@ -42,8 +42,8 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGAudioBufferSize       (4096 * 8)
-#define DGAudioNumberOfBuffers  2
+#define DGAudioBufferSize       4096
+#define DGAudioNumberOfBuffers  3
 
 enum DGAudioFlags {
     DGAudioFadeIn,
@@ -86,6 +86,7 @@ class DGAudio : public DGObject {
     float _currentVolume;
     float _targetVolume;
     
+    unsigned int _retainCount;
     int _fadeDirection;
     float _fadeStep;
     float _volumeFadeStep;
@@ -118,6 +119,10 @@ public:
     bool isLoopable();
     bool isPlaying();
     
+    // Gets
+    
+    int retainCount();
+    
     // Sets
     
     void fadeIn();
@@ -127,6 +132,7 @@ public:
     void setFadeTime(int withMilliseconds);
     void setFadeForVolumeChanges(int withMilliseconds);
     void setLoopable(bool loopable);
+    void setPosition(unsigned int onFace);
     void setResource(const char* fromFileName);
     void setVolume(float targetVolume);
     
@@ -138,6 +144,12 @@ public:
     void stop();
     void unload();
     void update();
+    
+    // These methods aren't used as in typical Objective-C,
+    // they will indicate wheteher we must keep playing an
+    // audio while changing nodes or not.
+    void retain();
+    void release();
 };
 
 #endif // DG_AUDIO_H

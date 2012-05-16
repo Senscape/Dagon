@@ -27,7 +27,7 @@ using namespace std;
 DGAudioManager::DGAudioManager() {
     log = &DGLog::getInstance();
     config = &DGConfig::getInstance();
-    
+
     _isInitialized = false;
 }
 
@@ -36,7 +36,13 @@ DGAudioManager::DGAudioManager() {
 ////////////////////////////////////////////////////////////
 
 DGAudioManager::~DGAudioManager() {
-    if (!_arrayOfAudios.empty()) {
+    // FIXME: Here it's important to determine if the
+    // audio was created by Lua or by another class
+    
+    // Each audio object should unregister itself if
+    // destructed
+    
+    /*if (!_arrayOfAudios.empty()) {
         vector<DGAudio*>::iterator it;
         
         it = _arrayOfAudios.begin();
@@ -45,9 +51,11 @@ DGAudioManager::~DGAudioManager() {
             delete *it;
             it++;
         }   
-    }
+    }*/
     
+    // Now we shut down OpenAL completely
     if (_isInitialized) {
+        alcMakeContextCurrent(NULL);
         alcDestroyContext(_alContext);
         alcCloseDevice(_alDevice);
     }
@@ -57,51 +65,124 @@ DGAudioManager::~DGAudioManager() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+void DGAudioManager::clear() {
+    if (_isInitialized) {
+        if (!_arrayOfActiveAudios.empty()) {
+            vector<DGAudio*>::iterator it;
+            
+            it = _arrayOfActiveAudios.begin();
+            
+            while (it != _arrayOfActiveAudios.end()) {
+                (*it)->release();
+                
+                it++;
+            }
+        }
+    }
+}
+
+void DGAudioManager::flush() {
+    if (_isInitialized) {
+        if (!_arrayOfActiveAudios.empty()) {
+            vector<DGAudio*>::iterator it;
+            
+            it = _arrayOfActiveAudios.begin();
+            
+            while (it != _arrayOfActiveAudios.end()) {
+                if ((*it)->retainCount() == 0) {
+                    (*it)->unload();
+                    _arrayOfActiveAudios.erase(it);
+                }
+                else it++;
+            }
+        }
+    }
+}
+
 void DGAudioManager::init() {
+    log->trace(DGModAudio, "%s", DGMsg070000);
+    
     _alDevice = alcOpenDevice(NULL);
+    
+    if (!_alDevice) {
+        log->error(DGModAudio, "%s", DGMsg270001);
+        return;
+    }
+    
 	_alContext = alcCreateContext(_alDevice, NULL);
+    
+    if (!_alContext) {
+        log->error(DGModAudio, "%s", DGMsg270002);
+        
+        return;
+    }
+    
 	alcMakeContextCurrent(_alContext);
+    
+    ALfloat listenerPos[] = {0.0, 0.0, 0.0};
+	ALfloat listenerVel[] = {0.0, 0.0, 0.0};
+	ALfloat listenerOri[] = {0.0, 0.0, -1.0, 
+                             0.0, 1.0, 0.0}; // Listener facing into the screen
+    
+	alListenerfv(AL_POSITION, listenerPos);
+	alListenerfv(AL_VELOCITY, listenerVel);
+	alListenerfv(AL_ORIENTATION, listenerOri);
     
     ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
-		log->error(DGModAudio, "Error while initializing OpenAL: %d", error);
-        
+		log->error(DGModAudio, "%s: init (%d)", DGMsg270003, error);
 		return;
 	}
-    
-    ///////////////////////////////////////////
-    
-    DGAudio* audio;
-    audio = new DGAudio;
-    audio->setResource("trck_daniel_layer0.ogg");
-    this->requestNewAudio(audio);
-    this->requireAudioToLoad(audio);
-    audio->play();
-    
-    ///////////////////////////////////////////
     
     _isInitialized = true;
 }
 
-void DGAudioManager::requestNewAudio(DGAudio* target) {
+void DGAudioManager::registerAudio(DGAudio* target) {
     _arrayOfAudios.push_back(target);
 }
 
-void DGAudioManager::requireAudioToLoad(DGAudio* target) {
+void DGAudioManager::requestAudio(DGAudio* target) {
     if (!target->isLoaded()) {
         target->load();
-    } 
+    }
+
+    target->retain();
+    
+    // If the audio is not active, then it's added to
+    // that vector
+    
+    bool isActive = false;
+    std::vector<DGAudio*>::iterator it;
+    it = _arrayOfActiveAudios.begin();
+    
+    while (it != _arrayOfActiveAudios.end()) {
+        if ((*it) == target) {
+            isActive = true;
+            break;
+        }
+        
+        it++;
+    }
+    
+    if (!isActive)
+        _arrayOfActiveAudios.push_back(target);
+}
+
+void DGAudioManager::setOrientation(float* orientation) {
+    if (_isInitialized) {
+        alListenerfv(AL_ORIENTATION, orientation);
+    }
 }
 
 void DGAudioManager::update() {
     if (_isInitialized) {
-        if (!_arrayOfAudios.empty()) {
+        if (!_arrayOfActiveAudios.empty()) {
             vector<DGAudio*>::iterator it;
             
-            it = _arrayOfAudios.begin();
+            it = _arrayOfActiveAudios.begin();
             
-            while (it != _arrayOfAudios.end()) {
+            while (it != _arrayOfActiveAudios.end()) {
                 (*it)->update();
                 it++;
             }

@@ -54,7 +54,7 @@ public:
     
     // Gets
     
-    DGAudio* arrayOfAudios();
+    std::vector<DGAudio*> arrayOfAudios();
     DGNode* currentNode();
     DGAudio* defaultFootstep();
     int effectsFlags();

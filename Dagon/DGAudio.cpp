@@ -31,6 +31,8 @@ DGAudio::DGAudio() {
 	_oggCallbacks.close_func = _oggClose;
 	_oggCallbacks.tell_func = _oggTell;
     
+    _retainCount = 0;
+    
     // Default volume is the loudest possible
     _defaultVolume = 1.0f;
     _currentVolume = 1.0f;
@@ -76,6 +78,14 @@ bool DGAudio::isPlaying() {
 }
 
 ////////////////////////////////////////////////////////////
+// Implementation - Gets
+////////////////////////////////////////////////////////////
+
+int DGAudio::retainCount() {
+    return _retainCount;
+}
+
+////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
@@ -106,7 +116,30 @@ void DGAudio::setFadeForVolumeChanges(int withMilliseconds) {
 }
 
 void DGAudio::setLoopable(bool loopable) {
-    _isLoopable = true;
+    _isLoopable = loopable;
+}
+
+void DGAudio::setPosition(unsigned int onFace) {    
+    switch (onFace) {
+        case DGNorth:
+            alSource3f(_alSource, AL_POSITION, 0.0, 0.0, -1.0);
+            break;
+        case DGEast:
+            alSource3f(_alSource, AL_POSITION, 1.0, 0.0, 0.0);
+            break;
+        case DGSouth:
+            alSource3f(_alSource, AL_POSITION, 0.0, 0.0, 1.0);
+            break;
+        case DGWest:
+            alSource3f(_alSource, AL_POSITION, -1.0, 0.0, 0.0);
+            break;
+        case DGUp:
+            alSource3f(_alSource, AL_POSITION, 0.0, 1.0, 0.0);
+            break;
+        case DGDown:
+            alSource3f(_alSource, AL_POSITION, 0.0, -1.0, 0.0);
+            break;            
+    }
 }
 
 void DGAudio::setResource(const char* fromFileName) {
@@ -122,121 +155,175 @@ void DGAudio::setVolume(float targetVolume) {
 ////////////////////////////////////////////////////////////
 
 void DGAudio::load() {
-    if (_isLoaded)
-        return;
-    
-    FILE* fh;
-    
-    fh = fopen(config->path(DGPathRes, _resource.name), "rb");	
-    
-    if (fh != NULL) {
-        fseek(fh, 0, SEEK_END);
-        _resource.dataSize = ftell(fh);
-        fseek(fh, 0, SEEK_SET);
-        _resource.data = (char*)malloc(_resource.dataSize);
-        fread(_resource.data, _resource.dataSize, 1, fh);
-        _resource.dataRead = 0;
+    if (!_isLoaded) {    
+        FILE* fh;
         
-        if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
-            return;
+        fh = fopen(config->path(DGPathRes, _resource.name), "rb");	
+        
+        if (fh != NULL) {
+            fseek(fh, 0, SEEK_END);
+            _resource.dataSize = ftell(fh);
+            fseek(fh, 0, SEEK_SET);
+            _resource.data = (char*)malloc(_resource.dataSize);
+            fread(_resource.data, _resource.dataSize, 1, fh);
+            _resource.dataRead = 0;
+            
+            if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
+                log->error(DGModAudio, "%s", DGMsg270007);
+                return;
+            }
+            
+            // Get file info
+            vorbis_info* info = ov_info(&_oggStream, -1);
+            
+            _channels = info->channels;
+            _rate = info->rate;
+            
+            if (_channels == 1) _alFormat = AL_FORMAT_MONO16;
+            else if (_channels == 2 ) _alFormat = AL_FORMAT_STEREO16;
+            else {
+                // Invalid number of channels
+                log->error(DGModAudio, "%s: %s", DGMsg270006, _resource.name);
+                return;
+            }
+            
+            // We no longer require the file handle
+            fclose(fh);
+            
+            alGenBuffers(DGAudioNumberOfBuffers, _alBuffers);
+            alGenSources(1, &_alSource);
+            
+            alSourcef (_alSource, AL_GAIN,			  _currentVolume);
+            alSource3f(_alSource, AL_POSITION,        0.0, 0.0, 0.0);
+            alSource3f(_alSource, AL_VELOCITY,        0.0, 0.0, 0.0);
+            alSource3f(_alSource, AL_DIRECTION,       0.0, 0.0, 0.0);
+            
+            _verifyError("load");
+            
+            _isLoaded = true;
         }
-        
-        // Get file info
-        vorbis_info* info = ov_info(&_oggStream, -1);
-        
-        _channels = info->channels;
-        _rate = info->rate;
-        
-        if (_channels == 1) _alFormat = AL_FORMAT_MONO16;
-        else if (_channels == 2 ) _alFormat = AL_FORMAT_STEREO16;
-        else {
-            // Invalid number of channels
-        }
-        
-        // We no longer require the file handle
-        fclose(fh);
-        
-        alGenBuffers(DGAudioNumberOfBuffers, _alBuffers);
-		alGenSources(1, &_alSource);
-		
-		alSourcef (_alSource, AL_GAIN,			  _currentVolume);
-		alSource3f(_alSource, AL_POSITION,        0.0, 0.0, 0.0);
-		alSource3f(_alSource, AL_VELOCITY,        0.0, 0.0, 0.0);
-		alSource3f(_alSource, AL_DIRECTION,       0.0, 0.0, 0.0);
-		alSourcef (_alSource, AL_ROLLOFF_FACTOR,  0.0          );
-		alSourcei (_alSource, AL_SOURCE_RELATIVE, AL_TRUE      );
-        
-        _verifyError("load");
-        
-        _isLoaded = true;
+        else log->error(DGModAudio, "%s: %s", DGMsg270005, _resource.name);
     }
 }
 
 void DGAudio::play() {
-    for (int i = 0; i < DGAudioNumberOfBuffers; i++) {
-		if (!_stream(_alBuffers[i])) {
-            // Raise an error
-            
-			return;
+    if (_isLoaded && !_isPlaying) {    
+        for (int i = 0; i < DGAudioNumberOfBuffers; i++) {
+            if (!_stream(_alBuffers[i])) {
+                // Raise an error
+                
+                return;
+            }
         }
+        
+        alSourceQueueBuffers(_alSource, DGAudioNumberOfBuffers, _alBuffers);
+        alSourcePlay(_alSource);
+        _isPlaying = true;
+        
+        _verifyError("play");
     }
-    
-    alSourceQueueBuffers(_alSource, DGAudioNumberOfBuffers, _alBuffers);
-    alSourcePlay(_alSource);
-    
-    _verifyError("play");
 }
 
 void DGAudio::pause() {
-    
+    if (_isPlaying) {
+        int queued;
+        
+        alSourceStop(_alSource);
+        alGetSourcei(_alSource, AL_BUFFERS_QUEUED, &queued);
+        
+        while (queued--) {
+            ALuint buffer;
+            alSourceUnqueueBuffers(_alSource, 1, &buffer);
+        }
+        
+        _isPlaying = false;
+        
+        _verifyError("pause");
+    } 
 }
 
 void DGAudio::stop() {
-    
+    if (_isPlaying) {
+        int queued;
+        
+        alSourceStop(_alSource);
+        alGetSourcei(_alSource, AL_BUFFERS_QUEUED, &queued);
+        
+        while (queued--) {
+            ALuint buffer;
+            alSourceUnqueueBuffers(_alSource, 1, &buffer);
+        }
+        
+        ov_raw_seek(&_oggStream, 0);
+        _isPlaying = false;
+        
+        _verifyError("stop");
+    }
 }
 
 void DGAudio::unload() {
-    free(_resource.data);
-    _isLoaded = false;
+    if (_isLoaded) {
+        this->stop();
+        
+        alDeleteSources(1, &_alSource);
+		alDeleteBuffers(1, _alBuffers);
+        ov_clear(&_oggStream);
+        free(_resource.data);
+        
+        _isLoaded = false;
+    }
 }
 
 void DGAudio::update() {
-    int processed;
-    
-    alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &processed);
-    
-    while (processed--) {
-        ALuint buffer;
+    if (_isPlaying) {
+        int processed;
         
-		alSourceUnqueueBuffers(_alSource, 1, &buffer);
-        _stream(buffer);
-        alSourceQueueBuffers(_alSource, 1, &buffer);
-	}
-    
-    if (_isFading) {
-        switch (_fadeDirection) {
-            case DGAudioFadeIn:
-                _currentVolume += _fadeStep;
-                if (_currentVolume > _targetVolume)
-                    _isFading = false;
-                
-                break;
-            case DGAudioFadeOut:
-                _currentVolume -= _fadeStep;
-                if (_currentVolume < _targetVolume)
-                    _isFading = false;
-                
-                break;
+        alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &processed);
+        
+        while (processed--) {
+            ALuint buffer;
+            
+            alSourceUnqueueBuffers(_alSource, 1, &buffer);
+            _stream(buffer);
+            alSourceQueueBuffers(_alSource, 1, &buffer);
         }
+        
+        if (_isFading) {
+            switch (_fadeDirection) {
+                case DGAudioFadeIn:
+                    _currentVolume += _fadeStep;
+                    if (_currentVolume > _targetVolume)
+                        _isFading = false;
+                    
+                    break;
+                case DGAudioFadeOut:
+                    _currentVolume -= _fadeStep;
+                    if (_currentVolume < _targetVolume)
+                        _isFading = false;
+                    
+                    break;
+            }
+        }
+        else {
+            // If the audio is not fading strongly, we check if we must
+            // smoothly update the volume. Note this isn't as accurate as above.
+            if (_currentVolume < _targetVolume)
+                _currentVolume += _volumeFadeStep;
+            else if (_currentVolume > _targetVolume)
+                _currentVolume -= _volumeFadeStep;
+        }
+        
+        // FIXME: Not very elegant as we're doing this every time
+        alSourcef (_alSource, AL_GAIN, _currentVolume);
     }
-    else {
-        // If the audio is not fading strongly, we check if we must
-        // smoothly update the volume. Note this isn't as accurate as above.
-        if (_currentVolume < _targetVolume)
-            _currentVolume += _volumeFadeStep;
-        else if (_currentVolume > _targetVolume)
-            _currentVolume -= _targetVolume;
-    }
+}
+
+void DGAudio::retain() {
+    _retainCount++;
+}
+
+void DGAudio::release() {
+    _retainCount--;
 }
 
 ////////////////////////////////////////////////////////////
@@ -244,36 +331,56 @@ void DGAudio::update() {
 ////////////////////////////////////////////////////////////
 
 bool DGAudio::_stream(ALuint buffer) {
-    char data[DGAudioBufferSize];
-    int size = 0;
-    int section;
-    int result;
+    // This is a failsafe; if this is true, we won't attempt
+    // to stream anymore
+    static bool _hasStreamingError = false;
     
-    while (size < DGAudioBufferSize) {
-        result = ov_read(&_oggStream, data + size, DGAudioBufferSize - size, 0, 2, 1, &section);
+    if (!_hasStreamingError) {
+        char data[DGAudioBufferSize];
+        int size = 0;
+        int section;
+        int result;
         
-        if (result > 0)
-            size += result;
-        else if (result < 0) {
-            // Error
-            return false;
+        while (size < DGAudioBufferSize) {
+            result = ov_read(&_oggStream, data + size, DGAudioBufferSize - size, 0, 2, 1, &section);
+            
+            if (result > 0)
+                size += result;
+            else if (result == 0) {
+                // EOF
+                if (_isLoopable)
+                    ov_raw_seek(&_oggStream, 0);
+                else
+                    this->stop();
+                
+                return false;
+            }
+            else if (result == OV_HOLE) {
+                // May return OV_HOLE after we rewind the stream,
+                // so we just re-loop
+                continue;
+            }
+            else if (result < 0) {
+                // Error
+                log->error(DGModAudio, "%s: %s", DGMsg270004, _resource.name);
+                _hasStreamingError = true;
+                
+                return false;
+            }
         }
-        else if (result == 0) {
-            // EOF
-            return false;
-        }    
+        
+        alBufferData(buffer, _alFormat, data, size, _rate);
+        
+        return true;
     }
-    
-    alBufferData(buffer, _alFormat, data, size, _rate);
-    
-    return true;
+    else return false;
 }
 
 ALboolean DGAudio::_verifyError(const char* operation) {
    	ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
-		log->error(DGModAudio, "OpenAL error: %s (%d)", operation, error);
+		log->error(DGModAudio, "%s: %s (%d)", DGMsg270003, operation, error);
         
 		return AL_FALSE;
 	}

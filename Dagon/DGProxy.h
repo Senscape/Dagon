@@ -24,6 +24,7 @@ extern "C" {
 #include "Luna.h"
 
 #include "DGPlatform.h"
+#include "DGAudio.h"
 #include "DGNode.h"
 #include "DGRoom.h"
 #include "DGSpot.h"
@@ -32,6 +33,7 @@ extern "C" {
 // Definitions
 ////////////////////////////////////////////////////////////
 
+#define DGAudioProxyName "Audio"
 #define DGNodeProxyName "Node"
 #define DGRoomProxyName "Room"
 #define DGSpotProxyName "Spot"
@@ -39,6 +41,7 @@ extern "C" {
 #define method(class, name) {#name, &class::name}
 
 static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
+static DGAudio* DGProxyToAudio(lua_State *L, int idx);
 static DGNode* DGProxyToNode(lua_State *L, int idx);
 static DGRoom* DGProxyToRoom(lua_State *L, int idx);
 static DGSpot* DGProxyToSpot(lua_State *L, int idx);
@@ -46,6 +49,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 // Now that the proxy functions has been declared, we
 // proceed to include the remaining headers
 
+#include "DGAudioProxy.h"
 #include "DGNodeProxy.h"
 #include "DGRoomProxy.h"
 #include "DGSpotProxy.h"
@@ -88,6 +92,9 @@ int DGCheckProxy(lua_State *L, int idx) {
     if (lua_isuserdata(L, idx)) {                
         // Good, now check against each user type
 
+        if (_checkutype(L, idx, DGAudioProxy::className))
+            return DGObjectAudio; // It's an audio
+        
         if (_checkutype(L, idx, DGNodeProxy::className))
             return DGObjectNode; // It's a node
         
@@ -101,6 +108,11 @@ int DGCheckProxy(lua_State *L, int idx) {
     }
     
     return DGObjectNone;
+}
+
+DGAudio* DGProxyToAudio(lua_State *L, int idx) {
+    DGAudioProxy* a = Luna<DGAudioProxy>::check(L, idx);
+    return a->ptr();
 }
 
 DGNode* DGProxyToNode(lua_State *L, int idx) {

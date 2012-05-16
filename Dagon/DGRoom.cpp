@@ -59,10 +59,8 @@ bool DGRoom::hasNodes() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-DGAudio* DGRoom::arrayOfAudios() {
-    DGAudio* data = *_arrayOfAudios.data();
-    
-    return data;
+vector<DGAudio*> DGRoom::arrayOfAudios() {
+    return _arrayOfAudios;
 }
 
 DGNode* DGRoom::currentNode() {
