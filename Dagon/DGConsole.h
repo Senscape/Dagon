@@ -10,51 +10,39 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_TEXTUREMANAGER_H
-#define DG_TEXTUREMANAGER_H
+#ifndef DG_CONSOLE_H
+#define DG_CONSOLE_H
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
 #include "DGPlatform.h"
-#include "DGTexture.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// This is temporary until we actually test how much memory is available.
-// NOT accurate! It's only a reference value since textures are flushed
-// before the next switch.
-#define DGMaxActiveTextures 6
-
 class DGConfig;
+class DGFont;
+class DGFontManager;
 class DGLog;
-class DGNode;
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGTextureManager {
+class DGConsole {
     DGConfig* config;
+    DGFontManager* fontManager;
     DGLog* log;
     
-    std::vector<DGTexture*> _arrayOfActiveTextures;
-    std::vector<DGTexture*> _arrayOfTextures;
+    DGFont* _consoleFont;
     
 public:
-    DGTextureManager();
-    ~DGTextureManager();
+    DGConsole();
+    ~DGConsole();
     
-    void appendTextureToBundle(const char* nameOfBundle, DGTexture* textureToAppend);
-    void createBundle(const char* nameOfBundle);
-    int itemsInBundle(const char* nameOfBundle);
-    void flush();
-    void registerTexture(DGTexture* target);
-    void requestBundle(DGNode* forNode);
-    void requestTexture(DGTexture* target);
 };
 
-#endif // DG_TEXTUREMANAGER_H
+#endif // DG_CONSOLE_H

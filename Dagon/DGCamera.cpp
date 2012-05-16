@@ -50,6 +50,17 @@ DGCamera::DGCamera() {
     _panDirV = DGCamPanNone;
     
     _neutralZone = DGCamNeutralZone;
+    
+    _orientation[0] = 0.0f;
+    _orientation[1] = 0.0f;
+    _orientation[2] = -1.0f;
+    _orientation[3] = 0.0f;
+    _orientation[4] = 1.0f; 
+    _orientation[5] = 0.0f; 
+    
+    _position[0] = 0.0f;
+    _position[1] = 0.0f;
+    _position[2] = 0.0f;
 }
 
 ////////////////////////////////////////////////////////////
@@ -63,34 +74,6 @@ DGCamera::~DGCamera() {
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
-
-void DGCamera::pan(int xPosition, int yPosition) {
-	if (xPosition > _panRegion.size.width) {
-		_deltaX = abs(xPosition - _panRegion.size.width);
-        _panDirH = DGCamPanRight;
-	}
-	else if (xPosition < _panRegion.origin.x) {
-		_deltaX = abs(xPosition - _panRegion.origin.x);
-        _panDirH = DGCamPanLeft;
-	}
-	else {
-        _deltaX = 0;
-        _panDirH = DGCamPanNone;
-    }
-	
-	if (yPosition > _panRegion.size.height) {
-		_deltaY = abs(yPosition - _panRegion.size.height);
-        _panDirV = DGCamPanDown;
-	}
-	else if (yPosition < _panRegion.origin.y) {
-		_deltaY = abs(yPosition - _panRegion.origin.y);
-        _panDirV = DGCamPanUp;
-	}
-	else {
-        _deltaY = 0;
-        _panDirV = DGCamPanNone;
-    }
-}
 
 void DGCamera::beginOrthoView() {
     // Switch to the projection view
@@ -124,6 +107,42 @@ float DGCamera::fieldOfView() {
 
 int DGCamera::neutralZone() {
     return _neutralZone;
+}
+
+float* DGCamera::orientation() {
+    return _orientation;
+}
+
+void DGCamera::pan(int xPosition, int yPosition) {
+	if (xPosition > _panRegion.size.width) {
+		_deltaX = abs(xPosition - _panRegion.size.width);
+        _panDirH = DGCamPanRight;
+	}
+	else if (xPosition < _panRegion.origin.x) {
+		_deltaX = abs(xPosition - _panRegion.origin.x);
+        _panDirH = DGCamPanLeft;
+	}
+	else {
+        _deltaX = 0;
+        _panDirH = DGCamPanNone;
+    }
+	
+	if (yPosition > _panRegion.size.height) {
+		_deltaY = abs(yPosition - _panRegion.size.height);
+        _panDirV = DGCamPanDown;
+	}
+	else if (yPosition < _panRegion.origin.y) {
+		_deltaY = abs(yPosition - _panRegion.origin.y);
+        _panDirV = DGCamPanUp;
+	}
+	else {
+        _deltaY = 0;
+        _panDirV = DGCamPanNone;
+    }
+}
+
+float* DGCamera::position() {
+    return _position;
 }
 
 void DGCamera::setFieldOfView(float fov) {
@@ -165,9 +184,6 @@ void DGCamera::setViewport(int width, int height) {
 }
 
 void DGCamera::update() {
-	float lx;
-    float lz;
-    
     // Implement direction
     // Delta only affects accel or speed
     // Update angles with speed
@@ -194,10 +210,11 @@ void DGCamera::update() {
         }
     }
     
-    lx = (float)sin(_angleH);
-    lz = (float)-cos(_angleH);
+    _orientation[0] = (float)sin(_angleH);
+    _orientation[1] = _angleV;
+    _orientation[2] = (float)-cos(_angleH);
     
-    gluLookAt(0.0f, 0.0f, 0.0f,
-              lx, _angleV, lz,
-              0.0f, 1.0f, 0.0f);
+    gluLookAt(_position[0], _position[1], _position[2],
+              _orientation[0], _orientation[1], _orientation[2],
+              _orientation[3], _orientation[4], _orientation[5]);
 }
