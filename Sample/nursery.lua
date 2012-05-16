@@ -1,3 +1,4 @@
+room 'CellsA'
 room 'CorridorB'
 
 nursery1 = Node("nursery1", "Door to Hallway B")
@@ -6,4 +7,4 @@ nursery3 = Node("nursery3", "Door to Cells")
 
 nursery1:link({ W = nursery2, E = CorridorB })
 nursery2:link({ W = nursery3, E = nursery1 })
-nursery3:link({ E = nursery2 })
+nursery3:link({ W = CellsA, E = nursery2 })
