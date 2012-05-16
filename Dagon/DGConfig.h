@@ -36,6 +36,7 @@ enum DGConfigDefaults {
 	DGDefFramerate = 60,
 	DGDefFullScreen = true,
 	DGDefLog = true,
+    DGDefMute = false,
     DGDefScare = false, // Move to effects
 	DGDefShowSplash = true,
 	DGDefShowSpots = false,
@@ -91,10 +92,11 @@ public:
 	int framerate;
 	bool fullScreen;
     bool log;
-	bool texCompression;
+    bool mute;
     bool scare;
     bool showSplash;
 	bool showSpots;
+    bool texCompression;
     bool throb;
 	bool verticalSync;
     
