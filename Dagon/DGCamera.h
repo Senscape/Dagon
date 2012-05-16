@@ -48,6 +48,9 @@ class DGCamera {
     int _deltaX;
     int _deltaY;
     
+    float _orientation[6];
+    float _position[3];
+    
     int _neutralZone;
     
     DGSize _viewport;
@@ -64,7 +67,9 @@ public:
     void endOrthoView();
     float fieldOfView();
     int neutralZone();
+    float* orientation();
     void pan(int xPosition, int yPosition);
+    float* position();
     void setFieldOfView(float fov);
     void setNeutralZone(int zone);
     void setViewport(int width, int height);

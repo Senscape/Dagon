@@ -85,36 +85,7 @@ void DGTextureManager::flush() {
     }
 }
 
-void DGTextureManager::requestNewBundle(DGNode* forNode) {
-    if (forNode->hasBundleName()) {
-        for (int i = 0; i < 6; i++) {
-            std::vector<int> arrayOfCoordinates;
-            // We ensure the texture is properly stretched, so we take the default cube size
-            // TODO: This setting should be obtained from the DGConfig class
-            int coords[] = {0, 0, DGDefTexSize, 0, DGDefTexSize, DGDefTexSize, 0, DGDefTexSize};
-            unsigned arraySize = sizeof(coords) / sizeof(int);
-            
-            arrayOfCoordinates.assign(coords, coords + arraySize);
-            DGSpot* spot = new DGSpot(arrayOfCoordinates, i, DGSpotClass);
-            DGTexture* texture = new DGTexture;
-            
-            spot->setTexture(texture);
-            spot->texture()->setIndexInBundle(i);
-            
-            // In this case, the filename is generated from the name
-            // of the texture
-            spot->texture()->setName(forNode->bundleName());
-            
-            requestNewTexture(spot->texture());
-            
-            forNode->addSpot(spot);
-        }
-    }
-    
-    // Possibly raise an error if this fails
-}
-
-void DGTextureManager::requestNewTexture(DGTexture* target) {
+void DGTextureManager::registerTexture(DGTexture* target) {
     // FIXME: If the script specifies a file with extension, we should
     // prioritize that and avoid doing any operations here.
     
@@ -145,7 +116,36 @@ void DGTextureManager::requestNewTexture(DGTexture* target) {
     // It's the responsibility of another module to generate the res path accordingly
 }
 
-void DGTextureManager::requireTextureToLoad(DGTexture* target) {
+void DGTextureManager::requestBundle(DGNode* forNode) {
+    if (forNode->hasBundleName()) {
+        for (int i = 0; i < 6; i++) {
+            std::vector<int> arrayOfCoordinates;
+            // We ensure the texture is properly stretched, so we take the default cube size
+            // TODO: This setting should be obtained from the DGConfig class
+            int coords[] = {0, 0, DGDefTexSize, 0, DGDefTexSize, DGDefTexSize, 0, DGDefTexSize};
+            unsigned arraySize = sizeof(coords) / sizeof(int);
+            
+            arrayOfCoordinates.assign(coords, coords + arraySize);
+            DGSpot* spot = new DGSpot(arrayOfCoordinates, i, DGSpotClass);
+            DGTexture* texture = new DGTexture;
+            
+            spot->setTexture(texture);
+            spot->texture()->setIndexInBundle(i);
+            
+            // In this case, the filename is generated from the name
+            // of the texture
+            spot->texture()->setName(forNode->bundleName());
+            
+            registerTexture(spot->texture());
+            
+            forNode->addSpot(spot);
+        }
+    }
+    
+    // Possibly raise an error if this fails
+}
+
+void DGTextureManager::requestTexture(DGTexture* target) {
     if (!target->isLoaded()) {
         target->load();
         
