@@ -15,7 +15,6 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGConfig.h"
-#include "DGControl.h"
 #include "DGFeedManager.h"
 #include "DGLog.h"
 #include "DGProxy.h"
@@ -92,6 +91,13 @@ void DGScript::init(int argc, char* argv[]) {
     lua_getglobal(_L, "_G");
     
     // Push all enum values
+    DGLuaEnum(_L, AUDIO, DGObjectAudio);
+    DGLuaEnum(_L, CUSTOM, DGActionCustom);
+    DGLuaEnum(_L, IMAGE, DGObjectTexture);
+    DGLuaEnum(_L, FEED, DGActionFeed);
+    DGLuaEnum(_L, SWITCH, DGActionSwitch);
+    DGLuaEnum(_L, VIDEO, DGObjectVideo);
+    
     DGLuaEnum(_L, NORTH, DGNorth);
     DGLuaEnum(_L, EAST, DGEast);
     DGLuaEnum(_L, WEST, DGWest);
@@ -102,13 +108,15 @@ void DGScript::init(int argc, char* argv[]) {
     DGLuaEnum(_L, SOUTHEAST, DGSouthEast);
     DGLuaEnum(_L, NORTHWEST, DGNorthWest);
     DGLuaEnum(_L, SOUTHWEST, DGSouthWest);
-
-    DGLuaEnum(_L, AUDIO, DGObjectAudio);
-    DGLuaEnum(_L, CUSTOM, DGActionCustom);
-    DGLuaEnum(_L, IMAGE, DGObjectTexture);
-    DGLuaEnum(_L, FEED, DGActionFeed);
-    DGLuaEnum(_L, SWITCH, DGActionSwitch);
-    DGLuaEnum(_L, VIDEO, DGObjectVideo);
+    
+    DGLuaEnum(_L, ENTER_NODE, DGEventEnterNode);
+    DGLuaEnum(_L, ENTER_ROOM, DGEventEnterRoom);
+    DGLuaEnum(_L, LEAVE_NODE, DGEventLeaveNode);
+    DGLuaEnum(_L, LEAVE_ROOM, DGEventLeaveRoom);
+    DGLuaEnum(_L, PRE_RENDER, DGEventPreRender);
+    DGLuaEnum(_L, POST_RENDER, DGEventPostRender);
+    DGLuaEnum(_L, MOUSE_BUTTON, DGEventMouseButton);
+    DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
     
     // Register all proxys
     Luna<DGAudioProxy>::Register(_L);
@@ -151,7 +159,17 @@ void DGScript::init(int argc, char* argv[]) {
         log->error(DGModScript, "%s: %s", DGMsg250003, script);
 }
 
-void DGScript::callback(int handler, int object) {
+const char* DGScript::module() {
+    return _arrayOfModuleNames.back().c_str();
+}
+
+bool DGScript::isExecutingModule() {
+    // We simply test if the vector is empty. If it is,
+    // it means no modules are stacked.
+    return !_arrayOfModuleNames.empty();
+}
+
+void DGScript::processCallback(int handler, int object) {
     if (object) {
         // Grab the reference to the Lua object and set it as 'self'
         lua_rawgeti(_L, LUA_REGISTRYINDEX, object);
@@ -162,16 +180,6 @@ void DGScript::callback(int handler, int object) {
     
     if (int result = lua_pcall(_L, 0, 0, 0))
         _error(result);
-}
-
-const char* DGScript::module() {
-    return _arrayOfModuleNames.back().c_str();
-}
-
-bool DGScript::isExecutingModule() {
-    // We simply test if the vector is empty. If it is,
-    // it means no modules are stacked.
-    return !_arrayOfModuleNames.empty();
 }
 
 void DGScript::processCommand(const char *command) {
@@ -225,6 +233,20 @@ void DGScript::_error(int result) {
 
 int DGScript::_globalFeed(lua_State *L) {
     DGFeedManager::getInstance().parse(luaL_checkstring(L, 1));
+	
+	return 0;
+}
+
+int DGScript::_globalRegister(lua_State *L) {
+	if (!lua_isfunction(L, -1)) {
+        DGLog::getInstance().error(DGModScript, DGMsg250011);
+		
+		return 0;
+	}
+	
+	int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // pop and return a reference to the table.
+	
+    DGControl::getInstance().registerGlobalHandler((unsigned int)luaL_checknumber(L, 1), ref);
 	
 	return 0;
 }
@@ -310,6 +332,7 @@ int DGScript::_globalTimer(lua_State *L) {
 void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
         {"feed", _globalFeed},
+        {"register", _globalRegister},
         {"room", _globalRoom},
         {"setFont", _globalSetFont},        
         {"switch", _globalSwitch},

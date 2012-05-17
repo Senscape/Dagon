@@ -24,6 +24,7 @@ extern "C" {
 }
 
 #include "DGAction.h"
+#include "DGControl.h"
 #include "DGPlatform.h"
 
 ////////////////////////////////////////////////////////////
@@ -31,6 +32,15 @@ extern "C" {
 ////////////////////////////////////////////////////////////
 
 // These are all values we export to Lua to handle directions and types
+
+enum DGAttachTypes {
+    AUDIO = DGObjectAudio,
+    CUSTOM = DGActionCustom,
+    IMAGE = DGObjectTexture,
+    FEED = DGActionFeed,
+    SWITCH = DGActionSwitch,
+    VIDEO = DGObjectVideo
+};
 
 enum DGLongDirections {
     NORTH = DGNorth,
@@ -45,13 +55,15 @@ enum DGLongDirections {
     SOUTHWEST = DGSouthWest
 };
 
-enum DGAttachTypes {
-    AUDIO = DGObjectAudio,
-    CUSTOM = DGActionCustom,
-    IMAGE = DGObjectTexture,
-    FEED = DGActionFeed,
-    SWITCH = DGActionSwitch,
-    VIDEO = DGObjectVideo
+enum DGEventTypes {
+    ENTER_NODE = DGEventEnterNode,
+    ENTER_ROOM = DGEventEnterRoom,
+    LEAVE_NODE = DGEventLeaveNode,
+    LEAVE_ROOM = DGEventLeaveRoom,
+    PRE_RENDER = DGEventPreRender,
+    POST_RENDER = DGEventPostRender,
+    MOUSE_BUTTON = DGEventMouseButton,
+    MOUSE_MOVE = DGEventMouseMove   
 };
 
 // Helper to push values to Lua
@@ -79,6 +91,7 @@ class DGScript {
     int _ref;
     void _error(int result);
     static int _globalFeed(lua_State *L);
+    static int _globalRegister(lua_State *L);    
     static int _globalRoom(lua_State *L);
     static int _globalSetFont(lua_State *L);    
     static int _globalSwitch(lua_State *L);
@@ -102,9 +115,9 @@ public:
     }
 
     void init(int argc, char* argv[]);
-    void callback(int handler, int object);
     const char* module();
     bool isExecutingModule();
+    void processCallback(int handler, int object);    
     void processCommand(const char* command);
     void run();
     void setModule(const char* module);
