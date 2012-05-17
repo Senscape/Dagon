@@ -1,6 +1,6 @@
 room 'Cafeteria'
 
-config.mute = true
+--config.mute = true
 setFont(FEED, "dislexia.ttf", 18)
 
 daniel0 = Audio("trck_daniel_layer0.ogg", {loopable = true})

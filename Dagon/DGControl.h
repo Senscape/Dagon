@@ -44,11 +44,11 @@ class DGTextureManager;
 class DGTimerManager;
 
 enum DGEvents {
-	DGEventEnterNode = 1,
-	DGEventLeaveNode,
-	DGEventEnterRoom,
-	DGEventLeaveRoom,
-	DGEventPreRender,
+	DGEventEnterNode = 1, // Must implement
+	DGEventLeaveNode, // Must implement
+	DGEventEnterRoom, // Must implement
+	DGEventLeaveRoom, // Must implement
+	DGEventPreRender, // Must implement
 	DGEventPostRender,
 	DGEventMouseButton,	
 	DGEventMouseMove	
@@ -71,7 +71,7 @@ typedef struct {
     int	mouseMove;
 	bool hasMouseButton;
 	int	mouseButton;	
-} DGEventsLuaFunctions;
+} DGEventHandlers;
 
 typedef struct {
 	bool enabled;
@@ -110,7 +110,7 @@ class DGControl {
     DGState* _state;
     DGTextureManager* _textureManager;
     
-    DGEventsLuaFunctions _eventsLuaFunctions;
+    DGEventHandlers _eventHandlers;
     DGHotKeyData _hotKeyData[DGMaxHotKeys];
     DGMouseData _mouseData;
     

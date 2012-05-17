@@ -182,6 +182,13 @@ void DGControl::processKey(int aKey, bool isModified) {
 }
 
 void DGControl::processMouse(int x, int y, bool isButtonPressed) {
+    if (_eventHandlers.hasMouseMove)
+        script->processCallback(_eventHandlers.mouseMove, 0);
+    
+    if (isButtonPressed && _eventHandlers.hasMouseButton) {
+        script->processCallback(_eventHandlers.mouseButton, 0);
+    }
+        
     if (isButtonPressed && _mouseData.onSpot) {
         // We can safely assume that all data is in place now,
         // so we execute the action
@@ -196,7 +203,7 @@ void DGControl::processMouse(int x, int y, bool isButtonPressed) {
                 
                 switch (action->type) {
                     case DGActionCustom:
-                        script->callback(action->luaHandler, spot->luaObject());
+                        script->processCallback(action->luaHandler, spot->luaObject());
                         break;
                     case DGActionFeed:
                         feedManager->parse(action->feed);
@@ -221,36 +228,36 @@ void DGControl::processMouse(int x, int y, bool isButtonPressed) {
 void DGControl::registerGlobalHandler(int forEvent, int handlerForLua) {
     switch (forEvent) {
 		case DGEventEnterNode:
-			_eventsLuaFunctions.enterNode = handlerForLua;
-			_eventsLuaFunctions.hasEnterNode = true;
+			_eventHandlers.enterNode = handlerForLua;
+			_eventHandlers.hasEnterNode = true;
 			break;
 		case DGEventLeaveNode:
-			_eventsLuaFunctions.leaveNode = handlerForLua;
-			_eventsLuaFunctions.hasLeaveNode = true;
+			_eventHandlers.leaveNode = handlerForLua;
+			_eventHandlers.hasLeaveNode = true;
 			break;
 		case DGEventEnterRoom:
-			_eventsLuaFunctions.enterRoom = handlerForLua;
-			_eventsLuaFunctions.hasEnterRoom = true;
+			_eventHandlers.enterRoom = handlerForLua;
+			_eventHandlers.hasEnterRoom = true;
 			break;
 		case DGEventLeaveRoom:
-			_eventsLuaFunctions.leaveRoom = handlerForLua;
-			_eventsLuaFunctions.hasLeaveRoom = true;
+			_eventHandlers.leaveRoom = handlerForLua;
+			_eventHandlers.hasLeaveRoom = true;
 			break;
 		case DGEventPreRender:
-			_eventsLuaFunctions.preRender = handlerForLua;
-			_eventsLuaFunctions.hasPreRender = true;
+			_eventHandlers.preRender = handlerForLua;
+			_eventHandlers.hasPreRender = true;
 			break;
 		case DGEventPostRender:
-			_eventsLuaFunctions.postRender = handlerForLua;
-			_eventsLuaFunctions.hasPostRender = true;
+			_eventHandlers.postRender = handlerForLua;
+			_eventHandlers.hasPostRender = true;
 			break;
 		case DGEventMouseButton:
-			_eventsLuaFunctions.mouseButton = handlerForLua;
-			_eventsLuaFunctions.hasMouseButton = true;
+			_eventHandlers.mouseButton = handlerForLua;
+			_eventHandlers.hasMouseButton = true;
 			break;			
 		case DGEventMouseMove:
-			_eventsLuaFunctions.mouseMove = handlerForLua;
-			_eventsLuaFunctions.hasMouseMove = true;
+			_eventHandlers.mouseMove = handlerForLua;
+			_eventHandlers.hasMouseMove = true;
 			break;			
 	}
 }
@@ -450,6 +457,12 @@ void DGControl::update() {
     else
         _render->setColor(DGColorDarkGray);
     _render->drawCursor(_mouseData.x, _mouseData.y);
+    _render->endDrawing();
+    
+    // User post render operations, supporting textures
+    _render->beginDrawing(true);
+    if (_eventHandlers.hasPostRender)
+        script->processCallback(_eventHandlers.postRender, 0);
     _render->endDrawing();
       
     // Debug info, if enabled
