@@ -73,6 +73,11 @@ public:
     void setFieldOfView(float fov);
     void setNeutralZone(int zone);
     void setViewport(int width, int height);
+
+    // For the Drag mode
+    void startPanning(int xPosition, int yPosition); // Recreates the neutral zone
+    void stopPanning(); // Resets the neutral zone
+    
     void update();
 };
 
