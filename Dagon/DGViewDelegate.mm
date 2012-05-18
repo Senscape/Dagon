@@ -102,7 +102,8 @@
 
 - (void)mouseExited:(NSEvent *)theEvent {
     if (!config->fullScreen) {
-        control->processMouse(config->displayWidth / 2, config->displayHeight / 2, false);
+        // Only when the Free mode is on
+        control->processMouse(config->displayWidth / 2, config->displayHeight / 2, DGMouseEventMove);
         [NSCursor unhide];
     }
 }
@@ -110,7 +111,14 @@
 - (void)mouseDown:(NSEvent *)theEvent {
     if (isMouseInside) {
         NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-        control->processMouse(mouseLoc.x, mouseLoc.y, true);
+        control->processMouse(mouseLoc.x, mouseLoc.y, DGMouseEventDown);
+    }
+}
+
+- (void)mouseDragged:(NSEvent *)theEvent {
+    if (isMouseInside) {
+        NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        control->processMouse(mouseLoc.x, mouseLoc.y, DGMouseEventDrag);
     }
 }
 
@@ -119,7 +127,14 @@
     isMouseInside = ([self hitTest:mouseLoc] == self);
     
     if (isMouseInside)
-        control->processMouse(mouseLoc.x, mouseLoc.y, false);
+        control->processMouse(mouseLoc.x, mouseLoc.y, DGMouseEventMove);
+}
+
+- (void)mouseUp:(NSEvent *)theEvent {
+    if (isMouseInside) {
+        NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        control->processMouse(mouseLoc.x, mouseLoc.y, DGMouseEventUp);
+    }
 }
 
 - (void)update {    

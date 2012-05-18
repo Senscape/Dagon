@@ -63,7 +63,8 @@ enum DGEventTypes {
     PRE_RENDER = DGEventPreRender,
     POST_RENDER = DGEventPostRender,
     MOUSE_BUTTON = DGEventMouseButton,
-    MOUSE_MOVE = DGEventMouseMove   
+    MOUSE_MOVE = DGEventMouseMove,
+    RESIZE = DGEventResize  
 };
 
 // Helper to push values to Lua

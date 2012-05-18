@@ -57,6 +57,11 @@ DGScript::~DGScript() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+// TODO: Save system: in every operation, save to a file the
+// Lua object being modified (retrieve ID from DGOBject), then
+// create a string with the actual modification, ie: spot:enable()
+// Filter switch and other heavy duty operations.
+
 // TODO: Support loading script from parameters
 // TODO: Consider seeking paths again if debug mode was enabled
 void DGScript::init(int argc, char* argv[]) {
@@ -117,10 +122,14 @@ void DGScript::init(int argc, char* argv[]) {
     DGLuaEnum(_L, POST_RENDER, DGEventPostRender);
     DGLuaEnum(_L, MOUSE_BUTTON, DGEventMouseButton);
     DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
+    DGLuaEnum(_L, RESIZE, DGEventResize);
     
     // Register all proxys
     Luna<DGAudioProxy>::Register(_L);
+    Luna<DGButtonProxy>::Register(_L);       
+    Luna<DGImageProxy>::Register(_L);    
     Luna<DGNodeProxy>::Register(_L);
+    Luna<DGOverlayProxy>::Register(_L);    
     Luna<DGRoomProxy>::Register(_L);
     Luna<DGSpotProxy>::Register(_L);
     

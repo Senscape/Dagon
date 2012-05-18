@@ -25,7 +25,10 @@ extern "C" {
 
 #include "DGPlatform.h"
 #include "DGAudio.h"
+#include "DGButton.h"
+#include "DGImage.h"
 #include "DGNode.h"
+#include "DGOverlay.h"
 #include "DGRoom.h"
 #include "DGSpot.h"
 
@@ -34,7 +37,10 @@ extern "C" {
 ////////////////////////////////////////////////////////////
 
 #define DGAudioProxyName "Audio"
+#define DGButtonProxyName "Button"
+#define DGImageProxyName "Image"
 #define DGNodeProxyName "Node"
+#define DGOverlayProxyName "Overlay"
 #define DGRoomProxyName "Room"
 #define DGSpotProxyName "Spot"
 
@@ -42,7 +48,10 @@ extern "C" {
 
 static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
 static DGAudio* DGProxyToAudio(lua_State *L, int idx);
+static DGButton* DGProxyToButton(lua_State *L, int idx);
+static DGImage* DGProxyToImage(lua_State *L, int idx);
 static DGNode* DGProxyToNode(lua_State *L, int idx);
+static DGOverlay* DGProxyToOverlay(lua_State *L, int idx);
 static DGRoom* DGProxyToRoom(lua_State *L, int idx);
 static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 
@@ -50,7 +59,10 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 // proceed to include the remaining headers
 
 #include "DGAudioProxy.h"
+#include "DGButtonProxy.h"
+#include "DGImageProxy.h"
 #include "DGNodeProxy.h"
+#include "DGOverlayProxy.h"
 #include "DGRoomProxy.h"
 #include "DGSpotProxy.h"
 
@@ -95,8 +107,17 @@ int DGCheckProxy(lua_State *L, int idx) {
         if (_checkutype(L, idx, DGAudioProxy::className))
             return DGObjectAudio; // It's an audio
         
+        if (_checkutype(L, idx, DGButtonProxy::className))
+            return DGObjectButton; // It's a button          
+        
+        if (_checkutype(L, idx, DGImageProxy::className))
+            return DGObjectImage; // It's an image        
+        
         if (_checkutype(L, idx, DGNodeProxy::className))
             return DGObjectNode; // It's a node
+        
+        if (_checkutype(L, idx, DGOverlayProxy::className))
+            return DGObjectOverlay; // It's an overlay        
         
         if (_checkutype(L, idx, DGRoomProxy::className))
             return DGObjectRoom; // It's a room
@@ -115,9 +136,24 @@ DGAudio* DGProxyToAudio(lua_State *L, int idx) {
     return a->ptr();
 }
 
+DGButton* DGProxyToButton(lua_State *L, int idx) {
+    DGButtonProxy* b = Luna<DGButtonProxy>::check(L, idx);
+    return b->ptr();
+}
+
+DGImage* DGProxyToImage(lua_State *L, int idx) {
+    DGImageProxy* i = Luna<DGImageProxy>::check(L, idx);
+    return i->ptr();
+}
+
 DGNode* DGProxyToNode(lua_State *L, int idx) {
     DGNodeProxy* n = Luna<DGNodeProxy>::check(L, idx);
     return n->ptr();
+}
+
+DGOverlay* DGProxyToOverlay(lua_State *L, int idx) {
+    DGOverlayProxy* o = Luna<DGOverlayProxy>::check(L, idx);
+    return o->ptr();    
 }
 
 DGRoom* DGProxyToRoom(lua_State *L, int idx) {

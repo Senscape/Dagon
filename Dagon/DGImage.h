@@ -10,8 +10,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_OBJECT_H
-#define DG_OBJECT_H
+#ifndef DG_IMAGE_H
+#define DG_IMAGE_H
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -23,59 +23,49 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-enum DGObjectTypes {
-    // Note that 0 is used to return an invalid object in Lua
-    DGObjectNone = 0,
-	DGObjectGeneric,
-	DGObjectAudio,
-    DGObjectButton,
-	DGObjectFont,
-    DGObjectImage,
-	DGObjectNode,
-    DGObjectOverlay,
-	DGObjectRoom,
-    DGObjectSlide,
-	DGObjectSpot,
-	DGObjectTexture,
-	DGObjectVideo
-};
+class DGConfig;
+class DGTexture;
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGObject {
-    unsigned int _id;
-    unsigned int _type;
-    std::string _name;
-    int _luaObject;
-    int _retainCount;
+class DGImage : public DGObject {
+    DGConfig* config;
+    
+    DGTexture* _attachedTexture;
+    int _arrayOfCoordinates[8];
+    bool _hasTexture;    
+    DGRect _rect;
+    
+    void _calculateCoordinates();
     
 public:
-    DGObject();
-    virtual ~DGObject();
+    DGImage();
+    DGImage(const char* fromFileName);
+    ~DGImage();
     
     // Checks
     
-    bool isType(unsigned int typeToCheck);
-    
+    bool hasTexture();
+      
     // Gets
     
-    int luaObject();
-    const char* name();
-    int retainCount();
-    unsigned int type();
-    
+    int* arrayOfCoordinates();
+    DGPoint position();
+    DGSize size();
+    DGTexture* texture();
+
     // Sets
     
-    void setLuaObject(int object);
-    void setType(unsigned int type);
-    void setName(const char* aName);
-    
+    void setPosition(int x, int y);
+    void setSize(int width, int height);
+    void setTexture(const char* fromFileName);    
+
     // State changes
     
-    void release();
-    void retain();
+    void move(int offsetX, int offsetY);
+    void scale(float factor);
 };
 
-#endif // DG_OBJECT_H
+#endif // DG_IMAGE_H

@@ -40,6 +40,9 @@
 		FBA2C77E14DC13B40098E334 /* DGRender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C77D14DC13B40098E334 /* DGRender.cpp */; };
 		FBA2C78114DC654B0098E334 /* DGControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78014DC654B0098E334 /* DGControl.cpp */; };
 		FBA2C78814DD801A0098E334 /* DGCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78714DD801A0098E334 /* DGCamera.cpp */; };
+		FBABA631156548E80009889F /* DGOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA630156548E80009889F /* DGOverlay.cpp */; };
+		FBABA6351565537D0009889F /* DGImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6341565537D0009889F /* DGImage.cpp */; };
+		FBABA6381565539B0009889F /* DGButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6371565539B0009889F /* DGButton.cpp */; };
 		FBC8883314574F08008D548F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
 		FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */; };
 		FBE7EDE3153F603D00F43EDA /* DGConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */; };
@@ -116,6 +119,15 @@
 		FBA2C78514DC91200098E334 /* DGPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGPlatform.h; sourceTree = "<group>"; };
 		FBA2C78614DD80100098E334 /* DGCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCamera.h; sourceTree = "<group>"; };
 		FBA2C78714DD801A0098E334 /* DGCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCamera.cpp; sourceTree = "<group>"; };
+		FBABA630156548E80009889F /* DGOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGOverlay.cpp; sourceTree = "<group>"; };
+		FBABA633156548F40009889F /* DGOverlay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGOverlay.h; sourceTree = "<group>"; };
+		FBABA6341565537D0009889F /* DGImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGImage.cpp; sourceTree = "<group>"; };
+		FBABA6361565538F0009889F /* DGImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGImage.h; sourceTree = "<group>"; };
+		FBABA6371565539B0009889F /* DGButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGButton.cpp; sourceTree = "<group>"; };
+		FBABA639156553A80009889F /* DGButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGButton.h; sourceTree = "<group>"; };
+		FBABA63A156583EC0009889F /* DGOverlayProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGOverlayProxy.h; sourceTree = "<group>"; };
+		FBABA63B156589030009889F /* DGImageProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGImageProxy.h; sourceTree = "<group>"; };
+		FBABA63C1565B5C00009889F /* DGButtonProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGButtonProxy.h; sourceTree = "<group>"; };
 		FBC8882E14574F08008D548F /* Dagon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dagon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBC8883214574F08008D548F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		FBC8883514574F08008D548F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -184,12 +196,18 @@
 				FB279DB014AB81F8002D48FC /* DGAction.h */,
 				FB279DB914AE1555002D48FC /* DGAudio.h */,
 				FB279DB714AE14AF002D48FC /* DGAudio.cpp */,
+				FBABA639156553A80009889F /* DGButton.h */,
+				FBABA6371565539B0009889F /* DGButton.cpp */,
 				E8CF666A14EFE7B100B4562B /* DGFont.h */,
 				E8CF666914EFE7B100B4562B /* DGFont.cpp */,
+				FBABA6361565538F0009889F /* DGImage.h */,
+				FBABA6341565537D0009889F /* DGImage.cpp */,
 				FB279DB314ACD230002D48FC /* DGNode.h */,
 				FB279DB114ACD223002D48FC /* DGNode.cpp */,
 				FB279DAA14AA8CF1002D48FC /* DGObject.h */,
 				FB279DA814AA8AA0002D48FC /* DGObject.cpp */,
+				FBABA633156548F40009889F /* DGOverlay.h */,
+				FBABA630156548E80009889F /* DGOverlay.cpp */,
 				FB279DB614ADF3BF002D48FC /* DGRoom.h */,
 				FB279DB414ADF3A5002D48FC /* DGRoom.cpp */,
 				FB279DAF14AB61BD002D48FC /* DGSpot.h */,
@@ -206,6 +224,7 @@
 				FBD2F64815064FD000AB6C31 /* DGAudioManager.h */,
 				FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */,
 				FB0769D71508F228009EA1AF /* DGAudioProxy.h */,
+				FBABA63C1565B5C00009889F /* DGButtonProxy.h */,
 				E817433514E6030A002CF502 /* DGConfigLib.h */,
 				FBA2C78214DC65660098E334 /* DGControl.h */,
 				FBA2C78014DC654B0098E334 /* DGControl.cpp */,
@@ -213,7 +232,9 @@
 				E8362A6914F1B1A1005B20EF /* DGFeedManager.cpp */,
 				E8362A6D14F2FBFB005B20EF /* DGFontManager.h */,
 				E8362A6B14F2FBE1005B20EF /* DGFontManager.cpp */,
+				FBABA63B156589030009889F /* DGImageProxy.h */,
 				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
+				FBABA63A156583EC0009889F /* DGOverlayProxy.h */,
 				E8E0194814E366B800173A2D /* DGProxy.h */,
 				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
 				FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */,
@@ -451,6 +472,9 @@
 				E8362A6C14F2FBE1005B20EF /* DGFontManager.cpp in Sources */,
 				FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */,
 				FBE7EDE3153F603D00F43EDA /* DGConsole.cpp in Sources */,
+				FBABA631156548E80009889F /* DGOverlay.cpp in Sources */,
+				FBABA6351565537D0009889F /* DGImage.cpp in Sources */,
+				FBABA6381565539B0009889F /* DGButton.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

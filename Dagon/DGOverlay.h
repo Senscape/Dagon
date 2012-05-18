@@ -10,8 +10,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_OBJECT_H
-#define DG_OBJECT_H
+#ifndef DG_OVERLAY_H
+#define DG_OVERLAY_H
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -23,59 +23,48 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-enum DGObjectTypes {
-    // Note that 0 is used to return an invalid object in Lua
-    DGObjectNone = 0,
-	DGObjectGeneric,
-	DGObjectAudio,
-    DGObjectButton,
-	DGObjectFont,
-    DGObjectImage,
-	DGObjectNode,
-    DGObjectOverlay,
-	DGObjectRoom,
-    DGObjectSlide,
-	DGObjectSpot,
-	DGObjectTexture,
-	DGObjectVideo
-};
+class DGButton;
+class DGImage;
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGObject {
-    unsigned int _id;
-    unsigned int _type;
-    std::string _name;
-    int _luaObject;
-    int _retainCount;
+class DGOverlay : public DGObject {
+    std::vector<DGButton*> _arrayOfButtons;
+    std::vector<DGImage*> _arrayOfImages;
+    
+    std::vector<DGButton*>::iterator _itButton;
+    std::vector<DGImage*>::iterator _itImage;
+    
+    bool _isVisible;
     
 public:
-    DGObject();
-    virtual ~DGObject();
+    DGOverlay();
+    ~DGOverlay();
     
     // Checks
     
-    bool isType(unsigned int typeToCheck);
+    bool hasButtons();
+    bool hasImages();
+    bool isVisible();
     
     // Gets
     
-    int luaObject();
-    const char* name();
-    int retainCount();
-    unsigned int type();
-    
-    // Sets
-    
-    void setLuaObject(int object);
-    void setType(unsigned int type);
-    void setName(const char* aName);
+    DGButton* currentButton();
+    DGImage* currentImage();
     
     // State changes
     
-    void release();
-    void retain();
+    DGButton* addButton(DGButton* aButton);
+    DGImage* addImage(DGImage* anImage);    
+    void beginIteratingButtons();
+    void beginIteratingImages();    
+    bool iterateButtons();
+    bool iterateImages();
+    void hide();
+    void move(int offsetX, int offsetY); // Applies move to every element
+    void show();
 };
 
-#endif // DG_OBJECT_H
+#endif // DG_OVERLAY_H

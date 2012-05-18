@@ -17,6 +17,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGAction.h"
 #include "DGPlatform.h"
 
 ////////////////////////////////////////////////////////////
@@ -35,6 +36,7 @@ class DGFeedManager;
 class DGFontManager;
 class DGLog;
 class DGNode;
+class DGOverlay;
 class DGRoom;
 class DGRender;
 class DGScript;
@@ -51,7 +53,15 @@ enum DGEvents {
 	DGEventPreRender, // Must implement
 	DGEventPostRender,
 	DGEventMouseButton,	
-	DGEventMouseMove	
+	DGEventMouseMove,
+	DGEventResize
+};
+
+enum DGMouseEvents {
+    DGMouseEventDown = 0x1,    
+    DGMouseEventDrag = 0x2,
+    DGMouseEventMove = 0x4,
+    DGMouseEventUp = 0x8,
 };
 
 typedef struct {
@@ -70,7 +80,9 @@ typedef struct {
 	bool hasMouseMove;
     int	mouseMove;
 	bool hasMouseButton;
-	int	mouseButton;	
+	int	mouseButton;
+	bool hasResize;
+	int	resize;	
 } DGEventHandlers;
 
 typedef struct {
@@ -81,8 +93,9 @@ typedef struct {
 
 typedef struct {
 	int x;
-	int y;
+	int y; 
     int color;
+	bool onButton;    
 	bool onSpot;
 } DGMouseData;
 
@@ -99,6 +112,9 @@ class DGControl {
     DGScript* script;
     DGSystem* system;
     DGTimerManager* timerManager;
+
+    std::vector<DGOverlay*> _arrayOfOverlays;
+    std::vector<DGOverlay*> _arrayOfActiveOverlays; // Visible overlays go here
     
     std::vector<DGRoom*> _arrayOfRooms;
     DGRoom* _currentRoom;
@@ -144,7 +160,7 @@ public:
     DGRoom* currentRoom();
     void processFunctionKey(int aKey);
     void processKey(int aKey, bool isModified);
-    void processMouse(int x, int y, bool isButtonPressed);
+    void processMouse(int x, int y, int eventFlags);
     void registerGlobalHandler(int forEvent, int handlerForLua);
     void registerHotKey(int aKey, const char* luaCommandToExecute);
     void registerObject(DGObject* theTarget);    
