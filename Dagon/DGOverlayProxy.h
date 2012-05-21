@@ -90,15 +90,37 @@ public:
     int isVisible(lua_State *L) {
         lua_pushboolean(L, o->isVisible());
         return 1;
-    }     
+    } 
+    
+    // Move the overlay
+    int move(lua_State *L) {
+        o->move(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        
+        return 0;
+    } 
+    
+    // Return the position
+    int position(lua_State *L) {
+        DGPoint position = o->position();
+        lua_pushnumber(L, position.x);
+        lua_pushnumber(L, position.y);        
+        return 2;
+    }
+    
+    // Set a new position
+    int setPosition(lua_State *L) {
+        o->setPosition(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        
+        return 0;
+    } 
     
     // Show the overlay
     int show(lua_State *L) {
         o->show();
         
         return 0;
-    }     
-    
+    }
+
     DGOverlay* ptr() { return o; }
     
 private:
@@ -116,7 +138,10 @@ Luna<DGOverlayProxy>::RegType DGOverlayProxy::methods[] = {
     method(DGOverlayProxy, addButton),      
     method(DGOverlayProxy, addImage),    
     method(DGOverlayProxy, hide),
-    method(DGOverlayProxy, isVisible),    
+    method(DGOverlayProxy, isVisible), 
+    method(DGOverlayProxy, move),
+    method(DGOverlayProxy, position),    
+    method(DGOverlayProxy, setPosition),
     method(DGOverlayProxy, show),
     {0,0}
 };

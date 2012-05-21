@@ -384,25 +384,10 @@ void DGControl::registerObject(DGObject* theTarget) {
 }
 
 void DGControl::reshape(int width, int height) {
-    int offsetX =  width - config->displayWidth;
-    int offsetY = height - config->displayHeight;
-    
     config->displayWidth = width;
     config->displayHeight = height;
     
     _camera->setViewport(width, height);
-    
-    // TODO: We should only apply these changes according to flags, stick to X, stick to Y, etc.
-    if (!_arrayOfOverlays.empty()) {
-        vector<DGOverlay*>::iterator itOverlay;
-        
-        itOverlay = _arrayOfOverlays.begin();
-        
-        while (itOverlay != _arrayOfOverlays.end()) {
-            (*itOverlay)->move(offsetX, offsetY);
-            itOverlay++;
-        }
-    }
     
     if (_eventHandlers.hasResize)
         script->processCallback(_eventHandlers.resize, 0);    
