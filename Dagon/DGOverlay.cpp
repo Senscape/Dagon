@@ -26,6 +26,9 @@ using namespace std;
 
 DGOverlay::DGOverlay() {
     _isVisible = false;
+    _position.x = 0;
+    _position.y = 0;
+    
     this->setType(DGObjectOverlay);
 }
 
@@ -53,6 +56,10 @@ bool DGOverlay::isVisible() {
     return _isVisible;
 }
 
+DGPoint DGOverlay::position() {
+    return _position;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
@@ -63,6 +70,23 @@ DGButton* DGOverlay::currentButton() {
 
 DGImage* DGOverlay::currentImage() {
     return *_itImage;  
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Sets
+////////////////////////////////////////////////////////////
+
+void DGOverlay::setPosition(int x, int y) {
+    // Calculate the offsets for the new position
+    int offsetX = x - _position.x;
+    int offsetY = y - _position.y;
+    
+    // Automatically reposition all elements contained
+    this->move(offsetX, offsetY);
+    
+    // Store the new position
+    _position.x = x;
+    _position.y = y;    
 }
 
 ////////////////////////////////////////////////////////////
@@ -133,6 +157,10 @@ void DGOverlay::move(int offsetX, int offsetY) {
             itImage++;
         }
     }
+    
+    // Store the new position
+    _position.x += offsetX;
+    _position.y += offsetY;
 }
 
 void DGOverlay::show() {

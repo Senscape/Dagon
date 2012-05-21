@@ -38,6 +38,7 @@ class DGOverlay : public DGObject {
     std::vector<DGImage*>::iterator _itImage;
     
     bool _isVisible;
+    DGPoint _position;
     
 public:
     DGOverlay();
@@ -48,11 +49,16 @@ public:
     bool hasButtons();
     bool hasImages();
     bool isVisible();
+    DGPoint position();
     
     // Gets
     
     DGButton* currentButton();
     DGImage* currentImage();
+    
+    // Sets
+    
+    void setPosition(int x, int y);
     
     // State changes
     

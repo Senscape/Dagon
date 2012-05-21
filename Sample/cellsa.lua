@@ -1,5 +1,5 @@
 room 'Bath1B'
-room 'Nursery'
+room 'Hospital'
 
 cellsa1 = Node("cellsa1", "Cells")
 cellsa2 = Node("cellsa2", "Cells")
@@ -8,7 +8,7 @@ cellsa4 = Node("cellsa4", "Cells")
 cellsa5 = Node("cellsa5", "Cells")
 cellsa6 = Node("cellsa6", "Cells")
 
-cellsa1:link({ W = cellsa2, E = Nursery })
+cellsa1:link({ W = cellsa2, E = Hospital })
 cellsa2:link({ W = cellsa3, E = cellsa1 })
 cellsa3:link({ W = cellsa4, E = cellsa2 })
 cellsa4:link({ N = Bath1B, W = cellsa5, E = cellsa3 })
