@@ -144,6 +144,7 @@ void DGCamera::setNeutralZone(int zone) {
     // the display height
     float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
     
+    printf("Setting neutral zone...\n");
     _neutralZone = zone;
     
     // Update panning regions with the new neutral zone
@@ -178,7 +179,7 @@ void DGCamera::startPanning(int xPosition, int yPosition) {
     // the display height
     float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
     
-    _neutralZone = 1;
+    _neutralZone = 50;
     
     _panRegion.origin.x = (xPosition - _neutralZone) * factor;
     _panRegion.origin.y = (yPosition - _neutralZone) * factor;

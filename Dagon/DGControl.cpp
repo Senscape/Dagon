@@ -293,6 +293,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
     
     if ((eventFlags & DGMouseEventUp) && _mouseData.onSpot && _mouseData.isDragging) {
         _mouseData.isDragging = false;
+        _camera->stopPanning();
     }
     
     if ((eventFlags & DGMouseEventMove)) {
@@ -328,7 +329,6 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
                 _mouseData.onSpot = true;        
                 _camera->pan(_mouseData.x, _mouseData.y);
             }
-            else _camera->stopPanning();
             break;
     }
 }
