@@ -1,15 +1,32 @@
-jStates = {
-  IDLE = 100,
-  OPENING = 101,
-  CLOSING = 102
+jEntries = {
+	TUNNEL = "'Tunnel of the Damned'",
+	HOSPITAL = "Hospital",
+	KEY_MALE = "Key to Male Cells"
 }
 
-jCurrentState = jStates.IDLE
+jRows = {}
+
+jIconStates = {
+  IDLE = 201,
+  EXPAND = 202,
+  CONTRACT = 203
+}
+
+jStates = {
+  OPENING = 101,
+  CLOSING = 102,
+  OPENED = 103,
+  CLOSED = 104
+}
+
+jIconLoop = 0
+jIconState = jIconStates.IDLE
+jCurrentState = jStates.CLOSED
 
 jClosed = Overlay("Journal Closed")
 jOpened = Overlay("Journal Opened")
 
-jClosedSize = 200 -- It's an icon
+jClosedSize = 180 -- It's an icon
 jOpenedSizeX = 450
 jOpenedSizeY = 675
 jClosedOffset = 0
@@ -24,57 +41,156 @@ jOpenedY = config.displayHeight - jOpenedOffset
 previousWidth = config.displayWidth
 previousHeight = config.displayHeight
 
+function journalToggle()
+	if jCurrentState == jStates.CLOSED then
+		jOpened:show()
+		play("sfx_journal_open.ogg")
+		jCurrentState = jStates.OPENING
+	elseif jCurrentState == jStates.OPENED then
+		play("sfx_journal_close.ogg")
+		jCurrentState = jStates.CLOSING		
+	end
+end
+
 -- Graphic for the closed journal
 icon = Button(jClosedX, jClosedY, jClosedSize, jClosedSize)
-icon:setAction(CUSTOM, function()
-							jOpened:show()				
-							jCurrentState = jStates.OPENING						
-					   end)
-icon:setImage("icon_journal.tga")
+icon:setAction(CUSTOM, journalToggle)
+icon:setImage("img_journal_icon.tga")
 
 jClosed:addButton(icon)
 jClosed:show()
 
 -- Graphics for the opened journal
 background = Button(jOpenedX, jOpenedY, jOpenedSizeX, jOpenedSizeY)
-background:setAction(CUSTOM, function()
-							jCurrentState = jStates.CLOSING							
-					   end)
+background:setAction(CUSTOM, journalToggle)
 					   
-background:setImage("bg_journal.tga")
+background:setImage("img_journal_bg.tga")
+
+function journalAddEntry(e, f)
+	local i = table.getn(jRows) -- Get length of table
+	i = i + 1
+	x, y = jOpened:position()
+	jRows[i] = Button(jOpenedX + 50, y + jOpenedY + 60 + (i * 40), string.len(e) * 13, 32)
+	jRows[i]:setAction(CUSTOM, f)	
+	jRows[i]:setFont("fnt_quikhand.ttf", 24)
+	jRows[i]:setTextColor(0xBB000000)
+	jRows[i]:setText(e)
+	jOpened:addButton(jRows[i])
+	jIconLoop = 2
+	play("sfx_journal_write.ogg")
+end
+
+function journalMarkEntry(e)
+	for i,v in pairs(jRows) do
+  	if v:text() == e then
+    		jRows[i]:setImage("img_completed.tga")
+    		jIconLoop = 2
+    		play("sfx_journal_erase.ogg")
+    	return
+  	end
+	end
+end
+
+function journalTagEntry(e)
+	for i,v in pairs(jRows) do
+  	if v:text() == (e) then
+  		x, y = jOpened:position()
+    	tag = Image("img_tag.tga")
+			tag:setPosition(jOpenedX + 20, y + jOpenedY + 60 + (i * 40))
+			jOpened:addImage(tag)
+			jIconLoop = 2
+			play("sfx_journal_tag.ogg")
+    	return
+  	end
+	end
+end
 
 jOpened:addButton(background)
 jOpened:move(0, jOpenedOffset) -- Hide the journal
 
-register(POST_RENDER, function()
-							if jCurrentState == jStates.OPENING then
-								x, y = jOpened:position()
-								if y < jClosedOffset then
-									jCurrentState = jStates.IDLE
-								else
-									jOpened:move(0, -jOpeningSpeed)
-								end
-							elseif jCurrentState == jStates.CLOSING then
-								x, y = jOpened:position()
-								if y > jOpenedOffset then
-									jOpened:hide()		
-									jCurrentState = jStates.IDLE
-								else
-									jOpened:move(0, jOpeningSpeed)
-								end
-							end							
-					  end)
+journalAddEntry(jEntries.TUNNEL, 
+	function()
+		feed("Scary place.")
+	end)
+	
+journalAddEntry(jEntries.HOSPITAL,
+	function()
+		feed("I must find the hospital.")
+	end)
+	
+jIconLoop = 0 -- Cancel animation
+	
+function journalAnimateIcon()
+	if jIconState == jIconStates.IDLE then
+		jIconState = jIconStates.EXPAND
+	elseif jIconState == jIconStates.EXPAND then
+		if jClosedSize < (180 + 20) then
+			jClosedSize = jClosedSize + 1
+			jClosedX = jClosedX - 1
+			jClosedY = jClosedY - 1
+		else
+			jIconState = jIconStates.CONTRACT
+		end
+		
+		icon:setPosition(jClosedX, jClosedY)		
+		icon:setSize(jClosedSize, jClosedSize)
+	elseif jIconState == jIconStates.CONTRACT then
+		if jClosedSize > 180 then
+			jClosedSize = jClosedSize - 1
+			jClosedX = jClosedX + 1
+			jClosedY = jClosedY + 1
+		else
+			jIconState = jIconStates.EXPAND
+			jIconLoop = jIconLoop - 1
+		end
+		
+		icon:setPosition(jClosedX, jClosedY)		
+		icon:setSize(jClosedSize, jClosedSize)	
+	end
+	
+	if jIconLoop == 0 then
+		jIconState = jIconStates.IDLE
+	end
+end	
+
+register(POST_RENDER, 
+	function()
+		journalAnimateIcon()
+		
+		if jCurrentState == jStates.OPENING then
+			x, y = jOpened:position()
+			if y < jClosedOffset then
+				jCurrentState = jStates.OPENED
+			else
+				jOpened:move(0, -jOpeningSpeed)
+			end
+		elseif jCurrentState == jStates.CLOSING then
+			x, y = jOpened:position()
+			if y > jOpenedOffset then
+				jOpened:hide()		
+				jCurrentState = jStates.CLOSED
+			else
+				jOpened:move(0, jOpeningSpeed)
+			end
+		end							
+	end)
 					  
-register(RESIZE, function()
-						offsetX = config.displayWidth - previousWidth
-						offsetY = config.displayHeight - previousHeight
+register(RESIZE, 
+	function()
+		offsetX = config.displayWidth - previousWidth
+		offsetY = config.displayHeight - previousHeight
 						
-						jClosed:move(offsetX, offsetY)
-						jOpened:move(offsetX, offsetY)
+		jClosed:move(offsetX, offsetY)
+		jOpened:move(offsetX, offsetY)
 						
-						jClosedOffset = jClosedOffset + offsetY
-						jOpenedOffset = jOpenedOffset + offsetY
+		jClosedOffset = jClosedOffset + offsetY
+		jOpenedOffset = jOpenedOffset + offsetY
+		
+		jClosedX = config.displayWidth - jClosedSize
+		jClosedY = config.displayHeight - jClosedSize
+		jOpenedX = config.displayWidth - jOpenedSizeX + 20 -- To cover the icon
+		jOpenedY = config.displayHeight - jOpenedOffset		
 						
-						previousWidth = config.displayWidth
-						previousHeight = config.displayHeight
-				 end)
+		previousWidth = config.displayWidth
+		previousHeight = config.displayHeight
+	end)
