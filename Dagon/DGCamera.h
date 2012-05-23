@@ -24,8 +24,14 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGCamFieldOfView 55
-#define DGCamNeutralZone 250
+enum DGCameraDefaults {
+    DGCamAccelerationFactor = 100,
+	DGCamFieldOfView = 55,
+    DGCamInertia = 750, // Maintain motion after panning stops
+    DGCamMaxSpeed = 30,
+    DGCamNeutralZone = 250,
+    DGCamSpeedFactor = 500000 // Make movement smoother
+};
 
 class DGConfig;
 
@@ -35,6 +41,9 @@ class DGConfig;
 
 class DGCamera {
     DGConfig* config;
+    
+    float _accelH;
+    float _accelV;
     
     GLfloat _angleH;
     GLfloat _angleV;
@@ -56,8 +65,16 @@ class DGCamera {
     DGSize _viewport;
     DGRect _panRegion;
     
-    int _panDirH;
-    int _panDirV;
+    float _inertia;
+    
+    float _motionDown;
+    float _motionLeft;
+    float _motionRight;
+    float _motionUp;    
+    
+    float _maxSpeed;
+    float _speedH;
+    float _speedV;    
     
 public:
     DGCamera();

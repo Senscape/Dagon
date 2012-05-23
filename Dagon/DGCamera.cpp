@@ -18,21 +18,14 @@
 #include "DGConfig.h"
 
 ////////////////////////////////////////////////////////////
-// Definitions
-////////////////////////////////////////////////////////////
-
-#define DGCamPanNone 0
-#define DGCamPanLeft -1
-#define DGCamPanRight 1
-#define DGCamPanUp 1
-#define DGCamPanDown -1
-
-////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
 DGCamera::DGCamera() {
     config = &DGConfig::getInstance();
+
+    _accelH = 0.0f;
+    _accelV = 0.0f;
     
     _angleH = 0.0f;
     _angleV = 0.0f;
@@ -46,10 +39,7 @@ DGCamera::DGCamera() {
     _fovCurrent = DGCamFieldOfView;
     _fovNormal = DGCamFieldOfView;
     
-    _panDirH = DGCamPanNone;
-    _panDirV = DGCamPanNone;
-    
-    _neutralZone = DGCamNeutralZone;
+    _neutralZone = DGCamNeutralZone;    
     
     _orientation[0] = 0.0f;
     _orientation[1] = 0.0f;
@@ -61,6 +51,17 @@ DGCamera::DGCamera() {
     _position[0] = 0.0f;
     _position[1] = 0.0f;
     _position[2] = 0.0f;
+    
+    _inertia = 1 / (float)DGCamInertia;
+    
+    _motionDown = 0.0f;
+    _motionLeft = 0.0f;
+    _motionRight = 0.0f;
+    _motionUp = 0.0f;
+    
+    _maxSpeed = 1.0f / (float)DGCamMaxSpeed;
+    _speedH = 0.0f;
+    _speedV = 0.0f;    
 }
 
 ////////////////////////////////////////////////////////////
@@ -114,31 +115,20 @@ float* DGCamera::orientation() {
 }
 
 void DGCamera::pan(int xPosition, int yPosition) {
-	if (xPosition > _panRegion.size.width) {
-		_deltaX = abs(xPosition - _panRegion.size.width);
-        _panDirH = DGCamPanRight;
-	}
-	else if (xPosition < _panRegion.origin.x) {
-		_deltaX = abs(xPosition - _panRegion.origin.x);
-        _panDirH = DGCamPanLeft;
-	}
-	else {
-        _deltaX = 0;
-        _panDirH = DGCamPanNone;
-    }
-	
-	if (yPosition > _panRegion.size.height) {
-		_deltaY = abs(yPosition - _panRegion.size.height);
-        _panDirV = DGCamPanDown;
-	}
-	else if (yPosition < _panRegion.origin.y) {
-		_deltaY = abs(yPosition - _panRegion.origin.y);
-        _panDirV = DGCamPanUp;
-	}
-	else {
-        _deltaY = 0;
-        _panDirV = DGCamPanNone;
-    }
+    if (xPosition > _panRegion.size.width)
+        _deltaX = xPosition - _panRegion.size.width;
+    else if (xPosition < _panRegion.origin.x)
+        _deltaX = xPosition - _panRegion.origin.x;
+    else _deltaX = 0.0f;
+        
+    if (yPosition > _panRegion.size.height)
+        _deltaY = _panRegion.size.height - yPosition;
+    else if (yPosition < _panRegion.origin.y)
+        _deltaY = _panRegion.origin.y - yPosition;
+    else _deltaY = 0.0f;
+    
+    _speedH = fabs(_deltaX) / (float)DGCamSpeedFactor;
+    _speedV = fabs(_deltaY) / (float)DGCamSpeedFactor;    
 }
 
 float* DGCamera::position() {
@@ -184,42 +174,148 @@ void DGCamera::setViewport(int width, int height) {
 }
 
 void DGCamera::startPanning(int xPosition, int yPosition) {
-    /*_panRegion.origin.x = xPosition - 50;
-    _panRegion.origin.y = yPosition - 50;
-    _panRegion.size.width = xPosition + 50;
-    _panRegion.size.height = yPosition + 50;*/
+    // We calculate the factor to stretch the neutral zone with
+    // the display height
+    float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
+    
+    _neutralZone = 1;
+    
+    _panRegion.origin.x = (xPosition - _neutralZone) * factor;
+    _panRegion.origin.y = (yPosition - _neutralZone) * factor;
+    _panRegion.size.width = (xPosition + _neutralZone) * factor;
+    _panRegion.size.height = (yPosition + _neutralZone) * factor;
 }
 
 void DGCamera::stopPanning() {
+    // We calculate the factor to stretch the neutral zone with
+    // the display height
+    float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
     
+    _neutralZone = DGCamNeutralZone;
+    
+    // Update panning regions with the new neutral zone
+    _panRegion.origin.x = (_viewport.width / 2) - _neutralZone * factor;
+    _panRegion.origin.y = (_viewport.height / 2) - _neutralZone * factor;
+    _panRegion.size.width = (_viewport.width / 2) + _neutralZone * factor;
+    _panRegion.size.height = (_viewport.height / 2) + _neutralZone * factor;
+    
+    this->pan(config->displayWidth / 2, config->displayHeight / 2);
 }
 
 void DGCamera::update() {
-    // Implement direction
-    // Delta only affects accel or speed
-    // Update angles with speed
-    
-    if (_panDirH || _panDirV) {
-        if (_panDirH) {
-            _angleH += 0.025f * _panDirH;
-            
-            // Limit rotation
-            if (_angleH > (GLfloat)_angleHLimit)
-                _angleH = 0.0f;
-            else if (_angleH < 0.0f)
-                _angleH = (GLfloat)_angleHLimit;
-        }
+    // Calculate horizontal motion
+    if (_deltaX > 0) {
+        if (_motionRight < _maxSpeed)
+            _motionRight += _speedH;
         
-        if (_panDirV) {
-            _angleV += 0.025f * _panDirV;
-            
-            // Limit rotation
-            if (_angleV > (GLfloat)_angleVLimit)
-                _angleV = (GLfloat)_angleVLimit;
-            else if (_angleV < -(GLfloat)_angleVLimit)
-                _angleV = -(GLfloat)_angleVLimit;
-        }
+        // Apply inertia to opposite direction
+        if (_motionLeft > 0.0f)
+            _motionLeft -= _inertia;        
     }
+	else if (_deltaX < 0) {
+        if (_motionLeft < _maxSpeed)
+            _motionLeft += _speedH;
+        
+        // Inertia        
+        if (_motionRight > 0.0f)
+            _motionRight -= _inertia;        
+    }
+    else {
+        // Decrease leftward motion
+        if (_motionLeft > 0.0f)
+            _motionLeft -= _inertia;
+        else
+            _motionLeft = 0.0f;
+        
+        // Decrease rightward motion
+        if (_motionRight > 0.0f)
+            _motionRight -= _inertia;
+        else
+            _motionRight = 0.0f;
+    }
+    
+    // Calculate vertical motion
+    if (_deltaY > 0) {  
+        if (_motionDown < _maxSpeed)
+            _motionDown += _speedV;
+        
+        // Apply inertia to opposite direction
+        if (_motionUp > 0.0f)
+            _motionUp -= _inertia;        
+    }
+	else if (_deltaY < 0) {
+        if (_motionUp < _maxSpeed)
+            _motionUp += _speedV;
+        
+        // Inertia
+        if (_motionDown > 0.0f)
+            _motionDown -= _inertia;        
+    }
+    else {
+        // Decrease downward motion
+        if (_motionDown > 0.0f)
+            _motionDown -= _inertia;
+        else
+            _motionDown = 0.0f;
+        
+        // Decrease upward motion
+        if (_motionUp > 0.0f)
+            _motionUp -= _inertia;
+        else
+            _motionUp = 0.0f;
+    }
+    
+    // Calculate horizontal acceleration
+    if (_deltaX) {
+        if (_accelH < 1.0f)
+            _accelH += 1.0f / (float)DGCamAccelerationFactor;
+    }
+    else {
+        // Deaccelerate        
+        if (_accelH > 0.0f)
+            _accelH -= 1.0f / (float)DGCamAccelerationFactor;
+        else
+            _accelH = 0.0f;
+    }
+    
+    // Calculate vertical acceleration
+    if (_deltaY) {
+        if (_accelV < 1.0f)
+            _accelV += 1.0f / ((float)DGCamAccelerationFactor / 4);
+    }
+    else {
+        // Deaccelerate
+        if (_accelV > 0.0f)
+            _accelV -= 1.0f / ((float)DGCamAccelerationFactor / 4);
+        else
+            _accelV = 0.0f;
+    }
+    
+    // Apply horizontal motion
+    if (_motionLeft)
+        _angleH -= _accelH * _motionLeft;
+    
+    if (_motionRight)
+        _angleH += _accelH * _motionRight;
+    
+    // Apply vertical motion
+    if (_motionDown)
+        _angleV += _accelV * _motionDown;
+    
+    if (_motionUp)
+        _angleV -= _accelV * _motionUp;    
+    
+    // Limit horizontal rotation
+    if (_angleH > (GLfloat)_angleHLimit)
+        _angleH = 0.0f;
+    else if (_angleH < 0.0f)
+        _angleH = (GLfloat)_angleHLimit;
+    
+    // Limit vertical rotation
+    if (_angleV > (GLfloat)_angleVLimit)
+        _angleV = (GLfloat)_angleVLimit;
+    else if (_angleV < -(GLfloat)_angleVLimit)
+        _angleV = -(GLfloat)_angleVLimit;
     
     _orientation[0] = (float)sin(_angleH);
     _orientation[1] = _angleV;
