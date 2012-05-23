@@ -95,7 +95,8 @@ void DGConsole::update() {
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     glPopMatrix();
     
-	glDisableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glEnable(GL_TEXTURE_2D);
     
     log->beginIteratingHistory();
     
@@ -120,6 +121,10 @@ void DGConsole::update() {
         if (_offset < _size)
             _offset += DGConsoleSpeed;
     }
+    
+    glDisable(GL_TEXTURE_2D);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void DGConsole::deleteChar() {

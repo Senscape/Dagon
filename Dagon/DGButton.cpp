@@ -29,12 +29,13 @@ DGButton::DGButton() {
     config = &DGConfig::getInstance();
     fontManager = &DGFontManager::getInstance();
     
-    _color = DGColorBlack;
     _textColor = DGColorWhite;
     
     _hasAction = false;
-    _hasColor = false;
     _hasOnHoverTexture = false;
+    _hasText = false;
+    
+    _font = fontManager->loadDefault();
     
     this->setType(DGObjectButton);    
 }
@@ -56,10 +57,6 @@ bool DGButton::hasAction() {
     return _hasAction;
 }
 
-bool DGButton::hasColor() {
-    return _hasColor;
-}
-
 bool DGButton::hasOnHoverTexture() {
     return _hasOnHoverTexture;
 }
@@ -78,10 +75,6 @@ bool DGButton::hasText() {
 
 DGAction* DGButton::action() {
     return _actionData;
-}
-
-int DGButton::color() {
-    return _color;
 }
 
 DGFont* DGButton::font() {
@@ -115,22 +108,6 @@ void DGButton::setFont(const char* fromFileName, unsigned int heightOfFont) {
     _font = fontManager->load(fromFileName, heightOfFont);
 }
 
-void DGButton::setColor(int aColor) {
-    if (!aColor) {
-        int r, g, b;
-        
-        // Make sure we avoid black
-        r = (rand() % 255) + 1;
-        g = (rand() % 255) + 1;
-        b = (rand() % 255) + 1;
-        
-        aColor = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-    }
-    
-    _color = aColor;
-    _hasColor = true;
-}
-
 void DGButton::setOnHoverTexture(const char* fromFileName) {
     // TODO: Important! Should determine first if the texture already exists,
     // to avoid repeating resources. Eventually, this would be done with the
@@ -147,6 +124,7 @@ void DGButton::setOnHoverTexture(const char* fromFileName) {
 
 void DGButton::setText(const char* text){
     _text = text;
+    _hasText = true;
 }
 
 void DGButton::setTextColor(int aColor) {

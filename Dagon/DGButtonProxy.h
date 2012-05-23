@@ -80,19 +80,13 @@ public:
                 
                 action.type = DGActionCustom;
                 action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
-                
                 b->setAction(&action);
-                if (!b->hasColor())
-                    b->setColor(0);
                 
                 break;
             case FEED:
                 action.type = DGActionFeed;
                 strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
-                
                 b->setAction(&action);
-                if (!b->hasColor())
-                    b->setColor(0);
                 
                 break;
             case SWITCH:
@@ -107,16 +101,19 @@ public:
                 }
                 
                 action.type = DGActionSwitch;
-                
                 b->setAction(&action);
-                if (!b->hasColor())
-                    b->setColor(0);
                 
                 break;
         }
                 
         return 0;
     }
+    
+    // Set the font for text
+    int setFont(lua_State *L) {
+        b->setFont(luaL_checkstring(L, 1), luaL_checknumber(L, 2));
+        return 0;
+    }  
     
     // Set the background image
     int setImage(lua_State *L) {
@@ -136,12 +133,30 @@ public:
         return 0;
     }
     
+    // Set a text
+    int setText(lua_State *L) {
+        b->setText(luaL_checkstring(L, 1));
+        return 0;
+    }
+    
+    // Set the color of text
+    int setTextColor(lua_State *L) {
+        b->setTextColor(luaL_checklong(L, 1));
+        return 0;
+    }      
+    
     // Return the size
     int size(lua_State *L) {
         DGSize size = b->size();
         lua_pushnumber(L, size.width);
         lua_pushnumber(L, size.height);        
         return 2;
+    }
+    
+    // Return the text
+    int text(lua_State *L) {
+        lua_pushstring(L, b->text());     
+        return 1;
     }
     
     DGButton* ptr() { return b; }
@@ -161,11 +176,15 @@ Luna<DGButtonProxy>::RegType DGButtonProxy::methods[] = {
     method(DGButtonProxy, move),
     method(DGButtonProxy, position),
     method(DGButtonProxy, scale),
-    method(DGButtonProxy, setAction),      
+    method(DGButtonProxy, setAction),
+    method(DGButtonProxy, setFont),     
     method(DGButtonProxy, setImage),    
     method(DGButtonProxy, setPosition),
     method(DGButtonProxy, setSize),
-    method(DGButtonProxy, size),    
+    method(DGButtonProxy, setText),    
+    method(DGButtonProxy, setTextColor),    
+    method(DGButtonProxy, size),
+    method(DGButtonProxy, text),       
     {0,0}
 };
 
