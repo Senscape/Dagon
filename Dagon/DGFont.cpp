@@ -92,9 +92,6 @@ void DGFont::print(int x, int y, const char* text, ...) {
 	size++;
 	
 	glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	for (int i = 0; i < size; i++) {
@@ -136,11 +133,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
 		glPopMatrix();
 	}
 	
-	glDisable(GL_TEXTURE_2D);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
-	
-	glPopAttrib();  
+	glPopAttrib();
 }
 
 // FIXME: This is a repeated method from DGRender - it would be best to avoid this

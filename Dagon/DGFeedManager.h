@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 #define DGDefFeedSize 10
-#define DGFeedMargin 10
+#define DGFeedMargin 25
 #define DGFeedSpeed 0.25f
 
 enum DGFeedStates {
@@ -58,6 +58,7 @@ class DGFeedManager {
     
     std::vector<DGFeed> _arrayOfFeeds;
     DGFont* _feedFont;
+    int _feedHeight;
     
     // Private constructor/destructor
     DGFeedManager();

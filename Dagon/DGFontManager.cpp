@@ -17,6 +17,8 @@
 #include "DGFontManager.h"
 #include "DGLog.h"
 
+using namespace std;
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -32,6 +34,8 @@ DGFontManager::DGFontManager() {
 ////////////////////////////////////////////////////////////
 
 DGFontManager::~DGFontManager() {
+    // TODO: Must destroy all the fonts here
+    
     if (_isInitialized) {
         _defaultFont.clear();
         FT_Done_FreeType(_library); 
@@ -55,12 +59,14 @@ void DGFontManager::init(){
 }
 
 DGFont* DGFontManager::load(const char* fromFileName, unsigned int heightOfFont){
-    static DGFont font;
+    DGFont* font = new DGFont;
     
-    font.setLibrary(&_library);
-    font.setResource(fromFileName, heightOfFont);
+    font->setLibrary(&_library);
+    font->setResource(fromFileName, heightOfFont);
     
-    return &font;
+    _arrayOfFonts.push_back(font);
+    
+    return font;
 }
 
 DGFont* DGFontManager::loadDefault() {

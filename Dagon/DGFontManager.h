@@ -40,6 +40,8 @@ class DGLog;
 class DGFontManager {
     DGLog* log;
     
+    std::vector<DGFont*> _arrayOfFonts;
+    
     DGFont _defaultFont;
     bool _isInitialized;
     FT_Library _library;
