@@ -24,6 +24,7 @@ extern "C" {
 }
 
 #include "DGAction.h"
+#include "DGConfig.h"
 #include "DGControl.h"
 #include "DGPlatform.h"
 
@@ -55,6 +56,12 @@ enum DGLongDirections {
     SOUTHWEST = DGSouthWest
 };
 
+enum DGControlTypes {
+    DRAG = DGMouseDrag,
+    FIXED = DGMouseFixed,
+    FREE = DGMouseFree
+};
+
 enum DGEventTypes {
     ENTER_NODE = DGEventEnterNode,
     ENTER_ROOM = DGEventEnterRoom,
@@ -72,7 +79,6 @@ enum DGEventTypes {
 lua_pushnumber(L, val); \
 lua_setfield(L, -2, #name);
 
-class DGConfig;
 class DGLog;
 class DGSystem;
 
@@ -92,7 +98,8 @@ class DGScript {
     int _ref;
     void _error(int result);
     static int _globalFeed(lua_State *L);
-    static int _globalRegister(lua_State *L);    
+    static int _globalPlay(lua_State *L);    
+    static int _globalRegister(lua_State *L);   
     static int _globalRoom(lua_State *L);
     static int _globalSetFont(lua_State *L);    
     static int _globalSwitch(lua_State *L);

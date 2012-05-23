@@ -183,6 +183,17 @@ void DGCamera::setViewport(int width, int height) {
     glLoadIdentity();
 }
 
+void DGCamera::startPanning(int xPosition, int yPosition) {
+    /*_panRegion.origin.x = xPosition - 50;
+    _panRegion.origin.y = yPosition - 50;
+    _panRegion.size.width = xPosition + 50;
+    _panRegion.size.height = yPosition + 50;*/
+}
+
+void DGCamera::stopPanning() {
+    
+}
+
 void DGCamera::update() {
     // Implement direction
     // Delta only affects accel or speed

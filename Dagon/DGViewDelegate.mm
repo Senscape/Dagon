@@ -102,8 +102,9 @@
 
 - (void)mouseExited:(NSEvent *)theEvent {
     if (!config->fullScreen) {
-        // Only when the Free mode is on
-        control->processMouse(config->displayWidth / 2, config->displayHeight / 2, DGMouseEventMove);
+        // We do this Only when the Free mode is on
+        if (config->controlMode == DGMouseFree)
+            control->processMouse(config->displayWidth / 2, config->displayHeight / 2, DGMouseEventMove);
         [NSCursor unhide];
     }
 }

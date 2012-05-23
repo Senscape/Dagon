@@ -23,10 +23,17 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
+enum DGControlModes {
+    DGMouseDrag,
+    DGMouseFixed,
+    DGMouseFree
+};
+
 enum DGConfigDefaults {
 	DGDefAntialiasing = true,
     DGDefAutorun = true,
     DGDefBundleEnabled = true, // Not exported to Lua
+    DGDefControlMode = DGMouseFree,
 	DGDefDisplayWidth = 1024,
 	DGDefDisplayHeight = 768,
 	DGDefDisplayDepth = 32,
@@ -40,7 +47,7 @@ enum DGConfigDefaults {
     DGDefScare = false, // Move to effects
 	DGDefShowSplash = true,
 	DGDefShowSpots = false,
-	DGDefTexCompression = true,
+	DGDefTexCompression = false,
 	DGDefThrob = false,  // Move to effects    
 	DGDefVerticalSync = true
 };
@@ -83,6 +90,7 @@ public:
     bool antialiasing;
     bool autorun;
     bool bundleEnabled;
+    int controlMode;
     int displayWidth;
 	int displayHeight;
 	int displayDepth;

@@ -30,6 +30,7 @@ DGConfig::DGConfig() {
 	antialiasing = DGDefAntialiasing;
     autorun = DGDefAutorun;
     bundleEnabled = DGDefBundleEnabled;
+    controlMode = DGDefControlMode;
 	displayWidth = DGDefDisplayWidth;
 	displayHeight = DGDefDisplayHeight;
 	displayDepth = DGDefDisplayDepth;
