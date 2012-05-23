@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGConfig.h"
+#include "DGAudioManager.h"
 #include "DGFeedManager.h"
 #include "DGLog.h"
 #include "DGProxy.h"
@@ -113,6 +114,10 @@ void DGScript::init(int argc, char* argv[]) {
     DGLuaEnum(_L, SOUTHEAST, DGSouthEast);
     DGLuaEnum(_L, NORTHWEST, DGNorthWest);
     DGLuaEnum(_L, SOUTHWEST, DGSouthWest);
+    
+    DGLuaEnum(_L, DRAG, DGMouseDrag);
+    DGLuaEnum(_L, FIXED, DGMouseFixed);
+    DGLuaEnum(_L, FREE, DGMouseFree);
     
     DGLuaEnum(_L, ENTER_NODE, DGEventEnterNode);
     DGLuaEnum(_L, ENTER_ROOM, DGEventEnterRoom);
@@ -245,6 +250,16 @@ int DGScript::_globalFeed(lua_State *L) {
 	
 	return 0;
 }
+int DGScript::_globalPlay(lua_State *L) {
+    DGAudio* audio = new DGAudio;
+    
+    audio->setResource(luaL_checkstring(L, 1));
+    DGAudioManager::getInstance().registerAudio(audio);
+    DGAudioManager::getInstance().requestAudio(audio);
+    audio->play();
+    
+	return 0;
+}
 
 int DGScript::_globalRegister(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
@@ -341,7 +356,8 @@ int DGScript::_globalTimer(lua_State *L) {
 void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
         {"feed", _globalFeed},
-        {"register", _globalRegister},
+        {"play", _globalPlay},          
+        {"register", _globalRegister},      
         {"room", _globalRoom},
         {"setFont", _globalSetFont},        
         {"switch", _globalSwitch},

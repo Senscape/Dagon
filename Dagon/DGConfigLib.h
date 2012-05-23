@@ -42,6 +42,11 @@ static int DGConfigLibGet(lua_State *L) {
 		lua_pushboolean(L, DGConfig::getInstance().autorun);
 		return 1;
 	}
+    
+    if (strcmp(key, "controlMode") == 0) {
+		lua_pushnumber(L, DGConfig::getInstance().controlMode);
+		return 1;
+	}
 	
 	if (strcmp(key, "displayWidth") == 0) {
 		lua_pushnumber(L, DGConfig::getInstance().displayWidth);
@@ -129,6 +134,9 @@ static int DGConfigLibSet(lua_State *L) {
     
     if (strcmp(key, "autorun") == 0)
 		DGConfig::getInstance().antialiasing = (bool)lua_toboolean(L, 3);
+    
+    if (strcmp(key, "controlMode") == 0)
+		DGConfig::getInstance().controlMode = (bool)luaL_checknumber(L, 3);    
 	
 	if (strcmp(key, "displayWidth") == 0)
 		DGConfig::getInstance().displayWidth = (int)luaL_checknumber(L, 3);
