@@ -136,7 +136,7 @@ static int DGConfigLibSet(lua_State *L) {
 		DGConfig::getInstance().antialiasing = (bool)lua_toboolean(L, 3);
     
     if (strcmp(key, "controlMode") == 0)
-		DGConfig::getInstance().controlMode = (bool)luaL_checknumber(L, 3);    
+		DGConfig::getInstance().controlMode = (int)luaL_checknumber(L, 3);    
 	
 	if (strcmp(key, "displayWidth") == 0)
 		DGConfig::getInstance().displayWidth = (int)luaL_checknumber(L, 3);

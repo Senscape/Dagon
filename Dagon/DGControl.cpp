@@ -220,7 +220,6 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
                         if (_mouseData.x >= arrayOfCoordinates[0] && _mouseData.y >= arrayOfCoordinates[1] &&
                             _mouseData.x <= arrayOfCoordinates[4] && _mouseData.y <= arrayOfCoordinates[5]) {
                             _mouseData.onButton = true;
-                            
                             if ((eventFlags & DGMouseEventUp) && button->hasAction()) {
                                 DGAction* action = button->action();
                                 
@@ -301,18 +300,25 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         _mouseData.y = y;
     }
     
-    if ((eventFlags & DGMouseEventDrag) && !_mouseData.isDragging) { 
-        _mouseData.isDragging = true;
+    if ((eventFlags & DGMouseEventDown)) {
         _mouseData.x = x;
         _mouseData.y = y;
         _camera->startPanning(_mouseData.x, _mouseData.y);
     }
     
+    if ((eventFlags & DGMouseEventDrag) && !_mouseData.isDragging) { 
+        _mouseData.isDragging = true;
+        _mouseData.x = x;
+        _mouseData.y = y;
+    }
+    
     switch (config->controlMode) {
         case DGMouseFree:
             _mouseData.x = x;
-            _mouseData.y = y;      
-            _camera->pan(_mouseData.x, _mouseData.y);
+            _mouseData.y = y;
+            if (!_mouseData.onButton)
+                _camera->pan(_mouseData.x, _mouseData.y);
+            else _camera->stopPanning();
             break;
             
         case DGMouseDrag:
@@ -322,7 +328,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
                 _mouseData.onSpot = true;        
                 _camera->pan(_mouseData.x, _mouseData.y);
             }
-            else _camera->pan(config->displayWidth / 2, config->displayHeight / 2);
+            else _camera->stopPanning();
             break;
     }
 }
