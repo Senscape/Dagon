@@ -35,8 +35,10 @@ class DGOverlay : public DGObject {
     std::vector<DGImage*> _arrayOfImages;
     
     std::vector<DGButton*>::iterator _itButton;
+    std::vector<DGButton*>::reverse_iterator _ritButton;
     std::vector<DGImage*>::iterator _itImage;
     
+    bool _isIteratingBackwards;
     bool _isVisible;
     DGPoint _position;
     
@@ -64,7 +66,7 @@ public:
     
     DGButton* addButton(DGButton* aButton);
     DGImage* addImage(DGImage* anImage);    
-    void beginIteratingButtons();
+    void beginIteratingButtons(bool iterateBackwards);
     void beginIteratingImages();    
     bool iterateButtons();
     bool iterateImages();

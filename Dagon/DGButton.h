@@ -38,7 +38,6 @@ class DGButton : public DGImage {
     DGConfig* config;
     DGFontManager* fontManager;
     
-    int _color;
     int _textColor;
     
     DGAction* _actionData;
@@ -47,7 +46,6 @@ class DGButton : public DGImage {
     std::string _text;
     
     bool _hasAction;
-    bool _hasColor;
     bool _hasFont;
     bool _hasOnHoverTexture;    
     bool _hasText;
@@ -59,7 +57,6 @@ public:
     // Checks
     
     bool hasAction();
-    bool hasColor();
     bool hasFont();
     bool hasOnHoverTexture();    
     bool hasText();
@@ -67,7 +64,6 @@ public:
     // Gets
     
     DGAction* action();
-    int color();
     DGFont* font();
     DGTexture* onHoverTexture();
     const char* text();
@@ -77,7 +73,6 @@ public:
     
     void setAction(DGAction* anAction);
     void setFont(const char* fromFileName, unsigned int heightOfFont);
-    void setColor(int aColor);
     void setOnHoverTexture(const char* fromFileName);
     void setText(const char* text);
     void setTextColor(int aColor);

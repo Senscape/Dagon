@@ -25,6 +25,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGOverlay::DGOverlay() {
+    _isIteratingBackwards = false; 
     _isVisible = false;
     _position.x = 0;
     _position.y = 0;
@@ -65,6 +66,9 @@ DGPoint DGOverlay::position() {
 ////////////////////////////////////////////////////////////
 
 DGButton* DGOverlay::currentButton() {
+    if (_isIteratingBackwards)
+        return *_ritButton;
+    
     return *_itButton;
 }
 
@@ -103,8 +107,13 @@ DGImage* DGOverlay::addImage(DGImage* anImage) {
     return anImage;
 }
 
-void DGOverlay::beginIteratingButtons() {
-    _itButton = _arrayOfButtons.begin();
+void DGOverlay::beginIteratingButtons(bool iterateBackwards) {
+    if (iterateBackwards)
+        _ritButton = _arrayOfButtons.rbegin();
+    else
+        _itButton = _arrayOfButtons.begin();
+    
+    _isIteratingBackwards = iterateBackwards;
 }
 
 void DGOverlay::beginIteratingImages() {
@@ -112,12 +121,18 @@ void DGOverlay::beginIteratingImages() {
 }
 
 bool DGOverlay::iterateButtons() {
-    _itButton++;
+    if (_isIteratingBackwards) {
+        _ritButton++;
+        if (_ritButton == _arrayOfButtons.rend()) return false;
+        else return true;  
+    }
+    else {
+        _itButton++;
+        if (_itButton == _arrayOfButtons.end()) return false;
+        else return true;
+    }
     
-    if (_itButton == _arrayOfButtons.end())
-        return false;
-    else
-        return true;
+    return false;
 }
 
 bool DGOverlay::iterateImages() {

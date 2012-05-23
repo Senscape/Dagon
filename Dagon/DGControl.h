@@ -95,6 +95,7 @@ typedef struct {
 	int x;
 	int y; 
     int color;
+    bool isDragging;
 	bool onButton;    
 	bool onSpot;
 } DGMouseData;
