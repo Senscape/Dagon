@@ -28,7 +28,9 @@ using namespace std;
 DGFeedManager::DGFeedManager() {	
     config = &DGConfig::getInstance();
     fontManager = &DGFontManager::getInstance();    
-    timerManager = &DGTimerManager::getInstance();    
+    timerManager = &DGTimerManager::getInstance();   
+    
+    _feedHeight = DGDefFeedSize;
 }
 
 ////////////////////////////////////////////////////////////
@@ -53,7 +55,7 @@ bool DGFeedManager::isQueued() {
 
 void DGFeedManager::parse(const char* text) {
     int length = (int)strlen(text);
-    const int maxChars = config->displayWidth / DGDefFeedSize;
+    const int maxChars = config->displayWidth / _feedHeight;
     
     DGFeed feed;
     
@@ -74,12 +76,12 @@ void DGFeedManager::parse(const char* text) {
 			*p = '\n';
 		}
 		
-		feed.location.x = (config->displayWidth / 2) - ((even / 2) * DGDefFeedSize) + DGFeedMargin;
-		feed.location.y = config->displayHeight - ((split + 1) * DGDefFeedSize) - DGFeedMargin;
+		feed.location.x = (config->displayWidth / 2) - ((even / 2) * _feedHeight) + DGFeedMargin;
+		feed.location.y = config->displayHeight - ((split + 1) * _feedHeight) - DGFeedMargin;
 	}
 	else {
-		feed.location.x = (config->displayWidth / 2) - ((length / 2) * DGDefFeedSize) + DGFeedMargin;
-		feed.location.y = config->displayHeight - DGDefFeedSize - DGFeedMargin;
+		feed.location.x = (config->displayWidth / 2) - ((length / 2) * _feedHeight) + DGFeedMargin;
+		feed.location.y = config->displayHeight - _feedHeight - DGFeedMargin;
 	}
 	
     // FIXME: Must implement masks for colors
@@ -93,6 +95,7 @@ void DGFeedManager::parse(const char* text) {
 // TODO: Note the font manager should purge unused fonts
 void DGFeedManager::setFont(const char* fromFileName, unsigned int heightOfFont) {
     _feedFont = fontManager->load(fromFileName, heightOfFont);
+    _feedHeight = heightOfFont;
 }
 
 void DGFeedManager::update() {
@@ -125,7 +128,7 @@ void DGFeedManager::update() {
                 break;        
         }
         
-        int displace = (it - _arrayOfFeeds.end() + 1) * (DGDefFeedSize + DGFeedMargin);
+        int displace = (it - _arrayOfFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
         _feedFont->setColor((*it).color);
         _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         
