@@ -304,7 +304,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
     if ((eventFlags & DGMouseEventDown)) {
         _mouseData.x = x;
         _mouseData.y = y;
-        _camera->startPanning(_mouseData.x, _mouseData.y);
+        //_camera->startPanning(_mouseData.x, _mouseData.y);
     }
     
     if ((eventFlags & DGMouseEventDrag) && !_mouseData.isDragging) { 
