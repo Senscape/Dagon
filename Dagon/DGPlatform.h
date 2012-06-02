@@ -116,7 +116,8 @@ enum DGKeys {
 	DGKeyEsc = 0x1b,
 	DGKeyQuote = 0x60,
 	DGKeyTab = 0x9,    
-	DGKeyEnter = 0xd
+	DGKeyEnter = 0xd,
+	DGKeySpacebar = 0x20     
 };
 #endif
     
@@ -139,7 +140,8 @@ enum DGKeys {
 	DGKeyEsc = 0x1b,
 	DGKeyQuote = 0x60,
 	DGKeyTab = 0x9,    
-	DGKeyEnter = 0xd
+	DGKeyEnter = 0xd,
+	DGKeySpacebar = 0x20    
 };
 #endif
 

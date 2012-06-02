@@ -28,4 +28,10 @@ typedef struct {
 	DGSize size;
 } DGRect;
 
+typedef struct {
+	double x;
+	double y;
+    double z;
+} DGVector;
+
 #endif // DG_GEOMETRY_H
