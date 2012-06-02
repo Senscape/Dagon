@@ -26,11 +26,12 @@
 
 enum DGCameraDefaults {
     DGCamAccelerationFactor = 100,
+    DGCamDragNeutralZone = 50,    
 	DGCamFieldOfView = 55,
+    DGCamFreeNeutralZone = 250,    
     DGCamInertia = 750, // Maintain motion after panning stops
     DGCamMaxSpeed = 30,
-    DGCamNeutralZone = 250,
-    DGCamSpeedFactor = 500000 // Make movement smoother
+    DGCamSpeedFactor = 500000 // Make movement smoother, duplicated in Drag mode
 };
 
 class DGConfig;
@@ -59,8 +60,9 @@ class DGCamera {
     
     float _orientation[6];
     float _position[3];
-    
-    int _neutralZone;
+
+    int _dragNeutralZone;
+    int _freeNeutralZone;
     
     DGSize _viewport;
     DGRect _panRegion;
@@ -92,8 +94,8 @@ public:
     void setViewport(int width, int height);
 
     // For the Drag mode
-    void startPanning(int xPosition, int yPosition); // Recreates the neutral zone
-    void stopPanning(); // Resets the neutral zone
+    void startDragging(int xPosition, int yPosition); // Recreates the neutral zone
+    void stopDragging(); // Resets the neutral zone
     
     void update();
 };

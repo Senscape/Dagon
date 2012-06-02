@@ -38,8 +38,9 @@ DGCamera::DGCamera() {
     
     _fovCurrent = DGCamFieldOfView;
     _fovNormal = DGCamFieldOfView;
-    
-    _neutralZone = DGCamNeutralZone;    
+
+    _dragNeutralZone = DGCamDragNeutralZone;
+    _freeNeutralZone = DGCamFreeNeutralZone;
     
     _orientation[0] = 0.0f;
     _orientation[1] = 0.0f;
@@ -107,7 +108,16 @@ float DGCamera::fieldOfView() {
 }
 
 int DGCamera::neutralZone() {
-    return _neutralZone;
+    switch (config->controlMode) {
+        case DGMouseDrag:
+            return _dragNeutralZone;
+        case DGMouseFixed:
+            return 0;            
+        case DGMouseFree:
+            return _freeNeutralZone;
+    }
+    
+   return 0;
 }
 
 float* DGCamera::orientation() {
@@ -127,8 +137,15 @@ void DGCamera::pan(int xPosition, int yPosition) {
         _deltaY = _panRegion.origin.y - yPosition;
     else _deltaY = 0.0f;
     
-    _speedH = fabs(_deltaX) / (float)DGCamSpeedFactor;
-    _speedV = fabs(_deltaY) / (float)DGCamSpeedFactor;    
+    if (config->controlMode == DGMouseDrag) {
+        _speedH = fabs(_deltaX) / (float)(DGCamSpeedFactor * 2); // Make movement even smoother
+        _speedV = fabs(_deltaY) / (float)(DGCamSpeedFactor * 2);
+    }
+    else {
+        _speedH = fabs(_deltaX) / (float)DGCamSpeedFactor;
+        _speedV = fabs(_deltaY) / (float)DGCamSpeedFactor;
+        
+    }
 }
 
 float* DGCamera::position() {
@@ -140,26 +157,42 @@ void DGCamera::setFieldOfView(float fov) {
 }
 
 void DGCamera::setNeutralZone(int zone) {
-    // We calculate the factor to stretch the neutral zone with
-    // the display height
-    float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
-    
-    _neutralZone = zone;
-    
-    // Update panning regions with the new neutral zone
-    _panRegion.origin.x = (_viewport.width / 2) - _neutralZone * factor;
-    _panRegion.origin.y = (_viewport.height / 2) - _neutralZone * factor;
-    _panRegion.size.width = (_viewport.width / 2) + _neutralZone * factor;
-    _panRegion.size.height = (_viewport.height / 2) + _neutralZone * factor;
+    switch (config->controlMode) {
+        case DGMouseDrag:
+            _dragNeutralZone = zone;
+            break;
+            
+        case DGMouseFixed:
+            // Nothing to do here
+            break;
+            
+        case DGMouseFree:
+            // We calculate the factor to stretch the neutral zone with
+            // the display height
+            float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
+            
+            _freeNeutralZone = zone;
+            
+            // Update panning regions with the new neutral zone
+            _panRegion.origin.x = (_viewport.width / 2) - _freeNeutralZone * factor;
+            _panRegion.origin.y = (_viewport.height / 2) - _freeNeutralZone * factor;
+            _panRegion.size.width = (_viewport.width / 2) + _freeNeutralZone * factor;
+            _panRegion.size.height = (_viewport.height / 2) + _freeNeutralZone * factor;
+            
+            break;
+    }
 }
 
 void DGCamera::setViewport(int width, int height) {
+    // NOTE: if screen size is changed while in Drag mode, the neutral zone for Free mode isn't updated
+    
     _viewport.width = width;
     _viewport.height = height;
     
     // This forces the new display factor to be applied to the
-    // current neutral zone
-    setNeutralZone(_neutralZone);
+    // current neutral zone (only in Free mode)
+    if (config->controlMode == DGMouseFree)
+        setNeutralZone(_freeNeutralZone);
     
     glViewport(0, 0, (GLint)_viewport.width, (GLint)_viewport.height);
 
@@ -173,31 +206,18 @@ void DGCamera::setViewport(int width, int height) {
     glLoadIdentity();
 }
 
-void DGCamera::startPanning(int xPosition, int yPosition) {
-    // We calculate the factor to stretch the neutral zone with
-    // the display height
-    float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
-    
-    _neutralZone = 50;
-    
-    _panRegion.origin.x = (xPosition - _neutralZone) * factor;
-    _panRegion.origin.y = (yPosition - _neutralZone) * factor;
-    _panRegion.size.width = (xPosition + _neutralZone) * factor;
-    _panRegion.size.height = (yPosition + _neutralZone) * factor;
+void DGCamera::startDragging(int xPosition, int yPosition) {
+    _panRegion.origin.x = xPosition - _dragNeutralZone;
+    _panRegion.origin.y = yPosition - _dragNeutralZone;
+    _panRegion.size.width = xPosition + _dragNeutralZone;
+    _panRegion.size.height = yPosition + _dragNeutralZone;
 }
 
-void DGCamera::stopPanning() {
-    // We calculate the factor to stretch the neutral zone with
-    // the display height
-    float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
-    
-    _neutralZone = DGCamNeutralZone;
-    
-    // Update panning regions with the new neutral zone
-    _panRegion.origin.x = (_viewport.width / 2) - _neutralZone * factor;
-    _panRegion.origin.y = (_viewport.height / 2) - _neutralZone * factor;
-    _panRegion.size.width = (_viewport.width / 2) + _neutralZone * factor;
-    _panRegion.size.height = (_viewport.height / 2) + _neutralZone * factor;
+void DGCamera::stopDragging() {
+    _panRegion.origin.x = (_viewport.width / 2) - _dragNeutralZone;
+    _panRegion.origin.y = (_viewport.height / 2) - _dragNeutralZone;
+    _panRegion.size.width = (_viewport.width / 2) + _dragNeutralZone;
+    _panRegion.size.height = (_viewport.height / 2) + _dragNeutralZone;
     
     this->pan(config->displayWidth / 2, config->displayHeight / 2);
 }
