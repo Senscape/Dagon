@@ -250,6 +250,7 @@ bool DGLog::iterateHistory() {
 }
 
 void DGLog::getCurrentLine(DGLogData* pointerToLogData) {
+    // BUG: This is crashing sometimes, probably because the iterator is not set
     strcpy(pointerToLogData->line, _it->line);
     pointerToLogData->color = _it->color;
     pointerToLogData->module = _it->module;

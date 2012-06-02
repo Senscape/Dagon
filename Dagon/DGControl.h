@@ -138,6 +138,7 @@ class DGControl {
     bool _isInitialized;
     
     void _drawScene();
+    void _scanOverlays();    
     void _scanSpots();
     
     // Private constructor/destructor

@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDefCursorDetail 40
+#define DGDefCursorDetail 30
 
 class DGConfig;
 class DGLog;
@@ -43,7 +43,12 @@ class DGRender {
     bool _shadersEnabled;
     bool _texturesEnabled;
     
-    DGTexture* _blendTexture;  
+    DGTexture* _blendTexture;
+    
+    std::vector<DGPoint> _arrayOfHelpers;
+    std::vector<DGPoint>::iterator _itHelper;
+    
+    DGPoint _centerOfPolygon(std::vector<int> arrayOfCoordinates);
     
 public:
     DGRender();
@@ -51,7 +56,7 @@ public:
     
     void beginDrawing(bool usingTextures);
     void blendNextUpdate();
-    void drawCursor(int xPosition, int yPosition);
+    void drawHelper(int xPosition, int yPosition, bool animate);
     void drawPolygon(std::vector<int> withArrayOfCoordinates, unsigned int onFace);
     
     // Slides always require four corners, so we know for sure the number of elements
@@ -66,6 +71,16 @@ public:
     void clearScene();
     void copyScene();
     void updateScene();
+    
+    // Conversion of coordinates (note this requires glu)
+    
+    DGVector project(float x, float y, float z); // If more than three coordinates, attempts to calculate center
+    DGVector unProject(int x, int y);
+    
+    // Process available helpers (indicates clickable spots)
+    bool beginIteratingHelpers();
+    DGPoint currentHelper();
+    bool iterateHelpers();
 };
 
 #endif // DG_RENDER_H

@@ -45,6 +45,7 @@ enum DGConfigDefaults {
 	DGDefLog = true,
     DGDefMute = false,
     DGDefScare = false, // Move to effects
+    DGDefShowHelpers = false,
 	DGDefShowSplash = true,
 	DGDefShowSpots = false,
 	DGDefTexCompression = false,
@@ -102,6 +103,7 @@ public:
     bool log;
     bool mute;
     bool scare;
+    bool showHelpers;
     bool showSplash;
 	bool showSpots;
     bool texCompression;

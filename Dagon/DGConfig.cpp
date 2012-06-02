@@ -41,6 +41,7 @@ DGConfig::DGConfig() {
 	effects = DGDefEffects;
 	log = DGDefLog;
     mute = DGDefMute;
+    showHelpers = DGDefShowHelpers;
 	showSplash = DGDefShowSplash;
 	showSpots = DGDefShowSpots;
 	texCompression = DGDefTexCompression;

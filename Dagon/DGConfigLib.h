@@ -97,6 +97,11 @@ static int DGConfigLibGet(lua_State *L) {
 		lua_pushstring(L, DGConfig::getInstance().script());
 		return 1;
 	}
+    
+    if (strcmp(key, "showHelpersh") == 0) {
+		lua_pushboolean(L, DGConfig::getInstance().showHelpers);
+		return 1;
+	}
 	
 	if (strcmp(key, "showSplash") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().showSplash);
@@ -167,6 +172,9 @@ static int DGConfigLibSet(lua_State *L) {
     
     if (strcmp(key, "script") == 0)
         DGConfig::getInstance().setScript(luaL_checkstring(L, 3));
+    
+	if (strcmp(key, "showHelpers") == 0)
+		DGConfig::getInstance().showHelpers = (bool)lua_toboolean(L, 3);    
 	
 	if (strcmp(key, "showSplash") == 0)
 		DGConfig::getInstance().showSplash = (bool)lua_toboolean(L, 3);

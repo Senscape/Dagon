@@ -172,6 +172,11 @@ void DGControl::processKey(int aKey, bool isModified) {
 		case DGKeyEnter:
 			_console->execute();
 			break;
+		case DGKeySpacebar:
+            if (!_console->isEnabled())
+                config->showHelpers = !config->showHelpers;
+            else _console->inputChar(aKey);
+			break;            
         case 'f':
         case 'F':
             if (isModified) {
@@ -291,9 +296,9 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         } while (currentNode->iterateSpots());
     }
     
-    if ((eventFlags & DGMouseEventUp) && _mouseData.onSpot && _mouseData.isDragging) {
+    if ((eventFlags & DGMouseEventUp) && _mouseData.isDragging) {
         _mouseData.isDragging = false;
-        _camera->stopPanning();
+        _camera->stopDragging();
     }
     
     if ((eventFlags & DGMouseEventMove)) {
@@ -304,7 +309,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
     if ((eventFlags & DGMouseEventDown)) {
         _mouseData.x = x;
         _mouseData.y = y;
-        //_camera->startPanning(_mouseData.x, _mouseData.y);
+        _camera->startDragging(_mouseData.x, _mouseData.y);
     }
     
     if ((eventFlags & DGMouseEventDrag) && !_mouseData.isDragging) { 
@@ -319,7 +324,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
             _mouseData.y = y;
             if (!_mouseData.onButton)
                 _camera->pan(_mouseData.x, _mouseData.y);
-            else _camera->stopPanning();
+            else _camera->stopDragging();
             break;
             
         case DGMouseDrag:
@@ -622,13 +627,27 @@ void DGControl::update() {
     feedManager->update();
     _render->endDrawing();
     
+    // Helpers
+    if (config->showHelpers) {
+        if (_render->beginIteratingHelpers()) { // Check if we have any
+            do {
+                DGPoint point = _render->currentHelper();
+                
+                _render->beginDrawing(false); // Textures disabled
+                _render->setColor(DGColorBrightCyan);
+                _render->drawHelper(point.x, point.y, true);
+                _render->endDrawing();
+            } while (_render->iterateHelpers());
+        }
+    }
+    
     // Mouse cursor
     _render->beginDrawing(false); // Textures disabled (only for default cursor)
     if (_mouseData.onButton || _mouseData.onSpot)
         _render->setColor(DGColorBrightRed);
     else
         _render->setColor(DGColorDarkGray);
-    _render->drawCursor(_mouseData.x, _mouseData.y);
+    _render->drawHelper(_mouseData.x, _mouseData.y, false);
     _render->endDrawing();
     
     // User post render operations, supporting textures
@@ -710,6 +729,9 @@ void DGControl::_drawScene() {
         
         _render->endDrawing();
     }
+}
+
+void DGControl::_scanOverlays() {
 }
 
 void DGControl::_scanSpots() {
