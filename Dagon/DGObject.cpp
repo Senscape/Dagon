@@ -27,6 +27,11 @@ static int globalID = 0;
 DGObject::DGObject() {
     _id = ++globalID;
     _retainCount = 0;
+    
+    _defaultFade = 1.0f;
+    _fadeLevel = 1.0f;
+    _fadeDirection = DGFadeNone;
+    _isEnabled = true;    
 }
 
 ////////////////////////////////////////////////////////////
@@ -41,6 +46,14 @@ DGObject::~DGObject() {
 // Implementation - Checks
 ////////////////////////////////////////////////////////////
 
+bool DGObject::isEnabled() {
+    return _isEnabled;
+}
+
+bool DGObject::isFading() {
+    return _fadeDirection;
+}
+
 bool DGObject::isType(unsigned int typeToCheck) {
     if (_type == typeToCheck)
         return true;
@@ -51,6 +64,10 @@ bool DGObject::isType(unsigned int typeToCheck) {
 ////////////////////////////////////////////////////////////
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
+
+float DGObject::fadeLevel() {
+    return _fadeLevel;
+}
 
 int DGObject::luaObject() {
     return _luaObject;
@@ -88,6 +105,25 @@ void DGObject::setType(unsigned int type) {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
+void DGObject::disable() {
+    _isEnabled = false;
+}
+
+void DGObject::enable() {
+    _isEnabled = true;
+}
+
+void DGObject::fadeIn() {
+    // Force object enabled
+    _isEnabled = true;
+    
+    _fadeLevel = 0.0f;
+    _fadeDirection = DGFadeIn;
+}
+
+void DGObject::fadeOut() {
+    _fadeDirection = DGFadeOut;
+}
 
 void DGObject::retain() {
     _retainCount++;
@@ -95,4 +131,21 @@ void DGObject::retain() {
 
 void DGObject::release() {
     _retainCount--;    
+}
+
+void DGObject::toggle() {
+    _isEnabled = !_isEnabled;
+}
+
+void DGObject::update() {
+    switch (_fadeDirection) {
+        case DGFadeIn:
+            if (_fadeLevel < 1.0f) _fadeLevel += 0.005f;
+            break;
+        case DGFadeOut:
+            
+            if (_fadeLevel < 0.0f) _isEnabled = false;
+            else  _fadeLevel -= 0.005f;
+            break;
+    }
 }

@@ -48,7 +48,6 @@ class DGSpot : public DGObject {
     DGTexture* _attachedTexture;
 	DGVideo* _attachedVideo;
 	
-	bool _isEnabled;
 	bool _isPlaying;
 	
 	bool _hasAction;
@@ -78,7 +77,6 @@ public:
     bool hasFlag(int theFlag);
     bool hasTexture();
     bool hasVideo();
-    bool isEnabled();
     bool isPlaying();
     
     // Gets
@@ -103,12 +101,9 @@ public:
     
     // State changes
     
-    void disable();
-    void enable();
     void play();
     void resize(std::vector<int> newArrayOfCoordinates);
     void stop();    
-    void toggle();
 };
 
 #endif // DG_SPOT_H

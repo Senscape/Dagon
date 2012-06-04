@@ -29,7 +29,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGOverlayProxy {
+class DGOverlayProxy : public DGObjectProxy {
 public:
     static const char className[];
     static Luna<DGOverlayProxy>::RegType methods[];
@@ -42,6 +42,9 @@ public:
         
         // Register the new overlay
         DGControl::getInstance().registerObject(o);
+        
+        // Init the base class
+        this->setObject(o);
     }
     
     // Destructor
@@ -135,6 +138,7 @@ private:
 const char DGOverlayProxy::className[] = DGOverlayProxyName;
 
 Luna<DGOverlayProxy>::RegType DGOverlayProxy::methods[] = {
+    DGObjectMethods(DGOverlayProxy)    
     method(DGOverlayProxy, addButton),      
     method(DGOverlayProxy, addImage),    
     method(DGOverlayProxy, hide),

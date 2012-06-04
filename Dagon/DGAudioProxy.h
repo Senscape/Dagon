@@ -28,7 +28,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGAudioProxy {
+class DGAudioProxy : public DGObjectProxy {
 public:
     static const char className[];
     static Luna<DGAudioProxy>::RegType methods[];
@@ -54,6 +54,9 @@ public:
         
         // Register the new audio
         DGAudioManager::getInstance().registerAudio(a);
+        
+        // Init the base class
+        this->setObject(a);
     }
     
     // Destructor
@@ -96,6 +99,7 @@ private:
 const char DGAudioProxy::className[] = DGAudioProxyName;
 
 Luna<DGAudioProxy>::RegType DGAudioProxy::methods[] = {
+    DGObjectMethods(DGAudioProxy)    
     method(DGAudioProxy, play),
     method(DGAudioProxy, pause),    
     method(DGAudioProxy, stop),

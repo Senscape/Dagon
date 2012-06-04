@@ -28,7 +28,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGImageProxy {
+class DGImageProxy : public DGObjectProxy {
 public:
     static const char className[];
     static Luna<DGImageProxy>::RegType methods[];
@@ -36,6 +36,10 @@ public:
     // Constructor
     DGImageProxy(lua_State *L) {
         i = new DGImage(luaL_checkstring(L, 1));
+        i->setName(luaL_checkstring(L, 1));
+        
+        // Init the base class
+        this->setObject(i);
     }
     
     // Destructor
@@ -95,12 +99,13 @@ private:
 const char DGImageProxy::className[] = DGImageProxyName;
 
 Luna<DGImageProxy>::RegType DGImageProxy::methods[] = {
+    DGObjectMethods(DGImageProxy)    
     method(DGImageProxy, move),
     method(DGImageProxy, position),
     method(DGImageProxy, scale),
     method(DGImageProxy, setPosition),
-    method(DGImageProxy, setSize),
-    method(DGImageProxy, size),    
+    method(DGImageProxy, setSize),      
+    method(DGImageProxy, size),
     {0,0}
 };
 

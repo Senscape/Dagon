@@ -29,7 +29,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGSpotProxy {
+class DGSpotProxy : public DGObjectProxy {
 public:
     static const char className[];
     static Luna<DGSpotProxy>::RegType methods[];
@@ -65,6 +65,9 @@ public:
             s->setVolume(1.0f); // Default volume
         }
         else luaL_error(L, DGMsg250004);
+        
+        // Init the base class
+        this->setObject(s);
     }
     
     // TODO: In the future we should return a pointer to an attached object
@@ -178,24 +181,6 @@ public:
         return 0;
     }
     
-    // Disable the spot
-    int disable(lua_State *L) {
-        s->disable();
-        return 0;
-    }
-
-    // Enable the spot
-    int enable(lua_State *L) {
-        s->enable();
-        return 0;
-    }
-
-    // Check if enabled
-    int isEnabled(lua_State *L) {
-        lua_pushboolean(L, s->isEnabled());
-        return 1;
-    }
-    
     // Check if playing
     int isPlaying(lua_State *L) {
         lua_pushboolean(L, s->isPlaying());
@@ -211,12 +196,6 @@ public:
     // Stop the spot
     int stop(lua_State *L) {
         s->stop();
-        return 0;
-    }
-
-    // Toggle enabled/disabled state
-    int toggle(lua_State *L) {
-        s->toggle();
         return 0;
     }
     
@@ -236,14 +215,11 @@ private:
 const char DGSpotProxy::className[] = DGSpotProxyName;
 
 Luna<DGSpotProxy>::RegType DGSpotProxy::methods[] = {
+    DGObjectMethods(DGSpotProxy)    
     method(DGSpotProxy, attach),
-    method(DGSpotProxy, disable),    
-    method(DGSpotProxy, enable),
-    method(DGSpotProxy, isEnabled),
     method(DGSpotProxy, isPlaying),    
     method(DGSpotProxy, play),
-    method(DGSpotProxy, stop),
-    method(DGSpotProxy, toggle),   
+    method(DGSpotProxy, stop),   
     {0,0}
 };
 

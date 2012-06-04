@@ -85,17 +85,39 @@ DGTexture* DGImage::texture() {
 }
 
 ////////////////////////////////////////////////////////////
+// Implementation - Sets
+////////////////////////////////////////////////////////////
+
+float* DGImage::arrayOfCoordinates() {
+    return _arrayOfCoordinates;
+}
+
+void DGImage::move(float offsetX, float offsetY) {
+    _rect.origin.x += offsetX;
+    _rect.origin.y += offsetY;
+    
+    _calculateCoordinates();
+}
+
+void DGImage::scale(float factor) {
+    _rect.size.width *= factor;
+    _rect.size.height *= factor;
+    
+    _calculateCoordinates();    
+}
+
+////////////////////////////////////////////////////////////
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-void DGImage::setPosition(int x, int y) {
+void DGImage::setPosition(float x, float y) {
     _rect.origin.x = x;
     _rect.origin.y = y;
     
     _calculateCoordinates();    
 }
 
-void DGImage::setSize(int width, int height) {
+void DGImage::setSize(float width, float height) {
     _rect.size.width = width;
     _rect.size.height = height;
     
@@ -114,28 +136,6 @@ void DGImage::setTexture(const char* fromFileName) {
     
     _attachedTexture = texture;
     _hasTexture = true;
-}
-
-////////////////////////////////////////////////////////////
-// Implementation - Sets
-////////////////////////////////////////////////////////////
-
-int* DGImage::arrayOfCoordinates() {
-    return _arrayOfCoordinates;
-}
-
-void DGImage::move(int offsetX, int offsetY) {
-    _rect.origin.x += offsetX;
-    _rect.origin.y += offsetY;
-    
-    _calculateCoordinates();
-}
-
-void DGImage::scale(float factor) {
-    _rect.size.width *= factor;
-    _rect.size.height *= factor;
-    
-    _calculateCoordinates();    
 }
 
 ////////////////////////////////////////////////////////////

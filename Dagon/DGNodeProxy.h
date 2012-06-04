@@ -46,7 +46,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGNodeProxy {
+class DGNodeProxy : public DGObjectProxy {
 public:
     static const char className[];
     static Luna<DGNodeProxy>::RegType methods[];
@@ -74,6 +74,9 @@ public:
             // We add the node automatically
             r->addNode(n);
         }
+        
+        // Init the base class
+        this->setObject(n);
     }
     
     // Destructor
@@ -93,7 +96,7 @@ public:
         }
         
         return 0;
-    }    
+    }
     
     // Function to link in several directions
     int link(lua_State *L) {
@@ -156,7 +159,8 @@ private:
 const char DGNodeProxy::className[] = DGNodeProxyName;
 
 Luna<DGNodeProxy>::RegType DGNodeProxy::methods[] = {
-    method(DGNodeProxy, addSpot),    
+    DGObjectMethods(DGNodeProxy)    
+    method(DGNodeProxy, addSpot),
     method(DGNodeProxy, link),
     {0,0}
 };

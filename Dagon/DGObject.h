@@ -23,6 +23,12 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
+enum DGFades {
+    DGFadeNone,
+    DGFadeIn,    
+    DGFadeOut
+};
+
 enum DGObjectTypes {
     // Note that 0 is used to return an invalid object in Lua
     DGObjectNone = 0,
@@ -44,12 +50,19 @@ enum DGObjectTypes {
 // Interface
 ////////////////////////////////////////////////////////////
 
+// TODO: Lots of stuff to add here: enable, disable, alpha property, etc.
+
 class DGObject {
     unsigned int _id;
-    unsigned int _type;
-    std::string _name;
     int _luaObject;
+    std::string _name;
     int _retainCount;
+    unsigned int _type;
+    
+    float _defaultFade;
+    int _fadeDirection;
+    float _fadeLevel;    
+    bool _isEnabled;
     
 public:
     DGObject();
@@ -57,10 +70,13 @@ public:
     
     // Checks
     
+    bool isEnabled();
+    bool isFading();
     bool isType(unsigned int typeToCheck);
     
     // Gets
     
+    float fadeLevel();
     int luaObject();
     const char* name();
     int retainCount();
@@ -74,8 +90,14 @@ public:
     
     // State changes
     
+    void disable();
+    void enable();
+    void fadeIn();
+    void fadeOut();    
     void release();
     void retain();
+    void toggle();
+    void update();
 };
 
 #endif // DG_OBJECT_H
