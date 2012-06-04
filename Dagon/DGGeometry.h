@@ -14,13 +14,13 @@
 #define	DG_GEOMETRY_H
 
 typedef struct {
-	int x;
-	int y;
+	double x;
+	double y;
 } DGPoint;
 
 typedef struct {
-	int width;
-	int height;
+	double width;
+	double height;
 } DGSize;
 
 typedef struct {

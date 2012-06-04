@@ -60,9 +60,10 @@ public:
     void drawPolygon(std::vector<int> withArrayOfCoordinates, unsigned int onFace);
     
     // Slides always require four corners, so we know for sure the number of elements
-    void drawSlide(int* withArrayOfCoordinates);    
+    void drawSlide(float* withArrayOfCoordinates); // We use float in all "slides" since we need the precision
     void endDrawing();
     void init();
+    void setAlpha(float alpha);
     void setColor(int color);
     int	testColor(int xPosition, int yPosition);
     
@@ -70,6 +71,7 @@ public:
     
     void clearScene();
     void copyScene();
+    void resetScene();    
     void updateScene();
     
     // Conversion of coordinates (note this requires glu)

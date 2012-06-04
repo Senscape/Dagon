@@ -221,7 +221,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
                     
                     do {
                         DGButton* button = (*itOverlay)->currentButton();
-                        int* arrayOfCoordinates = button->arrayOfCoordinates();
+                        float* arrayOfCoordinates = button->arrayOfCoordinates();
                         if (_mouseData.x >= arrayOfCoordinates[0] && _mouseData.y >= arrayOfCoordinates[1] &&
                             _mouseData.x <= arrayOfCoordinates[4] && _mouseData.y <= arrayOfCoordinates[5]) {
                             _mouseData.onButton = true;
@@ -330,8 +330,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         case DGMouseDrag:
             if ((eventFlags & DGMouseEventDrag) && _mouseData.isDragging) {
                 _mouseData.x = x;
-                _mouseData.y = y;
-                _mouseData.onSpot = true;        
+                _mouseData.y = y;      
                 _camera->pan(_mouseData.x, _mouseData.y);
             }
             break;
@@ -548,6 +547,7 @@ void DGControl::update() {
     // FIXME: Add a render stack of DGObjects, especially for overlays
     
     // Setup the scene
+    _render->resetScene();
     _render->clearScene();
     
     // Do this in a viewtimer
@@ -555,6 +555,11 @@ void DGControl::update() {
         case DGStateNode:
             // This is the first method we call because it sets the view
             _camera->update();
+            
+            _scanSpots();
+            
+            if (!config->showSpots)
+                _render->clearScene();
             
             // Drawing the node is handled by a separate function
             _drawScene();
@@ -589,17 +594,20 @@ void DGControl::update() {
                     
                     do {
                         DGButton* button = (*itOverlay)->currentButton();
-                        
-                        if (button->hasTexture()) {
-                            button->texture()->bind();
-                            _render->drawSlide(button->arrayOfCoordinates());
-                        }
-                        
-                        if (button->hasText()) {
-                            DGPoint position = button->position();
-                            _render->setColor(button->textColor());
-                            button->font()->print(position.x, position.y, button->text());
-                            _render->setColor(DGColorBlack);
+                        if (button->isEnabled()) {
+                            if (button->hasTexture()) {
+                                button->update();
+                                _render->setAlpha(button->fadeLevel());
+                                button->texture()->bind();
+                                _render->drawSlide(button->arrayOfCoordinates());
+                            }
+                            
+                            if (button->hasText()) {
+                                DGPoint position = button->position();
+                                _render->setColor(button->textColor());
+                                button->font()->print(position.x, position.y, button->text());
+                                _render->setColor(DGColorWhite); // Reset the color
+                            }
                         }
                     } while ((*itOverlay)->iterateButtons());
                 }
@@ -609,8 +617,12 @@ void DGControl::update() {
                     
                     do {
                         DGImage* image = (*itOverlay)->currentImage();
-                        image->texture()->bind();
-                        _render->drawSlide(image->arrayOfCoordinates());
+                        if (image->isEnabled()) {
+                            image->update(); // Perform any necessary updates
+                            image->texture()->bind();
+                            _render->setAlpha(image->fadeLevel());
+                            _render->drawSlide(image->arrayOfCoordinates());
+                        }
                     } while ((*itOverlay)->iterateImages());
                 }
                 
@@ -710,24 +722,26 @@ void DGControl::_drawScene() {
     // IMPORTANT: Ensure this function is thread-safe when
     // switching rooms or nodes
     
-    _scanSpots();
-    
     if (_canDrawSpots) {
         DGNode* currentNode = _currentRoom->currentNode();
-        
-        _render->beginDrawing(true);
-        
-        currentNode->beginIteratingSpots();
-        do {
-            DGSpot* spot = currentNode->currentSpot();
+        if (currentNode->isEnabled()) {
+            currentNode->update();
+            _render->setAlpha(currentNode->fadeLevel());
             
-            if (spot->hasTexture() && spot->isEnabled()) {
-                spot->texture()->bind();
-                _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
-            }
-        } while (currentNode->iterateSpots());
-        
-        _render->endDrawing();
+            _render->beginDrawing(true);
+            
+            currentNode->beginIteratingSpots();
+            do {
+                DGSpot* spot = currentNode->currentSpot();
+                
+                if (spot->hasTexture() && spot->isEnabled()) {
+                    spot->texture()->bind();
+                    _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                }
+            } while (currentNode->iterateSpots());
+            
+            _render->endDrawing();
+        }
     }
 }
 
@@ -740,7 +754,7 @@ void DGControl::_scanSpots() {
     
     if (_canDrawSpots) {
         DGNode* currentNode = _currentRoom->currentNode();
-        
+
         _render->beginDrawing(false);
     
         currentNode->beginIteratingSpots();

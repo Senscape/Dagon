@@ -239,7 +239,7 @@ void DGRender::drawPolygon(vector<int> withArrayOfCoordinates, unsigned int onFa
 	glPopMatrix();
 }
 
-void DGRender::drawSlide(int* withArrayOfCoordinates) {
+void DGRender::drawSlide(float* withArrayOfCoordinates) {
     glPushMatrix();
     
 	if (_texturesEnabled) {
@@ -247,7 +247,7 @@ void DGRender::drawSlide(int* withArrayOfCoordinates) {
 		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
 	}
     
-	glVertexPointer(2, GL_INT, 0, withArrayOfCoordinates);
+	glVertexPointer(2, GL_FLOAT, 0, withArrayOfCoordinates);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     
 	glPopMatrix();
@@ -312,6 +312,11 @@ void DGRender::init() {
 	}    
 }
 
+void DGRender::setAlpha(float alpha) {
+    // NOTE: This resets the current so it should be used with care
+    glColor4f(1.0f, 1.0f, 1.0f, alpha);
+}
+
 void DGRender::setColor(int color) {
    	uint32_t aux = color;
     
@@ -346,13 +351,16 @@ int	DGRender::testColor(int xPosition, int yPosition) {
 
 void DGRender::clearScene() {
     glClear(GL_COLOR_BUFFER_BIT);
-    glLoadIdentity();
-    
-    _arrayOfHelpers.clear();
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
 void DGRender::copyScene() {
    	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config->displayWidth, config->displayHeight, 0); 
+}
+
+void DGRender::resetScene() {
+    glLoadIdentity();
+    _arrayOfHelpers.clear();
 }
 
 void DGRender::updateScene() {
@@ -360,7 +368,7 @@ void DGRender::updateScene() {
 		static float j = 0.0f;
 		int xStretch = j * (config->displayWidth / 4);
 		int yStretch = j * (config->displayHeight / 4);
-		int coords[] = {-xStretch, -yStretch, config->displayWidth + xStretch, -yStretch, 
+		float coords[] = {-xStretch, -yStretch, config->displayWidth + xStretch, -yStretch, 
 			config->displayWidth + xStretch, config->displayHeight + yStretch, -xStretch, config->displayHeight + yStretch}; 
         
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f - j);
@@ -486,10 +494,8 @@ bool DGRender::iterateHelpers() {
 ////////////////////////////////////////////////////////////
 
 DGPoint DGRender::_centerOfPolygon(vector<int> arrayOfCoordinates) {
+    DGPoint center;    
     int vertex = arrayOfCoordinates.size() / 2;
-    
-    double cx = 0.0f;
-    double cy = 0.0f;
     
     double area = 0.0;
     double x0 = 0.0; // Current vertex X
@@ -510,8 +516,8 @@ DGPoint DGRender::_centerOfPolygon(vector<int> arrayOfCoordinates) {
         a = (x0 * y1) - (x1 * y0);
         area += a;
         
-        cx += (x0 + x1) * a;
-        cy += (y0 + y1) * a;
+        center.x += (x0 + x1) * a;
+        center.y += (y0 + y1) * a;
     }
     
     // Do last vertex
@@ -523,17 +529,12 @@ DGPoint DGRender::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     a = (x0 * y1) - (x1 * y0);
     area += a;
     
-    cx += (x0 + x1) * a;
-    cy += (y0 + y1) * a;
+    center.x += (x0 + x1) * a;
+    center.y += (y0 + y1) * a;
     
     area *= 0.5f;
-    cx /= (6 * area);
-    cy /= (6 * area);
-    
-    DGPoint center;
-    
-    center.x = (int)cx;
-    center.y = (int)cy;
+    center.x /= (6 * area);
+    center.y /= (6 * area);
     
     return center;
 }
