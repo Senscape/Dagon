@@ -56,6 +56,7 @@ end
 icon = Button(jClosedX, jClosedY, jClosedSize, jClosedSize)
 icon:setAction(CUSTOM, journalToggle)
 icon:setImage("img_journal_icon.tga")
+icon:disable()
 
 jClosed:addButton(icon)
 jClosed:show()
@@ -152,28 +153,6 @@ function journalAnimateIcon()
 		jIconState = jIconStates.IDLE
 	end
 end	
-
-register(POST_RENDER, 
-	function()
-		journalAnimateIcon()
-		
-		if jCurrentState == jStates.OPENING then
-			x, y = jOpened:position()
-			if y < jClosedOffset then
-				jCurrentState = jStates.OPENED
-			else
-				jOpened:move(0, -jOpeningSpeed)
-			end
-		elseif jCurrentState == jStates.CLOSING then
-			x, y = jOpened:position()
-			if y > jOpenedOffset then
-				jOpened:hide()		
-				jCurrentState = jStates.CLOSED
-			else
-				jOpened:move(0, jOpeningSpeed)
-			end
-		end							
-	end)
 					  
 register(RESIZE, 
 	function()

@@ -13,7 +13,7 @@ alarm = spot:attach(AUDIO, Audio("sfx_alarm.ogg", {loopable = true}) )
 spot:attach(CUSTOM, 
 	function() 
 		if self:isPlaying() == false then 
-			self:play() 
+			self:play()
 		else
 			self:stop()
 		end
