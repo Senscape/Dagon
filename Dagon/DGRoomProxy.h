@@ -29,7 +29,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGRoomProxy {
+class DGRoomProxy : public DGObjectProxy {
 public:
     static const char className[];
     static Luna<DGRoomProxy>::RegType methods[];
@@ -43,6 +43,9 @@ public:
         
         // Register the new room
         DGControl::getInstance().registerObject(r);
+        
+        // Init the base class
+        this->setObject(r);
     }
     
     // Destructor
@@ -94,6 +97,7 @@ private:
 const char DGRoomProxy::className[] = DGRoomProxyName;
 
 Luna<DGRoomProxy>::RegType DGRoomProxy::methods[] = {
+    DGObjectMethods(DGRoomProxy)    
     method(DGRoomProxy, addAudio),
     method(DGRoomProxy, addNode),
     {0,0}

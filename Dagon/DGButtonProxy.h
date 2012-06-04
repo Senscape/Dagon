@@ -29,7 +29,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGButtonProxy {
+class DGButtonProxy : public DGObjectProxy {
 public:
     static const char className[];
     static Luna<DGButtonProxy>::RegType methods[];
@@ -40,6 +40,9 @@ public:
         
         b->setPosition(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
         b->setSize(luaL_checknumber(L, 3), luaL_checknumber(L, 4));
+        
+        // Init the base class
+        this->setObject(b);
     }
     
     // Destructor
@@ -143,7 +146,7 @@ public:
     int setTextColor(lua_State *L) {
         b->setTextColor(luaL_checklong(L, 1));
         return 0;
-    }      
+    }
     
     // Return the size
     int size(lua_State *L) {
@@ -173,6 +176,7 @@ private:
 const char DGButtonProxy::className[] = DGButtonProxyName;
 
 Luna<DGButtonProxy>::RegType DGButtonProxy::methods[] = {
+    DGObjectMethods(DGButtonProxy)       
     method(DGButtonProxy, move),
     method(DGButtonProxy, position),
     method(DGButtonProxy, scale),
@@ -182,7 +186,7 @@ Luna<DGButtonProxy>::RegType DGButtonProxy::methods[] = {
     method(DGButtonProxy, setPosition),
     method(DGButtonProxy, setSize),
     method(DGButtonProxy, setText),    
-    method(DGButtonProxy, setTextColor),    
+    method(DGButtonProxy, setTextColor),     
     method(DGButtonProxy, size),
     method(DGButtonProxy, text),       
     {0,0}

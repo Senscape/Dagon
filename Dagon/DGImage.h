@@ -34,8 +34,8 @@ class DGImage : public DGObject {
     DGConfig* config;
     
     DGTexture* _attachedTexture;
-    int _arrayOfCoordinates[8];
-    bool _hasTexture;    
+    float _arrayOfCoordinates[8];
+    bool _hasTexture;
     DGRect _rect;
     
     void _calculateCoordinates();
@@ -51,20 +51,20 @@ public:
       
     // Gets
     
-    int* arrayOfCoordinates();
+    float* arrayOfCoordinates();
     DGPoint position();
     DGSize size();
     DGTexture* texture();
 
     // Sets
     
-    void setPosition(int x, int y);
-    void setSize(int width, int height);
-    void setTexture(const char* fromFileName);    
+    void setPosition(float x, float y);
+    void setSize(float width, float height);
+    void setTexture(const char* fromFileName);
 
     // State changes
     
-    void move(int offsetX, int offsetY);
+    void move(float offsetX, float offsetY);
     void scale(float factor);
 };
 

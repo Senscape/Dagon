@@ -35,8 +35,11 @@ class DGNode : public DGObject {
     // the Texture Manager uses it later to generate the corresponding
     // filename. This would be the name of the Lua object.
     
+    float _alpha;
     char _bundleName[DGMaxObjectName];
+    int _fadeDirection;    
     bool _hasBundleName;
+    bool _isVisible;
     
     std::vector<DGSpot*> _arrayOfSpots;
     std::vector<DGSpot*>::iterator _it;

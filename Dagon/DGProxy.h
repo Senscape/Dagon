@@ -58,6 +58,8 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 // Now that the proxy functions has been declared, we
 // proceed to include the remaining headers
 
+#include "DGObjectProxy.h"
+
 #include "DGAudioProxy.h"
 #include "DGButtonProxy.h"
 #include "DGImageProxy.h"

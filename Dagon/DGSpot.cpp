@@ -28,7 +28,6 @@ DGSpot::DGSpot(std::vector<int> withArrayOfCoordinates, unsigned int onFace, int
 	_color = DGColorBlack;
 	_flags = withFlags;
 	
-	_isEnabled = true;
 	_isPlaying = false;
 	
 	_hasAction = false;
@@ -85,10 +84,6 @@ bool DGSpot::hasTexture() {
 
 bool DGSpot::hasVideo() {
     return _hasVideo;
-}
-
-bool DGSpot::isEnabled() {
-    return _isEnabled;
 }
 
 bool DGSpot::isPlaying() {
@@ -184,14 +179,6 @@ void DGSpot::setVideo(DGVideo* aVideo) {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-void DGSpot::disable() {
-    _isEnabled = false;
-}
-
-void DGSpot::enable() {
-    _isEnabled = true;
-}
-
 void DGSpot::play() {
     _isPlaying = true;
     
@@ -204,8 +191,4 @@ void DGSpot::stop() {
     
     if (_hasAudio)
         _attachedAudio->stop();    
-}
-
-void DGSpot::toggle() {
-    _isEnabled = !_isEnabled;
 }
