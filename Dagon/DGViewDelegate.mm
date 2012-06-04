@@ -138,6 +138,15 @@
     }
 }
 
+- (void)scrollWheel:(NSEvent *)theEvent {
+    if (isMouseInside) {
+        /*float x = [theEvent deltaX];
+        float y = [theEvent deltaY];
+        NSLog(@"(%0.0f, %0.0f)", x, y);*/
+        // This should modify the camera directly, the panning method more precisely
+    }
+}
+
 - (void)update {    
 	[glContext flushBuffer];
 }

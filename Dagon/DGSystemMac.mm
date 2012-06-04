@@ -153,13 +153,10 @@ void DGSystem::init() {
         [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
         [window setTitle:[NSString stringWithUTF8String:config->script()]];
         [window makeKeyAndOrderFront:window];
-    
+        
         if (config->fullScreen) {
-            // Just one update before going fullscreen
             [view update];
             [window toggleFullScreen:nil];
-            
-            // Finally, force hiding the cursor
             [NSCursor hide];
         }
         
