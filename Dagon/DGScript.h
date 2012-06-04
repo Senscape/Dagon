@@ -103,7 +103,8 @@ class DGScript {
     static int _globalRoom(lua_State *L);
     static int _globalSetFont(lua_State *L);    
     static int _globalSwitch(lua_State *L);
-    static int _globalTimer(lua_State *L);    
+    static int _globalStartTimer(lua_State *L); 
+    static int _globalStopTimer(lua_State *L);    
     void _registerGlobals();
     
     // Private constructor/destructor
