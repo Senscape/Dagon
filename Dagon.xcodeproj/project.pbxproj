@@ -119,6 +119,7 @@
 		FBA2C78514DC91200098E334 /* DGPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGPlatform.h; sourceTree = "<group>"; };
 		FBA2C78614DD80100098E334 /* DGCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCamera.h; sourceTree = "<group>"; };
 		FBA2C78714DD801A0098E334 /* DGCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCamera.cpp; sourceTree = "<group>"; };
+		FBA97543157B961900428561 /* DGObjectProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGObjectProxy.h; sourceTree = "<group>"; };
 		FBABA630156548E80009889F /* DGOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGOverlay.cpp; sourceTree = "<group>"; };
 		FBABA633156548F40009889F /* DGOverlay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGOverlay.h; sourceTree = "<group>"; };
 		FBABA6341565537D0009889F /* DGImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGImage.cpp; sourceTree = "<group>"; };
@@ -234,6 +235,7 @@
 				E8362A6B14F2FBE1005B20EF /* DGFontManager.cpp */,
 				FBABA63B156589030009889F /* DGImageProxy.h */,
 				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
+				FBA97543157B961900428561 /* DGObjectProxy.h */,
 				FBABA63A156583EC0009889F /* DGOverlayProxy.h */,
 				E8E0194814E366B800173A2D /* DGProxy.h */,
 				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
