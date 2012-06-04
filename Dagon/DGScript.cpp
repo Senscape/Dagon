@@ -338,7 +338,7 @@ int DGScript::_globalSwitch(lua_State *L) {
 	return 0;
 }
 
-int DGScript::_globalTimer(lua_State *L) {
+int DGScript::_globalStartTimer(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
 		DGLog::getInstance().trace(DGModScript, "%s", DGMsg250006);
         
@@ -353,6 +353,12 @@ int DGScript::_globalTimer(lua_State *L) {
 	return 1;
 }
 
+int DGScript::_globalStopTimer(lua_State *L) {
+    DGTimerManager::getInstance().disable(luaL_checknumber(L, 1));
+	
+	return 0;
+}
+
 void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
         {"feed", _globalFeed},
@@ -361,7 +367,8 @@ void DGScript::_registerGlobals() {
         {"room", _globalRoom},
         {"setFont", _globalSetFont},        
         {"switch", _globalSwitch},
-        {"timer", _globalTimer},
+        {"startTimer", _globalStartTimer},
+        {"stopTimer", _globalStopTimer},
         {NULL, NULL}
     };
     
