@@ -59,6 +59,7 @@ int DGTimerManager::create(double trigger, int handlerForLua) {
     
     timer.handle = _handles;
     timer.isEnabled = true;
+    timer.isInternal = false;
     timer.isLoopable = true;
     timer.lastTime = clock();
     
@@ -76,6 +77,24 @@ int DGTimerManager::create(double trigger, int handlerForLua) {
     return timer.handle;
 }
 
+int DGTimerManager::createInternal(double trigger, void (*callback)()) {
+    DGTimer timer;
+    
+    timer.handle = _handles;
+    timer.handler = callback;
+    timer.isEnabled = true;
+    timer.isInternal = true;
+    timer.isLoopable = false;
+    timer.lastTime = clock();
+    
+    timer.trigger = trigger / 20;
+    
+    _arrayOfTimers.push_back(timer);
+    
+    _handles++;
+    
+    return timer.handle;
+}
 
 void DGTimerManager::destroy(int handle) {
     // Must implement
@@ -100,9 +119,12 @@ void DGTimerManager::update() {
         clock_t currentTime = clock();
         double duration = (double)(currentTime - (*it).lastTime) / CLOCKS_PER_SEC;
         
-        if ((duration > (*it).trigger) && (*it).luaHandler && (*it).isEnabled) {
+        if ((duration > (*it).trigger) && (*it).isEnabled) {
             (*it).lastTime = currentTime;
-            DGScript::getInstance().processCallback((*it).luaHandler, 0);
+            if ((*it).isInternal)
+                (*it).handler();
+            else
+                DGScript::getInstance().processCallback((*it).luaHandler, 0);
             
             // We break the loop because it's possible the timers array has changed
             break;

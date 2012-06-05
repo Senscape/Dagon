@@ -97,6 +97,7 @@ public:
     // State changes
     
     void bind();
+    void clear();
     void load();
     
     // Textures loaded from memory are not managed
