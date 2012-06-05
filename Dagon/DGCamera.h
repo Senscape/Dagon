@@ -24,6 +24,12 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
+enum DGCamBreatheDirections {
+    DGCamExpire,
+    DGCamInspire,
+    DGCamPause
+};
+
 enum DGCameraDefaults {
     DGCamAccelerationFactor = 100,
     DGCamDragNeutralZone = 50,    
@@ -31,7 +37,13 @@ enum DGCameraDefaults {
     DGCamFreeNeutralZone = 250,    
     DGCamInertia = 750, // Maintain motion after panning stops
     DGCamMaxSpeed = 30,
-    DGCamSpeedFactor = 500000 // Make movement smoother, duplicated in Drag mode
+    DGCamSpeedFactor = 500000 // Make movement smoother, duplicated in Drag mode  
+
+};
+
+enum DGCameraEffects {
+    DGCamBreatheIntensity = 50,
+    DGCamWalkIntensity = 30
 };
 
 class DGConfig;
@@ -67,7 +79,11 @@ class DGCamera {
     DGSize _viewport;
     DGRect _panRegion;
     
+    int _breatheDirection;
+    float _breatheFactor;
+    float _cameraDisplace;
     float _inertia;
+    bool _isWalking;
     
     float _motionDown;
     float _motionLeft;
@@ -89,6 +105,7 @@ public:
     float* orientation();
     void pan(int xPosition, int yPosition);
     float* position();
+    void simulateWalk();
     void setFieldOfView(float fov);
     void setNeutralZone(int zone);
     void setViewport(int width, int height);
