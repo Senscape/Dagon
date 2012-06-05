@@ -156,6 +156,16 @@ void DGTexture::bind() {
         glBindTexture(GL_TEXTURE_2D, _ident);
 }
 
+void DGTexture::clear() {
+    _bitmap = (GLubyte*)calloc(_width * _height * _depth, sizeof(GLubyte));
+    
+    glBindTexture(GL_TEXTURE_2D, _ident);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height,
+                 GL_RGB, GL_UNSIGNED_BYTE, _bitmap);
+    
+    free(_bitmap);
+}
+
 void DGTexture::load() {
     FILE* fh;
     char magic[10]; // Used to identity file types

@@ -30,6 +30,7 @@ DGRender::DGRender() {
     log = &DGLog::getInstance();
     
     _blendNextUpdate = false;
+    _fadeNextUpdate = false;
 	_texturesEnabled = false;
 }
 
@@ -40,6 +41,9 @@ DGRender::DGRender() {
 DGRender::~DGRender() {
     if (_blendTexture)
         delete _blendTexture;
+    
+    if (_fadeTexture)
+        delete _fadeTexture;    
 }
 
 ////////////////////////////////////////////////////////////
@@ -267,6 +271,10 @@ void DGRender::endDrawing() {
     }
 }
 
+void DGRender::fadeNextUpdate() {
+    _fadeNextUpdate = true;
+}
+
 void DGRender::init() {
 	const GLubyte* version = glGetString(GL_VERSION);
 
@@ -304,6 +312,7 @@ void DGRender::init() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
 	_blendTexture = new DGTexture(0, 0, 0); // All default values
+    _fadeTexture = new DGTexture(1, 1, 3); // Minimal, black texture
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
 	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
@@ -359,38 +368,7 @@ void DGRender::copyScene() {
 }
 
 void DGRender::resetScene() {
-    glLoadIdentity();
-    _arrayOfHelpers.clear();
-}
-
-void DGRender::updateScene() {
-	if (_blendNextUpdate) {
-		static float j = 0.0f;
-		int xStretch = j * (config->displayWidth / 4);
-		int yStretch = j * (config->displayHeight / 4);
-		float coords[] = {-xStretch, -yStretch, config->displayWidth + xStretch, -yStretch, 
-			config->displayWidth + xStretch, config->displayHeight + yStretch, -xStretch, config->displayHeight + yStretch}; 
-        
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f - j);
-        
-		//DGCameraSetOrthoView();
-        
-		this->beginDrawing(true);
-		_blendTexture->bind();
-		this->drawSlide(coords);
-		this->endDrawing();
-        
-		//DGCameraSetPerspectiveView();
-        
-		// This should a bit faster than the walk_time factor
-		j += 0.015f * config->globalSpeed();
-		if (j >= 1.0f) {
-			j = 0.0f;
-			_blendNextUpdate = false;
-		}
-	}
-    
-	// Check for errors in loop
+    // Check for errors in loop
     if (config->debugMode) {
         GLenum errCode;
         const GLubyte *errString;
@@ -400,6 +378,60 @@ void DGRender::updateScene() {
             log->error(DGModRender, "%s: %s", DGMsg220001, errString);
         }
     }
+    
+    glLoadIdentity();
+    _arrayOfHelpers.clear();
+}
+
+void DGRender::blendScene() {
+	if (_blendNextUpdate) {
+		static float j = 0.0f;
+		int xStretch = j * (config->displayWidth / 4);
+		int yStretch = j * (config->displayHeight / 4);
+
+        // Note the coordinates here are inverted because of the way the screen is captured
+        float coords[] = {-xStretch, config->displayHeight + yStretch, 
+            config->displayWidth + xStretch, config->displayHeight + yStretch, 
+            config->displayWidth + xStretch, -yStretch,
+            -xStretch, -yStretch}; 
+        
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f - j);
+        
+		this->beginDrawing(true);
+		_blendTexture->bind();
+		this->drawSlide(coords);
+		this->endDrawing();
+        
+		// This should a bit faster than the walk_time factor
+		j += 0.015f * config->globalSpeed();
+        if (_blendNextUpdate) {
+            if (j >= 1.0f) {
+                j = 0.0f;
+                _blendNextUpdate = false;
+            }
+        }
+	}
+}
+
+void DGRender::fadeScene() {
+	if (_fadeNextUpdate) {
+		static float j = 0.0f;
+        
+        float coords[] = {0, 0, 
+            config->displayWidth, 0, 
+            config->displayWidth, config->displayHeight,
+            0, config->displayHeight}; 
+        
+        glColor4f(0.0f, 0.0f, 0.0f, j);
+        
+		this->beginDrawing(true);
+		_fadeTexture->bind();
+		this->drawSlide(coords);
+		this->endDrawing();
+        
+		if (j < 1.0f)
+            j += 0.015f * config->globalSpeed();
+	}
 }
 
 ////////////////////////////////////////////////////////////

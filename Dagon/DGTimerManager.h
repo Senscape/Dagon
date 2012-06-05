@@ -27,8 +27,10 @@ typedef struct {
     int handle;
     bool isEnabled;
     bool isLoopable;
+    bool isInternal;
     clock_t lastTime;    
     int luaHandler;
+    void (*handler)();
     double trigger;
 } DGTimer;
 
@@ -60,6 +62,7 @@ public:
     
     bool check(int handle);
     int create(double trigger, int handlerForLua); // Returns a handle
+    int createInternal(double trigger, void (*callback)()); // For timers created by the engine (not Lua)
     void destroy(int handle);    
     void disable(int handle);
     void enable(int handle);

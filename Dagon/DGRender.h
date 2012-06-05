@@ -40,10 +40,12 @@ class DGRender {
     
     bool _blendNextUpdate;
     GLfloat _defCursor[(DGDefCursorDetail * 2) + 2];
+    bool _fadeNextUpdate;
     bool _shadersEnabled;
     bool _texturesEnabled;
     
     DGTexture* _blendTexture;
+    DGTexture* _fadeTexture;
     
     std::vector<DGPoint> _arrayOfHelpers;
     std::vector<DGPoint>::iterator _itHelper;
@@ -58,6 +60,7 @@ public:
     void blendNextUpdate();
     void drawHelper(int xPosition, int yPosition, bool animate);
     void drawPolygon(std::vector<int> withArrayOfCoordinates, unsigned int onFace);
+    void fadeNextUpdate();
     
     // Slides always require four corners, so we know for sure the number of elements
     void drawSlide(float* withArrayOfCoordinates); // We use float in all "slides" since we need the precision
@@ -70,9 +73,10 @@ public:
     // Scene operations
     
     void clearScene();
+    void blendScene();    
     void copyScene();
+    void fadeScene();
     void resetScene();    
-    void updateScene();
     
     // Conversion of coordinates (note this requires glu)
     
