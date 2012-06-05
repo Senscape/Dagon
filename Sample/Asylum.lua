@@ -9,6 +9,13 @@ setFont(FEED, "fnt_dislexia.ttf", 20)
 daniel0 = Audio("trk_daniel_layer0.ogg", {loopable = true})
 daniel1 = Audio("trk_daniel_layer1.ogg", {loopable = true})
 
+-- Separate into folders
+-- Breathing effect
+-- Splash
+-- Integrated readme
+-- Locate images on resize
+-- cancelIntro()
+-- Hints
 -- Remove tags
 -- Add sync to audio
 -- Remove convenience methods from attach
@@ -50,9 +57,9 @@ intro:addImage(credit3)
 intro:addImage(credit4)
 			
 intro:addImage(logo)
-intro:show()
+intro:disable()
 
-timerLoop = 1
+timerLoop = 12
 
 timerID = startTimer(5, 
 	function()
@@ -108,5 +115,5 @@ register(POST_RENDER,
 		end							
 	end)
 
-cafeteria1:disable()
+--cafeteria1:disable()
 switch(Cafeteria)

@@ -59,7 +59,7 @@ icon:setImage("img_journal_icon.tga")
 icon:disable()
 
 jClosed:addButton(icon)
-jClosed:show()
+jClosed:enable()
 
 -- Graphics for the opened journal
 background = Button(jOpenedX, jOpenedY, jOpenedSizeX, jOpenedSizeY)
