@@ -51,7 +51,7 @@ DGRender::~DGRender() {
 ////////////////////////////////////////////////////////////
 
 void DGRender::beginDrawing(bool usingTextures) {
-    glEnableClientState(GL_VERTEX_ARRAY);
+    //glEnableClientState(GL_VERTEX_ARRAY);
     
 	if (usingTextures) {
 		_texturesEnabled = true;
@@ -258,7 +258,7 @@ void DGRender::drawSlide(float* withArrayOfCoordinates) {
 }
 
 void DGRender::endDrawing() {
-  	glDisableClientState(GL_VERTEX_ARRAY);
+  	//glDisableClientState(GL_VERTEX_ARRAY);
     
 	if (_texturesEnabled) {
 		_texturesEnabled = false;
@@ -269,6 +269,8 @@ void DGRender::endDrawing() {
         // Since the color was likely changed, we set white again
         setColor(DGColorWhite);
     }
+    
+    glFlush();
 }
 
 void DGRender::fadeNextUpdate() {
@@ -294,7 +296,6 @@ void DGRender::init() {
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glEnable(GL_BLEND);
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_MULTISAMPLE);
 	glDisable(GL_DITHER);
     
 	if (config->antialiasing) {
@@ -307,18 +308,22 @@ void DGRender::init() {
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glEnable(GL_POLYGON_SMOOTH);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+        
+        glEnable(GL_MULTISAMPLE); // Not sure if this one goes here
 	}
     
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
 	_blendTexture = new DGTexture(0, 0, 0); // All default values
-    _fadeTexture = new DGTexture(1, 1, 3); // Minimal, black texture
+    _fadeTexture = new DGTexture(1, 1, 3); // Minimal, black texture   
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
 	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
 		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 1.87f * M_PI / DGDefCursorDetail)) * DGDefDisplayWidth);
 		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 1.87f * M_PI / DGDefCursorDetail)) * DGDefDisplayHeight);
 	}    
+
+    glEnableClientState(GL_VERTEX_ARRAY);
 }
 
 void DGRender::setAlpha(float alpha) {
@@ -337,6 +342,7 @@ void DGRender::setColor(int color) {
 	glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f)); 
 }
 
+// FIXME: glReadPixels has an important performace hit on older computers. Improve.
 int	DGRender::testColor(int xPosition, int yPosition) {
     GLubyte pixel[3];
 	GLint r, g, b;
@@ -344,8 +350,8 @@ int	DGRender::testColor(int xPosition, int yPosition) {
     
     // Note we flip the Y coordinate here because only the orthogonal projection is flipped
 	glReadPixels(xPosition, config->displayHeight - yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
-    
-	r = (GLint)pixel[0];
+
+    r = (GLint)pixel[0];
 	g = (GLint)pixel[1];
 	b = (GLint)pixel[2];
     
