@@ -97,7 +97,7 @@ void DGControl::init() {
     
     _render = new DGRender;
     _render->init();
-    _render->updateScene(); // Test for errors
+    _render->resetScene(); // Test for errors
     
     _camera = new DGCamera;
     _camera->setViewport(config->displayWidth, config->displayHeight);
@@ -160,7 +160,8 @@ void DGControl::processFunctionKey(int aKey) {
 void DGControl::processKey(int aKey, bool isModified) {
     switch (aKey) {
 		case DGKeyEsc:
-            system->terminate();
+            _render->fadeNextUpdate();
+            timerManager->createInternal(2, terminate);
 			break;
 		case DGKeyQuote:
 		case DGKeyTab:         
@@ -214,41 +215,43 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         itOverlay = _arrayOfOverlays.begin();
         
         while (itOverlay != _arrayOfOverlays.end()) {
-            if ((*itOverlay)->isVisible()) {
+            if ((*itOverlay)->isEnabled()) {
                 
                 if ((*itOverlay)->hasButtons()) {
                     (*itOverlay)->beginIteratingButtons(true);
                     
                     do {
                         DGButton* button = (*itOverlay)->currentButton();
-                        float* arrayOfCoordinates = button->arrayOfCoordinates();
-                        if (_mouseData.x >= arrayOfCoordinates[0] && _mouseData.y >= arrayOfCoordinates[1] &&
-                            _mouseData.x <= arrayOfCoordinates[4] && _mouseData.y <= arrayOfCoordinates[5]) {
-                            _mouseData.onButton = true;
-                            if ((eventFlags & DGMouseEventUp) && button->hasAction()) {
-                                DGAction* action = button->action();
-                                
-                                switch (action->type) {
-                                    case DGActionCustom:
-                                        script->processCallback(action->luaHandler, button->luaObject());
-                                        break;
-                                    case DGActionFeed:
-                                        feedManager->parse(action->feed);
-                                        break;
-                                    case DGActionSwitch:
-                                        switchTo(action->target);
-                                        break;
+                        if (button->isEnabled()) {
+                            float* arrayOfCoordinates = button->arrayOfCoordinates();
+                            if (_mouseData.x >= arrayOfCoordinates[0] && _mouseData.y >= arrayOfCoordinates[1] &&
+                                _mouseData.x <= arrayOfCoordinates[4] && _mouseData.y <= arrayOfCoordinates[5]) {
+                                _mouseData.onButton = true;
+                                if ((eventFlags & DGMouseEventUp) && button->hasAction()) {
+                                    DGAction* action = button->action();
+                                    
+                                    switch (action->type) {
+                                        case DGActionCustom:
+                                            script->processCallback(action->luaHandler, button->luaObject());
+                                            break;
+                                        case DGActionFeed:
+                                            feedManager->parse(action->feed);
+                                            break;
+                                        case DGActionSwitch:
+                                            switchTo(action->target);
+                                            break;
+                                    }
+                                    
+                                    // If the overlay containing the button is no longer visible,
+                                    // we force the corresponding cursor change.                                
+                                    if (!(*itOverlay)->isEnabled()) {
+                                        _mouseData.onButton = false;
+                                       // isButtonPressed = false;
+                                    }
+                                    
+                                    // Should stop processing overlays
+                                    return;
                                 }
-                                
-                                // If the overlay containing the button is no longer visible,
-                                // we force the corresponding cursor change.                                
-                                if (!(*itOverlay)->isVisible()) {
-                                    _mouseData.onButton = false;
-                                   // isButtonPressed = false;
-                                }
-                                
-                                // Should stop processing overlays
-                                return;
                             }
                         }
                     } while ((*itOverlay)->iterateButtons());
@@ -432,6 +435,19 @@ void DGControl::sleep(int forMilliseconds) {
 }
 
 void DGControl::switchTo(DGObject* theTarget) {
+    static bool firstSwitch = true;
+    
+    if (!firstSwitch) {
+        // FIXME: This code should be integrated with the general update()
+        _render->clearScene();
+        _camera->update();
+        _drawScene();
+        _render->blendNextUpdate();
+        _camera->simulateWalk();
+        ///////////////////////////
+    }
+    else firstSwitch = false;
+    
     audioManager->clear();
     
     switch (theTarget->type()) {
@@ -542,6 +558,10 @@ void DGControl::profiler() {
     _fpsCount = 0;
 }
 
+void DGControl::terminate() {
+    DGSystem::getInstance().terminate();
+}
+
 void DGControl::update() {
     // TODO: Suspend all operations when doing a switch
     // FIXME: Add a render stack of DGObjects, especially for overlays
@@ -574,7 +594,7 @@ void DGControl::update() {
     _camera->beginOrthoView();
     
     // Blends, gamma, etc.
-    _render->updateScene();
+    _render->blendScene();
     
     // Overlays
     // TODO: Move into a separate function
@@ -587,7 +607,7 @@ void DGControl::update() {
         itOverlay = _arrayOfOverlays.begin();
         
         while (itOverlay != _arrayOfOverlays.end()) {
-            if ((*itOverlay)->isVisible()) {
+            if ((*itOverlay)->isEnabled()) {
                 
                 if ((*itOverlay)->hasButtons()) {
                     (*itOverlay)->beginIteratingButtons(false);
@@ -667,6 +687,8 @@ void DGControl::update() {
     if (_eventHandlers.hasPostRender)
         script->processCallback(_eventHandlers.postRender, 0);
     _render->endDrawing();
+    
+    _render->fadeScene();
       
     // Debug info, if enabled
     if (config->debugMode) {
@@ -754,23 +776,25 @@ void DGControl::_scanSpots() {
     
     if (_canDrawSpots) {
         DGNode* currentNode = _currentRoom->currentNode();
-
-        _render->beginDrawing(false);
-    
-        currentNode->beginIteratingSpots();
-        do {
-            DGSpot* spot = currentNode->currentSpot();
-            
-            if (spot->hasColor() && spot->isEnabled()) {
-                _render->setColor(spot->color());
-                _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
-            }
-        } while (currentNode->iterateSpots());
         
-        if ((_mouseData.color = _render->testColor(_mouseData.x, _mouseData.y)))
-            _mouseData.onSpot = true;
-        else _mouseData.onSpot = false;
-    
-        _render->endDrawing();
+        if (currentNode->isEnabled()) {
+            _render->beginDrawing(false);
+        
+            currentNode->beginIteratingSpots();
+            do {
+                DGSpot* spot = currentNode->currentSpot();
+                
+                if (spot->hasColor() && spot->isEnabled()) {
+                    _render->setColor(spot->color());
+                    _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                }
+            } while (currentNode->iterateSpots());
+            
+            if ((_mouseData.color = _render->testColor(_mouseData.x, _mouseData.y)))
+                _mouseData.onSpot = true;
+            else _mouseData.onSpot = false;
+        
+            _render->endDrawing();
+        }
     }
 }
