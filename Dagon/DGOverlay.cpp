@@ -25,8 +25,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGOverlay::DGOverlay() {
-    _isIteratingBackwards = false; 
-    _isVisible = false;
+    _isIteratingBackwards = false;
     _position.x = 0;
     _position.y = 0;
     
@@ -51,10 +50,6 @@ bool DGOverlay::hasButtons() {
 
 bool DGOverlay::hasImages() {
     return !_arrayOfImages.empty();
-}
-
-bool DGOverlay::isVisible() {
-    return _isVisible;
 }
 
 DGPoint DGOverlay::position() {
@@ -144,10 +139,6 @@ bool DGOverlay::iterateImages() {
         return true;
 }
 
-void DGOverlay::hide() {
-    _isVisible = false;
-}
-
 void DGOverlay::move(int offsetX, int offsetY) {
     // Buttons
     if (!_arrayOfButtons.empty()) {
@@ -176,8 +167,4 @@ void DGOverlay::move(int offsetX, int offsetY) {
     // Store the new position
     _position.x += offsetX;
     _position.y += offsetY;
-}
-
-void DGOverlay::show() {
-    _isVisible = true;
 }

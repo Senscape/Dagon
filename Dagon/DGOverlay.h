@@ -39,7 +39,6 @@ class DGOverlay : public DGObject {
     std::vector<DGImage*>::iterator _itImage;
     
     bool _isIteratingBackwards;
-    bool _isVisible;
     DGPoint _position;
     
 public:
@@ -50,7 +49,6 @@ public:
     
     bool hasButtons();
     bool hasImages();
-    bool isVisible();
     DGPoint position();
     
     // Gets
@@ -70,9 +68,7 @@ public:
     void beginIteratingImages();    
     bool iterateButtons();
     bool iterateImages();
-    void hide();
     void move(int offsetX, int offsetY); // Applies move to every element
-    void show();
 };
 
 #endif // DG_OVERLAY_H

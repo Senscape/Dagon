@@ -171,6 +171,7 @@ public:
     // TODO: Add an explicit switchToNode() method
     void switchTo(DGObject* theTarget); 
     void takeSnapshot();
+    static void terminate();
     
     // These methods are called asynchronously
     void profiler();

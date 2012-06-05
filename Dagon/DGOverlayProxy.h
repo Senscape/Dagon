@@ -82,19 +82,6 @@ public:
         return 0;
     }
     
-    // Hide the overlay
-    int hide(lua_State *L) {
-        o->hide();
-        
-        return 0;
-    }
-    
-    // Check visibility
-    int isVisible(lua_State *L) {
-        lua_pushboolean(L, o->isVisible());
-        return 1;
-    } 
-    
     // Move the overlay
     int move(lua_State *L) {
         o->move(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
@@ -116,13 +103,6 @@ public:
         
         return 0;
     } 
-    
-    // Show the overlay
-    int show(lua_State *L) {
-        o->show();
-        
-        return 0;
-    }
 
     DGOverlay* ptr() { return o; }
     
@@ -141,12 +121,9 @@ Luna<DGOverlayProxy>::RegType DGOverlayProxy::methods[] = {
     DGObjectMethods(DGOverlayProxy)    
     method(DGOverlayProxy, addButton),      
     method(DGOverlayProxy, addImage),    
-    method(DGOverlayProxy, hide),
-    method(DGOverlayProxy, isVisible), 
     method(DGOverlayProxy, move),
     method(DGOverlayProxy, position),    
     method(DGOverlayProxy, setPosition),
-    method(DGOverlayProxy, show),
     {0,0}
 };
 
