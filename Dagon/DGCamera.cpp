@@ -53,7 +53,11 @@ DGCamera::DGCamera() {
     _position[1] = 0.0f;
     _position[2] = 0.0f;
     
+    _breatheDirection = DGCamPause;
+    _breatheFactor = 0.0f;
+    _cameraDisplace = 0.0f;
     _inertia = 1 / (float)DGCamInertia;
+    _isWalking = false;
     
     _motionDown = 0.0f;
     _motionLeft = 0.0f;
@@ -104,7 +108,7 @@ void DGCamera::endOrthoView() {
 }
 
 float DGCamera::fieldOfView() {
-    return _fovNormal;
+    return _fovCurrent;
 }
 
 int DGCamera::neutralZone() {
@@ -150,6 +154,11 @@ void DGCamera::pan(int xPosition, int yPosition) {
 
 float* DGCamera::position() {
     return _position;
+}
+
+void DGCamera::simulateWalk() {
+    _fovCurrent = _fovNormal + (float)DGCamWalkIntensity;
+    _isWalking = true;
 }
 
 void DGCamera::setFieldOfView(float fov) {
@@ -200,7 +209,7 @@ void DGCamera::setViewport(int width, int height) {
     glLoadIdentity();
     
     // We need a very close clipping point because the cube is rendered in a small area
-    gluPerspective(_fovNormal, (GLfloat)_viewport.width / (GLfloat)_viewport.height, 0.1f, 10.0f);
+    gluPerspective(_fovCurrent, (GLfloat)_viewport.width / (GLfloat)_viewport.height, 0.1f, 10.0f);
     
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -223,6 +232,18 @@ void DGCamera::stopDragging() {
 }
 
 void DGCamera::update() {
+    if (_isWalking) {
+        // Perform walk FX operations
+        if (_fovCurrent > _fovNormal)
+            _fovCurrent -= ((float)10 / DGCamWalkIntensity) * config->globalSpeed();
+        else {
+            _fovCurrent = _fovNormal;
+            _isWalking = false;
+        }
+        
+        this->setViewport(config->displayWidth, config->displayHeight);
+    }
+    
     // Calculate horizontal motion
     if (_deltaX > 0) {
         if (_motionRight < _maxSpeed)
@@ -313,17 +334,17 @@ void DGCamera::update() {
     
     // Apply horizontal motion
     if (_motionLeft)
-        _angleH -= _accelH * _motionLeft;
+        _angleH -= sin(_accelH) * _motionLeft;
     
     if (_motionRight)
-        _angleH += _accelH * _motionRight;
+        _angleH += sin(_accelH) * _motionRight;
     
     // Apply vertical motion
     if (_motionDown)
-        _angleV += _accelV * _motionDown;
+        _angleV += sin(_accelV) * _motionDown;
     
     if (_motionUp)
-        _angleV -= _accelV * _motionUp;    
+        _angleV -= sin(_accelV) * _motionUp;    
     
     // Limit horizontal rotation
     if (_angleH > (GLfloat)_angleHLimit)
@@ -341,7 +362,42 @@ void DGCamera::update() {
     _orientation[1] = _angleV;
     _orientation[2] = (float)-cos(_angleH);
     
-    gluLookAt(_position[0], _position[1], _position[2],
-              _orientation[0], _orientation[1], _orientation[2],
+    static float j = 0.0f;
+    static float breatheInspireLimit = 0.0f;
+    static float breatheExpireLimit = 0.0f;    
+    static float breatheWait = 0.0f;
+    
+    switch (_breatheDirection) {
+        case DGCamPause:
+            j += 0.1f;
+            if (j >= breatheWait) {
+                j = 0.0f;
+                breatheWait = 0.0f;
+                breatheInspireLimit = ((float)((rand() % 3) + 5)) / 10.0f;
+                _breatheDirection = DGCamInspire;
+            }
+            break;
+        case DGCamInspire:
+            if (_breatheFactor < breatheInspireLimit) _breatheFactor += (breatheInspireLimit / 100.0f);
+            else {
+                breatheExpireLimit = ((float)((rand() % 2) + 6)) / 10.0f;
+                _breatheDirection = DGCamExpire;
+            }
+            
+            _cameraDisplace = sin(_breatheFactor) * cos(_breatheFactor) / 20;
+            break;
+        case DGCamExpire:
+            if (_breatheFactor > -breatheExpireLimit) _breatheFactor -= (breatheExpireLimit / 100.0f);
+            else {
+                _breatheDirection = DGCamPause;
+                breatheWait = (float)((rand() % 3) + 1); // Make the breathing more irregular
+            }
+            
+            _cameraDisplace = sin(_breatheFactor) * cos(_breatheFactor) / 20; 
+            break;    
+    }
+    
+    gluLookAt(_position[0], _position[1] + (_cameraDisplace / 4), _position[2],
+              _orientation[0], _orientation[1] + _cameraDisplace, _orientation[2],
               _orientation[3], _orientation[4], _orientation[5]);
 }
