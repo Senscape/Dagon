@@ -315,7 +315,7 @@ void DGRender::init() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
 	_blendTexture = new DGTexture(0, 0, 0); // All default values
-    _fadeTexture = new DGTexture(1, 1, 3); // Minimal, black texture   
+    _fadeTexture = new DGTexture(1, 1, 0); // Minimal, black texture   
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
 	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
