@@ -33,6 +33,17 @@ DGCamera::DGCamera() {
     _angleHLimit = (float)M_PI * 2;
     _angleVLimit = (float)M_PI / 2;
     
+    _bob.currentFactor = DGCamBreatheFactor;
+    _bob.currentSpeed = DGCamBreatheSpeed;    
+    _bob.direction = DGCamPause;
+    _bob.displace = 0.0f;
+    _bob.expireStrength = 0.0f;
+    _bob.inspireStrength = 0.0f;
+    _bob.nextPause = 0.0f;
+    _bob.position = 0.0f;
+    _bob.state = DGCamBreathing;
+    _bob.timer = 0.0f;
+    
     _deltaX = 0;
     _deltaY = 0;
     
@@ -53,11 +64,7 @@ DGCamera::DGCamera() {
     _position[1] = 0.0f;
     _position[2] = 0.0f;
     
-    _breatheDirection = DGCamPause;
-    _breatheFactor = 0.0f;
-    _cameraDisplace = 0.0f;
     _inertia = 1 / (float)DGCamInertia;
-    _isWalking = false;
     
     _motionDown = 0.0f;
     _motionLeft = 0.0f;
@@ -157,8 +164,11 @@ float* DGCamera::position() {
 }
 
 void DGCamera::simulateWalk() {
-    _fovCurrent = _fovNormal + (float)DGCamWalkIntensity;
-    _isWalking = true;
+    _bob.currentFactor = DGCamWalkFactor;
+    _bob.currentSpeed = DGCamWalkSpeed;   
+    
+    _fovCurrent = _fovNormal + (float)DGCamWalkZoomIn;
+    _bob.state = DGCamWalking;
 }
 
 void DGCamera::setFieldOfView(float fov) {
@@ -232,18 +242,6 @@ void DGCamera::stopDragging() {
 }
 
 void DGCamera::update() {
-    if (_isWalking) {
-        // Perform walk FX operations
-        if (_fovCurrent > _fovNormal)
-            _fovCurrent -= ((float)10 / DGCamWalkIntensity) * config->globalSpeed();
-        else {
-            _fovCurrent = _fovNormal;
-            _isWalking = false;
-        }
-        
-        this->setViewport(config->displayWidth, config->displayHeight);
-    }
-    
     // Calculate horizontal motion
     if (_deltaX > 0) {
         if (_motionRight < _maxSpeed)
@@ -362,42 +360,83 @@ void DGCamera::update() {
     _orientation[1] = _angleV;
     _orientation[2] = (float)-cos(_angleH);
     
-    static float j = 0.0f;
-    static float breatheInspireLimit = 0.0f;
-    static float breatheExpireLimit = 0.0f;    
-    static float breatheWait = 0.0f;
+    _calculateBob();
     
-    switch (_breatheDirection) {
+    gluLookAt(_position[0], _position[1] + (_bob.displace / 4), _position[2],
+              _orientation[0], _orientation[1] + _bob.displace, _orientation[2],
+              _orientation[3], _orientation[4], _orientation[5]);
+    
+    // Displace in x for scare
+    /*gluLookAt(_position[0], _position[1], _position[2],
+              _orientation[0] + sin(_bob.displace), _orientation[1], _orientation[2],
+              _orientation[3], _orientation[4], _orientation[5]);*/
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Private methods
+////////////////////////////////////////////////////////////
+
+void DGCamera::_calculateBob() {
+    switch (_bob.state) {
+        case DGCamBreathing:
+            if (_bob.currentFactor > DGCamBreatheFactor)
+                _bob.currentFactor--;
+            else if (_bob.currentFactor < DGCamBreatheFactor)
+                _bob.currentFactor++;
+            
+            if (_bob.currentSpeed > DGCamBreatheSpeed)
+                _bob.currentSpeed--;
+            else if (_bob.currentSpeed < DGCamBreatheSpeed)
+                _bob.currentSpeed++;
+            break;            
+        case DGCamScared:
+            // Nothing to do here
+            break;            
+        case DGCamWalking:
+            // Perform walk FX operations
+            if (_fovCurrent > _fovNormal)
+                _fovCurrent -= ((float)10 / DGCamWalkZoomIn) * config->globalSpeed();
+            else {
+                _fovCurrent = _fovNormal;
+                _bob.state = DGCamBreathing;
+            }
+            
+            this->setViewport(config->displayWidth, config->displayHeight);
+            break;
+    }
+    
+    switch (_bob.direction) {
         case DGCamPause:
-            j += 0.1f;
-            if (j >= breatheWait) {
-                j = 0.0f;
-                breatheWait = 0.0f;
-                breatheInspireLimit = ((float)((rand() % 3) + 5)) / 10.0f;
-                _breatheDirection = DGCamInspire;
+            _bob.timer += 0.1f;
+            if (_bob.timer >= _bob.nextPause) {
+                _bob.timer = 0.0f;
+                _bob.nextPause = 0.0f;
+                _bob.inspireStrength = ((float)((rand() % 3) + 5)) / 10.0f;
+                _bob.direction = DGCamInspire;
             }
             break;
         case DGCamInspire:
-            if (_breatheFactor < breatheInspireLimit) _breatheFactor += (breatheInspireLimit / 100.0f);
+            if (_bob.position < _bob.inspireStrength) 
+                _bob.position += (_bob.inspireStrength / _bob.currentSpeed);
             else {
-                breatheExpireLimit = ((float)((rand() % 2) + 6)) / 10.0f;
-                _breatheDirection = DGCamExpire;
+                _bob.expireStrength = ((float)((rand() % 2) + 6)) / 10.0f;
+                _bob.direction = DGCamExpire;
             }
             
-            _cameraDisplace = sin(_breatheFactor) * cos(_breatheFactor) / 20;
+            _bob.displace = sin(_bob.position) * cos(_bob.position) / _bob.currentFactor;
             break;
         case DGCamExpire:
-            if (_breatheFactor > -breatheExpireLimit) _breatheFactor -= (breatheExpireLimit / 100.0f);
+            if (_bob.position > -_bob.expireStrength)
+                _bob.position -= (_bob.expireStrength / _bob.currentSpeed);
             else {
-                _breatheDirection = DGCamPause;
-                breatheWait = (float)((rand() % 3) + 1); // Make the breathing more irregular
+                _bob.direction = DGCamPause;
+                if (_bob.state != DGCamBreathing)
+                    _bob.nextPause = 0;
+                else
+                    _bob.nextPause = (float)((rand() % 3) + 1); // Make the breathing more irregular
             }
             
-            _cameraDisplace = sin(_breatheFactor) * cos(_breatheFactor) / 20; 
+            _bob.displace = sin(_bob.position) * cos(_bob.position) / _bob.currentFactor;
             break;    
     }
-    
-    gluLookAt(_position[0], _position[1] + (_cameraDisplace / 4), _position[2],
-              _orientation[0], _orientation[1] + _cameraDisplace, _orientation[2],
-              _orientation[3], _orientation[4], _orientation[5]);
 }

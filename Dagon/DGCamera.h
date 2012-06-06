@@ -24,10 +24,16 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-enum DGCamBreatheDirections {
+enum DGCameraBobDirections {
     DGCamExpire,
     DGCamInspire,
     DGCamPause
+};
+
+enum DGCameraBobStates {
+    DGCamBreathing,
+    DGCamScared,
+    DGCamWalking
 };
 
 enum DGCameraDefaults {
@@ -42,9 +48,27 @@ enum DGCameraDefaults {
 };
 
 enum DGCameraEffects {
-    DGCamBreatheIntensity = 50,
-    DGCamWalkIntensity = 30
+    DGCamBreatheFactor = 25,
+    DGCamBreatheSpeed = 100,
+    DGCamScareFactor = 15,
+    DGCamScareSpeed = 15,     
+    DGCamWalkFactor = 20,
+    DGCamWalkSpeed = 15,    
+    DGCamWalkZoomIn = 30
 };
+
+typedef struct {
+    int currentFactor;
+    int currentSpeed;
+    int direction;
+    float displace;
+    float expireStrength;
+    float inspireStrength;
+    float nextPause;
+    float position;
+    int state;
+    float timer;
+} DGCameraBob;
 
 class DGConfig;
 
@@ -64,6 +88,8 @@ class DGCamera {
     GLfloat _angleHLimit;
     GLfloat _angleVLimit;
     
+    DGCameraBob _bob;
+    
     GLfloat _fovCurrent;
     GLfloat _fovNormal;
     
@@ -79,11 +105,7 @@ class DGCamera {
     DGSize _viewport;
     DGRect _panRegion;
     
-    int _breatheDirection;
-    float _breatheFactor;
-    float _cameraDisplace;
     float _inertia;
-    bool _isWalking;
     
     float _motionDown;
     float _motionLeft;
@@ -92,7 +114,9 @@ class DGCamera {
     
     float _maxSpeed;
     float _speedH;
-    float _speedV;    
+    float _speedV;
+    
+    void _calculateBob();
     
 public:
     DGCamera();
