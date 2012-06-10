@@ -86,7 +86,6 @@ void DGConsole::update() {
         0, _size - _offset };
     
     // Draw the slide
-	glEnableClientState(GL_VERTEX_ARRAY);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     _setColor(0x25AA0000); // TODO: Add a mask color to achieve this (ie: ColoRed + Shade)
@@ -124,7 +123,6 @@ void DGConsole::update() {
     
     glDisable(GL_TEXTURE_2D);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void DGConsole::deleteChar() {

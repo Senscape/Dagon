@@ -23,7 +23,15 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-enum DGFades {
+enum DGFadeSpeeds {
+    DGFadeNormal = 200,
+    DGFadeSlow = 300, 
+    DGFadeSlowest = 350,
+    DGFadeFast = 100,
+    DGFadeFastest = 50
+};
+
+enum DGFadeTypes {
     DGFadeNone,
     DGFadeIn,    
     DGFadeOut
@@ -61,7 +69,8 @@ class DGObject {
     
     float _defaultFade;
     int _fadeDirection;
-    float _fadeLevel;    
+    float _fadeLevel;
+    float _fadeSpeed;
     bool _isEnabled;
     
 public:
@@ -84,6 +93,8 @@ public:
     
     // Sets
     
+    void setFadeLevel(float level);
+    void setFadeSpeed(int speed);
     void setLuaObject(int object);
     void setType(unsigned int type);
     void setName(const char* aName);

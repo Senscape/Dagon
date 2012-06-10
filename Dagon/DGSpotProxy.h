@@ -118,22 +118,10 @@ public:
                 return 1;
                 
                 break;
-            case CUSTOM:
-                if (!lua_isfunction(L, 2)) {
-                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
-                    return 0;
-                }
-                
-                action.type = DGActionCustom;
-                action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
-                
-                s->setAction(&action);
-                if (!s->hasColor())
-                    s->setColor(0);
-                
-                break;
             case FEED:
                 action.type = DGActionFeed;
+                action.cursor = DGCursorLook;
+                action.luaObject = s->luaObject();                
                 strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
                 
                 s->setAction(&action);
@@ -141,6 +129,22 @@ public:
                     s->setColor(0);
                 
                 break;
+            case FUNCTION:
+                if (!lua_isfunction(L, 2)) {
+                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
+                    return 0;
+                }
+                
+                action.type = DGActionFunction;
+                action.cursor = DGCursorUse;
+                action.luaObject = s->luaObject();
+                action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
+                
+                s->setAction(&action);
+                if (!s->hasColor())
+                    s->setColor(0);
+                
+                break;                
             case IMAGE:
                 // FIXME: This texture isn't managed. We should be able to communicate with the
                 // texture manager, register this texture, and parse its path if necessary, OR
@@ -170,6 +174,8 @@ public:
                 }
                 
                 action.type = DGActionSwitch;
+                action.cursor = DGCursorForward;
+                action.luaObject = s->luaObject();
                 
                 s->setAction(&action);
                 if (!s->hasColor())
@@ -178,6 +184,17 @@ public:
                 break;
         }
 
+        return 0;
+    }
+    
+    // Set a cursor for the attached action
+    int setCursor(lua_State *L) {
+        if (s->hasAction()) {
+            DGAction* action = s->action();
+            
+            action->cursor = luaL_checknumber(L, 1);
+        }
+        
         return 0;
     }
     
@@ -217,6 +234,7 @@ const char DGSpotProxy::className[] = DGSpotProxyName;
 Luna<DGSpotProxy>::RegType DGSpotProxy::methods[] = {
     DGObjectMethods(DGSpotProxy)    
     method(DGSpotProxy, attach),
+    method(DGSpotProxy, setCursor),    
     method(DGSpotProxy, isPlaying),    
     method(DGSpotProxy, play),
     method(DGSpotProxy, stop),   
