@@ -28,17 +28,19 @@ class DGObject;
 
 // Enum begins at 100 to avoid conflicts with objects
 enum DGActionTypes {
-	DGActionCustom = 100,
+	DGActionFunction = 100,
 	DGActionFeed,
 	DGActionSwitch
 };
 
 typedef struct {
-	unsigned int type;
+    unsigned int cursor;
     char feed[DGMaxFeedLength];
     DGAudio* feedAudio;
     int luaHandler;
+    int luaObject;
 	DGObject* target;
+	unsigned int type;    
 } DGAction;
 
 #endif // DG_ACTION_H

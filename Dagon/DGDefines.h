@@ -42,6 +42,25 @@
 // The first six elements are the same as the faces of the cube
 // We map these to the positions in arrays, we must be extra-careful about their values
 
+enum DGCursorTypes {
+    DGCursorNormal = 0,
+    DGCursorDrag,
+    DGCursorLeft,
+    DGCursorRight,
+    DGCursorUp,
+    DGCursorDown,
+    DGCursorUpLeft,
+    DGCursorUpRight,
+    DGCursorDownLeft,
+    DGCursorDownRight,
+    DGCursorForward,
+    DGCursorBackward,
+    DGCursorUse,
+    DGCursorLook,
+    DGCursorTalk,
+    DGCursorCustom
+};
+
 enum DGDirections {
 	DGNorth = 0,
 	DGEast = 1,

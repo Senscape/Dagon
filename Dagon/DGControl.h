@@ -31,6 +31,7 @@ class DGAudioManager;
 class DGCamera;
 class DGConfig;
 class DGConsole;
+class DGCursorManager;
 class DGFont;
 class DGFeedManager;
 class DGFontManager;
@@ -91,15 +92,6 @@ typedef struct {
 	char line[DGMaxLogLength];
 } DGHotKeyData;
 
-typedef struct {
-	int x;
-	int y; 
-    int color;
-    bool isDragging;
-	bool onButton;    
-	bool onSpot;
-} DGMouseData;
-
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
@@ -107,6 +99,7 @@ typedef struct {
 class DGControl {
     DGAudioManager* audioManager;
     DGConfig* config;
+    DGCursorManager* cursorManager;
     DGFeedManager* feedManager;
     DGFontManager* fontManager;    
     DGLog* log;
@@ -129,17 +122,18 @@ class DGControl {
     
     DGEventHandlers _eventHandlers;
     DGHotKeyData _hotKeyData[DGMaxHotKeys];
-    DGMouseData _mouseData;
     
     // This boolean helps to simplify our lengthy update cycle
     bool _canDrawSpots;
     int _fpsCount;
     int _fpsLastCount;
     bool _isInitialized;
-    
-    void _drawScene();
-    void _scanOverlays();    
-    void _scanSpots();
+
+    void _drawOverlays();
+    void _drawSpots();
+    void _processAction();
+    bool _scanOverlays();    
+    bool _scanSpots();
     
     // Private constructor/destructor
     DGControl();
@@ -167,6 +161,7 @@ public:
     void registerHotKey(int aKey, const char* luaCommandToExecute);
     void registerObject(DGObject* theTarget);    
     void reshape(int width, int height);
+    void showSplash();
     void sleep(int forMilliseconds);
     // TODO: Add an explicit switchToNode() method
     void switchTo(DGObject* theTarget); 
