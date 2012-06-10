@@ -38,7 +38,7 @@ enum DGCameraBobStates {
 
 enum DGCameraDefaults {
     DGCamAccelerationFactor = 100,
-    DGCamDragNeutralZone = 50,    
+    DGCamDragNeutralZone = 100,    
 	DGCamFieldOfView = 55,
     DGCamFreeNeutralZone = 250,    
     DGCamInertia = 750, // Maintain motion after panning stops
@@ -48,7 +48,7 @@ enum DGCameraDefaults {
 };
 
 enum DGCameraEffects {
-    DGCamBreatheFactor = 25,
+    DGCamBreatheFactor = 35,
     DGCamBreatheSpeed = 100,
     DGCamScareFactor = 15,
     DGCamScareSpeed = 15,     
@@ -106,6 +106,7 @@ class DGCamera {
     DGRect _panRegion;
     
     float _inertia;
+    bool _isPanning;
     
     float _motionDown;
     float _motionLeft;
@@ -123,15 +124,18 @@ public:
     ~DGCamera();
     
     void beginOrthoView();
+    int cursorWhenPanning();    
     void endOrthoView();
     float fieldOfView();
+    bool isPanning();
     int neutralZone();
     float* orientation();
-    void pan(int xPosition, int yPosition);
+    void pan(int xPosition, int yPosition);    
     float* position();
     void simulateWalk();
     void setFieldOfView(float fov);
     void setNeutralZone(int zone);
+    void stopPanning();
     void setViewport(int width, int height);
 
     // For the Drag mode
