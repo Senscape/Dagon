@@ -64,6 +64,13 @@ DGScript::~DGScript() {
 // create a string with the actual modification, ie: spot:enable()
 // Filter switch and other heavy duty operations.
 
+void DGScript::execute() {
+    if (_isInitialized) {
+        if (int result = lua_pcall(_L, 0, 0, 0))
+            _error(result);
+    }
+}
+
 // TODO: Support loading script from parameters
 // TODO: Consider seeking paths again if debug mode was enabled
 void DGScript::init(int argc, char* argv[]) {
@@ -222,8 +229,8 @@ void DGScript::processCommand(const char *command) {
 
 void DGScript::run() {
     if (_isInitialized) {
-        if (int result = lua_pcall(_L, 0, 0, 0))
-            _error(result);
+        if (!config->showSplash)
+            this->execute();
 
         // Check if we must start the main loop ourselves
         if (config->autorun)

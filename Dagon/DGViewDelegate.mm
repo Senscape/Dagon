@@ -63,7 +63,7 @@
         [notificationCenter addObserver: self
                                selector: @selector(_windowWillClose:)
                                    name: NSWindowWillCloseNotification
-                                 object: _window];    
+                                 object: _window];
     }
 	
     return self;
@@ -169,12 +169,12 @@
     [self removeTrackingRect:boundsTrackingTag];
     boundsTrackingTag = [self addTrackingRect:[self visibleRect] owner:self userData:nil assumeInside:isMouseInside];
     
-    // TODO: Ensure this is thread-safe
-    // (It probably is but everything is being drawn twice!)
+    // TODO: Ensure this is thread-safe (It probably is but everything is being drawn twice!)
+    // TODO: Perhaps add a separate Refresh method, then update calls refresh
     control->update();
     
     [super viewWillDraw];
-} 
+}
 
 // FIXME: This notification also comes when closing the About dialog
 - (void) _windowWillClose:(NSNotification *)notification {
