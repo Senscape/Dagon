@@ -61,6 +61,7 @@ int DGTimerManager::create(double trigger, int handlerForLua) {
     timer.isEnabled = true;
     timer.isInternal = false;
     timer.isLoopable = true;
+    timer.hasLuaHandler = true;
     timer.lastTime = clock();
     
     // IMPORTANT: Trigger is divided by 10 to comply with the current update scheme.
@@ -85,6 +86,26 @@ int DGTimerManager::createInternal(double trigger, void (*callback)()) {
     timer.isEnabled = true;
     timer.isInternal = true;
     timer.isLoopable = false;
+    timer.hasLuaHandler = false;    
+    timer.lastTime = clock();
+    
+    timer.trigger = trigger / 20;
+    
+    _arrayOfTimers.push_back(timer);
+    
+    _handles++;
+    
+    return timer.handle;
+}
+
+int DGTimerManager::createSimple(double trigger) {
+    DGTimer timer;
+    
+    timer.handle = _handles;
+    timer.isEnabled = true;
+    timer.isInternal = false;
+    timer.isLoopable = false;
+    timer.hasLuaHandler = false;    
     timer.lastTime = clock();
     
     timer.trigger = trigger / 20;
@@ -110,6 +131,8 @@ void DGTimerManager::enable(int handle) {
     timer->isEnabled = true;    
 }
 
+// FIXME: This is quite sucky. Timers keep looping and being checked even if they
+// were already triggered. Should have different arrays here.
 void DGTimerManager::update() {
     std::vector<DGTimer>::iterator it;
     
@@ -121,10 +144,12 @@ void DGTimerManager::update() {
         
         if ((duration > (*it).trigger) && (*it).isEnabled) {
             (*it).lastTime = currentTime;
+            
+            if ((*it).hasLuaHandler)
+                DGScript::getInstance().processCallback((*it).luaHandler, 0);
+            
             if ((*it).isInternal)
                 (*it).handler();
-            else
-                DGScript::getInstance().processCallback((*it).luaHandler, 0);
             
             // We break the loop because it's possible the timers array has changed
             break;
