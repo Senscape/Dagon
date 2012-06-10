@@ -65,6 +65,7 @@ DGCamera::DGCamera() {
     _position[2] = 0.0f;
     
     _inertia = 1 / (float)DGCamInertia;
+    _isPanning = false;
     
     _motionDown = 0.0f;
     _motionLeft = 0.0f;
@@ -105,6 +106,25 @@ void DGCamera::beginOrthoView() {
     glLoadIdentity();
 }
 
+int DGCamera::cursorWhenPanning() {
+    if (_motionLeft > 0.0f) {
+        if (_motionUp > 0.0f) return DGCursorDownLeft;
+        else if (_motionDown > 0.0f) return DGCursorUpLeft;
+        
+        return DGCursorLeft;
+    }
+    else if (_motionRight > 0.0f) {
+        if (_motionUp > 0.0f) return DGCursorDownRight;
+        else if (_motionDown > 0.0f) return DGCursorUpRight;
+        
+        return DGCursorRight;   
+    }
+    else if (_motionUp > 0.0f) return DGCursorDown;
+    else if (_motionDown > 0.0f) return DGCursorUp;
+    
+    return DGCursorDrag;
+}
+
 void DGCamera::endOrthoView() {
     // Go back to the projection view and its previous state
     glMatrixMode(GL_PROJECTION);
@@ -116,6 +136,10 @@ void DGCamera::endOrthoView() {
 
 float DGCamera::fieldOfView() {
     return _fovCurrent;
+}
+
+bool DGCamera::isPanning() {
+    return _isPanning;
 }
 
 int DGCamera::neutralZone() {
@@ -241,7 +265,13 @@ void DGCamera::stopDragging() {
     this->pan(config->displayWidth / 2, config->displayHeight / 2);
 }
 
+void DGCamera::stopPanning() {
+    this->pan(config->displayWidth / 2, config->displayHeight / 2);
+}
+
 void DGCamera::update() {
+    _isPanning = false;
+    
     // Calculate horizontal motion
     if (_deltaX > 0) {
         if (_motionRight < _maxSpeed)
@@ -249,7 +279,9 @@ void DGCamera::update() {
         
         // Apply inertia to opposite direction
         if (_motionLeft > 0.0f)
-            _motionLeft -= _inertia;        
+            _motionLeft -= _inertia;
+        
+        _isPanning = true;
     }
 	else if (_deltaX < 0) {
         if (_motionLeft < _maxSpeed)
@@ -258,6 +290,8 @@ void DGCamera::update() {
         // Inertia        
         if (_motionRight > 0.0f)
             _motionRight -= _inertia;        
+        
+        _isPanning = true;
     }
     else {
         // Decrease leftward motion
@@ -280,7 +314,9 @@ void DGCamera::update() {
         
         // Apply inertia to opposite direction
         if (_motionUp > 0.0f)
-            _motionUp -= _inertia;        
+            _motionUp -= _inertia;
+        
+        _isPanning = true;
     }
 	else if (_deltaY < 0) {
         if (_motionUp < _maxSpeed)
@@ -288,7 +324,9 @@ void DGCamera::update() {
         
         // Inertia
         if (_motionDown > 0.0f)
-            _motionDown -= _inertia;        
+            _motionDown -= _inertia;
+        
+        _isPanning = true;
     }
     else {
         // Decrease downward motion
