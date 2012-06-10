@@ -243,10 +243,8 @@ void DGSystem::terminate() {
 void DGSystem::toggleFullScreen() {
     config->fullScreen = !config->fullScreen;
     if (_isRunning) {
-        // Suspend the timer to avoid multiple redraws
-        dispatch_suspend(_mainTimer);
+        // TODO: Suspend the timer to avoid multiple redraws
         [window toggleFullScreen:nil];
-        dispatch_resume(_mainTimer);
     }
     else [window toggleFullScreen:nil];
 }

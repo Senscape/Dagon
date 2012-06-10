@@ -411,10 +411,8 @@ void DGRender::blendScene() {
         
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f - j);
         
-		this->beginDrawing(true);
 		_blendTexture->bind();
 		this->drawSlide(coords);
-		this->endDrawing();
         
 		// This should a bit faster than the walk_time factor
 		j += 0.015f * config->globalSpeed();
@@ -438,9 +436,7 @@ void DGRender::fadeScene() {
     _fadeTexture->update();
     _fadeTexture->bind();    
     this->setAlpha(_fadeTexture->fadeLevel());
-    this->beginDrawing(true);
     this->drawSlide(coords);
-    this->endDrawing();
 }
 
 ////////////////////////////////////////////////////////////

@@ -121,9 +121,9 @@ void DGControl::init() {
     if (config->showSplash) {
         _render->loadSplash();
         _state->set(DGStateSplash);
+        _render->fadeInNextUpdate();
     }
-    
-    _render->fadeInNextUpdate();
+    else _render->resetFade();
 }
 
 DGNode* DGControl::currentNode() {
@@ -521,11 +521,8 @@ void DGControl::update() {
             
             break;
         case DGStateSplash:
-            // 1: Update only one timer, export function that returns ticks
-            // 2: Fade in interface elements
-            
-            static int handlerIn = timerManager->createSimple(5);
-            static int handlerOut = timerManager->createSimple(6);
+            static int handlerIn = timerManager->createSimple(3);
+            static int handlerOut = timerManager->createSimple(4);
             
             _camera->update();
             _camera->beginOrthoView();
@@ -536,6 +533,7 @@ void DGControl::update() {
             _camera->endOrthoView();
         
             if (timerManager->check(handlerIn)) {
+                
                 _render->fadeOutNextUpdate();
             }
             
@@ -544,13 +542,12 @@ void DGControl::update() {
                 //_render->fadeInNextUpdate();
                 _render->resetFade();
                 _state->set(DGStateNode);
+                script->execute();
             }
-            
-            timerManager->update();
             
             // Flush the buffers
             system->update();
-            
+
             return;
             break;
     }
@@ -562,72 +559,29 @@ void DGControl::update() {
     _camera->beginOrthoView();
     
     // Blends, gamma, etc.
-    _render->blendScene();
-    
-    // Draw all active overlays
-    _drawOverlays();
-    
-    // Feedback
     _render->beginDrawing(true);
-    feedManager->update();
+    _render->blendScene();
     _render->endDrawing();
     
-    // We do this because the feed manager might change color
-    _render->setColor(DGColorWhite);
-    
-    // Helpers
-    if (config->showHelpers) {
-        if (_render->beginIteratingHelpers()) { // Check if we have any
-            do {
-                DGPoint point = _render->currentHelper();
-                
-                _render->beginDrawing(false); // Textures disabled
-                _render->setColor(DGColorBrightCyan);
-                _render->drawHelper(point.x, point.y, true);
-                _render->endDrawing();
-            } while (_render->iterateHelpers());
-        }
-    }
-    
-    // Mouse cursor
-    if (cursorManager->hasImage()) { // A bitmap cursor is currently set
-        _render->beginDrawing(true);
-        cursorManager->bindImage();
-        _render->drawSlide(cursorManager->arrayOfCoords());
-        _render->endDrawing();
-    }
-    else {
-        DGPoint position = cursorManager->position();
-        
-        _render->beginDrawing(false); // Textures disabled (only for default cursor)
-        if (cursorManager->onButton() || cursorManager->hasAction())
-            _render->setColor(DGColorBrightRed);
-        else
-            _render->setColor(DGColorDarkGray);
-        _render->drawHelper(position.x, position.y, false);
-        _render->endDrawing();
-    }
+    _drawInterface();
     
     // User post render operations, supporting textures
     _render->beginDrawing(true);
     if (_eventHandlers.hasPostRender)
         script->processCallback(_eventHandlers.postRender, 0);
+
+    _render->fadeScene();
     _render->endDrawing();
     
-    _render->fadeScene();
-      
     // Debug info, if enabled
     if (config->debugMode) {
         
         _fpsCount++;
         
         if (_console->isEnabled()) {
-            
             _console->update();
-            
             if (_console->isReadyToProcess()) {
                 char command[DGMaxLogLength];
-                
                 _console->getCommand(command);
                 script->processCommand(command);
             }
@@ -668,10 +622,54 @@ void DGControl::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
+void DGControl::_drawInterface() {
+    // Helpers
+    _render->beginDrawing(false); // Textures disabled
+    if (config->showHelpers) {
+        if (_render->beginIteratingHelpers()) { // Check if we have any
+            do {
+                DGPoint point = _render->currentHelper();
+                _render->setColor(DGColorBrightCyan);
+                _render->drawHelper(point.x, point.y, true);
+                
+            } while (_render->iterateHelpers());
+        }
+    }
+    _render->endDrawing();
+    
+    _render->beginDrawing(true);
+    
+    // Draw all active overlays
+    _drawOverlays();
+    
+    // Feedback operations
+    feedManager->update();
+    
+    // We do this because the feed manager might change color
+    _render->setColor(DGColorWhite);
+    
+    // Mouse cursor
+    if (cursorManager->hasImage()) { // A bitmap cursor is currently set
+        cursorManager->bindImage();
+        _render->drawSlide(cursorManager->arrayOfCoords());
+    }
+    else {
+        DGPoint position = cursorManager->position();
+        
+        _render->endDrawing();
+        _render->beginDrawing(false); // Textures disabled (only for default cursor)
+        if (cursorManager->onButton() || cursorManager->hasAction())
+            _render->setColor(DGColorBrightRed);
+        else
+            _render->setColor(DGColorDarkGray);
+        _render->drawHelper(position.x, position.y, false);
+    }
+    
+    _render->endDrawing();
+}
+
 void DGControl::_drawOverlays() {
     if (!_arrayOfOverlays.empty()) {
-        _render->beginDrawing(true);
-        
         vector<DGOverlay*>::iterator itOverlay;
         
         itOverlay = _arrayOfOverlays.begin();
@@ -722,8 +720,6 @@ void DGControl::_drawOverlays() {
             
             itOverlay++;
         }
-        
-        _render->endDrawing();
     }    
 }
 

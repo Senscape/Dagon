@@ -129,6 +129,7 @@ class DGControl {
     int _fpsLastCount;
     bool _isInitialized;
 
+    void _drawInterface();
     void _drawOverlays();
     void _drawSpots();
     void _processAction();

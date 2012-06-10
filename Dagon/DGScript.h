@@ -90,7 +90,8 @@ public:
         static DGScript instance;
         return instance;
     }
-
+    
+    void execute();
     void init(int argc, char* argv[]);
     const char* module();
     bool isExecutingModule();    

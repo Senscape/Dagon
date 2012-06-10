@@ -9,6 +9,7 @@ setFont(FEED, "fnt_dislexia.ttf", 20)
 daniel0 = Audio("trk_daniel_layer0.ogg", {loopable = true})
 daniel1 = Audio("trk_daniel_layer1.ogg", {loopable = true})
 
+-- Fade in interface elements
 -- Separate into folders
 -- Change image when cursor hovers on journal (without pencil)
 -- Breathing effect
@@ -20,6 +21,7 @@ daniel1 = Audio("trk_daniel_layer1.ogg", {loopable = true})
 -- Remove tags
 -- Add sync to audio
 -- Remove convenience methods from attach
+-- Suspend / Resume
 
 Cafeteria:addAudio(daniel0)
 
@@ -28,7 +30,7 @@ CorridorB:addAudio(daniel1)
 
 intro = Overlay("Intro")  
 logo = Image("img_logo.png")
-logo:scale(0.6)
+logo:scale(0.5)
 
 credit1 = Image("img_credit1.png")
 credit1:disable()
@@ -62,7 +64,7 @@ intro:enable()
 
 timerLoop = 1
 
-timerID = startTimer(5, 
+timerID = startTimer(4, 
 	function()
 		if (timerLoop == 1) then
 			logo:fadeOut()
