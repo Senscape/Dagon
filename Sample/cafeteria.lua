@@ -10,8 +10,8 @@ cafeteria3:link({ S = cafeteria2 })
 
 spot = cafeteria3:addSpot( Spot(WEST, {1536, 1164, 1625, 1164, 1625, 1290, 1536, 1290}) )
 alarm = spot:attach(AUDIO, Audio("sfx_alarm.ogg", {loopable = true}) )
-spot:attach(CUSTOM, 
-	function() 
+spot:attach(FUNCTION, 
+	function()
 		if self:isPlaying() == false then 
 			self:play()
 		else

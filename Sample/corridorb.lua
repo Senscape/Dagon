@@ -10,7 +10,7 @@ corridorb2:link({ W = corridorb1, N = Cafeteria, E = corridorb3 })
 corridorb3:link({ W = corridorb2 })
 
 spot = corridorb3:addSpot( Spot(NORTH, {512, 768, 1792, 768, 1792, 1536, 512, 1536}) )
-spot:attach(CUSTOM, 
+spot:attach(FUNCTION, 
 	function()
 		feed("Ah, there's the hospital.")
 		journalMarkEntry(jEntries.HOSPITAL)

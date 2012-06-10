@@ -43,7 +43,7 @@ previousHeight = config.displayHeight
 
 function journalToggle()
 	if jCurrentState == jStates.CLOSED then
-		jOpened:show()
+		jOpened:enable()
 		play("sfx_journal_open.ogg")
 		jCurrentState = jStates.OPENING
 	elseif jCurrentState == jStates.OPENED then
@@ -54,17 +54,19 @@ end
 
 -- Graphic for the closed journal
 icon = Button(jClosedX, jClosedY, jClosedSize, jClosedSize)
-icon:setAction(CUSTOM, journalToggle)
+icon:setAction(FUNCTION, journalToggle)
+icon:setCursor(CUSTOM)
 icon:setImage("img_journal_icon.tga")
-icon:disable()
+icon:enable()
+--icon:disable()
 
 jClosed:addButton(icon)
 jClosed:enable()
 
 -- Graphics for the opened journal
 background = Button(jOpenedX, jOpenedY, jOpenedSizeX, jOpenedSizeY)
-background:setAction(CUSTOM, journalToggle)
-					   
+background:setAction(FUNCTION, journalToggle)
+background:setCursor(BACKWARD)			   
 background:setImage("img_journal_bg.tga")
 
 function journalAddEntry(e, f)
@@ -72,7 +74,8 @@ function journalAddEntry(e, f)
 	i = i + 1
 	x, y = jOpened:position()
 	jRows[i] = Button(jOpenedX + 50, y + jOpenedY + 60 + (i * 40), string.len(e) * 13, 32)
-	jRows[i]:setAction(CUSTOM, f)	
+	jRows[i]:setAction(FUNCTION, f)	
+	jRows[i]:setCursor(CUSTOM)
 	jRows[i]:setFont("fnt_quikhand.ttf", 24)
 	jRows[i]:setTextColor(0xBB000000)
 	jRows[i]:setText(e)
