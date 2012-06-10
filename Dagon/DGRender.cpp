@@ -30,7 +30,6 @@ DGRender::DGRender() {
     log = &DGLog::getInstance();
     
     _blendNextUpdate = false;
-    _fadeNextUpdate = false;
 	_texturesEnabled = false;
 }
 
@@ -43,7 +42,7 @@ DGRender::~DGRender() {
         delete _blendTexture;
     
     if (_fadeTexture)
-        delete _fadeTexture;    
+        delete _fadeTexture;
 }
 
 ////////////////////////////////////////////////////////////
@@ -273,8 +272,16 @@ void DGRender::endDrawing() {
     glFlush();
 }
 
-void DGRender::fadeNextUpdate() {
-    _fadeNextUpdate = true;
+void DGRender::fadeInNextUpdate() {
+    _fadeTexture->fadeOut();
+}
+
+void DGRender::fadeOutNextUpdate() {
+    _fadeTexture->fadeIn();
+}
+
+void DGRender::resetFade() {
+    _fadeTexture->setFadeLevel(0.0f);
 }
 
 void DGRender::init() {
@@ -316,6 +323,7 @@ void DGRender::init() {
     
 	_blendTexture = new DGTexture(0, 0, 0); // All default values
     _fadeTexture = new DGTexture(1, 1, 0); // Minimal, black texture   
+    _fadeTexture->setFadeSpeed(DGFadeFastest);
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
 	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
@@ -420,24 +428,45 @@ void DGRender::blendScene() {
 }
 
 void DGRender::fadeScene() {
-	if (_fadeNextUpdate) {
-		static float j = 0.0f;
-        
-        float coords[] = {0, 0, 
-            config->displayWidth, 0, 
-            config->displayWidth, config->displayHeight,
-            0, config->displayHeight}; 
-        
-        glColor4f(0.0f, 0.0f, 0.0f, j);
-        
-		this->beginDrawing(true);
-		_fadeTexture->bind();
-		this->drawSlide(coords);
-		this->endDrawing();
-        
-		if (j < 1.0f)
-            j += 0.015f * config->globalSpeed();
-	}
+    // FIXME: This is done every time and it sucks
+    
+    float coords[] = {0, 0, 
+        config->displayWidth, 0, 
+        config->displayWidth, config->displayHeight,
+        0, config->displayHeight};
+    
+    _fadeTexture->update();
+    _fadeTexture->bind();    
+    this->setAlpha(_fadeTexture->fadeLevel());
+    this->beginDrawing(true);
+    this->drawSlide(coords);
+    this->endDrawing();
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Splash screen operations
+////////////////////////////////////////////////////////////
+
+void DGRender::drawSplash() {
+    _splashTexture->bind();
+    
+    // Note this is inverted
+    float coords[] = {0, config->displayHeight, 
+        config->displayWidth, config->displayHeight, 
+        config->displayWidth, 0,
+        0, 0}; 
+    
+    this->drawSlide(coords);
+}
+
+void DGRender::loadSplash() {
+    _splashTexture = new DGTexture;
+    _splashTexture->loadFromMemory(DGDefSplashBinary);
+}
+
+void DGRender::unloadSplash() {
+    _splashTexture->unload();
+    delete _splashTexture;
 }
 
 ////////////////////////////////////////////////////////////

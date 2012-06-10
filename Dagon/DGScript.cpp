@@ -16,6 +16,7 @@
 
 #include "DGConfig.h"
 #include "DGAudioManager.h"
+#include "DGCursorManager.h"
 #include "DGFeedManager.h"
 #include "DGLog.h"
 #include "DGProxy.h"
@@ -98,11 +99,28 @@ void DGScript::init(int argc, char* argv[]) {
     
     // Push all enum values
     DGLuaEnum(_L, AUDIO, DGObjectAudio);
-    DGLuaEnum(_L, CUSTOM, DGActionCustom);
+    DGLuaEnum(_L, FUNCTION, DGActionFunction);
     DGLuaEnum(_L, IMAGE, DGObjectTexture);
     DGLuaEnum(_L, FEED, DGActionFeed);
     DGLuaEnum(_L, SWITCH, DGActionSwitch);
     DGLuaEnum(_L, VIDEO, DGObjectVideo);
+    
+    DGLuaEnum(_L, NORMAL, DGCursorNormal);
+    DGLuaEnum(_L, DRAGGING, DGCursorDrag);
+    DGLuaEnum(_L, LEFT, DGCursorLeft);
+    DGLuaEnum(_L, RIGHT, DGCursorRight);
+    DGLuaEnum(_L, UP, DGCursorUp);
+    DGLuaEnum(_L, DOWN, DGCursorDown);
+    DGLuaEnum(_L, UP_LEFT, DGCursorUpLeft);
+    DGLuaEnum(_L, UP_RIGHT, DGCursorUpRight);
+    DGLuaEnum(_L, DOWN_LEFT, DGCursorDownLeft);
+    DGLuaEnum(_L, DOWN_RIGHT, DGCursorDownRight);
+    DGLuaEnum(_L, FORWARD, DGCursorForward);
+    DGLuaEnum(_L, BACKWARD, DGCursorBackward);
+    DGLuaEnum(_L, USE, DGCursorUse);
+    DGLuaEnum(_L, LOOK, DGCursorLook);
+    DGLuaEnum(_L, TALK, DGCursorTalk);
+    DGLuaEnum(_L, CUSTOM, DGCursorCustom);
     
     DGLuaEnum(_L, NORTH, DGNorth);
     DGLuaEnum(_L, EAST, DGEast);
@@ -261,6 +279,12 @@ int DGScript::_globalPlay(lua_State *L) {
 	return 0;
 }
 
+int DGScript::_globalLoadCursor(lua_State *L) {
+    DGCursorManager::getInstance().load(luaL_checknumber(L, 1), luaL_checkstring(L, 2));
+    
+    return 0;
+}
+
 int DGScript::_globalRegister(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
         DGLog::getInstance().error(DGModScript, DGMsg250011);
@@ -362,6 +386,7 @@ int DGScript::_globalStopTimer(lua_State *L) {
 void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
         {"feed", _globalFeed},
+        {"loadCursor", _globalLoadCursor},
         {"play", _globalPlay},          
         {"register", _globalRegister},      
         {"room", _globalRoom},
