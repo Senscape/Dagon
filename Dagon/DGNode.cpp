@@ -84,7 +84,8 @@ void DGNode::setBundleName(const char* name) {
 void DGNode::addCustomLink(unsigned withDirection, int luaHandler) {
     DGAction action;
     
-    action.type = DGActionCustom;
+    action.type = DGActionFunction;
+    action.cursor = DGCursorForward;
     action.luaHandler = luaHandler;
     
     _link(withDirection, &action);
@@ -94,6 +95,7 @@ void DGNode::addLink(unsigned int withDirection, DGObject* theTarget) {
     DGAction action;
     
     action.type = DGActionSwitch;
+    action.cursor = DGCursorForward;    
     action.target = theTarget;
     
     _link(withDirection, &action);

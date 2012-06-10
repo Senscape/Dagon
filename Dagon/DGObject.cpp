@@ -31,7 +31,9 @@ DGObject::DGObject() {
     _defaultFade = 1.0f;
     _fadeLevel = 1.0f;
     _fadeDirection = DGFadeNone;
-    _isEnabled = true;    
+    _isEnabled = true;
+    
+    this->setFadeSpeed(DGFadeNormal);
 }
 
 ////////////////////////////////////////////////////////////
@@ -89,6 +91,15 @@ unsigned int DGObject::type() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
+void DGObject::setFadeLevel(float level) {
+    _fadeLevel = level;
+    _fadeDirection = DGFadeNone;
+}
+
+void DGObject::setFadeSpeed(int speed) {
+    _fadeSpeed = 1.0f / (float)speed;
+}
+
 void DGObject::setLuaObject(int object) {
     _luaObject = object;
 }
@@ -140,7 +151,7 @@ void DGObject::toggle() {
 void DGObject::update() {
     switch (_fadeDirection) {
         case DGFadeIn:
-            if (_fadeLevel < 1.0f) _fadeLevel += 0.005f;
+            if (_fadeLevel < 1.0f) _fadeLevel += _fadeSpeed;
             else _fadeLevel = 1.0f;
             break;
         case DGFadeOut:
@@ -148,7 +159,7 @@ void DGObject::update() {
                 _fadeLevel = 0.0f;
                 _isEnabled = false;
             }
-            else  _fadeLevel -= 0.005f;
+            else  _fadeLevel -= _fadeSpeed;
             break;
     }
 }

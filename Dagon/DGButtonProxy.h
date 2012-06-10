@@ -75,23 +75,25 @@ public:
         int type = (int)luaL_checknumber(L, 1);
         
         switch (type) {
-            case CUSTOM:
+            case FEED:
+                action.type = DGActionFeed;
+                action.cursor = DGCursorLook;                
+                strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
+                b->setAction(&action);
+                
+                break;
+            case FUNCTION:
                 if (!lua_isfunction(L, 2)) {
                     DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
                     return 0;
                 }
                 
-                action.type = DGActionCustom;
+                action.type = DGActionFunction;
+                action.cursor = DGCursorUse;
                 action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
                 b->setAction(&action);
                 
-                break;
-            case FEED:
-                action.type = DGActionFeed;
-                strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
-                b->setAction(&action);
-                
-                break;
+                break;                
             case SWITCH:
                 int type = DGCheckProxy(L, 2);
                 if (type == DGObjectNode)
@@ -104,11 +106,23 @@ public:
                 }
                 
                 action.type = DGActionSwitch;
+                action.cursor = DGCursorForward;                
                 b->setAction(&action);
                 
                 break;
         }
                 
+        return 0;
+    }
+    
+    // Set a cursor for the action
+    int setCursor(lua_State *L) {
+        if (b->hasAction()) {
+            DGAction* action = b->action();
+            
+            action->cursor = luaL_checknumber(L, 1);
+        }
+        
         return 0;
     }
     
@@ -181,6 +195,7 @@ Luna<DGButtonProxy>::RegType DGButtonProxy::methods[] = {
     method(DGButtonProxy, position),
     method(DGButtonProxy, scale),
     method(DGButtonProxy, setAction),
+    method(DGButtonProxy, setCursor),
     method(DGButtonProxy, setFont),     
     method(DGButtonProxy, setImage),    
     method(DGButtonProxy, setPosition),
