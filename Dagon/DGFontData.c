@@ -1,3 +1,19 @@
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+// Embedded font data
+////////////////////////////////////////////////////////////
+
 const unsigned char DGDefFontBinary[] = {
   0x0,  0x1,  0x0,  0x0,  0x0, 0x10,  0x1,  0x0,  0x0,  0x4,  0x0,  0x0,
  0x4f, 0x53, 0x2f, 0x32, 0xb5, 0x89, 0xf6, 0x73,  0x0,  0x0, 0xa9, 0x80,
