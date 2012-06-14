@@ -46,39 +46,173 @@ DGRender::~DGRender() {
 }
 
 ////////////////////////////////////////////////////////////
-// Implementation
+// Implementation - Init sequence
 ////////////////////////////////////////////////////////////
 
-void DGRender::beginDrawing(bool usingTextures) {
-    //glEnableClientState(GL_VERTEX_ARRAY);
+void DGRender::init() {
+	const GLubyte* version = glGetString(GL_VERSION);
     
-	if (usingTextures) {
-		_texturesEnabled = true;
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glEnable(GL_TEXTURE_2D);
-        
-		// Need to define "rendering states" to properly handle this: ie, normal, blending, etc.
-		if (config->showSpots)
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-		else
-			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	log->trace(DGModRender, "%s", DGMsg020000);
+	log->info(DGModRender, "%s: %s", DGMsg020001, version);
+    
+	glewInit();
+    
+	if (glewIsSupported("GL_VERSION_2_0")) {
+		_shadersEnabled = true;
 	}
 	else {
-		glBlendFunc(GL_ONE, GL_ZERO);
+		log->trace(DGModRender, "%s", DGMsg020002);
+		_shadersEnabled = false;
 	}
+    
+    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+    glEnable(GL_BLEND);
+	glDisable(GL_DEPTH_TEST);
+	glDisable(GL_DITHER);
+    
+	if (config->antialiasing) {
+		// TODO: Some of these options may be introducing black lines
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+		glEnable(GL_POINT_SMOOTH);
+		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+		glEnable(GL_LINE_SMOOTH);
+		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+		glEnable(GL_POLYGON_SMOOTH);
+		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+        
+        glEnable(GL_MULTISAMPLE); // Not sure if this one goes here
+	}
+    
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    
+	_blendTexture = new DGTexture(0, 0, 0); // All default values
+    _fadeTexture = new DGTexture(1, 1, 0); // Minimal, black texture   
+    _fadeTexture->setFadeSpeed(DGFadeFastest);
+    
+    // NOTE: Here we read the default screen values to calculate the aspect ratio
+	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
+		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 1.87f * M_PI / DGDefCursorDetail)) * DGDefDisplayWidth);
+		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 1.87f * M_PI / DGDefCursorDetail)) * DGDefDisplayHeight);
+	}    
+    
+    glEnableClientState(GL_VERTEX_ARRAY);
 }
+
+////////////////////////////////////////////////////////////
+// Implementation - Blend and fades
+////////////////////////////////////////////////////////////
 
 void DGRender::blendNextUpdate() {
     _blendTexture->bind();
-    this->copyScene();
+    this->copyView();
     _blendNextUpdate = true;
+}
+
+void DGRender::fadeInNextUpdate() {
+    _fadeTexture->fadeOut();
+}
+
+void DGRender::fadeOutNextUpdate() {
+    _fadeTexture->fadeIn();
+}
+
+void DGRender::resetFade() {
+    _fadeTexture->setFadeLevel(0.0f);
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Conversion of coordinates
+////////////////////////////////////////////////////////////
+
+DGVector DGRender::project(float x, float y, float z) {
+    DGVector vector;
+    GLdouble winX, winY, winZ;
+    
+    // Arrays to hold matrix information
+    
+    GLdouble modelView[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
+    
+    GLdouble projection[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+	
+    // Get window coordinates based on the 3D object
+    
+    gluProject((GLdouble)x, GLdouble(y), GLdouble(z),
+               modelView, projection, viewport,
+               &winX, &winY, &winZ);
+    
+    vector.x = (double)winX;
+    vector.y = config->displayHeight - (double)winY; // This one must be inverted
+    vector.z = (double)winZ;
+    
+    return vector;
+}
+
+DGVector DGRender::unProject(int x, int y) {
+    DGVector vector;
+    GLdouble objX, objY, objZ;
+    
+    // Arrays to hold matrix information
+    
+    GLdouble modelView[16];
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
+    
+    GLdouble projection[16];
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+	
+    // Get window coordinates based on the 3D object
+    
+    gluUnProject((GLdouble)x, GLdouble(y), 0.0f,
+                 modelView, projection, viewport,
+                 &objX, &objY, &objZ);
+    
+    vector.x = objX;
+    vector.y = objY;
+    vector.z = objZ;
+    
+    return vector;
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Drawing operations
+////////////////////////////////////////////////////////////
+
+void DGRender::enableTextures() {
+    if (!_texturesEnabled) {
+        _texturesEnabled = true;
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glEnable(GL_TEXTURE_2D);
+        
+        // Need to define "rendering states" to properly handle this: ie, normal, blending, etc.
+        if (config->showSpots)
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+        else
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+}
+
+void DGRender::disableTextures() {
+    if (_texturesEnabled) {
+        _texturesEnabled = false;
+        glDisable(GL_TEXTURE_2D);
+        glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+        glBlendFunc(GL_ONE, GL_ZERO);
+    }
 }
 
 void DGRender::drawHelper(int xPosition, int yPosition, bool animate) {
     static float j = 0.0f;
     
     glDisable(GL_LINE_SMOOTH);
-
+    
     // TODO: Test later if push & pop is necessary at this point
 	glPushMatrix();
 	glTranslatef(xPosition, yPosition, 0);
@@ -104,7 +238,7 @@ void DGRender::drawHelper(int xPosition, int yPosition, bool animate) {
     
 	glDrawArrays(GL_TRIANGLE_FAN, 0, (DGDefCursorDetail / 2) + 2);
 	glPopMatrix();
-
+    
 	glEnable(GL_LINE_SMOOTH);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
@@ -118,7 +252,7 @@ void DGRender::drawPolygon(vector<int> withArrayOfCoordinates, unsigned int onFa
     int sizeOfArray = (int)withArrayOfCoordinates.size();
 	int numCoords = sizeOfArray + (sizeOfArray / 2);
 	GLfloat* spotVertCoords = new GLfloat[numCoords];
-
+    
 	glPushMatrix();
     
 	switch (onFace) {
@@ -256,84 +390,6 @@ void DGRender::drawSlide(float* withArrayOfCoordinates) {
 	glPopMatrix();
 }
 
-void DGRender::endDrawing() {
-  	//glDisableClientState(GL_VERTEX_ARRAY);
-    
-	if (_texturesEnabled) {
-		_texturesEnabled = false;
-		glDisable(GL_TEXTURE_2D);
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	}
-    else {
-        // Since the color was likely changed, we set white again
-        setColor(DGColorWhite);
-    }
-    
-    glFlush();
-}
-
-void DGRender::fadeInNextUpdate() {
-    _fadeTexture->fadeOut();
-}
-
-void DGRender::fadeOutNextUpdate() {
-    _fadeTexture->fadeIn();
-}
-
-void DGRender::resetFade() {
-    _fadeTexture->setFadeLevel(0.0f);
-}
-
-void DGRender::init() {
-	const GLubyte* version = glGetString(GL_VERSION);
-
-	log->trace(DGModRender, "%s", DGMsg020000);
-	log->info(DGModRender, "%s: %s", DGMsg020001, version);
-    
-	glewInit();
-    
-	if (glewIsSupported("GL_VERSION_2_0")) {
-		_shadersEnabled = true;
-	}
-	else {
-		log->trace(DGModRender, "%s", DGMsg020002);
-		_shadersEnabled = false;
-	}
-    
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-    glEnable(GL_BLEND);
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_DITHER);
-    
-	if (config->antialiasing) {
-		// TODO: Some of these options may be introducing black lines
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-		glEnable(GL_POINT_SMOOTH);
-		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-		glEnable(GL_LINE_SMOOTH);
-		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-		glEnable(GL_POLYGON_SMOOTH);
-		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
-        
-        glEnable(GL_MULTISAMPLE); // Not sure if this one goes here
-	}
-    
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    
-	_blendTexture = new DGTexture(0, 0, 0); // All default values
-    _fadeTexture = new DGTexture(1, 1, 0); // Minimal, black texture   
-    _fadeTexture->setFadeSpeed(DGFadeFastest);
-    
-    // NOTE: Here we read the default screen values to calculate the aspect ratio
-	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
-		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 1.87f * M_PI / DGDefCursorDetail)) * DGDefDisplayWidth);
-		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 1.87f * M_PI / DGDefCursorDetail)) * DGDefDisplayHeight);
-	}    
-
-    glEnableClientState(GL_VERTEX_ARRAY);
-}
-
 void DGRender::setAlpha(float alpha) {
     // NOTE: This resets the current so it should be used with care
     glColor4f(1.0f, 1.0f, 1.0f, alpha);
@@ -358,7 +414,7 @@ int	DGRender::testColor(int xPosition, int yPosition) {
     
     // Note we flip the Y coordinate here because only the orthogonal projection is flipped
 	glReadPixels(xPosition, config->displayHeight - yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
-
+    
     r = (GLint)pixel[0];
 	g = (GLint)pixel[1];
 	b = (GLint)pixel[2];
@@ -369,74 +425,30 @@ int	DGRender::testColor(int xPosition, int yPosition) {
 }
 
 ////////////////////////////////////////////////////////////
-// Implementation - Scene operations
+// Implementation - Helpers processing
 ////////////////////////////////////////////////////////////
 
-void DGRender::clearScene() {
-    glClear(GL_COLOR_BUFFER_BIT);
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-}
-
-void DGRender::copyScene() {
-   	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config->displayWidth, config->displayHeight, 0); 
-}
-
-void DGRender::resetScene() {
-    // Check for errors in loop
-    if (config->debugMode) {
-        GLenum errCode;
-        const GLubyte *errString;
+bool DGRender::beginIteratingHelpers() {
+    if (!_arrayOfHelpers.empty()) {
+        _itHelper = _arrayOfHelpers.begin();
         
-        if ((errCode = glGetError()) != GL_NO_ERROR) {
-            errString = gluErrorString(errCode);
-            log->error(DGModRender, "%s: %s", DGMsg220001, errString);
-        }
+        return true;
     }
     
-    glLoadIdentity();
-    _arrayOfHelpers.clear();
+    return false;
 }
 
-void DGRender::blendScene() {
-	if (_blendNextUpdate) {
-		static float j = 0.0f;
-		int xStretch = j * (config->displayWidth / 4);
-		int yStretch = j * (config->displayHeight / 4);
-
-        // Note the coordinates here are inverted because of the way the screen is captured
-        float coords[] = {-xStretch, config->displayHeight + yStretch, 
-            config->displayWidth + xStretch, config->displayHeight + yStretch, 
-            config->displayWidth + xStretch, -yStretch,
-            -xStretch, -yStretch}; 
-        
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f - j);
-        
-		_blendTexture->bind();
-		this->drawSlide(coords);
-        
-		// This should a bit faster than the walk_time factor
-		j += 0.015f * config->globalSpeed();
-        if (_blendNextUpdate) {
-            if (j >= 1.0f) {
-                j = 0.0f;
-                _blendNextUpdate = false;
-            }
-        }
-	}
+DGPoint DGRender::currentHelper() {
+    return *_itHelper;
 }
 
-void DGRender::fadeScene() {
-    // FIXME: This is done every time and it sucks
+bool DGRender::iterateHelpers() {
+    _itHelper++;
     
-    float coords[] = {0, 0, 
-        config->displayWidth, 0, 
-        config->displayWidth, config->displayHeight,
-        0, config->displayHeight};
-    
-    _fadeTexture->update();
-    _fadeTexture->bind();    
-    this->setAlpha(_fadeTexture->fadeLevel());
-    this->drawSlide(coords);
+    if (_itHelper == _arrayOfHelpers.end())
+        return false;
+    else
+        return true;
 }
 
 ////////////////////////////////////////////////////////////
@@ -466,90 +478,74 @@ void DGRender::unloadSplash() {
 }
 
 ////////////////////////////////////////////////////////////
-// Implementation - Conversion of coordinates
+// Implementation - View operations
 ////////////////////////////////////////////////////////////
 
-DGVector DGRender::project(float x, float y, float z) {
-    DGVector vector;
-    GLdouble winX, winY, winZ;
-    
-    // Arrays to hold matrix information
-
-    GLdouble modelView[16];
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
-    
-    GLdouble projection[16];
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-	
-    // Get window coordinates based on the 3D object
-    
-    gluProject((GLdouble)x, GLdouble(y), GLdouble(z),
-                 modelView, projection, viewport,
-                 &winX, &winY, &winZ);
-    
-    vector.x = (double)winX;
-    vector.y = config->displayHeight - (double)winY; // This one must be inverted
-    vector.z = (double)winZ;
-    
-    return vector;
+void DGRender::clearView() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
 
-DGVector DGRender::unProject(int x, int y) {
-    DGVector vector;
-    GLdouble objX, objY, objZ;
-    
-    // Arrays to hold matrix information
-    
-    GLdouble modelView[16];
-    glGetDoublev(GL_MODELVIEW_MATRIX, modelView);
-    
-    GLdouble projection[16];
-    glGetDoublev(GL_PROJECTION_MATRIX, projection);
-    
-    GLint viewport[4];
-    glGetIntegerv(GL_VIEWPORT, viewport);
-	
-    // Get window coordinates based on the 3D object
-    
-    gluUnProject((GLdouble)x, GLdouble(y), 0.0f,
-               modelView, projection, viewport,
-               &objX, &objY, &objZ);
-    
-    vector.x = objX;
-    vector.y = objY;
-    vector.z = objZ;
-    
-    return vector;
+void DGRender::copyView() {
+   	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config->displayWidth, config->displayHeight, 0); 
 }
 
-////////////////////////////////////////////////////////////
-// Implementation - Process available helpers
-////////////////////////////////////////////////////////////
-
-bool DGRender::beginIteratingHelpers() {
-    if (!_arrayOfHelpers.empty()) {
-        _itHelper = _arrayOfHelpers.begin();
+void DGRender::blendView() {
+	if (_blendNextUpdate) {
+		static float j = 0.0f;
+		int xStretch = j * (config->displayWidth / 4);
+		int yStretch = j * (config->displayHeight / 4);
         
-        return true;
+        // Note the coordinates here are inverted because of the way the screen is captured
+        float coords[] = {-xStretch, config->displayHeight + yStretch, 
+            config->displayWidth + xStretch, config->displayHeight + yStretch, 
+            config->displayWidth + xStretch, -yStretch,
+            -xStretch, -yStretch}; 
+        
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f - j);
+        
+		_blendTexture->bind();
+		this->drawSlide(coords);
+        
+		// This should a bit faster than the walk_time factor
+		j += 0.015f * config->globalSpeed();
+        if (_blendNextUpdate) {
+            if (j >= 1.0f) {
+                j = 0.0f;
+                _blendNextUpdate = false;
+            }
+        }
+	}
+}
+
+void DGRender::resetView() {
+    // Check for errors in loop
+    if (config->debugMode) {
+        GLenum errCode;
+        const GLubyte *errString;
+        
+        if ((errCode = glGetError()) != GL_NO_ERROR) {
+            errString = gluErrorString(errCode);
+            log->error(DGModRender, "%s: %s", DGMsg220001, errString);
+        }
     }
     
-    return false;
+    glLoadIdentity();
+    _arrayOfHelpers.clear();
 }
 
-DGPoint DGRender::currentHelper() {
-    return *_itHelper;
-}
-
-bool DGRender::iterateHelpers() {
-    _itHelper++;
+void DGRender::fadeView() {
+    // FIXME: This is done every time and it sucks
     
-    if (_itHelper == _arrayOfHelpers.end())
-        return false;
-    else
-        return true;
+    float coords[] = {0, 0, 
+        config->displayWidth, 0, 
+        config->displayWidth, config->displayHeight,
+        0, config->displayHeight};
+    
+    _fadeTexture->update();
+    _fadeTexture->bind();    
+    this->setAlpha(_fadeTexture->fadeLevel());
+    this->drawSlide(coords);
 }
 
 ////////////////////////////////////////////////////////////
