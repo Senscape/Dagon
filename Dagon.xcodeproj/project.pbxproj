@@ -46,6 +46,7 @@
 		FBABA6381565539B0009889F /* DGButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6371565539B0009889F /* DGButton.cpp */; };
 		FBC8883314574F08008D548F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
 		FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */; };
+		FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE208DF1589745B002F7D46 /* DGScene.cpp */; };
 		FBE7EDE3153F603D00F43EDA /* DGConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */; };
 		FBFB04BD1583E520002280E1 /* DGSplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBFB04BC1583E520002280E1 /* DGSplashData.c */; };
 		FBFCC9F114BB3624003211AD /* DGTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFCC9F014BB3624003211AD /* DGTexture.cpp */; };
@@ -144,6 +145,8 @@
 		FBD2F64815064FD000AB6C31 /* DGAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGAudioManager.h; sourceTree = "<group>"; };
 		FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGAudioManager.cpp; sourceTree = "<group>"; };
 		FBD3A58614DF27C600CA2756 /* DGGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGGeometry.h; sourceTree = "<group>"; };
+		FBE208DF1589745B002F7D46 /* DGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGScene.cpp; sourceTree = "<group>"; };
+		FBE208E21589746E002F7D46 /* DGScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGScene.h; sourceTree = "<group>"; };
 		FBE7EDE0153F602F00F43EDA /* DGConsole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGConsole.h; sourceTree = "<group>"; };
 		FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGConsole.cpp; sourceTree = "<group>"; };
 		FBFB04BC1583E520002280E1 /* DGSplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGSplashData.c; sourceTree = "<group>"; };
@@ -227,10 +230,9 @@
 		FB247318148C676A00F7D1B6 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				FBE208E315897A9A002F7D46 /* Proxys */,
 				FBD2F64815064FD000AB6C31 /* DGAudioManager.h */,
 				FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */,
-				FB0769D71508F228009EA1AF /* DGAudioProxy.h */,
-				FBABA63C1565B5C00009889F /* DGButtonProxy.h */,
 				E817433514E6030A002CF502 /* DGConfigLib.h */,
 				FBA2C78214DC65660098E334 /* DGControl.h */,
 				FBA2C78014DC654B0098E334 /* DGControl.cpp */,
@@ -238,13 +240,6 @@
 				E8362A6914F1B1A1005B20EF /* DGFeedManager.cpp */,
 				E8362A6D14F2FBFB005B20EF /* DGFontManager.h */,
 				E8362A6B14F2FBE1005B20EF /* DGFontManager.cpp */,
-				FBABA63B156589030009889F /* DGImageProxy.h */,
-				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
-				FBA97543157B961900428561 /* DGObjectProxy.h */,
-				FBABA63A156583EC0009889F /* DGOverlayProxy.h */,
-				E8E0194814E366B800173A2D /* DGProxy.h */,
-				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
-				FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */,
 				E8ECDFCC14E216B900A6BA8D /* DGScript.h */,
 				E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */,
 				FB26300A14D3491000EAD41A /* DGState.h */,
@@ -271,6 +266,8 @@
 				E8707568157EF47600D2E916 /* DGCursorManager.cpp */,
 				FBA2C77F14DC13BF0098E334 /* DGRender.h */,
 				FBA2C77D14DC13B40098E334 /* DGRender.cpp */,
+				FBE208E21589746E002F7D46 /* DGScene.h */,
+				FBE208DF1589745B002F7D46 /* DGScene.cpp */,
 				FB34FB1414DB126F007D2EE1 /* DGViewDelegate.h */,
 				FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */,
 			);
@@ -372,6 +369,22 @@
 				FBFB04BC1583E520002280E1 /* DGSplashData.c */,
 			);
 			name = Data;
+			sourceTree = "<group>";
+		};
+		FBE208E315897A9A002F7D46 /* Proxys */ = {
+			isa = PBXGroup;
+			children = (
+				FB0769D71508F228009EA1AF /* DGAudioProxy.h */,
+				FBABA63C1565B5C00009889F /* DGButtonProxy.h */,
+				FBABA63B156589030009889F /* DGImageProxy.h */,
+				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
+				FBA97543157B961900428561 /* DGObjectProxy.h */,
+				FBABA63A156583EC0009889F /* DGOverlayProxy.h */,
+				E8E0194814E366B800173A2D /* DGProxy.h */,
+				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
+				FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */,
+			);
+			name = Proxys;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -487,6 +500,7 @@
 				FBABA6381565539B0009889F /* DGButton.cpp in Sources */,
 				E8707569157EF47600D2E916 /* DGCursorManager.cpp in Sources */,
 				FBFB04BD1583E520002280E1 /* DGSplashData.c in Sources */,
+				FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

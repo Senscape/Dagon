@@ -67,6 +67,7 @@ public:
     void releaseSemaphore(int ID);
     void run();
     void setTitle(const char* title);
+    void startTimers();
     void terminate();
     void toggleFullScreen();
 	void update();

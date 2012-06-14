@@ -135,10 +135,10 @@ static int DGConfigLibSet(lua_State *L) {
 	const char *key = luaL_checkstring(L, 2);
 	
 	if (strcmp(key, "antialiasing") == 0)
-		DGConfig::getInstance().antialiasing = lua_toboolean(L, 3);
+		DGConfig::getInstance().antialiasing = (bool)lua_toboolean(L, 3);
     
     if (strcmp(key, "autorun") == 0)
-		DGConfig::getInstance().antialiasing = (bool)lua_toboolean(L, 3);
+		DGConfig::getInstance().autorun = (bool)lua_toboolean(L, 3);
     
     if (strcmp(key, "controlMode") == 0)
 		DGConfig::getInstance().controlMode = (int)luaL_checknumber(L, 3);    

@@ -155,7 +155,6 @@ void DGSystem::init() {
         [window makeKeyAndOrderFront:window];
         
         if (config->fullScreen) {
-            [view update];
             [window toggleFullScreen:nil];
             [NSCursor hide];
         }
@@ -171,6 +170,22 @@ void DGSystem::init() {
 
 void DGSystem::releaseSemaphore(int ID) {
     dispatch_semaphore_signal(_semaphores[ID]);
+}
+
+void DGSystem::startTimers() {
+    _mainTimer = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC, 0,
+                                     dispatch_get_main_queue(),
+                                     ^{ control->update(); });
+    
+    _audioTimer = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
+                                      dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                                      ^{ audioManager->update(); });
+    
+    if (config->debugMode) {
+        _profilerTimer = CreateDispatchTimer(1.0f * NSEC_PER_SEC, 0,
+                                             dispatch_get_main_queue(),
+                                             ^{ control->profiler(); });
+    }
 }
 
 // TODO: Note this isn't quite multithreaded yet.

@@ -40,6 +40,7 @@ class DGNode;
 class DGOverlay;
 class DGRoom;
 class DGRender;
+class DGScene;
 class DGScript;
 class DGState;
 class DGSystem;
@@ -117,6 +118,7 @@ class DGControl {
     DGConsole* _console;
     DGFont* _consoleFont;
     DGRender* _render;
+    DGScene* _scene;    
     DGState* _state;
     DGTextureManager* _textureManager;
     

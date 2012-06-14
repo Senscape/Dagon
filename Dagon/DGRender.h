@@ -46,6 +46,7 @@ class DGRender {
     bool _shadersEnabled;
     bool _texturesEnabled;
     
+    DGPoint _centerOfPolygon(std::vector<int> arrayOfCoordinates); // Used for the helpers feature
     DGTexture* _blendTexture;
     DGTexture* _fadeTexture;
     DGTexture* _splashTexture;    
@@ -53,53 +54,54 @@ class DGRender {
     std::vector<DGPoint> _arrayOfHelpers;
     std::vector<DGPoint>::iterator _itHelper;
     
-    DGPoint _centerOfPolygon(std::vector<int> arrayOfCoordinates);
-    
 public:
     DGRender();
     ~DGRender();
     
-    void beginDrawing(bool usingTextures);
+    void init();
+    
+    // Control blend and fades
+    
     void blendNextUpdate();
-    void drawHelper(int xPosition, int yPosition, bool animate);
-    void drawPolygon(std::vector<int> withArrayOfCoordinates, unsigned int onFace);
     void fadeInNextUpdate();
     void fadeOutNextUpdate();
     void resetFade();
-    
-    // Slides always require four corners, so we know for sure the number of elements
-    void drawSlide(float* withArrayOfCoordinates); // We use float in all "slides" since we need the precision
-    void endDrawing();
-    void init();
-    void setAlpha(float alpha);
-    void setColor(int color);
-    int	testColor(int xPosition, int yPosition);
-    
-    // Scene operations
-    
-    void clearScene();
-    void blendScene();    
-    void copyScene();
-    void fadeScene();
-    void resetScene();
-    
-    // View operations
-    
-    
-    // Splash screen operations
-    void drawSplash();
-    void loadSplash();
-    void unloadSplash();
     
     // Conversion of coordinates (note this requires glu)
     
     DGVector project(float x, float y, float z); // If more than three coordinates, attempts to calculate center
     DGVector unProject(int x, int y);
+
+    // Drawing operations
     
-    // Process available helpers (indicates clickable spots)
+    void enableTextures();
+    void disableTextures();
+    void drawHelper(int xPosition, int yPosition, bool animate);
+    void drawPolygon(std::vector<int> withArrayOfCoordinates, unsigned int onFace);
+    void drawSlide(float* withArrayOfCoordinates); // We use float in all "slides" since we need the precision
+    void setAlpha(float alpha);
+    void setColor(int color);
+    int	testColor(int xPosition, int yPosition);
+    
+    // Helpers processing (indicates clickable spots)
+    
     bool beginIteratingHelpers();
     DGPoint currentHelper();
     bool iterateHelpers();
+    
+    // Splash screen operations
+    
+    void drawSplash();
+    void loadSplash();
+    void unloadSplash();
+    
+    // View operations, always used in the main loop
+    
+    void blendView();
+    void clearView();
+    void copyView();
+    void fadeView();
+    void resetView();    
 };
 
 #endif // DG_RENDER_H

@@ -229,6 +229,7 @@ void DGScript::processCommand(const char *command) {
 
 void DGScript::run() {
     if (_isInitialized) {
+        // TODO: This doesn't work if autorun is disabled
         if (!config->showSplash)
             this->execute();
 

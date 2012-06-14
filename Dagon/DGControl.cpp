@@ -29,6 +29,7 @@
 #include "DGOverlay.h"
 #include "DGRender.h"
 #include "DGRoom.h"
+#include "DGScene.h"
 #include "DGScript.h"
 #include "DGSpot.h"
 #include "DGState.h"
@@ -78,6 +79,7 @@ DGControl::~DGControl() {
         delete _console;
         delete _render;
         delete _state;
+        delete _scene;
         delete _textureManager;
     }
 }
@@ -94,7 +96,7 @@ void DGControl::init() {
     
     _render = new DGRender;
     _render->init();
-    _render->resetScene(); // Test for errors
+    _render->resetView(); // Test for errors
     
     _camera = new DGCamera;
     _camera->setViewport(config->displayWidth, config->displayHeight);
@@ -111,6 +113,7 @@ void DGControl::init() {
     
     feedManager->init();
     
+    _scene = new DGScene;
     _state = new DGState;
     _textureManager = new DGTextureManager;
     
@@ -372,7 +375,7 @@ void DGControl::switchTo(DGObject* theTarget) {
     
     if (!firstSwitch) {
         // FIXME: This code should be integrated with the general update()
-        _render->clearScene();
+        _render->clearView();
         _camera->update();
         _drawSpots();
         _render->blendNextUpdate();
@@ -478,7 +481,7 @@ void DGControl::takeSnapshot() {
 	strftime(buffer, DGMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
     
     texture.bind();
-    _render->copyScene();
+    _render->copyView();
     
     texture.saveToFile(buffer);   
     
@@ -500,9 +503,12 @@ void DGControl::update() {
     // FIXME: Add a render stack of DGObjects, especially for overlays
     // FIXME: Rework all this
     
+    // IMPORTANT: Ensure this function is thread-safe when
+    // switching rooms or nodes
+    
     // Setup the scene
-    _render->resetScene();
-    _render->clearScene();
+    _render->resetView();
+    _render->clearView();
     
     // Do this in a viewtimer
     switch (_state->current()) {
@@ -514,7 +520,7 @@ void DGControl::update() {
             _scanSpots();
             
             if (!config->showSpots)
-                _render->clearScene();
+                _render->clearView();
             
             // Drawing the node is handled by a separate function
             _drawSpots();
@@ -526,10 +532,8 @@ void DGControl::update() {
             
             _camera->update();
             _camera->beginOrthoView();
-            _render->beginDrawing(true);
             _render->drawSplash();
-            _render->fadeScene();
-            _render->endDrawing();
+            _render->fadeView();
             _camera->endOrthoView();
         
             if (timerManager->check(handlerIn)) {
@@ -559,19 +563,15 @@ void DGControl::update() {
     _camera->beginOrthoView();
     
     // Blends, gamma, etc.
-    _render->beginDrawing(true);
-    _render->blendScene();
-    _render->endDrawing();
+    _render->blendView();
     
     _drawInterface();
     
     // User post render operations, supporting textures
-    _render->beginDrawing(true);
     if (_eventHandlers.hasPostRender)
         script->processCallback(_eventHandlers.postRender, 0);
 
-    _render->fadeScene();
-    _render->endDrawing();
+    _render->fadeView();
     
     // Debug info, if enabled
     if (config->debugMode) {
@@ -590,7 +590,6 @@ void DGControl::update() {
             if (_console->isHidden()) {
                 DGPoint position = cursorManager->position();
                 
-                _render->beginDrawing(true);
                 // Set the color used for information
                 _render->setColor(DGColorBrightCyan);
                 _consoleFont->print(DGInfoMargin, DGInfoMargin, 
@@ -601,7 +600,6 @@ void DGControl::update() {
                                     "Viewing angle: %2.1f", _camera->fieldOfView());
                 _consoleFont->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
                                     "FPS: %d", _fpsLastCount); 
-                _render->endDrawing();
             }
             else
                 _console->update(); // Keep updating until done...
@@ -623,8 +621,10 @@ void DGControl::update() {
 ////////////////////////////////////////////////////////////
 
 void DGControl::_drawInterface() {
+    // TODO: Substract a new variable to all the alphas of objects
+    
     // Helpers
-    _render->beginDrawing(false); // Textures disabled
+    _render->disableTextures();
     if (config->showHelpers) {
         if (_render->beginIteratingHelpers()) { // Check if we have any
             do {
@@ -635,9 +635,8 @@ void DGControl::_drawInterface() {
             } while (_render->iterateHelpers());
         }
     }
-    _render->endDrawing();
     
-    _render->beginDrawing(true);
+    _render->enableTextures();
     
     // Draw all active overlays
     _drawOverlays();
@@ -656,16 +655,14 @@ void DGControl::_drawInterface() {
     else {
         DGPoint position = cursorManager->position();
         
-        _render->endDrawing();
-        _render->beginDrawing(false); // Textures disabled (only for default cursor)
+        _render->disableTextures(); // Default cursor doesn't require textures
         if (cursorManager->onButton() || cursorManager->hasAction())
             _render->setColor(DGColorBrightRed);
         else
             _render->setColor(DGColorDarkGray);
         _render->drawHelper(position.x, position.y, false);
+        _render->enableTextures();
     }
-    
-    _render->endDrawing();
 }
 
 void DGControl::_drawOverlays() {
@@ -677,22 +674,7 @@ void DGControl::_drawOverlays() {
         while (itOverlay != _arrayOfOverlays.end()) {
             if ((*itOverlay)->isEnabled()) {
                 
-                // Draw images first
-                if ((*itOverlay)->hasImages()) {
-                    (*itOverlay)->beginIteratingImages();
-                    
-                    do {
-                        DGImage* image = (*itOverlay)->currentImage();
-                        if (image->isEnabled()) {
-                            image->update(); // Perform any necessary updates
-                            image->texture()->bind();
-                            _render->setAlpha(image->fadeLevel());
-                            _render->drawSlide(image->arrayOfCoordinates());
-                        }
-                    } while ((*itOverlay)->iterateImages());
-                }
-                
-                // Now buttons
+                // Draw buttons first
                 if ((*itOverlay)->hasButtons()) {
                     (*itOverlay)->beginIteratingButtons(false);
                     
@@ -716,6 +698,23 @@ void DGControl::_drawOverlays() {
                     } while ((*itOverlay)->iterateButtons());
                 }
                 
+                // Now images
+                // NOTE: This isn't quite right, images should be drawn first. Perhaps
+                // allow the user to setup the order for each overlay.
+                if ((*itOverlay)->hasImages()) {
+                    (*itOverlay)->beginIteratingImages();
+                    
+                    do {
+                        DGImage* image = (*itOverlay)->currentImage();
+                        if (image->isEnabled()) {
+                            image->update(); // Perform any necessary updates
+                            image->texture()->bind();
+                            _render->setAlpha(image->fadeLevel());
+                            _render->drawSlide(image->arrayOfCoordinates());
+                        }
+                    } while ((*itOverlay)->iterateImages());
+                }
+                
             }
             
             itOverlay++;
@@ -724,16 +723,11 @@ void DGControl::_drawOverlays() {
 }
 
 void DGControl::_drawSpots() {
-    // IMPORTANT: Ensure this function is thread-safe when
-    // switching rooms or nodes
-    
     if (_canDrawSpots) {
         DGNode* currentNode = _currentRoom->currentNode();
         if (currentNode->isEnabled()) {
             currentNode->update();
             _render->setAlpha(currentNode->fadeLevel());
-            
-            _render->beginDrawing(true);
             
             currentNode->beginIteratingSpots();
             do {
@@ -744,8 +738,6 @@ void DGControl::_drawSpots() {
                     _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
                 }
             } while (currentNode->iterateSpots());
-            
-            _render->endDrawing();
         }
     }
 }
@@ -815,7 +807,7 @@ bool DGControl::_scanSpots() {
         
         // Check if the current node is enabled
         if (currentNode->isEnabled()) {
-            _render->beginDrawing(false);
+            _render->disableTextures();
         
             // First pass: draw the colored spots
             currentNode->beginIteratingSpots();
@@ -842,13 +834,14 @@ bool DGControl::_scanSpots() {
                         DGSpot* spot = currentNode->currentSpot();
                         if (color == spot->color()) {
                             cursorManager->setAction(spot->action());
+                            _render->enableTextures();
                             return true;
                         }
                     } while (currentNode->iterateSpots());
                 }
             }
         
-            _render->endDrawing();
+            _render->enableTextures();
         }
     }
     
