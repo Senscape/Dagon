@@ -23,6 +23,11 @@ daniel1 = Audio("trk_daniel_layer1.ogg", {loopable = true})
 -- Remove convenience methods from attach
 -- Suspend / Resume
 
+-- Cursor sobre journal, quitar el lapiz
+-- Falta tag en obj. de inventario
+-- Estirar animacion de tachar
+-- Revisar el orden como se conectan las cosas
+
 Cafeteria:addAudio(daniel0)
 
 CorridorB:addAudio(daniel0)
@@ -137,4 +142,5 @@ loadCursor(CUSTOM, "cur_custom.tga")
     
 cafeteria1:disable()
 switch(Cafeteria)
+jInit = false
 play("sfx_thump.ogg")

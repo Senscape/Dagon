@@ -41,6 +41,9 @@ jOpenedY = config.displayHeight - jOpenedOffset
 previousWidth = config.displayWidth
 previousHeight = config.displayHeight
 
+-- Sucky
+jInit = true
+
 function journalToggle()
 	if jCurrentState == jStates.CLOSED then
 		jOpened:enable()
@@ -80,7 +83,9 @@ function journalAddEntry(e, f)
 	jRows[i]:setText(e)
 	jOpened:addButton(jRows[i])
 	jIconLoop = 2
-	play("sfx_journal_write.ogg")
+	if jInit == false then
+		play("sfx_journal_write.ogg")
+	end
 end
 
 function journalMarkEntry(e)
@@ -88,6 +93,7 @@ function journalMarkEntry(e)
   	if v:text() == e then
     		jRows[i]:setImage("img_completed.tga")
     		jIconLoop = 2
+    		-- Init here
     		play("sfx_journal_erase.ogg")
     	return
   	end
@@ -102,6 +108,7 @@ function journalTagEntry(e)
 			tag:setPosition(jOpenedX + 20, y + jOpenedY + 60 + (i * 40))
 			jOpened:addImage(tag)
 			jIconLoop = 2
+			-- Init here
 			play("sfx_journal_tag.ogg")
     	return
   	end
@@ -120,6 +127,8 @@ journalAddEntry(jEntries.HOSPITAL,
 	function()
 		feed("I must find the hospital.")
 	end)
+	
+journalTagEntry(jEntries.HOSPITAL)
 	
 jIconLoop = 0 -- Cancel animation
 	

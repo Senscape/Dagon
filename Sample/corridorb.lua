@@ -15,3 +15,4 @@ spot:attach(FUNCTION,
 		feed("Ah, there's the hospital.")
 		journalMarkEntry(jEntries.HOSPITAL)
 end)
+spot:setCursor(LOOK)

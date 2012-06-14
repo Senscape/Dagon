@@ -21,4 +21,4 @@ end
 
 hospital1:link({ W = hospital2, E = CorridorB })
 hospital2:link({ W = hospital3, E = hospital1 })
-hospital3:link({ W = enterCells, E = hospital2 })
+hospital3:link({ E = hospital2, W = enterCells })
