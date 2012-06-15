@@ -37,6 +37,7 @@ DGButton::DGButton() {
     
     _font = fontManager->loadDefault();
     
+    this->setFadeSpeed(DGFadeFastest); // Buttons default to fastest fade
     this->setType(DGObjectButton);    
 }
 

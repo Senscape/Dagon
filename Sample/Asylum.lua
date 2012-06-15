@@ -74,9 +74,10 @@ timerID = startTimer(4,
 		if (timerLoop == 1) then
 			logo:fadeOut()
 			cafeteria1:fadeIn()
-			icon:fadeIn()
 		elseif (timerLoop == 2) then	
 			credit1:fadeIn()
+			cursor:fadeIn()
+			icon:fadeIn()
 		elseif (timerLoop == 4) then	
 			credit1:fadeOut()
 			credit2:fadeIn()
@@ -141,6 +142,7 @@ loadCursor(TALK, "cur_talk.tga")
 loadCursor(CUSTOM, "cur_custom.tga")
     
 cafeteria1:disable()
+cursor.disable()
 switch(Cafeteria)
 jInit = false
 play("sfx_thump.ogg")

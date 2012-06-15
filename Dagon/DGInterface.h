@@ -10,8 +10,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SCENE_H
-#define DG_SCENE_H
+#ifndef DG_INTERFACE_H
+#define DG_INTERFACE_H
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -20,43 +20,34 @@
 class DGCameraManager;
 class DGConfig;
 class DGCursorManager;
+class DGOverlay;
 class DGRenderManager;
-class DGRoom;
-class DGTexture;
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGScene {
+class DGInterface {
     // References to singletons
     DGCameraManager* cameraManager;    
     DGConfig* config;
-    DGCursorManager* cursorManager;   
+    DGCursorManager* cursorManager;
     DGRenderManager* renderManager;
     
-    // Other classes
-    DGRoom* _currentRoom;
-    DGTexture* _splashTexture;
-    
-    bool _canDrawSpots; // This bool is used to make checks faster
-    bool _isSplashLoaded;
+    std::vector<DGOverlay*> _arrayOfOverlays;
+    std::vector<DGOverlay*> _arrayOfActiveOverlays; // Visible overlays go here
     
 public:
-    DGScene();
-    ~DGScene();
+    DGInterface();
+    ~DGInterface();
     
-    void clear();
-    void drawSpots();
+    void addOverlay(DGOverlay* overlay);
+    void drawCursor();
+    void drawHelpers();
+    void drawOverlays();
     void fadeIn();    
-    void fadeOut(); 
-    bool scanSpots();
-    void setRoom(DGRoom* room);
-    
-    // Splash screen operations
-    void drawSplash();
-    void loadSplash();
-    void unloadSplash();
+    void fadeOut();
+    bool scanOverlays();
 };
 
-#endif // DG_SCENE_H
+#endif // DG_INTERFACE_H

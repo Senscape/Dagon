@@ -38,9 +38,8 @@ typedef struct {
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
-
 // TODO: Define origin for cursors (for better placement)
-class DGCursorManager {
+class DGCursorManager : public DGObject {
     DGConfig* config;
     
     std::vector<DGCursorData> _arrayOfCursors;
@@ -48,7 +47,7 @@ class DGCursorManager {
     float _arrayOfCoords[8];
     int _half;
     bool _hasAction;
-    bool _hasImage;    
+    bool _hasImage;
     bool _isDragging;
     bool _onButton; // Decide in control?
     DGAction* _pointerToAction;    
@@ -77,8 +76,10 @@ public:
     DGAction* action();
     void bindImage();
     float* arrayOfCoords();
+    void disable();
+    void enable();    
     bool hasAction();
-    bool hasImage();    
+    bool hasImage();
     bool isDragging();
     void load(int type, const char* imageFromFile);
     bool onButton();

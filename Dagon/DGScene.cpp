@@ -14,16 +14,12 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGButton.h"
-#include "DGCamera.h"
+#include "DGCameraManager.h"
 #include "DGConfig.h"
 #include "DGCursorManager.h"
 #include "DGFont.h"
-#include "DGImage.h"
-#include "DGLog.h"
 #include "DGNode.h"
-#include "DGOverlay.h"
-#include "DGRender.h"
+#include "DGRenderManager.h"
 #include "DGRoom.h"
 #include "DGScene.h"
 #include "DGSpot.h"
@@ -35,15 +31,15 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
+// TODO: Improve rendering of layers supporting active layers
 DGScene::DGScene() {
+    cameraManager = &DGCameraManager::getInstance(); 
     config = &DGConfig::getInstance();  
     cursorManager = &DGCursorManager::getInstance();
-    log = &DGLog::getInstance();
+    renderManager = &DGRenderManager::getInstance();
     
-    _camera = new DGCamera;
-    _camera->setViewport(config->displayWidth, config->displayHeight);
-    
-    _render = new DGRender;
+    _canDrawSpots = false;
+    _isSplashLoaded = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -51,117 +47,20 @@ DGScene::DGScene() {
 ////////////////////////////////////////////////////////////
 
 DGScene::~DGScene() {
-    delete _camera;
-    delete _render;
+    if (_isSplashLoaded)
+        this->unloadSplash();
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
 
-void DGScene::addOverlay(DGOverlay* overlay) {
-    _arrayOfOverlays.push_back(overlay);
-}
-
 void DGScene::clear() {
-    _render->resetView();
-    _render->clearView();
-}
-
-void DGScene::drawCursor() {
-    // Mouse cursor
-    if (cursorManager->hasImage()) { // A bitmap cursor is currently set
-        cursorManager->bindImage();
-        _render->drawSlide(cursorManager->arrayOfCoords());
-    }
-    else {
-        DGPoint position = cursorManager->position();
-        
-        _render->disableTextures(); // Default cursor doesn't require textures
-        if (cursorManager->onButton() || cursorManager->hasAction())
-            _render->setColor(DGColorBrightRed);
-        else
-            _render->setColor(DGColorDarkGray);
-        _render->drawHelper(position.x, position.y, false);
-    }
-}
-
-void DGScene::drawHelpers() {
-    // Helpers
-    _render->disableTextures();
-    if (config->showHelpers) {
-        if (_render->beginIteratingHelpers()) { // Check if we have any
-            do {
-                DGPoint point = _render->currentHelper();
-                _render->setColor(DGColorBrightCyan);
-                _render->drawHelper(point.x, point.y, true);
-                
-            } while (_render->iterateHelpers());
-        }
-    }
+    renderManager->resetView();
+    renderManager->clearView();
     
-    _render->enableTextures();
-}
-
-void DGScene::drawOverlays() {
-    if (!_arrayOfOverlays.empty()) {
-        vector<DGOverlay*>::iterator itOverlay;
-        
-        itOverlay = _arrayOfOverlays.begin();
-        
-        while (itOverlay != _arrayOfOverlays.end()) {
-            if ((*itOverlay)->isEnabled()) {
-                
-                // Draw buttons first
-                if ((*itOverlay)->hasButtons()) {
-                    (*itOverlay)->beginIteratingButtons(false);
-                    
-                    do {
-                        DGButton* button = (*itOverlay)->currentButton();
-                        if (button->isEnabled()) {
-                            if (button->hasTexture()) {
-                                button->update();
-                                _render->setAlpha(button->fadeLevel());
-                                button->texture()->bind();
-                                _render->drawSlide(button->arrayOfCoordinates());
-                            }
-                            
-                            if (button->hasText()) {
-                                DGPoint position = button->position();
-                                _render->setColor(button->textColor());
-                                button->font()->print(position.x, position.y, button->text());
-                                _render->setColor(DGColorWhite); // Reset the color
-                            }
-                        }
-                    } while ((*itOverlay)->iterateButtons());
-                }
-                
-                // Now images
-                // NOTE: This isn't quite right, images should be drawn first. Perhaps
-                // allow the user to setup the order for each overlay.
-                if ((*itOverlay)->hasImages()) {
-                    (*itOverlay)->beginIteratingImages();
-                    
-                    do {
-                        DGImage* image = (*itOverlay)->currentImage();
-                        if (image->isEnabled()) {
-                            image->update(); // Perform any necessary updates
-                            image->texture()->bind();
-                            _render->setAlpha(image->fadeLevel());
-                            _render->drawSlide(image->arrayOfCoordinates());
-                        }
-                    } while ((*itOverlay)->iterateImages());
-                }
-                
-            }
-            
-            itOverlay++;
-        }
-    }   
-}
-
-void DGScene::drawSplash() {
-    
+    // This is the first method we call because it sets the view
+    cameraManager->update();
 }
 
 void DGScene::drawSpots() {
@@ -169,7 +68,7 @@ void DGScene::drawSpots() {
         DGNode* currentNode = _currentRoom->currentNode();
         if (currentNode->isEnabled()) {
             currentNode->update();
-            _render->setAlpha(currentNode->fadeLevel());
+            renderManager->setAlpha(currentNode->fadeLevel());
             
             currentNode->beginIteratingSpots();
             do {
@@ -177,66 +76,28 @@ void DGScene::drawSpots() {
                 
                 if (spot->hasTexture() && spot->isEnabled()) {
                     spot->texture()->bind();
-                    _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                    renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
                 }
             } while (currentNode->iterateSpots());
         }
     }
+    
+    // Blends, gamma, etc.
+    cameraManager->beginOrthoView();
+    renderManager->blendView();
 }
 
 void DGScene::fadeIn() {
-    
+    renderManager->fadeInNextUpdate();
 }
 
 void DGScene::fadeOut() {
-    
-}
-
-void DGScene::prepareSplash() {
-    
-}
-
-bool DGScene::scanOverlays() {
-    cursorManager->setOnButton(false);
-    
-    if (!_arrayOfOverlays.empty()) {
-        vector<DGOverlay*>::reverse_iterator itOverlay;
-        
-        itOverlay = _arrayOfOverlays.rbegin();
-        
-        while (itOverlay != _arrayOfOverlays.rend()) {
-            if ((*itOverlay)->isEnabled()) {
-                
-                if ((*itOverlay)->hasButtons()) {
-                    (*itOverlay)->beginIteratingButtons(true);
-                    
-                    do {
-                        DGButton* button = (*itOverlay)->currentButton();
-                        if (button->isEnabled()) {
-                            DGPoint position = cursorManager->position();
-                            float* arrayOfCoordinates = button->arrayOfCoordinates();
-                            if (position.x >= arrayOfCoordinates[0] && position.y >= arrayOfCoordinates[1] &&
-                                position.x <= arrayOfCoordinates[4] && position.y <= arrayOfCoordinates[5]) {
-                                
-                                cursorManager->setOnButton(true);
-                                if (button->hasAction())
-                                    cursorManager->setAction(button->action());
-                                
-                                return true;
-                            }
-                        }
-                    } while ((*itOverlay)->iterateButtons());
-                }
-            }
-            
-            itOverlay++;
-        }
-    }
-    
-    return false;
+    renderManager->fadeOutNextUpdate();
 }
 
 bool DGScene::scanSpots() {
+    bool foundAction = false;
+    
     // Check if the current node has spots to draw, and also if
     // we aren't dragging the view
     if (_canDrawSpots) {
@@ -244,7 +105,8 @@ bool DGScene::scanSpots() {
         
         // Check if the current node is enabled
         if (currentNode->isEnabled()) {
-            _render->disableTextures();
+            renderManager->disableAlpha();
+            renderManager->disableTextures();
             
             // First pass: draw the colored spots
             currentNode->beginIteratingSpots();
@@ -252,8 +114,8 @@ bool DGScene::scanSpots() {
                 DGSpot* spot = currentNode->currentSpot();
                 
                 if (spot->hasColor() && spot->isEnabled()) {
-                    _render->setColor(spot->color());
-                    _render->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                    renderManager->setColor(spot->color());
+                    renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
                 }
             } while (currentNode->iterateSpots());
             
@@ -261,32 +123,79 @@ bool DGScene::scanSpots() {
             // set action, if available
             
             // FIXME: Should unify the checks here a bit more...
-            if (!cursorManager->isDragging() && !_camera->isPanning() && !cursorManager->onButton()) {
+            if (!cursorManager->isDragging() && !cameraManager->isPanning() && !cursorManager->onButton()) {
                 DGPoint position = cursorManager->position();
                 cursorManager->removeAction();
-                int color = _render->testColor(position.x, position.y);
+                int color = renderManager->testColor(position.x, position.y);
                 if (color) {
                     currentNode->beginIteratingSpots();
                     do {
                         DGSpot* spot = currentNode->currentSpot();
                         if (color == spot->color()) {
                             cursorManager->setAction(spot->action());
-                            _render->enableTextures();
-                            return true;
+                            foundAction = true;
+                            
+                            break;
                         }
                     } while (currentNode->iterateSpots());
                 }
             }
             
-            _render->enableTextures();
+            renderManager->enableAlpha();
+            renderManager->enableTextures();
         }
     }
     
-    return false;
+    if (!config->showSpots)
+        renderManager->clearView();
+    else {
+        // FIXME: This is a hack to show the spots, fix later
+        glBlendFunc(GL_ONE, GL_ONE);
+        renderManager->setAlpha(1.0f);   
+    }
+    
+    if (foundAction) return true;
+    else return false;
 }
 
 void DGScene::setRoom(DGRoom* room) {
     _currentRoom = room;
     
     // Determine if spots can be drawn
+    DGNode* node = _currentRoom->currentNode();
+    
+    if (node->hasSpots())
+        _canDrawSpots = true;
+    else
+        _canDrawSpots = false;
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Splash screen operations
+////////////////////////////////////////////////////////////
+
+void DGScene::drawSplash() {
+    _splashTexture->bind();
+    
+    // Note this is inverted
+    float coords[] = {0, config->displayHeight, 
+        config->displayWidth, config->displayHeight, 
+        config->displayWidth, 0,
+        0, 0}; 
+    
+    cameraManager->beginOrthoView();
+    renderManager->enableTextures();
+    renderManager->drawSlide(coords);
+}
+
+void DGScene::loadSplash() {
+    _splashTexture = new DGTexture;
+    _splashTexture->loadFromMemory(DGDefSplashBinary);
+    _isSplashLoaded = true;
+}
+
+void DGScene::unloadSplash() {
+    _splashTexture->unload();
+    delete _splashTexture;
+    _isSplashLoaded = false;
 }

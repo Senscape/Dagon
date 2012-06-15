@@ -136,7 +136,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
 	glPopAttrib();
 }
 
-// FIXME: This is a repeated method from DGRender - it would be best to avoid this
+// FIXME: This is a repeated method from DGRenderManager - it would be best to avoid this
 void DGFont::setColor(int color) {
     uint32_t aux = color;
     

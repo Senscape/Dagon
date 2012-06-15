@@ -35,6 +35,7 @@ DGCursorManager::DGCursorManager() {
     _x = config->displayWidth / 2;
     _y = config->displayHeight / 2;
     
+    this->setFadeSpeed(DGFadeFastest); // Cursor always fades with fastest speed
     this->updateCoords(_x, _y);
 }
 

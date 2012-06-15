@@ -70,6 +70,7 @@ class DGConfig {
 	char _userPath[DGMaxPathLength];
     char _texExtension[4];
     
+    int _fps;
     float _globalSpeed;
     
     // Private constructor/destructor
@@ -111,6 +112,9 @@ public:
 	bool verticalSync;
     
     float globalSpeed();
+    
+    int framesPerSecond();
+    void setFramesPerSecond(int fps);
     
     const char* path(int ofType, const char* forFile);
     void setPath(int forType, const char* path);

@@ -128,8 +128,6 @@ journalAddEntry(jEntries.HOSPITAL,
 		feed("I must find the hospital.")
 	end)
 	
-journalTagEntry(jEntries.HOSPITAL)
-	
 jIconLoop = 0 -- Cancel animation
 	
 function journalAnimateIcon()

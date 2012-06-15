@@ -87,7 +87,7 @@ void DGFeedManager::parse(const char* text) {
     // FIXME: Must implement masks for colors
     feed.color = DGColorWhite - 0xFF000000;
     feed.state = DGFeedFadeIn;
-	feed.timerHandle = timerManager->createSimple((float)(length * DGFeedSpeed)); // Trigger should be configurable  
+	feed.timerHandle = timerManager->createManual((float)(length * DGFeedSpeed)); // Trigger should be configurable  
 
     _arrayOfFeeds.push_back(feed);
 }

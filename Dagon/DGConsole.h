@@ -27,30 +27,43 @@
 #define DGConsoleRows       25
 #define DGConsoleSpacing    6
 #define DGConsoleSpeed      10
+#define DGInfoMargin        6
 
+enum DGConsoleStates {
+    DGConsoleHidden,
+    DGConsoleHiding,
+    DGConsoleShowing,
+    DGConsoleVisible
+};
+
+class DGCameraManager;
 class DGConfig;
+class DGCursorManager;
 class DGFont;
 class DGFontManager;
 class DGLog;
+class DGRenderManager;
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
 class DGConsole {
+    DGCameraManager* cameraManager;
     DGConfig* config;
+    DGCursorManager* cursorManager;
     DGFontManager* fontManager;
     DGLog* log;
+    DGRenderManager* renderManager;
     
     DGFont* _font;
     
     std::string _command;
-    bool _isEnabled;
+    bool _isEnabled;  
     bool _isReadyToProcess;
     int _offset; // Used for sliding effect
     int _size;
-    
-    void _setColor(int color); // From the render module, to avoid an unnecessary dependency
+    int _state;
     
 public:
     DGConsole();
