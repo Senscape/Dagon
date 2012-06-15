@@ -164,6 +164,7 @@ void DGScript::init(int argc, char* argv[]) {
     Luna<DGSpotProxy>::Register(_L);
     
     // Register all libs
+    luaL_register(_L, "cursor", DGCursorLib);
     luaL_register(_L, "system", DGSystemLib);
     
     // The config lib requires a special treatment because

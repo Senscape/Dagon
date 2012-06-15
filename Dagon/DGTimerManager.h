@@ -23,16 +23,21 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
+enum DGTimerTypes {
+    DGTimerInternal,
+    DGTimerManual,
+    DGTimerNormal,
+};
+
 typedef struct {
-    int handle;
-    bool hasLuaHandler;    
+    int handle;  
     bool isEnabled;
     bool isLoopable;
-    bool isInternal;
     clock_t lastTime;    
     int luaHandler;
     void (*handler)();
     double trigger;
+    int type;    
 } DGTimer;
 
 ////////////////////////////////////////////////////////////
@@ -64,7 +69,7 @@ public:
     bool check(int handle);
     int create(double trigger, int handlerForLua); // Returns a handle
     int createInternal(double trigger, void (*callback)()); // For timers created by the engine (not Lua)
-    int createSimple(double trigger); // For timers that are manually checked
+    int createManual(double trigger); // For timers that are manually checked
     void destroy(int handle);    
     void disable(int handle);
     void enable(int handle);

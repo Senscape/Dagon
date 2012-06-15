@@ -28,18 +28,19 @@
 #define DGMaxHotKeys 12
 
 class DGAudioManager;
-class DGCamera;
+class DGCameraManager;
 class DGConfig;
 class DGConsole;
 class DGCursorManager;
 class DGFont;
 class DGFeedManager;
 class DGFontManager;
+class DGInterface;
 class DGLog;
 class DGNode;
 class DGOverlay;
 class DGRoom;
-class DGRender;
+class DGRenderManager;
 class DGScene;
 class DGScript;
 class DGState;
@@ -99,25 +100,22 @@ typedef struct {
 
 class DGControl {
     DGAudioManager* audioManager;
+    DGCameraManager* cameraManager;    
     DGConfig* config;
     DGCursorManager* cursorManager;
     DGFeedManager* feedManager;
-    DGFontManager* fontManager;    
+    DGFontManager* fontManager;
     DGLog* log;
+    DGRenderManager* render;
     DGScript* script;
     DGSystem* system;
     DGTimerManager* timerManager;
-
-    std::vector<DGOverlay*> _arrayOfOverlays;
-    std::vector<DGOverlay*> _arrayOfActiveOverlays; // Visible overlays go here
     
     std::vector<DGRoom*> _arrayOfRooms;
     DGRoom* _currentRoom;
     
-    DGCamera* _camera;
     DGConsole* _console;
-    DGFont* _consoleFont;
-    DGRender* _render;
+    DGInterface* _interface;
     DGScene* _scene;    
     DGState* _state;
     DGTextureManager* _textureManager;
@@ -125,18 +123,10 @@ class DGControl {
     DGEventHandlers _eventHandlers;
     DGHotKeyData _hotKeyData[DGMaxHotKeys];
     
-    // This boolean helps to simplify our lengthy update cycle
-    bool _canDrawSpots;
     int _fpsCount;
-    int _fpsLastCount;
     bool _isInitialized;
 
-    void _drawInterface();
-    void _drawOverlays();
-    void _drawSpots();
     void _processAction();
-    bool _scanOverlays();    
-    bool _scanSpots();
     
     // Private constructor/destructor
     DGControl();
@@ -164,7 +154,6 @@ public:
     void registerHotKey(int aKey, const char* luaCommandToExecute);
     void registerObject(DGObject* theTarget);    
     void reshape(int width, int height);
-    void showSplash();
     void sleep(int forMilliseconds);
     // TODO: Add an explicit switchToNode() method
     void switchTo(DGObject* theTarget); 

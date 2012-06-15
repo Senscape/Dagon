@@ -49,6 +49,8 @@ DGConfig::DGConfig() {
     throb = DGDefThrob;
 	verticalSync = DGDefVerticalSync;
 	
+    _fps = 0;
+    
 	//TODO: If vertical sync is enabled this should not be necessary!
 	// This is a readonly setting
 	_globalSpeed = 60.0f / (float)framerate;
@@ -68,6 +70,14 @@ DGConfig::~DGConfig() {
 
 float DGConfig::globalSpeed() {
     return _globalSpeed;
+}
+
+int DGConfig::framesPerSecond() {
+    return _fps;
+}
+
+void DGConfig::setFramesPerSecond(int fps) {
+    _fps = fps;
 }
 
 const char*	DGConfig::path(int ofType, const char* forFile) {

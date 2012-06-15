@@ -14,11 +14,13 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <GL/glew.h>
+#include "DGCameraManager.h"
 #include "DGConfig.h"
 #include "DGConsole.h"
+#include "DGCursorManager.h"
 #include "DGLog.h"
 #include "DGFontManager.h"
+#include "DGRenderManager.h"
 
 using namespace std;
 
@@ -27,14 +29,19 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGConsole::DGConsole() {
+    cameraManager = &DGCameraManager::getInstance();
     config = &DGConfig::getInstance();
+    cursorManager = &DGCursorManager::getInstance();    
     fontManager = &DGFontManager::getInstance();
     log = &DGLog::getInstance();
+    renderManager = &DGRenderManager::getInstance();
     
-    _isEnabled = false;
-    _isReadyToProcess = false;
+    _isEnabled = false; 
+    _isReadyToProcess = false;;
     _size = DGConsoleRows * (DGDefFontSize + DGConsoleSpacing);
-    _offset = _size;    
+    _offset = _size;
+    
+    _state = DGConsoleHidden;
 }
 
 ////////////////////////////////////////////////////////////
@@ -53,80 +60,17 @@ void DGConsole::init() {
     _font = fontManager->loadDefault();
 }
 
+void DGConsole::deleteChar() {
+    if (_command.size () > 0) 
+        _command.resize(_command.size () - 1);
+}
+
 void DGConsole::disable() {
     _isEnabled = false;
 }
 
 void DGConsole::enable() {
     _isEnabled = true;
-}
-
-bool DGConsole::isHidden() {
-    if (_offset >= _size)
-        return true;
-    else
-        return false;
-} 
-
-bool DGConsole::isEnabled() {
-    return _isEnabled;
-}
-
-void DGConsole::toggle() {
-    _isEnabled = !_isEnabled;
-}
-
-void DGConsole::update() {
-    DGLogData logData;
-    int row = (DGConsoleRows - 1); // Extra row saved for prompt
-    
-    int coords[] = { 0, -_offset, 
-        config->displayWidth, -_offset,
-        config->displayWidth, _size - _offset,
-        0, _size - _offset };
-    
-    // Draw the slide
-    glDisable(GL_TEXTURE_2D);
-	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    
-    _setColor(0x25AA0000); // TODO: Add a mask color to achieve this (ie: ColoRed + Shade)
-    glPushMatrix();
-    glVertexPointer(2, GL_INT, 0, coords);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    glPopMatrix();
-    
-	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	glEnable(GL_TEXTURE_2D);
-    
-    log->beginIteratingHistory();
-    
-    do {
-        log->getCurrentLine(&logData);
-        
-        // Draw the current line
-        _setColor(logData.color);
-        _font->print(DGConsoleMargin, ((DGConsoleSpacing + DGDefFontSize) * row) - _offset, logData.line);
-        
-        row--;
-    } while (log->iterateHistory());
-    
-    _setColor(DGColorBrightGreen);
-    _font->print(DGConsoleMargin, (_size - (DGConsoleSpacing + DGDefFontSize)) - _offset, ">%s_", _command.c_str());
-    
-    if (_isEnabled) {
-        if (_offset > 0)
-            _offset -= DGConsoleSpeed;
-    }
-    else {
-        if (_offset < _size)
-            _offset += DGConsoleSpeed;
-    }
-}
-
-void DGConsole::deleteChar() {
-    if (_command.size () > 0) 
-        _command.resize(_command.size () - 1);
 }
 
 void DGConsole::execute() {
@@ -145,21 +89,93 @@ void DGConsole::inputChar(char aKey) {
         _command.insert(_command.end(), aKey);
 }
 
+bool DGConsole::isEnabled() {
+    return _isEnabled;
+}
+
+bool DGConsole::isHidden() {
+    if (_state == DGConsoleHidden)
+        return true;
+    else
+        return false;
+} 
+
 bool DGConsole::isReadyToProcess() {
     return _isReadyToProcess;
 }
 
-////////////////////////////////////////////////////////////
-// Implementation - Private methods
-////////////////////////////////////////////////////////////
+void DGConsole::toggle() {
+    switch (_state) {
+        case DGConsoleHidden:
+        case DGConsoleHiding:
+            _state = DGConsoleShowing;
+            break;            
+        case DGConsoleShowing:
+        case DGConsoleVisible:
+            _state = DGConsoleHiding;
+            break;            
+    }
+}
 
-void DGConsole::_setColor(int color) {
-   	uint32_t aux = color;
+void DGConsole::update() {
+    DGPoint position = cursorManager->position();
     
-	uint8_t b = (aux & 0x000000ff);
-	uint8_t g = (aux & 0x0000ff00) >> 8;
-	uint8_t r = (aux & 0x00ff0000) >> 16;
-	uint8_t a = (aux & 0xff000000) >> 24;
+    switch (_state) {
+        case DGConsoleHidden:
+            // Set the color used for information
+            renderManager->setColor(DGColorBrightCyan);
+            _font->print(DGInfoMargin, DGInfoMargin, 
+                         "Viewport size: %d x %d", config->displayWidth, config->displayHeight);                
+            _font->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize, 
+                         "Coordinates: (%d, %d)", (int)position.x, (int)position.y);
+            _font->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2), 
+                         "Viewing angle: %2.1f", cameraManager->fieldOfView());
+            _font->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
+                         "FPS: %d", config->framesPerSecond()); 
+            
+            break;            
+        case DGConsoleHiding:
+            if (_offset < _size)
+                _offset += DGConsoleSpeed;
+            else 
+                _state = DGConsoleHidden;
+            break;
+        case DGConsoleShowing:
+            if (_offset > 0)
+                _offset -= DGConsoleSpeed;
+            else
+                _state = DGConsoleVisible;
+            break;
+    }
     
-	glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f)); 
+    if (_state != DGConsoleHidden) {
+        DGLogData logData;
+        int row = (DGConsoleRows - 1); // Extra row saved for prompt
+        
+        float coords[] = { 0, -_offset, 
+            config->displayWidth, -_offset,
+            config->displayWidth, _size - _offset,
+            0, _size - _offset };
+        
+        // Draw the slide
+        renderManager->disableTextures();
+        renderManager->setColor(0x25AA0000); // TODO: Add a mask color to achieve this (ie: ColoRed + Shade)
+        renderManager->drawSlide(coords);
+        renderManager->enableTextures();
+        
+        log->beginIteratingHistory();
+        
+        do {
+            log->getCurrentLine(&logData);
+            
+            // Draw the current line
+            renderManager->setColor(logData.color);
+            _font->print(DGConsoleMargin, ((DGConsoleSpacing + DGDefFontSize) * row) - _offset, logData.line);
+            
+            row--;
+        } while (log->iterateHistory());
+        
+        renderManager->setColor(DGColorBrightGreen);
+        _font->print(DGConsoleMargin, (_size - (DGConsoleSpacing + DGDefFontSize)) - _offset, ">%s_", _command.c_str());
+    }
 }

@@ -14,6 +14,7 @@
 		E8CF666B14EFE7B100B4562B /* DGFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666914EFE7B100B4562B /* DGFont.cpp */; };
 		E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666D14EFE7F100B4562B /* DGFontData.c */; };
 		E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */; };
+		FB0602B4158BC6B800D26AB9 /* DGInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */; };
 		FB0F421B14896D0A00BE880D /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421A14896D0A00BE880D /* Credits.rtf */; };
 		FB0F421E14896D3600BE880D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421C14896D3600BE880D /* MainMenu.xib */; };
 		FB0F422114896D3C00BE880D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421F14896D3C00BE880D /* InfoPlist.strings */; };
@@ -38,9 +39,9 @@
 		FB279DBA14AE1736002D48FC /* DGAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB714AE14AF002D48FC /* DGAudio.cpp */; };
 		FB34FB1814DB126F007D2EE1 /* DGSystemMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */; };
 		FB34FB1914DB126F007D2EE1 /* DGViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */; };
-		FBA2C77E14DC13B40098E334 /* DGRender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C77D14DC13B40098E334 /* DGRender.cpp */; };
+		FBA2C77E14DC13B40098E334 /* DGRenderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */; };
 		FBA2C78114DC654B0098E334 /* DGControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78014DC654B0098E334 /* DGControl.cpp */; };
-		FBA2C78814DD801A0098E334 /* DGCamera.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78714DD801A0098E334 /* DGCamera.cpp */; };
+		FBA2C78814DD801A0098E334 /* DGCameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78714DD801A0098E334 /* DGCameraManager.cpp */; };
 		FBABA631156548E80009889F /* DGOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA630156548E80009889F /* DGOverlay.cpp */; };
 		FBABA6351565537D0009889F /* DGImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6341565537D0009889F /* DGImage.cpp */; };
 		FBABA6381565539B0009889F /* DGButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6371565539B0009889F /* DGButton.cpp */; };
@@ -72,6 +73,9 @@
 		E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGScript.cpp; sourceTree = "<group>"; };
 		E8ECDFCC14E216B900A6BA8D /* DGScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGScript.h; sourceTree = "<group>"; };
 		E8ECDFCF14E216D900A6BA8D /* Luna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Luna.h; path = "Other Sources/Luna.h"; sourceTree = SOURCE_ROOT; };
+		FB0602B2158BC6AC00D26AB9 /* DGInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGInterface.h; sourceTree = "<group>"; };
+		FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGInterface.cpp; sourceTree = "<group>"; };
+		FB0602B6158BD58200D26AB9 /* DGCursorLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGCursorLib.h; sourceTree = "<group>"; };
 		FB0769D71508F228009EA1AF /* DGAudioProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGAudioProxy.h; sourceTree = "<group>"; };
 		FB0F421A14896D0A00BE880D /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = ../Documents/Credits.rtf; sourceTree = "<group>"; };
 		FB0F421D14896D3600BE880D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
@@ -116,14 +120,14 @@
 		FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DGSystemMac.mm; sourceTree = "<group>"; };
 		FB34FB1414DB126F007D2EE1 /* DGViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGViewDelegate.h; sourceTree = "<group>"; };
 		FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DGViewDelegate.mm; sourceTree = "<group>"; };
-		FBA2C77D14DC13B40098E334 /* DGRender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGRender.cpp; sourceTree = "<group>"; };
-		FBA2C77F14DC13BF0098E334 /* DGRender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRender.h; sourceTree = "<group>"; };
+		FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGRenderManager.cpp; sourceTree = "<group>"; };
+		FBA2C77F14DC13BF0098E334 /* DGRenderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRenderManager.h; sourceTree = "<group>"; };
 		FBA2C78014DC654B0098E334 /* DGControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGControl.cpp; sourceTree = "<group>"; };
 		FBA2C78214DC65660098E334 /* DGControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGControl.h; sourceTree = "<group>"; };
 		FBA2C78414DC74840098E334 /* DGVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGVersion.h; sourceTree = "<group>"; };
 		FBA2C78514DC91200098E334 /* DGPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGPlatform.h; sourceTree = "<group>"; };
-		FBA2C78614DD80100098E334 /* DGCamera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCamera.h; sourceTree = "<group>"; };
-		FBA2C78714DD801A0098E334 /* DGCamera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCamera.cpp; sourceTree = "<group>"; };
+		FBA2C78614DD80100098E334 /* DGCameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCameraManager.h; sourceTree = "<group>"; };
+		FBA2C78714DD801A0098E334 /* DGCameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCameraManager.cpp; sourceTree = "<group>"; };
 		FBA97543157B961900428561 /* DGObjectProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGObjectProxy.h; sourceTree = "<group>"; };
 		FBABA630156548E80009889F /* DGOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGOverlay.cpp; sourceTree = "<group>"; };
 		FBABA633156548F40009889F /* DGOverlay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGOverlay.h; sourceTree = "<group>"; };
@@ -176,6 +180,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FB0602B5158BD55B00D26AB9 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				E817433514E6030A002CF502 /* DGConfigLib.h */,
+				FB0602B6158BD58200D26AB9 /* DGCursorLib.h */,
+				FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */,
+			);
+			name = Libraries;
+			sourceTree = "<group>";
+		};
 		FB247283148C05E900F7D1B6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -230,10 +244,10 @@
 		FB247318148C676A00F7D1B6 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				FB0602B5158BD55B00D26AB9 /* Libraries */,
 				FBE208E315897A9A002F7D46 /* Proxys */,
 				FBD2F64815064FD000AB6C31 /* DGAudioManager.h */,
 				FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */,
-				E817433514E6030A002CF502 /* DGConfigLib.h */,
 				FBA2C78214DC65660098E334 /* DGControl.h */,
 				FBA2C78014DC654B0098E334 /* DGControl.cpp */,
 				E8362A6814F1B182005B20EF /* DGFeedManager.h */,
@@ -245,7 +259,6 @@
 				FB26300A14D3491000EAD41A /* DGState.h */,
 				FB26300814D3490300EAD41A /* DGState.cpp */,
 				FB34FB1214DB126F007D2EE1 /* DGSystem.h */,
-				FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */,
 				FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */,
 				FBFD855A14C4CCF9000E82B2 /* DGTextureManager.h */,
 				FBFD855814C4CCE9000E82B2 /* DGTextureManager.cpp */,
@@ -258,14 +271,16 @@
 		FB247319148C677800F7D1B6 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				FBA2C78614DD80100098E334 /* DGCamera.h */,
-				FBA2C78714DD801A0098E334 /* DGCamera.cpp */,
+				FBA2C78614DD80100098E334 /* DGCameraManager.h */,
+				FBA2C78714DD801A0098E334 /* DGCameraManager.cpp */,
 				FBE7EDE0153F602F00F43EDA /* DGConsole.h */,
 				FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */,
 				E8707566157EF46800D2E916 /* DGCursorManager.h */,
 				E8707568157EF47600D2E916 /* DGCursorManager.cpp */,
-				FBA2C77F14DC13BF0098E334 /* DGRender.h */,
-				FBA2C77D14DC13B40098E334 /* DGRender.cpp */,
+				FB0602B2158BC6AC00D26AB9 /* DGInterface.h */,
+				FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */,
+				FBA2C77F14DC13BF0098E334 /* DGRenderManager.h */,
+				FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */,
 				FBE208E21589746E002F7D46 /* DGScene.h */,
 				FBE208DF1589745B002F7D46 /* DGScene.cpp */,
 				FB34FB1414DB126F007D2EE1 /* DGViewDelegate.h */,
@@ -484,9 +499,9 @@
 				FB26303A14D713DB00EAD41A /* DGConfig.cpp in Sources */,
 				FB34FB1814DB126F007D2EE1 /* DGSystemMac.mm in Sources */,
 				FB34FB1914DB126F007D2EE1 /* DGViewDelegate.mm in Sources */,
-				FBA2C77E14DC13B40098E334 /* DGRender.cpp in Sources */,
+				FBA2C77E14DC13B40098E334 /* DGRenderManager.cpp in Sources */,
 				FBA2C78114DC654B0098E334 /* DGControl.cpp in Sources */,
-				FBA2C78814DD801A0098E334 /* DGCamera.cpp in Sources */,
+				FBA2C78814DD801A0098E334 /* DGCameraManager.cpp in Sources */,
 				E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */,
 				E8CF666B14EFE7B100B4562B /* DGFont.cpp in Sources */,
 				E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */,
@@ -501,6 +516,7 @@
 				E8707569157EF47600D2E916 /* DGCursorManager.cpp in Sources */,
 				FBFB04BD1583E520002280E1 /* DGSplashData.c in Sources */,
 				FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */,
+				FB0602B4158BC6B800D26AB9 /* DGInterface.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
