@@ -158,6 +158,7 @@ void DGAudio::load() {
     if (!_isLoaded) {    
         FILE* fh;
         
+        // FIXME: This object shouldn't reference DGConfig, let the manager do it
         fh = fopen(config->path(DGPathRes, _resource.name), "rb");	
         
         if (fh != NULL) {

@@ -22,8 +22,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGAudio.h"
 #include "DGSpot.h"
 #include "DGTexture.h"
+#include "DGVideo.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -73,7 +75,12 @@ public:
     // TODO: In the future we should return a pointer to an attached object
     int attach(lua_State *L) {
         DGAction action;
+        DGAudio* audio;
         DGTexture* texture;
+        DGVideo* video;
+        
+        // For the video attach, autoplay defaults to true
+        bool autoplay = true, loop, sync;
         
         int type = (int)luaL_checknumber(L, 1);
         
@@ -85,8 +92,7 @@ public:
                 }
                 else {
                     // If not, create and set
-                    DGAudio* audio = new DGAudio;
-                    
+                    audio = new DGAudio;
                     audio->setResource(luaL_checkstring(L, 2));
                     
                     DGAudioManager::getInstance().registerAudio(audio);
@@ -163,7 +169,7 @@ public:
                 s->setTexture(texture);
                 break;
             case SWITCH:
-                int type = DGCheckProxy(L, 2);
+                type = DGCheckProxy(L, 2);
                 if (type == DGObjectNode)
                     action.target = DGProxyToNode(L, 2);
                 else if (type == DGObjectRoom)
@@ -182,6 +188,34 @@ public:
                     s->setColor(0);
                 
                 break;
+            case VIDEO:
+                // TODO: Autoplay should NOT be handled in video but affect spot in general
+                if (lua_istable(L, 3)) {
+                    lua_pushnil(L);
+                    while (lua_next(L, 3) != 0) {
+                        const char* key = lua_tostring(L, -2);
+                        
+                        if (strcmp(key, "autoplay") == 0) autoplay = lua_toboolean(L, -1);
+                        else if (strcmp(key, "loop") == 0) loop = lua_toboolean(L, -1);
+                        else if (strcmp(key, "sync") == 0) sync = lua_toboolean(L, -1);
+                        
+                        lua_pop(L, 1);
+                    }
+                    
+                    video = new DGVideo(autoplay, loop, sync);
+                }
+                else {
+                    video = new DGVideo;
+                }
+                
+                // TODO: Path is set by the video manager
+                video->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2)));
+                s->setVideo(video);
+                
+                if (autoplay)
+                    s->play();
+                
+                break;                
         }
 
         return 0;

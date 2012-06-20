@@ -10,74 +10,61 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SYSTEM_H
-#define	DG_SYSTEM_H
+#ifndef DG_VIDEOMANAGER_H
+#define DG_VIDEOMANAGER_H
+
+// TODO: Obviously, it makes sense to have all these managers
+// inherit from a base, singleton manager
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
 #include "DGPlatform.h"
+#include "DGVideo.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// NOTE: Let's find a more elegant and optimal way to do this
-#define DGMaxSystemSemaphores 64
-
-class DGAudioManager;
 class DGConfig;
-class DGControl;
 class DGLog;
-class DGTimerManager;
-class DGVideoManager;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
-class DGSystem {
-    DGAudioManager* audioManager;
-    DGControl* control;
+class DGVideoManager {
     DGConfig* config;
     DGLog* log;
-    DGTimerManager* timerManager;
-    DGVideoManager* videoManager;
     
-    int _semaphoresIndex;
+    std::vector<DGVideo*> _arrayOfVideos;
+    std::vector<DGVideo*> _arrayOfActiveVideos;
+    
     bool _isInitialized;
-    bool _isRunning;
     
     // Private constructor/destructor
-    DGSystem();
-    ~DGSystem();
+    DGVideoManager();
+    ~DGVideoManager();
     // Stop the compiler generating methods of copy the object
-    DGSystem(DGSystem const& copy);            // Not implemented
-    DGSystem& operator=(DGSystem const& copy); // Not implemented
+    DGVideoManager(DGVideoManager const& copy);            // Not implemented
+    DGVideoManager& operator=(DGVideoManager const& copy); // Not implemented
     
 public:
-    static DGSystem& getInstance() {
+    static DGVideoManager& getInstance() {
         // The only instance
         // Guaranteed to be lazy initialized
         // Guaranteed that it will be destroyed correctly
-        static DGSystem instance;
+        static DGVideoManager instance;
         return instance;
     }
     
-    void findPaths(int argc, char* argv[]);
-    bool getSemaphore(int* pointerToID);
+    void flush();
+    
     void init();
-    void releaseSemaphore(int ID);
-    void resumeManager();
-    void run();
-    void setTitle(const char* title);
-    void suspendManager();
-    void terminate();
-    void toggleFullScreen();
-	void update();
-    time_t wallTime();
-    void waitForSemaphore(int ID);
+    void registerVideo(DGVideo* target);
+    void requestVideo(DGVideo* target);
+    void update();
 };
 
-#endif // DG_SYSTEM_H
+#endif // DG_VIDEOMANAGER_H

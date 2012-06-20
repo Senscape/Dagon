@@ -118,6 +118,10 @@ DGTexture* DGSpot::texture() {
     return _attachedTexture;
 }
 
+int DGSpot::vertexCount() {
+    return (_arrayOfCoordinates.size() / 2);
+}
+
 DGVideo* DGSpot::video() {
     return _attachedVideo;
 }
@@ -130,8 +134,25 @@ float DGSpot::volume() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void DGSpot::resize(vector<int> newArrayOfCoordinates) {
-    _arrayOfCoordinates = newArrayOfCoordinates;
+void DGSpot::resize(int width, int height) {
+    DGPoint origin;
+    
+    origin.x = _arrayOfCoordinates[0];
+    origin.y = _arrayOfCoordinates[1];
+    
+    _arrayOfCoordinates.resize(8);
+    
+    _arrayOfCoordinates[0] = origin.x;
+    _arrayOfCoordinates[1] = origin.y;
+        
+    _arrayOfCoordinates[2] = origin.x + width;
+    _arrayOfCoordinates[3] = origin.y;
+        
+    _arrayOfCoordinates[4] = origin.x + width;
+    _arrayOfCoordinates[5] = origin.y + height;
+        
+    _arrayOfCoordinates[6] = origin.x;
+    _arrayOfCoordinates[7] = origin.y + height;
 }
 
 void DGSpot::setAction(DGAction* anAction) {
