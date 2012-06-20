@@ -1,6 +1,8 @@
 room 'Cafeteria'
 room 'Hospital'
 
+require 'notes'
+
 corridorb2 = Node("corridorb2", "Door to Cafeteria")
 corridorb1 = Node("corridorb1", "Door to Nursery")
 corridorb3 = Node("corridorb3", "Map")
@@ -13,6 +15,6 @@ spot = corridorb3:addSpot( Spot(NORTH, {512, 768, 1792, 768, 1792, 1536, 512, 15
 spot:attach(FUNCTION, 
 	function()
 		feed("Ah, there's the hospital.")
-		journalMarkEntry(jEntries.HOSPITAL)
+		journal:markEntry(Notes.HOSPITAL)
 end)
 spot:setCursor(LOOK)

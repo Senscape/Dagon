@@ -24,3 +24,9 @@ spot:attach(AUDIO, alarm, {volume = 50})
 
 spot = cafeteria1:addSpot( Spot(NORTH, {1024, 1024}) )
 spot:attach(AUDIO, alarm, {volume = 25})	
+
+test = cafeteria1:addSpot( Spot(NORTH, {512, 512}) )
+test:attach(VIDEO, "vid_mad_scare.ogv")
+
+test = cafeteria1:addSpot( Spot(NORTH, {1024, 1024}) )
+test:attach(VIDEO, "vid_mad_cellsa2.ogv", {autoplay = true, loop = true, sync = false})
