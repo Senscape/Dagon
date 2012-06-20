@@ -15,6 +15,7 @@
 		E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666D14EFE7F100B4562B /* DGFontData.c */; };
 		E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */; };
 		FB0602B4158BC6B800D26AB9 /* DGInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */; };
+		FB0602B8158FB18000D26AB9 /* DGVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0602B7158FB18000D26AB9 /* DGVideo.cpp */; };
 		FB0F421B14896D0A00BE880D /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421A14896D0A00BE880D /* Credits.rtf */; };
 		FB0F421E14896D3600BE880D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421C14896D3600BE880D /* MainMenu.xib */; };
 		FB0F422114896D3C00BE880D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421F14896D3C00BE880D /* InfoPlist.strings */; };
@@ -49,6 +50,7 @@
 		FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */; };
 		FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE208DF1589745B002F7D46 /* DGScene.cpp */; };
 		FBE7EDE3153F603D00F43EDA /* DGConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */; };
+		FBE8A8101590E91100C6D44A /* DGVideoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */; };
 		FBFB04BD1583E520002280E1 /* DGSplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBFB04BC1583E520002280E1 /* DGSplashData.c */; };
 		FBFCC9F114BB3624003211AD /* DGTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFCC9F014BB3624003211AD /* DGTexture.cpp */; };
 		FBFD855914C4CCE9000E82B2 /* DGTextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFD855814C4CCE9000E82B2 /* DGTextureManager.cpp */; };
@@ -76,6 +78,8 @@
 		FB0602B2158BC6AC00D26AB9 /* DGInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGInterface.h; sourceTree = "<group>"; };
 		FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGInterface.cpp; sourceTree = "<group>"; };
 		FB0602B6158BD58200D26AB9 /* DGCursorLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGCursorLib.h; sourceTree = "<group>"; };
+		FB0602B7158FB18000D26AB9 /* DGVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGVideo.cpp; sourceTree = "<group>"; };
+		FB0602B9158FB18C00D26AB9 /* DGVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGVideo.h; sourceTree = "<group>"; };
 		FB0769D71508F228009EA1AF /* DGAudioProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGAudioProxy.h; sourceTree = "<group>"; };
 		FB0F421A14896D0A00BE880D /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = ../Documents/Credits.rtf; sourceTree = "<group>"; };
 		FB0F421D14896D3600BE880D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
@@ -153,6 +157,8 @@
 		FBE208E21589746E002F7D46 /* DGScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGScene.h; sourceTree = "<group>"; };
 		FBE7EDE0153F602F00F43EDA /* DGConsole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGConsole.h; sourceTree = "<group>"; };
 		FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGConsole.cpp; sourceTree = "<group>"; };
+		FBE8A80D1590E90600C6D44A /* DGVideoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGVideoManager.h; sourceTree = "<group>"; };
+		FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGVideoManager.cpp; sourceTree = "<group>"; };
 		FBFB04BC1583E520002280E1 /* DGSplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGSplashData.c; sourceTree = "<group>"; };
 		FBFCC9EF14BB361B003211AD /* DGTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGTexture.h; sourceTree = "<group>"; };
 		FBFCC9F014BB3624003211AD /* DGTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGTexture.cpp; sourceTree = "<group>"; };
@@ -237,6 +243,8 @@
 				FB279DAD14AB61A0002D48FC /* DGSpot.cpp */,
 				FBFCC9EF14BB361B003211AD /* DGTexture.h */,
 				FBFCC9F014BB3624003211AD /* DGTexture.cpp */,
+				FB0602B9158FB18C00D26AB9 /* DGVideo.h */,
+				FB0602B7158FB18000D26AB9 /* DGVideo.cpp */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -264,6 +272,8 @@
 				FBFD855814C4CCE9000E82B2 /* DGTextureManager.cpp */,
 				E8362A6414F099A6005B20EF /* DGTimerManager.h */,
 				E8362A6614F099B3005B20EF /* DGTimerManager.cpp */,
+				FBE8A80D1590E90600C6D44A /* DGVideoManager.h */,
+				FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -517,6 +527,8 @@
 				FBFB04BD1583E520002280E1 /* DGSplashData.c in Sources */,
 				FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */,
 				FB0602B4158BC6B800D26AB9 /* DGInterface.cpp in Sources */,
+				FB0602B8158FB18000D26AB9 /* DGVideo.cpp in Sources */,
+				FBE8A8101590E91100C6D44A /* DGVideoManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

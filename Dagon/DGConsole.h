@@ -59,7 +59,7 @@ class DGConsole {
     DGFont* _font;
     
     std::string _command;
-    bool _isEnabled;  
+    bool _isEnabled;
     bool _isReadyToProcess;
     int _offset; // Used for sliding effect
     int _size;

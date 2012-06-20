@@ -16,6 +16,7 @@
 
 #import "DGConfig.h"
 #import "DGControl.h"
+#import "DGSystem.h"
 #import "DGViewDelegate.h"
 
 ////////////////////////////////////////////////////////////
@@ -178,8 +179,7 @@
 
 // FIXME: This notification also comes when closing the About dialog
 - (void) _windowWillClose:(NSNotification *)notification {
-    // Simulate the ESC key
-    control->processKey(DGKeyEsc, false);
+    DGSystem::getInstance().terminate(); // Hard shutdown
 }
 
 @end

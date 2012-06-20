@@ -34,6 +34,7 @@
 #include "DGSystem.h"
 #include "DGTextureManager.h"
 #include "DGTimerManager.h"
+#include "DGVideoManager.h"
 
 using namespace std;
 
@@ -53,6 +54,7 @@ DGControl::DGControl() {
     script = &DGScript::getInstance();
     system = &DGSystem::getInstance();
     timerManager = &DGTimerManager::getInstance();
+    videoManager = &DGVideoManager::getInstance();
     
     _currentRoom = NULL;
     
@@ -103,6 +105,9 @@ void DGControl::init() {
     // Init the font library
     fontManager->init();
     
+    // Init the video manager
+    videoManager->init();
+    
     _console = new DGConsole;
     if (config->debugMode) {
         // Console must be initialized after the Font Manager
@@ -130,6 +135,19 @@ void DGControl::init() {
         render->fadeInNextUpdate();
     }
     else render->resetFade();
+    
+    ///////////////////////////
+    
+   /* DGVideo video;
+    video.setResource(config->path(DGPathRes, "vid_mad_scare.ogv"));
+    video.load();
+    video.play();
+    video.update();
+    
+    DGFrame* frame = video.currentFrame();
+    DGTexture texture;
+    texture.loadRawData(frame->data, frame->width, frame->height);
+    texture.saveToFile("test");*/
 }
 
 DGNode* DGControl::currentNode() {
@@ -181,7 +199,7 @@ void DGControl::processKey(int aKey, bool isModified) {
 		case DGKeySpacebar:
             if (_console->isHidden()) 
                 config->showHelpers = !config->showHelpers;
-			break;            
+			break;
         case 'f':
         case 'F':
             if (isModified) system->toggleFullScreen();
@@ -398,6 +416,9 @@ void DGControl::switchTo(DGObject* theTarget) {
     else firstSwitch = false;
     
     audioManager->clear();
+    system->suspendManager();
+    videoManager->flush();
+    system->resumeManager();
     
     switch (theTarget->type()) {
         case DGObjectRoom:
@@ -429,9 +450,6 @@ void DGControl::switchTo(DGObject* theTarget) {
                 do {
                     DGSpot* spot = currentNode->currentSpot();
                     
-                    if (spot->hasTexture())
-                        _textureManager->requestTexture(spot->texture());
-                    
                     if (spot->hasAudio()) {
                         DGAudio* audio = spot->audio();
                         
@@ -442,6 +460,34 @@ void DGControl::switchTo(DGObject* theTarget) {
                         
                         if (spot->hasFlag(DGSpotAuto))
                             audio->play();
+                    }
+                    
+                    if (spot->hasVideo()) {
+                        DGVideo* video = spot->video();
+                        video->load();
+                        
+                        if (video->isLoaded()) {
+                            // Do this here?
+                            video->play();
+                            video->update();
+                            videoManager->requestVideo(video);
+                            ////////////////
+                            
+                            if (!spot->hasTexture()) {
+                                DGFrame* frame = video->currentFrame();
+                                DGTexture* texture = new DGTexture;
+                                texture->loadRawData(frame->data, frame->width, frame->height);
+                                spot->setTexture(texture);
+                            }
+                        }
+                    }
+                    
+                    if (spot->hasTexture()) {
+                        _textureManager->requestTexture(spot->texture());
+                        
+                        // Only resize if nothing but origin
+                        if (spot->vertexCount() == 1)
+                            spot->resize(spot->texture()->width(), spot->texture()->height());
                     }
                 } while (currentNode->iterateSpots());
             }
@@ -533,11 +579,11 @@ void DGControl::update() {
             
             _scene->drawSplash();
 
-            if (timerManager->check(handlerIn)) {
+            if (timerManager->checkManual(handlerIn)) {
                 _scene->fadeOut();
             }
             
-            if (timerManager->check(handlerOut)) {
+            if (timerManager->checkManual(handlerOut)) {
                 render->clearView();
                 render->resetFade();
                 _state->set(DGStateNode);
@@ -566,11 +612,11 @@ void DGControl::update() {
             script->processCommand(command);
         }
     }
-    
+
     cameraManager->endOrthoView();
     
     audioManager->setOrientation(cameraManager->orientation());
-    timerManager->update();
+    timerManager->process();
     
     // Flush the buffers
     system->update();

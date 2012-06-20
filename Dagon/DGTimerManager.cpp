@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGScript.h"
+#include "DGSystem.h"
 #include "DGTimerManager.h"
 
 using namespace std;
@@ -39,10 +40,10 @@ DGTimerManager::~DGTimerManager() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-bool DGTimerManager::check(int handle) {
+bool DGTimerManager::checkManual(int handle) {
     DGTimer* timer = _lookUp(handle);
     
-    clock_t currentTime = clock();
+    time_t currentTime = DGSystem::getInstance().wallTime();
     double duration = (double)(currentTime - timer->lastTime) / CLOCKS_PER_SEC;
     
     if (duration > timer->trigger) {
@@ -58,22 +59,23 @@ int DGTimerManager::create(double trigger, int handlerForLua) {
     DGTimer timer;
     
     timer.handle = _handles;
+    timer.hasTriggered = false;
     timer.isEnabled = true;
     timer.isLoopable = true;
-    timer.lastTime = clock();
+    timer.lastTime = DGSystem::getInstance().wallTime();
     timer.type = DGTimerNormal;    
     
     // IMPORTANT: Trigger is divided by 10 to comply with the current update scheme.
     // For precision above 1 second, control would have to be updated often.
     // Actually, it looks like the math here is 10 per pair of cores. ie: 20 for
     // quad-core. Why the hell is that?
-    timer.trigger = trigger / 20;
+    timer.trigger = trigger;
     timer.luaHandler = handlerForLua;
     
     _arrayOfTimers.push_back(timer);
     
     _handles++;
-    
+
     return timer.handle;
 }
 
@@ -81,13 +83,14 @@ int DGTimerManager::createInternal(double trigger, void (*callback)()) {
     DGTimer timer;
     
     timer.handle = _handles;
+    timer.hasTriggered = false;
     timer.handler = callback;
     timer.isEnabled = true;
     timer.isLoopable = false;  
-    timer.lastTime = clock();
+    timer.lastTime = DGSystem::getInstance().wallTime();
     timer.type = DGTimerInternal;
     
-    timer.trigger = trigger / 20;
+    timer.trigger = trigger;
     
     _arrayOfTimers.push_back(timer);
     
@@ -100,12 +103,13 @@ int DGTimerManager::createManual(double trigger) {
     DGTimer timer;
     
     timer.handle = _handles;
+    timer.hasTriggered = false;
     timer.isEnabled = true;
     timer.isLoopable = false;   
-    timer.lastTime = clock();
+    timer.lastTime = DGSystem::getInstance().wallTime();
     timer.type = DGTimerManual;
     
-    timer.trigger = trigger / 20;
+    timer.trigger = trigger;
     
     _arrayOfTimers.push_back(timer);
     
@@ -128,19 +132,14 @@ void DGTimerManager::enable(int handle) {
     timer->isEnabled = true;    
 }
 
-// FIXME: This is quite sucky. Timers keep looping and being checked even if they
-// were already triggered. Should have different arrays here.
-void DGTimerManager::update() {
+void DGTimerManager::process() {
     std::vector<DGTimer>::iterator it;
     
     it = _arrayOfTimers.begin();
     
     while (it != _arrayOfTimers.end()) {
-        clock_t currentTime = clock();
-        double duration = (double)(currentTime - (*it).lastTime) / CLOCKS_PER_SEC;
-        
         if ((*it).isEnabled && ((*it).type != DGTimerManual)) {
-            if (duration > (*it).trigger) {
+            if ((*it).hasTriggered) {
                 switch ((*it).type) {
                     case DGTimerInternal:
                         (*it).handler();
@@ -151,7 +150,29 @@ void DGTimerManager::update() {
                         break;
                 }
                 
-                (*it).lastTime = currentTime;
+                (*it).hasTriggered = false;
+                (*it).lastTime = DGSystem::getInstance().wallTime();
+            }
+        }
+        
+        it++;
+    }
+}
+
+// FIXME: This is quite sucky. Timers keep looping and being checked even if they
+// were already triggered. Should have different arrays here.
+void DGTimerManager::update() {
+    std::vector<DGTimer>::iterator it;
+    
+    it = _arrayOfTimers.begin();
+    
+    while (it != _arrayOfTimers.end()) {
+        time_t currentTime = DGSystem::getInstance().wallTime();
+        double duration = (double)(currentTime - (*it).lastTime) / CLOCKS_PER_SEC;
+        
+        if ((*it).isEnabled && ((*it).type != DGTimerManual)) {
+            if ((duration > (*it).trigger) && !(*it).hasTriggered) {
+                (*it).hasTriggered = true;
             }
         }
         

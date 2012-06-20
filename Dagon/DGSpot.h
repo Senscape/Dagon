@@ -87,6 +87,7 @@ public:
     std::vector<int> arrayOfCoordinates();
     unsigned int face();
     DGTexture* texture();
+    int vertexCount();
     DGVideo* video();
     float volume();
     
@@ -102,7 +103,7 @@ public:
     // State changes
     
     void play();
-    void resize(std::vector<int> newArrayOfCoordinates);
+    void resize(int width, int height);
     void stop();    
 };
 

@@ -1,0 +1,139 @@
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
+
+#ifndef DG_VIDEO_H
+#define DG_VIDEO_H
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#include "DGPlatform.h"
+
+#include <theora/theora.h>
+
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
+
+enum DGVideoStates {
+    DGVideoIdle,
+    DGVideoPlaying,
+    DGVideoPaused
+};
+
+typedef struct {
+	int width;
+	int	height;
+	int depth;
+	unsigned char* data;
+} DGFrame;
+
+typedef struct {
+	ogg_sync_state oy;
+	ogg_page og;
+	ogg_stream_state to;
+	theora_info ti;
+	theora_comment tc;
+	theora_state td;
+	ogg_packet op;
+	
+    ogg_int64_t bos;
+	int long_option_index;
+	int c;
+	int theora_p;
+	int videobuf_ready;
+	ogg_int64_t videobuf_granulepos;
+	double videobuf_time;
+} DGTheoraInfo;
+
+#define DGVideoBuffer 4096
+
+#define DGPutComponent(p, v, i) \
+tmp = (unsigned int)(v); \
+if (tmp < 0x10000) \
+p[i] = tmp >> 8; \
+else \
+p[i] = (tmp >> 24) ^ 0xff; 
+
+class DGLog;
+
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
+
+class DGVideo : public DGObject {
+    DGLog* log;
+    
+    DGFrame _currentFrame;
+    DGTheoraInfo* _theoraInfo;
+    
+    bool _doesAutoplay;
+    float _frameDuration;
+    FILE* _handle;
+    bool _hasResource;
+    bool _isLoaded;
+    bool _isLoopable;
+    bool _isSynced;
+    time_t _lastTime;
+    int _state;
+    
+    // Eventually all file management will be handled by a DGResourceManager object
+    char _resource[DGMaxFileLength];
+    
+    // Private methods
+    int _bufferData(ogg_sync_state* oy);
+    void _convertToRGB(uint8_t* puc_y, int stride_y,
+                       uint8_t* puc_u, uint8_t* puc_v, int stride_uv,
+                       uint8_t* puc_out, int width_y, int height_y,
+                       unsigned int _stride_out);
+    void _initConversionToRGB();
+    int _prepareFrame();
+    int _queuePage();
+    
+public:
+    DGVideo();
+    DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced);    
+    ~DGVideo();
+    
+    // Checks
+    
+    bool doesAutoplay();
+    bool hasResource();
+    bool isLoaded();
+    bool isLoopable();
+    bool isPlaying();
+    bool isSynced();
+    
+    // Gets
+    
+    DGFrame* currentFrame();
+    const char* resource();
+    
+    // Sets
+    
+    void setAutoplay(bool autoplay);
+    void setLoopable(bool loopable);
+    void setResource(const char* fromFileName);
+    void setSynced(bool synced);    
+    
+    // State changes
+    
+    void load();
+    void play();
+    void pause();
+    void stop();
+    void unload();
+    void update();
+};
+
+#endif // DG_VIDEO_H

@@ -112,7 +112,7 @@ void DGFeedManager::update() {
                     (*it).state = DGFeedIdle;
                 }
             case DGFeedIdle:
-                if (timerManager->check((*it).timerHandle))
+                if (timerManager->checkManual((*it).timerHandle))
                     (*it).state = DGFeedFadeOut;
                 break;
             case DGFeedFadeOut:

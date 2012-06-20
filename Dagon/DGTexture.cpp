@@ -57,6 +57,10 @@ DGTexture::DGTexture(int width, int height, int depth) {
     if (!depth) comp = 3;
     else comp = depth / 8;
     
+    _width = width;
+    _height = height;
+    _depth = depth;
+    
     _bitmap = (GLubyte*)calloc(width * height * comp, sizeof(GLubyte));
     
     glGenTextures(1, &_ident);
@@ -384,6 +388,32 @@ void DGTexture::loadFromMemory(const unsigned char* dataToLoad) {
     }
 }
 
+void DGTexture::loadRawData(const unsigned char* dataToLoad, int width, int height) {
+    // Mostly useful to load frames from DGVideo. Note it defaults to inverted RGB
+    
+    if (!_isLoaded) {
+        glGenTextures(1, &_ident);
+        glBindTexture(GL_TEXTURE_2D, _ident);
+        
+        glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height,
+                     0, GL_BGR, GL_UNSIGNED_BYTE, dataToLoad);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        
+        _width = width;
+        _height = height;
+        _depth = 24;
+        
+        _isLoaded = true;
+    }
+    else {
+        // NOTE: Careful with this! Binding another texture in the loop
+        glBindTexture(GL_TEXTURE_2D, _ident);
+        glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, dataToLoad);
+    }
+}
+
+// NOTE: Always saves in TGA format
 void DGTexture::saveToFile(const char* fileName){
     if (_isLoaded) {
         FILE* fh;

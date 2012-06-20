@@ -30,6 +30,7 @@
  *  50 - Script
  *  60 - Font
  *  70 - Audio
+ *  80 - Video
  *
  */
 
@@ -110,6 +111,14 @@
 #define DGMsg270005 "File not found"
 #define DGMsg270006 "Unsupported number of channels in file"
 #define DGMsg270007 "Unable to initialize Ogg callbacks"
+
+// Video module
+#define DGMsg080000 "Initializing video manager..."
+#define DGMsg080001 "Loading"
+#define DGMsg280002 "File not found"
+#define DGMsg280003 "Error parsing stream headers"
+#define DGMsg280004 "End of file while searching for codec headers"
+#define DGMsg280005 "Resource not set in video object"
 
 #endif
 

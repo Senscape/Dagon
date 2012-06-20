@@ -47,6 +47,7 @@ class DGState;
 class DGSystem;
 class DGTextureManager;
 class DGTimerManager;
+class DGVideoManager;
 
 enum DGEvents {
 	DGEventEnterNode = 1, // Must implement
@@ -110,6 +111,7 @@ class DGControl {
     DGScript* script;
     DGSystem* system;
     DGTimerManager* timerManager;
+    DGVideoManager* videoManager;    
     
     std::vector<DGRoom*> _arrayOfRooms;
     DGRoom* _currentRoom;
