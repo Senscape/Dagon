@@ -42,6 +42,7 @@ DGVideo::DGVideo() {
     log = &DGLog::getInstance();
     this->setType(DGObjectVideo);
     
+    _hasNewFrame = false;
     _hasResource = false;
     _isLoaded = false;
     _state = DGVideoIdle;
@@ -69,6 +70,12 @@ DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced) {
     
     _theoraInfo = new DGTheoraInfo;
     
+    _theoraInfo->bos = 0;
+	_theoraInfo->theora_p = 0;
+	_theoraInfo->videobuf_ready = 0;
+	_theoraInfo->videobuf_granulepos -= 1;
+	_theoraInfo->videobuf_time = 0;
+    
     _initConversionToRGB();
 }
 
@@ -87,6 +94,15 @@ DGVideo::~DGVideo() {
 
 bool DGVideo::doesAutoplay() {
     return _doesAutoplay;
+}
+
+bool DGVideo::hasNewFrame() {
+    if (_hasNewFrame) {
+        _hasNewFrame = false;
+        return true;
+    }
+    
+    return false;
 }
 
 bool DGVideo::hasResource() {
@@ -154,7 +170,7 @@ void DGVideo::load() {
         return;
     }
     
-    log->trace(DGModVideo, "%s %s", DGMsg080001, _resource);
+    //log->trace(DGModVideo, "%s %s", DGMsg080001, _resource);
     
     _handle = fopen(_resource, "rb");
     
@@ -178,7 +194,7 @@ void DGVideo::load() {
             ogg_stream_state test;
             
             if (!ogg_page_bos(&_theoraInfo->og)) {
-                _queuePage();
+                _queuePage(_theoraInfo, &_theoraInfo->og);
                 stateFlag = 1;
                 break;
             }
@@ -218,7 +234,7 @@ void DGVideo::load() {
         }
         
         if (ogg_sync_pageout(& _theoraInfo->oy, & _theoraInfo->og) > 0)
-            _queuePage();
+            _queuePage(_theoraInfo, &_theoraInfo->og);
         else {
             int ret = _bufferData(&_theoraInfo->oy);
             if (ret == 0) {
@@ -241,7 +257,7 @@ void DGVideo::load() {
     _currentFrame.data = (unsigned char*)malloc((_theoraInfo->ti.width * _theoraInfo->ti.height) * 3);
     
     while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og)>0) {
-        _queuePage();
+        _queuePage(_theoraInfo, &_theoraInfo->og);
     }
     
     _frameDuration = (float)(1/((double)_theoraInfo->ti.fps_numerator / _theoraInfo->ti.fps_denominator));
@@ -317,6 +333,8 @@ void DGVideo::update() {
                        _currentFrame.data, _theoraInfo->ti.width, _theoraInfo->ti.height, _theoraInfo->ti.width);
             
             _lastTime = currentTime;
+            
+            _hasNewFrame = true;
         }
 	}
 }
@@ -463,7 +481,7 @@ int DGVideo::_prepareFrame() {
 		if (!_theoraInfo->videobuf_ready) {
 			_bufferData(&_theoraInfo->oy);
 			while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og) > 0) {
-				_queuePage();
+				_queuePage(_theoraInfo, &_theoraInfo->og);
 			}
             
 		} else {
@@ -477,8 +495,8 @@ int DGVideo::_prepareFrame() {
 	return 0;
 }
 
-int DGVideo::_queuePage() {
-	if (_theoraInfo->theora_p) ogg_stream_pagein(&_theoraInfo->to, &_theoraInfo->og);
+int DGVideo::_queuePage(DGTheoraInfo* theoraInfo, ogg_page *page) {
+	if (theoraInfo->theora_p) ogg_stream_pagein(&theoraInfo->to, page);
 	
 	return 0;
 }

@@ -23,8 +23,13 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// NOTE: Let's find a more elegant and optimal way to do this
-#define DGMaxSystemSemaphores 64
+#define DGNumberOfThreads 3
+
+enum DGThreads {
+    DGAudioThread,
+    DGTimerThread,
+    DGVideoThread
+};
 
 class DGAudioManager;
 class DGConfig;
@@ -45,7 +50,7 @@ class DGSystem {
     DGTimerManager* timerManager;
     DGVideoManager* videoManager;
     
-    int _semaphoresIndex;
+    bool _areThreadsActive;
     bool _isInitialized;
     bool _isRunning;
     
@@ -65,19 +70,18 @@ public:
         return instance;
     }
     
+    void createThreads();
+    void destroyThreads();
     void findPaths(int argc, char* argv[]);
-    bool getSemaphore(int* pointerToID);
     void init();
-    void releaseSemaphore(int ID);
-    void resumeManager();
+    void resumeThread(int threadID);
     void run();
     void setTitle(const char* title);
-    void suspendManager();
+    void suspendThread(int threadID);
     void terminate();
     void toggleFullScreen();
 	void update();
     time_t wallTime();
-    void waitForSemaphore(int ID);
 };
 
 #endif // DG_SYSTEM_H

@@ -69,6 +69,10 @@ void DGScript::execute() {
         if (int result = lua_pcall(_L, 0, 0, 0))
             _error(result);
     }
+    
+    // Ensure the threads are always created after the script is executed,
+    // even if an error was raised
+    system->createThreads();
 }
 
 // TODO: Support loading script from parameters

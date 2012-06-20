@@ -33,13 +33,13 @@
 NSWindow* window;
 DGViewDelegate* view;
 
-dispatch_semaphore_t _semaphores[DGMaxSystemSemaphores];
+dispatch_semaphore_t _semaphores[DGNumberOfThreads];
 
-dispatch_source_t _audioTimer;
 dispatch_source_t _mainLoop;
-dispatch_source_t _mainTimer;
-dispatch_source_t _profilerTimer;
-dispatch_source_t _videoTimer;
+dispatch_source_t _audioThread;
+dispatch_source_t _timerThread;
+dispatch_source_t _profilerThread;
+dispatch_source_t _videoThread;
 dispatch_source_t CreateDispatchTimer(uint64_t interval,
                                       uint64_t leeway,
                                       dispatch_queue_t queue,
@@ -56,10 +56,9 @@ DGSystem::DGSystem() {
     log = &DGLog::getInstance();
     config = &DGConfig::getInstance();
     timerManager = &DGTimerManager::getInstance();  
-    videoManager = &DGVideoManager::getInstance();    
+    videoManager = &DGVideoManager::getInstance();
     
-    _semaphoresIndex = 0;
-    
+    _areThreadsActive = false;
     _isInitialized = false;
     _isRunning = false;
 }
@@ -75,6 +74,66 @@ DGSystem::~DGSystem() {
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
+
+void DGSystem::createThreads() {
+    // Create the semaphores
+    _semaphores[DGAudioThread] = dispatch_semaphore_create(0);
+    _semaphores[DGTimerThread] = dispatch_semaphore_create(0);
+    _semaphores[DGVideoThread] = dispatch_semaphore_create(0);
+    
+    // Send the first signal
+    dispatch_semaphore_signal(_semaphores[DGAudioThread]);
+    dispatch_semaphore_signal(_semaphores[DGTimerThread]); 
+    dispatch_semaphore_signal(_semaphores[DGVideoThread]);
+    
+    _audioThread = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
+                                       dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                                       ^{ dispatch_semaphore_wait(_semaphores[DGAudioThread], DISPATCH_TIME_FOREVER);
+                                           audioManager->update();
+                                           dispatch_semaphore_signal(_semaphores[DGAudioThread]); });    
+    
+    _timerThread = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
+                                       dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                                       ^{ dispatch_semaphore_wait(_semaphores[DGTimerThread], DISPATCH_TIME_FOREVER);
+                                           timerManager->update(); 
+                                           dispatch_semaphore_signal(_semaphores[DGTimerThread]); });
+    
+    _videoThread = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
+                                       dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
+                                       ^{ dispatch_semaphore_wait(_semaphores[DGVideoThread], DISPATCH_TIME_FOREVER);
+                                           videoManager->update();
+                                           dispatch_semaphore_signal(_semaphores[DGVideoThread]); });
+    
+    if (config->debugMode) {
+        _profilerThread = CreateDispatchTimer(1.0f * NSEC_PER_SEC, 0,
+                                              dispatch_get_main_queue(),
+                                              ^{ control->profiler(); });
+    }
+    
+    _areThreadsActive = true;
+}
+
+void DGSystem::destroyThreads() {    
+    // Suspend and release all threads
+    this->suspendThread(DGAudioThread);
+    this->suspendThread(DGTimerThread);
+    this->suspendThread(DGVideoThread);
+    
+    dispatch_source_cancel(_audioThread);
+    dispatch_source_cancel(_timerThread);
+    dispatch_source_cancel(_videoThread);
+    
+    dispatch_release(_semaphores[DGAudioThread]);
+    dispatch_release(_semaphores[DGTimerThread]);
+    dispatch_release(_semaphores[DGVideoThread]);
+    
+    // If in debug mode, release the profiler
+    if (config->debugMode) {
+        dispatch_release(_profilerThread);
+    }
+    
+    _areThreadsActive = false;
+}
 
 void DGSystem::findPaths(int argc, char* argv[]) {
     // Check if launched by Finder (non-standard but safe)
@@ -113,18 +172,6 @@ void DGSystem::findPaths(int argc, char* argv[]) {
         
         [pool release];
     }
-}
-
-bool DGSystem::getSemaphore(int* pointerToID) {
-    if (_semaphoresIndex + 1 > DGMaxSystemSemaphores)
-        return false;
-    
-    _semaphores[_semaphoresIndex] = dispatch_semaphore_create(0);
-    *pointerToID = _semaphoresIndex;
-    
-    _semaphoresIndex++;
-    
-    return true;
 }
 
 void DGSystem::init() {
@@ -174,13 +221,19 @@ void DGSystem::init() {
     else log->warning(DGModSystem, "%s", DGMsg140002);
 }
 
-void DGSystem::releaseSemaphore(int ID) {
-    dispatch_semaphore_signal(_semaphores[ID]);
-}
-
-void DGSystem::resumeManager() {
-    if (_isRunning) {
-        dispatch_resume(_videoTimer);
+void DGSystem::resumeThread(int threadID) {
+    if (_areThreadsActive) {
+        switch (threadID) {
+            case DGAudioThread:
+                dispatch_resume(_audioThread);
+                break;
+            case DGTimerThread:
+                dispatch_resume(_timerThread);
+                break;
+            case DGVideoThread:
+                dispatch_resume(_audioThread);
+                break;                
+        }
     }
 }
 
@@ -188,32 +241,9 @@ void DGSystem::resumeManager() {
 // The timer is running in the main process and thus the OpenGL context doesn't
 // have to be shared.
 void DGSystem::run() {
-    _semaphores[0] = dispatch_semaphore_create(0);
-      dispatch_semaphore_signal(_semaphores[0]);
-    
     _mainLoop = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC, 0,
-                                     dispatch_get_main_queue(),
-                                     ^{ control->update(); });
-    
-    _mainTimer = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
-                                     dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-                                     ^{ timerManager->update(); });
-
-    _audioTimer = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
-                                     dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-                                     ^{ audioManager->update(); });
-    
-    _videoTimer = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
-                                      dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
-                                      ^{  dispatch_semaphore_wait(_semaphores[0], DISPATCH_TIME_FOREVER);
-                                          videoManager->update();
-                                          dispatch_semaphore_signal(_semaphores[0]); });
-    
-    if (config->debugMode) {
-        _profilerTimer = CreateDispatchTimer(1.0f * NSEC_PER_SEC, 0,
-                                             dispatch_get_main_queue(),
-                                             ^{ control->profiler(); });
-    }
+                                    dispatch_get_main_queue(),
+                                    ^{ control->update(); });
     
     _isRunning = true;
     
@@ -230,11 +260,23 @@ void DGSystem::setTitle(const char* title) {
     [pool release];
 }
 
-void DGSystem::suspendManager() {
-    if (_isRunning) {
-        dispatch_semaphore_wait(_semaphores[0], DISPATCH_TIME_FOREVER);
-        dispatch_suspend(_videoTimer);
-        dispatch_semaphore_signal(_semaphores[0]);
+void DGSystem::suspendThread(int threadID) {
+    if (_areThreadsActive) {
+        dispatch_semaphore_wait(_semaphores[threadID], DISPATCH_TIME_FOREVER);
+        
+        switch (threadID) {
+            case DGAudioThread:
+                dispatch_suspend(_audioThread);
+                break;
+            case DGTimerThread:
+                dispatch_suspend(_timerThread);
+                break;
+            case DGVideoThread:
+                dispatch_suspend(_audioThread);
+                break;                
+        }
+        
+        dispatch_semaphore_signal(_semaphores[threadID]);
     }
 }
 
@@ -248,13 +290,11 @@ void DGSystem::terminate() {
         int r = arc4random() % 8; // Double the replies, so that the default one appears often
         
         if (_isRunning) {
-            dispatch_release(_mainLoop);
-            dispatch_release(_mainTimer);
-            dispatch_release(_audioTimer);
-            dispatch_release(_videoTimer);            
+            // Release the main loop
+            dispatch_source_cancel(_mainLoop);
             
-            if (config->debugMode)
-                dispatch_release(_profilerTimer);
+            if (_areThreadsActive)
+                destroyThreads();
         }    
         
         if (_isInitialized) {
@@ -290,10 +330,6 @@ void DGSystem::update() {
 time_t DGSystem::wallTime() {
     dispatch_time_t now = dispatch_time(DISPATCH_TIME_NOW, NULL);
     return (now / 1000);
-}
-
-void DGSystem::waitForSemaphore(int ID) {
-    dispatch_semaphore_wait(_semaphores[ID], DISPATCH_TIME_FOREVER);
 }
 
 ////////////////////////////////////////////////////////////

@@ -81,11 +81,12 @@ void DGScene::drawSpots() {
                 }
                 
                 if (spot->hasVideo() && spot->isPlaying()) {
-                    //////// TEST //////////
-                    DGFrame* frame = spot->video()->currentFrame();
-                    DGTexture* texture = spot->texture();
-                    texture->loadRawData(frame->data, frame->width, frame->height);
-                    ////////////////////////
+                    if (spot->video()->hasNewFrame()) {
+                        DGFrame* frame = spot->video()->currentFrame();
+                        DGTexture* texture = spot->texture();
+                        texture->loadRawData(frame->data, frame->width, frame->height);
+                    }
+
                     spot->texture()->bind();
                     renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
                 }
