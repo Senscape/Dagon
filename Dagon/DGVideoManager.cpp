@@ -113,7 +113,6 @@ void DGVideoManager::update() {
     if (_isInitialized) {
         if (!_arrayOfActiveVideos.empty()) {
             vector<DGVideo*>::iterator it;
-            //printf("Active videos: %u\n", _arrayOfActiveVideos.size());
             it = _arrayOfActiveVideos.begin();
             
             while (it != _arrayOfActiveVideos.end()) {

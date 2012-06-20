@@ -127,6 +127,7 @@ class DGControl {
     
     int _fpsCount;
     bool _isInitialized;
+    bool _isShuttingDown;
 
     void _processAction();
     

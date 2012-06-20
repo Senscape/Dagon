@@ -80,6 +80,7 @@ class DGVideo : public DGObject {
     bool _doesAutoplay;
     float _frameDuration;
     FILE* _handle;
+    bool _hasNewFrame;
     bool _hasResource;
     bool _isLoaded;
     bool _isLoopable;
@@ -98,7 +99,7 @@ class DGVideo : public DGObject {
                        unsigned int _stride_out);
     void _initConversionToRGB();
     int _prepareFrame();
-    int _queuePage();
+    static int _queuePage(DGTheoraInfo* theoraInfo, ogg_page *page);
     
 public:
     DGVideo();
@@ -108,6 +109,7 @@ public:
     // Checks
     
     bool doesAutoplay();
+    bool hasNewFrame();
     bool hasResource();
     bool isLoaded();
     bool isLoopable();

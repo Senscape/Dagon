@@ -61,6 +61,7 @@ DGControl::DGControl() {
     _fpsCount = 0;
     
     _isInitialized = false;
+    _isShuttingDown = false;
     
     // This is used to randomize the color of certain spots,
     // should be called once
@@ -189,8 +190,11 @@ void DGControl::processFunctionKey(int aKey) {
 void DGControl::processKey(int aKey, bool isModified) {
     switch (aKey) {
 		case DGKeyEsc:
-            _scene->fadeOut();
-            timerManager->createInternal(1, terminate);
+            if (!_isShuttingDown) {
+                _scene->fadeOut();
+                timerManager->createInternal(1, terminate);
+                _isShuttingDown = true;
+            }
 			break;
 		case DGKeyQuote:
 		case DGKeyTab:         
@@ -415,10 +419,12 @@ void DGControl::switchTo(DGObject* theTarget) {
     }
     else firstSwitch = false;
     
+    system->suspendThread(DGAudioThread);
     audioManager->clear();
-    system->suspendManager();
+    system->resumeThread(DGAudioThread);
+    
+    system->suspendThread(DGVideoThread);
     videoManager->flush();
-    system->resumeManager();
     
     switch (theTarget->type()) {
         case DGObjectRoom:
@@ -469,7 +475,7 @@ void DGControl::switchTo(DGObject* theTarget) {
                         if (video->isLoaded()) {
                             // Do this here?
                             video->play();
-                            video->update();
+                            //video->update();
                             videoManager->requestVideo(video);
                             ////////////////
                             
@@ -518,7 +524,11 @@ void DGControl::switchTo(DGObject* theTarget) {
         }
     }
     
+    system->resumeThread(DGVideoThread);
+    
+    system->suspendThread(DGAudioThread);
     audioManager->flush();
+    system->resumeThread(DGAudioThread);
 }
 
 void DGControl::takeSnapshot() {
@@ -588,6 +598,7 @@ void DGControl::update() {
                 render->resetFade();
                 _state->set(DGStateNode);
                 _scene->unloadSplash();
+                
                 script->execute();
             }
 
@@ -613,10 +624,14 @@ void DGControl::update() {
         }
     }
 
+    // FIXME: Stack overflow, likely a beginOrthoView unclosed
     cameraManager->endOrthoView();
     
     audioManager->setOrientation(cameraManager->orientation());
+    
+    system->suspendThread(DGTimerThread);
     timerManager->process();
+    system->resumeThread(DGTimerThread);
     
     // Flush the buffers
     system->update();

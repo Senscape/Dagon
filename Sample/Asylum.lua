@@ -11,20 +11,15 @@ setFont(FEED, "fnt_dislexia.ttf", 20)
 daniel0 = Audio("trk_daniel_layer0.ogg", {loopable = true})
 daniel1 = Audio("trk_daniel_layer1.ogg", {loopable = true})
 
--- Fade in interface elements
 -- Separate into folders
 -- Change image when cursor hovers on journal (without pencil)
 -- Integrated readme
--- Relocate images on resize
--- cancelIntro()
 -- Hints
 -- Remove tags
 -- Add sync to audio
 -- Remove convenience methods from attach
 -- Suspend / Resume
 -- Stretch mark animation (on journal)
-
--- Revisar el orden como se conectan las cosas (problema en Hospital)
 
 Cafeteria:addAudio(daniel0)
 
@@ -64,5 +59,7 @@ loadCursor(LOOK, "cur_look.tga")
 loadCursor(TALK, "cur_talk.tga")
 loadCursor(CUSTOM, "cur_custom.tga")
 
---intro:start()
 switch(Cafeteria)
+
+-- Special effects are always cleared up when switching
+--intro:start()

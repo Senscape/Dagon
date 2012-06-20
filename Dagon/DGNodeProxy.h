@@ -127,6 +127,8 @@ public:
             if (lua_isfunction(L, -1)) {
                 int ref = luaL_ref(L, LUA_REGISTRYINDEX);
                 n->addCustomLink(dir, ref);
+                
+                // No need to pop the value in this case
             }
             else {
                 switch (DGCheckProxy(L, 3)) {
@@ -137,9 +139,9 @@ public:
                         n->addLink(dir, (DGObject*)DGProxyToRoom(L, 3));
                         break;
                 }
+                
+                lua_pop(L, 1);
             }
-            
-            lua_pop(L, 1);
         }
         
         return 0;
