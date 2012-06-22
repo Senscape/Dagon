@@ -182,4 +182,6 @@
     DGSystem::getInstance().terminate(); // Hard shutdown
 }
 
+// TODO: If fullscreen is enabled, launch threads after switching to fullscreen
+
 @end
