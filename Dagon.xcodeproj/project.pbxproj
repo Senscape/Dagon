@@ -617,10 +617,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				CODE_SIGN_IDENTITY = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../Library/Frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Other Sources/Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
@@ -640,10 +637,7 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				CODE_SIGN_IDENTITY = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../Library/Frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Other Sources/Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
