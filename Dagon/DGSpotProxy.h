@@ -22,10 +22,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudio.h"
+#include "DGAudioManager.h"
 #include "DGSpot.h"
 #include "DGTexture.h"
-#include "DGVideo.h"
+#include "DGVideoManager.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -47,7 +47,7 @@ public:
                 
                 // We can only read the key as a string, so we have no choice but
                 // do an ugly nesting of strcmps()
-                if (strcmp(key, "autostart") == 0) flags = flags | DGSpotAuto;
+                if (strcmp(key, "autoplay") == 0) flags = flags | DGSpotAuto;
                 
                 lua_pop(L, 1);
             }
@@ -211,6 +211,7 @@ public:
                 // TODO: Path is set by the video manager
                 video->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2)));
                 s->setVideo(video);
+                DGVideoManager::getInstance().registerVideo(video);
                 
                 if (autoplay)
                     s->play();

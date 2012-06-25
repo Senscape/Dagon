@@ -76,19 +76,24 @@ void DGScene::drawSpots() {
                 DGSpot* spot = currentNode->currentSpot();
                 
                 if (spot->hasTexture() && spot->isEnabled()) {
-                    spot->texture()->bind();
-                    renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
-                }
-                
-                if (spot->hasVideo() && spot->isPlaying()) {
-                    if (spot->video()->hasNewFrame()) {
-                        DGFrame* frame = spot->video()->currentFrame();
-                        DGTexture* texture = spot->texture();
-                        texture->loadRawData(frame->data, frame->width, frame->height);
+                    if (spot->hasVideo()) {
+                        // If it has a video, we need to check if it's playing
+                        if (spot->isPlaying()) {
+                            if (spot->video()->hasNewFrame()) {
+                                DGFrame* frame = spot->video()->currentFrame();
+                                DGTexture* texture = spot->texture();
+                                texture->loadRawData(frame->data, frame->width, frame->height);
+                            }
+                            
+                            spot->texture()->bind();
+                            renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                        }
                     }
-
-                    spot->texture()->bind();
-                    renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                    else {
+                        // Draw right away...
+                        spot->texture()->bind();
+                        renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                    }
                 }
             } while (currentNode->iterateSpots());
         }

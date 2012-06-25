@@ -179,7 +179,6 @@ void DGCameraManager::pan(int xPosition, int yPosition) {
     else {
         _speedH = fabs(_deltaX) / (float)DGCamSpeedFactor;
         _speedV = fabs(_deltaY) / (float)DGCamSpeedFactor;
-        
     }
 }
 
@@ -193,6 +192,21 @@ void DGCameraManager::simulateWalk() {
     
     _fovCurrent = _fovNormal + (float)DGCamWalkZoomIn;
     _bob.state = DGCamWalking;
+}
+
+void DGCameraManager::setAngle(float horizontal, float vertical, bool instant) {
+    // Extrapolate the coordinates
+    horizontal = (horizontal * _angleHLimit) / 360.0f;
+    vertical = (vertical * _angleHLimit) / 360.0f;
+    
+    if (instant) {
+        _angleH = horizontal;
+        _angleV = vertical;
+    }
+    else {
+        _angleHTarget = horizontal;
+        _angleVTarget = vertical;
+    }
 }
 
 void DGCameraManager::setFieldOfView(float fov) {

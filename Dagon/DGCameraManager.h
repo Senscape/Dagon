@@ -84,6 +84,9 @@ class DGCameraManager {
     
     GLfloat _angleH;
     GLfloat _angleV;
+    
+    GLfloat _angleHTarget;
+    GLfloat _angleVTarget;    
 
     GLfloat _angleHLimit;
     GLfloat _angleVLimit;
@@ -145,6 +148,7 @@ public:
     void pan(int xPosition, int yPosition);    
     float* position();
     void simulateWalk();
+    void setAngle(float horizontal, float vertical, bool instant);
     void setFieldOfView(float fov);
     void setNeutralZone(int zone);
     void stopPanning();

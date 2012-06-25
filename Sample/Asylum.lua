@@ -18,7 +18,6 @@ daniel1 = Audio("trk_daniel_layer1.ogg", {loopable = true})
 -- Remove tags
 -- Add sync to audio
 -- Remove convenience methods from attach
--- Suspend / Resume
 -- Stretch mark animation (on journal)
 
 Cafeteria:addAudio(daniel0)
@@ -40,7 +39,6 @@ register(RESIZE,
 		intro:resize()
 		journal:resize()
 	end)
-
 
 loadCursor(NORMAL, "cur_normal.tga")
 loadCursor(DRAGGING, "cur_dragging.tga")

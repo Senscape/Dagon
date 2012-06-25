@@ -22,7 +22,7 @@ mad = cellsa5:addSpot( Spot(NORTH, {1036, 1079}) )
 mad:attach(VIDEO, "vid_mad_cellsa5.ogv", {loop = true})
 
 mad = cellsa6:addSpot( Spot(NORTH, {406, 824}) )
-mad:attach(VIDEO, "vid_mad_scare.ogv")
+mad:attach(VIDEO, "vid_mad_scare.ogv", {autoplay = false })
 mad:attach(FUNCTION, 
 	function()
 		self:play()

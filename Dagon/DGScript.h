@@ -60,19 +60,23 @@ class DGScript {
     
     std::vector<std::string> _arrayOfModuleNames;
     bool _isInitialized;
+    bool _isSuspended;    
     lua_State* _L;
+    lua_State* _thread;
     
     int _ref;
     void _error(int result);
     static int _globalFeed(lua_State *L);
+    static int _globalLookAt(lua_State *L);    
     static int _globalLoadCursor(lua_State *L);
     static int _globalPlay(lua_State *L);    
     static int _globalRegister(lua_State *L);   
     static int _globalRoom(lua_State *L);
     static int _globalSetFont(lua_State *L);    
+    static int _globalSleep(lua_State *L);       
     static int _globalSwitch(lua_State *L);
     static int _globalStartTimer(lua_State *L); 
-    static int _globalStopTimer(lua_State *L);    
+    static int _globalStopTimer(lua_State *L);
     void _registerGlobals();
     
     // Private constructor/destructor
@@ -97,8 +101,10 @@ public:
     bool isExecutingModule();    
     void processCallback(int handler, int object);    
     void processCommand(const char* command);
+    void resume();
     void run();
     void setModule(const char* module);
+    int suspend();
     void unsetModule();
 };
 

@@ -152,12 +152,16 @@ void DGObject::update() {
     switch (_fadeDirection) {
         case DGFadeIn:
             if (_fadeLevel < 1.0f) _fadeLevel += _fadeSpeed;
-            else _fadeLevel = 1.0f;
+            else {
+                _fadeLevel = 1.0f;
+                _fadeDirection = DGFadeNone;
+            }
             break;
         case DGFadeOut:
             if (_fadeLevel < 0.0f) {
                 _fadeLevel = 0.0f;
                 _isEnabled = false;
+                _fadeDirection = DGFadeNone;
             }
             else  _fadeLevel -= _fadeSpeed;
             break;

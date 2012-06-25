@@ -16,6 +16,7 @@
 
 #include "DGAudio.h"
 #include "DGSpot.h"
+#include "DGVideo.h"
 
 using namespace std;
 
@@ -203,8 +204,11 @@ void DGSpot::setVideo(DGVideo* aVideo) {
 void DGSpot::play() {
     _isPlaying = true;
     
-    if (_hasAudio)
+    if (_hasAudio && _attachedAudio->isLoaded())
         _attachedAudio->play();
+    
+    if (_hasVideo && _attachedVideo->isLoaded())
+        _attachedVideo->play();
 }
 
 void DGSpot::stop() {

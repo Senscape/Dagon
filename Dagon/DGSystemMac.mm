@@ -129,6 +129,7 @@ void DGSystem::destroyThreads() {
     
     // If in debug mode, release the profiler
     if (config->debugMode) {
+        dispatch_source_cancel(_profilerThread);
         dispatch_release(_profilerThread);
     }
     
@@ -231,7 +232,7 @@ void DGSystem::resumeThread(int threadID) {
                 dispatch_resume(_timerThread);
                 break;
             case DGVideoThread:
-                dispatch_resume(_audioThread);
+                dispatch_resume(_videoThread);
                 break;                
         }
     }
@@ -272,7 +273,7 @@ void DGSystem::suspendThread(int threadID) {
                 dispatch_suspend(_timerThread);
                 break;
             case DGVideoThread:
-                dispatch_suspend(_audioThread);
+                dispatch_suspend(_videoThread);
                 break;                
         }
         
