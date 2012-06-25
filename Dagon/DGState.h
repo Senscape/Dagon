@@ -22,11 +22,12 @@
 enum DGGlobalStates {
 	DGStateCutscene,
 	DGStateInventory,
+    DGStateLookAt,
 	DGStateMenu,
 	DGStateNode,
+    DGStateSleep,
     DGStateSplash,
-	DGStateTimer,
-	DGStateVideo,
+	DGStateVideoSync,
 	DGStateZoom
 };
 

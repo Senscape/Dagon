@@ -40,10 +40,11 @@ using namespace std;
 
 DGScript::DGScript() {
     log = &DGLog::getInstance();
-    config = &DGConfig::getInstance();    
+    config = &DGConfig::getInstance();        
     system = &DGSystem::getInstance();
     
     _isInitialized = false;
+    _isSuspended = false;    
 }
 
 ////////////////////////////////////////////////////////////
@@ -66,7 +67,7 @@ DGScript::~DGScript() {
 
 void DGScript::execute() {
     if (_isInitialized) {
-        if (int result = lua_pcall(_L, 0, 0, 0))
+        if (int result = lua_resume(_thread, 0))
             _error(result);
     }
     
@@ -193,14 +194,18 @@ void DGScript::init(int argc, char* argv[]) {
     if (config->autorun)
         system->init();
     
-    // We're ready to roll, let's attempt to load the script
-    
+    // We're ready to roll, let's attempt to load the script in a Lua thread
+    _thread = lua_newthread(_L);
     snprintf(script, DGMaxFileLength, "%s.lua", config->script());
-    if (luaL_loadfile(_L, config->path(DGPathApp, script)) == 0)
+    if (luaL_loadfile(_thread, config->path(DGPathApp, script)) == 0)
         _isInitialized = true;
-    else
+    else {
         // Not found!
         log->error(DGModScript, "%s: %s", DGMsg250003, script);
+        DGControl::getInstance().processKey(DGKeyTab, false); // Simulate tab key to open the console
+        system->createThreads();
+        system->run();
+    }
 }
 
 const char* DGScript::module() {
@@ -216,20 +221,34 @@ bool DGScript::isExecutingModule() {
 void DGScript::processCallback(int handler, int object) {
     if (object) {
         // Grab the reference to the Lua object and set it as 'self'
-        lua_rawgeti(_L, LUA_REGISTRYINDEX, object);
-        lua_setglobal(_L, "self");
+        lua_rawgeti(_thread, LUA_REGISTRYINDEX, object);
+        lua_setglobal(_thread, "self");
     }
     
-    lua_rawgeti(_L, LUA_REGISTRYINDEX, handler);
+    lua_rawgeti(_thread, LUA_REGISTRYINDEX, handler);
     
-    if (int result = lua_pcall(_L, 0, 0, 0))
-        _error(result);
+    if (_isSuspended) {
+        if (int result =  lua_pcall(_thread, 0, 0, 0))
+            _error(result);
+    }
+    else {
+        if (int result = lua_resume(_thread, 0))
+            _error(result);
+    }
 }
 
 void DGScript::processCommand(const char *command) {
-    if (int result = luaL_loadbuffer(_L, command, strlen(command), "command") ||
-                    lua_pcall(_L, 0, 0, 0))
+    if (int result = luaL_loadbuffer(_thread, command, strlen(command), "command") ||
+                    lua_pcall(_thread, 0, 0, 0))
         _error(result);
+}
+
+void DGScript::resume() {
+    if (_isSuspended) {
+        _isSuspended = false;
+        if (int result = lua_resume(_thread, 0))
+            _error(result); // Remains suspended
+    }
 }
 
 void DGScript::run() {
@@ -248,6 +267,15 @@ void DGScript::setModule(const char* module) {
     _arrayOfModuleNames.push_back(module);
 }
 
+int DGScript::suspend() {
+    if (!_isSuspended) {
+        _isSuspended = true;
+        return lua_yield(_thread, 0);
+    }
+    
+    return 0;
+}
+
 void DGScript::unsetModule() {
     _arrayOfModuleNames.pop_back();
 }
@@ -257,23 +285,25 @@ void DGScript::unsetModule() {
 ////////////////////////////////////////////////////////////
 
 void DGScript::_error(int result) {
-    switch (result) {
-        case LUA_ERRRUN:
-            log->error(DGModScript, "%s", DGMsg250007);
-            break;
-        case LUA_ERRMEM:
-            log->error(DGModScript, "%s", DGMsg250008);
-            break;
-        case LUA_ERRERR:
-            log->error(DGModScript, "%s", DGMsg250009);
-            break;
-        case LUA_ERRSYNTAX:
-            log->error(DGModScript, "%s", DGMsg250010);
-            break;            
+    if (result != LUA_YIELD) {
+        switch (result) {
+            case LUA_ERRRUN:
+                log->error(DGModScript, "%s", DGMsg250007);
+                break;
+            case LUA_ERRMEM:
+                log->error(DGModScript, "%s", DGMsg250008);
+                break;
+            case LUA_ERRERR:
+                log->error(DGModScript, "%s", DGMsg250009);
+                break;
+            case LUA_ERRSYNTAX:
+                log->error(DGModScript, "%s", DGMsg250010);
+                break;            
+        }
+        
+        // Now print the last Lua string in the stack, which should indicate the error
+        log->error(DGModScript, "%s", lua_tostring(_L, -1));
     }
-    
-    // Now print the last Lua string in the stack, which should indicate the error
-    log->error(DGModScript, "%s", lua_tostring(_L, -1));
 }
 
 int DGScript::_globalFeed(lua_State *L) {
@@ -290,6 +320,12 @@ int DGScript::_globalPlay(lua_State *L) {
     audio->play();
     
 	return 0;
+}
+
+int DGScript::_globalLookAt(lua_State *L) {
+    DGControl::getInstance().lookAt(luaL_checknumber(L, 1), luaL_checknumber(L, 2), lua_toboolean(L, 3));
+    
+    return 0;
 }
 
 int DGScript::_globalLoadCursor(lua_State *L) {
@@ -343,6 +379,12 @@ int DGScript::_globalRoom(lua_State *L) {
     // Nothing to do...
     
     return 0;
+}
+
+int DGScript::_globalSleep(lua_State *L) {
+    DGControl::getInstance().sleep((int)luaL_checknumber(L, 1));
+    
+    return DGScript::getInstance().suspend();
 }
 
 int DGScript::_globalSetFont(lua_State *L) {
@@ -400,10 +442,12 @@ void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
         {"feed", _globalFeed},
         {"loadCursor", _globalLoadCursor},
+        {"lookAt", _globalLookAt},        
         {"play", _globalPlay},          
         {"register", _globalRegister},      
         {"room", _globalRoom},
-        {"setFont", _globalSetFont},        
+        {"setFont", _globalSetFont},  
+        {"sleep", _globalSleep},        
         {"switch", _globalSwitch},
         {"startTimer", _globalStartTimer},
         {"stopTimer", _globalStopTimer},

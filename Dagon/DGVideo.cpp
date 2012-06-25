@@ -256,7 +256,7 @@ void DGVideo::load() {
     _currentFrame.depth = 24; // NOTE: We only support flat RGB for now
     _currentFrame.data = (unsigned char*)malloc((_theoraInfo->ti.width * _theoraInfo->ti.height) * 3);
     
-    while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og)>0) {
+    while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og) > 0) {
         _queuePage(_theoraInfo, &_theoraInfo->og);
     }
     
@@ -265,10 +265,14 @@ void DGVideo::load() {
 }
 
 void DGVideo::play() {
-    if (_state == DGVideoIdle)
-        _lastTime = DGSystem::getInstance().wallTime() - (time_t)(_frameDuration * CLOCKS_PER_SEC);
-    
-    _state = DGVideoPlaying;
+    if (_state == DGVideoIdle) {
+        _lastTime = _frameDuration; // Forces a first update
+        _state = DGVideoPlaying;
+        this->update();
+    }
+    else { // If paused
+        _state = DGVideoPlaying;
+    }
 }
 
 void DGVideo::pause() {

@@ -128,8 +128,10 @@ class DGControl {
     int _fpsCount;
     bool _isInitialized;
     bool _isShuttingDown;
+    int _sleepTimer;
 
     void _processAction();
+    void _updateView(int state);
     
     // Private constructor/destructor
     DGControl();
@@ -150,6 +152,7 @@ public:
     void init();
     DGNode* currentNode();
     DGRoom* currentRoom();
+    void lookAt(float horizontal, float vertical, bool instant);
     void processFunctionKey(int aKey);
     void processKey(int aKey, bool isModified);
     void processMouse(int x, int y, int eventFlags);
@@ -157,7 +160,7 @@ public:
     void registerHotKey(int aKey, const char* luaCommandToExecute);
     void registerObject(DGObject* theTarget);    
     void reshape(int width, int height);
-    void sleep(int forMilliseconds);
+    void sleep(int forSeconds);
     // TODO: Add an explicit switchToNode() method
     void switchTo(DGObject* theTarget); 
     void takeSnapshot();

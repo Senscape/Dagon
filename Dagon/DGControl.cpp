@@ -59,6 +59,7 @@ DGControl::DGControl() {
     _currentRoom = NULL;
     
     _fpsCount = 0;
+    _sleepTimer = 0;
     
     _isInitialized = false;
     _isShuttingDown = false;
@@ -136,19 +137,6 @@ void DGControl::init() {
         render->fadeInNextUpdate();
     }
     else render->resetFade();
-    
-    ///////////////////////////
-    
-   /* DGVideo video;
-    video.setResource(config->path(DGPathRes, "vid_mad_scare.ogv"));
-    video.load();
-    video.play();
-    video.update();
-    
-    DGFrame* frame = video.currentFrame();
-    DGTexture texture;
-    texture.loadRawData(frame->data, frame->width, frame->height);
-    texture.saveToFile("test");*/
 }
 
 DGNode* DGControl::currentNode() {
@@ -160,6 +148,12 @@ DGNode* DGControl::currentNode() {
 
 DGRoom* DGControl::currentRoom() {
     return _currentRoom;
+}
+    
+void DGControl::lookAt(float horizontal, float vertical, bool instant) {
+    if (instant) {
+        cameraManager->setAngle(horizontal, vertical, true);
+    }
 }
 
 void DGControl::processFunctionKey(int aKey) {
@@ -232,7 +226,7 @@ void DGControl::processKey(int aKey, bool isModified) {
 }
 
 void DGControl::processMouse(int x, int y, int eventFlags) {
-    if (!cursorManager->isEnabled()) // Ignore everything
+    if (!cursorManager->isEnabled() || cursorManager->isFading()) // Ignore everything
         return;
             
     if ((eventFlags & DGMouseEventMove) && (_eventHandlers.hasMouseMove))
@@ -401,8 +395,10 @@ void DGControl::reshape(int width, int height) {
         script->processCallback(_eventHandlers.resize, 0);    
 }
 
-void DGControl::sleep(int forMilliseconds) {
-    // Must implement
+void DGControl::sleep(int forSeconds) {
+    _sleepTimer = timerManager->createManual(forSeconds);
+    _state->set(DGStateSleep);
+    cursorManager->fadeOut();
 }
 
 void DGControl::switchTo(DGObject* theTarget) {
@@ -468,22 +464,25 @@ void DGControl::switchTo(DGObject* theTarget) {
                             audio->play();
                     }
                     
+                    // TODO: Merge the video autoplay with spot properties
                     if (spot->hasVideo()) {
                         DGVideo* video = spot->video();
-                        video->load();
+                        videoManager->requestVideo(video);
                         
                         if (video->isLoaded()) {
-                            // Do this here?
-                            video->play();
-                            //video->update();
-                            videoManager->requestVideo(video);
-                            ////////////////
-                            
                             if (!spot->hasTexture()) {
+                                video->play();
+                                
                                 DGFrame* frame = video->currentFrame();
                                 DGTexture* texture = new DGTexture;
                                 texture->loadRawData(frame->data, frame->width, frame->height);
                                 spot->setTexture(texture);
+                                
+                                video->pause();
+                            }
+                            
+                            if (video->doesAutoplay()) {
+                                video->play();
                             }
                         }
                     }
@@ -564,77 +563,22 @@ void DGControl::terminate() {
 }
 
 void DGControl::update() {
-    // TODO: Suspend all operations when doing a switch
-    // FIXME: Add a render stack of DGObjects, especially for overlays
-    // IMPORTANT: Ensure this function is thread-safe when
-    // switching rooms or nodes
-    
-    // Setup the scene
-    _scene->clear();
-    
-    // Do this in a viewtimer
     switch (_state->current()) {
-        case DGStateNode:
-            _scene->scanSpots();
-            _scene->drawSpots();
-            _interface->drawHelpers();
-            _interface->drawOverlays();
-            feedManager->update();
-            _interface->drawCursor();
-            
-            break;
-        case DGStateSplash:
-            static int handlerIn = timerManager->createManual(3);
-            static int handlerOut = timerManager->createManual(4);
-            
-            _scene->drawSplash();
-
-            if (timerManager->checkManual(handlerIn)) {
-                _scene->fadeOut();
+        case DGStateSleep:
+            if (timerManager->checkManual(_sleepTimer)) {
+                _state->setPrevious();
+                cursorManager->fadeIn();
+                script->resume();
             }
-            
-            if (timerManager->checkManual(handlerOut)) {
-                render->clearView();
-                render->resetFade();
-                _state->set(DGStateNode);
-                _scene->unloadSplash();
-                
-                script->execute();
+            else {
+                _updateView(_state->previous());
             }
 
             break;
+        default:
+            _updateView(_state->current());
+            break;
     }
-    
-    // User post render operations, supporting textures
-    if (_eventHandlers.hasPostRender)
-        script->processCallback(_eventHandlers.postRender, 0);
-
-    // General fade, affects every graphic on screen
-    render->fadeView();
-    
-    // Debug info, if enabled
-    if (_console->isEnabled()) {
-        _fpsCount++;
-        _console->update();
-        
-        if (_console->isReadyToProcess()) {
-            char command[DGMaxLogLength];
-            _console->getCommand(command);
-            script->processCommand(command);
-        }
-    }
-
-    // FIXME: Stack overflow, likely a beginOrthoView unclosed
-    cameraManager->endOrthoView();
-    
-    audioManager->setOrientation(cameraManager->orientation());
-    
-    system->suspendThread(DGTimerThread);
-    timerManager->process();
-    system->resumeThread(DGTimerThread);
-    
-    // Flush the buffers
-    system->update();
 }
 
 ////////////////////////////////////////////////////////////
@@ -656,4 +600,78 @@ void DGControl::_processAction(){
             switchTo(action->target);
             break;
     }
+}
+
+void DGControl::_updateView(int state) {
+    // TODO: Suspend all operations when doing a switch
+    // FIXME: Add a render stack of DGObjects, especially for overlays
+    // IMPORTANT: Ensure this function is thread-safe when
+    // switching rooms or nodes
+    
+    // Setup the scene
+    _scene->clear();
+    
+    // Do this in a viewtimer
+    switch (state) {
+        case DGStateNode:
+            _scene->scanSpots();
+            _scene->drawSpots();
+            _interface->drawHelpers();
+            _interface->drawOverlays();
+            feedManager->update();
+            _interface->drawCursor();
+            
+            break;
+        case DGStateSplash:
+            static int handlerIn = timerManager->createManual(3);
+            static int handlerOut = timerManager->createManual(4);
+            
+            _scene->drawSplash();
+            
+            if (timerManager->checkManual(handlerIn)) {
+                _scene->fadeOut();
+            }
+            
+            if (timerManager->checkManual(handlerOut)) {
+                render->clearView();
+                render->resetFade();
+                _state->set(DGStateNode);
+                _scene->unloadSplash();
+                
+                script->execute();
+            }
+            
+            break;
+    }
+    
+    // User post render operations, supporting textures
+    if (_eventHandlers.hasPostRender)
+        script->processCallback(_eventHandlers.postRender, 0);
+    
+    // General fade, affects every graphic on screen
+    render->fadeView();
+    
+    // Debug info, if enabled
+    if (_console->isEnabled()) {
+        _fpsCount++;
+        _console->update();
+        
+        if (_console->isReadyToProcess()) {
+            char command[DGMaxLogLength];
+            _console->getCommand(command);
+            script->processCommand(command);
+        }
+    }
+    
+    // FIXME: Stack overflow, likely a beginOrthoView unclosed
+    cameraManager->endOrthoView();
+    
+    audioManager->setOrientation(cameraManager->orientation());
+    
+    system->suspendThread(DGTimerThread);
+    timerManager->process();
+    system->resumeThread(DGTimerThread);
+    
+    // Flush the buffers
+    system->update();
 }
