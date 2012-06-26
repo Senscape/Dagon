@@ -109,55 +109,7 @@ void DGScript::init(int argc, char* argv[]) {
     
     lua_getglobal(_L, "_G");
     
-    // Push all enum values
-    DGLuaEnum(_L, AUDIO, DGObjectAudio);
-    DGLuaEnum(_L, FUNCTION, DGActionFunction);
-    DGLuaEnum(_L, IMAGE, DGObjectTexture);
-    DGLuaEnum(_L, FEED, DGActionFeed);
-    DGLuaEnum(_L, SWITCH, DGActionSwitch);
-    DGLuaEnum(_L, VIDEO, DGObjectVideo);
-    
-    DGLuaEnum(_L, NORMAL, DGCursorNormal);
-    DGLuaEnum(_L, DRAGGING, DGCursorDrag);
-    DGLuaEnum(_L, LEFT, DGCursorLeft);
-    DGLuaEnum(_L, RIGHT, DGCursorRight);
-    DGLuaEnum(_L, UP, DGCursorUp);
-    DGLuaEnum(_L, DOWN, DGCursorDown);
-    DGLuaEnum(_L, UP_LEFT, DGCursorUpLeft);
-    DGLuaEnum(_L, UP_RIGHT, DGCursorUpRight);
-    DGLuaEnum(_L, DOWN_LEFT, DGCursorDownLeft);
-    DGLuaEnum(_L, DOWN_RIGHT, DGCursorDownRight);
-    DGLuaEnum(_L, FORWARD, DGCursorForward);
-    DGLuaEnum(_L, BACKWARD, DGCursorBackward);
-    DGLuaEnum(_L, USE, DGCursorUse);
-    DGLuaEnum(_L, LOOK, DGCursorLook);
-    DGLuaEnum(_L, TALK, DGCursorTalk);
-    DGLuaEnum(_L, CUSTOM, DGCursorCustom);
-    
-    DGLuaEnum(_L, NORTH, DGNorth);
-    DGLuaEnum(_L, EAST, DGEast);
-    DGLuaEnum(_L, WEST, DGWest);
-    DGLuaEnum(_L, SOUTH, DGSouth);
-    DGLuaEnum(_L, UP, DGUp);
-    DGLuaEnum(_L, DOWN, DGDown);
-    DGLuaEnum(_L, NORTHEAST, DGNorthEast);
-    DGLuaEnum(_L, SOUTHEAST, DGSouthEast);
-    DGLuaEnum(_L, NORTHWEST, DGNorthWest);
-    DGLuaEnum(_L, SOUTHWEST, DGSouthWest);
-    
-    DGLuaEnum(_L, DRAG, DGMouseDrag);
-    DGLuaEnum(_L, FIXED, DGMouseFixed);
-    DGLuaEnum(_L, FREE, DGMouseFree);
-    
-    DGLuaEnum(_L, ENTER_NODE, DGEventEnterNode);
-    DGLuaEnum(_L, ENTER_ROOM, DGEventEnterRoom);
-    DGLuaEnum(_L, LEAVE_NODE, DGEventLeaveNode);
-    DGLuaEnum(_L, LEAVE_ROOM, DGEventLeaveRoom);
-    DGLuaEnum(_L, PRE_RENDER, DGEventPreRender);
-    DGLuaEnum(_L, POST_RENDER, DGEventPostRender);
-    DGLuaEnum(_L, MOUSE_BUTTON, DGEventMouseButton);
-    DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
-    DGLuaEnum(_L, RESIZE, DGEventResize);
+    _registerEnums();
     
     // Register all proxys
     Luna<DGAudioProxy>::Register(_L);
@@ -323,9 +275,37 @@ int DGScript::_globalPlay(lua_State *L) {
 }
 
 int DGScript::_globalLookAt(lua_State *L) {
-    DGControl::getInstance().lookAt(luaL_checknumber(L, 1), luaL_checknumber(L, 2), lua_toboolean(L, 3));
+    // NOTE: The user cannot use a custom angle between 0 and 5
     
-    return 0;
+    int horizontal = luaL_checknumber(L, 1);
+    int vertical = 0; // Always assumes a 'flat' vertical angle
+    bool instant = false;
+    
+    switch (horizontal) {
+        case DGNorth:   horizontal = 0;     break;
+        case DGEast:    horizontal = 90;    break;
+        case DGSouth:   horizontal = 180;   break;
+        case DGWest:    horizontal = 270;   break;
+    }
+    
+    if (lua_gettop(L) > 1) {
+        vertical = luaL_checknumber(L, 2);
+        
+        switch (vertical) {
+            case DGUp:      vertical = 360;     break;
+            case DGDown:    vertical = -360;    break;
+        }    
+    }
+    
+    if (lua_gettop(L) == 3) {
+        instant = lua_toboolean(L, 3);
+    }
+      
+    
+    DGControl::getInstance().lookAt(horizontal, vertical, instant);
+    
+    if (instant) return 0;
+    else return DGScript::getInstance().suspend();
 }
 
 int DGScript::_globalLoadCursor(lua_State *L) {
@@ -436,6 +416,59 @@ int DGScript::_globalStopTimer(lua_State *L) {
     DGTimerManager::getInstance().disable(luaL_checknumber(L, 1));
 	
 	return 0;
+}
+
+void DGScript::_registerEnums() {
+    // Push all enum values
+    DGLuaEnum(_L, AUDIO, DGObjectAudio);
+    DGLuaEnum(_L, FUNCTION, DGActionFunction);
+    DGLuaEnum(_L, IMAGE, DGObjectTexture);
+    DGLuaEnum(_L, FEED, DGActionFeed);
+    DGLuaEnum(_L, SWITCH, DGActionSwitch);
+    DGLuaEnum(_L, VIDEO, DGObjectVideo);
+    
+    DGLuaEnum(_L, NORMAL, DGCursorNormal);
+    DGLuaEnum(_L, DRAGGING, DGCursorDrag);
+    DGLuaEnum(_L, LEFT, DGCursorLeft);
+    DGLuaEnum(_L, RIGHT, DGCursorRight);
+    DGLuaEnum(_L, UP, DGCursorUp);
+    DGLuaEnum(_L, DOWN, DGCursorDown);
+    DGLuaEnum(_L, UP_LEFT, DGCursorUpLeft);
+    DGLuaEnum(_L, UP_RIGHT, DGCursorUpRight);
+    DGLuaEnum(_L, DOWN_LEFT, DGCursorDownLeft);
+    DGLuaEnum(_L, DOWN_RIGHT, DGCursorDownRight);
+    DGLuaEnum(_L, FORWARD, DGCursorForward);
+    DGLuaEnum(_L, BACKWARD, DGCursorBackward);
+    DGLuaEnum(_L, USE, DGCursorUse);
+    DGLuaEnum(_L, LOOK, DGCursorLook);
+    DGLuaEnum(_L, TALK, DGCursorTalk);
+    DGLuaEnum(_L, CUSTOM, DGCursorCustom);
+    
+    DGLuaEnum(_L, NORTH, DGNorth);
+    DGLuaEnum(_L, EAST, DGEast);
+    DGLuaEnum(_L, WEST, DGWest);
+    DGLuaEnum(_L, SOUTH, DGSouth);
+    DGLuaEnum(_L, UP, DGUp);
+    DGLuaEnum(_L, DOWN, DGDown);
+    DGLuaEnum(_L, NORTHEAST, DGNorthEast);
+    DGLuaEnum(_L, SOUTHEAST, DGSouthEast);
+    DGLuaEnum(_L, NORTHWEST, DGNorthWest);
+    DGLuaEnum(_L, SOUTHWEST, DGSouthWest);
+    DGLuaEnum(_L, CURRENT, DGCurrent);
+    
+    DGLuaEnum(_L, DRAG, DGMouseDrag);
+    DGLuaEnum(_L, FIXED, DGMouseFixed);
+    DGLuaEnum(_L, FREE, DGMouseFree);
+    
+    DGLuaEnum(_L, ENTER_NODE, DGEventEnterNode);
+    DGLuaEnum(_L, ENTER_ROOM, DGEventEnterRoom);
+    DGLuaEnum(_L, LEAVE_NODE, DGEventLeaveNode);
+    DGLuaEnum(_L, LEAVE_ROOM, DGEventLeaveRoom);
+    DGLuaEnum(_L, PRE_RENDER, DGEventPreRender);
+    DGLuaEnum(_L, POST_RENDER, DGEventPostRender);
+    DGLuaEnum(_L, MOUSE_BUTTON, DGEventMouseButton);
+    DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
+    DGLuaEnum(_L, RESIZE, DGEventResize);   
 }
 
 void DGScript::_registerGlobals() {

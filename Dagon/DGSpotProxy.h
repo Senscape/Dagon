@@ -242,6 +242,15 @@ public:
     // Play the spot
     int play(lua_State *L) {
         s->play();
+        
+        // Test for synced audio or video
+        if (s->hasVideo()) {
+            if (s->isPlaying() && s->video()->isSynced()) {
+                DGControl::getInstance().syncSpot(s);
+                return DGScript::getInstance().suspend();
+            }
+        }
+        
         return 0;
     }
     

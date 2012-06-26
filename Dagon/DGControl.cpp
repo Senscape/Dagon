@@ -152,7 +152,12 @@ DGRoom* DGControl::currentRoom() {
     
 void DGControl::lookAt(float horizontal, float vertical, bool instant) {
     if (instant) {
-        cameraManager->setAngle(horizontal, vertical, true);
+        cameraManager->setAngle(horizontal, vertical);
+    }
+    else {
+        cameraManager->setTargetAngle(horizontal, vertical);
+        _state->set(DGStateLookAt);
+        cursorManager->fadeOut();
     }
 }
 
@@ -530,6 +535,12 @@ void DGControl::switchTo(DGObject* theTarget) {
     system->resumeThread(DGAudioThread);
 }
 
+void DGControl::syncSpot(DGSpot* spot) {
+    _syncedSpot = spot;
+    _state->set(DGStateVideoSync);
+    cursorManager->fadeOut(); 
+}
+
 void DGControl::takeSnapshot() {
     bool previousTexCompression = config->texCompression;
     config->texCompression = false;
@@ -564,6 +575,16 @@ void DGControl::terminate() {
 
 void DGControl::update() {
     switch (_state->current()) {
+        case DGStateLookAt:
+            cameraManager->panToTargetAngle();
+            _updateView(_state->previous());
+            
+            if (!cameraManager->isPanning()) {
+                _state->setPrevious();
+                cursorManager->fadeIn();
+                script->resume(); 
+            }
+            break;
         case DGStateSleep:
             if (timerManager->checkManual(_sleepTimer)) {
                 _state->setPrevious();
@@ -575,6 +596,15 @@ void DGControl::update() {
             }
 
             break;
+        case DGStateVideoSync:
+            _updateView(_state->previous());
+            
+            if (!_syncedSpot->video()->isPlaying()) {
+                _state->setPrevious();
+                cursorManager->fadeIn();
+                script->resume(); 
+            }
+            break;      
         default:
             _updateView(_state->current());
             break;

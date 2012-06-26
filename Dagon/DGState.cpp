@@ -20,7 +20,7 @@
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGState::DGState() {	
+DGState::DGState() {
 	_current = DGStateNode;
 	_previous = _current;
 }

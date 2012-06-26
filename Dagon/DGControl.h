@@ -43,6 +43,7 @@ class DGRoom;
 class DGRenderManager;
 class DGScene;
 class DGScript;
+class DGSpot;
 class DGState;
 class DGSystem;
 class DGTextureManager;
@@ -118,7 +119,8 @@ class DGControl {
     
     DGConsole* _console;
     DGInterface* _interface;
-    DGScene* _scene;    
+    DGScene* _scene;   
+    DGSpot* _syncedSpot;
     DGState* _state;
     DGTextureManager* _textureManager;
     
@@ -162,6 +164,7 @@ public:
     void reshape(int width, int height);
     void sleep(int forSeconds);
     // TODO: Add an explicit switchToNode() method
+    void syncSpot(DGSpot* spot);
     void switchTo(DGObject* theTarget); 
     void takeSnapshot();
     static void terminate();
