@@ -182,6 +182,20 @@ void DGCameraManager::pan(int xPosition, int yPosition) {
     }
 }
 
+void DGCameraManager::panToTargetAngle() {
+    float error = 0.02f;
+    
+    if (_angleH != (_angleHTarget - error)) {
+        _deltaX = (_angleHTarget - _angleH) * 360;
+        _speedH = fabs(_deltaX) / (float)DGCamSpeedFactor;
+    }
+
+    if (_angleV != (_angleVTarget - error)) {
+        _deltaY = (_angleVTarget - _angleV) * 360;
+        _speedV = fabs(_deltaY) / (float)DGCamSpeedFactor;
+    }
+}
+
 float* DGCameraManager::position() {
     return _position;
 }
@@ -194,18 +208,37 @@ void DGCameraManager::simulateWalk() {
     _bob.state = DGCamWalking;
 }
 
-void DGCameraManager::setAngle(float horizontal, float vertical, bool instant) {
-    // Extrapolate the coordinates
-    horizontal = (horizontal * _angleHLimit) / 360.0f;
-    vertical = (vertical * _angleHLimit) / 360.0f;
-    
-    if (instant) {
+void DGCameraManager::setAngle(float horizontal, float vertical) {
+    if (horizontal != DGCurrent) {
+        // Extrapolate the coordinates
+        horizontal = (horizontal * _angleHLimit) / 360.0f;
         _angleH = horizontal;
+    }
+    
+    if (vertical != DGCurrent) {
+        // Extrapolate the coordinates
+        vertical = (vertical * _angleHLimit) / 360.0f;
         _angleV = vertical;
     }
-    else {
+}
+
+void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
+    if (horizontal != DGCurrent) {
+        // Extrapolate the coordinates
+        horizontal = (horizontal * _angleHLimit) / 360.0f;
         _angleHTarget = horizontal;
+    }
+    else {
+        _angleHTarget = _angleH;
+    }
+    
+    if (vertical != DGCurrent) {
+        // Extrapolate the coordinates
+        vertical = (vertical * _angleHLimit) / 360.0f;
         _angleVTarget = vertical;
+    }
+    else {
+        _angleVTarget = _angleV;
     }
 }
 

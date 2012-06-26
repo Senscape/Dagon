@@ -77,6 +77,7 @@ class DGScript {
     static int _globalSwitch(lua_State *L);
     static int _globalStartTimer(lua_State *L); 
     static int _globalStopTimer(lua_State *L);
+    void _registerEnums();
     void _registerGlobals();
     
     // Private constructor/destructor

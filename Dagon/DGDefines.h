@@ -39,9 +39,6 @@
 #define mkstr(a) # a
 #define in_between(a) mkstr(a)
 
-// The first six elements are the same as the faces of the cube
-// We map these to the positions in arrays, we must be extra-careful about their values
-
 enum DGCursorTypes {
     DGCursorNormal = 0,
     DGCursorDrag,
@@ -61,6 +58,9 @@ enum DGCursorTypes {
     DGCursorCustom
 };
 
+// The first six elements are the same as the faces of the cube
+// We map these to the positions in arrays, we must be extra-careful about their values
+
 enum DGDirections {
 	DGNorth = 0,
 	DGEast = 1,
@@ -71,7 +71,8 @@ enum DGDirections {
 	DGNorthEast,
 	DGSouthEast,
 	DGSouthWest,
-	DGNorthWest
+	DGNorthWest,
+    DGCurrent = 0xFF // Maintain current direction
 };
 
 #endif // DG_DEFINES_H

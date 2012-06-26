@@ -85,7 +85,7 @@ void DGNode::addCustomLink(unsigned withDirection, int luaHandler) {
     DGAction action;
     
     action.type = DGActionFunction;
-    action.cursor = DGCursorForward;
+    action.cursor = DGCursorUse;
     action.luaHandler = luaHandler;
     
     _link(withDirection, &action);

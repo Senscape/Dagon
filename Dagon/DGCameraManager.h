@@ -145,10 +145,12 @@ public:
     bool isPanning();
     int neutralZone();
     float* orientation();
-    void pan(int xPosition, int yPosition);    
+    void pan(int xPosition, int yPosition);
+    void panToTargetAngle();
     float* position();
     void simulateWalk();
-    void setAngle(float horizontal, float vertical, bool instant);
+    void setAngle(float horizontal, float verticalt);
+    void setTargetAngle(float horizontal, float vertical);
     void setFieldOfView(float fov);
     void setNeutralZone(int zone);
     void stopPanning();
