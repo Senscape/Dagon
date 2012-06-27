@@ -78,7 +78,7 @@ void DGScene::drawSpots() {
                 if (spot->hasTexture() && spot->isEnabled()) {
                     if (spot->hasVideo()) {
                         // If it has a video, we need to check if it's playing
-                        if (spot->isPlaying()) {
+                        if (spot->isPlaying()) { // FIXME: Must stop the spot later!
                             if (spot->video()->hasNewFrame()) {
                                 DGFrame* frame = spot->video()->currentFrame();
                                 DGTexture* texture = spot->texture();

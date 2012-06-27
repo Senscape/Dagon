@@ -19,6 +19,7 @@ daniel1 = Audio("trk_daniel_layer1.ogg", {loopable = true})
 -- Add sync to audio
 -- Remove convenience methods from attach
 -- Stretch mark animation (on journal)
+-- Still cursor while walking?
 
 Cafeteria:addAudio(daniel0)
 
