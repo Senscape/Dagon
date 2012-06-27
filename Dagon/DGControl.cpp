@@ -470,25 +470,26 @@ void DGControl::switchTo(DGObject* theTarget) {
                     }
                     
                     // TODO: Merge the video autoplay with spot properties
+                    // TODO: Decide after video finishes playing if texture is showed or removed
                     if (spot->hasVideo()) {
                         DGVideo* video = spot->video();
                         videoManager->requestVideo(video);
                         
                         if (video->isLoaded()) {
                             if (!spot->hasTexture()) {
-                                video->play();
-                                
-                                DGFrame* frame = video->currentFrame();
                                 DGTexture* texture = new DGTexture;
-                                texture->loadRawData(frame->data, frame->width, frame->height);
                                 spot->setTexture(texture);
-                                
-                                video->pause();
                             }
                             
-                            if (video->doesAutoplay()) {
+                            video->play();
+                            
+                            DGFrame* frame = video->currentFrame();
+                            spot->texture()->loadRawData(frame->data, frame->width, frame->height);
+                            
+                            if (video->doesAutoplay()) 
                                 video->play();
-                            }
+                            else 
+                                video->pause();
                         }
                     }
                     
