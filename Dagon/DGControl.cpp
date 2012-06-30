@@ -110,13 +110,6 @@ void DGControl::init() {
     // Init the video manager
     videoManager->init();
     
-    _console = new DGConsole;
-    if (config->debugMode) {
-        // Console must be initialized after the Font Manager
-        _console->init();
-        _console->enable();
-    }
-    
     feedManager->init();
     
     _interface = new DGInterface;
@@ -125,10 +118,12 @@ void DGControl::init() {
     _state = new DGState;
     _textureManager = new DGTextureManager;
     
-    _isInitialized = true;
-    
-    if (config->debugMode)
+    _console = new DGConsole;
+    if (config->debugMode) {
+        // Console must be initialized after the Font Manager
+        _console->init();
         _console->enable();
+    }
     
     // If the splash screen is enabled, load its data and set the correct state
     if (config->showSplash) {
@@ -137,6 +132,8 @@ void DGControl::init() {
         render->fadeInNextUpdate();
     }
     else render->resetFade();
+    
+    _isInitialized = true;
 }
 
 DGNode* DGControl::currentNode() {
@@ -410,15 +407,10 @@ void DGControl::switchTo(DGObject* theTarget) {
     static bool firstSwitch = true;
     
     if (!firstSwitch) {
-        // FIXME: This code should be integrated with the general update()
-        render->clearView();
-        cameraManager->update();
-        _scene->drawSpots();
+        _updateView(DGStateNode, true);
         render->blendNextUpdate();
         cameraManager->simulateWalk();
-        ///////////////////////////
     }
-    else firstSwitch = false;
     
     system->suspendThread(DGAudioThread);
     audioManager->clear();
@@ -461,12 +453,14 @@ void DGControl::switchTo(DGObject* theTarget) {
                         DGAudio* audio = spot->audio();
                         
                         // Request the audio
+                        system->suspendThread(DGAudioThread);
                         audioManager->requestAudio(audio);
                         audio->setPosition(spot->face());
-                        audio->setVolume(spot->volume());
+                        audio->setDefaultFadeLevel(spot->volume());
                         
                         if (spot->hasFlag(DGSpotAuto))
                             audio->play();
+                        system->resumeThread(DGAudioThread);
                     }
                     
                     // TODO: Merge the video autoplay with spot properties
@@ -514,26 +508,42 @@ void DGControl::switchTo(DGObject* theTarget) {
         }
         
         // This has to be done every time so that room audios keep playing
-        if (!_currentRoom->hasAudios()) {
+        if (_currentRoom->hasAudios()) {
             vector<DGAudio*>::iterator it;
             vector<DGAudio*> arrayOfAudios = _currentRoom->arrayOfAudios();
             
             it = arrayOfAudios.begin();
             
             while (it != arrayOfAudios.end()) {
-                audioManager->requestAudio((*it));
+                system->suspendThread(DGAudioThread);
+                if ((*it)->state() != DGAudioPlaying)
+                    (*it)->fadeIn();
+                
+                audioManager->requestAudio((*it));                
                 (*it)->play();
+                system->resumeThread(DGAudioThread);
                 
                 it++;
             }
         }
+        
+        // Finally, check if must play a single footstep
+        if (_currentRoom->hasDefaultFootstep() && !firstSwitch) {
+            system->suspendThread(DGAudioThread);
+            _currentRoom->defaultFootstep()->unload();
+            audioManager->requestAudio(_currentRoom->defaultFootstep());
+            _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+            _currentRoom->defaultFootstep()->play();
+            system->resumeThread(DGAudioThread);
+        }
+        else firstSwitch = false;
     }
-    
-    system->resumeThread(DGVideoThread);
     
     system->suspendThread(DGAudioThread);
     audioManager->flush();
     system->resumeThread(DGAudioThread);
+    
+    system->resumeThread(DGVideoThread);
 }
 
 void DGControl::syncSpot(DGSpot* spot) {
@@ -578,7 +588,7 @@ void DGControl::update() {
     switch (_state->current()) {
         case DGStateLookAt:
             cameraManager->panToTargetAngle();
-            _updateView(_state->previous());
+            _updateView(_state->previous(), false);
             
             if (!cameraManager->isPanning()) {
                 _state->setPrevious();
@@ -593,12 +603,12 @@ void DGControl::update() {
                 script->resume();
             }
             else {
-                _updateView(_state->previous());
+                _updateView(_state->previous(), false);
             }
 
             break;
         case DGStateVideoSync:
-            _updateView(_state->previous());
+            _updateView(_state->previous(), false);
             
             if (!_syncedSpot->video()->isPlaying()) {
                 _state->setPrevious();
@@ -607,7 +617,7 @@ void DGControl::update() {
             }
             break;      
         default:
-            _updateView(_state->current());
+            _updateView(_state->current(), false);
             break;
     }
 }
@@ -633,7 +643,7 @@ void DGControl::_processAction(){
     }
 }
 
-void DGControl::_updateView(int state) {
+void DGControl::_updateView(int state, bool inBackground) {
     // TODO: Suspend all operations when doing a switch
     // FIXME: Add a render stack of DGObjects, especially for overlays
     // IMPORTANT: Ensure this function is thread-safe when
@@ -647,10 +657,13 @@ void DGControl::_updateView(int state) {
         case DGStateNode:
             _scene->scanSpots();
             _scene->drawSpots();
-            _interface->drawHelpers();
-            _interface->drawOverlays();
-            feedManager->update();
-            _interface->drawCursor();
+            
+            if (!inBackground) {
+                _interface->drawHelpers();
+                _interface->drawOverlays();
+                feedManager->update();
+                _interface->drawCursor();
+            }
             
             break;
         case DGStateSplash:
@@ -675,16 +688,19 @@ void DGControl::_updateView(int state) {
             break;
     }
     
-    // User post render operations, supporting textures
-    if (_eventHandlers.hasPostRender)
-        script->processCallback(_eventHandlers.postRender, 0);
+    if (!inBackground) {
+        // User post render operations, supporting textures
+        if (_eventHandlers.hasPostRender)
+            script->processCallback(_eventHandlers.postRender, 0);
+    }
     
     // General fade, affects every graphic on screen
     render->fadeView();
     
     // Debug info, if enabled
-    if (_console->isEnabled()) {
+    if (_console->isEnabled() && !inBackground) {
         _fpsCount++;
+        // BUG: This causes a crash sometimes. Why?
         _console->update();
         
         if (_console->isReadyToProcess()) {
@@ -703,6 +719,8 @@ void DGControl::_updateView(int state) {
     timerManager->process();
     system->resumeThread(DGTimerThread);
     
-    // Flush the buffers
-    system->update();
+    if (!inBackground) {
+        // Flush the buffers
+        system->update();
+    }
 }
