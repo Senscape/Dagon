@@ -24,7 +24,6 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGInfoMargin 6
 #define DGMaxHotKeys 12
 
 class DGAudioManager;
@@ -133,7 +132,7 @@ class DGControl {
     int _sleepTimer;
 
     void _processAction();
-    void _updateView(int state);
+    void _updateView(int state, bool inBackground);
     
     // Private constructor/destructor
     DGControl();
