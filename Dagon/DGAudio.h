@@ -42,12 +42,19 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGAudioBufferSize       4096
+#define DGAudioBufferSize       8192
 #define DGAudioNumberOfBuffers  3
 
 enum DGAudioFlags {
     DGAudioFadeIn,
     DGAudioFadeOut
+};
+
+enum DGAudioStates {
+    DGAudioInitial,
+    DGAudioPlaying,
+    DGAudioPaused,
+    DGAudioStopped
 };
 
 typedef struct {
@@ -69,6 +76,8 @@ class DGAudio : public DGObject {
     DGConfig* config;
     DGLog* log;
     
+    DGAudio* _matchedAudio;
+    
     ALuint _alBuffers[DGAudioNumberOfBuffers];
 	ALenum _alFormat;    
     ALuint _alSource;
@@ -82,24 +91,18 @@ class DGAudio : public DGObject {
     // Eventually all file management will be handled by a DGResourceManager class
     DGResource _resource;
     
-    float _defaultVolume;
-    float _currentVolume;
-    float _targetVolume;
-    
-    unsigned int _retainCount;
-    int _fadeDirection;
-    float _fadeStep;
-    float _volumeFadeStep;
-    
-    bool _isFading;
     bool _isLoaded;
     bool _isLoopable;
-    bool _isPlaying;
+    bool _isMatched;
+
+    int _state;
     
     // Method used to fill buffers
     bool _stream(ALuint buffer);
     
     // We use this one to periodically check for errors
+    void _emptyBuffers();
+    const char* _randomizeFile(const char* fileName);    
     ALboolean _verifyError(const char* operation);
     
     // Callbacks for Vorbisfile library
@@ -114,42 +117,29 @@ public:
     
     // Checks
     
-    bool isFading();
     bool isLoaded();
     bool isLoopable();
-    bool isPlaying();
     
     // Gets
     
-    int retainCount();
+    double cursor(); // For match function
+    int state();
     
     // Sets
     
-    void fadeIn();
-    void fadeOut();
-    void forceVolume(float newVolume); // Ignores fading
-    void setDefaultVolume(float defaultVolume);
-    void setFadeTime(int withMilliseconds);
-    void setFadeForVolumeChanges(int withMilliseconds);
     void setLoopable(bool loopable);
     void setPosition(unsigned int onFace);
     void setResource(const char* fromFileName);
-    void setVolume(float targetVolume);
     
     // State changes
     
     void load();
+    void match(DGAudio* matchedAudio);
     void play();
     void pause();
     void stop();
     void unload();
     void update();
-    
-    // These methods aren't used as in typical Objective-C,
-    // they will indicate wheteher we must keep playing an
-    // audio while changing nodes or not.
-    void retain();
-    void release();
 };
 
 #endif // DG_AUDIO_H
