@@ -64,7 +64,7 @@ class DGLog {
     
     std::ofstream _filestr;
     std::vector<DGLogData> _history;
-    std::vector<DGLogData>::iterator _it;
+    std::vector<DGLogData>::reverse_iterator _it;
     void _log(DGLogData* data);
     
     // Private constructor/destructor
@@ -91,7 +91,7 @@ public:
     
     // Helpers for the console feature
     
-    void beginIteratingHistory();
+    bool beginIteratingHistory();
     bool iterateHistory();
     void getCurrentLine(DGLogData* pointerToLogData);
 };

@@ -27,7 +27,7 @@
 #define DGConsoleRows       25
 #define DGConsoleSpacing    6
 #define DGConsoleSpeed      10
-#define DGInfoMargin        6
+#define DGInfoMargin        10
 
 enum DGConsoleStates {
     DGConsoleHidden,
@@ -60,6 +60,7 @@ class DGConsole {
     
     std::string _command;
     bool _isEnabled;
+    bool _isInitialized;
     bool _isReadyToProcess;
     int _offset; // Used for sliding effect
     int _size;
