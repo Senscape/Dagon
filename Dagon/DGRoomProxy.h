@@ -22,6 +22,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGAudioManager.h"
 #include "DGControl.h"
 #include "DGRoom.h"
 
@@ -83,6 +84,25 @@ public:
         return 0;
     }
     
+    // Set the default footstep
+    int setDefaultFootstep(lua_State *L) {
+        if (DGCheckProxy(L, 1) == DGObjectAudio) {
+            // Just set the audio object
+             r->setDefaultFoostep((DGAudio*)DGProxyToAudio(L, 1));
+        }
+        else {
+            // If not, create and set (deleted by the Audio Manager)
+            DGAudio* audio = new DGAudio;
+            audio->setResource(luaL_checkstring(L, 1));
+            
+            DGAudioManager::getInstance().registerAudio(audio);
+            
+            r->setDefaultFoostep(audio);
+        }
+        
+        return 0;
+    }    
+    
     DGRoom* ptr() { return r; }
     
 private:
@@ -97,9 +117,10 @@ private:
 const char DGRoomProxy::className[] = DGRoomProxyName;
 
 Luna<DGRoomProxy>::RegType DGRoomProxy::methods[] = {
-    DGObjectMethods(DGRoomProxy)    
+    DGObjectMethods(DGRoomProxy),    
     method(DGRoomProxy, addAudio),
     method(DGRoomProxy, addNode),
+    method(DGRoomProxy, setDefaultFootstep),    
     {0,0}
 };
 

@@ -118,7 +118,7 @@ private:
 const char DGOverlayProxy::className[] = DGOverlayProxyName;
 
 Luna<DGOverlayProxy>::RegType DGOverlayProxy::methods[] = {
-    DGObjectMethods(DGOverlayProxy)    
+    DGObjectMethods(DGOverlayProxy),    
     method(DGOverlayProxy, addButton),      
     method(DGOverlayProxy, addImage),    
     method(DGOverlayProxy, move),

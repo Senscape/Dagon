@@ -99,7 +99,7 @@ private:
 const char DGImageProxy::className[] = DGImageProxyName;
 
 Luna<DGImageProxy>::RegType DGImageProxy::methods[] = {
-    DGObjectMethods(DGImageProxy)    
+    DGObjectMethods(DGImageProxy),   
     method(DGImageProxy, move),
     method(DGImageProxy, position),
     method(DGImageProxy, scale),

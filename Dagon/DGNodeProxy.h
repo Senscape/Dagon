@@ -161,7 +161,7 @@ private:
 const char DGNodeProxy::className[] = DGNodeProxyName;
 
 Luna<DGNodeProxy>::RegType DGNodeProxy::methods[] = {
-    DGObjectMethods(DGNodeProxy)    
+    DGObjectMethods(DGNodeProxy),    
     method(DGNodeProxy, addSpot),
     method(DGNodeProxy, link),
     {0,0}

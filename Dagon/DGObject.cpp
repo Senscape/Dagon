@@ -30,6 +30,7 @@ DGObject::DGObject() {
     
     _defaultFade = 1.0f;
     _fadeLevel = 1.0f;
+    _fadeTarget = 1.0f;
     _fadeDirection = DGFadeNone;
     _isEnabled = true;
     
@@ -91,9 +92,21 @@ unsigned int DGObject::type() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
+void DGObject::setDefaultFadeLevel(float level) {
+    _defaultFade = level;
+    
+    this->setFadeLevel(_defaultFade);
+}
+
 void DGObject::setFadeLevel(float level) {
-    _fadeLevel = level;
-    _fadeDirection = DGFadeNone;
+    _fadeTarget = level;
+    
+    if (_fadeTarget > _fadeLevel)
+        _fadeDirection = DGFadeIn;
+    else if (_fadeTarget < _fadeLevel)
+        _fadeDirection = DGFadeOut;
+    else
+        _fadeDirection = DGFadeNone;
 }
 
 void DGObject::setFadeSpeed(int speed) {
@@ -129,10 +142,12 @@ void DGObject::fadeIn() {
     _isEnabled = true;
     
     _fadeLevel = 0.0f;
+    _fadeTarget = _defaultFade;
     _fadeDirection = DGFadeIn;
 }
 
 void DGObject::fadeOut() {
+    _fadeTarget = 0.0f;
     _fadeDirection = DGFadeOut;
 }
 
@@ -141,27 +156,31 @@ void DGObject::retain() {
 }
 
 void DGObject::release() {
-    _retainCount--;    
+    if (_retainCount > 0)
+        _retainCount--;    
 }
 
 void DGObject::toggle() {
     _isEnabled = !_isEnabled;
 }
 
-void DGObject::update() {
+void DGObject::updateFade() {
     switch (_fadeDirection) {
         case DGFadeIn:
-            if (_fadeLevel < 1.0f) _fadeLevel += _fadeSpeed;
+            if (_fadeLevel <_fadeTarget) _fadeLevel += _fadeSpeed;
             else {
-                _fadeLevel = 1.0f;
+                _fadeLevel = _fadeTarget;
                 _fadeDirection = DGFadeNone;
             }
             break;
         case DGFadeOut:
-            if (_fadeLevel < 0.0f) {
-                _fadeLevel = 0.0f;
-                _isEnabled = false;
+            if (_fadeLevel < _fadeTarget) {
+                _fadeLevel = _fadeTarget;
                 _fadeDirection = DGFadeNone;
+                
+                if (_fadeLevel <= 0.0f) {
+                    _isEnabled = false;
+                }
             }
             else  _fadeLevel -= _fadeSpeed;
             break;

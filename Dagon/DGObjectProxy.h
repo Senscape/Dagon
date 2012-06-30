@@ -31,7 +31,8 @@ method(proxy, fadeOut), \
 method(proxy, isEnabled), \
 method(proxy, isFading), \
 method(proxy, name), \
-method(proxy, toggle),
+method(proxy, setFadeSpeed), \
+method(proxy, toggle)
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -95,6 +96,12 @@ public:
     int name(lua_State *L) {
         lua_pushstring(L, o->name());
         return 1;
+    }
+    
+    // Set speed for fades
+    int setFadeSpeed(lua_State *L) {
+        o->setFadeSpeed(lua_tonumber(L, 1));
+        return 0;
     }
     
     // Toggle enabled/disabled state of the object
