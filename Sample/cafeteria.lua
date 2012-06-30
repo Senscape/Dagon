@@ -13,9 +13,6 @@ cafeteria1:link({ N = cafeteria2 })
 cafeteria2:link({ N = cafeteria3, S = cafeteria1 })
 cafeteria3:link({ S = cafeteria2 })
 
--- Inherit values from spot
--- Stop creates corrupted first frames
--- Maintain convenience tags... Videos only exist in spots or cutscenes, audios can be shared
 spot = cafeteria1:addSpot( Spot(SOUTH, {64, 424}) )
 spot:attach(AUDIO, "sfx_door_large_opend.ogg" )
 spot:attach(VIDEO, "vid_door_cafeteria_corridorb.ogv", {autoplay = false, sync = true} )
@@ -24,7 +21,7 @@ spot:attach(FUNCTION,
 		lookAt(SOUTH)
 		self:play()
 		switch(CorridorB)
-		play("sfx_door_large_closed.ogg")
+		play("sfx_door_large_closed.ogg")	
 	end)
 spot:stop()
 

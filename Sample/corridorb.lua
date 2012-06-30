@@ -18,3 +18,15 @@ spot:attach(FUNCTION,
 		journal:markEntry(Notes.HOSPITAL)
 end)
 spot:setCursor(LOOK)
+
+spot = corridorb2:addSpot( Spot(NORTH, {64, 424}) )
+spot:attach(AUDIO, "sfx_door_large_opend.ogg" )
+spot:attach(VIDEO, "vid_door_corridorb_cafeteria.ogv", {autoplay = false, sync = true} )
+spot:attach(FUNCTION, 
+	function()
+		lookAt(NORTH)
+		self:play()
+		switch(Cafeteria)
+		play("sfx_door_large_closed.ogg")
+	end)
+spot:stop()

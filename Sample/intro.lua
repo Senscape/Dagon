@@ -47,6 +47,7 @@ end
 
 function Intro:start()
 	cafeteria1:disable()
+	daniel0:stop()
 	cursor.disable()
 	self.intro:enable()
 	play("sfx_thump.ogg")
@@ -56,6 +57,7 @@ function Intro:start()
 			if (self.timerLoop == 1) then
 				self.logo:fadeOut()
 				cafeteria1:fadeIn()
+				daniel0:play()
 			elseif (self.timerLoop == 2) then	
 				self.credit1:fadeIn()
 				cursor.fadeIn()

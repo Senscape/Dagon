@@ -96,7 +96,7 @@ function Journal:addEntry(e, f)
 	jRows[i]:setText(e)
 	self.opened:addButton(jRows[i])
 	self.iconAnimLoop = 2
-	play("sfx_journal_write.ogg")
+	--play("sfx_journal_write.ogg")
 end
 
 function Journal:markEntry(e)
