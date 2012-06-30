@@ -24,19 +24,19 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-enum DGCameraBobDirections {
+enum DGCamBobDirections {
     DGCamExpire,
     DGCamInspire,
     DGCamPause
 };
 
-enum DGCameraBobStates {
+enum DGCamBobStates {
     DGCamBreathing,
     DGCamScared,
     DGCamWalking
 };
 
-enum DGCameraDefaults {
+enum DGCamDefaults {
     DGCamAccelerationFactor = 100,
     DGCamDragNeutralZone = 100,    
 	DGCamFieldOfView = 55,
@@ -47,7 +47,7 @@ enum DGCameraDefaults {
 
 };
 
-enum DGCameraEffects {
+enum DGCamEffects {
     DGCamBreatheFactor = 35,
     DGCamBreatheSpeed = 100,
     DGCamScareFactor = 15,
@@ -86,8 +86,10 @@ class DGCameraManager {
     GLfloat _angleV;
     
     GLfloat _angleHTarget;
-    GLfloat _angleVTarget;    
-
+    GLfloat _angleVTarget;
+    float _targetHError;
+    float _targetVError;
+    
     GLfloat _angleHLimit;
     GLfloat _angleVLimit;
     
@@ -109,6 +111,7 @@ class DGCameraManager {
     DGRect _panRegion;
     
     float _inertia;
+    bool _inOrthoView;
     bool _isPanning;
     
     float _motionDown;
