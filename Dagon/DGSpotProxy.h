@@ -24,6 +24,7 @@
 
 #include "DGAudioManager.h"
 #include "DGSpot.h"
+#include "DGSystem.h"
 #include "DGTexture.h"
 #include "DGVideoManager.h"
 
@@ -91,7 +92,7 @@ public:
                     s->setAudio(DGProxyToAudio(L, 2));
                 }
                 else {
-                    // If not, create and set
+                    // If not, create and set (deleted by the Audio Manager)
                     audio = new DGAudio;
                     audio->setResource(luaL_checkstring(L, 2));
                     
@@ -256,7 +257,9 @@ public:
     
     // Stop the spot
     int stop(lua_State *L) {
+        DGSystem::getInstance().suspendThread(DGAudioThread);
         s->stop();
+        DGSystem::getInstance().resumeThread(DGAudioThread);
         return 0;
     }
     
@@ -276,7 +279,7 @@ private:
 const char DGSpotProxy::className[] = DGSpotProxyName;
 
 Luna<DGSpotProxy>::RegType DGSpotProxy::methods[] = {
-    DGObjectMethods(DGSpotProxy)    
+    DGObjectMethods(DGSpotProxy),    
     method(DGSpotProxy, attach),
     method(DGSpotProxy, setCursor),    
     method(DGSpotProxy, isPlaying),    

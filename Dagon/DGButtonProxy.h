@@ -190,7 +190,7 @@ private:
 const char DGButtonProxy::className[] = DGButtonProxyName;
 
 Luna<DGButtonProxy>::RegType DGButtonProxy::methods[] = {
-    DGObjectMethods(DGButtonProxy)       
+    DGObjectMethods(DGButtonProxy),      
     method(DGButtonProxy, move),
     method(DGButtonProxy, position),
     method(DGButtonProxy, scale),

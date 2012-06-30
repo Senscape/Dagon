@@ -75,9 +75,7 @@ public:
 
     DGAction* action();
     void bindImage();
-    float* arrayOfCoords();
-    void disable();
-    void enable();    
+    float* arrayOfCoords();   
     bool hasAction();
     bool hasImage();
     bool isDragging();

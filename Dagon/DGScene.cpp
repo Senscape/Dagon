@@ -68,7 +68,7 @@ void DGScene::drawSpots() {
     if (_canDrawSpots) {
         DGNode* currentNode = _currentRoom->currentNode();
         if (currentNode->isEnabled()) {
-            currentNode->update();
+            currentNode->updateFade();
             renderManager->setAlpha(currentNode->fadeLevel());
             
             currentNode->beginIteratingSpots();

@@ -60,7 +60,7 @@ void DGInterface::drawCursor() {
     // Mouse cursor
     if (cursorManager->isEnabled()) {
         if (cursorManager->hasImage()) { // A bitmap cursor is currently set
-            cursorManager->update(); // Process fade (supported only with bitmaps)
+            cursorManager->updateFade(); // Process fade (supported only with bitmaps)
             cursorManager->bindImage();
             renderManager->setAlpha(cursorManager->fadeLevel());
             renderManager->drawSlide(cursorManager->arrayOfCoords());
@@ -114,7 +114,7 @@ void DGInterface::drawOverlays() {
                         DGButton* button = (*itOverlay)->currentButton();
                         if (button->isEnabled()) {
                             if (button->hasTexture()) {
-                                button->update();
+                                button->updateFade();
                                 renderManager->setAlpha(button->fadeLevel());
                                 button->texture()->bind();
                                 renderManager->drawSlide(button->arrayOfCoordinates());
@@ -139,7 +139,7 @@ void DGInterface::drawOverlays() {
                     do {
                         DGImage* image = (*itOverlay)->currentImage();
                         if (image->isEnabled()) {
-                            image->update(); // Perform any necessary updates
+                            image->updateFade(); // Perform any necessary updates
                             image->texture()->bind();
                             renderManager->setAlpha(image->fadeLevel());
                             renderManager->drawSlide(image->arrayOfCoordinates());

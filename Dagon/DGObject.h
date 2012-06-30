@@ -25,8 +25,8 @@
 
 enum DGFadeSpeeds {
     DGFadeNormal = 200,
-    DGFadeSlow = 300, 
-    DGFadeSlowest = 350,
+    DGFadeSlow = 350, 
+    DGFadeSlowest = 500,
     DGFadeFast = 100,
     DGFadeFastest = 50
 };
@@ -71,6 +71,7 @@ class DGObject {
     int _fadeDirection;
     float _fadeLevel;
     float _fadeSpeed;
+    float _fadeTarget;
     bool _isEnabled;
     
 public:
@@ -93,6 +94,7 @@ public:
     
     // Sets
     
+    void setDefaultFadeLevel(float level);
     void setFadeLevel(float level);
     void setFadeSpeed(int speed);
     void setLuaObject(int object);
@@ -108,7 +110,7 @@ public:
     void release();
     void retain();
     void toggle();
-    void update();
+    void updateFade();
 };
 
 #endif // DG_OBJECT_H
