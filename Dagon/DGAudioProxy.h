@@ -62,6 +62,13 @@ public:
     // Destructor
     ~DGAudioProxy() { delete a; }
     
+    // Match with another audio
+    int match(lua_State *L) {
+        a->match((DGAudio*)DGProxyToAudio(L, 1));
+        
+        return 0;
+    } 
+    
     // Pause the audio
     int pause(lua_State *L) {
         a->pause();
@@ -99,7 +106,8 @@ private:
 const char DGAudioProxy::className[] = DGAudioProxyName;
 
 Luna<DGAudioProxy>::RegType DGAudioProxy::methods[] = {
-    DGObjectMethods(DGAudioProxy)    
+    DGObjectMethods(DGAudioProxy),
+    method(DGAudioProxy, match),
     method(DGAudioProxy, play),
     method(DGAudioProxy, pause),    
     method(DGAudioProxy, stop),

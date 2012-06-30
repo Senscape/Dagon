@@ -31,23 +31,12 @@ DGAudio::DGAudio() {
 	_oggCallbacks.close_func = _oggClose;
 	_oggCallbacks.tell_func = _oggTell;
     
-    _retainCount = 0;
-    
-    // Default volume is the loudest possible
-    _defaultVolume = 1.0f;
-    _currentVolume = 1.0f;
-    _targetVolume = 1.0f;
-    
-    // And reasonably smooth default fades
-    _fadeStep = 0.1f;
-    _volumeFadeStep = 0.1f;
-    
-    _isFading = false;
     _isLoaded = false;
     
     // For convenience, this always defaults to false
     _isLoopable = false;
-    _isPlaying = false;
+    _isMatched = false;
+    _state = DGAudioInitial;
     
     this->setType(DGObjectAudio);
 }
@@ -73,47 +62,21 @@ bool DGAudio::isLoopable() {
     return _isLoopable;
 }
 
-bool DGAudio::isPlaying() {
-    return _isPlaying;
-}
-
 ////////////////////////////////////////////////////////////
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-int DGAudio::retainCount() {
-    return _retainCount;
+double DGAudio::cursor() {
+    return ov_time_tell(&_oggStream);
+}
+
+int DGAudio::state() {
+    return _state;
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
-
-void DGAudio::fadeIn() {
-    _currentVolume = 0.0f;
-    _targetVolume = _defaultVolume;
-    _fadeDirection = DGAudioFadeIn;
-    _isFading = true;
-}
-
-void DGAudio::fadeOut() {
-    _targetVolume = 0.0f;
-    _fadeDirection = DGAudioFadeOut;
-    _isFading = true;
-}
-
-void DGAudio::forceVolume(float newVolume) {
-    _currentVolume = newVolume;
-    _targetVolume = newVolume;
-}
-
-void DGAudio::setFadeTime(int withMilliseconds) {
-    _fadeStep = 1.0f / (float)withMilliseconds;
-}
-
-void DGAudio::setFadeForVolumeChanges(int withMilliseconds) {
-    _volumeFadeStep = 1.0f / (float)withMilliseconds; 
-}
 
 void DGAudio::setLoopable(bool loopable) {
     _isLoopable = loopable;
@@ -140,14 +103,12 @@ void DGAudio::setPosition(unsigned int onFace) {
             alSource3f(_alSource, AL_POSITION, 0.0, -1.0, 0.0);
             break;            
     }
+    
+    _verifyError("position");
 }
 
 void DGAudio::setResource(const char* fromFileName) {
     strncpy(_resource.name, fromFileName, DGMaxFileLength);
-}
-
-void DGAudio::setVolume(float targetVolume) {
-    _targetVolume = targetVolume;
 }
 
 ////////////////////////////////////////////////////////////
@@ -155,11 +116,12 @@ void DGAudio::setVolume(float targetVolume) {
 ////////////////////////////////////////////////////////////
 
 void DGAudio::load() {
-    if (!_isLoaded) {    
+    if (!_isLoaded) { 
         FILE* fh;
         
         // FIXME: This object shouldn't reference DGConfig, let the manager do it
-        fh = fopen(config->path(DGPathRes, _resource.name), "rb");	
+        const char* fileToLoad = _randomizeFile(_resource.name);
+        fh = fopen(config->path(DGPathRes, fileToLoad), "rb");	
         
         if (fh != NULL) {
             fseek(fh, 0, SEEK_END);
@@ -184,7 +146,7 @@ void DGAudio::load() {
             else if (_channels == 2 ) _alFormat = AL_FORMAT_STEREO16;
             else {
                 // Invalid number of channels
-                log->error(DGModAudio, "%s: %s", DGMsg270006, _resource.name);
+                log->error(DGModAudio, "%s: %s", DGMsg270006, fileToLoad);
                 return;
             }
             
@@ -193,11 +155,13 @@ void DGAudio::load() {
             
             alGenBuffers(DGAudioNumberOfBuffers, _alBuffers);
             alGenSources(1, &_alSource);
-            
-            if (config->mute)
+    
+            if (config->mute || this->fadeLevel() < 0.0f) {
                 alSourcef(_alSource, AL_GAIN, 0.0f);
-            else
-                alSourcef(_alSource, AL_GAIN, _currentVolume);
+            }
+            else {
+                alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+            }
             
             alSource3f(_alSource, AL_POSITION,        0.0, 0.0, 0.0);
             alSource3f(_alSource, AL_VELOCITY,        0.0, 0.0, 0.0);
@@ -207,15 +171,25 @@ void DGAudio::load() {
             
             _isLoaded = true;
         }
-        else log->error(DGModAudio, "%s: %s", DGMsg270005, _resource.name);
+        else log->error(DGModAudio, "%s: %s", DGMsg270005, fileToLoad);
     }
 }
 
+void DGAudio::match(DGAudio* matchedAudio) {
+    _matchedAudio = matchedAudio;
+    _isMatched = true;
+}
+
 void DGAudio::play() {
-    if (_isLoaded && !_isPlaying) {    
+    if (_isLoaded && (_state != DGAudioPlaying)) {
+        _emptyBuffers(); // Just in case
+        
+        if (_isMatched)
+            ov_time_seek(&_oggStream, _matchedAudio->cursor());
+        
         for (int i = 0; i < DGAudioNumberOfBuffers; i++) {
             if (!_stream(_alBuffers[i])) {
-                // Raise an error
+                _verifyError("prebuffer");
                 
                 return;
             }
@@ -223,44 +197,32 @@ void DGAudio::play() {
         
         alSourceQueueBuffers(_alSource, DGAudioNumberOfBuffers, _alBuffers);
         alSourcePlay(_alSource);
-        _isPlaying = true;
+        _state = DGAudioPlaying;
         
         _verifyError("play");
     }
 }
 
 void DGAudio::pause() {
-    if (_isPlaying) {
-        int queued;
-        
+    if (_state == DGAudioPlaying) {
         alSourceStop(_alSource);
-        alGetSourcei(_alSource, AL_BUFFERS_QUEUED, &queued);
+
+        _emptyBuffers();
         
-        while (queued--) {
-            ALuint buffer;
-            alSourceUnqueueBuffers(_alSource, 1, &buffer);
-        }
-        
-        _isPlaying = false;
+        _state = DGAudioPaused;
         
         _verifyError("pause");
     } 
 }
 
 void DGAudio::stop() {
-    if (_isPlaying) {
-        int queued;
-        
+    if ((_state == DGAudioPlaying) || (_state == DGAudioPaused)) {
         alSourceStop(_alSource);
-        alGetSourcei(_alSource, AL_BUFFERS_QUEUED, &queued);
-        
-        while (queued--) {
-            ALuint buffer;
-            alSourceUnqueueBuffers(_alSource, 1, &buffer);
-        }
+    
+        _emptyBuffers();
         
         ov_raw_seek(&_oggStream, 0);
-        _isPlaying = false;
+        _state = DGAudioStopped;
         
         _verifyError("stop");
     }
@@ -268,19 +230,22 @@ void DGAudio::stop() {
 
 void DGAudio::unload() {
     if (_isLoaded) {
-        this->stop();
+        if (_state == DGAudioPlaying)
+            this->stop();
         
         alDeleteSources(1, &_alSource);
-		alDeleteBuffers(1, _alBuffers);
+		alDeleteBuffers(DGAudioNumberOfBuffers, _alBuffers);
         ov_clear(&_oggStream);
         free(_resource.data);
         
         _isLoaded = false;
+        
+        _verifyError("unload");
     }
 }
 
 void DGAudio::update() {
-    if (_isPlaying) {
+    if (_state == DGAudioPlaying) {
         int processed;
         
         alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &processed);
@@ -293,55 +258,64 @@ void DGAudio::update() {
             alSourceQueueBuffers(_alSource, 1, &buffer);
         }
         
-        if (_isFading) {
-            switch (_fadeDirection) {
-                case DGAudioFadeIn:
-                    _currentVolume += _fadeStep;
-                    if (_currentVolume > _targetVolume)
-                        _isFading = false;
-                    
-                    break;
-                case DGAudioFadeOut:
-                    _currentVolume -= _fadeStep;
-                    if (_currentVolume < _targetVolume)
-                        _isFading = false;
-                    
-                    break;
-            }
-        }
-        else {
-            // If the audio is not fading strongly, we check if we must
-            // smoothly update the volume. Note this isn't as accurate as above.
-            if (_currentVolume < _targetVolume)
-                _currentVolume += _volumeFadeStep;
-            else if (_currentVolume > _targetVolume)
-                _currentVolume -= _volumeFadeStep;
-        }
+        // Run fade operations
+        // TODO: Better change the name of the DGObject function
+        this->updateFade();
         
         // FIXME: Not very elegant as we're doing this every time
-        if (config->mute)
+        if (config->mute) {
             alSourcef(_alSource, AL_GAIN, 0.0f);
-        else
-            alSourcef(_alSource, AL_GAIN, _currentVolume);
+        }
+        else {
+            // Finally check the current volume. If it's zero, let the manager know
+            // that we're done with this audio
+            if (this->fadeLevel() > 0.0f)
+                alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+            else
+                this->pause();
+        }
     }
-}
-
-void DGAudio::retain() {
-    _retainCount++;
-}
-
-void DGAudio::release() {
-    _retainCount--;
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
+void DGAudio::_emptyBuffers() {
+    ALint state;
+    alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
+    
+    if (state != AL_PLAYING) {
+        int queued;
+        
+        alGetSourcei(_alSource, AL_BUFFERS_QUEUED, &queued);
+        
+        while (queued--) {
+            ALuint buffer;
+            alSourceUnqueueBuffers(_alSource, 1, &buffer);
+        }   
+    }
+}
+
+const char* DGAudio::_randomizeFile(const char* fileName) {
+    if (strstr(fileName, ".ogg")) { // Was extension specified?
+        return fileName; // Return as-is
+    }
+    else { // Randomize
+        static char fileToLoad[DGMaxFileLength];
+        int index = (rand() % 6); // Allow to configure
+        
+        snprintf(fileToLoad, DGMaxFileLength, "%s%0" in_between(DGFileSeqDigits) "d.%s", fileName,
+                 index + DGFileSeqStart, "ogg");
+        
+        return fileToLoad;
+    }
+}
+
 bool DGAudio::_stream(ALuint buffer) {
     // This is a failsafe; if this is true, we won't attempt
     // to stream anymore
-    static bool _hasStreamingError = false;
+    static bool _hasStreamingError = false;         
     
     if (!_hasStreamingError) {
         char data[DGAudioBufferSize];
@@ -388,7 +362,7 @@ ALboolean DGAudio::_verifyError(const char* operation) {
    	ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
-		log->error(DGModAudio, "%s: %s (%d)", DGMsg270003, operation, error);
+		log->error(DGModAudio, "%s: %s: %s (%d)", DGMsg270003, _resource.name, operation, error);
         
 		return AL_FALSE;
 	}
