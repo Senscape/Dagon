@@ -236,14 +236,19 @@ void DGLog::warning(int forModule, const char* theString, ...) {
 // Implementation - Console helpers
 ////////////////////////////////////////////////////////////
 
-void DGLog::beginIteratingHistory() {
-    _it = _history.end();
+bool DGLog::beginIteratingHistory() {
+    if (!_history.empty()) {
+        _it = _history.rbegin();
+        return true;
+    }
+    
+    return false;
 }
 
 bool DGLog::iterateHistory() {
-    _it--;
+    _it++;
     
-    if (_it == _history.begin() || _history.empty())
+    if (_it == (_history.rend() - 1) || _history.empty()) // Bypass the first line  
         return false;
     else
         return true;

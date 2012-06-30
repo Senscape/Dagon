@@ -36,8 +36,11 @@ DGConsole::DGConsole() {
     log = &DGLog::getInstance();
     renderManager = &DGRenderManager::getInstance();
     
-    _isEnabled = false; 
-    _isReadyToProcess = false;;
+    _command = "";
+    
+    _isEnabled = false;
+    _isInitialized = false;
+    _isReadyToProcess = false;
     _size = DGConsoleRows * (DGDefFontSize + DGConsoleSpacing);
     _offset = _size;
     
@@ -57,7 +60,9 @@ DGConsole::~DGConsole() {
 ////////////////////////////////////////////////////////////
 
 void DGConsole::init() {
+    log->trace(DGModNone, "%s", DGMsg030002);
     _font = fontManager->loadDefault();
+    _isInitialized = true;
 }
 
 void DGConsole::deleteChar() {
@@ -70,7 +75,8 @@ void DGConsole::disable() {
 }
 
 void DGConsole::enable() {
-    _isEnabled = true;
+    if (_isInitialized)
+        _isEnabled = true;
 }
 
 void DGConsole::execute() {
@@ -118,64 +124,67 @@ void DGConsole::toggle() {
 }
 
 void DGConsole::update() {
-    DGPoint position = cursorManager->position();
-    
-    switch (_state) {
-        case DGConsoleHidden:
-            // Set the color used for information
-            renderManager->setColor(DGColorBrightCyan);
-            _font->print(DGInfoMargin, DGInfoMargin, 
-                         "Viewport size: %d x %d", config->displayWidth, config->displayHeight);                
-            _font->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize, 
-                         "Coordinates: (%d, %d)", (int)position.x, (int)position.y);
-            _font->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2), 
-                         "Viewing angle: %2.1f", cameraManager->fieldOfView());
-            _font->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
-                         "FPS: %d", config->framesPerSecond()); 
+    if (_isEnabled) {
+        DGPoint position = cursorManager->position();
+        
+        switch (_state) {
+            case DGConsoleHidden:
+                // Set the color used for information
+                renderManager->setColor(DGColorBrightCyan);
+                // Leave 20 pixels in case OS interfaces covers the text
+                _font->print(DGInfoMargin, DGInfoMargin + 20, 
+                             "Viewport size: %d x %d", config->displayWidth, config->displayHeight);                
+                _font->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize + 20, 
+                             "Coordinates: (%d, %d)", (int)position.x, (int)position.y);
+                _font->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2 + 20), 
+                             "Viewing angle: %2.1f", cameraManager->fieldOfView());
+                _font->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3 + 20), 
+                             "FPS: %d", config->framesPerSecond()); 
+                
+                break;            
+            case DGConsoleHiding:
+                if (_offset < _size)
+                    _offset += DGConsoleSpeed;
+                else 
+                    _state = DGConsoleHidden;
+                break;
+            case DGConsoleShowing:
+                if (_offset > 0)
+                    _offset -= DGConsoleSpeed;
+                else
+                    _state = DGConsoleVisible;
+                break;
+        }
+        
+        if (_state != DGConsoleHidden) {
+            DGLogData logData;
+            int row = (DGConsoleRows - 2); // Extra row saved for prompt
             
-            break;            
-        case DGConsoleHiding:
-            if (_offset < _size)
-                _offset += DGConsoleSpeed;
-            else 
-                _state = DGConsoleHidden;
-            break;
-        case DGConsoleShowing:
-            if (_offset > 0)
-                _offset -= DGConsoleSpeed;
-            else
-                _state = DGConsoleVisible;
-            break;
-    }
-    
-    if (_state != DGConsoleHidden) {
-        DGLogData logData;
-        int row = (DGConsoleRows - 1); // Extra row saved for prompt
-        
-        float coords[] = { 0, -_offset, 
-            config->displayWidth, -_offset,
-            config->displayWidth, _size - _offset,
-            0, _size - _offset };
-        
-        // Draw the slide
-        renderManager->disableTextures();
-        renderManager->setColor(0x25AA0000); // TODO: Add a mask color to achieve this (ie: ColoRed + Shade)
-        renderManager->drawSlide(coords);
-        renderManager->enableTextures();
-        
-        log->beginIteratingHistory();
-        
-        do {
-            log->getCurrentLine(&logData);
+            float coords[] = { 0, -_offset, 
+                config->displayWidth, -_offset,
+                config->displayWidth, _size - _offset,
+                0, _size - _offset };
             
-            // Draw the current line
-            renderManager->setColor(logData.color);
-            _font->print(DGConsoleMargin, ((DGConsoleSpacing + DGDefFontSize) * row) - _offset, logData.line);
+            // Draw the slide
+            renderManager->disableTextures();
+            renderManager->setColor(0x25AA0000); // TODO: Add a mask color to achieve this (ie: ColoRed + Shade)
+            renderManager->drawSlide(coords);
+            renderManager->enableTextures();
             
-            row--;
-        } while (log->iterateHistory());
-        
-        renderManager->setColor(DGColorBrightGreen);
-        _font->print(DGConsoleMargin, (_size - (DGConsoleSpacing + DGDefFontSize)) - _offset, ">%s_", _command.c_str());
+            if (log->beginIteratingHistory()) {
+                do {
+                    log->getCurrentLine(&logData);
+                    
+                    // Draw the current line
+                    renderManager->setColor(logData.color);
+                    _font->print(DGConsoleMargin, ((DGConsoleSpacing + DGDefFontSize) * row) - _offset, logData.line);
+                    
+                    row--;
+                } while (log->iterateHistory());
+            }
+            
+            renderManager->setColor(DGColorBrightGreen);
+            _font->print(DGConsoleMargin, (_size - (DGConsoleSpacing + DGDefFontSize)) - _offset, ">%s_", _command.c_str());
+        }
     }
 }
