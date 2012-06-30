@@ -34,8 +34,7 @@ DGRoom::DGRoom() {
 ////////////////////////////////////////////////////////////
 
 DGRoom::~DGRoom() {
-    if (_hasDefaultFootstep)
-        delete _defaultFootstep;
+    // Nothing to do here
 }
 
 ////////////////////////////////////////////////////////////
@@ -43,7 +42,7 @@ DGRoom::~DGRoom() {
 ////////////////////////////////////////////////////////////
 
 bool DGRoom::hasAudios() {
-    return _arrayOfAudios.empty();
+    return !_arrayOfAudios.empty();
 }
 
 bool DGRoom::hasDefaultFootstep() {

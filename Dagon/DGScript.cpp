@@ -199,7 +199,7 @@ void DGScript::resume() {
     if (_isSuspended) {
         _isSuspended = false;
         if (int result = lua_resume(_thread, 0))
-            _error(result); // Remains suspended
+            _error(result);
     }
 }
 
@@ -267,9 +267,11 @@ int DGScript::_globalPlay(lua_State *L) {
     DGAudio* audio = new DGAudio;
     
     audio->setResource(luaL_checkstring(L, 1));
+    DGSystem::getInstance().suspendThread(DGAudioThread);
     DGAudioManager::getInstance().registerAudio(audio);
     DGAudioManager::getInstance().requestAudio(audio);
     audio->play();
+    DGSystem::getInstance().resumeThread(DGAudioThread);
     
 	return 0;
 }
@@ -468,7 +470,12 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, POST_RENDER, DGEventPostRender);
     DGLuaEnum(_L, MOUSE_BUTTON, DGEventMouseButton);
     DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
-    DGLuaEnum(_L, RESIZE, DGEventResize);   
+    DGLuaEnum(_L, RESIZE, DGEventResize);
+
+    DGLuaEnum(_L, SLOW, DGFadeSlow);
+    DGLuaEnum(_L, SLOWEST, DGFadeSlowest);
+    DGLuaEnum(_L, FAST, DGFadeFast);
+    DGLuaEnum(_L, FASTEST, DGFadeFastest);
 }
 
 void DGScript::_registerGlobals() {

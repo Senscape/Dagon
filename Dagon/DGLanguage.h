@@ -59,6 +59,7 @@
 // Control module
 #define DGMsg030000 "Dagon version"
 #define DGMsg030001 "Initializing main controller..."
+#define DGMsg030002 "Initializing console..."
 #define DGMsg130000 "No nodes to load in room"
 #define DGMsg130001 "No spots to draw"
 #define DGMsg230000 "Node not added to current room"
