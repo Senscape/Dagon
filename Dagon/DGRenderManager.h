@@ -42,6 +42,7 @@ class DGRenderManager {
     DGLog* log;
     
     bool _blendNextUpdate;
+    float _blendOpacity;
     GLfloat _defCursor[(DGDefCursorDetail * 2) + 2];
     bool _alphaEnabled;
     bool _shadersEnabled;
