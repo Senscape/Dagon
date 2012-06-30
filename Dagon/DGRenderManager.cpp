@@ -108,6 +108,7 @@ void DGRenderManager::init() {
 ////////////////////////////////////////////////////////////
 
 void DGRenderManager::blendNextUpdate() {
+    _blendOpacity = 0.0f;
     _blendTexture->bind();
     this->copyView();
     _blendNextUpdate = true;
@@ -477,9 +478,8 @@ void DGRenderManager::copyView() {
 
 void DGRenderManager::blendView() {
 	if (_blendNextUpdate) {
-		static float j = 0.0f;
-		int xStretch = j * (config->displayWidth / 4);
-		int yStretch = j * (config->displayHeight / 4);
+		int xStretch = _blendOpacity * (config->displayWidth / 4);
+		int yStretch = _blendOpacity * (config->displayHeight / 4);
         
         // Note the coordinates here are inverted because of the way the screen is captured
         float coords[] = {-xStretch, config->displayHeight + yStretch, 
@@ -487,16 +487,16 @@ void DGRenderManager::blendView() {
             config->displayWidth + xStretch, -yStretch,
             -xStretch, -yStretch}; 
         
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f - j);
+        glColor4f(1.0f, 1.0f, 1.0f, 1.0f - _blendOpacity);
         
 		_blendTexture->bind();
 		this->drawSlide(coords);
         
 		// This should a bit faster than the walk_time factor
-		j += 0.015f * config->globalSpeed();
+		_blendOpacity += 0.015f * config->globalSpeed();
         if (_blendNextUpdate) {
-            if (j >= 1.0f) {
-                j = 0.0f;
+            if (_blendOpacity >= 1.0f) {
+                _blendOpacity = 0.0f;
                 _blendNextUpdate = false;
             }
         }
@@ -527,7 +527,7 @@ void DGRenderManager::fadeView() {
         config->displayWidth, config->displayHeight,
         0, config->displayHeight};
     
-    _fadeTexture->update();
+    _fadeTexture->updateFade();
     _fadeTexture->bind();    
     this->setAlpha(_fadeTexture->fadeLevel());
     this->drawSlide(coords);
