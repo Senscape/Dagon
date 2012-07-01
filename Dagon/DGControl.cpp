@@ -634,7 +634,12 @@ void DGControl::_processAction(){
             script->processCallback(action->luaHandler, action->luaObject);
             break;
         case DGActionFeed:
-            feedManager->parse(action->feed);
+            if (action->hasFeedAudio) {
+                system->suspendThread(DGAudioThread);
+                feedManager->parseWithAudio(action->feed, action->feedAudio);
+                system->resumeThread(DGAudioThread);                
+            }
+            else feedManager->parse(action->feed);
             break;
         case DGActionSwitch:
             cursorManager->removeAction();

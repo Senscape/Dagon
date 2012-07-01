@@ -23,7 +23,6 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-class DGAudio;
 class DGObject;
 
 // Enum begins at 100 to avoid conflicts with objects
@@ -36,7 +35,8 @@ enum DGActionTypes {
 typedef struct {
     unsigned int cursor;
     char feed[DGMaxFeedLength];
-    DGAudio* feedAudio;
+    char feedAudio[DGMaxFileLength];
+    bool hasFeedAudio;
     int luaHandler;
     int luaObject;
 	DGObject* target;

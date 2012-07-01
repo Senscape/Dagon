@@ -79,6 +79,13 @@ public:
                 action.type = DGActionFeed;
                 action.cursor = DGCursorLook;                
                 strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
+                
+                if (lua_isstring(L, 3)) {
+                    strncpy(action.feedAudio, lua_tostring(L, 3), DGMaxFileLength);
+                    action.hasFeedAudio = true;
+                }
+                else action.hasFeedAudio = false;
+                
                 b->setAction(&action);
                 
                 break;
