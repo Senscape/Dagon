@@ -259,7 +259,12 @@ void DGScript::_error(int result) {
 }
 
 int DGScript::_globalFeed(lua_State *L) {
-    DGFeedManager::getInstance().parse(luaL_checkstring(L, 1));
+    if (lua_isstring(L, 2)) {
+        DGSystem::getInstance().suspendThread(DGAudioThread);
+        DGFeedManager::getInstance().parseWithAudio(luaL_checkstring(L, 1), lua_tostring(L, 2));
+        DGSystem::getInstance().resumeThread(DGAudioThread);        
+    }
+    else DGFeedManager::getInstance().parse(luaL_checkstring(L, 1));
 	
 	return 0;
 }

@@ -131,6 +131,12 @@ public:
                 action.luaObject = s->luaObject();                
                 strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
                 
+                if (lua_isstring(L, 3)) {
+                    strncpy(action.feedAudio, lua_tostring(L, 3), DGMaxFileLength);
+                    action.hasFeedAudio = true;
+                }
+                else action.hasFeedAudio = false;
+                
                 s->setAction(&action);
                 if (!s->hasColor())
                     s->setColor(0);

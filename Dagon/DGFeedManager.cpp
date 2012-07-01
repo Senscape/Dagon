@@ -14,6 +14,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGAudioManager.h"
 #include "DGConfig.h"
 #include "DGFeedManager.h"
 #include "DGFontManager.h"
@@ -25,7 +26,8 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGFeedManager::DGFeedManager() {	
+DGFeedManager::DGFeedManager() {
+    audioManager = &DGAudioManager::getInstance();  
     config = &DGConfig::getInstance();
     fontManager = &DGFontManager::getInstance();    
     timerManager = &DGTimerManager::getInstance();   
@@ -38,7 +40,7 @@ DGFeedManager::DGFeedManager() {
 ////////////////////////////////////////////////////////////
 
 DGFeedManager::~DGFeedManager() {
-    // Nothing to do here
+    // Nothing to do here (manager destroys the audio)
 }
 
 ////////////////////////////////////////////////////////////
@@ -46,6 +48,9 @@ DGFeedManager::~DGFeedManager() {
 ////////////////////////////////////////////////////////////
 
 void DGFeedManager::init() {
+    _feedAudio = new DGAudio;
+    audioManager->registerAudio(_feedAudio);
+    
     _feedFont = fontManager->loadDefault();
 }
 
@@ -54,42 +59,41 @@ bool DGFeedManager::isQueued() {
 }
 
 void DGFeedManager::parse(const char* text) {
-    int length = (int)strlen(text);
-    const int maxChars = config->displayWidth / _feedHeight;
+    string str = text;
+    size_t maxChars = config->displayWidth / _feedHeight;
+    size_t even = str.length() / (str.length() / maxChars + 1);
+    size_t currSpace = 0;
+    size_t nextSpace = 0; 
     
-    DGFeed feed;
-    
-	strncpy(feed.text, text, DGMaxFeedLength);
-	
-	if (length > maxChars) {
-		char* p = feed.text;
-		int split = length / maxChars;
-		int even = length / (split + 1);
-		
-		for (int s = 0; s < split; s++) {
-			for (int c = 0; c < even; c++)
-				p++;
-			
-			while (*p != ' ')
-				p++;
-			
-			*p = '\n';
-		}
-		
-		feed.location.x = (config->displayWidth / 2) - ((even / 2) * _feedHeight) + DGFeedMargin;
-		feed.location.y = config->displayHeight - ((split + 1) * _feedHeight) - DGFeedMargin;
-	}
-	else {
-		feed.location.x = (config->displayWidth / 2) - ((length / 2) * _feedHeight) + DGFeedMargin;
+    while (nextSpace != str.npos) {
+        nextSpace = str.find(" " , even + currSpace);
+        string substr = str.substr(currSpace, (nextSpace - currSpace));
+        
+        DGFeed feed;
+        int width = (_feedHeight * 0.66f); // We have no option but to estimate this
+        
+        strncpy(feed.text, substr.c_str(), DGMaxFeedLength);
+        feed.location.x = (config->displayWidth / 2) - ((substr.length() / 2) * width);
 		feed.location.y = config->displayHeight - _feedHeight - DGFeedMargin;
-	}
-	
-    // FIXME: Must implement masks for colors
-    feed.color = DGColorWhite - 0xFF000000;
-    feed.state = DGFeedFadeIn;
-	feed.timerHandle = timerManager->createManual((float)(length * DGFeedSpeed)); // Trigger should be configurable  
+        feed.color = DGColorWhite - 0xFF000000;
+        feed.state = DGFeedFadeIn;
+        feed.timerHandle = timerManager->createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable  
+        
+        _arrayOfFeeds.push_back(feed);
+        
+        currSpace = currSpace + substr.length() + 1;
+    }
+}
 
-    _arrayOfFeeds.push_back(feed);
+void DGFeedManager::parseWithAudio(const char* text, const char* audio) {
+    this->parse(text);
+    
+    if (_feedAudio->isLoaded())
+        _feedAudio->unload();
+    
+    _feedAudio->setResource(audio);
+    audioManager->requestAudio(_feedAudio);
+    _feedAudio->play();
 }
 
 // TODO: Note the font manager should purge unused fonts
@@ -99,7 +103,7 @@ void DGFeedManager::setFont(const char* fromFileName, unsigned int heightOfFont)
 }
 
 void DGFeedManager::update() {
-    std::vector<DGFeed>::iterator it;
+    vector<DGFeed>::iterator it;
     
     it = _arrayOfFeeds.begin();
     
@@ -131,6 +135,10 @@ void DGFeedManager::update() {
         int displace = (it - _arrayOfFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
         _feedFont->setColor((*it).color);
         _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
+        
+        if (((_arrayOfFeeds.end() - it) > DGFeedMaxLines) && (*it).state == DGFeedIdle) {
+            (*it).state = DGFeedFadeOut;
+        }
         
         it++;
     }

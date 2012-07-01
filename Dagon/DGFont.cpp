@@ -56,15 +56,8 @@ bool DGFont::isLoaded() {
 }
 
 void DGFont::print(int x, int y, const char* text, ...) {
-	// We should keep this entire buffer separated from this function
-	char aux[DGMaxFeedLength];
 	char line[DGMaxFeedLength];
-	char lines[DGMaxLogHistory][DGMaxFeedLength]; // Max rows of text
-    
     const char* c;
-    float h = (float)_height / .63f;
-	unsigned int size = 0;
-    
 	va_list	ap;
 	
 	if (text == NULL)
@@ -75,63 +68,44 @@ void DGFont::print(int x, int y, const char* text, ...) {
 		va_end(ap);
 	}
 	
-	strcpy(aux, "");
-	for (c = line; *c; c++) {
-		if (*c == '\n') {
-			strcpy(lines[size], aux);
-			strcpy(aux, "");
-			size++;
-		}
-		else {
-			strncat(aux, c, 1);
-		}
-	}
-	
-	// This is to copy the last line
-	strcpy(lines[size], aux);
-	size++;
-	
 	glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	for (int i = 0; i < size; i++) {
-		c = lines[i];
+    
+    glPushMatrix();
+    glTranslatef(x, y, 0);
+    
+    c = line;
+    for (int j = 0; j < strlen(line); j++) {
+        int ch = *c;
         
-		glPushMatrix();
-		glTranslatef(x, y - h * i, 0);
+        GLfloat texCoords[] = {	0, 0,
+            0, _glyph[ch].y,
+            _glyph[ch].x, _glyph[ch].y,
+            _glyph[ch].x, 0 };
         
-		for (int j = 0; j < strlen(lines[i]); j++) {
-			int ch = *c;
-			
-			GLfloat texCoords[] = {	0, 0,
-				0, _glyph[ch].y,
-				_glyph[ch].x, _glyph[ch].y,
-				_glyph[ch].x, 0 };
-            
-            GLshort coords[] = { 0, 0,
-				0, _glyph[ch].rows,
-                _glyph[ch].width, _glyph[ch].rows,
-				_glyph[ch].width, 0 };
-			
-			glBindTexture(GL_TEXTURE_2D, _textures[ch]);
-			
-			glTranslatef((GLfloat)_glyph[ch].left, 0, 0);
-            
-			glPushMatrix();
-			glTranslatef(0, -(GLfloat)_glyph[ch].top + _height, 0);
-			
-			glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-			glVertexPointer(2, GL_SHORT, 0, coords);
-			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-			
-			glPopMatrix();
-			glTranslatef((GLfloat)(_glyph[ch].advance >> 6), 0, 0);
-			
-			c++;
-		}
-		
-		glPopMatrix();
-	}
+        GLshort coords[] = { 0, 0,
+            0, _glyph[ch].rows,
+            _glyph[ch].width, _glyph[ch].rows,
+            _glyph[ch].width, 0 };
+        
+        glBindTexture(GL_TEXTURE_2D, _textures[ch]);
+        
+        glTranslatef((GLfloat)_glyph[ch].left, 0, 0);
+        
+        glPushMatrix();
+        glTranslatef(0, -(GLfloat)_glyph[ch].top + _height, 0);
+        
+        glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+        glVertexPointer(2, GL_SHORT, 0, coords);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+        
+        glPopMatrix();
+        glTranslatef((GLfloat)(_glyph[ch].advance >> 6), 0, 0);
+        
+        c++;
+    }
+    
+    glPopMatrix();
 	
 	glPopAttrib();
 }

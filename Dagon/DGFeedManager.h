@@ -25,6 +25,7 @@
 
 #define DGDefFeedSize 10
 #define DGFeedMargin 25
+#define DGFeedMaxLines 8
 #define DGFeedSpeed 0.25f
 
 enum DGFeedStates {
@@ -42,6 +43,8 @@ typedef struct {
 	int timerHandle;    
 } DGFeed;
 
+class DGAudio;
+class DGAudioManager;
 class DGConfig;
 class DGFont;
 class DGFontManager;
@@ -52,10 +55,12 @@ class DGTimerManager;
 ////////////////////////////////////////////////////////////
 
 class DGFeedManager {
+    DGAudioManager* audioManager;    
     DGConfig* config;
     DGFontManager* fontManager;
     DGTimerManager* timerManager;
     
+    DGAudio* _feedAudio;
     std::vector<DGFeed> _arrayOfFeeds;
     DGFont* _feedFont;
     int _feedHeight;
@@ -79,6 +84,7 @@ public:
     void init();
     bool isQueued();
     void parse(const char* text);
+    void parseWithAudio(const char* text, const char* audio);
     void setFont(const char* fromFileName, unsigned int heightOfFont);
     void update();
 };
