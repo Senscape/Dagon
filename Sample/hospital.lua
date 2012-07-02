@@ -5,9 +5,9 @@ require 'notes'
 
 hasKeyMale = false
 
-hospital1 = Node("hospital1", "Door to Hallway B")
-hospital2 = Node("hospital2", "Middle section")
-hospital3 = Node("hospital3", "Door to Cells")
+hospital_1 = Node("Nodes/hospital_1", "Door to Hallway B")
+hospital_2 = Node("Nodes/hospital_2", "Middle section")
+hospital_3 = Node("Nodes/hospital_3", "Door to Cells")
 
 function enterCells()
 	if hasKeyMale == false then
@@ -21,21 +21,21 @@ function enterCells()
 	end 
 end
 
-hospital1:link({ W = hospital2, E = CorridorB })
-hospital2:link({ W = hospital3, E = hospital1 })
-hospital3:link({ E = hospital2, W = enterCells })
+hospital_1:link({ W = hospital_2, E = CorridorB })
+hospital_2:link({ W = hospital_3, E = hospital_1 })
+hospital_3:link({ E = hospital_2, W = enterCells })
 
-tube = hospital1:addSpot( Spot(WEST, {788, 368}) )
+tube = hospital_1:addSpot( Spot(WEST, {788, 368}) )
 tube:attach(VIDEO, "vid_tubea_hospital1.ogv", {loop = true})
 	
-tube = hospital1:addSpot( Spot(WEST, {894, 698}) )
+tube = hospital_1:addSpot( Spot(WEST, {894, 698}) )
 tube:attach(VIDEO, "vid_tubeb_hospital1.ogv", {loop = true})
 	
-tube = hospital2:addSpot( Spot(EAST, {1118, 306}) )
+tube = hospital_2:addSpot( Spot(EAST, {1118, 306}) )
 tube:attach(VIDEO, "vid_tube_hospital2.ogv", {loop = true})
 	
-tube = hospital3:addSpot( Spot(EAST, {1030, 534}) )
+tube = hospital_3:addSpot( Spot(EAST, {1030, 534}) )
 tube:attach(VIDEO, "vid_tubea_hospital3.ogv", {loop = true})
 
-tube = hospital3:addSpot( Spot(EAST, {1050, 802}) )
+tube = hospital_3:addSpot( Spot(EAST, {1050, 802}) )
 tube:attach(VIDEO, "vid_tubeb_hospital3.ogv", {loop = true})

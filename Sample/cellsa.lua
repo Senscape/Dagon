@@ -1,28 +1,28 @@
 room 'Bath1B'
 room 'Hospital'
 
-cellsa1 = Node("cellsa1", "Cells")
-cellsa2 = Node("cellsa2", "Cells")
-cellsa3 = Node("cellsa3", "Cells")
-cellsa4 = Node("cellsa4", "Cells")
-cellsa5 = Node("cellsa5", "Cells")
-cellsa6 = Node("cellsa6", "Cells")
+cellsa_1 = Node("Nodes/cellsa_1", "Cells")
+cellsa_2 = Node("Nodes/cellsa_2", "Cells")
+cellsa_3 = Node("Nodes/cellsa_3", "Cells")
+cellsa_4 = Node("Nodes/cellsa_4", "Cells")
+cellsa_5 = Node("Nodes/cellsa_5", "Cells")
+cellsa_6 = Node("Nodes/cellsa_6", "Cells")
 
-cellsa1:link({ W = cellsa2, E = Hospital })
-cellsa2:link({ W = cellsa3, E = cellsa1 })
-cellsa3:link({ W = cellsa4, E = cellsa2 })
-cellsa4:link({ N = Bath1B, W = cellsa5, E = cellsa3 })
-cellsa5:link({ W = cellsa6, E = cellsa4 })
-cellsa6:link({ E = cellsa5 })
+cellsa_1:link({ W = cellsa_2, E = Hospital })
+cellsa_2:link({ W = cellsa_3, E = cellsa_1 })
+cellsa_3:link({ W = cellsa_4, E = cellsa_2 })
+cellsa_4:link({ N = Bath1B, W = cellsa_5, E = cellsa_3 })
+cellsa_5:link({ W = cellsa_6, E = cellsa_4 })
+cellsa_6:link({ E = cellsa_5 })
 
-mad = cellsa2:addSpot( Spot(SOUTH, {947, 1047}) )
+mad = cellsa_2:addSpot( Spot(SOUTH, {947, 1047}) )
 mad:attach(VIDEO, "vid_mad_cellsa2.ogv", {loop = true})
 
-mad = cellsa5:addSpot( Spot(NORTH, {1036, 1079}) )
+mad = cellsa_5:addSpot( Spot(NORTH, {1036, 1079}) )
 mad:attach(VIDEO, "vid_mad_cellsa5.ogv", {loop = true})
 
-mad = cellsa6:addSpot( Spot(NORTH, {406, 824}) )
-mad:attach(VIDEO, "vid_mad_scare.ogv", {autoplay = false })
+mad = cellsa_6:addSpot( Spot(NORTH, {406, 824}) )
+mad:attach(VIDEO, "vid_mad_scare.ogv", {autoplay = false, sync = false })
 mad:attach(FUNCTION, 
 	function()
 		self:play()

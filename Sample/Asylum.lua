@@ -4,7 +4,7 @@ require 'intro'
 require 'notes'
 
 --config.controlMode = DRAG
-config.mute = true
+--config.mute = true
 
 setFont(FEED, "fnt_dislexia.ttf", 20)
 
