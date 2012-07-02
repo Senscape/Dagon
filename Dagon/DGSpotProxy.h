@@ -81,7 +81,7 @@ public:
         DGVideo* video;
         
         // For the video attach, autoplay defaults to true
-        bool autoplay = true, loop, sync;
+        bool autoplay = true, loop = false, sync = false;
         
         int type = (int)luaL_checknumber(L, 1);
         
