@@ -258,9 +258,7 @@ public:
     
     // Stop the spot
     int stop(lua_State *L) {
-        DGSystem::getInstance().suspendThread(DGAudioThread);
         s->stop();
-        DGSystem::getInstance().resumeThread(DGAudioThread);
         return 0;
     }
     

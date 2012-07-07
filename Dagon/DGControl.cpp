@@ -129,6 +129,7 @@ void DGControl::init() {
     if (config->showSplash) {
         _scene->loadSplash();
         _state->set(DGStateSplash);
+        cursorManager->disable();
         render->fadeInNextUpdate();
     }
     else render->resetFade();
@@ -228,8 +229,11 @@ void DGControl::processKey(int aKey, bool isModified) {
 }
 
 void DGControl::processMouse(int x, int y, int eventFlags) {
-    if (!cursorManager->isEnabled() || cursorManager->isFading()) // Ignore everything
+    if (!cursorManager->isEnabled()) {
+        // Ignore everything
+        cameraManager->stopPanning();
         return;
+    }
             
     if ((eventFlags & DGMouseEventMove) && (_eventHandlers.hasMouseMove))
         script->processCallback(_eventHandlers.mouseMove, 0);
@@ -412,9 +416,7 @@ void DGControl::switchTo(DGObject* theTarget) {
         cameraManager->simulateWalk();
     }
     
-    system->suspendThread(DGAudioThread);
     audioManager->clear();
-    system->resumeThread(DGAudioThread);
     
     system->suspendThread(DGVideoThread);
     videoManager->flush();
@@ -453,12 +455,9 @@ void DGControl::switchTo(DGObject* theTarget) {
                         DGAudio* audio = spot->audio();
                         
                         // Request the audio
-                        system->suspendThread(DGAudioThread);
                         audioManager->requestAudio(audio);
                         audio->setPosition(spot->face());
                         audio->setDefaultFadeLevel(spot->volume());
-                        
-                        system->resumeThread(DGAudioThread);
                     }
                     
                     // TODO: Merge the video autoplay with spot properties
@@ -516,13 +515,11 @@ void DGControl::switchTo(DGObject* theTarget) {
             it = arrayOfAudios.begin();
             
             while (it != arrayOfAudios.end()) {
-                system->suspendThread(DGAudioThread);
                 if ((*it)->state() != DGAudioPlaying)
                     (*it)->fadeIn();
                 
                 audioManager->requestAudio((*it));                
                 (*it)->play();
-                system->resumeThread(DGAudioThread);
                 
                 it++;
             }
@@ -530,19 +527,15 @@ void DGControl::switchTo(DGObject* theTarget) {
         
         // Finally, check if must play a single footstep
         if (_currentRoom->hasDefaultFootstep() && !firstSwitch) {
-            system->suspendThread(DGAudioThread);
             _currentRoom->defaultFootstep()->unload();
             audioManager->requestAudio(_currentRoom->defaultFootstep());
             _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
             _currentRoom->defaultFootstep()->play();
-            system->resumeThread(DGAudioThread);
         }
         else firstSwitch = false;
     }
     
-    system->suspendThread(DGAudioThread);
     audioManager->flush();
-    system->resumeThread(DGAudioThread);
     
     system->resumeThread(DGVideoThread);
 }
@@ -636,9 +629,7 @@ void DGControl::_processAction(){
             break;
         case DGActionFeed:
             if (action->hasFeedAudio) {
-                system->suspendThread(DGAudioThread);
-                feedManager->parseWithAudio(action->feed, action->feedAudio);
-                system->resumeThread(DGAudioThread);                
+                feedManager->parseWithAudio(action->feed, action->feedAudio);             
             }
             else feedManager->parse(action->feed);
             break;
