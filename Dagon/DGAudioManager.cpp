@@ -17,6 +17,7 @@
 #include "DGAudioManager.h"
 #include "DGConfig.h"
 #include "DGLog.h"
+#include "DGSystem.h"
 
 using namespace std;
 
@@ -98,9 +99,11 @@ void DGAudioManager::flush() {
                         case DGAudioPaused:
                         case DGAudioStopped:
                             // TODO: Automatically flush stopped and non-retained audios after
-                            // n update cycles!!
+                            // n update cycles
+                            DGSystem::getInstance().suspendThread(DGAudioThread);
                             (*it)->unload();
                             _arrayOfActiveAudios.erase(it);
+                            DGSystem::getInstance().resumeThread(DGAudioThread);
                             break;
                         default:
                             it++;
@@ -116,6 +119,7 @@ void DGAudioManager::flush() {
 void DGAudioManager::init() {
     log->trace(DGModAudio, "%s", DGMsg070000);
     
+    system = &DGSystem::getInstance();
     _alDevice = alcOpenDevice(NULL);
     
     if (!_alDevice) {
@@ -179,8 +183,10 @@ void DGAudioManager::requestAudio(DGAudio* target) {
         it++;
     }
     
+    DGSystem::getInstance().suspendThread(DGAudioThread);
     if (!isActive)
         _arrayOfActiveAudios.push_back(target);
+    DGSystem::getInstance().resumeThread(DGAudioThread);
     
     // FIXME: Not very elegant. Must implement a state condition for
     // each audio object. Perhaps use AL_STATE even.
@@ -195,6 +201,8 @@ void DGAudioManager::setOrientation(float* orientation) {
     }
 }
 
+
+// Asynchronous method
 void DGAudioManager::update() {
     if (_isInitialized) {
         if (!_arrayOfActiveAudios.empty()) {

@@ -260,9 +260,7 @@ void DGScript::_error(int result) {
 
 int DGScript::_globalFeed(lua_State *L) {
     if (lua_isstring(L, 2)) {
-        DGSystem::getInstance().suspendThread(DGAudioThread);
-        DGFeedManager::getInstance().parseWithAudio(luaL_checkstring(L, 1), lua_tostring(L, 2));
-        DGSystem::getInstance().resumeThread(DGAudioThread);        
+        DGFeedManager::getInstance().parseWithAudio(luaL_checkstring(L, 1), lua_tostring(L, 2));      
     }
     else DGFeedManager::getInstance().parse(luaL_checkstring(L, 1));
 	
@@ -273,9 +271,7 @@ int DGScript::_globalPlay(lua_State *L) {
     
     audio->setResource(luaL_checkstring(L, 1));
     DGAudioManager::getInstance().registerAudio(audio);
-    DGSystem::getInstance().suspendThread(DGAudioThread);
     DGAudioManager::getInstance().requestAudio(audio);
-    DGSystem::getInstance().resumeThread(DGAudioThread);
     audio->play();
     
 	return 0;

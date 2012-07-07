@@ -41,19 +41,16 @@
 
 class DGConfig;
 class DGLog;
+class DGSystem;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
-// TODO: The Audio Manager itself should communicate with the system
-// and suspend / resume threads. requestAudio should *always* play
-// the audio, and make sure it's loaded first. Let the Control attempt
-// to load during switches, but only request when necessary.
-
 class DGAudioManager {
     DGConfig* config;
     DGLog* log;
+    DGSystem* system;
     
     ALCdevice* _alDevice;
     ALCcontext* _alContext;
