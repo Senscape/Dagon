@@ -35,14 +35,14 @@ enum DGConfigDefaults {
     DGDefAutorun = true,
     DGDefBundleEnabled = true, // Not exported to Lua
     DGDefControlMode = DGMouseFree,
-	DGDefDisplayWidth = 1024,
-	DGDefDisplayHeight = 768,
+	DGDefDisplayWidth = 1280,
+	DGDefDisplayHeight = 800,
 	DGDefDisplayDepth = 32,
 	DGDefDebugMode = true, // This shouldn't default to true, careful while finding paths
     DGDefDust = false,  // Move to effects
     DGDefEffects = true,
 	DGDefFramerate = 60,
-	DGDefFullScreen = true,
+	DGDefFullScreen = false,
 	DGDefLog = true,
     DGDefMute = false,
     DGDefScare = false, // Move to effects
