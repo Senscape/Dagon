@@ -31,6 +31,7 @@ enum DGControlModes {
 
 enum DGConfigDefaults {
 	DGDefAntialiasing = true,
+    DGDefAutopaths = true,    
     DGDefAutorun = true,
     DGDefBundleEnabled = true, // Not exported to Lua
     DGDefControlMode = DGMouseFree,
@@ -90,6 +91,7 @@ public:
     }
     
     bool antialiasing;
+    bool autopaths;
     bool autorun;
     bool bundleEnabled;
     int controlMode;
@@ -116,7 +118,7 @@ public:
     int framesPerSecond();
     void setFramesPerSecond(int fps);
     
-    const char* path(int ofType, const char* forFile);
+    const char* path(int ofType, const char* forFile, int andObject = DGObjectGeneric);
     void setPath(int forType, const char* path);
     
     const char*	script();

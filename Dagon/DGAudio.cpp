@@ -121,7 +121,7 @@ void DGAudio::load() {
         
         // FIXME: This object shouldn't reference DGConfig, let the manager do it
         const char* fileToLoad = _randomizeFile(_resource.name);
-        fh = fopen(config->path(DGPathRes, fileToLoad), "rb");	
+        fh = fopen(config->path(DGPathRes, fileToLoad, DGObjectAudio), "rb");	
         
         if (fh != NULL) {
             fseek(fh, 0, SEEK_END);

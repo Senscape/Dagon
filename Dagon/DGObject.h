@@ -43,6 +43,7 @@ enum DGObjectTypes {
 	DGObjectGeneric,
 	DGObjectAudio,
     DGObjectButton,
+    DGObjectCursor, // Not really objects
 	DGObjectFont,
     DGObjectImage,
 	DGObjectNode,
@@ -73,6 +74,7 @@ class DGObject {
     float _fadeSpeed;
     float _fadeTarget;
     bool _isEnabled;
+    bool _isStatic;
     
 public:
     DGObject();
@@ -100,6 +102,7 @@ public:
     void setLuaObject(int object);
     void setType(unsigned int type);
     void setName(const char* aName);
+    void setStatic();
     
     // State changes
     

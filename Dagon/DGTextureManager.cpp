@@ -107,7 +107,7 @@ void DGTextureManager::registerTexture(DGTexture* target) {
                      target->indexInBundle() + DGFileSeqStart, config->texExtension());
         }
         
-        target->setResource(config->path(DGPathRes, fileToLoad));
+        target->setResource(config->path(DGPathRes, fileToLoad, DGObjectNode));
     }
     
     _arrayOfTextures.push_back(target);

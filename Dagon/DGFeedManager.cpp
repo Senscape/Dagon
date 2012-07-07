@@ -49,6 +49,7 @@ DGFeedManager::~DGFeedManager() {
 
 void DGFeedManager::init() {
     _feedAudio = new DGAudio;
+    _feedAudio->setStatic();
     audioManager->registerAudio(_feedAudio);
     
     _feedFont = fontManager->loadDefault();

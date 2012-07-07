@@ -92,13 +92,13 @@ void DGSystem::createThreads() {
                                            audioManager->update();
                                            dispatch_semaphore_signal(_semaphores[DGAudioThread]); });    
     
-    _timerThread = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
+    _timerThread = CreateDispatchTimer(0.001f * NSEC_PER_SEC, 0,
                                        dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
                                        ^{ dispatch_semaphore_wait(_semaphores[DGTimerThread], DISPATCH_TIME_FOREVER);
                                            timerManager->update(); 
                                            dispatch_semaphore_signal(_semaphores[DGTimerThread]); });
     
-    _videoThread = CreateDispatchTimer(0.01f * NSEC_PER_SEC, 0,
+    _videoThread = CreateDispatchTimer(0.001f * NSEC_PER_SEC, 0,
                                        dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0),
                                        ^{ dispatch_semaphore_wait(_semaphores[DGVideoThread], DISPATCH_TIME_FOREVER);
                                            videoManager->update();
@@ -167,7 +167,7 @@ void DGSystem::findPaths(int argc, char* argv[]) {
             
             // Get resource folder in bundle path
             NSString *resDirectory = [[NSBundle mainBundle] resourcePath];
-            resDirectory = [[resDirectory stringByAppendingString:@"/"] stringByAppendingString:@DGDefCatalogPath];
+            resDirectory = [[resDirectory stringByAppendingString:@"/"] stringByAppendingString:@DGDefResourcePath];
             config->setPath(DGPathRes, [resDirectory UTF8String]);
         }   
         

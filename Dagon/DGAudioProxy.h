@@ -46,7 +46,8 @@ public:
                 
                 // We can only read the key as a string, so we have no choice but
                 // do an ugly nesting of strcmps()
-                if (strcmp(key, "loopable") == 0) a->setLoopable(lua_toboolean(L, -1));
+                if (strcmp(key, "loop") == 0) a->setLoopable(lua_toboolean(L, -1));
+                if (strcmp(key, "volume") == 0) a->setDefaultFadeLevel((float)(lua_tonumber(L, -1) / 100));
                 
                 lua_pop(L, 1);
             }

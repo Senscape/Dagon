@@ -27,8 +27,9 @@
 enum DGSpotFlags {
     DGSpotAuto = 0x1,
 	DGSpotClass = 0x2,
-	DGSpotSync = 0x4,    
-	DGSpotUser = 0x8
+	DGSpotLoop = 0x4,    
+	DGSpotSync = 0x8,    
+	DGSpotUser = 0x10
 };
 
 class DGAudio;
@@ -52,7 +53,7 @@ class DGSpot : public DGObject {
 	
 	bool _hasAction;
 	bool _hasAudio;
-	bool _hasColor;
+	bool _hasColor; 
 	bool _hasTexture;
 	bool _hasVideo;
     

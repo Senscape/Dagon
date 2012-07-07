@@ -56,6 +56,9 @@ bool DGFont::isLoaded() {
 }
 
 void DGFont::print(int x, int y, const char* text, ...) {
+    if (!_isLoaded)
+        return;
+    
 	char line[DGMaxFeedLength];
     const char* c;
 	va_list	ap;
@@ -143,7 +146,7 @@ void DGFont::setLibrary(FT_Library* library) {
 void DGFont::setResource(const char* fromFileName, unsigned int heightOfFont) {
     _height = (float)heightOfFont;
     
-    if (FT_New_Face(*_library, config->path(DGPathRes, fromFileName), 0, &_face)) {
+    if (FT_New_Face(*_library, config->path(DGPathRes, fromFileName, DGObjectFont), 0, &_face)) {
         log->error(DGModFont, "%s: %s", DGMsg260003, fromFileName);
         return;
     }

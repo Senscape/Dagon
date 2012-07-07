@@ -43,6 +43,7 @@ class DGNode : public DGObject {
     
     std::vector<DGSpot*> _arrayOfSpots;
     std::vector<DGSpot*>::iterator _it;
+    std::string _description;    
     
     void _link(unsigned int direction, DGAction* action);
     
@@ -60,11 +61,14 @@ public:
     // Gets
     
     char* bundleName();
+    const char* description();
     DGSpot* currentSpot();
+    
     
     // Sets
     
     void setBundleName(const char* name);
+    void setDescription(const char* description);
     
     // State changes
     

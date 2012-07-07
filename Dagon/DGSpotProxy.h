@@ -40,6 +40,7 @@ public:
     // Constructor
     DGSpotProxy(lua_State *L) {
         int flags = DGSpotUser;
+        float volume = 1.0f;
         
         if (lua_istable(L, 3)) {
             lua_pushnil(L);
@@ -48,7 +49,22 @@ public:
                 
                 // We can only read the key as a string, so we have no choice but
                 // do an ugly nesting of strcmps()
-                if (strcmp(key, "autoplay") == 0) flags = flags | DGSpotAuto;
+                if (strcmp(key, "auto") == 0) {
+                    if (lua_toboolean(L, -1) == true) flags = flags | DGSpotAuto;
+                    else flags = flags & ~DGSpotAuto;
+                }
+                
+                if (strcmp(key, "loop") == 0) {
+                    if (lua_toboolean(L, -1) == true) flags = flags | DGSpotLoop;
+                    else flags = flags & ~DGSpotLoop;
+                }
+                
+                if (strcmp(key, "sync") == 0) {
+                    if (lua_toboolean(L, -1) == true) flags = flags | DGSpotSync;
+                    else flags = flags & DGSpotSync;
+                }
+
+                if (strcmp(key, "volume") == 0) volume = (float)(lua_tonumber(L, -1) / 100);
                 
                 lua_pop(L, 1);
             }
@@ -65,7 +81,7 @@ public:
             }
             
             s = new DGSpot(arrayOfCoords, luaL_checknumber(L, 1), flags);
-            s->setVolume(1.0f); // Default volume
+            s->setVolume(volume);
         }
         else luaL_error(L, DGMsg250004);
         
@@ -81,7 +97,7 @@ public:
         DGVideo* video;
         
         // For the video attach, autoplay defaults to true
-        bool autoplay = true, loop = false, sync = false;
+        bool autoplay, loop, sync;
         
         int type = (int)luaL_checknumber(L, 1);
         
@@ -98,23 +114,10 @@ public:
                     
                     DGAudioManager::getInstance().registerAudio(audio);
                     
+                    if (s->hasFlag(DGSpotLoop))
+                        audio->setLoopable(true);
+                    
                     s->setAudio(audio);
-                }
-                
-                // Check if we have flags to add
-                // TODO: We probably have to review the entire syntax here,
-                // and check flags for any object
-                if (lua_istable(L, 3)) {
-                    lua_pushnil(L);
-                    while (lua_next(L, 3) != 0) {
-                        const char* key = lua_tostring(L, -2);
-                        
-                        // We can only read the key as a string, so we have no choice but
-                        // do an ugly nesting of strcmps()
-                        if (strcmp(key, "volume") == 0) s->setVolume((float)(lua_tonumber(L, -1) / 100));
-                        
-                        lua_pop(L, 1);
-                    }
                 }
                 
                 // Now we get the metatable of the added audio and set it
@@ -167,7 +170,7 @@ public:
                 // resource of the texture.
                 
                 texture = new DGTexture;
-                texture->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2)));
+                texture->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2), DGObjectImage));
                 
                 // If we have a third parameter, use it to set the index inside a bundle
                 if (lua_isnumber(L, 3))
@@ -196,32 +199,21 @@ public:
                 
                 break;
             case VIDEO:
-                // TODO: Autoplay should NOT be handled in video but affect spot in general
-                if (lua_istable(L, 3)) {
-                    lua_pushnil(L);
-                    while (lua_next(L, 3) != 0) {
-                        const char* key = lua_tostring(L, -2);
-                        
-                        if (strcmp(key, "autoplay") == 0) autoplay = lua_toboolean(L, -1);
-                        else if (strcmp(key, "loop") == 0) loop = lua_toboolean(L, -1);
-                        else if (strcmp(key, "sync") == 0) sync = lua_toboolean(L, -1);
-                        
-                        lua_pop(L, 1);
-                    }
+                if (s->hasFlag(DGSpotAuto)) autoplay = true;
+                else autoplay = false;
+                
+                if (s->hasFlag(DGSpotLoop)) loop = true;
+                else loop = false;
+                
+                if (s->hasFlag(DGSpotSync)) sync = true;
+                else sync = false;                
                     
-                    video = new DGVideo(autoplay, loop, sync);
-                }
-                else {
-                    video = new DGVideo;
-                }
+                video = new DGVideo(autoplay, loop, sync);
                 
                 // TODO: Path is set by the video manager
-                video->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2)));
+                video->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2), DGObjectVideo));
                 s->setVideo(video);
                 DGVideoManager::getInstance().registerVideo(video);
-                
-                if (autoplay)
-                    s->play();
                 
                 break;                
         }
@@ -248,6 +240,9 @@ public:
     
     // Play the spot
     int play(lua_State *L) {
+        // WARNING: Potential thread conflict here! Let the manager decide when to pause
+        // thread(s).
+        
         s->play();
         
         // Test for synced audio or video

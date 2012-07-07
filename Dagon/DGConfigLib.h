@@ -38,8 +38,18 @@ static int DGConfigLibGet(lua_State *L) {
 		return 1;
 	}
     
+    if (strcmp(key, "autopaths") == 0) {
+		lua_pushboolean(L, DGConfig::getInstance().autopaths);
+		return 1;
+	}
+    
     if (strcmp(key, "autorun") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().autorun);
+		return 1;
+	}
+    
+    if (strcmp(key, "bundleEnabled") == 0) {
+		lua_pushboolean(L, DGConfig::getInstance().bundleEnabled);
 		return 1;
 	}
     
@@ -137,8 +147,14 @@ static int DGConfigLibSet(lua_State *L) {
 	if (strcmp(key, "antialiasing") == 0)
 		DGConfig::getInstance().antialiasing = (bool)lua_toboolean(L, 3);
     
+	if (strcmp(key, "autopaths") == 0)
+		DGConfig::getInstance().autopaths = (bool)lua_toboolean(L, 3);    
+    
     if (strcmp(key, "autorun") == 0)
 		DGConfig::getInstance().autorun = (bool)lua_toboolean(L, 3);
+    
+    if (strcmp(key, "bundleEnabled") == 0)
+		DGConfig::getInstance().bundleEnabled = (bool)lua_toboolean(L, 3);    
     
     if (strcmp(key, "controlMode") == 0)
 		DGConfig::getInstance().controlMode = (int)luaL_checknumber(L, 3);    

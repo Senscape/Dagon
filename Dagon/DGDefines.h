@@ -15,10 +15,17 @@
 
 // Defaults
 
-#define	DGDefScriptFile     "main" // Also window name
-#define	DGDefCatalogPath	"catalog/"
-#define	DGDefConfigFile		"dagon.cfg"
-#define	DGDefLogFile		"dagon.log"
+#define	DGDefScriptFile     "Main" // Also window name
+#define	DGDefAudioPath      "Audio/"
+#define	DGDefCursorPath     "Cursors/"
+#define	DGDefFontPath       "Fonts/"
+#define	DGDefImagePath      "Images/"
+#define	DGDefNodePath       "Nodes/"
+#define	DGDefRoomPath       "Rooms/"
+#define	DGDefVideoPath      "Video/"
+#define	DGDefResourcePath	"Resources/"
+#define	DGDefConfigFile		"Dagon.cfg"
+#define	DGDefLogFile		"Dagon.log"
 #define DGDefTexExtension	"tex"
 #define DGDefTexSize		2048 // TODO: We should be able to read this value from each texture
 
@@ -29,12 +36,13 @@
 #define DGMaxLogLength		256
 #define DGMaxLogHistory		80
 #define	DGMaxObjectName		80
-#define	DGMaxPathLength		512
+#define	DGMaxPathLength		256
+#define	DGMaxSubPathLength	32
 
 // Others
 
 #define DGFileSeqStart      1
-#define	DGFileSeqDigits     4
+#define	DGFileSeqDigits     3
 
 #define mkstr(a) # a
 #define in_between(a) mkstr(a)

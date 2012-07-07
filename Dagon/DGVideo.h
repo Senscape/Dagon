@@ -26,9 +26,10 @@
 ////////////////////////////////////////////////////////////
 
 enum DGVideoStates {
-    DGVideoIdle,
+    DGVideoInitial,
     DGVideoPlaying,
-    DGVideoPaused
+    DGVideoPaused,
+    DGVideoStopped
 };
 
 typedef struct {

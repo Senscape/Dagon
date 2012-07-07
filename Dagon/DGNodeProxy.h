@@ -57,9 +57,9 @@ public:
         n->setBundleName(luaL_checkstring(L, 1));
         
         if (lua_gettop(L) == 2)
-            n->setName(luaL_checkstring(L, 2));
-        else
-            n->setName(luaL_checkstring(L, 1));
+            n->setDescription(luaL_checkstring(L, 2));
+
+        n->setName(luaL_checkstring(L, 1));
         
         // Register the node in the controller (generates the bundle)
         DGControl::getInstance().registerObject(n);

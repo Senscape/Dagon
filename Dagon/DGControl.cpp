@@ -458,8 +458,6 @@ void DGControl::switchTo(DGObject* theTarget) {
                         audio->setPosition(spot->face());
                         audio->setDefaultFadeLevel(spot->volume());
                         
-                        if (spot->hasFlag(DGSpotAuto))
-                            audio->play();
                         system->resumeThread(DGAudioThread);
                     }
                     
@@ -494,6 +492,9 @@ void DGControl::switchTo(DGObject* theTarget) {
                         if (spot->vertexCount() == 1)
                             spot->resize(spot->texture()->width(), spot->texture()->height());
                     }
+                    
+                    if (spot->hasFlag(DGSpotAuto))
+                        spot->play();
                 } while (currentNode->iterateSpots());
             }
             else {
@@ -503,7 +504,7 @@ void DGControl::switchTo(DGObject* theTarget) {
             // Prepare the name for the window
             char title[DGMaxObjectName];
             snprintf(title, DGMaxObjectName, "%s (%s, %s)", config->script(), 
-                     _currentRoom->name(), currentNode->name());
+                     _currentRoom->name(), currentNode->description());
             system->setTitle(title);
         }
         

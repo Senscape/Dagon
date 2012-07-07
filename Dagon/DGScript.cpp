@@ -272,11 +272,11 @@ int DGScript::_globalPlay(lua_State *L) {
     DGAudio* audio = new DGAudio;
     
     audio->setResource(luaL_checkstring(L, 1));
-    DGSystem::getInstance().suspendThread(DGAudioThread);
     DGAudioManager::getInstance().registerAudio(audio);
+    DGSystem::getInstance().suspendThread(DGAudioThread);
     DGAudioManager::getInstance().requestAudio(audio);
-    audio->play();
     DGSystem::getInstance().resumeThread(DGAudioThread);
+    audio->play();
     
 	return 0;
 }
@@ -356,7 +356,7 @@ int DGScript::_globalRoom(lua_State *L) {
         // TODO: Read rooms from path
         snprintf(script, DGMaxFileLength, "%s.lua", module);
         
-        if (luaL_loadfile(L, DGConfig::getInstance().path(DGPathApp, script)) == 0) {
+        if (luaL_loadfile(L, DGConfig::getInstance().path(DGPathApp, script, DGObjectRoom)) == 0) {
             DGScript::getInstance().setModule(module);
             lua_pcall(L, 0, 0, 0);
             DGScript::getInstance().unsetModule();

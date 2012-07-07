@@ -88,7 +88,7 @@ void DGCursorManager::load(int type, const char* imageFromFile) {
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config->path(DGPathRes, imageFromFile));
+    texture->setResource(config->path(DGPathRes, imageFromFile, DGObjectCursor));
     texture->load();
     
     cursor.type = type;

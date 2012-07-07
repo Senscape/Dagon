@@ -68,6 +68,10 @@ char* DGNode::bundleName() {
     return _bundleName;
 }
 
+const char* DGNode::description() {
+    return _description.c_str();
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
@@ -75,6 +79,10 @@ char* DGNode::bundleName() {
 void DGNode::setBundleName(const char* name) {
     strncpy(_bundleName, name, DGMaxObjectName);
     _hasBundleName = true;
+}
+
+void DGNode::setDescription(const char* description) {
+    _description = description;
 }
 
 ////////////////////////////////////////////////////////////
