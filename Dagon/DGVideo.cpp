@@ -45,7 +45,7 @@ DGVideo::DGVideo() {
     _hasNewFrame = false;
     _hasResource = false;
     _isLoaded = false;
-    _state = DGVideoIdle;
+    _state = DGVideoInitial;
     
     _doesAutoplay = true;
     _isLoopable = false;
@@ -62,7 +62,7 @@ DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced) {
     
     _hasResource = false;
     _isLoaded = false;
-    _state = DGVideoIdle;
+    _state = DGVideoInitial;
     
     _doesAutoplay = doesAutoplay;
     _isLoopable = isLoopable;
@@ -265,12 +265,12 @@ void DGVideo::load() {
 }
 
 void DGVideo::play() {
-    if (_state == DGVideoIdle) {
+    if (_state == DGVideoInitial) {
         _lastTime = _frameDuration; // Forces a first update
         _state = DGVideoPlaying;
         this->update();
     }
-    else { // If paused
+    else { // If paused or stopped
         _state = DGVideoPlaying;
     }
 }
@@ -281,8 +281,8 @@ void DGVideo::pause() {
 }
 
 void DGVideo::stop() {
-    if (_state != DGVideoIdle) {
-        _state = DGVideoIdle;
+    if (_state == DGVideoPlaying) {
+        _state = DGVideoStopped;
         
         // Rewind
         fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
@@ -293,7 +293,7 @@ void DGVideo::stop() {
 void DGVideo::unload() {
     if (_isLoaded) {
         _isLoaded = false;
-        _state = DGVideoIdle;
+        _state = DGVideoInitial;
         
         _theoraInfo->videobuf_ready = 0;
         _theoraInfo->videobuf_granulepos -= 1;
@@ -476,7 +476,7 @@ int DGVideo::_prepareFrame() {
 				ogg_stream_reset(&_theoraInfo->to);
 			}
 			else {
-				_state = DGVideoIdle;
+				this->stop();
 			}
             
 			break;

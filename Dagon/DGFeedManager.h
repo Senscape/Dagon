@@ -25,7 +25,7 @@
 
 #define DGDefFeedSize 10
 #define DGFeedMargin 25
-#define DGFeedMaxLines 8
+#define DGFeedMaxLines 5
 #define DGFeedSpeed 0.25f
 
 enum DGFeedStates {

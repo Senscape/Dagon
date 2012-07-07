@@ -45,6 +45,7 @@ class DGRenderManager {
     float _blendOpacity;
     GLfloat _defCursor[(DGDefCursorDetail * 2) + 2];
     bool _alphaEnabled;
+    float _helperLoop;
     bool _shadersEnabled;
     bool _texturesEnabled;
     

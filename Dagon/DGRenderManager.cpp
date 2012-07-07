@@ -31,6 +31,7 @@ DGRenderManager::DGRenderManager() {
     
     _blendTexture = NULL;
     _fadeTexture = NULL;
+    _helperLoop = 0.0f;
     
     _blendNextUpdate = false;
 	_texturesEnabled = false;
@@ -217,23 +218,18 @@ void DGRenderManager::disableTextures() {
 }
 
 void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
-    static float j = 0.0f;
-    
     glDisable(GL_LINE_SMOOTH);
     
     // TODO: Test later if push & pop is necessary at this point
 	glPushMatrix();
 	glTranslatef(xPosition, yPosition, 0);
     
-    if (j > 1.0f) j = 0.0f;
-    else j += 0.01f;
-    
     if (animate) {
         GLfloat currColor[4];
         glGetFloatv(GL_CURRENT_COLOR, currColor);
-        glColor4f(currColor[0], currColor[1], currColor[2], 1.0f - j);
+        glColor4f(currColor[0], currColor[1], currColor[2], 1.0f - _helperLoop);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        glScalef(1.0f * (j * 2.0f), 1.0f * (j * 2.0f), 0);   
+        glScalef(1.0f * (_helperLoop * 2.0f), 1.0f * (_helperLoop * 2.0f), 0);   
     }
     else glBlendFunc(GL_ONE, GL_ONE);
     
@@ -241,7 +237,7 @@ void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
 	
 	glDrawArrays(GL_LINE_LOOP, 0, (DGDefCursorDetail / 2) + 2);
     
-	if (animate) glScalef(0.85f * j, 0.85f * j, 0);
+	if (animate) glScalef(0.85f * _helperLoop, 0.85f * _helperLoop, 0);
     else glScalef(0.85f, 0.85f, 0);   
     
 	glDrawArrays(GL_TRIANGLE_FAN, 0, (DGDefCursorDetail / 2) + 2);
@@ -442,6 +438,9 @@ int	DGRenderManager::testColor(int xPosition, int yPosition) {
 
 bool DGRenderManager::beginIteratingHelpers() {
     if (!_arrayOfHelpers.empty()) {
+        if (_helperLoop > 1.0f) _helperLoop = 0.0f;
+        else _helperLoop += 0.015f; // This is an arbitrary speed
+        
         _itHelper = _arrayOfHelpers.begin();
         
         return true;

@@ -116,7 +116,7 @@ void DGButton::setOnHoverTexture(const char* fromFileName) {
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config->path(DGPathRes, fromFileName));
+    texture->setResource(config->path(DGPathRes, fromFileName, DGObjectImage));
     texture->load();
     
     _attachedOnHoverTexture = texture;

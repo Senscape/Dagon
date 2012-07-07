@@ -22,12 +22,13 @@
 
 DGConfig::DGConfig() {
     strcpy(_appPath, "");
-    strncpy(_resPath, DGDefCatalogPath, DGMaxPathLength);
+    strncpy(_resPath, DGDefResourcePath, DGMaxPathLength);
 	strncpy(_scriptName, DGDefScriptFile, DGMaxFileLength);
     strcpy(_userPath, "");
     strncpy(_texExtension, DGDefTexExtension, 4);
 	
 	antialiasing = DGDefAntialiasing;
+    autopaths = DGDefAutopaths;
     autorun = DGDefAutorun;
     bundleEnabled = DGDefBundleEnabled;
     controlMode = DGDefControlMode;
@@ -80,15 +81,44 @@ void DGConfig::setFramesPerSecond(int fps) {
     _fps = fps;
 }
 
-const char*	DGConfig::path(int ofType, const char* forFile) {
+const char*	DGConfig::path(int ofType, const char* forFile, int andObject) {
  	static char fullPath[DGMaxPathLength + DGMaxFileLength];
 	
     switch (ofType) {
         case DGPathApp:
             strncpy(fullPath, _appPath, DGMaxPathLength);
+            if (strchr(forFile, '/') == NULL && autopaths) {
+                switch (andObject) {
+                    case DGObjectRoom:
+                        strncat(fullPath, DGDefRoomPath, DGMaxSubPathLength);
+                        break;                    
+                }
+            }
             break;
         case DGPathRes:
             strncpy(fullPath, _resPath, DGMaxPathLength);
+            if (strchr(forFile, '/') == NULL && autopaths) {
+                switch (andObject) {
+                    case DGObjectAudio:
+                        strncat(fullPath, DGDefAudioPath, DGMaxSubPathLength);
+                        break;
+                    case DGObjectCursor:
+                        strncat(fullPath, DGDefCursorPath, DGMaxSubPathLength);
+                        break;
+                    case DGObjectFont:
+                        strncat(fullPath, DGDefFontPath, DGMaxSubPathLength);
+                        break;                        
+                    case DGObjectImage:
+                        strncat(fullPath, DGDefImagePath, DGMaxSubPathLength);
+                        break;                        
+                    case DGObjectNode:
+                        strncat(fullPath, DGDefNodePath, DGMaxSubPathLength);
+                        break;      
+                    case DGObjectVideo:
+                        strncat(fullPath, DGDefVideoPath, DGMaxSubPathLength);
+                        break;                        
+                }
+            }
             break;
         case DGPathUser:
             strncpy(fullPath, _userPath, DGMaxPathLength);

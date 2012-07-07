@@ -140,6 +140,9 @@ void DGTimerManager::process() {
     while (it != _arrayOfTimers.end()) {
         if ((*it).isEnabled && ((*it).type != DGTimerManual)) {
             if ((*it).hasTriggered) {
+                (*it).hasTriggered = false;
+                (*it).lastTime = DGSystem::getInstance().wallTime();
+                
                 switch ((*it).type) {
                     case DGTimerInternal:
                         (*it).handler();
@@ -150,8 +153,7 @@ void DGTimerManager::process() {
                         break;
                 }
                 
-                (*it).hasTriggered = false;
-                (*it).lastTime = DGSystem::getInstance().wallTime();
+                break; // In case the vector has changed, break the loop
             }
         }
         

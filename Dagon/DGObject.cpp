@@ -33,6 +33,7 @@ DGObject::DGObject() {
     _fadeTarget = 1.0f;
     _fadeDirection = DGFadeNone;
     _isEnabled = true;
+    _isStatic = false;
     
     this->setFadeSpeed(DGFadeNormal);
 }
@@ -125,6 +126,11 @@ void DGObject::setType(unsigned int type) {
     _type = type;
 }
 
+void DGObject::setStatic() {
+    _isStatic = true;
+    this->retain();
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
@@ -156,7 +162,7 @@ void DGObject::retain() {
 }
 
 void DGObject::release() {
-    if (_retainCount > 0)
+    if (_retainCount > 0 && !_isStatic)
         _retainCount--;    
 }
 
