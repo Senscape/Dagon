@@ -120,7 +120,8 @@ private:
         // Another modification: print the name of the Dagon object instead
         // of its pointer
         sprintf(buff, "%s", obj->ptr()->name());
-        lua_pushfstring(L, "%s (%s)", T::className, buff);
+        //lua_pushfstring(L, "%s (%s)", T::className, buff);
+        lua_pushfstring(L, "%s", buff);
         return 1;
     }
 };
