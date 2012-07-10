@@ -26,6 +26,7 @@ using namespace std;
 
 DGTimerManager::DGTimerManager() {
     _handles = 0;
+    _luaObject = 0;
 }
 
 ////////////////////////////////////////////////////////////
@@ -55,22 +56,19 @@ bool DGTimerManager::checkManual(int handle) {
 }
 
 // TODO: Trigger should always be above 1 second
-int DGTimerManager::create(double trigger, int handlerForLua) {
+int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, int luaObject) {
     DGTimer timer;
     
     timer.handle = _handles;
     timer.hasTriggered = false;
     timer.isEnabled = true;
-    timer.isLoopable = true;
+    timer.isLoopable = shouldLoop;
     timer.lastTime = DGSystem::getInstance().wallTime();
     timer.type = DGTimerNormal;    
     
-    // IMPORTANT: Trigger is divided by 10 to comply with the current update scheme.
-    // For precision above 1 second, control would have to be updated often.
-    // Actually, it looks like the math here is 10 per pair of cores. ie: 20 for
-    // quad-core. Why the hell is that?
     timer.trigger = trigger;
     timer.luaHandler = handlerForLua;
+    timer.luaObject = luaObject;
     
     _arrayOfTimers.push_back(timer);
     
@@ -139,16 +137,27 @@ void DGTimerManager::process() {
     
     while (it != _arrayOfTimers.end()) {
         if ((*it).isEnabled && ((*it).type != DGTimerManual)) {
-            if ((*it).hasTriggered) {
-                (*it).hasTriggered = false;
-                (*it).lastTime = DGSystem::getInstance().wallTime();
-                
+            if ((*it).hasTriggered) {                
                 switch ((*it).type) {
                     case DGTimerInternal:
                         (*it).handler();
                         break;
                         
                     case DGTimerNormal:
+                        if ((*it).luaObject) { // Belongs to a Lua object?
+                            if ((*it).luaObject != _luaObject)
+                                break; // Do not invoke the handler
+                        }
+                        
+                        if ((*it).isLoopable) {
+                            (*it).hasTriggered = false;
+                            (*it).lastTime = DGSystem::getInstance().wallTime();
+                        }
+                        else {
+                            // Should destroy in reality
+                            (*it).isEnabled = false;
+                        }
+                        
                         DGScript::getInstance().processCallback((*it).luaHandler, 0);
                         break;
                 }
@@ -159,6 +168,10 @@ void DGTimerManager::process() {
         
         it++;
     }
+}
+
+void DGTimerManager::setLuaObject(int luaObject) {
+    _luaObject = luaObject;
 }
 
 // FIXME: This is quite sucky. Timers keep looping and being checked even if they

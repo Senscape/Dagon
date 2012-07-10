@@ -425,6 +425,7 @@ void DGControl::switchTo(DGObject* theTarget) {
         case DGObjectRoom:
             _currentRoom = (DGRoom*)theTarget;
             _scene->setRoom((DGRoom*)theTarget);
+            timerManager->setLuaObject(_currentRoom->luaObject());
             
             if (!_currentRoom->hasNodes())
                 log->warning(DGModControl, "%s: %s", DGMsg130000, _currentRoom->name());
@@ -629,9 +630,9 @@ void DGControl::_processAction(){
             break;
         case DGActionFeed:
             if (action->hasFeedAudio) {
-                feedManager->parseWithAudio(action->feed, action->feedAudio);             
+                feedManager->showAndPlay(action->feed, action->feedAudio);             
             }
-            else feedManager->parse(action->feed);
+            else feedManager->show(action->feed);
             break;
         case DGActionSwitch:
             cursorManager->removeAction();
