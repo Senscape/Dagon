@@ -260,9 +260,9 @@ void DGScript::_error(int result) {
 
 int DGScript::_globalFeed(lua_State *L) {
     if (lua_isstring(L, 2)) {
-        DGFeedManager::getInstance().parseWithAudio(luaL_checkstring(L, 1), lua_tostring(L, 2));      
+        DGFeedManager::getInstance().queue(luaL_checkstring(L, 1), lua_tostring(L, 2));      
     }
-    else DGFeedManager::getInstance().parse(luaL_checkstring(L, 1));
+    else DGFeedManager::getInstance().show(luaL_checkstring(L, 1));
 	
 	return 0;
 }
@@ -408,7 +408,8 @@ int DGScript::_globalStartTimer(lua_State *L) {
 	}
 	
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
-	int handle = DGTimerManager::getInstance().create(luaL_checknumber(L, 1), ref);
+    bool shouldLoop = lua_toboolean(L, 2);
+	int handle = DGTimerManager::getInstance().create(luaL_checknumber(L, 1), shouldLoop, ref);
     
     lua_pushnumber(L, handle);
 	

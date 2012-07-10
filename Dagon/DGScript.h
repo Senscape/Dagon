@@ -66,7 +66,7 @@ class DGScript {
     
     int _ref;
     void _error(int result);
-    static int _globalFeed(lua_State *L);
+    static int _globalFeed(lua_State *L);    
     static int _globalLookAt(lua_State *L);    
     static int _globalLoadCursor(lua_State *L);
     static int _globalPlay(lua_State *L);    

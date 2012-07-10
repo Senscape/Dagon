@@ -55,11 +55,11 @@ void DGFeedManager::init() {
     _feedFont = fontManager->loadDefault();
 }
 
-bool DGFeedManager::isQueued() {
+bool DGFeedManager::hasQueued() {
     return !_arrayOfFeeds.empty();
 }
 
-void DGFeedManager::parse(const char* text) {
+void DGFeedManager::show(const char* text) {
     string str = text;
     size_t maxChars = config->displayWidth / _feedHeight;
     size_t even = str.length() / (str.length() / maxChars + 1);
@@ -80,14 +80,14 @@ void DGFeedManager::parse(const char* text) {
         feed.state = DGFeedFadeIn;
         feed.timerHandle = timerManager->createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable  
         
-        _arrayOfFeeds.push_back(feed);
+        _arrayOfActiveFeeds.push_back(feed);
         
         currSpace = currSpace + substr.length() + 1;
     }
 }
 
-void DGFeedManager::parseWithAudio(const char* text, const char* audio) {
-    this->parse(text);
+void DGFeedManager::showAndPlay(const char* text, const char* audio) {
+    this->show(text);
     
     if (_feedAudio->isLoaded())
         _feedAudio->unload();
@@ -95,6 +95,20 @@ void DGFeedManager::parseWithAudio(const char* text, const char* audio) {
     _feedAudio->setResource(audio);
     audioManager->requestAudio(_feedAudio);
     _feedAudio->play();
+}
+
+void DGFeedManager::queue(const char* text, const char* audio) {
+    if (_feedAudio->state() != DGAudioPlaying) {
+        this->showAndPlay(text, audio);
+    }
+    else {
+        DGFeed feed;
+        
+        strncpy(feed.text, text, DGMaxFeedLength);
+        strncpy(feed.audio, audio, DGMaxFileLength);
+        
+        _arrayOfFeeds.push_back(feed);
+    }
 }
 
 // TODO: Note the font manager should purge unused fonts
@@ -106,9 +120,9 @@ void DGFeedManager::setFont(const char* fromFileName, unsigned int heightOfFont)
 void DGFeedManager::update() {
     vector<DGFeed>::iterator it;
     
-    it = _arrayOfFeeds.begin();
+    it = _arrayOfActiveFeeds.begin();
     
-    while (it != _arrayOfFeeds.end() && !_arrayOfFeeds.empty()) {
+    while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
         switch ((*it).state) {
             case DGFeedFadeIn:
                 (*it).color += 0x10000000;
@@ -126,21 +140,32 @@ void DGFeedManager::update() {
                     (*it).state = DGFeedDiscard;
                 break;
             case DGFeedDiscard:
-                _arrayOfFeeds.erase(it);
+                _arrayOfActiveFeeds.erase(it);
                 // If it was the last one, then stop everything
-                if (it == _arrayOfFeeds.end())
+                if (it == _arrayOfActiveFeeds.end())
                     return;                
                 break;        
         }
         
-        int displace = (it - _arrayOfFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
+        int displace = (it - _arrayOfActiveFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
         _feedFont->setColor((*it).color);
         _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         
-        if (((_arrayOfFeeds.end() - it) > DGFeedMaxLines) && (*it).state == DGFeedIdle) {
+        // Fadeout extra lines
+        if (((_arrayOfActiveFeeds.end() - it) > DGFeedMaxLines) && (*it).state == DGFeedIdle) {
             (*it).state = DGFeedFadeOut;
         }
         
         it++;
     }
+    
+    // Check for queued feeds
+    if (_feedAudio->state() != DGAudioPlaying) {
+        if (!_arrayOfFeeds.empty()) {
+            DGFeed feed = _arrayOfFeeds.back();
+            
+            this->showAndPlay(feed.text, feed.audio);
+            _arrayOfFeeds.pop_back();
+        }
+    } 
 }
