@@ -25,6 +25,7 @@
 #include "DGAudioManager.h"
 #include "DGControl.h"
 #include "DGRoom.h"
+#include "DGTimerManager.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -101,7 +102,23 @@ public:
         }
         
         return 0;
-    }    
+    }
+    
+    int startTimer(lua_State *L) {
+        if (!lua_isfunction(L, -1)) {
+            DGLog::getInstance().trace(DGModScript, "%s", DGMsg250006);
+            
+            return 0;
+        }
+        
+        int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
+        bool shouldLoop = lua_toboolean(L, 2);
+        int handle = DGTimerManager::getInstance().create(luaL_checknumber(L, 1), shouldLoop, ref, r->luaObject());
+        
+        lua_pushnumber(L, handle);
+        
+        return 1;
+    }
     
     DGRoom* ptr() { return r; }
     
@@ -121,6 +138,7 @@ Luna<DGRoomProxy>::RegType DGRoomProxy::methods[] = {
     method(DGRoomProxy, addAudio),
     method(DGRoomProxy, addNode),
     method(DGRoomProxy, setDefaultFootstep),    
+    method(DGRoomProxy, startTimer),     
     {0,0}
 };
 
