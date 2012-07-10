@@ -40,6 +40,7 @@ typedef struct {
 	uint32_t color;
     int state;
 	char text[DGMaxFeedLength];
+    char audio[DGMaxFileLength];
 	int timerHandle;    
 } DGFeed;
 
@@ -61,7 +62,8 @@ class DGFeedManager {
     DGTimerManager* timerManager;
     
     DGAudio* _feedAudio;
-    std::vector<DGFeed> _arrayOfFeeds;
+    std::vector<DGFeed> _arrayOfActiveFeeds;
+    std::vector<DGFeed> _arrayOfFeeds;    
     DGFont* _feedFont;
     int _feedHeight;
     
@@ -82,9 +84,10 @@ public:
     }
 
     void init();
-    bool isQueued();
-    void parse(const char* text);
-    void parseWithAudio(const char* text, const char* audio);
+    bool hasQueued();
+    void show(const char* text);
+    void showAndPlay(const char* text, const char* audio);
+    void queue(const char* text, const char* audio);
     void setFont(const char* fromFileName, unsigned int heightOfFont);
     void update();
 };
