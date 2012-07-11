@@ -165,7 +165,7 @@ public:
     
     // Set the color of text
     int setTextColor(lua_State *L) {
-        b->setTextColor(luaL_checklong(L, 1));
+        b->setTextColor((int)luaL_checklong(L, 1));
         return 0;
     }
     

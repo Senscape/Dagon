@@ -54,6 +54,7 @@
 #define DGMsg020000 "Initializing renderer..."
 #define DGMsg020001 "OpenGL version"
 #define DGMsg020002 "Visual effects not supported on this system"
+#define DGMsg020003	"Could not create framebuffer"
 #define DGMsg220001	"OpenGL error"
 
 // Control module

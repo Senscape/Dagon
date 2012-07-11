@@ -140,7 +140,7 @@ void DGAudio::load() {
             vorbis_info* info = ov_info(&_oggStream, -1);
             
             _channels = info->channels;
-            _rate = info->rate;
+            _rate = (ALsizei)info->rate;
             
             if (_channels == 1) _alFormat = AL_FORMAT_MONO16;
             else if (_channels == 2 ) _alFormat = AL_FORMAT_STEREO16;
@@ -321,7 +321,7 @@ bool DGAudio::_stream(ALuint buffer) {
         char data[DGAudioBufferSize];
         int size = 0;
         int section;
-        int result;
+        long result;
         
         while (size < DGAudioBufferSize) {
             result = ov_read(&_oggStream, data + size, DGAudioBufferSize - size, 0, 2, 1, &section);

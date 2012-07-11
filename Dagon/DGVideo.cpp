@@ -185,7 +185,7 @@ void DGVideo::load() {
     theora_info_init(&_theoraInfo->ti);
     
     while (!stateFlag) {
-        int ret = _bufferData(&_theoraInfo->oy);
+        size_t ret = _bufferData(&_theoraInfo->oy);
         
         if (ret == 0)
             break;
@@ -236,7 +236,7 @@ void DGVideo::load() {
         if (ogg_sync_pageout(& _theoraInfo->oy, & _theoraInfo->og) > 0)
             _queuePage(_theoraInfo, &_theoraInfo->og);
         else {
-            int ret = _bufferData(&_theoraInfo->oy);
+            size_t ret = _bufferData(&_theoraInfo->oy);
             if (ret == 0) {
                 log->error(DGModVideo, "%s", DGMsg280004);
                 return;
@@ -347,9 +347,9 @@ void DGVideo::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-int DGVideo::_bufferData(ogg_sync_state* oy) {
+size_t DGVideo::_bufferData(ogg_sync_state* oy) {
     char *buffer = ogg_sync_buffer(oy, DGVideoBuffer);
-	int bytes = fread(buffer, 1, DGVideoBuffer, _handle);
+	size_t bytes = fread(buffer, 1, DGVideoBuffer, _handle);
 	
 	ogg_sync_wrote(oy, bytes);
 	
