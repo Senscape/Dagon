@@ -147,7 +147,7 @@ void DGFeedManager::update() {
                 break;        
         }
         
-        int displace = (it - _arrayOfActiveFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
+        long displace = (it - _arrayOfActiveFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
         _feedFont->setColor((*it).color);
         _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         

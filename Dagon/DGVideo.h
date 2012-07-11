@@ -93,7 +93,7 @@ class DGVideo : public DGObject {
     char _resource[DGMaxFileLength];
     
     // Private methods
-    int _bufferData(ogg_sync_state* oy);
+    size_t _bufferData(ogg_sync_state* oy);
     void _convertToRGB(uint8_t* puc_y, int stride_y,
                        uint8_t* puc_u, uint8_t* puc_v, int stride_uv,
                        uint8_t* puc_out, int width_y, int height_y,

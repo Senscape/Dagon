@@ -37,7 +37,7 @@ typedef struct {
 	int rows;
 	int left;
 	int top;
-	int advance;
+	long advance;
 } DGGlyph;
  
 // When default font is selected, we use data embedded in the

@@ -65,9 +65,14 @@ void DGScene::clear() {
 }
 
 void DGScene::drawSpots() {
+    bool processed = false;
+    
     if (_canDrawSpots) {
         DGNode* currentNode = _currentRoom->currentNode();
         if (currentNode->isEnabled()) {
+            renderManager->enablePostprocess();
+            renderManager->clearView();
+            
             currentNode->updateFade();
             renderManager->setAlpha(currentNode->fadeLevel());
             
@@ -76,6 +81,7 @@ void DGScene::drawSpots() {
                 DGSpot* spot = currentNode->currentSpot();
                 
                 if (spot->hasTexture() && spot->isEnabled()) {
+                    
                     if (spot->hasVideo()) {
                         // If it has a video, we need to check if it's playing
                         if (spot->isPlaying()) { // FIXME: Must stop the spot later!
@@ -96,11 +102,33 @@ void DGScene::drawSpots() {
                     }
                 }
             } while (currentNode->iterateSpots());
+            
+            if (config->showSpots) {
+                renderManager->disableTextures();
+                
+                currentNode->beginIteratingSpots();
+                do {
+                    DGSpot* spot = currentNode->currentSpot();
+                    
+                    if (spot->hasColor() && spot->isEnabled()) {
+                        renderManager->setColor(0x2500AAAA);
+                        renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                    }
+                } while (currentNode->iterateSpots());
+                
+                renderManager->enableTextures();
+            }
+            
+            renderManager->disablePostprocess();
+            processed = true;
         }
     }
     
+    
     // Blends, gamma, etc.
     cameraManager->beginOrthoView();
+    if (processed)
+        renderManager->drawPostprocessedView();
     renderManager->blendView();
 }
 
@@ -163,13 +191,7 @@ bool DGScene::scanSpots() {
         }
     }
     
-    if (!config->showSpots)
-        renderManager->clearView();
-    else {
-        // FIXME: This is a hack to show the spots, fix later
-        glBlendFunc(GL_ONE, GL_ONE);
-        renderManager->setAlpha(1.0f);   
-    }
+    renderManager->clearView();
     
     if (foundAction) return true;
     else return false;

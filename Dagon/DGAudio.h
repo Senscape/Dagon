@@ -83,7 +83,7 @@ class DGAudio : public DGObject {
     ALuint _alSource;
     
     int _channels;
-    long _rate;
+    ALsizei _rate;
     
     ov_callbacks _oggCallbacks;
     OggVorbis_File _oggStream;
