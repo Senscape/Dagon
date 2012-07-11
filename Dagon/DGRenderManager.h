@@ -10,8 +10,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_RENDER_H
-#define DG_RENDER_H
+#ifndef DG_RENDERMANAGER_H
+#define DG_RENDERMANAGER_H
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -27,6 +27,7 @@
 #define DGDefCursorDetail 30
 
 class DGConfig;
+class DGEffectsManager;
 class DGLog;
 class DGTexture;
 
@@ -39,19 +40,30 @@ extern const unsigned char DGDefSplashBinary[];
 
 class DGRenderManager {
     DGConfig* config;
+    DGEffectsManager* effectsManager;    
     DGLog* log;
+    
+    GLuint _fbo; // The frame buffer object  
+    GLuint _fboDepth; // The depth buffer for the frame buffer object  
+    GLuint _fboTexture; // The texture object to write our frame buffer object to 
     
     bool _blendNextUpdate;
     float _blendOpacity;
     GLfloat _defCursor[(DGDefCursorDetail * 2) + 2];
     bool _alphaEnabled;
     float _helperLoop;
-    bool _shadersEnabled;
+    
+    bool _framebufferEnabled;
+    bool _effectsEnabled;
     bool _texturesEnabled;
     
-    DGPoint _centerOfPolygon(std::vector<int> arrayOfCoordinates); // Used for the helpers feature
     DGTexture* _blendTexture;
     DGTexture* _fadeTexture;   
+    
+    DGPoint _centerOfPolygon(std::vector<int> arrayOfCoordinates); // Used for the helpers feature
+    void _initFrameBuffer();
+    void _initFrameBufferDepthBuffer();
+    void _initFrameBufferTexture();
     
     std::vector<DGPoint> _arrayOfHelpers;
     std::vector<DGPoint>::iterator _itHelper;
@@ -89,11 +101,14 @@ public:
     // Drawing operations
     
     void enableAlpha();
+    void enablePostprocess();
     void enableTextures();
-    void disableAlpha();    
+    void disableAlpha();
+    void disablePostprocess();
     void disableTextures();
     void drawHelper(int xPosition, int yPosition, bool animate);
     void drawPolygon(std::vector<int> withArrayOfCoordinates, unsigned int onFace);
+    void drawPostprocessedView(); // Expects orthogonal mode
     void drawSlide(float* withArrayOfCoordinates); // We use float in all "slides" since we need the precision
     void setAlpha(float alpha);
     void setColor(int color);
@@ -111,7 +126,8 @@ public:
     void clearView();
     void copyView();
     void fadeView();
-    void resetView();    
+    void resetView();
+    void reshape();
 };
 
-#endif // DG_RENDER_H
+#endif // DG_RENDERMANAGER_H

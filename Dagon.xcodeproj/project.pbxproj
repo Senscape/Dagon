@@ -40,7 +40,7 @@
 		FB279DBA14AE1736002D48FC /* DGAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB714AE14AF002D48FC /* DGAudio.cpp */; };
 		FB34FB1814DB126F007D2EE1 /* DGSystemMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */; };
 		FB34FB1914DB126F007D2EE1 /* DGViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */; };
-		FB6A1E9315AC7E5D000C0222 /* DGEffects.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB6A1E9215AC7E5D000C0222 /* DGEffects.cpp */; };
+		FB6A1E9315AC7E5D000C0222 /* DGEffectsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */; };
 		FBA2C77E14DC13B40098E334 /* DGRenderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */; };
 		FBA2C78114DC654B0098E334 /* DGControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78014DC654B0098E334 /* DGControl.cpp */; };
 		FBA2C78814DD801A0098E334 /* DGCameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78714DD801A0098E334 /* DGCameraManager.cpp */; };
@@ -52,6 +52,7 @@
 		FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE208DF1589745B002F7D46 /* DGScene.cpp */; };
 		FBE7EDE3153F603D00F43EDA /* DGConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */; };
 		FBE8A8101590E91100C6D44A /* DGVideoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */; };
+		FBF931CB15ADB2E90042F7FC /* FreeType.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBF931CA15ADB2E90042F7FC /* FreeType.framework */; };
 		FBFB04BD1583E520002280E1 /* DGSplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBFB04BC1583E520002280E1 /* DGSplashData.c */; };
 		FBFCC9F114BB3624003211AD /* DGTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFCC9F014BB3624003211AD /* DGTexture.cpp */; };
 		FBFD855914C4CCE9000E82B2 /* DGTextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFD855814C4CCE9000E82B2 /* DGTextureManager.cpp */; };
@@ -125,8 +126,8 @@
 		FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DGSystemMac.mm; sourceTree = "<group>"; };
 		FB34FB1414DB126F007D2EE1 /* DGViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGViewDelegate.h; sourceTree = "<group>"; };
 		FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DGViewDelegate.mm; sourceTree = "<group>"; };
-		FB6A1E9015AC7E52000C0222 /* DGEffects.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEffects.h; sourceTree = "<group>"; };
-		FB6A1E9215AC7E5D000C0222 /* DGEffects.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGEffects.cpp; sourceTree = "<group>"; };
+		FB6A1E9015AC7E52000C0222 /* DGEffectsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEffectsManager.h; sourceTree = "<group>"; };
+		FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGEffectsManager.cpp; sourceTree = "<group>"; };
 		FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGRenderManager.cpp; sourceTree = "<group>"; };
 		FBA2C77F14DC13BF0098E334 /* DGRenderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRenderManager.h; sourceTree = "<group>"; };
 		FBA2C78014DC654B0098E334 /* DGControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGControl.cpp; sourceTree = "<group>"; };
@@ -162,6 +163,7 @@
 		FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGConsole.cpp; sourceTree = "<group>"; };
 		FBE8A80D1590E90600C6D44A /* DGVideoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGVideoManager.h; sourceTree = "<group>"; };
 		FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGVideoManager.cpp; sourceTree = "<group>"; };
+		FBF931CA15ADB2E90042F7FC /* FreeType.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FreeType.framework; path = Frameworks/FreeType.framework; sourceTree = "<group>"; };
 		FBFB04BC1583E520002280E1 /* DGSplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGSplashData.c; sourceTree = "<group>"; };
 		FBFCC9EF14BB361B003211AD /* DGTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGTexture.h; sourceTree = "<group>"; };
 		FBFCC9F014BB3624003211AD /* DGTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGTexture.cpp; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 				FBC8883314574F08008D548F /* Cocoa.framework in Frameworks */,
 				FB24729B148C0B1000F7D1B6 /* OpenAL.framework in Frameworks */,
 				FB24729C148C0B1000F7D1B6 /* OpenGL.framework in Frameworks */,
+				FBF931CB15ADB2E90042F7FC /* FreeType.framework in Frameworks */,
 				FB247292148C09F400F7D1B6 /* libGLEW.a in Frameworks */,
 				FB247293148C09F400F7D1B6 /* liblua.a in Frameworks */,
 				FB247294148C09F400F7D1B6 /* libogg.a in Frameworks */,
@@ -290,8 +293,8 @@
 				FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */,
 				E8707566157EF46800D2E916 /* DGCursorManager.h */,
 				E8707568157EF47600D2E916 /* DGCursorManager.cpp */,
-				FB6A1E9015AC7E52000C0222 /* DGEffects.h */,
-				FB6A1E9215AC7E5D000C0222 /* DGEffects.cpp */,
+				FB6A1E9015AC7E52000C0222 /* DGEffectsManager.h */,
+				FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */,
 				FB0602B2158BC6AC00D26AB9 /* DGInterface.h */,
 				FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */,
 				FBA2C77F14DC13BF0098E334 /* DGRenderManager.h */,
@@ -344,6 +347,7 @@
 				FBC8883214574F08008D548F /* Cocoa.framework */,
 				FB247299148C0B1000F7D1B6 /* OpenAL.framework */,
 				FB24729A148C0B1000F7D1B6 /* OpenGL.framework */,
+				FBF931CA15ADB2E90042F7FC /* FreeType.framework */,
 				FB247298148C0AA400F7D1B6 /* Libraries */,
 				FBC8883414574F08008D548F /* Other Frameworks */,
 			);
@@ -444,7 +448,7 @@
 		FBC8882514574F08008D548F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "Senscape s.r.l.";
 			};
 			buildConfigurationList = FBC8882814574F08008D548F /* Build configuration list for PBXProject "Dagon" */;
@@ -534,7 +538,7 @@
 				FB0602B4158BC6B800D26AB9 /* DGInterface.cpp in Sources */,
 				FB0602B8158FB18000D26AB9 /* DGVideo.cpp in Sources */,
 				FBE8A8101590E91100C6D44A /* DGVideoManager.cpp in Sources */,
-				FB6A1E9315AC7E5D000C0222 /* DGEffects.cpp in Sources */,
+				FB6A1E9315AC7E5D000C0222 /* DGEffectsManager.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -564,9 +568,10 @@
 		FBC8884A14574F08008D548F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = Frameworks;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -596,10 +601,11 @@
 		FBC8884B14574F08008D548F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = Frameworks;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -623,7 +629,11 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				CODE_SIGN_IDENTITY = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Other Sources/Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
@@ -632,7 +642,7 @@
 					"\"$(SRCROOT)/Libraries\"",
 					/usr/X11/lib,
 				);
-				OTHER_LDFLAGS = "-lfreetype";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -643,7 +653,11 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				CODE_SIGN_IDENTITY = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Other Sources/Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
@@ -652,7 +666,7 @@
 					"\"$(SRCROOT)/Libraries\"",
 					/usr/X11/lib,
 				);
-				OTHER_LDFLAGS = "-lfreetype";
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
