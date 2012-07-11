@@ -131,6 +131,8 @@ void DGTimerManager::enable(int handle) {
 }
 
 void DGTimerManager::process() {
+    bool keepProcessing = true;
+    
     std::vector<DGTimer>::iterator it;
     
     it = _arrayOfTimers.begin();
@@ -141,6 +143,7 @@ void DGTimerManager::process() {
                 switch ((*it).type) {
                     case DGTimerInternal:
                         (*it).handler();
+                        keepProcessing = false;
                         break;
                         
                     case DGTimerNormal:
@@ -159,10 +162,12 @@ void DGTimerManager::process() {
                         }
                         
                         DGScript::getInstance().processCallback((*it).luaHandler, 0);
+                        keepProcessing = false;
                         break;
                 }
                 
-                break; // In case the vector has changed, break the loop
+                if (!keepProcessing)
+                    break; // In case the vector has changed, break the loop
             }
         }
         
@@ -185,9 +190,11 @@ void DGTimerManager::update() {
         time_t currentTime = DGSystem::getInstance().wallTime();
         double duration = (double)(currentTime - (*it).lastTime) / CLOCKS_PER_SEC;
         
-        if ((*it).isEnabled && ((*it).type != DGTimerManual)) {
-            if ((duration > (*it).trigger) && !(*it).hasTriggered) {
-                (*it).hasTriggered = true;
+        DGTimer* timer = &(*it);
+        
+        if (timer->isEnabled && (timer->type != DGTimerManual)) {
+            if ((duration > timer->trigger) && !timer->hasTriggered) {
+                timer->hasTriggered = true;
             }
         }
         
