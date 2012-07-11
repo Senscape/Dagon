@@ -38,8 +38,8 @@
         NSOpenGLPFANoRecovery,
 		
         // Attributes Common to FullScreen and Non-FullScreen
-        NSOpenGLPFAColorSize, 24,
-        NSOpenGLPFADepthSize, 16,
+        NSOpenGLPFAColorSize, 32,
+        NSOpenGLPFADepthSize, 32,
         NSOpenGLPFADoubleBuffer,
         NSOpenGLPFAAccelerated,
         0

@@ -50,7 +50,7 @@ DGControl::DGControl() {
     feedManager = &DGFeedManager::getInstance();
     fontManager = &DGFontManager::getInstance();
     log = &DGLog::getInstance();
-    render = &DGRenderManager::getInstance();    
+    renderManager = &DGRenderManager::getInstance();    
     script = &DGScript::getInstance();
     system = &DGSystem::getInstance();
     timerManager = &DGTimerManager::getInstance();
@@ -96,8 +96,8 @@ void DGControl::init() {
     
 	log->trace(DGModControl, "%s", DGMsg030001);
     
-    render->init();
-    render->resetView(); // Test for errors
+    renderManager->init();
+    renderManager->resetView(); // Test for errors
 
     cameraManager->setViewport(config->displayWidth, config->displayHeight);
     
@@ -127,12 +127,13 @@ void DGControl::init() {
     
     // If the splash screen is enabled, load its data and set the correct state
     if (config->showSplash) {
+        config->effects = false;
         _scene->loadSplash();
         _state->set(DGStateSplash);
         cursorManager->disable();
-        render->fadeInNextUpdate();
+        renderManager->fadeInNextUpdate();
     }
-    else render->resetFade();
+    else renderManager->resetFade();
     
     _isInitialized = true;
 }
@@ -396,6 +397,7 @@ void DGControl::reshape(int width, int height) {
     config->displayHeight = height;
     
     cameraManager->setViewport(width, height);
+    renderManager->reshape();
     
     if (_eventHandlers.hasResize)
         script->processCallback(_eventHandlers.resize, 0);    
@@ -412,7 +414,7 @@ void DGControl::switchTo(DGObject* theTarget) {
     
     if (!firstSwitch) {
         _updateView(DGStateNode, true);
-        render->blendNextUpdate();
+        renderManager->blendNextUpdate();
         cameraManager->simulateWalk();
     }
     
@@ -562,7 +564,7 @@ void DGControl::takeSnapshot() {
 	strftime(buffer, DGMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
     
     texture.bind();
-    render->copyView();
+    renderManager->copyView();
     
     texture.saveToFile(buffer);   
     
@@ -648,6 +650,7 @@ void DGControl::_updateView(int state, bool inBackground) {
     // switching rooms or nodes
     
     // Setup the scene
+    
     _scene->clear();
     
     // Do this in a viewtimer
@@ -675,8 +678,10 @@ void DGControl::_updateView(int state, bool inBackground) {
             }
             
             if (timerManager->checkManual(handlerOut)) {
-                render->clearView();
-                render->resetFade();
+                config->effects = true;
+                cursorManager->enable();
+                renderManager->clearView();
+                renderManager->resetFade();
                 _state->set(DGStateNode);
                 _scene->unloadSplash();
                 
@@ -693,7 +698,7 @@ void DGControl::_updateView(int state, bool inBackground) {
     }
     
     // General fade, affects every graphic on screen
-    render->fadeView();
+    renderManager->fadeView();
     
     // Debug info, if enabled
     if (_console->isEnabled() && !inBackground) {

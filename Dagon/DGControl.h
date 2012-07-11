@@ -107,7 +107,7 @@ class DGControl {
     DGFeedManager* feedManager;
     DGFontManager* fontManager;
     DGLog* log;
-    DGRenderManager* render;
+    DGRenderManager* renderManager;
     DGScript* script;
     DGSystem* system;
     DGTimerManager* timerManager;

@@ -15,6 +15,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGConfig.h"
+#include "DGEffectsManager.h"
 #include "DGLog.h"
 #include "DGRenderManager.h"
 #include "DGTexture.h"
@@ -27,6 +28,7 @@ using namespace std;
 
 DGRenderManager::DGRenderManager() {
     config = &DGConfig::getInstance();
+    effectsManager = &DGEffectsManager::getInstance();    
     log = &DGLog::getInstance();
     
     _blendTexture = NULL;
@@ -62,11 +64,12 @@ void DGRenderManager::init() {
 	glewInit();
     
 	if (glewIsSupported("GL_VERSION_2_0")) {
-		_shadersEnabled = true;
+		_effectsEnabled = true;
+        effectsManager->init();
 	}
 	else {
-		log->trace(DGModRender, "%s", DGMsg020002);
-		_shadersEnabled = false;
+		log->warning(DGModRender, "%s", DGMsg020002);
+		_effectsEnabled = false;
 	}
     
     _alphaEnabled = true;
@@ -74,8 +77,11 @@ void DGRenderManager::init() {
     
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
     glEnable(GL_BLEND);
+    glDisable(GL_DITHER);
+    
 	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_DITHER);
+    //glDepthFunc(GL_ALWAYS);
+	//glDepthMask(GL_TRUE);
     
 	if (config->antialiasing) {
 		// FIXME: Some of these options may be introducing black lines
@@ -89,6 +95,7 @@ void DGRenderManager::init() {
         glEnable(GL_MULTISAMPLE); // Not sure if this one goes here
 	}
     
+    glClearDepth(1.0f);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
 	_blendTexture = new DGTexture(0, 0, 0); // All default values
@@ -102,6 +109,7 @@ void DGRenderManager::init() {
 	}    
     
     glEnableClientState(GL_VERTEX_ARRAY);
+    _initFrameBuffer();
 }
 
 ////////////////////////////////////////////////////////////
@@ -196,6 +204,11 @@ void DGRenderManager::enableAlpha() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
+void DGRenderManager::enablePostprocess() {
+    if (_framebufferEnabled)
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _fbo); // Bind our frame buffer for rendering
+}
+
 void DGRenderManager::enableTextures() {
     if (!_texturesEnabled) {
         _texturesEnabled = true;
@@ -207,6 +220,11 @@ void DGRenderManager::enableTextures() {
 void DGRenderManager::disableAlpha() {
     _alphaEnabled = false;
     glBlendFunc(GL_ONE, GL_ZERO);
+}
+
+void DGRenderManager::disablePostprocess() {
+    if (_framebufferEnabled)
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); // Unbind our texture
 }
 
 void DGRenderManager::disableTextures() {
@@ -384,6 +402,26 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 	glPopMatrix();
 }
 
+void DGRenderManager::drawPostprocessedView() {
+    if (_framebufferEnabled) {
+        glBindTexture(GL_TEXTURE_2D, _fboTexture); // Bind our frame buffer texture
+        
+        if (config->effects)
+            effectsManager->play();
+        
+        float coords[] = {0, config->displayHeight,
+            config->displayWidth, config->displayHeight,
+            config->displayWidth, 0,
+            0, 0};
+        
+        this->drawSlide(coords);
+        
+        effectsManager->pause();
+        
+        glBindTexture(GL_TEXTURE_2D, 0); // Unbind any textures
+    }
+}
+
 void DGRenderManager::drawSlide(float* withArrayOfCoordinates) {
     glPushMatrix();
     
@@ -467,6 +505,7 @@ bool DGRenderManager::iterateHelpers() {
 ////////////////////////////////////////////////////////////
 
 void DGRenderManager::clearView() {
+    //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glClear(GL_COLOR_BUFFER_BIT);
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 }
@@ -516,6 +555,12 @@ void DGRenderManager::resetView() {
     
     glLoadIdentity();
     _arrayOfHelpers.clear();
+}
+
+void DGRenderManager::reshape() {
+    glBindTexture(GL_TEXTURE_2D, _fboTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, config->displayWidth, config->displayHeight, 0,
+                 GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 }
 
 void DGRenderManager::fadeView() {
@@ -580,4 +625,59 @@ DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     center.y /= (6 * area);
     
     return center;
+}
+
+void DGRenderManager::_initFrameBuffer() {  
+   // _initFrameBufferDepthBuffer(); // Initialize our frame buffer depth buffer  
+    
+    _initFrameBufferTexture(); // Initialize our frame buffer texture  
+    
+    glGenFramebuffersEXT(1, &_fbo); // Generate one frame buffer and store the ID in fbo  
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _fbo); // Bind our frame buffer  
+    
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, _fboTexture, 0); // Attach the texture fbo_texture to the color buffer in our frame buffer  
+    
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, _fboDepth); // Attach the depth buffer fbo_depth to our frame buffer  
+    
+    GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT); // Check that status of our generated frame buffer  
+    
+    if (status != GL_FRAMEBUFFER_COMPLETE_EXT) { // If the frame buffer does not report back as complete
+        log->warning(DGModRender, "%s", DGMsg020003);
+        _framebufferEnabled = false;
+    }
+    else _framebufferEnabled = true;
+    
+    glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); // Unbind our texture
+}
+
+// Obsolete
+void DGRenderManager::_initFrameBufferDepthBuffer() {  
+    glGenRenderbuffersEXT(1, &_fboDepth); // Generate one render buffer and store the ID in fbo_depth  
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, _fboDepth); // Bind the fbo_depth render buffer  
+    
+    // Set the render buffer storage to be a depth component, with a width and height of the window  
+    glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 
+                             config->displayWidth, config->displayHeight);
+    
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
+                                 GL_RENDERBUFFER_EXT, _fboDepth); // Set the render buffer of this buffer to the depth buffer  
+    
+    glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0); // Unbind the render buffer  
+}
+
+void DGRenderManager::_initFrameBufferTexture() {
+    glGenTextures(1, &_fboTexture); // Generate one texture  
+    glBindTexture(GL_TEXTURE_2D, _fboTexture); // Bind the texture fbo_texture
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, config->displayWidth, config->displayHeight, 0, 
+                 GL_RGBA, GL_UNSIGNED_BYTE, NULL); // Create a standard texture with the width and height of our window  
+    
+    // Setup the basic texture parameters  
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);  
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);  
+    
+    // Unbind the texture  
+    glBindTexture(GL_TEXTURE_2D, 0);  
 }
