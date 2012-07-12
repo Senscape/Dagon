@@ -152,11 +152,11 @@ bool DGCameraManager::isPanning() {
 }
 
 float DGCameraManager::motionHorizontal() {
-    return _motionLeft + _motionRight;
+    return (_motionLeft + _motionRight) * _accelH;
 }
 
 float DGCameraManager::motionVertical() {
-    return _motionDown + _motionUp;    
+    return (_motionDown + _motionUp) * _accelV;
 }
 
 int DGCameraManager::neutralZone() {
@@ -440,8 +440,9 @@ void DGCameraManager::update() {
         // Deaccelerate        
         if (_accelH > 0.0f)
             _accelH -= 1.0f / (float)DGCamAccelerationFactor;
-        else
+        else{
             _accelH = 0.0f;
+        }
     }
     
     // Calculate vertical acceleration
@@ -478,10 +479,16 @@ void DGCameraManager::update() {
         _angleH = (GLfloat)_angleHLimit;
     
     // Limit vertical rotation
-    if (_angleV > (GLfloat)_angleVLimit)
+    if (_angleV > (GLfloat)_angleVLimit) {
         _angleV = (GLfloat)_angleVLimit;
-    else if (_angleV < -(GLfloat)_angleVLimit)
+        _motionUp = 0.0f;
+        _motionDown = 0.0f;
+    }
+    else if (_angleV < -(GLfloat)_angleVLimit) {
         _angleV = -(GLfloat)_angleVLimit;
+        _motionUp = 0.0f;
+        _motionDown = 0.0f;
+    }
     
     _orientation[0] = (float)sin(_angleH);
     _orientation[1] = _angleV;

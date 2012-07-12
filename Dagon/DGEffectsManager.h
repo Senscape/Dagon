@@ -25,19 +25,32 @@
 ////////////////////////////////////////////////////////////
 
 #define DGEffectsFileName       "DGShaderData.fs"
-#define DGEffectsReadFromFile   1
+#define DGEffectsReadFromFile   0
 
 enum DGEffects {
-    DGEffectBlur,
-    DGEffectColorize,
-    DGEffectContrast,
-    DGEffectConvolution,
+    DGEffectAdjust,
+    DGEffectMotionBlur,
     DGEffectNoise,
+    DGEffectSepia,
     DGEffectSharpen
+};
+
+enum DGEffectsValues {
+    DGEffectAdjustBrightness,
+    DGEffectAdjustSaturation,
+    DGEffectAdjustContrast,
+    DGEffectMotionBlurIntensity,
+    DGEffectNoiseIntensity,
+    DGEffectSepiaIntensity,    
+    DGEffectSharpenRatio,
+    DGEffectSharpenIntensity
 };
 
 class DGCameraManager;
 class DGConfig;
+
+// Reference to embedded shader data
+extern const char DGDefShaderData[];
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -51,13 +64,24 @@ class DGEffectsManager {
     GLuint _program;
     
     char* _shaderData;
+
+    bool _adjustEnabled;
+    float _adjustBrightness;
+    float _adjustSaturation;
+    float _adjustContrast;
     
-    bool _blurEnabled;
-    bool _colorizeEnabled;
-    bool _contrastEnabled;
-    bool _convolutionEnabled;
+    bool _motionBlurEnabled;
+    float _motionBlurIntensity;
+    
     bool _noiseEnabled;
+    float _noiseIntensity;
+    
+    bool _sepiaEnabled;
+    float _sepiaIntensity;
+    
     bool _sharpenEnabled;
+    float _sharpenRatio;
+    float _sharpenIntensity;
     
     bool _isActive;
     bool _isInitialized;
@@ -80,13 +104,13 @@ public:
         return instance;
     }
     
-    void disable(int ID);    
-    void enable(int ID);
     void init();
     void pause();
-    void play();    
-    void setBlur(int horizontalOffset, int verticalOffset);
-    void setGamma(float intensity);    
+    void play();
+    void setEnabled(int effectID, bool enabled);
+    void setValue(int valueID, float value);
+    void update();
+    float value(int valueID);
 };
 
 #endif // DG_EFFECTSMANAGER_H
