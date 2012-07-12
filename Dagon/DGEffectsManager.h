@@ -36,11 +36,17 @@ enum DGEffects {
     DGEffectSharpen
 };
 
+class DGCameraManager;
+class DGConfig;
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
 class DGEffectsManager {
+    DGConfig* config;
+    DGCameraManager* cameraManager;
+    
     GLuint _fragment;
     GLuint _program;
     
