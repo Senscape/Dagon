@@ -14,6 +14,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGCameraManager.h"
+#include "DGConfig.h"
 #include "DGEffectsManager.h"
 
 char DGDefShaderData[] =
@@ -80,6 +82,9 @@ char DGDefShaderData[] =
 ////////////////////////////////////////////////////////////
 
 DGEffectsManager::DGEffectsManager() {
+    cameraManager = &DGCameraManager::getInstance();
+    config = &DGConfig::getInstance();
+    
     _blurEnabled = false;
     _colorizeEnabled = false;
     _contrastEnabled = false;
@@ -159,20 +164,17 @@ void DGEffectsManager::init() {
 }
 
 void DGEffectsManager::pause() {
-    static float noise = 0.0f;
+   // static float noise = 0.0f;
     if (_isInitialized && _isActive) {
-        GLfloat rand = glGetUniformLocation(_program, "Rand");
+        /*GLfloat rand = glGetUniformLocation(_program, "Rand");
 		glUniform1f(rand, noise);
-        noise += 0.1f;
+        noise += 0.1f;*/
         
-        GLfloat width = glGetUniformLocation(_program, "rt_w");
-        glUniform1f(width, 1920);
-        
-        GLfloat height = glGetUniformLocation(_program, "rt_h");
-        glUniform1f(height, 1102);
-        
-        GLfloat line = glGetUniformLocation(_program, "vx_offset");
-        glUniform1f(line, 0.71f);
+        GLfloat offsetx = glGetUniformLocation(_program, "offsetx");
+        glUniform1f(offsetx, cameraManager->motionHorizontal());
+
+        GLfloat offsety = glGetUniformLocation(_program, "offsety");
+        glUniform1f(offsety, cameraManager->motionVertical());
         
         glUseProgram(0);
         _isActive = false;

@@ -146,6 +146,8 @@ public:
     void endOrthoView();
     float fieldOfView();
     bool isPanning();
+    float motionHorizontal();
+    float motionVertical();    
     int neutralZone();
     float* orientation();
     void pan(int xPosition, int yPosition);

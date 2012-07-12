@@ -151,6 +151,14 @@ bool DGCameraManager::isPanning() {
     return _isPanning;
 }
 
+float DGCameraManager::motionHorizontal() {
+    return _motionLeft + _motionRight;
+}
+
+float DGCameraManager::motionVertical() {
+    return _motionDown + _motionUp;    
+}
+
 int DGCameraManager::neutralZone() {
     switch (config->controlMode) {
         case DGMouseDrag:
