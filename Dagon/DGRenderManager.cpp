@@ -405,9 +405,11 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 void DGRenderManager::drawPostprocessedView() {
     if (_framebufferEnabled) {
         glBindTexture(GL_TEXTURE_2D, _fboTexture); // Bind our frame buffer texture
-        
-        if (config->effects)
+    
+        if (config->effects) {
             effectsManager->play();
+            effectsManager->update();
+        }
         
         float coords[] = {0, config->displayHeight,
             config->displayWidth, config->displayHeight,

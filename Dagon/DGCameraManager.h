@@ -37,12 +37,12 @@ enum DGCamBobStates {
 };
 
 enum DGCamDefaults {
-    DGCamAccelerationFactor = 100,
+    DGCamAccelerationFactor = 150,
     DGCamDragNeutralZone = 100,    
 	DGCamFieldOfView = 55,
     DGCamFreeNeutralZone = 250,    
     DGCamInertia = 750, // Maintain motion after panning stops
-    DGCamMaxSpeed = 30,
+    DGCamMaxSpeed = 20,
     DGCamSpeedFactor = 500000 // Make movement smoother, duplicated in Drag mode  
 
 };

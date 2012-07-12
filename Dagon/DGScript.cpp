@@ -139,6 +139,20 @@ void DGScript::init(int argc, char* argv[]) {
 	
 	lua_setglobal(_L, "config");
     
+    // Same with the effects properties
+    lua_newuserdata(_L, sizeof(void*));
+    
+    lua_pushvalue(_L, -1);
+	
+	luaL_newmetatable(_L, "DGEffectsLib");
+	luaL_register(_L, NULL, DGEffectsLib);
+	lua_setmetatable(_L, -2);
+	
+	lua_newtable(_L);
+    lua_setfenv(_L, -2);
+	
+	lua_setglobal(_L, "effects");
+    
     // Now we register the global functions that don't belong to any library
     _registerGlobals();
     
