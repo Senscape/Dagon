@@ -208,10 +208,8 @@ void DGSystem::init() {
         [window setTitle:[NSString stringWithUTF8String:config->script()]];
         [window makeKeyAndOrderFront:window];
         
-        if (config->fullScreen) {
-            [window toggleFullScreen:nil];
-            [NSCursor hide];
-        }
+        if (config->fullScreen)
+            this->toggleFullScreen();
         
         [NSBundle loadNibNamed:@"MainMenu" owner:NSApp];
         [pool release];
@@ -311,17 +309,27 @@ void DGSystem::terminate() {
             case 3: log->trace(DGModSystem, "%s", DGMsg040103); break;
         }
         
-        [NSApp terminate:nil];
+        [NSApp terminate: nil];
     }
 }
 
 void DGSystem::toggleFullScreen() {
-    config->fullScreen = !config->fullScreen;
-    if (_isRunning) {
-        // TODO: Suspend the timer to avoid multiple redraws
-        [window toggleFullScreen:nil];
+    // TODO: Suspend the timer to avoid multiple redraws
+    [window toggleFullScreen: nil];
+    
+    if (config->fullScreen) {
+        [NSCursor hide];
+        
+        [[NSApplication sharedApplication]
+         setPresentationOptions: NSApplicationPresentationHideMenuBar
+         | NSApplicationPresentationHideDock];
     }
-    else [window toggleFullScreen:nil];
+    else {
+        [NSCursor unhide];
+        
+        [[NSApplication sharedApplication]
+         setPresentationOptions: NSApplicationPresentationDefault];
+    }
 }
 
 void DGSystem::update() {
