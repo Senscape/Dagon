@@ -17,6 +17,7 @@
 #include "DGCameraManager.h"
 #include "DGConfig.h"
 #include "DGEffectsManager.h"
+#include "DGTimerManager.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -25,12 +26,14 @@
 DGEffectsManager::DGEffectsManager() {
     cameraManager = &DGCameraManager::getInstance();
     config = &DGConfig::getInstance();
+    timerManager = &DGTimerManager::getInstance();
     
     _adjustEnabled = false;
     _motionBlurEnabled = false;
     _noiseEnabled = false;
     _sepiaEnabled = false;
     _sharpenEnabled = false;
+    _throbEnabled = false;
    
     _adjustBrightness = 1.0f;
     _adjustSaturation = 1.0f;
@@ -40,6 +43,8 @@ DGEffectsManager::DGEffectsManager() {
     _sepiaIntensity = 0.0f;
     _sharpenRatio = 0.25f; // Not currently used in the script, so we set a standard value here
     _sharpenIntensity = 0.0f;
+    _throbStyle = 0;
+    _throbIntensity = 100.0f; // Lowest
     
     _isActive = false;
     _isInitialized = false;
@@ -147,6 +152,18 @@ void DGEffectsManager::setEnabled(int effectID, bool enabled) {
                 parameter = glGetUniformLocation(_program, "SharpenEnabled");
                 break;
                 
+            case DGEffectThrob:
+                _throbEnabled = enabled;
+                
+                if (!_throbEnabled) {
+                    // Special case, we reset the brightness and contrast
+                    this->setValue(DGEffectAdjustBrightness, _adjustBrightness);
+                    this->setValue(DGEffectAdjustContrast, _adjustContrast);
+                }
+                
+                this->pause();
+                return;
+                
             default:
                 this->pause();
                 return;
@@ -205,6 +222,16 @@ void DGEffectsManager::setValue(int valueID, float value) {
                 _sharpenIntensity = value;
                 break;
                 
+            case DGEffectThrobStyle:
+                _throbStyle = (int)value;
+                this->pause();
+                return;
+                
+            case DGEffectThrobIntensity:
+                _throbIntensity = value;
+                this->pause();
+                return;
+                
             default:
                 this->pause();
                 return;
@@ -238,7 +265,44 @@ void DGEffectsManager::update() {
                 noise += 0.01f;
             else noise = 0.0f;
         }
-    }  
+        
+        if (_throbEnabled) {
+            static int handlerStyle1 = timerManager->createManual(0.1f);
+            static int handlerStyle2 = timerManager->createManual(2);
+            static float aux;
+            static float j = 1.0f;
+            
+            switch (_throbStyle) {
+                case 1:
+                    if (timerManager->checkManual(handlerStyle1)) {
+                        aux = (rand() % 10) - (rand() % 10);
+                        parameter = glGetUniformLocation(_program, "AdjustBrightness");
+                        glUniform1f(parameter, _adjustBrightness + (aux / _throbIntensity)); // Suggested: 50
+                     
+                        aux = rand() % 10;
+                        parameter = glGetUniformLocation(_program, "AdjustContrast");
+                        glUniform1f(parameter, _adjustContrast + (aux / _throbIntensity));
+                    }
+                    break;
+                    
+                case 2:
+                    parameter = glGetUniformLocation(_program, "AdjustBrightness");
+                    glUniform1f(parameter, _adjustBrightness + (aux * j));
+                     
+                    parameter = glGetUniformLocation(_program, "AdjustContrast");
+                    glUniform1f(parameter, _adjustContrast + 0.15f);
+                     
+                    if (j > 0)
+                        j -= 0.1f;
+                     
+                    if (timerManager->checkManual(handlerStyle2)) {
+                        aux = (float)((rand() % 50) + 5) / _throbIntensity; // Suggested: 10
+                        j = 1.0f;
+                    }
+                    break;
+            }
+        }
+    }
 }
 
 float DGEffectsManager::value(int valueID) {
@@ -251,6 +315,8 @@ float DGEffectsManager::value(int valueID) {
         case DGEffectSepiaIntensity: return _sepiaIntensity;
         case DGEffectSharpenRatio: return _sharpenRatio;
         case DGEffectSharpenIntensity: return _sharpenIntensity;
+        case DGEffectThrobStyle: return _throbStyle;
+        case DGEffectThrobIntensity: return _throbIntensity;
     }
     
     return 0.0f;

@@ -32,7 +32,8 @@ enum DGEffects {
     DGEffectMotionBlur,
     DGEffectNoise,
     DGEffectSepia,
-    DGEffectSharpen
+    DGEffectSharpen,
+    DGEffectThrob
 };
 
 enum DGEffectsValues {
@@ -43,11 +44,14 @@ enum DGEffectsValues {
     DGEffectNoiseIntensity,
     DGEffectSepiaIntensity,    
     DGEffectSharpenRatio,
-    DGEffectSharpenIntensity
+    DGEffectSharpenIntensity,
+    DGEffectThrobStyle,
+    DGEffectThrobIntensity
 };
 
 class DGCameraManager;
 class DGConfig;
+class DGTimerManager;
 
 // Reference to embedded shader data
 extern const char DGDefShaderData[];
@@ -59,6 +63,7 @@ extern const char DGDefShaderData[];
 class DGEffectsManager {
     DGConfig* config;
     DGCameraManager* cameraManager;
+    DGTimerManager* timerManager;
     
     GLuint _fragment;
     GLuint _program;
@@ -82,6 +87,10 @@ class DGEffectsManager {
     bool _sharpenEnabled;
     float _sharpenRatio;
     float _sharpenIntensity;
+    
+    bool _throbEnabled;
+    int _throbStyle;
+    float _throbIntensity;
     
     bool _isActive;
     bool _isInitialized;

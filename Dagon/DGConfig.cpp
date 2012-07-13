@@ -47,7 +47,6 @@ DGConfig::DGConfig() {
 	showSpots = DGDefShowSpots;
 	texCompression = DGDefTexCompression;
     scare = DGDefScare;
-    throb = DGDefThrob;
 	verticalSync = DGDefVerticalSync;
 	
     _fps = 0;
