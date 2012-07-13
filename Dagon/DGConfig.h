@@ -50,7 +50,6 @@ enum DGConfigDefaults {
 	DGDefShowSplash = true,
 	DGDefShowSpots = false,
 	DGDefTexCompression = false,
-	DGDefThrob = false,  // Move to effects    
 	DGDefVerticalSync = true
 };
 
@@ -110,7 +109,6 @@ public:
     bool showSplash;
 	bool showSpots;
     bool texCompression;
-    bool throb;
 	bool verticalSync;
     
     float globalSpeed();

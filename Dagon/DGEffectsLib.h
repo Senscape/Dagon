@@ -68,6 +68,16 @@ static int DGEffectsLibGet(lua_State *L) {
         return 1;
     }
 
+    if (strcmp(key, "throb") == 0) {
+        lua_pushnumber(L, (100.0f - (effectsManager->value(DGEffectThrobIntensity) * 100.0f)));
+        return 1;
+    }
+    
+    if (strcmp(key, "throbStyle") == 0) {
+        lua_pushnumber(L, effectsManager->value(DGEffectThrobStyle));
+        return 1;
+    }
+    
 	return 0;
 }
 
@@ -127,6 +137,18 @@ static int DGEffectsLibSet(lua_State *L) {
             effectsManager->setValue(DGEffectSharpenIntensity, value);
         }
         else effectsManager->setEnabled(DGEffectSharpen, false);
+    }
+    
+	if (strcmp(key, "throb") == 0) {
+        if (value) {
+            effectsManager->setEnabled(DGEffectThrob, true);
+            effectsManager->setValue(DGEffectThrobIntensity, (100.0f - (value * 100.0f)));
+        }
+        else effectsManager->setEnabled(DGEffectThrob, false);
+    }
+    
+	if (strcmp(key, "throbStyle") == 0) {
+        effectsManager->setValue(DGEffectThrobStyle, value * 100.0f);
     }
     
  	return 0;
