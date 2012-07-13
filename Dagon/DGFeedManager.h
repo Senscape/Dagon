@@ -28,6 +28,9 @@
 #define DGFeedMaxLines 5
 #define DGFeedSpeed 0.25f
 
+#define DGFeedShadowEnabled     1
+#define DGFeedShadowDistance    2
+
 enum DGFeedStates {
     DGFeedFadeIn,
     DGFeedIdle,
@@ -67,6 +70,8 @@ class DGFeedManager {
     DGFont* _feedFont;
     int _feedHeight;
     
+    void _calculatePosition(DGFeed* feed);
+    
     // Private constructor/destructor
     DGFeedManager();
     ~DGFeedManager();
@@ -85,9 +90,10 @@ public:
 
     void init();
     bool hasQueued();
+    void queue(const char* text, const char* audio);
+    void reshape();
     void show(const char* text);
     void showAndPlay(const char* text, const char* audio);
-    void queue(const char* text, const char* audio);
     void setFont(const char* fromFileName, unsigned int heightOfFont);
     void update();
 };

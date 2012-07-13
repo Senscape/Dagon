@@ -71,11 +71,9 @@ void DGFeedManager::show(const char* text) {
         string substr = str.substr(currSpace, (nextSpace - currSpace));
         
         DGFeed feed;
-        int width = (_feedHeight * 0.66f); // We have no option but to estimate this
         
         strncpy(feed.text, substr.c_str(), DGMaxFeedLength);
-        feed.location.x = (config->displayWidth / 2) - ((substr.length() / 2) * width);
-		feed.location.y = config->displayHeight - _feedHeight - DGFeedMargin;
+        _calculatePosition(&feed);
         feed.color = DGColorWhite - 0xFF000000;
         feed.state = DGFeedFadeIn;
         feed.timerHandle = timerManager->createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable  
@@ -86,15 +84,16 @@ void DGFeedManager::show(const char* text) {
     }
 }
 
-void DGFeedManager::showAndPlay(const char* text, const char* audio) {
-    this->show(text);
+void DGFeedManager::reshape() {
+    vector<DGFeed>::iterator it;
     
-    if (_feedAudio->isLoaded())
-        _feedAudio->unload();
+    it = _arrayOfActiveFeeds.begin();
     
-    _feedAudio->setResource(audio);
-    audioManager->requestAudio(_feedAudio);
-    _feedAudio->play();
+    while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
+        _calculatePosition(&(*it));
+        
+        it++;
+    }
 }
 
 void DGFeedManager::queue(const char* text, const char* audio) {
@@ -109,6 +108,17 @@ void DGFeedManager::queue(const char* text, const char* audio) {
         
         _arrayOfFeeds.push_back(feed);
     }
+}
+
+void DGFeedManager::showAndPlay(const char* text, const char* audio) {
+    this->show(text);
+    
+    if (_feedAudio->isLoaded())
+        _feedAudio->unload();
+    
+    _feedAudio->setResource(audio);
+    audioManager->requestAudio(_feedAudio);
+    _feedAudio->play();
 }
 
 // TODO: Note the font manager should purge unused fonts
@@ -148,6 +158,14 @@ void DGFeedManager::update() {
         }
         
         long displace = (it - _arrayOfActiveFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
+        
+        // Shadow code
+        if (DGFeedShadowEnabled) {
+            _feedFont->setColor(DGColorBlack & (*it).color);
+            _feedFont->print((*it).location.x + DGFeedShadowDistance,
+                             (*it).location.y + displace + DGFeedShadowDistance, (*it).text);
+        }
+        
         _feedFont->setColor((*it).color);
         _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         
@@ -168,4 +186,16 @@ void DGFeedManager::update() {
             _arrayOfFeeds.pop_back();
         }
     } 
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Private methods
+////////////////////////////////////////////////////////////
+
+void DGFeedManager::_calculatePosition(DGFeed* feed) {
+    int width = (_feedHeight * 0.66f); // We have no option but to estimate this
+    size_t length = strlen(feed->text) * width;
+    
+    feed->location.x = (config->displayWidth / 2) - (length / 2);
+    feed->location.y = config->displayHeight - _feedHeight - DGFeedMargin;
 }
