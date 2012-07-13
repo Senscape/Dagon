@@ -209,8 +209,13 @@ void DGSpot::play() {
     if (_hasAudio && _attachedAudio->isLoaded())
         _attachedAudio->play();
     
-    if (_hasVideo && _attachedVideo->isLoaded())
+    if (_hasVideo && _attachedVideo->isLoaded()) {
         _attachedVideo->play();
+    }
+    
+    // Hack of sorts but works OK
+    if (this->hasFlag(DGSpotLoop))
+        _flags = _flags | DGSpotAuto;
 }
 
 void DGSpot::stop() {
