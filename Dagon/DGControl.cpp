@@ -204,7 +204,10 @@ void DGControl::processKey(int aKey, bool isModified) {
 			break;
         case 'f':
         case 'F':
-            if (isModified) system->toggleFullScreen();
+            if (isModified) {
+                config->fullScreen = !config->fullScreen;
+                system->toggleFullScreen();   
+            }
             break;          
 	}
     
@@ -397,6 +400,7 @@ void DGControl::reshape(int width, int height) {
     config->displayHeight = height;
     
     cameraManager->setViewport(width, height);
+    feedManager->reshape();
     renderManager->reshape();
     
     if (_eventHandlers.hasResize)
@@ -480,10 +484,7 @@ void DGControl::switchTo(DGObject* theTarget) {
                             DGFrame* frame = video->currentFrame();
                             spot->texture()->loadRawData(frame->data, frame->width, frame->height);
                             
-                            if (video->doesAutoplay()) 
-                                video->play();
-                            else 
-                                video->pause();
+                            video->pause();
                         }
                     }
                     
