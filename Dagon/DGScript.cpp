@@ -488,6 +488,23 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
     DGLuaEnum(_L, RESIZE, DGEventResize);
 
+	DGLuaEnum(_L, BLACK, DGColorBlack);
+	DGLuaEnum(_L, BLUE, DGColorBlue);
+	DGLuaEnum(_L, GREEN, DGColorGreen);
+	DGLuaEnum(_L, CYAN, DGColorCyan);
+	DGLuaEnum(_L, RED, DGColorRed);
+	DGLuaEnum(_L, MAGENTA, DGColorMagenta);
+	DGLuaEnum(_L, BROWN, DGColorBrown);
+	DGLuaEnum(_L, LIGHTGRAY, DGColorLightGray);
+	DGLuaEnum(_L, DARKGRAY, DGColorDarkGray);
+	DGLuaEnum(_L, BRIGHTBLUE, DGColorBrightBlue);
+	DGLuaEnum(_L, BRIGHTGREEN, DGColorBrightGreen);
+	DGLuaEnum(_L, BRIGHTCYAN, DGColorBrightCyan);
+	DGLuaEnum(_L, BRIGHTRED, DGColorBrightRed);
+	DGLuaEnum(_L, BRIGHTMAGENTA, DGColorBrightMagenta);
+	DGLuaEnum(_L, YELLOW, DGColorYellow);
+	DGLuaEnum(_L, WHITE, DGColorWhite);
+
     DGLuaEnum(_L, SLOW, DGFadeSlow);
     DGLuaEnum(_L, SLOWEST, DGFadeSlowest);
     DGLuaEnum(_L, FAST, DGFadeFast);
