@@ -25,13 +25,12 @@
 #include "DGVideoManager.h"
 
 /* TODO:
-	- Deadlock when switching
+	* Deadlock when switching (potential problem with SetWindowText)
+	* Exception when resizing (probably related to virtual machine)
 	- Sound corruption
-	- Exception when resizing (and switching to fullscreen repeatedly)
+	- Test memory with virtual machine!
 	- Problem with key 'f'
 	- Video timing
-	- Font of journal
-	- Drag mode
 */
 
 ////////////////////////////////////////////////////////////
@@ -470,6 +469,8 @@ DWORD WINAPI _videoThread(LPVOID lpParam) {
 
 // This function processes the main loop
 LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	static bool isDragging = false;
+
     switch(msg) {
 		case WM_SIZE:
 			EnterCriticalSection(&csSystemThread);
@@ -481,7 +482,10 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 		case WM_MOUSEMOVE:
 			EnterCriticalSection(&csSystemThread);
 			wglMakeCurrent(g_hDC, g_hRC);
-			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventMove);
+			if (isDragging)
+				DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventDrag);
+			else
+				DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventMove);
 			wglMakeCurrent(NULL, NULL);
 			LeaveCriticalSection(&csSystemThread);
 
@@ -513,6 +517,7 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventDown);
 			wglMakeCurrent(NULL, NULL);
 			LeaveCriticalSection(&csSystemThread);
+			isDragging = true;
 			break;
 		case WM_LBUTTONUP:
 			EnterCriticalSection(&csSystemThread);
@@ -520,6 +525,7 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventUp);
 			wglMakeCurrent(NULL, NULL);
 			LeaveCriticalSection(&csSystemThread);
+			isDragging = false;
 			break;
 		case WM_KEYDOWN:
 			EnterCriticalSection(&csSystemThread);
