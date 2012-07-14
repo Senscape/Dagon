@@ -128,7 +128,9 @@ class DGControl {
     
     int _fpsCount;
     bool _isInitialized;
+	bool _isRunning;
     bool _isShuttingDown;
+	int _shutdownTimer;
     int _sleepTimer;
 
     void _processAction();
@@ -166,11 +168,11 @@ public:
     void syncSpot(DGSpot* spot);
     void switchTo(DGObject* theTarget); 
     void takeSnapshot();
-    static void terminate();
+    void terminate();
     
     // These methods are called asynchronously
-    void profiler();
-    void update();
+    bool profiler();
+    bool update();
 };
 
 #endif // DG_CONTROL_H

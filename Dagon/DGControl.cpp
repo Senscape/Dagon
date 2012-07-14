@@ -63,6 +63,7 @@ DGControl::DGControl() {
     
     _isInitialized = false;
     _isShuttingDown = false;
+	_isRunning = false;
     
     // This is used to randomize the color of certain spots,
     // should be called once
@@ -136,6 +137,7 @@ void DGControl::init() {
     else renderManager->resetFade();
     
     _isInitialized = true;
+	_isRunning = true;
 }
 
 DGNode* DGControl::currentNode() {
@@ -190,7 +192,7 @@ void DGControl::processKey(int aKey, bool isModified) {
 		case DGKeyEsc:
             if (!_isShuttingDown) {
                 _scene->fadeOut();
-                timerManager->createInternal(1, terminate);
+                _shutdownTimer = timerManager->createManual(1);
                 _isShuttingDown = true;
             }
 			break;
@@ -572,52 +574,71 @@ void DGControl::takeSnapshot() {
     config->texCompression = previousTexCompression;
 }
 
-void DGControl::profiler() {    
-    // Store the last FPS count and reset
-    config->setFramesPerSecond(_fpsCount);
-    _fpsCount = 0;
+bool DGControl::profiler() {
+	if (_isRunning) {
+		// Store the last FPS count and reset
+		config->setFramesPerSecond(_fpsCount);
+		_fpsCount = 0;
+
+		return true;
+	}
+
+	return false;
 }
 
 void DGControl::terminate() {
-    DGSystem::getInstance().terminate();
+	_isRunning = false;
+    system->terminate();
 }
 
-void DGControl::update() {
-    switch (_state->current()) {
-        case DGStateLookAt:
-            cameraManager->panToTargetAngle();
-            _updateView(_state->previous(), false);
+bool DGControl::update() {
+	if (_isRunning) {
+		switch (_state->current()) {
+			case DGStateLookAt:
+				cameraManager->panToTargetAngle();
+				_updateView(_state->previous(), false);
             
-            if (!cameraManager->isPanning()) {
-                _state->setPrevious();
-                cursorManager->fadeIn();
-                script->resume(); 
-            }
-            break;
-        case DGStateSleep:
-            if (timerManager->checkManual(_sleepTimer)) {
-                _state->setPrevious();
-                cursorManager->fadeIn();
-                script->resume();
-            }
-            else {
-                _updateView(_state->previous(), false);
-            }
+				if (!cameraManager->isPanning()) {
+					 _state->setPrevious();
+					cursorManager->fadeIn();
+					script->resume(); 
+				}
+				break;
+			case DGStateSleep:
+				if (timerManager->checkManual(_sleepTimer)) {
+					_state->setPrevious();
+					cursorManager->fadeIn();
+					script->resume();
+				}
+				else {
+					_updateView(_state->previous(), false);
+				}
 
-            break;
-        case DGStateVideoSync:
-            _updateView(_state->previous(), false);
+				break;
+			case DGStateVideoSync:
+				_updateView(_state->previous(), false);
             
-            if (!_syncedSpot->video()->isPlaying()) {
-                _state->setPrevious();
-                cursorManager->fadeIn();
-                script->resume(); 
-            }
-            break;      
-        default:
-            _updateView(_state->current(), false);
-            break;
-    }
+				if (!_syncedSpot->video()->isPlaying()) {
+					_state->setPrevious();
+					cursorManager->fadeIn();
+					script->resume(); 
+				}
+				break;      
+			default:
+				_updateView(_state->current(), false);
+				break;
+		}
+
+		if (_isShuttingDown) {
+			if (timerManager->checkManual(_shutdownTimer)) {
+				this->terminate();
+			}
+		}
+
+		return true;
+	}
+
+	return false;
 }
 
 ////////////////////////////////////////////////////////////

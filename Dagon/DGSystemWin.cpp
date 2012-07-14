@@ -15,11 +15,14 @@
 ////////////////////////////////////////////////////////////
 
 #include <GL/glew.h>
+#include "DGAudioManager.h"
 #include "DGConfig.h"
 #include "DGControl.h"
 #include "DGLog.h"
 #include "DGPlatform.h"
 #include "DGSystem.h"
+#include "DGTimerManager.h"
+#include "DGVideoManager.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -35,9 +38,22 @@ HWND g_hWnd = NULL;
 HDC g_hDC = NULL;
 HGLRC g_hRC = NULL;
 
+HANDLE hAudioThread;
+HANDLE hProfilerThread;
 HANDLE hSystemThread;
+HANDLE hTimerThread;
+HANDLE hVideoThread;
 
+CRITICAL_SECTION csAudioThread;
+CRITICAL_SECTION csSystemThread;
+CRITICAL_SECTION csTimerThread;
+CRITICAL_SECTION csVideoThread;
+
+DWORD WINAPI _audioThread(LPVOID lpParam);
+DWORD WINAPI _profilerThread(LPVOID lpParam);
 DWORD WINAPI _systemThread(LPVOID lpParam);
+DWORD WINAPI _timerThread(LPVOID lpParam);
+DWORD WINAPI _videoThread(LPVOID lpParam);
 LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 // Get pointers to functions for setting vertical sync
@@ -73,6 +89,51 @@ DGSystem::~DGSystem() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+void DGSystem::createThreads() {
+	InitializeCriticalSection(&csAudioThread);
+	hAudioThread = CreateThread(NULL, 0, _audioThread, NULL, 0, NULL);
+
+	InitializeCriticalSection(&csTimerThread);
+	hTimerThread = CreateThread(NULL, 0, _timerThread, NULL, 0, NULL);
+
+	InitializeCriticalSection(&csVideoThread);
+	hVideoThread = CreateThread(NULL, 0, _videoThread, NULL, 0, NULL);
+
+	if (config->debugMode) {
+		hProfilerThread = CreateThread(NULL, 0, _profilerThread, NULL, 0, NULL);
+	}
+
+	_areThreadsActive = true;
+}
+
+void DGSystem::destroyThreads() {
+	if (hAudioThread != NULL) {
+		EnterCriticalSection(&csAudioThread);
+		DGAudioManager::getInstance().terminate();
+		LeaveCriticalSection(&csAudioThread);
+		/*WaitForSingleObject(hAudioThread, INFINITE);
+		DeleteCriticalSection(&csAudioThread);*/
+	}
+
+	if (hTimerThread != NULL) {
+		EnterCriticalSection(&csTimerThread);
+		DGTimerManager::getInstance().terminate();
+		LeaveCriticalSection(&csTimerThread);
+		/*WaitForSingleObject(hTimerThread, INFINITE);
+		DeleteCriticalSection(&csTimerThread);*/
+	}
+
+	if (hVideoThread != NULL) {
+		EnterCriticalSection(&csVideoThread);
+		DGVideoManager::getInstance().terminate();
+		LeaveCriticalSection(&csVideoThread);
+		/*WaitForSingleObject(hVideoThread, INFINITE);
+		DeleteCriticalSection(&csVideoThread);*/
+	}
+
+	_areThreadsActive = false;
+}
+
 void DGSystem::findPaths(int argc, char* argv[]) {
     // Implement
 }
@@ -80,7 +141,9 @@ void DGSystem::findPaths(int argc, char* argv[]) {
 void DGSystem::init() {
     if (!_isInitialized) {
         log->trace(DGModSystem, "========================================");
-        log->trace(DGModSystem, "%s", DGMsg040000);        
+        log->trace(DGModSystem, "%s", DGMsg040000); 
+
+		InitializeCriticalSection(&csSystemThread);
 
         // Prepare the string to set the window title
         WCHAR title[DGMaxPathLength];
@@ -159,7 +222,7 @@ void DGSystem::init() {
         if (config->fullScreen)
             toggleFullScreen();
         
-        ShowCursor(FALSE);        
+        ShowCursor(FALSE);
 
         _isInitialized = true;
         log->trace(DGModSystem, "%s", DGMsg040001);
@@ -167,19 +230,37 @@ void DGSystem::init() {
     else log->warning(DGModSystem, "%s", DGMsg140002);
 }
 
-void DGSystem::run() {
-    DWORD dwControlThreadId;
-	MSG uMsg;
+void DGSystem::resumeThread(int threadID){
+    if (_areThreadsActive) {
+        switch (threadID) {
+            case DGAudioThread:
+                LeaveCriticalSection(&csAudioThread);
+                break;
+            case DGTimerThread:
+                LeaveCriticalSection(&csTimerThread);
+                break;
+            case DGVideoThread:
+                LeaveCriticalSection(&csVideoThread);
+                break;                
+        }
+    }
+}
 
+void DGSystem::run() {
 	wglMakeCurrent(NULL, NULL);
-	
+
+	DWORD dwControlThreadId;
+
     // Create the thread to update the controller module
 	if (!(hSystemThread = CreateThread(NULL, 0, _systemThread, NULL, 0, &dwControlThreadId)))
 		log->error(DGModSystem, "%s", DGMsg240004);
-	
+
     // Now launch the main loop
+	MSG uMsg;
 	memset(&uMsg,0,sizeof(uMsg));
-    while (uMsg.message != WM_QUIT) {
+
+	_isRunning = true;
+    while (_isRunning) {
         if (PeekMessage(&uMsg, NULL, 0, 0, PM_REMOVE)) {
             TranslateMessage(&uMsg);
             DispatchMessage(&uMsg);
@@ -191,13 +272,26 @@ void DGSystem::setTitle(const char* title) {
     // Implement
 }
 
+void DGSystem::suspendThread(int threadID){
+    if (_areThreadsActive) {
+        switch (threadID) {
+            case DGAudioThread:
+                EnterCriticalSection(&csAudioThread);
+                break;
+            case DGTimerThread:
+                EnterCriticalSection(&csTimerThread);
+                break;
+            case DGVideoThread:
+                EnterCriticalSection(&csVideoThread);
+                break;                
+        }
+    }
+}
+
 // TODO: We must delete the thread here too
 void DGSystem::terminate() {
-	if (hSystemThread != NULL) {
-		DWORD lpExitCode;
-		GetExitCodeThread(hSystemThread, &lpExitCode);
-		TerminateThread(hSystemThread, lpExitCode);
-	}
+	if (_areThreadsActive)
+		this->destroyThreads();
 
 	if (g_hRC != NULL) {
         wglMakeCurrent(NULL, NULL);
@@ -209,11 +303,13 @@ void DGSystem::terminate() {
         ReleaseDC(g_hWnd, g_hDC);
         g_hDC = NULL;
     }
+
+	//DeleteCriticalSection(&csSystemThread);
 	
 	UnregisterClass(L"DG_WINDOWS_CLASS", NULL);
 	ShowCursor(TRUE);
 	
-	PostQuitMessage(0);
+	_isRunning = false;
 }
 
 // TODO: We should try and get the best possible resolution here
@@ -250,23 +346,96 @@ void DGSystem::toggleFullScreen() {
 }
 
 void DGSystem::update() {
-	// Update the controller
-	control->update();
-
     // Now swap the OpenGL buffers
     SwapBuffers(g_hDC);
+}
+
+time_t DGSystem::wallTime(){
+	FILETIME ft;
+	LARGE_INTEGER li;
+	time_t ret;
+
+	GetSystemTimeAsFileTime(&ft);
+	li.LowPart = ft.dwLowDateTime;
+	li.HighPart = ft.dwHighDateTime;
+
+	ret = li.QuadPart;
+	ret -= 116444736000000000LL;
+	ret /= 10000;
+
+	return ret;
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
+DWORD WINAPI _audioThread(LPVOID lpParam) {
+	DWORD dwPause = 10;
+	bool isRunning = true;
+
+	while (isRunning) {
+		EnterCriticalSection(&csAudioThread);
+		isRunning = DGAudioManager::getInstance().update();
+		LeaveCriticalSection(&csAudioThread);
+		Sleep(dwPause);
+	}
+	
+	return 0;
+}
+
+DWORD WINAPI _profilerThread(LPVOID lpParam) {
+	DWORD dwPause = 1000;
+	bool isRunning = true;
+
+	while (isRunning) {
+		EnterCriticalSection(&csSystemThread);
+		isRunning = DGControl::getInstance().profiler();
+		LeaveCriticalSection(&csSystemThread);
+		Sleep(dwPause);
+	}
+	
+	return 0;
+}
+
 DWORD WINAPI _systemThread(LPVOID lpParam) {
 	DWORD dwPause = (1.0f / DGConfig::getInstance().framerate) * 1000;
+	bool isRunning = true;
 
-	wglMakeCurrent(g_hDC, g_hRC);
-	while (true) {
-		DGSystem::getInstance().update();
+	while (isRunning) {
+		EnterCriticalSection(&csSystemThread);
+		wglMakeCurrent(g_hDC, g_hRC);
+		isRunning = DGControl::getInstance().update();
+		wglMakeCurrent(NULL, NULL);
+		LeaveCriticalSection(&csSystemThread);
+		Sleep(dwPause);
+	}
+	
+	return 0;
+}
+
+DWORD WINAPI _timerThread(LPVOID lpParam) {
+	DWORD dwPause = 100;
+	bool isRunning = true;
+
+	while (isRunning) {
+		EnterCriticalSection(&csTimerThread);
+		isRunning = DGTimerManager::getInstance().update();
+		LeaveCriticalSection(&csTimerThread);
+		Sleep(dwPause);
+	}
+	
+	return 0;
+}
+
+DWORD WINAPI _videoThread(LPVOID lpParam) {
+	DWORD dwPause = 10;
+	bool isRunning = true;
+
+	while (isRunning) {
+		EnterCriticalSection(&csVideoThread);
+		isRunning = DGVideoManager::getInstance().update();
+		LeaveCriticalSection(&csVideoThread);
 		Sleep(dwPause);
 	}
 	
@@ -277,17 +446,32 @@ DWORD WINAPI _systemThread(LPVOID lpParam) {
 LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {	
     switch(msg) {
 		case WM_SIZE:
-			DGConfig::getInstance().displayWidth = LOWORD(lParam);
-			DGConfig::getInstance().displayHeight = HIWORD(lParam);
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
+			DGControl::getInstance().reshape(LOWORD(lParam), HIWORD(lParam));
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
 			break;
 		case WM_MOUSEMOVE:
-            DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), false);
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
+            DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventMove);
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
 			break;
 		case WM_LBUTTONDOWN:
-            // We ignore this message
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
+			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventDown);
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
 			break;
 		case WM_LBUTTONUP:
-			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), true);
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
+			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventUp);
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
 			break;
 		case WM_KEYDOWN:
             // A different switch to handle keystrokes
@@ -304,12 +488,21 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case VK_F10:
 				case VK_F11:
 				case VK_F12:
+					EnterCriticalSection(&csSystemThread);
+					wglMakeCurrent(g_hDC, g_hRC);
 					DGControl::getInstance().processKey(wParam, false);
+					wglMakeCurrent(NULL, NULL);
+					LeaveCriticalSection(&csSystemThread);
 					break;
 				case VK_SHIFT:
 					// Ignored when pressed alone
 					break;
 				case VK_ESCAPE:
+					EnterCriticalSection(&csSystemThread);
+					wglMakeCurrent(g_hDC, g_hRC);
+					DGControl::getInstance().processKey(DGKeyEsc, false);
+					wglMakeCurrent(NULL, NULL);
+					LeaveCriticalSection(&csSystemThread);
 				case VK_RETURN:
 				case VK_BACK:	
 				case VK_OEM_3:
@@ -319,16 +512,24 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
                     
 					GetKeyboardState(kbs);
 					ToAscii(wParam, MapVirtualKey(wParam, 0), kbs, &ch, 0);
+					EnterCriticalSection(&csSystemThread);
+					wglMakeCurrent(g_hDC, g_hRC);
 					DGControl::getInstance().processKey(ch, false);
+					wglMakeCurrent(NULL, NULL);
+					LeaveCriticalSection(&csSystemThread);
 					break;
 			}			
 			break;
         case WM_CLOSE:
-        case WM_DESTROY:
-		case WM_QUIT:
             // Simulate the ESC key
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
             DGControl::getInstance().processKey(DGKeyEsc, false);
-			break;			
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
+			break;
+        case WM_DESTROY:
+		case WM_QUIT:			
         default:
             // Any other messages are passed to the default window process
             return DefWindowProc(hWnd, msg, wParam, lParam);

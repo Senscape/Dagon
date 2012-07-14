@@ -23,6 +23,7 @@ xcuserdata/
 *.csproj
 *.filters
 *.ncb
+*.opensdf
 *.scc
 *.sdf
 *.suo

@@ -30,6 +30,7 @@ DGAudioManager::DGAudioManager() {
     config = &DGConfig::getInstance();
 
     _isInitialized = false;
+	_isRunning = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -154,6 +155,7 @@ void DGAudioManager::init() {
 	}
     
     _isInitialized = true;
+	_isRunning = true;
 }
 
 void DGAudioManager::registerAudio(DGAudio* target) {
@@ -201,10 +203,13 @@ void DGAudioManager::setOrientation(float* orientation) {
     }
 }
 
+void DGAudioManager::terminate() {
+	_isRunning = false;
+}
 
 // Asynchronous method
-void DGAudioManager::update() {
-    if (_isInitialized) {
+bool DGAudioManager::update() {
+    if (_isRunning) {
         if (!_arrayOfActiveAudios.empty()) {
             vector<DGAudio*>::iterator it;
             
@@ -215,5 +220,9 @@ void DGAudioManager::update() {
                 it++;
             }
         }
+
+		return true;
     }
+
+	return false;
 }

@@ -32,7 +32,7 @@ class DGLog;
 class DGTexture;
 
 // Reference to embedded splash screen
-extern const unsigned char DGDefSplashBinary[];
+extern "C" const unsigned char DGDefSplashBinary[];
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class

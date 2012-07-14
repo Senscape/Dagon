@@ -58,6 +58,7 @@ class DGAudioManager {
     std::vector<DGAudio*> _arrayOfActiveAudios;
     
     bool _isInitialized;
+	bool _isRunning;
     
     // Private constructor/destructor
     DGAudioManager();
@@ -86,7 +87,8 @@ public:
     void registerAudio(DGAudio* target);
     void requestAudio(DGAudio* target);
     void setOrientation(float* orientation);
-    void update();
+	void terminate();
+    bool update();
 };
 
 #endif // DG_AUDIOMANAGER_H

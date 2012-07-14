@@ -54,7 +54,7 @@ class DGConfig;
 class DGTimerManager;
 
 // Reference to embedded shader data
-extern const char DGDefShaderData[];
+extern "C" const char DGDefShaderData[];
 
 ////////////////////////////////////////////////////////////
 // Interface
