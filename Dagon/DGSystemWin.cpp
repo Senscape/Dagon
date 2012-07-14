@@ -24,6 +24,16 @@
 #include "DGTimerManager.h"
 #include "DGVideoManager.h"
 
+/* TODO:
+	- Deadlock when switching
+	- Sound corruption
+	- Exception when resizing (and switching to fullscreen repeatedly)
+	- Problem with key 'f'
+	- Video timing
+	- Font of journal
+	- Drag mode
+*/
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -111,24 +121,24 @@ void DGSystem::destroyThreads() {
 		EnterCriticalSection(&csAudioThread);
 		DGAudioManager::getInstance().terminate();
 		LeaveCriticalSection(&csAudioThread);
-		/*WaitForSingleObject(hAudioThread, INFINITE);
-		DeleteCriticalSection(&csAudioThread);*/
+		WaitForSingleObject(hAudioThread, INFINITE);
+		DeleteCriticalSection(&csAudioThread);
 	}
 
 	if (hTimerThread != NULL) {
 		EnterCriticalSection(&csTimerThread);
 		DGTimerManager::getInstance().terminate();
 		LeaveCriticalSection(&csTimerThread);
-		/*WaitForSingleObject(hTimerThread, INFINITE);
-		DeleteCriticalSection(&csTimerThread);*/
+		WaitForSingleObject(hTimerThread, INFINITE);
+		DeleteCriticalSection(&csTimerThread);
 	}
 
 	if (hVideoThread != NULL) {
 		EnterCriticalSection(&csVideoThread);
 		DGVideoManager::getInstance().terminate();
 		LeaveCriticalSection(&csVideoThread);
-		/*WaitForSingleObject(hVideoThread, INFINITE);
-		DeleteCriticalSection(&csVideoThread);*/
+		WaitForSingleObject(hVideoThread, INFINITE);
+		DeleteCriticalSection(&csVideoThread);
 	}
 
 	_areThreadsActive = false;
@@ -155,8 +165,8 @@ void DGSystem::init() {
         winClass.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
         winClass.lpfnWndProc   = _WindowProc;
         winClass.hInstance     = NULL;
-        winClass.hIcon         = LoadIcon(NULL, (LPCTSTR)IDI_APPLICATION);
-        winClass.hIconSm       = LoadIcon(NULL, (LPCTSTR)IDI_APPLICATION);
+		winClass.hIcon         = LoadIcon(NULL, MAKEINTRESOURCE(100));
+		winClass.hIconSm       = (HICON)LoadImage(GetModuleHandle(NULL), MAKEINTRESOURCE(100), IMAGE_ICON, 16, 16, 0);
         winClass.hCursor       = LoadCursor(NULL, IDC_ARROW);
         winClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
         winClass.lpszMenuName  = NULL;
@@ -219,9 +229,6 @@ void DGSystem::init() {
             log->error(DGModSystem, "%s", DGMsg240003);
         }
         
-        if (config->fullScreen)
-            toggleFullScreen();
-        
         ShowCursor(FALSE);
 
         _isInitialized = true;
@@ -249,11 +256,12 @@ void DGSystem::resumeThread(int threadID){
 void DGSystem::run() {
 	wglMakeCurrent(NULL, NULL);
 
-	DWORD dwControlThreadId;
-
     // Create the thread to update the controller module
-	if (!(hSystemThread = CreateThread(NULL, 0, _systemThread, NULL, 0, &dwControlThreadId)))
+	if (!(hSystemThread = CreateThread(NULL, 0, _systemThread, NULL, 0, NULL)))
 		log->error(DGModSystem, "%s", DGMsg240004);
+
+	if (config->fullScreen)
+        toggleFullScreen();
 
     // Now launch the main loop
 	MSG uMsg;
@@ -266,10 +274,19 @@ void DGSystem::run() {
             DispatchMessage(&uMsg);
         }
     }
+
+	WaitForSingleObject(hSystemThread, INFINITE);
+	if (config->debugMode) {
+		WaitForSingleObject(hProfilerThread, INFINITE);
+	}
+
+	DeleteCriticalSection(&csSystemThread);
 }
 
 void DGSystem::setTitle(const char* title) {
-    // Implement
+	WCHAR str[DGMaxLogLength];
+	MultiByteToWideChar(0,0, title, DGMaxLogLength, str, DGMaxLogLength);
+    SetWindowText(g_hWnd, str);
 }
 
 void DGSystem::suspendThread(int threadID){
@@ -303,8 +320,6 @@ void DGSystem::terminate() {
         ReleaseDC(g_hWnd, g_hDC);
         g_hDC = NULL;
     }
-
-	//DeleteCriticalSection(&csSystemThread);
 	
 	UnregisterClass(L"DG_WINDOWS_CLASS", NULL);
 	ShowCursor(TRUE);
@@ -315,21 +330,31 @@ void DGSystem::terminate() {
 // TODO: We should try and get the best possible resolution here
 void DGSystem::toggleFullScreen() { 
     if (config->fullScreen) {
-        // Enter fullscreen        
+        // Enter fullscreen
+		RECT desktop;
+		// Get a handle to the desktop window
+		const HWND hDesktop = GetDesktopWindow();
+		// Get the size of screen to the variable desktop
+		GetWindowRect(hDesktop, &desktop);
+		// The top left corner will have coordinates (0,0)
+		// and the bottom right corner will have coordinates
+		// (horizontal, vertical)
+
         DEVMODE fullscreenSettings;
         
         EnumDisplaySettings(NULL, 0, &fullscreenSettings);
-        fullscreenSettings.dmPelsWidth        = config->displayWidth;
-        fullscreenSettings.dmPelsHeight       = config->displayHeight;
+        fullscreenSettings.dmPelsWidth        = desktop.right;
+        fullscreenSettings.dmPelsHeight       = desktop.bottom;
         fullscreenSettings.dmBitsPerPel       = config->displayDepth;
         fullscreenSettings.dmDisplayFrequency = config->framerate;
         fullscreenSettings.dmFields           = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;
         
         SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, WS_EX_APPWINDOW | WS_EX_TOPMOST);
         SetWindowLongPtr(g_hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
-        SetWindowPos(g_hWnd, HWND_TOPMOST, 0, 0, config->displayWidth, config->displayHeight, SWP_SHOWWINDOW);
+        SetWindowPos(g_hWnd, HWND_TOPMOST, 0, 0, desktop.right, desktop.bottom, SWP_SHOWWINDOW);
         if (ChangeDisplaySettings(&fullscreenSettings, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL) {
             ShowWindow(g_hWnd, SW_MAXIMIZE);
+			control->reshape(desktop.right, desktop.bottom);
         }
         else log->error(DGModSystem, "%s", DGMsg240005);
     }
@@ -340,6 +365,7 @@ void DGSystem::toggleFullScreen() {
         if (ChangeDisplaySettings(NULL, CDS_RESET) == DISP_CHANGE_SUCCESSFUL) {
             SetWindowPos(g_hWnd, HWND_NOTOPMOST, 0, 0, config->displayWidth, config->displayHeight, SWP_SHOWWINDOW);
             ShowWindow(g_hWnd, SW_RESTORE);
+			control->reshape(config->displayWidth, config->displayHeight);
         }
         else log->error(DGModSystem, "%s", DGMsg240006);        
     }
@@ -443,7 +469,7 @@ DWORD WINAPI _videoThread(LPVOID lpParam) {
 }
 
 // This function processes the main loop
-LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {	
+LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
     switch(msg) {
 		case WM_SIZE:
 			EnterCriticalSection(&csSystemThread);
@@ -455,9 +481,31 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 		case WM_MOUSEMOVE:
 			EnterCriticalSection(&csSystemThread);
 			wglMakeCurrent(g_hDC, g_hRC);
-            DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventMove);
+			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventMove);
 			wglMakeCurrent(NULL, NULL);
 			LeaveCriticalSection(&csSystemThread);
+
+			if (GetCapture() != g_hWnd) {
+				SetCapture(g_hWnd);
+			}
+			else {
+				RECT rect;
+				GetWindowRect(g_hWnd, &rect);
+
+				POINT pt = { LOWORD(lParam), HIWORD(lParam) };
+				ClientToScreen(g_hWnd, &pt);
+
+				if (!PtInRect(&rect, pt)) {
+					EnterCriticalSection(&csSystemThread);
+					wglMakeCurrent(g_hDC, g_hRC);
+					DGControl::getInstance().processMouse(DGConfig::getInstance().displayWidth / 2, 
+					DGConfig::getInstance().displayHeight / 2, DGMouseEventMove);
+					wglMakeCurrent(NULL, NULL);
+					LeaveCriticalSection(&csSystemThread);
+
+					ReleaseCapture();
+				}
+			}
 			break;
 		case WM_LBUTTONDOWN:
 			EnterCriticalSection(&csSystemThread);
@@ -474,6 +522,8 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			LeaveCriticalSection(&csSystemThread);
 			break;
 		case WM_KEYDOWN:
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
             // A different switch to handle keystrokes
             switch(wParam) {
 				case VK_F1:
@@ -488,37 +538,34 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case VK_F10:
 				case VK_F11:
 				case VK_F12:
-					EnterCriticalSection(&csSystemThread);
-					wglMakeCurrent(g_hDC, g_hRC);
-					DGControl::getInstance().processKey(wParam, false);
-					wglMakeCurrent(NULL, NULL);
-					LeaveCriticalSection(&csSystemThread);
+					DGControl::getInstance().processFunctionKey(wParam);
 					break;
 				case VK_SHIFT:
 					// Ignored when pressed alone
 					break;
 				case VK_ESCAPE:
-					EnterCriticalSection(&csSystemThread);
-					wglMakeCurrent(g_hDC, g_hRC);
-					DGControl::getInstance().processKey(DGKeyEsc, false);
-					wglMakeCurrent(NULL, NULL);
-					LeaveCriticalSection(&csSystemThread);
+				case VK_TAB:
+				case VK_SPACE:
 				case VK_RETURN:
 				case VK_BACK:	
-				case VK_OEM_3:
+					DGControl::getInstance().processKey(wParam, false);
+					break;
+				case VK_OEM_3: // Open console
+					DGControl::getInstance().processKey(DGKeyTab, false);
+					break;
 				default:
                     WORD ch;
                     BYTE kbs[256];
-                    
 					GetKeyboardState(kbs);
 					ToAscii(wParam, MapVirtualKey(wParam, 0), kbs, &ch, 0);
-					EnterCriticalSection(&csSystemThread);
-					wglMakeCurrent(g_hDC, g_hRC);
-					DGControl::getInstance().processKey(ch, false);
-					wglMakeCurrent(NULL, NULL);
-					LeaveCriticalSection(&csSystemThread);
+					if (GetKeyState(VK_CONTROL) < 0)
+						DGControl::getInstance().processKey(ch, true);
+					else
+						DGControl::getInstance().processKey(ch, false);
 					break;
-			}			
+			}
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
 			break;
         case WM_CLOSE:
             // Simulate the ESC key
