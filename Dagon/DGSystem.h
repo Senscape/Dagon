@@ -13,6 +13,9 @@
 #ifndef DG_SYSTEM_H
 #define	DG_SYSTEM_H
 
+// TODO: Separate each implementation into different headers,
+// then this one loads the appropriate one accordingly
+
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////

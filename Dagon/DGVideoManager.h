@@ -42,6 +42,7 @@ class DGVideoManager {
     std::vector<DGVideo*> _arrayOfActiveVideos;
     
     bool _isInitialized;
+	bool _isRunning;
     
     // Private constructor/destructor
     DGVideoManager();
@@ -64,7 +65,8 @@ public:
     void init();
     void registerVideo(DGVideo* target);
     void requestVideo(DGVideo* target);
-    void update();
+	void terminate();
+    bool update();
 };
 
 #endif // DG_VIDEOMANAGER_H

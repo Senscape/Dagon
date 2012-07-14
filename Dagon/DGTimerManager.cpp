@@ -27,6 +27,8 @@ using namespace std;
 DGTimerManager::DGTimerManager() {
     _handles = 0;
     _luaObject = 0;
+
+	_isRunning = true;
 }
 
 ////////////////////////////////////////////////////////////
@@ -179,27 +181,37 @@ void DGTimerManager::setLuaObject(int luaObject) {
     _luaObject = luaObject;
 }
 
+void DGTimerManager::terminate() {
+	_isRunning = false;
+}
+
+
 // FIXME: This is quite sucky. Timers keep looping and being checked even if they
 // were already triggered. Should have different arrays here.
-void DGTimerManager::update() {
-    std::vector<DGTimer>::iterator it;
+bool DGTimerManager::update() {
+	if (_isRunning) {
+		std::vector<DGTimer>::iterator it;
     
-    it = _arrayOfTimers.begin();
+		it = _arrayOfTimers.begin();
     
-    while (it != _arrayOfTimers.end()) {
-        time_t currentTime = DGSystem::getInstance().wallTime();
-        double duration = (double)(currentTime - (*it).lastTime) / CLOCKS_PER_SEC;
+		while (it != _arrayOfTimers.end()) {
+			time_t currentTime = DGSystem::getInstance().wallTime();
+			double duration = (double)(currentTime - (*it).lastTime) / CLOCKS_PER_SEC;
         
-        DGTimer* timer = &(*it);
+			DGTimer* timer = &(*it);
         
-        if (timer->isEnabled && (timer->type != DGTimerManual)) {
-            if ((duration > timer->trigger) && !timer->hasTriggered) {
-                timer->hasTriggered = true;
-            }
-        }
+			if (timer->isEnabled && (timer->type != DGTimerManual)) {
+				if ((duration > timer->trigger) && !timer->hasTriggered) {
+					timer->hasTriggered = true;
+				}
+			}
         
-        it++;
-    }
+			it++;
+		}
+		return true;
+	}
+
+	return false;
 }
 
 ////////////////////////////////////////////////////////////

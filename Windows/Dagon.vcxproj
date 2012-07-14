@@ -11,60 +11,102 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Other Sources\Prefix.pch" />
+    <None Include="Resources\dagon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\dagon.rc" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="..\Dagon\DGAction.h" />
     <ClInclude Include="..\Dagon\DGAudio.h" />
-    <ClInclude Include="..\Dagon\DGCamera.h" />
+    <ClInclude Include="..\Dagon\DGAudioManager.h" />
+    <ClInclude Include="..\Dagon\DGAudioProxy.h" />
+    <ClInclude Include="..\Dagon\DGButton.h" />
+    <ClInclude Include="..\Dagon\DGButtonProxy.h" />
+    <ClInclude Include="..\Dagon\DGCameraManager.h" />
     <ClInclude Include="..\Dagon\DGColors.h" />
     <ClInclude Include="..\Dagon\DGConfig.h" />
     <ClInclude Include="..\Dagon\DGConfigLib.h" />
+    <ClInclude Include="..\Dagon\DGConsole.h" />
     <ClInclude Include="..\Dagon\DGControl.h" />
+    <ClInclude Include="..\Dagon\DGCursorLib.h" />
+    <ClInclude Include="..\Dagon\DGCursorManager.h" />
     <ClInclude Include="..\Dagon\DGDefines.h" />
+    <ClInclude Include="..\Dagon\DGEffectsLib.h" />
+    <ClInclude Include="..\Dagon\DGEffectsManager.h" />
+    <ClInclude Include="..\Dagon\DGFeedManager.h" />
+    <ClInclude Include="..\Dagon\DGFont.h" />
+    <ClInclude Include="..\Dagon\DGFontManager.h" />
     <ClInclude Include="..\Dagon\DGGeometry.h" />
+    <ClInclude Include="..\Dagon\DGImage.h" />
+    <ClInclude Include="..\Dagon\DGImageProxy.h" />
+    <ClInclude Include="..\Dagon\DGInterface.h" />
     <ClInclude Include="..\Dagon\DGLanguage.h" />
     <ClInclude Include="..\Dagon\DGLog.h" />
     <ClInclude Include="..\Dagon\DGNode.h" />
     <ClInclude Include="..\Dagon\DGNodeProxy.h" />
     <ClInclude Include="..\Dagon\DGObject.h" />
+    <ClInclude Include="..\Dagon\DGObjectProxy.h" />
+    <ClInclude Include="..\Dagon\DGOverlay.h" />
+    <ClInclude Include="..\Dagon\DGOverlayProxy.h" />
     <ClInclude Include="..\Dagon\DGPlatform.h" />
     <ClInclude Include="..\Dagon\DGProxy.h" />
-    <ClInclude Include="..\Dagon\DGRender.h" />
+    <ClInclude Include="..\Dagon\DGRenderManager.h" />
     <ClInclude Include="..\Dagon\DGRoom.h" />
     <ClInclude Include="..\Dagon\DGRoomProxy.h" />
+    <ClInclude Include="..\Dagon\DGScene.h" />
     <ClInclude Include="..\Dagon\DGScript.h" />
     <ClInclude Include="..\Dagon\DGSpot.h" />
+    <ClInclude Include="..\Dagon\DGSpotProxy.h" />
     <ClInclude Include="..\Dagon\DGState.h" />
     <ClInclude Include="..\Dagon\DGSystem.h" />
     <ClInclude Include="..\Dagon\DGSystemLib.h" />
     <ClInclude Include="..\Dagon\DGTexture.h" />
     <ClInclude Include="..\Dagon\DGTextureManager.h" />
+    <ClInclude Include="..\Dagon\DGTimerManager.h" />
     <ClInclude Include="..\Dagon\DGVersion.h" />
+    <ClInclude Include="..\Dagon\DGVideo.h" />
+    <ClInclude Include="..\Dagon\DGVideoManager.h" />
     <ClInclude Include="..\Other Sources\Luna.h" />
     <ClInclude Include="..\Other Sources\stb_image.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Dagon\DGAudio.cpp" />
-    <ClCompile Include="..\Dagon\DGCamera.cpp" />
+    <ClCompile Include="..\Dagon\DGAudioManager.cpp" />
+    <ClCompile Include="..\Dagon\DGButton.cpp" />
+    <ClCompile Include="..\Dagon\DGCameraManager.cpp" />
     <ClCompile Include="..\Dagon\DGConfig.cpp" />
+    <ClCompile Include="..\Dagon\DGConsole.cpp" />
     <ClCompile Include="..\Dagon\DGControl.cpp" />
+    <ClCompile Include="..\Dagon\DGCursorManager.cpp" />
+    <ClCompile Include="..\Dagon\DGEffectsManager.cpp" />
+    <ClCompile Include="..\Dagon\DGFeedManager.cpp" />
+    <ClCompile Include="..\Dagon\DGFont.cpp" />
+    <ClCompile Include="..\Dagon\DGFontData.c" />
+    <ClCompile Include="..\Dagon\DGFontManager.cpp" />
+    <ClCompile Include="..\Dagon\DGImage.cpp" />
+    <ClCompile Include="..\Dagon\DGInterface.cpp" />
     <ClCompile Include="..\Dagon\DGLog.cpp" />
     <ClCompile Include="..\Dagon\DGNode.cpp" />
     <ClCompile Include="..\Dagon\DGObject.cpp" />
-    <ClCompile Include="..\Dagon\DGRender.cpp" />
+    <ClCompile Include="..\Dagon\DGOverlay.cpp" />
+    <ClCompile Include="..\Dagon\DGRenderManager.cpp" />
     <ClCompile Include="..\Dagon\DGRoom.cpp" />
+    <ClCompile Include="..\Dagon\DGScene.cpp" />
     <ClCompile Include="..\Dagon\DGScript.cpp" />
+    <ClCompile Include="..\Dagon\DGShaderData.c" />
+    <ClCompile Include="..\Dagon\DGSplashData.c" />
     <ClCompile Include="..\Dagon\DGSpot.cpp" />
     <ClCompile Include="..\Dagon\DGState.cpp" />
     <ClCompile Include="..\Dagon\DGSystemWin.cpp" />
     <ClCompile Include="..\Dagon\DGTexture.cpp" />
     <ClCompile Include="..\Dagon\DGTextureManager.cpp" />
+    <ClCompile Include="..\Dagon\DGTimerManager.cpp" />
+    <ClCompile Include="..\Dagon\DGVideo.cpp" />
+    <ClCompile Include="..\Dagon\DGVideoManager.cpp" />
     <ClCompile Include="..\Dagon\main.cpp" />
     <ClCompile Include="..\Other Sources\stb_image.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\dagon.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resources\dagon.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F560EA9F-3802-46FF-9460-39262216EBC2}</ProjectGuid>
@@ -111,7 +153,7 @@
     <ClCompile>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level1</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_USE_MATH_DEFINES;GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>

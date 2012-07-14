@@ -596,6 +596,9 @@ DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     
     // For all vertices except last
     int i;
+
+	center.x = 0;
+	center.y = 0;
     
     for (i = 0; i < (vertex - 1); i++) {
         x0 = arrayOfCoordinates[i*2 + 0];

@@ -190,19 +190,19 @@ void DGCameraManager::pan(int xPosition, int yPosition) {
     else _deltaY = 0.0f;
     
     if (config->controlMode == DGMouseDrag) {
-        _speedH = fabs(_deltaX) / (float)(DGCamSpeedFactor * 2); // Make movement even smoother
-        _speedV = fabs(_deltaY) / (float)(DGCamSpeedFactor * 2);
+        _speedH = fabs((float)_deltaX) / (float)(DGCamSpeedFactor * 2); // Make movement even smoother
+        _speedV = fabs((float)_deltaY) / (float)(DGCamSpeedFactor * 2);
     }
     else {
-        _speedH = fabs(_deltaX) / (float)DGCamSpeedFactor;
-        _speedV = fabs(_deltaY) / (float)DGCamSpeedFactor;
+        _speedH = fabs((float)_deltaX) / (float)DGCamSpeedFactor;
+        _speedV = fabs((float)_deltaY) / (float)DGCamSpeedFactor;
     }
 }
 
 void DGCameraManager::panToTargetAngle() {
     if (_angleH < (_angleHTarget - _targetHError) || _angleH > (_angleHTarget + _targetHError)) {
         _deltaX = (_angleHTarget - _angleH) * 360;
-        _speedH = fabs(_deltaX) / (float)DGCamSpeedFactor;
+        _speedH = fabs((float)_deltaX) / (float)DGCamSpeedFactor;
     }
     else {
         _deltaX = 0;
@@ -211,7 +211,7 @@ void DGCameraManager::panToTargetAngle() {
 
     if (_angleV < (_angleVTarget - _targetVError) || _angleV > (_angleVTarget + _targetVError)) {
         _deltaY = (_angleVTarget - _angleV) * 360;
-        _speedV = fabs(_deltaY) / (float)DGCamSpeedFactor;
+        _speedV = fabs((float)_deltaY) / (float)DGCamSpeedFactor;
     }
     else {
         _deltaY = 0;

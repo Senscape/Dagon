@@ -50,6 +50,8 @@ class DGTimerManager {
     std::vector<DGTimer> _arrayOfTimers;
     int _handles; // Maintains a count of handles
     int _luaObject;
+
+	bool _isRunning;
     
     DGTimer* _lookUp(int handle);
     
@@ -78,7 +80,8 @@ public:
     void enable(int handle);
     void process();
     void setLuaObject(int luaObject);
-    void update();
+	void terminate();
+    bool update();
 };
 
 #endif // DG_TIMER_H

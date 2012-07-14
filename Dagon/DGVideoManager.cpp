@@ -29,6 +29,7 @@ DGVideoManager::DGVideoManager() {
     config = &DGConfig::getInstance();
     
     _isInitialized = false;
+	_isRunning = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -78,6 +79,7 @@ void DGVideoManager::init() {
     // Eventually lots of Theora initialization will be moved here
     
     _isInitialized = true;
+	_isRunning = true;
 }
 
 void DGVideoManager::registerVideo(DGVideo* target) {
@@ -109,8 +111,13 @@ void DGVideoManager::requestVideo(DGVideo* target) {
         _arrayOfActiveVideos.push_back(target);
 }
 
-void DGVideoManager::update() {
-    if (_isInitialized) {
+void DGVideoManager::terminate() {
+	_isRunning = false;
+}
+
+
+bool DGVideoManager::update() {
+    if (_isRunning) {
         if (!_arrayOfActiveVideos.empty()) {
             vector<DGVideo*>::iterator it;
             it = _arrayOfActiveVideos.begin();
@@ -120,5 +127,9 @@ void DGVideoManager::update() {
                 it++;
             }
         }
+
+		return true;
     }
+
+	return false;
 }

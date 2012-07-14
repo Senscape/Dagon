@@ -50,17 +50,17 @@ public:
                 // We can only read the key as a string, so we have no choice but
                 // do an ugly nesting of strcmps()
                 if (strcmp(key, "auto") == 0) {
-                    if (lua_toboolean(L, -1) == true) flags = flags | DGSpotAuto;
+                    if (lua_toboolean(L, -1) == 1) flags = flags | DGSpotAuto;
                     else flags = flags & ~DGSpotAuto;
                 }
                 
                 if (strcmp(key, "loop") == 0) {
-                    if (lua_toboolean(L, -1) == true) flags = flags | DGSpotLoop;
+                    if (lua_toboolean(L, -1) == 1) flags = flags | DGSpotLoop;
                     else flags = flags & ~DGSpotLoop;
                 }
                 
                 if (strcmp(key, "sync") == 0) {
-                    if (lua_toboolean(L, -1) == true) flags = flags | DGSpotSync;
+                    if (lua_toboolean(L, -1) == 1) flags = flags | DGSpotSync;
                     else flags = flags & DGSpotSync;
                 }
 

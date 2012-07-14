@@ -35,10 +35,15 @@ DGNode::DGNode() {
 
 DGNode::~DGNode() {
     // Note that we only delete spots created by this class, not the ones from the user
-    for (_it = _arrayOfSpots.begin(); _it < _arrayOfSpots.end(); _it++) {
-        DGSpot* spot = *_it;
-        if (spot->hasFlag(DGSpotClass))
-            delete spot;
+	_it = _arrayOfSpots.begin();
+
+    while (_it != _arrayOfSpots.end()) {
+        DGSpot* spot = (*_it);
+		// FIXME: This causes a crash on Windows
+        /*if (spot->hasFlag(DGSpotClass))
+            delete spot;*/
+
+		_it++;
     }
 }
 
