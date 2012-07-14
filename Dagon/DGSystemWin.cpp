@@ -25,10 +25,9 @@
 #include "DGVideoManager.h"
 
 /* TODO:
-	* Deadlock when switching (potential problem with SetWindowText)
+	* Hang when switching (potential problem with SetWindowText)
 	* Exception when resizing (probably related to virtual machine)
 	- Sound corruption
-	- Test memory with virtual machine!
 	- Problem with key 'f'
 	- Video timing
 */
