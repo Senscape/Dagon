@@ -38,9 +38,9 @@ DGNode::~DGNode() {
 	_it = _arrayOfSpots.begin();
 
     while (_it != _arrayOfSpots.end()) {
-        DGSpot* spot = (*_it);
+        /*DGSpot* spot = (*_it);
 		// FIXME: This causes a crash on Windows
-        /*if (spot->hasFlag(DGSpotClass))
+        if (spot->hasFlag(DGSpotClass))
             delete spot;*/
 
 		_it++;
