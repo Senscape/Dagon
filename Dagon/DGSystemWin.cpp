@@ -24,7 +24,7 @@
 #include "DGTimerManager.h"
 #include "DGVideoManager.h"
 
-/* TODO:
+/* CHECK:
 	* Hang when switching (potential problem with SetWindowText)
 	* Exception when resizing (probably related to virtual machine)
 	- Sound corruption
@@ -282,9 +282,9 @@ void DGSystem::run() {
 }
 
 void DGSystem::setTitle(const char* title) {
-	WCHAR str[DGMaxLogLength];
+	/*WCHAR str[DGMaxLogLength];
 	MultiByteToWideChar(0,0, title, DGMaxLogLength, str, DGMaxLogLength);
-    SetWindowText(g_hWnd, str);
+    SetWindowText(g_hWnd, str);*/
 }
 
 void DGSystem::suspendThread(int threadID){
@@ -471,6 +471,8 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	static bool isDragging = false;
 
     switch(msg) {
+		case WM_ERASEBKGND:
+			break;
 		case WM_SIZE:
 			EnterCriticalSection(&csSystemThread);
 			wglMakeCurrent(g_hDC, g_hRC);
