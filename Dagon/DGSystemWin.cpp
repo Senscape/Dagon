@@ -28,7 +28,6 @@
 	* Hang when switching (potential problem with SetWindowText)
 	* Exception when resizing (probably related to virtual machine)
 	- Sound corruption
-	- Problem with key 'f'
 	- Video timing
 */
 
@@ -70,6 +69,8 @@ typedef int (*PFNWGLEXTGETSWAPINTERVALPROC) (void);
 
 PFNWGLEXTSWAPCONTROLPROC wglSwapIntervalEXT = NULL;
 PFNWGLEXTGETSWAPINTERVALPROC wglGetSwapIntervalEXT = NULL;
+
+BYTE keyboardState[256];
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -202,6 +203,8 @@ void DGSystem::init() {
         SetPixelFormat( g_hDC, PixelFormat, &pfd);
         g_hRC = wglCreateContext(g_hDC);
         wglMakeCurrent(g_hDC, g_hRC);
+
+		GetKeyboardState(keyboardState);
         
         // Now we're ready to init the controller instance
         control = &DGControl::getInstance();
@@ -374,7 +377,7 @@ void DGSystem::update() {
     SwapBuffers(g_hDC);
 }
 
-time_t DGSystem::wallTime(){
+time_t DGSystem::wallTime() {
 	FILETIME ft;
 	LARGE_INTEGER li;
 	time_t ret;
@@ -561,14 +564,12 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					DGControl::getInstance().processKey(DGKeyTab, false);
 					break;
 				default:
-                    WORD ch;
-                    BYTE kbs[256];
-					GetKeyboardState(kbs);
-					ToAscii(wParam, MapVirtualKey(wParam, 0), kbs, &ch, 0);
-					if (GetKeyState(VK_CONTROL) < 0)
-						DGControl::getInstance().processKey(ch, true);
-					else
-						DGControl::getInstance().processKey(ch, false);
+					WCHAR chars[2];
+					ToUnicode(wParam, MapVirtualKey(wParam, 0), keyboardState, chars, 2, 0);
+					if (GetKeyState(VK_CONTROL) < 0) {
+						DGControl::getInstance().processKey(chars[0], true);
+					}
+					else DGControl::getInstance().processKey(chars[0], false);
 					break;
 			}
 			wglMakeCurrent(NULL, NULL);
