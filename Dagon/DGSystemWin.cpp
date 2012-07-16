@@ -71,6 +71,8 @@ PFNWGLEXTSWAPCONTROLPROC wglSwapIntervalEXT = NULL;
 PFNWGLEXTGETSWAPINTERVALPROC wglGetSwapIntervalEXT = NULL;
 
 BYTE keyboardState[256];
+int previousWidth;
+int previousHeight;
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -204,6 +206,7 @@ void DGSystem::init() {
         g_hRC = wglCreateContext(g_hDC);
         wglMakeCurrent(g_hDC, g_hRC);
 
+		// FIXME: This doesn't work if the CTRL key is pressed when launching
 		GetKeyboardState(keyboardState);
         
         // Now we're ready to init the controller instance
@@ -331,7 +334,11 @@ void DGSystem::terminate() {
 // TODO: We should try and get the best possible resolution here
 void DGSystem::toggleFullScreen() { 
     if (config->fullScreen) {
-        // Enter fullscreen
+		// Enter fullscreen
+
+		previousWidth = config->displayWidth;
+		previousHeight = config->displayHeight;
+       
 		RECT desktop;
 		// Get a handle to the desktop window
 		const HWND hDesktop = GetDesktopWindow();
@@ -361,6 +368,9 @@ void DGSystem::toggleFullScreen() {
     }
     else {
         // Exit fullscreen
+		config->displayWidth = previousWidth;
+		config->displayHeight = previousHeight;
+
         SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, WS_EX_LEFT);
         SetWindowLongPtr(g_hWnd, GWL_STYLE, WS_OVERLAPPEDWINDOW | WS_VISIBLE);
         if (ChangeDisplaySettings(NULL, CDS_RESET) == DISP_CHANGE_SUCCESSFUL) {
