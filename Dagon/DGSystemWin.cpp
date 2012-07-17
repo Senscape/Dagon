@@ -24,13 +24,6 @@
 #include "DGTimerManager.h"
 #include "DGVideoManager.h"
 
-/* CHECK:
-	* Hang when switching (potential problem with SetWindowText)
-	* Exception when resizing (probably related to virtual machine)
-	- Sound corruption
-	- Video timing
-*/
-
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
