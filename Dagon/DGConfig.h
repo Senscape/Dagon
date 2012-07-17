@@ -30,7 +30,7 @@ enum DGControlModes {
 };
 
 enum DGConfigDefaults {
-	DGDefAntialiasing = true,
+	DGDefAntialiasing = false,
     DGDefAutopaths = true,    
     DGDefAutorun = true,
     DGDefBundleEnabled = true, // Not exported to Lua
