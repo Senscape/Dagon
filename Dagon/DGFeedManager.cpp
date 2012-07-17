@@ -180,10 +180,10 @@ void DGFeedManager::update() {
     // Check for queued feeds
     if (_feedAudio->state() != DGAudioPlaying) {
         if (!_arrayOfFeeds.empty()) {
-            DGFeed feed = _arrayOfFeeds.back();
+            DGFeed feed = _arrayOfFeeds.front();
             
             this->showAndPlay(feed.text, feed.audio);
-            _arrayOfFeeds.pop_back();
+            _arrayOfFeeds.erase(_arrayOfFeeds.begin());
         }
     } 
 }
