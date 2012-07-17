@@ -55,15 +55,22 @@ static int DGCursorLibFadeOut(lua_State *L) {
 	return 0;
 }
 
+static int DGCursorLibLoad(lua_State *L) {
+    DGCursorManager::getInstance().load(luaL_checknumber(L, 1), luaL_checkstring(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
+    
+    return 0;
+}
+
 ////////////////////////////////////////////////////////////
 // Static definitions
 ////////////////////////////////////////////////////////////
 
 static const struct luaL_reg DGCursorLib [] = {
-	{"disable", DGCursorLibDisable},    
+	{"disable", DGCursorLibDisable},
 	{"enable", DGCursorLibEnable},   
     {"fadeIn", DGCursorLibFadeIn}, 
-    {"fadeOut", DGCursorLibFadeOut},     
+    {"fadeOut", DGCursorLibFadeOut},
+    {"load", DGCursorLibLoad},
 	{NULL, NULL}
 };
 

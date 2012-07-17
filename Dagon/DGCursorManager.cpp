@@ -30,12 +30,11 @@ DGCursorManager::DGCursorManager() {
     _hasImage = false;
     _isDragging = false;
     _onButton = false;
-    _size = DGDefCursorSize;
-    _half = _size / 2;
     _x = config->displayWidth / 2;
     _y = config->displayHeight / 2;
     
     this->setFadeSpeed(DGFadeFastest); // Cursor always fades with fastest speed
+    this->setSize(DGDefCursorSize);
     this->updateCoords(_x, _y);
 }
 
@@ -83,7 +82,7 @@ bool DGCursorManager::isDragging() {
 }
 
 // NOTE: These textures aren't managed
-void DGCursorManager::load(int type, const char* imageFromFile) {
+void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int offsetY) {
     DGCursorData cursor;
     DGTexture* texture;
     
@@ -93,7 +92,9 @@ void DGCursorManager::load(int type, const char* imageFromFile) {
     
     cursor.type = type;
     cursor.image = texture;
-    
+    cursor.origin.x = _half - offsetX;
+    cursor.origin.y = _half - offsetY;
+
     _arrayOfCursors.push_back(cursor);
 }
 
@@ -113,9 +114,6 @@ DGPoint DGCursorManager::position() {
 void DGCursorManager::removeAction() {
     _pointerToAction = NULL;
     _hasAction = false;
-    
-    if (!_isDragging)
-        this->_set(DGCursorNormal);
 }
 
 void DGCursorManager::setDragging(bool flag) {
@@ -153,14 +151,26 @@ void DGCursorManager::updateCoords(int x, int y) {
     _x = x;
     _y = y;
     
-    _arrayOfCoords[0] = _x - _half;
-    _arrayOfCoords[1] = _y - _half;
-    _arrayOfCoords[2] = _x + _half;
-    _arrayOfCoords[3] = _y - _half;    
-    _arrayOfCoords[4] = _x + _half;
-    _arrayOfCoords[5] = _y + _half;
-    _arrayOfCoords[6] = _x - _half;
-    _arrayOfCoords[7] = _y + _half;    
+    /*if (_hasImage) {
+        _arrayOfCoords[0] = _x - _half + (*_current).origin.x;
+        _arrayOfCoords[1] = _y - _half + (*_current).origin.y;
+        _arrayOfCoords[2] = _x + _half + (*_current).origin.x;
+        _arrayOfCoords[3] = _y - _half + (*_current).origin.y;
+        _arrayOfCoords[4] = _x + _half + (*_current).origin.x;
+        _arrayOfCoords[5] = _y + _half + (*_current).origin.y;
+        _arrayOfCoords[6] = _x - _half + (*_current).origin.x;
+        _arrayOfCoords[7] = _y + _half + (*_current).origin.y;
+    }
+    else {*/
+        _arrayOfCoords[0] = _x - _half;
+        _arrayOfCoords[1] = _y - _half;
+        _arrayOfCoords[2] = _x + _half;
+        _arrayOfCoords[3] = _y - _half;
+        _arrayOfCoords[4] = _x + _half;
+        _arrayOfCoords[5] = _y + _half;
+        _arrayOfCoords[6] = _x - _half;
+        _arrayOfCoords[7] = _y + _half;
+   // }
 }
 
 ////////////////////////////////////////////////////////////
