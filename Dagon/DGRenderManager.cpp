@@ -75,7 +75,7 @@ void DGRenderManager::init() {
     _alphaEnabled = true;
     
     // WARNING: This next setting could make things slower
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
