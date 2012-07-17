@@ -93,7 +93,7 @@ typedef struct {
 	bool enabled;
 	int value;
 	char line[DGMaxLogLength];
-} DGHotKeyData;
+} DGHotkeyData;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
@@ -124,7 +124,7 @@ class DGControl {
     DGTextureManager* _textureManager;
     
     DGEventHandlers _eventHandlers;
-    DGHotKeyData _hotKeyData[DGMaxHotKeys];
+    DGHotkeyData _hotkeyData[DGMaxHotKeys];
     
     int _fpsCount;
     bool _isInitialized;
@@ -160,7 +160,7 @@ public:
     void processKey(int aKey, bool isModified);
     void processMouse(int x, int y, int eventFlags);
     void registerGlobalHandler(int forEvent, int handlerForLua);
-    void registerHotKey(int aKey, const char* luaCommandToExecute);
+    void registerHotkey(int aKey, const char* luaCommandToExecute);
     void registerObject(DGObject* theTarget);    
     void reshape(int width, int height);
     void sleep(int forSeconds);

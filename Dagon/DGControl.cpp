@@ -70,7 +70,7 @@ DGControl::DGControl() {
     srand((unsigned)time(0)); 
     
     for (int i = 0; i <= DGMaxHotKeys; i++)
-		_hotKeyData[i].enabled = false;
+		_hotkeyData[i].enabled = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -181,9 +181,8 @@ void DGControl::processFunctionKey(int aKey) {
 	}
 	
     if (idx) {
-        //if (_hotKeyData[idx].enabled)
-        //DGScriptDoLine(hotkey[idx].line);
-        log->trace(DGModControl, "Index = %d", idx); // Temp
+        if (_hotkeyData[idx].enabled)
+           script->processCommand(_hotkeyData[idx].line);
     }
 }
 
@@ -235,8 +234,11 @@ void DGControl::processKey(int aKey, bool isModified) {
 }
 
 void DGControl::processMouse(int x, int y, int eventFlags) {
-    if (!cursorManager->isEnabled()) {
-        // Ignore everything
+    cursorManager->updateCoords(x, y);
+    
+    if (!cursorManager->isEnabled() || cursorManager->isFading()) {
+        // Ignore all the rest
+        cursorManager->setCursor(DGCursorNormal);
         cameraManager->stopPanning();
         return;
     }
@@ -274,9 +276,11 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
                     
                     // When in free mode, we first check if camera is panning because
                     // we don't want the "not dragging" cursor
-                    if (cameraManager->isPanning()) { 
+                    if (cameraManager->isPanning() && !cursorManager->hasAction()) {
                         cursorManager->setCursor(cameraManager->cursorWhenPanning());
                     }
+                    else cursorManager->setCursor(DGCursorNormal);
+
                 }
                 else cameraManager->stopPanning();
             }
@@ -313,8 +317,6 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
             
             break;
     }
-    
-    cursorManager->updateCoords(x, y);
 }
 
 void DGControl::registerGlobalHandler(int forEvent, int handlerForLua) {
@@ -358,7 +360,7 @@ void DGControl::registerGlobalHandler(int forEvent, int handlerForLua) {
 	}
 }
 
-void DGControl::registerHotKey(int aKey, const char* luaCommandToExecute) {
+void DGControl::registerHotkey(int aKey, const char* luaCommandToExecute) {
     int idx = 0;
     
     switch (aKey) {
@@ -377,9 +379,9 @@ void DGControl::registerHotKey(int aKey, const char* luaCommandToExecute) {
     }
     
     if (idx) {
-        _hotKeyData[idx].enabled = true;
-        _hotKeyData[idx].value = aKey;
-        strncpy(_hotKeyData[idx].line, luaCommandToExecute, DGMaxLogLength);
+        _hotkeyData[idx].enabled = true;
+        _hotkeyData[idx].value = aKey;
+        strncpy(_hotkeyData[idx].line, luaCommandToExecute, DGMaxLogLength);
     }
 }
 
@@ -566,8 +568,12 @@ void DGControl::takeSnapshot() {
     
 	strftime(buffer, DGMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
     
+    system->update();
+    cameraManager->beginOrthoView();
+    renderManager->drawPostprocessedView();
     texture.bind();
     renderManager->copyView();
+    cameraManager->endOrthoView();
     
     texture.saveToFile(buffer);   
     
