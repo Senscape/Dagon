@@ -113,8 +113,9 @@ void DGInterface::drawOverlays() {
                     do {
                         DGButton* button = (*itOverlay)->currentButton();
                         if (button->isEnabled()) {
+                            button->updateFade();
+                            
                             if (button->hasTexture()) {
-                                button->updateFade();
                                 renderManager->setAlpha(button->fadeLevel());
                                 button->texture()->bind();
                                 renderManager->drawSlide(button->arrayOfCoordinates());
@@ -122,7 +123,11 @@ void DGInterface::drawOverlays() {
                             
                             if (button->hasText()) {
                                 DGPoint position = button->position();
-                                renderManager->setColor(button->textColor());
+                               // int color = button->textColor();
+                                if (button->isFading())
+                                    renderManager->setColor(button->textColor(), button->fadeLevel());
+                                else
+                                    renderManager->setColor(button->textColor());
                                 button->font()->print(position.x, position.y, button->text());
                                 renderManager->setColor(DGColorWhite); // Reset the color
                             }
