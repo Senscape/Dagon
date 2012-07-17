@@ -150,8 +150,11 @@ void DGTimerManager::process() {
                         
                     case DGTimerNormal:
                         if ((*it).luaObject) { // Belongs to a Lua object?
-                            if ((*it).luaObject != _luaObject)
+                            if ((*it).luaObject != _luaObject) {
+                                (*it).hasTriggered = false;
+                                (*it).lastTime = DGSystem::getInstance().wallTime(); // Reset timer
                                 break; // Do not invoke the handler
+                            }
                         }
                         
                         if ((*it).isLoopable) {

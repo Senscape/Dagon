@@ -111,7 +111,7 @@ public:
     void drawPostprocessedView(); // Expects orthogonal mode
     void drawSlide(float* withArrayOfCoordinates); // We use float in all "slides" since we need the precision
     void setAlpha(float alpha);
-    void setColor(int color);
+    void setColor(int color, float alpha = 0);
     int	testColor(int xPosition, int yPosition);
     
     // Helpers processing (indicates clickable spots)

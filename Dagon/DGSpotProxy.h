@@ -106,6 +106,13 @@ public:
                 if (DGCheckProxy(L, 2) == DGObjectAudio) {
                     // Just set the audio object
                     s->setAudio(DGProxyToAudio(L, 2));
+                    
+                    // Now we get the metatable of the added audio and set it
+                    // as a return value
+                    lua_getfield(L, LUA_REGISTRYINDEX, DGAudioProxyName);
+                    lua_setmetatable(L, -2);
+                    
+                    return 1;
                 }
                 else {
                     // If not, create and set (deleted by the Audio Manager)
@@ -119,13 +126,6 @@ public:
                     
                     s->setAudio(audio);
                 }
-                
-                // Now we get the metatable of the added audio and set it
-                // as a return value
-                lua_getfield(L, LUA_REGISTRYINDEX, DGAudioProxyName);
-                lua_setmetatable(L, -2);
-                
-                return 1;
                 
                 break;
             case FEED:

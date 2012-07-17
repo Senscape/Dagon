@@ -168,9 +168,8 @@ bool DGScene::scanSpots() {
             // set action, if available
             
             // FIXME: Should unify the checks here a bit more...
-            if (!cursorManager->isDragging() && !cameraManager->isPanning() && !cursorManager->onButton()) {
+            if (!cursorManager->isDragging() && !cursorManager->onButton()) {
                 DGPoint position = cursorManager->position();
-                cursorManager->removeAction();
                 int color = renderManager->testColor(position.x, position.y);
                 if (color) {
                     currentNode->beginIteratingSpots();
@@ -183,6 +182,13 @@ bool DGScene::scanSpots() {
                             break;
                         }
                     } while (currentNode->iterateSpots());
+                }
+                
+                if (!foundAction) {
+                    cursorManager->removeAction();
+                    
+                    if (cameraManager->isPanning())
+                        cursorManager->setCursor(cameraManager->cursorWhenPanning());
                 }
             }
             

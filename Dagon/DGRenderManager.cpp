@@ -443,7 +443,7 @@ void DGRenderManager::setAlpha(float alpha) {
     glColor4f(1.0f, 1.0f, 1.0f, alpha);
 }
 
-void DGRenderManager::setColor(int color) {
+void DGRenderManager::setColor(int color, float alpha) {
    	uint32_t aux = color;
     
 	uint8_t b = (aux & 0x000000ff);
@@ -451,7 +451,12 @@ void DGRenderManager::setColor(int color) {
 	uint8_t r = (aux & 0x00ff0000) >> 16;
 	uint8_t a = (aux & 0xff000000) >> 24;
     
-	glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f)); 
+	glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
+    
+    if (alpha)
+        glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), alpha); // Force specified alpha
+    else
+        glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
 }
 
 // FIXME: glReadPixels has an important performace hit on older computers. Improve.
