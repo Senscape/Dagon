@@ -66,14 +66,18 @@ class DGScript {
     
     int _ref;
     void _error(int result);
-    static int _globalFeed(lua_State *L);    
+    static int _globalCurrentNode(lua_State *L);
+    static int _globalCurrentRoom(lua_State *L);
+    static int _globalFeed(lua_State *L);
+    static int _globalHotkey(lua_State *L);
     static int _globalLookAt(lua_State *L);    
-    static int _globalLoadCursor(lua_State *L);
-    static int _globalPlay(lua_State *L);    
+    static int _globalPlay(lua_State *L);
+    static int _globalPrint(lua_State *L);
     static int _globalRegister(lua_State *L);   
     static int _globalRoom(lua_State *L);
     static int _globalSetFont(lua_State *L);    
-    static int _globalSleep(lua_State *L);       
+    static int _globalSleep(lua_State *L);
+    static int _globalSnap(lua_State *L);
     static int _globalSwitch(lua_State *L);
     static int _globalStartTimer(lua_State *L); 
     static int _globalStopTimer(lua_State *L);

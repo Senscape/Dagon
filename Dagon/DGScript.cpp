@@ -111,6 +111,9 @@ void DGScript::init(int argc, char* argv[]) {
     
     _registerEnums();
     
+    // Config modules path
+    luaL_dostring(_L, "package.path = package.path .. \";Modules/?.lua\"");
+    
     // Register all proxys
     Luna<DGAudioProxy>::Register(_L);
     Luna<DGButtonProxy>::Register(_L);       
@@ -272,6 +275,32 @@ void DGScript::_error(int result) {
     }
 }
 
+int DGScript::_globalCurrentNode(lua_State *L) {
+    DGNode* node = DGControl::getInstance().currentNode();
+    
+    // Grab the reference to the Lua object and set it as 'self'
+    if (node) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, node->luaObject());
+    
+        return 1;
+    }
+    
+    return 0;
+}
+
+int DGScript::_globalCurrentRoom(lua_State *L) {
+    DGRoom* room = DGControl::getInstance().currentRoom();
+    
+    // Grab the reference to the Lua object and set it as 'self'
+    if (room) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, room->luaObject());
+        
+        return 1;
+    }
+    
+    return 0;
+}
+
 int DGScript::_globalFeed(lua_State *L) {
     if (lua_isstring(L, 2)) {
         DGFeedManager::getInstance().queue(luaL_checkstring(L, 1), lua_tostring(L, 2));      
@@ -280,14 +309,10 @@ int DGScript::_globalFeed(lua_State *L) {
 	
 	return 0;
 }
-int DGScript::_globalPlay(lua_State *L) {
-    DGAudio* audio = new DGAudio;
-    
-    audio->setResource(luaL_checkstring(L, 1));
-    DGAudioManager::getInstance().registerAudio(audio);
-    DGAudioManager::getInstance().requestAudio(audio);
-    audio->play();
-    
+
+int DGScript::_globalHotkey(lua_State *L) {
+    DGControl::getInstance().registerHotkey((int)luaL_checknumber(L, 1), luaL_checkstring(L, 2));
+	
 	return 0;
 }
 
@@ -325,10 +350,36 @@ int DGScript::_globalLookAt(lua_State *L) {
     else return DGScript::getInstance().suspend();
 }
 
-int DGScript::_globalLoadCursor(lua_State *L) {
-    DGCursorManager::getInstance().load(luaL_checknumber(L, 1), luaL_checkstring(L, 2));
+int DGScript::_globalPlay(lua_State *L) {
+    DGAudio* audio = new DGAudio;
     
-    return 0;
+    audio->setResource(luaL_checkstring(L, 1));
+    DGAudioManager::getInstance().registerAudio(audio);
+    DGAudioManager::getInstance().requestAudio(audio);
+    audio->play();
+    
+	return 0;
+}
+
+int DGScript::_globalPrint (lua_State *L) {
+	int n = lua_gettop(L);  /* number of arguments */
+	int i;
+    
+	lua_getglobal(L, "tostring");
+	for (i = 1; i <= n; i++) {
+		const char *s;
+		lua_pushvalue(L, -1);  /* function to be called */
+		lua_pushvalue(L, i);   /* value to print */
+		lua_call(L, 1, 1);
+		s = lua_tostring(L, -1);  /* get result */
+		if (s == NULL)
+			return luaL_error(L, LUA_QL("tostring") " must return a string to "
+							  LUA_QL("print"));
+		if (i > 1) fputs("\t", stdout);
+        DGLog::getInstance().trace(DGModNone, "%s", s);
+		lua_pop(L, 1);  /* pop result */
+	}
+	return 0;
 }
 
 int DGScript::_globalRegister(lua_State *L) {
@@ -392,6 +443,12 @@ int DGScript::_globalSetFont(lua_State *L) {
     }
     
     return 0;
+}
+
+int DGScript::_globalSnap(lua_State *L) {
+    DGControl::getInstance().takeSnapshot();
+	
+	return 0;
 }
 
 int DGScript::_globalSwitch(lua_State *L) {
@@ -504,6 +561,19 @@ void DGScript::_registerEnums() {
 	DGLuaEnum(_L, BRIGHTMAGENTA, DGColorBrightMagenta);
 	DGLuaEnum(_L, YELLOW, DGColorYellow);
 	DGLuaEnum(_L, WHITE, DGColorWhite);
+    
+    DGLuaEnum(_L, F1, DGKeyF1);
+	DGLuaEnum(_L, F2, DGKeyF2);
+	DGLuaEnum(_L, F3, DGKeyF3);
+	DGLuaEnum(_L, F4, DGKeyF4);
+    DGLuaEnum(_L, F5, DGKeyF5);
+	DGLuaEnum(_L, F6, DGKeyF6);
+	DGLuaEnum(_L, F7, DGKeyF7);
+	DGLuaEnum(_L, F8, DGKeyF8);
+	DGLuaEnum(_L, F9, DGKeyF9);
+	DGLuaEnum(_L, F10, DGKeyF10);
+	DGLuaEnum(_L, F11, DGKeyF11);
+	DGLuaEnum(_L, F12, DGKeyF12);
 
     DGLuaEnum(_L, SLOW, DGFadeSlow);
     DGLuaEnum(_L, SLOWEST, DGFadeSlowest);
@@ -513,13 +583,17 @@ void DGScript::_registerEnums() {
 
 void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
+        {"currentNode", _globalCurrentNode},
+        {"currentRoom", _globalCurrentRoom},
         {"feed", _globalFeed},
-        {"loadCursor", _globalLoadCursor},
+        {"hotkey", _globalHotkey},
         {"lookAt", _globalLookAt},        
-        {"play", _globalPlay},          
+        {"play", _globalPlay},
+        {"print", _globalPrint},
         {"register", _globalRegister},      
         {"room", _globalRoom},
-        {"setFont", _globalSetFont},  
+        {"setFont", _globalSetFont},
+        {"snap", _globalSnap},
         {"sleep", _globalSleep},        
         {"switch", _globalSwitch},
         {"startTimer", _globalStartTimer},
