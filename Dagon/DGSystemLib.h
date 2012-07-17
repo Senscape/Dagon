@@ -22,6 +22,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGControl.h"
 #include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
@@ -40,6 +41,14 @@ static int DGSystemLibRun(lua_State *L) {
 	return 0;
 }
 
+static int DGSystemLibUpdate(lua_State *L) {
+    // We allow this in case the user wants to implement a loop of some kind
+    // Currently has a conflict if there's an event hook registered
+    DGControl::getInstance().update();
+	
+	return 0;
+}
+
 ////////////////////////////////////////////////////////////
 // Static definitions
 ////////////////////////////////////////////////////////////
@@ -47,6 +56,7 @@ static int DGSystemLibRun(lua_State *L) {
 static const struct luaL_reg DGSystemLib [] = {
 	{"init", DGSystemLibInit},
     {"run", DGSystemLibRun},
+    {"update", DGSystemLibUpdate},
 	{NULL, NULL}
 };
 
