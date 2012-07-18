@@ -206,6 +206,7 @@ void DGSpot::setVideo(DGVideo* aVideo) {
 void DGSpot::play() {
     _isPlaying = true;
     
+    // FIXME: Should start playing only if in the current room
     if (_hasAudio && _attachedAudio->isLoaded())
         _attachedAudio->play();
     
