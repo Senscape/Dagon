@@ -38,6 +38,7 @@
 		FB279DB214ACD224002D48FC /* DGNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB114ACD223002D48FC /* DGNode.cpp */; };
 		FB279DB514ADF3A5002D48FC /* DGRoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB414ADF3A5002D48FC /* DGRoom.cpp */; };
 		FB279DBA14AE1736002D48FC /* DGAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB714AE14AF002D48FC /* DGAudio.cpp */; };
+		FB31E0F115B73F6100EE3642 /* FreeType.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FBF931CA15ADB2E90042F7FC /* FreeType.framework */; };
 		FB34FB1814DB126F007D2EE1 /* DGSystemMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */; };
 		FB34FB1914DB126F007D2EE1 /* DGViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */; };
 		FB6A1E9315AC7E5D000C0222 /* DGEffectsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */; };
@@ -58,6 +59,19 @@
 		FBFCC9F114BB3624003211AD /* DGTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFCC9F014BB3624003211AD /* DGTexture.cpp */; };
 		FBFD855914C4CCE9000E82B2 /* DGTextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFD855814C4CCE9000E82B2 /* DGTextureManager.cpp */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FB31E0EF15B73F5A00EE3642 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FB31E0F115B73F6100EE3642 /* FreeType.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		E817433514E6030A002CF502 /* DGConfigLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGConfigLib.h; sourceTree = "<group>"; };
@@ -433,6 +447,7 @@
 				FBC8882B14574F08008D548F /* Frameworks */,
 				FBC8882C14574F08008D548F /* Resources */,
 				FBF06C27148FBBFD00DAE958 /* ShellScript */,
+				FB31E0EF15B73F5A00EE3642 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -594,6 +609,7 @@
 					"\"Other Sources\"",
 				);
 				INFOPLIST_FILE = "";
+				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -621,6 +637,7 @@
 					"\"Other Sources\"",
 				);
 				INFOPLIST_FILE = "";
+				INSTALL_PATH = /Applications;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
 			};
