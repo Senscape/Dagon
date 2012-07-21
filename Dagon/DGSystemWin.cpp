@@ -222,8 +222,7 @@ void DGSystem::init() {
                 // Go ahead and enable
                 wglSwapIntervalEXT(1);
             }
-            
-            log->error(DGModSystem, "%s", DGMsg240003);
+            else log->error(DGModSystem, "%s", DGMsg240003);
         }
         
         ShowCursor(FALSE);
