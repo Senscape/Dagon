@@ -55,8 +55,10 @@
 #elif __linux
 
 #define DGPlatformLinux
-#include <X11/extensions/xf86vmode.h>
+#include <X11/Xlib.h>              
+#include <X11/Xatom.h>
 #include <X11/keysym.h>
+#include <X11/extensions/xf86vmode.h>
 
 #endif
 
@@ -97,10 +99,33 @@
 // Key definitions
 ////////////////////////////////////////////////////////////
 
+#ifdef DGPlatformLinux
+enum DGKeys {
+	DGKeyBackspace = XK_BackSpace,
+    DGKeyF1 = XK_F1,
+	DGKeyF2 = XK_F2,
+	DGKeyF3 = XK_F3,	
+	DGKeyF4 = XK_F4,
+    DGKeyF5 = XK_F5,
+	DGKeyF6 = XK_F6,	
+	DGKeyF7 = XK_F7,	
+	DGKeyF8 = XK_F8,	
+	DGKeyF9 = XK_F9,
+	DGKeyF10 = XK_F10,
+	DGKeyF11 = XK_F11,
+	DGKeyF12 = XK_F12,
+	DGKeyEsc = XK_Escape,
+	DGKeyQuote = 0x60,
+	DGKeyTab = XK_Tab,    
+	DGKeyEnter = XK_Return,
+	DGKeySpacebar = 0x20    
+};
+#endif
+
 #ifdef DGPlatformMac
 enum DGKeys {
     // These are all Mac key codes
-	DGKeyBackspace = 0x7f,
+    DGKeyBackspace = 0x7f,
     DGKeyF1 = 0x7a,
 	DGKeyF2 = 0x78,
 	DGKeyF3 = 0x63,	
@@ -117,7 +142,7 @@ enum DGKeys {
 	DGKeyQuote = 0x60,
 	DGKeyTab = 0x9,    
 	DGKeyEnter = 0xd,
-	DGKeySpacebar = 0x20     
+	DGKeySpacebar = 0x20
 };
 #endif
     

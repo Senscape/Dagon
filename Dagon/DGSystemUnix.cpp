@@ -1,26 +1,41 @@
-/*
- *  DAGON
- *  Copyright (c) 2011 Senscape s.r.l.
- *	All rights reserved.
- *
- *  NOTICE: Senscape permits you to use, modify, and distribute this
- *  file in accordance with the terms of the license agreement accompanying it.
- *
- */
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011 Senscape s.r.l.
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
 
-#include "DGCommonGL."
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#include <GL/glew.h>
+#include <GL/glx.h>
+#include <pthread.h>
+#include <sys/time.h>
+
+#include "DGAudioManager.h"
 #include "DGConfig.h"
 #include "DGControl.h"
 #include "DGLog.h"
+#include "DGPlatform.h"
 #include "DGSystem.h"
+#include "DGTimerManager.h"
+#include "DGVideoManager.h"
 
-#ifndef DG_USE_SDL
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
 
+bool createGLWindow(char* title, int width, int height, int bits,
+                    bool fullscreenflag);
 
-DG_BOOL createGLWindow(char* title, int width, int height, int bits,
-                    DG_BOOL fullscreenflag);
-
-GLvoid killGLWindow(GLvoid);
+GLvoid killGLWindow();
 
 typedef struct {
     Display *dpy;
@@ -28,7 +43,7 @@ typedef struct {
     Window win;
     GLXContext ctx;
     XSetWindowAttributes attr;
-    DG_BOOL fs;
+    bool fs;
     XF86VidModeModeInfo deskMode;
     int x, y;
     unsigned int width, height;
@@ -49,21 +64,135 @@ static int attrListDbl[] = { GLX_RGBA, GLX_DOUBLEBUFFER,
     None };
 
 GLWindow GLWin;
-DG_BOOL done;
 
-void DGSystemInitialize() {
-	DGLogTrace(DG_MOD_SYSTEM, "Initializing system interface...");
+pthread_t tAudioThread;
+pthread_t tProfilerThread;
+pthread_t tSystemThread;
+pthread_t tTimerThread;
+pthread_t tVideoThread;
 
-	GLWin.fs = config.fullscreen;
-    createGLWindow("Dagon", DGConfig.display_width, DGConfig.display_height, 24, GLWin.fs);
+static pthread_mutex_t _audioMutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t _systemMutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t _timerMutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_mutex_t _videoMutex = PTHREAD_MUTEX_INITIALIZER;
+
+void* _audioThread(void *arg);
+void* _profilerThread(void *arg);
+void* _systemThread(void *arg);
+void* _systemThread(void *arg);
+void* _timerThread(void *arg);
+void* _videoThread(void *arg);
+
+////////////////////////////////////////////////////////////
+// Implementation - Constructor
+////////////////////////////////////////////////////////////
+
+// TODO: At this point the system module should copy the config file
+// into the user folder
+DGSystem::DGSystem() {  
+    log = &DGLog::getInstance();
+    config = &DGConfig::getInstance();
+    
+    _isInitialized = false;
+    _isRunning = false;
 }
 
-void DGSystemRun() {
+////////////////////////////////////////////////////////////
+// Implementation - Destructor
+////////////////////////////////////////////////////////////
+
+DGSystem::~DGSystem() {
+    // The shutdown sequence is performed in the terminate() method
+}
+
+////////////////////////////////////////////////////////////
+// Implementation
+////////////////////////////////////////////////////////////
+
+void DGSystem::createThreads() {
+	pthread_create(&tAudioThread, NULL, &_audioThread, NULL);
+	pthread_create(&tTimerThread, NULL, &_timerThread, NULL);
+	pthread_create(&tVideoThread, NULL, &_videoThread, NULL);
+
+	if (config->debugMode)
+		pthread_create(&tProfilerThread, NULL, &_profilerThread, NULL);
+
+	_areThreadsActive = true;
+}
+
+void DGSystem::destroyThreads() {
+	pthread_mutex_lock(&_audioMutex);
+	DGAudioManager::getInstance().terminate();
+	pthread_mutex_unlock(&_audioMutex);
+
+	pthread_mutex_lock(&_timerMutex);
+	DGTimerManager::getInstance().terminate();
+	pthread_mutex_unlock(&_timerMutex);
+
+	pthread_mutex_lock(&_videoMutex);
+	DGVideoManager::getInstance().terminate();
+	pthread_mutex_unlock(&_videoMutex);
+
+	_areThreadsActive = false;
+}
+
+void DGSystem::findPaths(int argc, char* argv[]) {
+
+}
+
+void DGSystem::init() {
+    if (!_isInitialized) {
+        log->trace(DGModSystem, "========================================");
+        log->trace(DGModSystem, "%s", DGMsg040000); 
+
+		XInitThreads();
+		GLWin.fs = config->fullScreen;
+    	createGLWindow("Dagon", config->displayWidth, config->displayHeight, config->displayDepth, GLWin.fs);
+
+		if (GLX_SGI_swap_control) {
+			const GLubyte* ProcAddress = reinterpret_cast<const GLubyte*>("glXSwapIntervalSGI");
+   			PFNGLXSWAPINTERVALSGIPROC glXSwapIntervalSGI = reinterpret_cast<PFNGLXSWAPINTERVALSGIPROC>(glXGetProcAddress(ProcAddress));
+    		if (glXSwapIntervalSGI)
+        		glXSwapIntervalSGI(config->verticalSync ? 1 : 0);
+		}
+
+		// Now we're ready to init the controller instance
+    	control = &DGControl::getInstance();
+    	control->init();
+        _isInitialized = true;
+
+        log->trace(DGModSystem, "%s", DGMsg040001);
+    }
+    else log->warning(DGModSystem, "%s", DGMsg140002);
+}
+
+void DGSystem::resumeThread(int threadID){
+    if (_areThreadsActive) {
+        switch (threadID) {
+            case DGAudioThread:
+                pthread_mutex_unlock(&_audioMutex);
+                break;
+            case DGTimerThread:
+                pthread_mutex_unlock(&_timerMutex);
+                break;
+            case DGVideoThread:
+                pthread_mutex_unlock(&_videoMutex);
+                break;                
+        }
+    }
+}
+
+void DGSystem::run() {
 	XEvent event;
     KeySym key;
+
+	int err = pthread_create(&tSystemThread, NULL, &_systemThread, NULL);
+        if (err != 0)
+            printf("\nCan't create system thread");
 	
-	while (!done) {
-		/* Check for events */
+	_isRunning = true;
+	while (_isRunning) {
+		// Check for events
 		while (XPending(GLWin.dpy) > 0) {
 			XNextEvent(GLWin.dpy, &event);
 			
@@ -71,64 +200,102 @@ void DGSystemRun() {
                 case Expose:
 	                if (event.xexpose.count != 0)
 	                    break;
-                    DGControlUpdate();
          	        break;				
 	            case ConfigureNotify:
-					/* call resizeGLScene only if our window-size changed */
+					// call resizeGLScene only if our window-size changed
 	                if ((event.xconfigure.width != GLWin.width) || 
 	                    (event.xconfigure.height != GLWin.height))
 	                {
 	                    GLWin.width = event.xconfigure.width;
 	                    GLWin.height = event.xconfigure.height;
-						DGConfig.display_width = GLWin.width;
-						DGConfig.display_height = GLWin.height;
+						pthread_mutex_lock(&_systemMutex);
+						config->displayWidth = GLWin.width;
+						config->displayHeight = GLWin.height;
+						pthread_mutex_unlock(&_systemMutex);
 	                }
 					break;
 				case MotionNotify:
-					DGControlProcessMouse(event.xbutton.x, DGConfig.display_height - event.xbutton.y, DG_NO);
+					pthread_mutex_lock(&_systemMutex);
+					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+					control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventMove);
+					glXMakeCurrent(GLWin.dpy, None, NULL);
+					pthread_mutex_unlock(&_systemMutex);
 					break;
 				case ButtonPress:
 					break;
 				case ButtonRelease:
-					DGControlProcess_mouse(event.xbutton.x, DGConfig.display_height - event.xbutton.y, DG_YES);
+					pthread_mutex_lock(&_systemMutex);
+					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+					control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventUp);
+					glXMakeCurrent(GLWin.dpy, None, NULL);
+					pthread_mutex_unlock(&_systemMutex);
 					break;
                 case KeyPress:
                     key = XLookupKeysym(&event.xkey, 0);
-					switch (key) {
-						case XK_Escape:
-							done = DG_YES;
-							DGControlTerminate();
-							break;
-						case XK_F1:
-							killGLWindow();
-							GLWin.fs = !GLWin.fs;
-							createGLWindow("Dagon", DGConfig.display_width, DGConfig.display_height, 24, GLWin.fs);
-							break;
-					}
+					pthread_mutex_lock(&_systemMutex);
+					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+					control->processKey(key, false);
+					glXMakeCurrent(GLWin.dpy, None, NULL);
+					pthread_mutex_unlock(&_systemMutex);
 					break;
 				case ClientMessage:
-					done = DG_YES;
-					DGSystemTerminate();
+					// TODO: Simulate ESC key
+					this->terminate();
 					break;
 				default:
 					break;
 			}
 		}
-		
-		DGControlUpdate();
 	}
 }
 
-void DGSystemTerminate() {
-	killGLWindow();
+void DGSystem::setTitle(const char* title) {
+
 }
 
-void DGSystemUpdate() {
+void DGSystem::suspendThread(int threadID) {
+    if (_areThreadsActive) {
+        switch (threadID) {
+            case DGAudioThread:
+                pthread_mutex_lock(&_audioMutex);
+                break;
+            case DGTimerThread:
+                pthread_mutex_lock(&_timerMutex);
+                break;
+            case DGVideoThread:
+                pthread_mutex_lock(&_videoMutex);
+                break;                
+        }
+    }
+}
+
+void DGSystem::terminate() {
+	killGLWindow();
+
+	_isRunning = false;
+}
+
+void DGSystem::toggleFullScreen() { 
+	killGLWindow();
+	GLWin.fs = config->fullScreen;
+    createGLWindow("Dagon", config->displayWidth, config->displayHeight, config->displayDepth, GLWin.fs);
+}
+
+void DGSystem::update() {
 	glXSwapBuffers(GLWin.dpy, GLWin.win);
 }
 
-DG_BOOL createGLWindow(char* title, int width, int height, int bits,
-                    DGBool fullscreenflag) {
+time_t DGSystem::wallTime() {
+	// FIXME: Confirm this works with several threads
+	return clock();
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Private methods
+////////////////////////////////////////////////////////////
+
+bool createGLWindow(char* title, int width, int height, int bits,
+                    bool fullscreenflag) {
     XVisualInfo *vi;
     Colormap cmap;
     int dpyWidth, dpyHeight;
@@ -143,9 +310,9 @@ DG_BOOL createGLWindow(char* title, int width, int height, int bits,
     unsigned int borderDummy;
     
     GLWin.fs = fullscreenflag;
-    /* set best mode to current */
+    // set best mode to current
     bestMode = 0;
-    /* get a connection */
+    // get a connection
     GLWin.dpy = XOpenDisplay(0);
     GLWin.screen = DefaultScreen(GLWin.dpy);
     XF86VidModeQueryVersion(GLWin.dpy, &vidModeMajorVersion,
@@ -153,9 +320,9 @@ DG_BOOL createGLWindow(char* title, int width, int height, int bits,
     printf("XF86VidModeExtension-Version %d.%d\n", vidModeMajorVersion,
 		   vidModeMinorVersion);
     XF86VidModeGetAllModeLines(GLWin.dpy, GLWin.screen, &modeNum, &modes);
-    /* save desktop-resolution before switching modes */
+    // save desktop-resolution before switching modes
     GLWin.deskMode = *modes[0];
-    /* look for mode with requested resolution */
+    // look for mode with requested resolution
     for (i = 0; i < modeNum; i++)
     {
         if ((modes[i]->hdisplay == width) && (modes[i]->vdisplay == height))
@@ -163,7 +330,7 @@ DG_BOOL createGLWindow(char* title, int width, int height, int bits,
             bestMode = i;
         }
     }
-    /* get an appropriate visual */
+    // get an appropriate visual
     vi = glXChooseVisual(GLWin.dpy, GLWin.screen, attrListDbl);
     if (vi == NULL)
     {
@@ -176,9 +343,9 @@ DG_BOOL createGLWindow(char* title, int width, int height, int bits,
     }
     glXQueryVersion(GLWin.dpy, &glxMajorVersion, &glxMinorVersion);
     printf("glX-Version %d.%d\n", glxMajorVersion, glxMinorVersion);
-    /* create a GLX context */
+    // create a GLX context
     GLWin.ctx = glXCreateContext(GLWin.dpy, vi, 0, GL_TRUE);
-    /* create a color map */
+    // create a color map
     cmap = XCreateColormap(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
 						   vi->visual, AllocNone);
     GLWin.attr.colormap = cmap;
@@ -193,7 +360,7 @@ DG_BOOL createGLWindow(char* title, int width, int height, int bits,
         printf("Resolution %dx%d\n", dpyWidth, dpyHeight);
         XFree(modes);
 		
-        /* create a fullscreen window */
+        // create a fullscreen window
         GLWin.attr.override_redirect = True;
         GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
 		ButtonReleaseMask | StructureNotifyMask | PointerMotionMask;
@@ -210,20 +377,20 @@ DG_BOOL createGLWindow(char* title, int width, int height, int bits,
     }
     else
     {
-        /* create a window in window mode*/
+        // create a window in window mode
         GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
 		ButtonReleaseMask | StructureNotifyMask | PointerMotionMask;
         GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
 								  0, 0, width, height, 0, vi->depth, InputOutput, vi->visual,
 								  CWBorderPixel | CWColormap | CWEventMask, &GLWin.attr);
-        /* only set window title and handle wm_delete_events if in windowed mode */
+        // only set window title and handle wm_delete_events if in windowed mode
         wmDelete = XInternAtom(GLWin.dpy, "WM_DELETE_WINDOW", True);
         XSetWMProtocols(GLWin.dpy, GLWin.win, &wmDelete, 1);
         XSetStandardProperties(GLWin.dpy, GLWin.win, title,
 							   title, None, NULL, 0, NULL);
         XMapRaised(GLWin.dpy, GLWin.win);
     }       
-    /* connect the glx-context to the window */
+    // connect the glx-context to the window
     glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
     XGetGeometry(GLWin.dpy, GLWin.win, &winDummy, &GLWin.x, &GLWin.y,
 				 &GLWin.width, &GLWin.height, &borderDummy, &GLWin.depth);
@@ -233,28 +400,96 @@ DG_BOOL createGLWindow(char* title, int width, int height, int bits,
     else
         printf("Sorry, no Direct Rendering possible!\n");
 	
-    return DG_YES;    
+    return true;    
 }
 
-GLvoid killGLWindow(GLvoid)
-{
-    if (GLWin.ctx)
-    {
-        if (!glXMakeCurrent(GLWin.dpy, None, NULL))
-        {
+GLvoid killGLWindow() {
+    if (GLWin.ctx) {
+        if (!glXMakeCurrent(GLWin.dpy, None, NULL)) {
             printf("Could not release drawing context.\n");
         }
+
         glXDestroyContext(GLWin.dpy, GLWin.ctx);
         GLWin.ctx = NULL;
     }
-    /* switch back to original desktop resolution if we were in fs */
-    if (GLWin.fs)
-    {
+
+    // switch back to original desktop resolution if we were in fs
+    if (GLWin.fs) {
         XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.deskMode);
         XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
     }
+
     XCloseDisplay(GLWin.dpy);
 }
 
-#endif
+void* _audioThread(void *arg) {
+	bool isRunning = true;
+	double pause = 10000;
+
+	while (isRunning) {
+		pthread_mutex_lock(&_audioMutex);
+		isRunning = DGAudioManager::getInstance().update();
+		pthread_mutex_unlock(&_audioMutex);
+		usleep(pause);
+	}
+
+	return 0;
+}
+
+void* _profilerThread(void *arg) {
+	bool isRunning = true;
+
+	while (isRunning) {
+		pthread_mutex_lock(&_systemMutex);
+		isRunning = DGControl::getInstance().profiler();
+		pthread_mutex_unlock(&_systemMutex);
+		sleep(1);
+	}
+
+	return 0;
+}
+
+void* _systemThread(void *arg) {
+	bool isRunning = true;
+	double pause = (1.0f / DGConfig::getInstance().framerate) * 1000000;
+
+	while (isRunning) {
+		pthread_mutex_lock(&_systemMutex);
+		glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+		isRunning = DGControl::getInstance().update();
+		glXMakeCurrent(GLWin.dpy, None, NULL);
+		pthread_mutex_unlock(&_systemMutex);
+		usleep(pause);
+	}
+
+	return 0;
+}
+
+void* _timerThread(void *arg) {
+	bool isRunning = true;
+	double pause = 100000;
+
+	while (isRunning) {
+		pthread_mutex_lock(&_timerMutex);
+		isRunning = DGTimerManager::getInstance().update();
+		pthread_mutex_unlock(&_timerMutex);
+		usleep(pause);
+	}
+
+	return 0;
+}
+
+void* _videoThread(void *arg) {
+	bool isRunning = true;
+	double pause = 10000;
+
+	while (isRunning) {
+		pthread_mutex_lock(&_videoMutex);
+		isRunning = DGVideoManager::getInstance().update();
+		pthread_mutex_unlock(&_videoMutex);
+		usleep(pause);
+	}
+
+	return 0;
+}
 
