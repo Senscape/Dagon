@@ -82,6 +82,11 @@ static int DGConfigLibGet(lua_State *L) {
 		lua_pushboolean(L, DGConfig::getInstance().effects);
 		return 1;
 	}
+    
+    if (strcmp(key, "framebuffer") == 0) {
+		lua_pushboolean(L, DGConfig::getInstance().framebuffer);
+		return 1;
+	}
 	
 	if (strcmp(key, "framerate") == 0) {
 		lua_pushnumber(L, DGConfig::getInstance().framerate);
@@ -173,6 +178,9 @@ static int DGConfigLibSet(lua_State *L) {
 	
 	if (strcmp(key, "effects") == 0)
 		DGConfig::getInstance().effects = (bool)lua_toboolean(L, 3);
+    
+	if (strcmp(key, "framebuffer") == 0)
+		DGConfig::getInstance().framebuffer = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "framerate") == 0)
 		DGConfig::getInstance().framerate = (int)luaL_checknumber(L, 3);
