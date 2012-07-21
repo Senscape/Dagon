@@ -113,7 +113,9 @@ void DGRenderManager::init() {
 	}    
     
     glEnableClientState(GL_VERTEX_ARRAY);
-    _initFrameBuffer();
+    
+    if (config->framebuffer)
+        _initFrameBuffer();
 }
 
 ////////////////////////////////////////////////////////////
