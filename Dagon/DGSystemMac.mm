@@ -45,6 +45,14 @@ dispatch_source_t CreateDispatchTimer(uint64_t interval,
                                       dispatch_queue_t queue,
                                       dispatch_block_t block);
 
+#define DGFullscreenFadeOutDuration	0.2f
+#define DGFullscreenFadeInDuration	0.4f
+
+NSString * const DGSessionWillEnterFullScreenNotification	= @"DGSessionWillEnterFullScreen";
+NSString * const DGSessionDidEnterFullScreenNotification	= @"DGSessionDidEnterFullScreen";
+NSString * const DGSessionWillExitFullScreenNotification	= @"DGSessionWillExitFullScreen";
+NSString * const DGSessionDidExitFullScreenNotification		= @"DGSessionDidExitFullScreen";
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -204,7 +212,9 @@ void DGSystem::init() {
         [window setAcceptsMouseMovedEvents:YES];
         [window setContentView:view];
         [window makeFirstResponder:view];
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6
         [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
+#endif
         [window setTitle:[NSString stringWithUTF8String:config->script()]];
         [window makeKeyAndOrderFront:window];
         
@@ -315,6 +325,7 @@ void DGSystem::terminate() {
 
 void DGSystem::toggleFullScreen() {
     // TODO: Suspend the timer to avoid multiple redraws
+#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6    
     [window toggleFullScreen: nil];
     
     if (config->fullScreen) {
@@ -330,6 +341,67 @@ void DGSystem::toggleFullScreen() {
         [[NSApplication sharedApplication]
          setPresentationOptions: NSApplicationPresentationDefault];
     }
+#else
+    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+    
+    NSDictionary* FullScreen_Options; // Not in the pool
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    NSString *startNotification, *endNotification;
+    
+    if (config->fullScreen) {
+        startNotification	= DGSessionWillEnterFullScreenNotification;
+        endNotification		= DGSessionDidEnterFullScreenNotification;
+    }
+    else {
+        startNotification	= DGSessionWillExitFullScreenNotification;
+        endNotification		= DGSessionDidExitFullScreenNotification;
+    }
+    
+    [center postNotificationName: startNotification object: window];
+    
+    //Set up a screen fade in and out of the fullscreen mode
+    CGError acquiredToken;
+    CGDisplayFadeReservationToken fadeToken;
+    
+    acquiredToken = CGAcquireDisplayFadeReservation(DGFullscreenFadeOutDuration + DGFullscreenFadeInDuration, &fadeToken);
+    
+    //First fade out to black synchronously
+    if (acquiredToken == kCGErrorSuccess) {
+        CGDisplayFade(fadeToken,
+                      DGFullscreenFadeOutDuration,	//Fade duration
+                      (CGDisplayBlendFraction)kCGDisplayBlendNormal,		//Start transparent
+                      (CGDisplayBlendFraction)kCGDisplayBlendSolidColor,	//Fade to opaque
+                      0.0f, 0.0f, 0.0f,				//Pure black (R, G, B)
+                      true							//Synchronous
+                      );
+    }
+    
+    FullScreen_Options = [NSDictionary dictionaryWithObject: [NSNumber numberWithBool: YES] forKey: NSFullScreenModeAllScreens];
+    
+    if (config->fullScreen) {
+        [view enterFullScreenMode: [NSScreen mainScreen] withOptions: FullScreen_Options];
+    }
+    else {
+        [view exitFullScreenModeWithOptions: FullScreen_Options];
+        [window makeFirstResponder:view];
+    }
+    
+    //And now fade back in from black asynchronously
+    if (acquiredToken == kCGErrorSuccess) {
+        CGDisplayFade(fadeToken,
+                      DGFullscreenFadeInDuration,	//Fade duration
+                      (CGDisplayBlendFraction)kCGDisplayBlendSolidColor,	//Start opaque
+                      (CGDisplayBlendFraction)kCGDisplayBlendNormal,		//Fade to transparent
+                      0.0f, 0.0f, 0.0f,				//Pure black (R, G, B)
+                      false							//Asynchronous
+                      );
+    }
+    CGReleaseDisplayFadeReservation(fadeToken);
+    
+    [center postNotificationName: endNotification object: window];
+    
+    [pool release];
+#endif
 }
 
 void DGSystem::update() {
