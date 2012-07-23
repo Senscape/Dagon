@@ -155,6 +155,16 @@ void DGAudio::load() {
             
             alGenBuffers(DGAudioNumberOfBuffers, _alBuffers);
             alGenSources(1, &_alSource);
+
+			for (int i = 0; i < DGAudioNumberOfBuffers; i++) {
+				if (!_stream(&_alBuffers[i])) {
+					_verifyError("prebuffer");
+                
+					return;
+				}
+			}
+        
+			alSourceQueueBuffers(_alSource, DGAudioNumberOfBuffers, _alBuffers);
     
             if (config->mute || this->fadeLevel() < 0.0f) {
                 alSourcef(_alSource, AL_GAIN, 0.0f);
@@ -182,20 +192,10 @@ void DGAudio::match(DGAudio* matchedAudio) {
 
 void DGAudio::play() {
     if (_isLoaded && (_state != DGAudioPlaying)) {
-        _emptyBuffers(); // Just in case
-        
         if (_isMatched)
             ov_time_seek(&_oggStream, _matchedAudio->cursor());
         
-        for (int i = 0; i < DGAudioNumberOfBuffers; i++) {
-            if (!_stream(_alBuffers[i])) {
-                _verifyError("prebuffer");
-                
-                return;
-            }
-        }
-        
-        alSourceQueueBuffers(_alSource, DGAudioNumberOfBuffers, _alBuffers);
+
         alSourcePlay(_alSource);
         _state = DGAudioPlaying;
         
@@ -207,8 +207,6 @@ void DGAudio::pause() {
     if (_state == DGAudioPlaying) {
         alSourceStop(_alSource);
 
-        _emptyBuffers();
-        
         _state = DGAudioPaused;
         
         _verifyError("pause");
@@ -218,9 +216,7 @@ void DGAudio::pause() {
 void DGAudio::stop() {
     if ((_state == DGAudioPlaying) || (_state == DGAudioPaused)) {
         alSourceStop(_alSource);
-    
-        _emptyBuffers();
-        
+
         ov_raw_seek(&_oggStream, 0);
         _state = DGAudioStopped;
         
@@ -232,8 +228,11 @@ void DGAudio::unload() {
     if (_isLoaded) {
         if (_state == DGAudioPlaying)
             this->stop();
-        
-        alDeleteSources(1, &_alSource);
+
+		_emptyBuffers();
+
+		
+		alDeleteSources(1, &_alSource);
 		alDeleteBuffers(DGAudioNumberOfBuffers, _alBuffers);
         ov_clear(&_oggStream);
         free(_resource.data);
@@ -254,7 +253,7 @@ void DGAudio::update() {
             ALuint buffer;
             
             alSourceUnqueueBuffers(_alSource, 1, &buffer);
-            _stream(buffer);
+            _stream(&buffer);
             alSourceQueueBuffers(_alSource, 1, &buffer);
         }
         
@@ -284,15 +283,16 @@ void DGAudio::update() {
 void DGAudio::_emptyBuffers() {
     ALint state;
     alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
-    
-    if (state != AL_PLAYING) {
+
+	if (state != AL_PLAYING) {
         int queued;
         
-        alGetSourcei(_alSource, AL_BUFFERS_QUEUED, &queued);
+        alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &queued);
         
         while (queued--) {
             ALuint buffer;
             alSourceUnqueueBuffers(_alSource, 1, &buffer);
+			_verifyError("unqueue");
         }   
     }
 }
@@ -312,7 +312,7 @@ const char* DGAudio::_randomizeFile(const char* fileName) {
     }
 }
 
-bool DGAudio::_stream(ALuint buffer) {
+bool DGAudio::_stream(ALuint* buffer) {
     // This is a failsafe; if this is true, we won't attempt
     // to stream anymore
     static bool _hasStreamingError = false;         
@@ -351,7 +351,7 @@ bool DGAudio::_stream(ALuint buffer) {
             }
         }
         
-        alBufferData(buffer, _alFormat, data, size, _rate);
+        alBufferData(*buffer, _alFormat, data, size, _rate);
         
         return true;
     }

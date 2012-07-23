@@ -43,7 +43,7 @@
 ////////////////////////////////////////////////////////////
 
 #define DGAudioBufferSize       8192
-#define DGAudioNumberOfBuffers  3
+#define DGAudioNumberOfBuffers  2
 
 enum DGAudioFlags {
     DGAudioFadeIn,
@@ -98,7 +98,7 @@ class DGAudio : public DGObject {
     int _state;
     
     // Method used to fill buffers
-    bool _stream(ALuint buffer);
+    bool _stream(ALuint* buffer);
     
     // We use this one to periodically check for errors
     void _emptyBuffers();
