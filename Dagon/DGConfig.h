@@ -37,7 +37,7 @@ enum DGConfigDefaults {
     DGDefControlMode = DGMouseFree,
 	DGDefDisplayWidth = 1280,
 	DGDefDisplayHeight = 800,
-	DGDefDisplayDepth = 32,
+	DGDefDisplayDepth = 24,
 	DGDefDebugMode = true, // This shouldn't default to true, careful while finding paths
     DGDefDust = false,  // Move to effects
     DGDefEffects = true,
