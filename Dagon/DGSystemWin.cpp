@@ -327,28 +327,20 @@ void DGSystem::terminate() {
 void DGSystem::toggleFullScreen() { 
     if (config->fullScreen) {
 		// Enter fullscreen
-
 		previousWidth = config->displayWidth;
 		previousHeight = config->displayHeight;
-       
-		/*RECT desktop;
-		// Get a handle to the desktop window
-		const HWND hDesktop = GetDesktopWindow();
-		// Get the size of screen to the variable desktop
-		GetWindowRect(hDesktop, &desktop);
-		// The top left corner will have coordinates (0,0)
-		// and the bottom right corner will have coordinates
-		// (horizontal, vertical)*/
 
         DEVMODE fullscreenSettings;
 		fullscreenSettings.dmSize = sizeof(DEVMODE);
         
         EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &fullscreenSettings);
-        /*fullscreenSettings.dmPelsWidth        = desktop.right;
-        fullscreenSettings.dmPelsHeight       = desktop.bottom;
-        fullscreenSettings.dmBitsPerPel       = config->displayDepth;
-        fullscreenSettings.dmDisplayFrequency = config->framerate;
-        fullscreenSettings.dmFields           = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;*/
+		if (config->forcedFullScreen) {
+			fullscreenSettings.dmPelsWidth        = config->displayWidth;
+			fullscreenSettings.dmPelsHeight       = config->displayHeight;
+			fullscreenSettings.dmBitsPerPel       = config->displayDepth;
+			fullscreenSettings.dmDisplayFrequency = config->framerate;
+			fullscreenSettings.dmFields           = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;
+		}
         
         SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, WS_EX_APPWINDOW | WS_EX_TOPMOST);
         SetWindowLongPtr(g_hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
@@ -553,11 +545,12 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case VK_F12:
 					DGControl::getInstance().processFunctionKey(wParam);
 					break;
+				// Ignored keys
 				case VK_SHIFT:
-					// Ignored when pressed alone
-					break;
 				case VK_CAPITAL:
-					// Always ignored
+				case VK_CONTROL:
+				case VK_LWIN:
+				case VK_RWIN:
 					break;
 				case VK_ESCAPE:
 				case VK_TAB:

@@ -41,6 +41,7 @@ enum DGConfigDefaults {
 	DGDefDebugMode = true, // This shouldn't default to true, careful while finding paths
     DGDefDust = false,  // Move to effects
     DGDefEffects = true,
+	DGDefForcedFullScreen = false,
 	DGDefFramebuffer = true,
 	DGDefFramerate = 60,
 	DGDefFullScreen = false,
@@ -101,6 +102,7 @@ public:
     bool debugMode;
     bool dust;
     bool effects;
+	bool forcedFullScreen;
     bool framebuffer;
 	int framerate;
 	bool fullScreen;
