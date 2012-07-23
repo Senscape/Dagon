@@ -21,6 +21,8 @@
 
 using namespace std;
 
+// TODO: Watch out with the context here!
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -43,17 +45,17 @@ DGAudioManager::~DGAudioManager() {
     
     // Each audio object should unregister itself if
     // destructed
-    
-    /*if (!_arrayOfAudios.empty()) {
+
+    if (!_arrayOfAudios.empty()) {
         vector<DGAudio*>::iterator it;
         
         it = _arrayOfAudios.begin();
         
         while (it != _arrayOfAudios.end()) {
-            delete *it;
+			(*it)->unload();
             it++;
         }   
-    }*/
+    }
     
     // Now we shut down OpenAL completely
     if (_isInitialized) {
