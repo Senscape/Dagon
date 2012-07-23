@@ -1,6 +1,8 @@
 # General
 *.log
 build/
+bin/
+obj/
 
 # Mac OS X
 *.DS_store
@@ -23,6 +25,7 @@ xcuserdata/
 # Linux
 ~*
 *~
+*.depend
 
 # Visual Studio Express
 *.csproj

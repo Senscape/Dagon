@@ -4,6 +4,7 @@
 # libxxf86vm-dev
 # libopenal-dev
 # libogg-dev
+# libvorbis-dev
 # libtheora-dev
 # lua5.1-dev
 # libfreetype6-dev
