@@ -63,7 +63,7 @@ typedef int (*PFNWGLEXTGETSWAPINTERVALPROC) (void);
 PFNWGLEXTSWAPCONTROLPROC wglSwapIntervalEXT = NULL;
 PFNWGLEXTGETSWAPINTERVALPROC wglGetSwapIntervalEXT = NULL;
 
-BYTE keyboardState[256];
+BYTE defKeyboardState[256];
 int previousWidth;
 int previousHeight;
 
@@ -200,7 +200,7 @@ void DGSystem::init() {
         wglMakeCurrent(g_hDC, g_hRC);
 
 		// FIXME: This doesn't work if the CTRL key is pressed when launching
-		GetKeyboardState(keyboardState);
+		GetKeyboardState(defKeyboardState);
         
         // Now we're ready to init the controller instance
         control = &DGControl::getInstance();
@@ -250,14 +250,14 @@ void DGSystem::resumeThread(int threadID){
 }
 
 void DGSystem::run() {
+	if (config->fullScreen)
+		toggleFullScreen();
+
 	wglMakeCurrent(NULL, NULL);
 
     // Create the thread to update the controller module
 	if (!(hSystemThread = CreateThread(NULL, 0, _systemThread, NULL, 0, NULL)))
 		log->error(DGModSystem, "%s", DGMsg240004);
-
-	if (config->fullScreen)
-        toggleFullScreen();
 
     // Now launch the main loop
 	MSG uMsg;
@@ -331,30 +331,31 @@ void DGSystem::toggleFullScreen() {
 		previousWidth = config->displayWidth;
 		previousHeight = config->displayHeight;
        
-		RECT desktop;
+		/*RECT desktop;
 		// Get a handle to the desktop window
 		const HWND hDesktop = GetDesktopWindow();
 		// Get the size of screen to the variable desktop
 		GetWindowRect(hDesktop, &desktop);
 		// The top left corner will have coordinates (0,0)
 		// and the bottom right corner will have coordinates
-		// (horizontal, vertical)
+		// (horizontal, vertical)*/
 
         DEVMODE fullscreenSettings;
+		fullscreenSettings.dmSize = sizeof(DEVMODE);
         
-        EnumDisplaySettings(NULL, 0, &fullscreenSettings);
-        fullscreenSettings.dmPelsWidth        = desktop.right;
+        EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &fullscreenSettings);
+        /*fullscreenSettings.dmPelsWidth        = desktop.right;
         fullscreenSettings.dmPelsHeight       = desktop.bottom;
         fullscreenSettings.dmBitsPerPel       = config->displayDepth;
         fullscreenSettings.dmDisplayFrequency = config->framerate;
-        fullscreenSettings.dmFields           = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;
+        fullscreenSettings.dmFields           = DM_PELSWIDTH | DM_PELSHEIGHT | DM_BITSPERPEL | DM_DISPLAYFREQUENCY;*/
         
         SetWindowLongPtr(g_hWnd, GWL_EXSTYLE, WS_EX_APPWINDOW | WS_EX_TOPMOST);
         SetWindowLongPtr(g_hWnd, GWL_STYLE, WS_POPUP | WS_VISIBLE);
-        SetWindowPos(g_hWnd, HWND_TOPMOST, 0, 0, desktop.right, desktop.bottom, SWP_SHOWWINDOW);
+        SetWindowPos(g_hWnd, HWND_TOPMOST, 0, 0, fullscreenSettings.dmPelsWidth, fullscreenSettings.dmPelsHeight, SWP_SHOWWINDOW);
         if (ChangeDisplaySettings(&fullscreenSettings, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL) {
             ShowWindow(g_hWnd, SW_MAXIMIZE);
-			control->reshape(desktop.right, desktop.bottom);
+			control->reshape(fullscreenSettings.dmPelsWidth, fullscreenSettings.dmPelsHeight);
         }
         else log->error(DGModSystem, "%s", DGMsg240005);
     }
@@ -370,7 +371,7 @@ void DGSystem::toggleFullScreen() {
             ShowWindow(g_hWnd, SW_RESTORE);
 			control->reshape(config->displayWidth, config->displayHeight);
         }
-        else log->error(DGModSystem, "%s", DGMsg240006);        
+        else log->error(DGModSystem, "%s", DGMsg240006);
     }
 }
 
@@ -555,6 +556,9 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case VK_SHIFT:
 					// Ignored when pressed alone
 					break;
+				case VK_CAPITAL:
+					// Always ignored
+					break;
 				case VK_ESCAPE:
 				case VK_TAB:
 				case VK_SPACE:
@@ -567,11 +571,16 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					break;
 				default:
 					WCHAR chars[2];
-					ToUnicode(wParam, MapVirtualKey(wParam, 0), keyboardState, chars, 2, 0);
 					if (GetKeyState(VK_CONTROL) < 0) {
+						ToUnicode(wParam, MapVirtualKey(wParam, 0), defKeyboardState, chars, 2, 0);
 						DGControl::getInstance().processKey(chars[0], true);
 					}
-					else DGControl::getInstance().processKey(chars[0], false);
+					else {
+						BYTE keyboardState[256];
+						GetKeyboardState(keyboardState);
+						ToUnicode(wParam, MapVirtualKey(wParam, 0), keyboardState, chars, 2, 0);
+						DGControl::getInstance().processKey(chars[0], false);
+					}
 					break;
 			}
 			wglMakeCurrent(NULL, NULL);
