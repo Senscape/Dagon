@@ -195,7 +195,6 @@ void DGAudio::play() {
         if (_isMatched)
             ov_time_seek(&_oggStream, _matchedAudio->cursor());
         
-
         alSourcePlay(_alSource);
         _state = DGAudioPlaying;
         
@@ -230,7 +229,6 @@ void DGAudio::unload() {
             this->stop();
 
 		_emptyBuffers();
-
 		
 		alDeleteSources(1, &_alSource);
 		alDeleteBuffers(DGAudioNumberOfBuffers, _alBuffers);
