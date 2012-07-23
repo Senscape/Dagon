@@ -113,7 +113,7 @@ static int DGConfigLibGet(lua_State *L) {
 		return 1;
 	}
     
-    if (strcmp(key, "showHelpersh") == 0) {
+    if (strcmp(key, "showHelpers") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().showHelpers);
 		return 1;
 	}
