@@ -127,7 +127,10 @@ int DGCameraManager::cursorWhenPanning() {
     else if (_motionUp > 0.0f) return DGCursorDown;
     else if (_motionDown > 0.0f) return DGCursorUp;
     
-    return DGCursorDrag;
+    if (config->controlMode == DGMouseDrag)
+        return DGCursorDrag;
+    else
+        return DGCursorNormal;
 }
 
 void DGCameraManager::endOrthoView() {
