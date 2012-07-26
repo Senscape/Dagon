@@ -400,10 +400,18 @@ void DGControl::registerObject(DGObject* theTarget) {
 }
 
 void DGControl::reshape(int width, int height) {
+    int size = (width * DGDefCursorSize) / 1920;
+    
+    if (size > DGMaxCursorSize)
+        size = DGMaxCursorSize;
+    else if (size < DGMinCursorSize)
+        size = DGMinCursorSize;
+    
     config->displayWidth = width;
     config->displayHeight = height;
     
     cameraManager->setViewport(width, height);
+    cursorManager->setSize(size);
     feedManager->reshape();
     renderManager->reshape();
     
@@ -546,6 +554,8 @@ void DGControl::switchTo(DGObject* theTarget) {
     audioManager->flush();
     
     system->resumeThread(DGVideoThread);
+    
+    cameraManager->stopPanning();
 }
 
 void DGControl::syncSpot(DGSpot* spot) {
