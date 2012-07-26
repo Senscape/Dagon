@@ -250,6 +250,12 @@ void DGCameraManager::setAngle(float horizontal, float vertical) {
 
 void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
     if (horizontal != DGCurrent) {
+        // Substract n times pi (fix probable double turn)
+        float pi, pos;
+        pi = _angleH / (M_PI * 2);
+		pos = pi - (float)(floor (pi));
+		_angleH = pos * 2 * M_PI;
+        
         // Extrapolate the coordinates
         _angleHTarget = (horizontal * _angleHLimit) / 360.0f;
         
