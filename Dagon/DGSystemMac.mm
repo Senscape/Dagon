@@ -218,6 +218,13 @@ void DGSystem::init() {
         [window setTitle:[NSString stringWithUTF8String:config->script()]];
         [window makeKeyAndOrderFront:window];
         
+        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        
+        [notificationCenter addObserver: view
+                               selector: @selector(_windowWillClose:)
+                                   name: NSWindowWillCloseNotification
+                                 object: window];
+        
         if (config->fullScreen)
             this->toggleFullScreen();
         
@@ -325,7 +332,7 @@ void DGSystem::terminate() {
 
 void DGSystem::toggleFullScreen() {
     // TODO: Suspend the timer to avoid multiple redraws
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6    
+/*#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6
     [window toggleFullScreen: nil];
     
     if (config->fullScreen) {
@@ -333,7 +340,9 @@ void DGSystem::toggleFullScreen() {
         
         [[NSApplication sharedApplication]
          setPresentationOptions: NSApplicationPresentationHideMenuBar
-         | NSApplicationPresentationHideDock];
+         | NSApplicationPresentationHideDock
+         | NSApplicationPresentationDisableProcessSwitching
+         | NSApplicationPresentationFullScreen];
     }
     else {
         [NSCursor unhide];
@@ -341,7 +350,7 @@ void DGSystem::toggleFullScreen() {
         [[NSApplication sharedApplication]
          setPresentationOptions: NSApplicationPresentationDefault];
     }
-#else
+#else*/
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     
     NSDictionary* FullScreen_Options; // Not in the pool
@@ -380,10 +389,12 @@ void DGSystem::toggleFullScreen() {
     
     if (config->fullScreen) {
         [view enterFullScreenMode: [NSScreen mainScreen] withOptions: FullScreen_Options];
+        [NSCursor hide];
     }
     else {
         [view exitFullScreenModeWithOptions: FullScreen_Options];
         [window makeFirstResponder:view];
+        [NSCursor unhide];
     }
     
     //And now fade back in from black asynchronously
@@ -401,7 +412,7 @@ void DGSystem::toggleFullScreen() {
     [center postNotificationName: endNotification object: window];
     
     [pool release];
-#endif
+//#endif
 }
 
 void DGSystem::update() {
