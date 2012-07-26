@@ -30,7 +30,6 @@ class DGControl;
 @interface DGViewDelegate : NSView {
     DGConfig* config;
     DGControl* control;
-    NSWindow* window;
     
     BOOL isMouseInside; 
 	NSOpenGLPixelFormat* pixelFormat;

@@ -116,6 +116,58 @@ void DGOverlay::beginIteratingImages() {
     _itImage = _arrayOfImages.begin();
 }
 
+void DGOverlay::fadeIn() {
+    // Buttons
+    if (!_arrayOfButtons.empty()) {
+        vector<DGButton*>::iterator itButton;
+        
+        itButton = _arrayOfButtons.begin();
+        
+        while (itButton != _arrayOfButtons.end()) {
+            (*itButton)->fadeIn();
+            itButton++;
+        }
+    }
+    
+    // Images
+    if (!_arrayOfImages.empty()) {
+        vector<DGImage*>::iterator itImage;
+        
+        itImage = _arrayOfImages.begin();
+        
+        while (itImage != _arrayOfImages.end()) {
+            (*itImage)->fadeIn();
+            itImage++;
+        }
+    }
+}
+
+void DGOverlay::fadeOut() {
+    // Buttons
+    if (!_arrayOfButtons.empty()) {
+        vector<DGButton*>::iterator itButton;
+        
+        itButton = _arrayOfButtons.begin();
+        
+        while (itButton != _arrayOfButtons.end()) {
+            (*itButton)->fadeOut();
+            itButton++;
+        }
+    }
+    
+    // Images
+    if (!_arrayOfImages.empty()) {
+        vector<DGImage*>::iterator itImage;
+        
+        itImage = _arrayOfImages.begin();
+        
+        while (itImage != _arrayOfImages.end()) {
+            (*itImage)->fadeOut();
+            itImage++;
+        }
+    }
+}
+
 bool DGOverlay::iterateButtons() {
     if (_isIteratingBackwards) {
         _ritButton++;

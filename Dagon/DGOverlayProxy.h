@@ -82,6 +82,20 @@ public:
         return 0;
     }
     
+    // Fadein (overrides object method)
+    int fadeIn(lua_State *L) {
+        o->fadeIn();
+        
+        return 0;
+    }
+    
+    // Fadeout (overrides object method)
+    int fadeOut(lua_State *L) {
+        o->fadeOut();
+        
+        return 0;
+    }
+    
     // Move the overlay
     int move(lua_State *L) {
         o->move(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
@@ -120,7 +134,9 @@ const char DGOverlayProxy::className[] = DGOverlayProxyName;
 Luna<DGOverlayProxy>::RegType DGOverlayProxy::methods[] = {
     DGObjectMethods(DGOverlayProxy),    
     method(DGOverlayProxy, addButton),      
-    method(DGOverlayProxy, addImage),    
+    method(DGOverlayProxy, addImage),
+    method(DGOverlayProxy, fadeIn),
+    method(DGOverlayProxy, fadeOut),
     method(DGOverlayProxy, move),
     method(DGOverlayProxy, position),    
     method(DGOverlayProxy, setPosition),

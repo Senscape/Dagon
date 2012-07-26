@@ -58,13 +58,6 @@
             GLint swapInterval = 1;
             [glContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
         }
-        
-        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
-        
-        [notificationCenter addObserver: self
-                               selector: @selector(_windowWillClose:)
-                                   name: NSWindowWillCloseNotification
-                                 object: _window];
     }
 	
     return self;
@@ -76,7 +69,7 @@
 	[super dealloc];
 }
 
-- (BOOL) isFlipped {
+- (BOOL)isFlipped {
     return YES;
 }
 
