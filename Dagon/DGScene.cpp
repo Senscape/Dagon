@@ -189,6 +189,7 @@ bool DGScene::scanSpots() {
                     
                     if (cameraManager->isPanning())
                         cursorManager->setCursor(cameraManager->cursorWhenPanning());
+                    else cursorManager->setCursor(DGCursorNormal);
                 }
             }
             
