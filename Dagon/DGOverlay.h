@@ -65,7 +65,9 @@ public:
     DGButton* addButton(DGButton* aButton);
     DGImage* addImage(DGImage* anImage);    
     void beginIteratingButtons(bool iterateBackwards);
-    void beginIteratingImages();    
+    void beginIteratingImages();
+    void fadeIn();
+    void fadeOut();
     bool iterateButtons();
     bool iterateImages();
     void move(int offsetX, int offsetY); // Applies move to every element
