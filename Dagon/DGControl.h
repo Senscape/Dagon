@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGMaxHotKeys 12
+#define DGMaxHotKeys 13
 
 class DGAudioManager;
 class DGCameraManager;

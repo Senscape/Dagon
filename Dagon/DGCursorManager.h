@@ -25,6 +25,8 @@
 ////////////////////////////////////////////////////////////
 
 #define DGDefCursorSize 100
+#define DGMaxCursorSize 128
+#define DGMinCursorSize 32
 
 class DGConfig;
 class DGTexture;
