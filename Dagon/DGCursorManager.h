@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDefCursorSize 100
+#define DGDefCursorSize 128
 #define DGMaxCursorSize 128
 #define DGMinCursorSize 32
 
