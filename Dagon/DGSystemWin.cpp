@@ -93,6 +93,16 @@ DGSystem::~DGSystem() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+void DGSystem::browse(const char* url) {
+	if (config->fullScreen) {
+		ShowWindow(g_hWnd, SW_MINIMIZE);
+	}
+
+	wchar_t urlW[MAX_PATH];
+	std::copy(url, url + lstrlenA(url) + 1, urlW);
+	ShellExecute(NULL, L"open", urlW, NULL, NULL, SW_SHOWNORMAL);
+}
+
 void DGSystem::createThreads() {
 	InitializeCriticalSection(&csAudioThread);
 	hAudioThread = CreateThread(NULL, 0, _audioThread, NULL, 0, NULL);
