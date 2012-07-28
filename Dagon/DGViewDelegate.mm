@@ -16,7 +16,6 @@
 
 #import "DGConfig.h"
 #import "DGControl.h"
-#import "DGSystem.h"
 #import "DGViewDelegate.h"
 
 ////////////////////////////////////////////////////////////
@@ -169,12 +168,5 @@
     
     [super viewWillDraw];
 }
-
-// FIXME: This notification also comes when closing the About dialog
-- (void) _windowWillClose:(NSNotification *)notification {
-    DGSystem::getInstance().terminate(); // Hard shutdown
-}
-
-// TODO: If fullscreen is enabled, launch threads after switching to fullscreen
 
 @end
