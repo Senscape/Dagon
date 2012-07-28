@@ -83,6 +83,17 @@ DGSystem::~DGSystem() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+void DGSystem::browse(const char* url) {
+    if (config->fullScreen) {
+        config->fullScreen = false;
+        this->toggleFullScreen();
+        [NSApp miniaturizeAll:nil];
+    }
+    
+    NSString* aux = [NSString stringWithUTF8String:url];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:aux]];
+}
+
 void DGSystem::createThreads() {
     // Create the semaphores
     _semaphores[DGAudioThread] = dispatch_semaphore_create(0);

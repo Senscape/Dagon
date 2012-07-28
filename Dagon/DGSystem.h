@@ -73,6 +73,7 @@ public:
         return instance;
     }
     
+    void browse(const char* url);
     void createThreads();
     void destroyThreads();
     void findPaths(int argc, char* argv[]);

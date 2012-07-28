@@ -29,6 +29,12 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
+static int DGSystemLibBrowse(lua_State *L) {
+    DGSystem::getInstance().browse(lua_tostring(L, 1));
+    
+    return 0;
+}
+
 static int DGSystemLibInit(lua_State *L) {
     DGSystem::getInstance().init();
     
@@ -54,6 +60,7 @@ static int DGSystemLibUpdate(lua_State *L) {
 ////////////////////////////////////////////////////////////
 
 static const struct luaL_reg DGSystemLib [] = {
+    {"browse", DGSystemLibBrowse},
 	{"init", DGSystemLibInit},
     {"run", DGSystemLibRun},
     {"update", DGSystemLibUpdate},
