@@ -22,6 +22,7 @@
 #import "DGTimerManager.h"
 #import "DGViewDelegate.h"
 #import "DGVideoManager.h"
+#import "DGWindowDelegate.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -30,8 +31,11 @@
 // These are static private in order to keep a clean and
 // portable header
 
+bool lionFullscreen = false;
+
 NSWindow* window;
 DGViewDelegate* view;
+DGWindowDelegate* windowDelegate;
 
 dispatch_semaphore_t _semaphores[DGNumberOfThreads];
 
@@ -84,10 +88,9 @@ DGSystem::~DGSystem() {
 ////////////////////////////////////////////////////////////
 
 void DGSystem::browse(const char* url) {
-    if (config->fullScreen) {
+    if (config->fullScreen && !lionFullscreen) {
         config->fullScreen = false;
         this->toggleFullScreen();
-        [NSApp miniaturizeAll:nil];
     }
     
     NSString* aux = [NSString stringWithUTF8String:url];
@@ -199,15 +202,12 @@ void DGSystem::init() {
         log->trace(DGModSystem, "========================================");
         log->trace(DGModSystem, "%s", DGMsg040000);
         
-        // We manually create our NSApplication instance
-        [NSApplication sharedApplication];
-        
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
         // Programmatically create a window
-        window = [[NSWindow alloc] initWithContentRect:NSMakeRect(50, 100, config->displayWidth, config->displayHeight) 
-                                                     styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
-                                                       backing:NSBackingStoreBuffered defer:TRUE];
+        window = [[NSWindow alloc]
+                  initWithContentRect:NSMakeRect(50, 100, config->displayWidth, config->displayHeight)
+                    styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask backing:NSBackingStoreBuffered defer:NO];
         
         // Programmatically create our NSView delegate
         NSRect mainDisplayRect, viewRect;
@@ -223,23 +223,24 @@ void DGSystem::init() {
         [window setAcceptsMouseMovedEvents:YES];
         [window setContentView:view];
         [window makeFirstResponder:view];
-#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6
-        [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
-#endif
         [window setTitle:[NSString stringWithUTF8String:config->script()]];
         [window makeKeyAndOrderFront:window];
         
-        NSNotificationCenter* notificationCenter = [NSNotificationCenter defaultCenter];
+        windowDelegate = [[DGWindowDelegate alloc] init];
+        [window setDelegate:windowDelegate];
         
-        [notificationCenter addObserver: view
-                               selector: @selector(_windowWillClose:)
-                                   name: NSWindowWillCloseNotification
-                                 object: window];
+        SInt32 OSXversionMajor, OSXversionMinor;
+        if (Gestalt(gestaltSystemVersionMajor, &OSXversionMajor) == noErr &&
+            Gestalt(gestaltSystemVersionMinor, &OSXversionMinor) == noErr) {
+            if(OSXversionMajor == 10 && OSXversionMinor < 7) {
+                lionFullscreen = true;
+                [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
+            }
+        }
         
         if (config->fullScreen)
             this->toggleFullScreen();
-        
-        [NSBundle loadNibNamed:@"MainMenu" owner:NSApp];
+
         [pool release];
         
         _isInitialized = true;
@@ -273,8 +274,6 @@ void DGSystem::run() {
                                     ^{ control->update(); });
     
     _isRunning = true;
-    
-    [NSApp run];
 }
 
 void DGSystem::setTitle(const char* title) {
@@ -343,87 +342,72 @@ void DGSystem::terminate() {
 
 void DGSystem::toggleFullScreen() {
     // TODO: Suspend the timer to avoid multiple redraws
-/*#if MAC_OS_X_VERSION_MAX_ALLOWED > MAC_OS_X_VERSION_10_6
-    [window toggleFullScreen: nil];
-    
-    if (config->fullScreen) {
-        [NSCursor hide];
+    if (lionFullscreen) {
+         [window toggleFullScreen: nil];
+    }
+    else {
+        NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         
-        [[NSApplication sharedApplication]
-         setPresentationOptions: NSApplicationPresentationHideMenuBar
-         | NSApplicationPresentationHideDock
-         | NSApplicationPresentationDisableProcessSwitching
-         | NSApplicationPresentationFullScreen];
-    }
-    else {
-        [NSCursor unhide];
+        NSDictionary* FullScreen_Options; // Not in the pool
+        NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+        NSString *startNotification, *endNotification;
         
-        [[NSApplication sharedApplication]
-         setPresentationOptions: NSApplicationPresentationDefault];
+        if (config->fullScreen) {
+            startNotification	= DGSessionWillEnterFullScreenNotification;
+            endNotification		= DGSessionDidEnterFullScreenNotification;
+        }
+        else {
+            startNotification	= DGSessionWillExitFullScreenNotification;
+            endNotification		= DGSessionDidExitFullScreenNotification;
+        }
+        
+        [center postNotificationName: startNotification object: window];
+        
+        //Set up a screen fade in and out of the fullscreen mode
+        CGError acquiredToken;
+        CGDisplayFadeReservationToken fadeToken;
+        
+        acquiredToken = CGAcquireDisplayFadeReservation(DGFullscreenFadeOutDuration + DGFullscreenFadeInDuration, &fadeToken);
+        
+        //First fade out to black synchronously
+        if (acquiredToken == kCGErrorSuccess) {
+            CGDisplayFade(fadeToken,
+                          DGFullscreenFadeOutDuration,	//Fade duration
+                          (CGDisplayBlendFraction)kCGDisplayBlendNormal,		//Start transparent
+                          (CGDisplayBlendFraction)kCGDisplayBlendSolidColor,	//Fade to opaque
+                          0.0f, 0.0f, 0.0f,				//Pure black (R, G, B)
+                          true							//Synchronous
+                          );
+        }
+        
+        FullScreen_Options = [NSDictionary dictionaryWithObject: [NSNumber numberWithBool: YES] forKey: NSFullScreenModeAllScreens];
+        
+        if (config->fullScreen) {
+            [view enterFullScreenMode: [NSScreen mainScreen] withOptions: FullScreen_Options];
+            [NSCursor hide];
+        }
+        else {
+            [view exitFullScreenModeWithOptions: FullScreen_Options];
+            [window makeFirstResponder:view];
+            [NSCursor unhide];
+        }
+        
+        //And now fade back in from black asynchronously
+        if (acquiredToken == kCGErrorSuccess) {
+            CGDisplayFade(fadeToken,
+                          DGFullscreenFadeInDuration,	//Fade duration
+                          (CGDisplayBlendFraction)kCGDisplayBlendSolidColor,	//Start opaque
+                          (CGDisplayBlendFraction)kCGDisplayBlendNormal,		//Fade to transparent
+                          0.0f, 0.0f, 0.0f,				//Pure black (R, G, B)
+                          false							//Asynchronous
+                          );
+        }
+        CGReleaseDisplayFadeReservation(fadeToken);
+        
+        [center postNotificationName: endNotification object: window];
+        
+        [pool release];
     }
-#else*/
-    NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    
-    NSDictionary* FullScreen_Options; // Not in the pool
-    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    NSString *startNotification, *endNotification;
-    
-    if (config->fullScreen) {
-        startNotification	= DGSessionWillEnterFullScreenNotification;
-        endNotification		= DGSessionDidEnterFullScreenNotification;
-    }
-    else {
-        startNotification	= DGSessionWillExitFullScreenNotification;
-        endNotification		= DGSessionDidExitFullScreenNotification;
-    }
-    
-    [center postNotificationName: startNotification object: window];
-    
-    //Set up a screen fade in and out of the fullscreen mode
-    CGError acquiredToken;
-    CGDisplayFadeReservationToken fadeToken;
-    
-    acquiredToken = CGAcquireDisplayFadeReservation(DGFullscreenFadeOutDuration + DGFullscreenFadeInDuration, &fadeToken);
-    
-    //First fade out to black synchronously
-    if (acquiredToken == kCGErrorSuccess) {
-        CGDisplayFade(fadeToken,
-                      DGFullscreenFadeOutDuration,	//Fade duration
-                      (CGDisplayBlendFraction)kCGDisplayBlendNormal,		//Start transparent
-                      (CGDisplayBlendFraction)kCGDisplayBlendSolidColor,	//Fade to opaque
-                      0.0f, 0.0f, 0.0f,				//Pure black (R, G, B)
-                      true							//Synchronous
-                      );
-    }
-    
-    FullScreen_Options = [NSDictionary dictionaryWithObject: [NSNumber numberWithBool: YES] forKey: NSFullScreenModeAllScreens];
-    
-    if (config->fullScreen) {
-        [view enterFullScreenMode: [NSScreen mainScreen] withOptions: FullScreen_Options];
-        [NSCursor hide];
-    }
-    else {
-        [view exitFullScreenModeWithOptions: FullScreen_Options];
-        [window makeFirstResponder:view];
-        [NSCursor unhide];
-    }
-    
-    //And now fade back in from black asynchronously
-    if (acquiredToken == kCGErrorSuccess) {
-        CGDisplayFade(fadeToken,
-                      DGFullscreenFadeInDuration,	//Fade duration
-                      (CGDisplayBlendFraction)kCGDisplayBlendSolidColor,	//Start opaque
-                      (CGDisplayBlendFraction)kCGDisplayBlendNormal,		//Fade to transparent
-                      0.0f, 0.0f, 0.0f,				//Pure black (R, G, B)
-                      false							//Asynchronous
-                      );
-    }
-    CGReleaseDisplayFadeReservation(fadeToken);
-    
-    [center postNotificationName: endNotification object: window];
-    
-    [pool release];
-//#endif
 }
 
 void DGSystem::update() {
