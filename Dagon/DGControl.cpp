@@ -502,7 +502,7 @@ void DGControl::switchTo(DGObject* theTarget) {
                         
                         // Request the audio
                         audioManager->requestAudio(audio);
-                        audio->setPosition(spot->face());
+                        audio->setPosition(spot->face(), spot->origin());
                         audio->setDefaultFadeLevel(spot->volume());
                     }
                     
