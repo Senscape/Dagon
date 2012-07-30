@@ -55,6 +55,12 @@ static int DGSystemLibUpdate(lua_State *L) {
 	return 0;
 }
 
+static int DGSystemLibTerminate(lua_State *L) {
+    DGControl::getInstance().terminate();
+	
+	return 0;
+}
+
 ////////////////////////////////////////////////////////////
 // Static definitions
 ////////////////////////////////////////////////////////////
@@ -64,6 +70,7 @@ static const struct luaL_reg DGSystemLib [] = {
 	{"init", DGSystemLibInit},
     {"run", DGSystemLibRun},
     {"update", DGSystemLibUpdate},
+    {"terminate", DGSystemLibTerminate},
 	{NULL, NULL}
 };
 
