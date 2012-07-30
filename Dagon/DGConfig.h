@@ -31,6 +31,8 @@ enum DGControlModes {
 
 enum DGConfigDefaults {
 	DGDefAntialiasing = false,
+	DGDefAudioBuffer = 8192,
+    DGDefAudioDevice = 0,    
     DGDefAutopaths = true,    
     DGDefAutorun = true,
     DGDefBundleEnabled = true, // Not exported to Lua
@@ -92,6 +94,8 @@ public:
     }
     
     bool antialiasing;
+    int audioBuffer;
+    int audioDevice;
     bool autopaths;
     bool autorun;
     bool bundleEnabled;

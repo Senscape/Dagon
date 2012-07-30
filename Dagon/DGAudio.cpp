@@ -319,13 +319,13 @@ bool DGAudio::_stream(ALuint* buffer) {
     static bool _hasStreamingError = false;         
     
     if (!_hasStreamingError) {
-        char data[DGAudioBufferSize];
+        char data[config->audioBuffer];
         int size = 0;
         int section;
         long result;
         
-        while (size < DGAudioBufferSize) {
-            result = ov_read(&_oggStream, data + size, DGAudioBufferSize - size, 0, 2, 1, &section);
+        while (size < config->audioBuffer) {
+            result = ov_read(&_oggStream, data + size, config->audioBuffer - size, 0, 2, 1, &section);
             
             if (result > 0)
                 size += result;

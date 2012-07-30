@@ -129,9 +129,66 @@ void DGAudioManager::flush() {
 
 void DGAudioManager::init() {
     log->trace(DGModAudio, "%s", DGMsg070000);
-    
     system = &DGSystem::getInstance();
+    
+    // OpenAl sucks in Windows, so let's support forcing the audio device
+#ifdef DGPlatformWindows
+    char deviceName[256];
+	char *defaultDevice;
+	char *deviceList;
+	char *devices[12];
+	int	numDevices, numDefaultDevice;
+    
+	strcpy(deviceName, "");
+	if (config->debugMode) {
+        if (alcIsExtensionPresent(NULL, (ALubyte*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
+            defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+            deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+            for (numDevices = 0; numDevices < 12; numDevices++) {devices[numDevices] = NULL;}
+            for (numDevices = 0; numDevices < 12; numDevices++) {
+                devices[numDevices] = deviceList;
+                if (strcmp(devices[numDevices], defaultDevice) == 0) {
+                    numDefaultDevice = numDevices;
+                }
+                deviceList += strlen(deviceList);
+                if (deviceList[0] == 0) {
+                    if (deviceList[1] == 0) {
+                        break;
+                    } else {
+                        deviceList += 1;
+                    }
+                }
+            }
+            
+            if (devices[numDevices] != NULL) {
+                int i;
+                
+                numDevices++;
+                log->trace(DGModAudio, "%s", DGMsg080002);
+                log->trace(DGModAudio, "0. NULL");
+                for (i = 0; i < numDevices; i++) {
+                    log->trace(DGModAudio, "%d. %s", i + 1, devices[i]);
+                }
+                
+                i = config->audioDevice;
+                if ((i != 0) && (strlen(devices[i - 1]) < 256)) {
+                    strcpy(deviceName, devices[i - 1]);
+                }
+            }
+        }
+	}
+    
+    if (strlen(deviceName) == 0) {
+		log->trace(DGModAudio, "%s", DGMsg080003);
+		_alDevice = alcOpenDevice(NULL); // Select the preferred device
+	} else {
+		log->trace(DGModAudio, "%s: %s", DGMsg080004, deviceName);
+		_alDevice = alcOpenDevice((ALubyte*)deviceName); // Use the name from the enumeration process
+	}
+    
+#else
     _alDevice = alcOpenDevice(NULL);
+#endif
     
     if (!_alDevice) {
         log->error(DGModAudio, "%s", DGMsg270001);

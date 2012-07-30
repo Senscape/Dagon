@@ -38,6 +38,16 @@ static int DGConfigLibGet(lua_State *L) {
 		return 1;
 	}
     
+    if (strcmp(key, "audioBuffer") == 0) {
+		lua_pushnumber(L, DGConfig::getInstance().audioBuffer);
+		return 1;
+	}
+    
+    if (strcmp(key, "audioDevice") == 0) {
+		lua_pushnumber(L, DGConfig::getInstance().audioDevice);
+		return 1;
+	}
+    
     if (strcmp(key, "autopaths") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().autopaths);
 		return 1;
@@ -156,6 +166,12 @@ static int DGConfigLibSet(lua_State *L) {
 	
 	if (strcmp(key, "antialiasing") == 0)
 		DGConfig::getInstance().antialiasing = (bool)lua_toboolean(L, 3);
+
+    if (strcmp(key, "audioBuffer") == 0)
+		DGConfig::getInstance().audioBuffer = (int)luaL_checknumber(L, 3);
+
+    if (strcmp(key, "audioDevice") == 0)
+		DGConfig::getInstance().audioDevice = (int)luaL_checknumber(L, 3);
     
 	if (strcmp(key, "autopaths") == 0)
 		DGConfig::getInstance().autopaths = (bool)lua_toboolean(L, 3);    
