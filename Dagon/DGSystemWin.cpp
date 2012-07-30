@@ -536,6 +536,20 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			LeaveCriticalSection(&csSystemThread);
 			isDragging = false;
 			break;
+		case WM_RBUTTONDOWN:
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
+			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventRightDown);
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
+			break;
+		case WM_RBUTTONUP:
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
+			DGControl::getInstance().processMouse(LOWORD(lParam), HIWORD(lParam), DGMouseEventRightUp);
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
+			break;
 		case WM_KEYDOWN:
 			EnterCriticalSection(&csSystemThread);
 			wglMakeCurrent(g_hDC, g_hRC);
