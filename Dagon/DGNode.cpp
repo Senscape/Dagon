@@ -146,9 +146,11 @@ void DGNode::_link(unsigned int direction, DGAction* action) {
     // We always have four corners here, hence eight elements since they are squared spots
     
     std::vector<int> arrayOfCoordinates;
-    int coordsNormal[] = {minorBound, minorBound, majorBound, minorBound, majorBound, majorBound, minorBound, majorBound};
-    int coordsShiftRight[] = {minorBound+offset, minorBound, majorBound+offset, minorBound, majorBound+offset, majorBound, minorBound+offset, majorBound};
-    int coordsShiftLeft[] = {minorBound-offset, minorBound, majorBound-offset, minorBound, majorBound-offset, majorBound, minorBound-offset, majorBound};
+    int coordsNormal[] = {minorBound, minorBound, majorBound, minorBound, majorBound, DGDefTexSize, minorBound, DGDefTexSize};
+    int coordsShiftRight[] = {minorBound+offset, minorBound, majorBound+offset, minorBound,
+        majorBound+offset, DGDefTexSize, minorBound+offset, DGDefTexSize};
+    int coordsShiftLeft[] = {minorBound-offset, minorBound, majorBound-offset, minorBound,
+        majorBound-offset, DGDefTexSize, minorBound-offset, DGDefTexSize};
     
     DGSpot* newSpot = NULL;
     DGSpot* auxSpot = NULL;
