@@ -24,7 +24,7 @@
 
 @implementation DGWindowDelegate
 
-- (id) init {
+- (id)init {
     self = [super init];
     if (self) {
         config = &DGConfig::getInstance();
@@ -38,25 +38,37 @@
     [super dealloc];
 }
 
-- (void) windowWillClose:(NSNotification *)notification {
+- (void)setWindow:(NSWindow *)theWindow {
+    window = theWindow;
+}
+
+- (void)windowWillClose:(NSNotification *)notification {
     system->terminate(); // Hard shutdown
 }
 
-- (void) windowWillEnterFullScreen:(NSNotification *)notification {
+- (void)windowWillEnterFullScreen:(NSNotification *)notification {
     config->fullScreen = true;
     [NSCursor hide];
     
-    [[NSApplication sharedApplication]
-     setPresentationOptions: NSApplicationPresentationHideMenuBar
-     | NSApplicationPresentationHideDock];
+  /*  [[NSApplication sharedApplication]
+     setPresentationOptions: NSApplicationPresentationFullScreen];*/
 }
 
-- (void) windowDidExitFullScreen:(NSNotification *)notification {
+- (void)windowDidEnterFullScreen:(NSNotification *)notification {
+    [window makeKeyAndOrderFront:window];
+    [window setLevel:CGShieldingWindowLevel()];
+}
+
+- (void)windowWillExitFullScreen:(NSNotification *)notification {
+    [window setLevel:NSNormalWindowLevel];
+}
+
+- (void)windowDidExitFullScreen:(NSNotification *)notification {
     config->fullScreen = false;
     [NSCursor unhide];
     
-    [[NSApplication sharedApplication]
-     setPresentationOptions: NSApplicationPresentationDefault];
+    /*[[NSApplication sharedApplication]
+     setPresentationOptions: NSApplicationPresentationDefault];*/
 }
 
 @end

@@ -30,6 +30,10 @@ class DGSystem;
 @interface DGWindowDelegate : NSObject < NSWindowDelegate > {
     DGConfig* config;
     DGSystem* system;
+    
+    NSWindow* window;
 }
+
+- (void)setWindow: (NSWindow*)theWindow;
 
 @end

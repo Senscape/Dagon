@@ -57,6 +57,9 @@
             GLint swapInterval = 1;
             [glContext setValues:&swapInterval forParameter:NSOpenGLCPSwapInterval];
         }
+        
+        [[NSColor blackColor] setFill];
+        NSRectFill(frame);
     }
 	
     return self;
@@ -131,6 +134,20 @@
     }
 }
 
+- (void)rightMouseDown:(NSEvent *)theEvent {
+    if (isMouseInside) {
+        NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        control->processMouse(mouseLoc.x, mouseLoc.y, DGMouseEventRightDown);
+    }
+}
+
+- (void)rightMouseUp:(NSEvent *)theEvent {
+    if (isMouseInside) {
+        NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+        control->processMouse(mouseLoc.x, mouseLoc.y, DGMouseEventRightUp);
+    }
+}
+
 - (void)scrollWheel:(NSEvent *)theEvent {
     if (isMouseInside) {
         /*float x = [theEvent deltaX];
@@ -162,8 +179,7 @@
     [self removeTrackingRect:boundsTrackingTag];
     boundsTrackingTag = [self addTrackingRect:[self visibleRect] owner:self userData:nil assumeInside:isMouseInside];
     
-    // TODO: Ensure this is thread-safe (It probably is but everything is being drawn twice!)
-    // TODO: Perhaps add a separate Refresh method, then update calls refresh
+    // TODO: Ensure this is thread-safe for future versions
     control->update();
     
     [super viewWillDraw];
