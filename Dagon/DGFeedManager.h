@@ -35,6 +35,7 @@ enum DGFeedStates {
     DGFeedFadeIn,
     DGFeedIdle,
     DGFeedFadeOut,
+    DGFeedFadeOutSlow,
     DGFeedDiscard
 };
 
@@ -71,6 +72,8 @@ class DGFeedManager {
     int _feedHeight;
     
     void _calculatePosition(DGFeed* feed);
+    void _dim();
+    void _flush();
     
     // Private constructor/destructor
     DGFeedManager();

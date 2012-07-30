@@ -18,6 +18,7 @@
 #include "DGConfig.h"
 #include "DGFeedManager.h"
 #include "DGFontManager.h"
+#include "DGSystem.h" // Temporary, this should be resolved by the audio manager
 #include "DGTimerManager.h"
 
 using namespace std;
@@ -66,6 +67,7 @@ void DGFeedManager::show(const char* text) {
     size_t currSpace = 0;
     size_t nextSpace = 0; 
     
+    _dim();
     while (nextSpace != str.npos) {
         nextSpace = str.find(" " , even + currSpace);
         string substr = str.substr(currSpace, (nextSpace - currSpace));
@@ -118,7 +120,9 @@ void DGFeedManager::showAndPlay(const char* text, const char* audio) {
     
     _feedAudio->setResource(audio);
     audioManager->requestAudio(_feedAudio);
+    DGSystem::getInstance().suspendThread(DGAudioThread);
     _feedAudio->play();
+    DGSystem::getInstance().resumeThread(DGAudioThread);
 }
 
 // TODO: Note the font manager should purge unused fonts
@@ -137,41 +141,45 @@ void DGFeedManager::update() {
             case DGFeedFadeIn:
                 (*it).color += 0x10000000;
                 if ((*it).color >= 0xEE000000) {
-                    (*it).color = DGColorWhite;
+                    // (*it).color = DGColorWhite;
                     (*it).state = DGFeedIdle;
                 }
+                break;
             case DGFeedIdle:
                 if (timerManager->checkManual((*it).timerHandle))
                     (*it).state = DGFeedFadeOut;
                 break;
             case DGFeedFadeOut:
                 (*it).color -= 0x05000000;
-                if ((*it).color <= 0x01000000)
+                if ((*it).color <= 0x01000000) {
                     (*it).state = DGFeedDiscard;
+                }
                 break;
-            case DGFeedDiscard:
-                _arrayOfActiveFeeds.erase(it);
-                // If it was the last one, then stop everything
-                if (it == _arrayOfActiveFeeds.end())
-                    return;                
-                break;        
+            case DGFeedFadeOutSlow:
+                (*it).color -= 0x02000000;
+                if ((*it).color <= 0x01000000) {
+                    (*it).state = DGFeedDiscard;
+                }
+                break;
         }
-        
-        long displace = (it - _arrayOfActiveFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
-        
-        // Shadow code
-        if (DGFeedShadowEnabled) {
-            _feedFont->setColor(DGColorBlack & (*it).color);
-            _feedFont->print((*it).location.x + DGFeedShadowDistance,
-                             (*it).location.y + displace + DGFeedShadowDistance, (*it).text);
-        }
-        
-        _feedFont->setColor((*it).color);
-        _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         
         // Fadeout extra lines
-        if (((_arrayOfActiveFeeds.end() - it) > DGFeedMaxLines) && (*it).state == DGFeedIdle) {
-            (*it).state = DGFeedFadeOut;
+        if (((_arrayOfActiveFeeds.end() - it) > DGFeedMaxLines)) {
+            (*it).state = DGFeedDiscard;
+        }
+        
+        if ((*it).state != DGFeedDiscard) {
+            long displace = (it - _arrayOfActiveFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
+            
+            // Shadow code
+            if (DGFeedShadowEnabled) {
+                _feedFont->setColor(DGColorBlack & (*it).color);
+                _feedFont->print((*it).location.x + DGFeedShadowDistance,
+                                 (*it).location.y + displace + DGFeedShadowDistance, (*it).text);
+            }
+            
+            _feedFont->setColor((*it).color);
+            _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         }
         
         it++;
@@ -185,7 +193,9 @@ void DGFeedManager::update() {
             this->showAndPlay(feed.text, feed.audio);
             _arrayOfFeeds.erase(_arrayOfFeeds.begin());
         }
-    } 
+    }
+    
+    _flush();
 }
 
 ////////////////////////////////////////////////////////////
@@ -198,4 +208,37 @@ void DGFeedManager::_calculatePosition(DGFeed* feed) {
     
     feed->location.x = (config->displayWidth / 2) - (length / 2);
     feed->location.y = config->displayHeight - _feedHeight - DGFeedMargin;
+}
+
+void DGFeedManager::_dim() {
+    vector<DGFeed>::iterator it;
+    
+    it = _arrayOfActiveFeeds.begin();
+    
+    while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
+        if ((*it).state == DGFeedIdle)
+            (*it).state = DGFeedFadeOutSlow;
+        it++;
+    }
+}
+
+void DGFeedManager::_flush() {
+    bool done = false;
+    
+    vector<DGFeed>::iterator it;
+    
+    while (!done) {
+        done = true;
+        
+        it = _arrayOfActiveFeeds.begin();
+        while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
+            if ((*it).state == DGFeedDiscard) {
+                _arrayOfActiveFeeds.erase(it);
+                done = false;
+                break;
+            }
+            
+            it++;
+        }
+    }
 }
