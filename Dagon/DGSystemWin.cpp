@@ -327,6 +327,16 @@ void DGSystem::terminate() {
         g_hDC = NULL;
     }
 	
+	int r = rand() % 8;
+
+	switch(r) {
+		default:
+		case 0: log->trace(DGModSystem, "%s", DGMsg040100); break;
+		case 1: log->trace(DGModSystem, "%s", DGMsg040101); break;
+		case 2: log->trace(DGModSystem, "%s", DGMsg040102); break;
+		case 3: log->trace(DGModSystem, "%s", DGMsg040103); break;
+	}
+
 	UnregisterClass(L"DG_WINDOWS_CLASS", NULL);
 	ShowCursor(TRUE);
 	
@@ -479,14 +489,28 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	static bool isDragging = false;
 
     switch(msg) {
+		case WM_ACTIVATE:
+			switch (wParam) {
+				case WA_ACTIVE:
+					LeaveCriticalSection(&csSystemThread);
+					break;
+			}
+			break;
 		case WM_ERASEBKGND:
 			break;
 		case WM_SIZE:
-			EnterCriticalSection(&csSystemThread);
-			wglMakeCurrent(g_hDC, g_hRC);
-			DGControl::getInstance().reshape(LOWORD(lParam), HIWORD(lParam));
-			wglMakeCurrent(NULL, NULL);
-			LeaveCriticalSection(&csSystemThread);
+			switch (wParam) {
+				case SIZE_MINIMIZED:
+					EnterCriticalSection(&csSystemThread);
+					break;
+				default:
+					EnterCriticalSection(&csSystemThread);
+					wglMakeCurrent(g_hDC, g_hRC);
+					DGControl::getInstance().reshape(LOWORD(lParam), HIWORD(lParam));
+					wglMakeCurrent(NULL, NULL);
+					LeaveCriticalSection(&csSystemThread);
+					break;
+			}
 			break;
 		case WM_MOUSEMOVE:
 			EnterCriticalSection(&csSystemThread);
