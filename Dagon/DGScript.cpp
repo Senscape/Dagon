@@ -301,9 +301,15 @@ int DGScript::_globalCurrentRoom(lua_State *L) {
     return 0;
 }
 
+int DGScript::_globalCutscene(lua_State *L) {
+    DGControl::getInstance().cutscene(luaL_checkstring(L, 1));
+    
+    return DGScript::getInstance().suspend();
+}
+
 int DGScript::_globalFeed(lua_State *L) {
     if (lua_isstring(L, 2)) {
-        DGFeedManager::getInstance().queue(luaL_checkstring(L, 1), lua_tostring(L, 2));      
+        DGFeedManager::getInstance().showAndPlay(luaL_checkstring(L, 1), lua_tostring(L, 2));
     }
     else DGFeedManager::getInstance().show(luaL_checkstring(L, 1));
 	
@@ -358,6 +364,12 @@ int DGScript::_globalPlay(lua_State *L) {
     DGAudioManager::getInstance().requestAudio(audio);
     audio->play();
     
+	return 0;
+}
+
+int DGScript::_globalQueue(lua_State *L) {
+    DGFeedManager::getInstance().queue(luaL_checkstring(L, 1), lua_tostring(L, 2));
+	
 	return 0;
 }
 
@@ -542,6 +554,7 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, PRE_RENDER, DGEventPreRender);
     DGLuaEnum(_L, POST_RENDER, DGEventPostRender);
     DGLuaEnum(_L, MOUSE_BUTTON, DGEventMouseButton);
+    DGLuaEnum(_L, MOUSE_RIGHT_BUTTON, DGEventMouseRightButton);
     DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
     DGLuaEnum(_L, RESIZE, DGEventResize);
 
@@ -585,11 +598,13 @@ void DGScript::_registerGlobals() {
     static const struct luaL_reg globalLibs [] = {
         {"currentNode", _globalCurrentNode},
         {"currentRoom", _globalCurrentRoom},
+        {"cutscene", _globalCutscene},
         {"feed", _globalFeed},
         {"hotkey", _globalHotkey},
         {"lookAt", _globalLookAt},        
         {"play", _globalPlay},
         {"print", _globalPrint},
+        {"queue", _globalQueue},
         {"register", _globalRegister},      
         {"room", _globalRoom},
         {"setFont", _globalSetFont},

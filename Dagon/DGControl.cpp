@@ -67,7 +67,20 @@ DGControl::DGControl() {
     
     // This is used to randomize the color of certain spots,
     // should be called once
-    srand((unsigned)time(0)); 
+    srand((unsigned)time(0));
+    
+    // For precaution
+    
+    _eventHandlers.hasEnterNode = false;
+    _eventHandlers.hasLeaveNode = false;
+    _eventHandlers.hasEnterRoom = false;
+    _eventHandlers.hasLeaveRoom = false;
+    _eventHandlers.hasPreRender = false;
+    _eventHandlers.hasPostRender = false;
+    _eventHandlers.hasMouseButton = false;
+    _eventHandlers.hasMouseRightButton = false;
+    _eventHandlers.hasMouseMove = false;
+    _eventHandlers.hasResize = false;
     
     for (int i = 0; i <= DGMaxHotKeys; i++)
 		_hotkeyData[i].enabled = false;
@@ -149,6 +162,12 @@ DGNode* DGControl::currentNode() {
 
 DGRoom* DGControl::currentRoom() {
     return _currentRoom;
+}
+
+void DGControl::cutscene(const char* fileName) {
+    _scene->loadCutscene(fileName);
+    _state->set(DGStateCutscene);
+    cursorManager->fadeOut();
 }
     
 void DGControl::lookAt(float horizontal, float vertical, bool instant) {
@@ -250,6 +269,10 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         script->processCallback(_eventHandlers.mouseButton, 0);
     }
     
+    if ((eventFlags & DGMouseEventRightUp) && _eventHandlers.hasMouseRightButton) {
+        script->processCallback(_eventHandlers.mouseRightButton, 0);
+    }
+    
     // The overlay system is handled differently than the spots, so we
     // do everything here. Eventually, we should tide up things a little.
 
@@ -348,7 +371,11 @@ void DGControl::registerGlobalHandler(int forEvent, int handlerForLua) {
 		case DGEventMouseButton:
 			_eventHandlers.mouseButton = handlerForLua;
 			_eventHandlers.hasMouseButton = true;
-			break;			
+			break;
+		case DGEventMouseRightButton:
+			_eventHandlers.mouseRightButton = handlerForLua;
+			_eventHandlers.hasMouseRightButton = true;
+			break;
 		case DGEventMouseMove:
 			_eventHandlers.mouseMove = handlerForLua;
 			_eventHandlers.hasMouseMove = true;
@@ -693,6 +720,14 @@ void DGControl::_updateView(int state, bool inBackground) {
     
     // Do this in a viewtimer
     switch (state) {
+        case DGStateCutscene:
+            if (!_scene->drawCutscene()) {
+                _scene->unloadCutscene();
+                _state->setPrevious();
+                cursorManager->fadeIn();
+                script->resume();
+            }
+            break;
         case DGStateNode:
             _scene->scanSpots();
             _scene->drawSpots();

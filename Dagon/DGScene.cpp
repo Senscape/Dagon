@@ -23,10 +23,13 @@
 #include "DGRoom.h"
 #include "DGScene.h"
 #include "DGSpot.h"
+#include "DGSystem.h" // Temporary, we don't want this class calling system
 #include "DGTexture.h"
-#include "DGVideo.h"
+#include "DGVideoManager.h"
 
 using namespace std;
+
+DGVideo _cutscene; // FIXME: Static to avoid Theora issues, revise later
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -38,8 +41,10 @@ DGScene::DGScene() {
     config = &DGConfig::getInstance();  
     cursorManager = &DGCursorManager::getInstance();
     renderManager = &DGRenderManager::getInstance();
+    videoManager = &DGVideoManager::getInstance();
     
     _canDrawSpots = false;
+    _isCutsceneLoaded = false;
     _isSplashLoaded = false;
 }
 
@@ -48,6 +53,9 @@ DGScene::DGScene() {
 ////////////////////////////////////////////////////////////
 
 DGScene::~DGScene() {
+    if (_isCutsceneLoaded)
+        this->unloadCutscene();
+    
     if (_isSplashLoaded)
         this->unloadSplash();
 }
@@ -214,6 +222,67 @@ void DGScene::setRoom(DGRoom* room) {
         _canDrawSpots = true;
     else
         _canDrawSpots = false;
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Cutscene operations
+////////////////////////////////////////////////////////////
+
+bool DGScene::drawCutscene() {
+    if (_cutscene.isPlaying()) {
+        if (_cutscene.hasNewFrame()) {
+            DGFrame* frame = _cutscene.currentFrame();
+            _cutsceneTexture->loadRawData(frame->data, frame->width, frame->height);
+        }
+        
+        _cutsceneTexture->bind();
+        
+        // Note this is inverted
+        float coords[] = {0, 0,
+            config->displayWidth, 0,
+            config->displayWidth, config->displayHeight,
+            0, config->displayHeight};
+        
+        renderManager->enablePostprocess();
+        cameraManager->beginOrthoView();
+        renderManager->enableTextures();
+        renderManager->drawSlide(coords);
+        renderManager->disablePostprocess();
+        renderManager->drawPostprocessedView();
+        
+        return true;
+    }
+    
+    return false;
+}
+
+void DGScene::loadCutscene(const char* fileName) {
+    _cutsceneTexture = new DGTexture;
+    
+    _cutscene.setResource(config->path(DGPathRes, fileName, DGObjectVideo));
+    DGSystem::getInstance().suspendThread(DGVideoThread);
+    videoManager->requestVideo(&_cutscene);
+    
+    if (_cutscene.isLoaded()) {
+        _cutscene.play();
+        
+        DGFrame* frame = _cutscene.currentFrame();
+        _cutsceneTexture->loadRawData(frame->data, frame->width, frame->height);
+
+        _isCutsceneLoaded = true;
+    }
+    DGSystem::getInstance().resumeThread(DGVideoThread);
+}
+
+void DGScene::unloadCutscene() {
+    DGSystem::getInstance().suspendThread(DGVideoThread);
+    _cutscene.unload();
+    DGSystem::getInstance().resumeThread(DGVideoThread);
+    
+    _cutsceneTexture->unload();
+    delete _cutsceneTexture;
+    
+    _isCutsceneLoaded = false;
 }
 
 ////////////////////////////////////////////////////////////
