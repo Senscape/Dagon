@@ -117,6 +117,8 @@ void DGOverlay::beginIteratingImages() {
 }
 
 void DGOverlay::fadeIn() {
+    this->enable();
+    
     // Buttons
     if (!_arrayOfButtons.empty()) {
         vector<DGButton*>::iterator itButton;
