@@ -86,35 +86,43 @@ void DGAudioManager::clear() {
 }
 
 void DGAudioManager::flush() {
+	bool done = false;
+
     if (_isInitialized) {
         if (!_arrayOfActiveAudios.empty()) {
             vector<DGAudio*>::iterator it;
             
-            it = _arrayOfActiveAudios.begin();
-            
-            while (it != _arrayOfActiveAudios.end()) {
-                if ((*it)->retainCount() == 0) {
-                    switch ((*it)->state()) {
-                        case DGAudioPlaying:
-                            (*it)->fadeOut();
-                            it++;
-                            break;
-                        case DGAudioPaused:
-                        case DGAudioStopped:
-                            // TODO: Automatically flush stopped and non-retained audios after
-                            // n update cycles
-                            DGSystem::getInstance().suspendThread(DGAudioThread);
-                            (*it)->unload();
-                            _arrayOfActiveAudios.erase(it);
-                            DGSystem::getInstance().resumeThread(DGAudioThread);
-                            break;
-                        default:
-                            it++;
-                            break;
-                    }
-                }
-                else it++;
-            }
+			while (!done) {
+				it = _arrayOfActiveAudios.begin();
+				done = true;
+				while ((it != _arrayOfActiveAudios.end())) {
+					if ((*it)->retainCount() == 0) {
+						if ((*it)->state() == DGAudioStopped) { // Had to move this outside the switch
+							// TODO: Automatically flush stopped and non-retained audios after
+							// n update cycles
+							DGSystem::getInstance().suspendThread(DGAudioThread);
+							(*it)->unload();
+							_arrayOfActiveAudios.erase(it);
+							DGSystem::getInstance().resumeThread(DGAudioThread);
+							done = false;
+							break;
+						}
+						else {
+							switch ((*it)->state()) {
+								case DGAudioPlaying:
+									(*it)->fadeOut();
+									it++;
+									break;
+								case DGAudioPaused:
+								default:
+									it++;
+									break;
+							}
+						}
+					}
+					else it++;
+				}
+			}
         }
     }
 }
