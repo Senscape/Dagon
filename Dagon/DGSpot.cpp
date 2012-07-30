@@ -117,6 +117,15 @@ unsigned int DGSpot::face() {
     return _onFace;
 }
 
+DGPoint DGSpot::origin() {
+    DGPoint _origin;
+    
+    _origin.x = _arrayOfCoordinates[0];
+    _origin.y = _arrayOfCoordinates[1];
+    
+    return _origin;
+}
+
 DGTexture* DGSpot::texture() {
     return _attachedTexture;
 }

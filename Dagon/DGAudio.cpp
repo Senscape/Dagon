@@ -82,19 +82,22 @@ void DGAudio::setLoopable(bool loopable) {
     _isLoopable = loopable;
 }
 
-void DGAudio::setPosition(unsigned int onFace) {    
+void DGAudio::setPosition(unsigned int onFace, DGPoint origin) {
+    float x = (float)origin.x / (float)DGDefTexSize;
+    float y = (float)origin.y / (float)DGDefTexSize;
+    
     switch (onFace) {
         case DGNorth:
-            alSource3f(_alSource, AL_POSITION, 0.0, 0.0, -1.0);
+            alSource3f(_alSource, AL_POSITION, x, y, -1.0);
             break;
         case DGEast:
-            alSource3f(_alSource, AL_POSITION, 1.0, 0.0, 0.0);
+            alSource3f(_alSource, AL_POSITION, 1.0, y, x);
             break;
         case DGSouth:
-            alSource3f(_alSource, AL_POSITION, 0.0, 0.0, 1.0);
+            alSource3f(_alSource, AL_POSITION, -x, y, 1.0);
             break;
         case DGWest:
-            alSource3f(_alSource, AL_POSITION, -1.0, 0.0, 0.0);
+            alSource3f(_alSource, AL_POSITION, -1.0, y, -x);
             break;
         case DGUp:
             alSource3f(_alSource, AL_POSITION, 0.0, 1.0, 0.0);
