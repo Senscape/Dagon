@@ -56,7 +56,8 @@ enum DGEvents {
 	DGEventLeaveRoom, // Must implement
 	DGEventPreRender, // Must implement
 	DGEventPostRender,
-	DGEventMouseButton,	
+	DGEventMouseButton,
+	DGEventMouseRightButton,
 	DGEventMouseMove,
 	DGEventResize
 };
@@ -66,6 +67,8 @@ enum DGMouseEvents {
     DGMouseEventDrag = 0x2,
     DGMouseEventMove = 0x4,
     DGMouseEventUp = 0x8,
+    DGMouseEventRightDown = 0x10,
+    DGMouseEventRightUp = 0x12
 };
 
 typedef struct {
@@ -85,6 +88,8 @@ typedef struct {
     int	mouseMove;
 	bool hasMouseButton;
 	int	mouseButton;
+	bool hasMouseRightButton;
+	int	mouseRightButton;
 	bool hasResize;
 	int	resize;	
 } DGEventHandlers;
@@ -155,6 +160,7 @@ public:
     void init();
     DGNode* currentNode();
     DGRoom* currentRoom();
+    void cutscene(const char* fileName);    
     void lookAt(float horizontal, float vertical, bool instant);
     void processFunctionKey(int aKey);
     void processKey(int aKey, bool isModified);
