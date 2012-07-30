@@ -206,8 +206,11 @@ void DGSystem::init() {
         
         // Programmatically create a window
         window = [[NSWindow alloc]
-                  initWithContentRect:NSMakeRect(50, 100, config->displayWidth, config->displayHeight)
-                    styleMask:NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask backing:NSBackingStoreBuffered defer:NO];
+                  initWithContentRect: NSMakeRect(config->displayWidth / 2, config->displayHeight / 2, config->displayWidth, config->displayHeight)
+                  styleMask: NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
+                  backing: NSBackingStoreBuffered
+                  defer: NO
+                  screen: [NSScreen mainScreen]];
         
         // Programmatically create our NSView delegate
         NSRect mainDisplayRect, viewRect;
@@ -219,27 +222,32 @@ void DGSystem::init() {
         // Now we're ready to init the controller instance
         control = &DGControl::getInstance();
         control->init();
-        
+       
         [window setAcceptsMouseMovedEvents:YES];
-        [window setContentView:view];
         [window makeFirstResponder:view];
         [window setTitle:[NSString stringWithUTF8String:config->script()]];
-        [window makeKeyAndOrderFront:window];
+        [window setContentView:view];
         
         windowDelegate = [[DGWindowDelegate alloc] init];
+        [windowDelegate setWindow:window];
         [window setDelegate:windowDelegate];
         
         SInt32 OSXversionMajor, OSXversionMinor;
         if (Gestalt(gestaltSystemVersionMajor, &OSXversionMajor) == noErr &&
             Gestalt(gestaltSystemVersionMinor, &OSXversionMinor) == noErr) {
-            if(OSXversionMajor == 10 && OSXversionMinor < 7) {
+            if(OSXversionMajor == 10 && OSXversionMinor >= 7) {
                 lionFullscreen = true;
                 [window setCollectionBehavior: NSWindowCollectionBehaviorFullScreenPrimary];
             }
         }
         
-        if (config->fullScreen)
+        if (config->fullScreen) {
+            if (!lionFullscreen)
+                [window makeKeyAndOrderFront:window];
+                
             this->toggleFullScreen();
+        }
+        else [window makeKeyAndOrderFront:window];
 
         [pool release];
         
@@ -343,7 +351,7 @@ void DGSystem::terminate() {
 void DGSystem::toggleFullScreen() {
     // TODO: Suspend the timer to avoid multiple redraws
     if (lionFullscreen) {
-         [window toggleFullScreen: nil];
+        [window toggleFullScreen: nil];
     }
     else {
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
