@@ -467,7 +467,8 @@ void DGRenderManager::setColor(int color, float alpha) {
 
 // FIXME: glReadPixels has an important performace hit on older computers. Improve.
 int	DGRenderManager::testColor(int xPosition, int yPosition) {
-    GLubyte pixel[3];
+	// This is static because it sometimes throws a stack corruption error
+    static GLubyte pixel[3];
 	GLint r, g, b;
 	uint32_t aux;
     
