@@ -285,8 +285,8 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         // FIXME: This division is related to the amount of configured inertia. Must fix later.
         _targetVError = fabs(_angleVTarget - _angleV) / 5.0f;
         
-        if (_targetVError < 0.02f)
-            _targetVError = 0.02f;        
+        //if (_targetVError < 0.001f)
+        _targetVError = 0.01f;
     }
     else {
         _angleVTarget = _angleV;
