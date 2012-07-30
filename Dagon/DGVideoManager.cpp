@@ -56,19 +56,25 @@ DGVideoManager::~DGVideoManager() {
 ////////////////////////////////////////////////////////////
 
 void DGVideoManager::flush() {
+	bool done = false;
+
     if (_isInitialized) {
         if (!_arrayOfActiveVideos.empty()) {
             vector<DGVideo*>::iterator it;
             
-            it = _arrayOfActiveVideos.begin();
-            
-            while (it != _arrayOfActiveVideos.end()) {
-                if ((*it)->retainCount() == 0) {
-                    (*it)->unload();
-                    _arrayOfActiveVideos.erase(it);
-                }
-                else it++;
-            }
+			while (!done) {
+				it = _arrayOfActiveVideos.begin();
+				done = true;
+				while (it != _arrayOfActiveVideos.end()) {
+					if ((*it)->retainCount() == 0) {
+						(*it)->unload();
+						_arrayOfActiveVideos.erase(it);
+						done = false;
+						break;
+					}
+					else it++;
+				}
+			}
         }
     }
 }
