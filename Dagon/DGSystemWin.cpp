@@ -368,6 +368,11 @@ void DGSystem::toggleFullScreen() {
         if (ChangeDisplaySettings(&fullscreenSettings, CDS_FULLSCREEN) == DISP_CHANGE_SUCCESSFUL) {
             ShowWindow(g_hWnd, SW_MAXIMIZE);
 			control->reshape(fullscreenSettings.dmPelsWidth, fullscreenSettings.dmPelsHeight);
+			
+			// Capture cursor for multiple screens
+			RECT rect;
+			GetWindowRect(g_hWnd, &rect);
+			ClipCursor(&rect);
         }
         else log->error(DGModSystem, "%s", DGMsg240005);
     }
@@ -382,6 +387,8 @@ void DGSystem::toggleFullScreen() {
             SetWindowPos(g_hWnd, HWND_NOTOPMOST, 0, 0, config->displayWidth, config->displayHeight, SWP_SHOWWINDOW);
             ShowWindow(g_hWnd, SW_RESTORE);
 			control->reshape(config->displayWidth, config->displayHeight);
+
+			ClipCursor(NULL);
         }
         else log->error(DGModSystem, "%s", DGMsg240006);
     }
