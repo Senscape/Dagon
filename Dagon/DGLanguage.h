@@ -117,6 +117,9 @@
 // Video module
 #define DGMsg080000 "Initializing video manager..."
 #define DGMsg080001 "Loading"
+#define DGMsg080002 "Enumerating devices..."
+#define DGMsg080003 "Opening default device"
+#define DGMsg080004 "Opening device"
 #define DGMsg280002 "File not found"
 #define DGMsg280003 "Error parsing stream headers"
 #define DGMsg280004 "End of file while searching for codec headers"

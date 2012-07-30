@@ -42,7 +42,6 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGAudioBufferSize       8192
 #define DGAudioNumberOfBuffers  2
 
 enum DGAudioFlags {

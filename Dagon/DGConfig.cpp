@@ -28,6 +28,8 @@ DGConfig::DGConfig() {
     strncpy(_texExtension, DGDefTexExtension, 4);
 	
 	antialiasing = DGDefAntialiasing;
+    audioBuffer = DGDefAudioBuffer;
+    audioDevice = DGDefAudioDevice;
     autopaths = DGDefAutopaths;
     autorun = DGDefAutorun;
     bundleEnabled = DGDefBundleEnabled;
