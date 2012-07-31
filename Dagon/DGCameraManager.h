@@ -79,6 +79,8 @@ class DGConfig;
 
 class DGCameraManager {
     DGConfig* config;
+
+    bool _isInitialized;
     
     bool _canBreathe;
     bool _canWalk;
@@ -188,6 +190,7 @@ public:
     // State changes
     
     void beginOrthoView();
+    void init();
     void endOrthoView();
     void pan(int xPosition, int yPosition);
     void panToTargetAngle();

@@ -22,6 +22,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGCameraManager.h"
 #include "DGConfig.h"
 
 ////////////////////////////////////////////////////////////
@@ -187,8 +188,11 @@ static int DGConfigLibSet(lua_State *L) {
     if (strcmp(key, "bundleEnabled") == 0)
 		DGConfig::getInstance().bundleEnabled = (bool)lua_toboolean(L, 3);    
     
-    if (strcmp(key, "controlMode") == 0)
-		DGConfig::getInstance().controlMode = (int)luaL_checknumber(L, 3);    
+    if (strcmp(key, "controlMode") == 0) {
+		DGConfig::getInstance().controlMode = (int)luaL_checknumber(L, 3);
+        // Must refresh the viewport
+        DGCameraManager::getInstance().setViewport(DGConfig::getInstance().displayWidth, DGConfig::getInstance().displayHeight);
+    }
 	
 	if (strcmp(key, "displayWidth") == 0)
 		DGConfig::getInstance().displayWidth = (int)luaL_checknumber(L, 3);

@@ -113,6 +113,7 @@ void DGControl::init() {
     renderManager->init();
     renderManager->resetView(); // Test for errors
 
+    cameraManager->init();
     cameraManager->setViewport(config->displayWidth, config->displayHeight);
     
     // Init the audio manager
@@ -326,14 +327,14 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         return;
     }
             
-    if ((eventFlags & DGMouseEventMove) && (_eventHandlers.hasMouseMove))
+    if ((eventFlags == DGMouseEventMove) && (_eventHandlers.hasMouseMove))
         script->processCallback(_eventHandlers.mouseMove, 0);
     
-    if ((eventFlags & DGMouseEventUp) && _eventHandlers.hasMouseButton) {
+    if ((eventFlags == DGMouseEventUp) && _eventHandlers.hasMouseButton) {
         script->processCallback(_eventHandlers.mouseButton, 0);
     }
     
-    if ((eventFlags & DGMouseEventRightUp) && _eventHandlers.hasMouseRightButton) {
+    if ((eventFlags == DGMouseEventRightUp) && _eventHandlers.hasMouseRightButton) {
         script->processCallback(_eventHandlers.mouseRightButton, 0);
     }
     
@@ -343,7 +344,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
     // TODO: Use active overlays only
     if (!cursorManager->isDragging()) {
         if (_interface->scanOverlays()) {
-            if ((eventFlags & DGMouseEventUp) && cursorManager->hasAction()) {
+            if ((eventFlags == DGMouseEventUp) && cursorManager->hasAction()) {
                 _processAction();
                 
                 // Repeat the scan in case the button is no longer visible  
@@ -357,7 +358,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
 
     switch (config->controlMode) {
         case DGMouseFree:
-            if (eventFlags & DGMouseEventMove) {
+            if (eventFlags == DGMouseEventMove) {
                 if (!cursorManager->onButton()) {
                     cameraManager->pan(x, y);
                     
@@ -372,14 +373,14 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
                 else cameraManager->stopPanning();
             }
             
-            if (eventFlags & DGMouseEventUp) {
+            if (eventFlags == DGMouseEventUp) {
                 if (cursorManager->hasAction())
                     _processAction();
             }
             break;
             
         case DGMouseDrag:
-            if (eventFlags & DGMouseEventDrag) {
+            if (eventFlags == DGMouseEventDrag) {
                 if (cursorManager->isDragging()) {
                     cameraManager->pan(x, y);
                     cursorManager->setCursor(cameraManager->cursorWhenPanning());
@@ -388,11 +389,11 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
             }
             
             // FIXME: Start dragging a few milliseconds after the mouse if down
-            if (eventFlags & DGMouseEventDown) {
+            if (eventFlags == DGMouseEventDown) {
                 cameraManager->startDragging(x, y);
             }
             
-            if (eventFlags & DGMouseEventUp) {
+            if (eventFlags == DGMouseEventUp) {
                 if (cursorManager->isDragging()) {
                     cursorManager->setDragging(false);
                     cameraManager->stopDragging();
