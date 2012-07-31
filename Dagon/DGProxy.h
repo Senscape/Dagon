@@ -70,6 +70,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 
 // We include non-proxy libraries here as well
 
+#include "DGCamLib.h"
 #include "DGConfigLib.h"
 #include "DGEffectsLib.h"
 #include "DGCursorLib.h"

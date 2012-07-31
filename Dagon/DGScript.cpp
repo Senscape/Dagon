@@ -142,6 +142,20 @@ void DGScript::init(int argc, char* argv[]) {
 	
 	lua_setglobal(_L, "config");
     
+    // Same with the camera settings
+    lua_newuserdata(_L, sizeof(void*));
+    
+    lua_pushvalue(_L, -1);
+	
+	luaL_newmetatable(_L, "DGCamLib");
+	luaL_register(_L, NULL, DGCamLib);
+	lua_setmetatable(_L, -2);
+	
+	lua_newtable(_L);
+    lua_setfenv(_L, -2);
+	
+	lua_setglobal(_L, "camera");
+    
     // Same with the effects properties
     lua_newuserdata(_L, sizeof(void*));
     

@@ -23,7 +23,10 @@
 
 DGCameraManager::DGCameraManager() {
     config = &DGConfig::getInstance();
-
+    
+    _canBreathe = false;
+    _canWalk = false;
+    
     _accelH = 0.0f;
     _accelV = 0.0f;
     
@@ -41,7 +44,8 @@ DGCameraManager::DGCameraManager() {
     _bob.inspireStrength = 0.0f;
     _bob.nextPause = 0.0f;
     _bob.position = 0.0f;
-    _bob.state = DGCamBreathing;
+    _bob.state = DGCamIdle;
+    _bob.previousState = _bob.state;
     _bob.timer = 0.0f;
     
     _deltaX = 0;
@@ -89,6 +93,41 @@ DGCameraManager::~DGCameraManager() {
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
+
+float DGCameraManager::angleH() {
+    return _angleH;
+}
+
+float DGCameraManager::angleV() {
+    return _angleV;
+}
+
+bool DGCameraManager::canBreathe() {
+    return _canBreathe;
+}
+
+bool DGCameraManager::canWalk() {
+    return _canWalk;
+}
+
+void DGCameraManager::setBreathe(bool enabled) {
+    _canBreathe = enabled;
+    
+    if (enabled) {
+        if (_bob.state == DGCamWalking)
+            _bob.previousState = DGCamBreathing;
+        else _bob.state = DGCamBreathing;
+    }
+    else {
+        if (_bob.state == DGCamWalking)
+            _bob.previousState = DGCamIdle;
+        else _bob.state = DGCamIdle;
+    }
+}
+
+void DGCameraManager::setWalk(bool enabled) {
+    _canWalk = enabled;
+}
 
 void DGCameraManager::beginOrthoView() {
     if (!_inOrthoView) {
@@ -227,11 +266,15 @@ float* DGCameraManager::position() {
 }
 
 void DGCameraManager::simulateWalk() {
-    _bob.currentFactor = DGCamWalkFactor;
-    _bob.currentSpeed = DGCamWalkSpeed;   
-    
-    _fovCurrent = _fovNormal + (float)DGCamWalkZoomIn;
-    _bob.state = DGCamWalking;
+    if (_canWalk) {
+        _bob.currentFactor = DGCamWalkFactor;
+        _bob.currentSpeed = DGCamWalkSpeed;   
+        
+        _fovCurrent = _fovNormal + (float)DGCamWalkZoomIn;
+        
+        _bob.previousState = _bob.state;
+        _bob.state = DGCamWalking;
+    }
 }
 
 void DGCameraManager::setAngle(float horizontal, float vertical) {
@@ -503,7 +546,8 @@ void DGCameraManager::update() {
     _orientation[1] = _angleV;
     _orientation[2] = (float)-cos(_angleH);
     
-    _calculateBob();
+    if (_bob.state != DGCamIdle)
+        _calculateBob();
     
     gluLookAt(_position[0], _position[1] + (_bob.displace / 4), _position[2],
               _orientation[0], _orientation[1] + _bob.displace, _orientation[2],
@@ -541,7 +585,7 @@ void DGCameraManager::_calculateBob() {
                 _fovCurrent -= ((float)10 / DGCamWalkZoomIn) * config->globalSpeed();
             else {
                 _fovCurrent = _fovNormal;
-                _bob.state = DGCamBreathing;
+                _bob.state = _bob.previousState;
             }
             
             this->setViewport(config->displayWidth, config->displayHeight);
