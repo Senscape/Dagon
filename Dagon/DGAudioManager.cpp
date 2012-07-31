@@ -141,7 +141,7 @@ void DGAudioManager::init() {
     
 	strcpy(deviceName, "");
 	if (config->debugMode) {
-        if (alcIsExtensionPresent(NULL, (ALubyte*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
+        if (alcIsExtensionPresent(NULL, (ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
             defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
             deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
             for (numDevices = 0; numDevices < 12; numDevices++) {devices[numDevices] = NULL;}
@@ -183,7 +183,7 @@ void DGAudioManager::init() {
 		_alDevice = alcOpenDevice(NULL); // Select the preferred device
 	} else {
 		log->trace(DGModAudio, "%s: %s", DGMsg080004, deviceName);
-		_alDevice = alcOpenDevice((ALubyte*)deviceName); // Use the name from the enumeration process
+		_alDevice = alcOpenDevice((ALCchar*)deviceName); // Use the name from the enumeration process
 	}
     
 #else

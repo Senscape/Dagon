@@ -323,11 +323,12 @@ bool DGAudio::_stream(ALuint* buffer) {
     static bool _hasStreamingError = false;         
     
     if (!_hasStreamingError) {
-        char data[config->audioBuffer];
+        char* data;
         int size = 0;
         int section;
         long result;
         
+		data = (char*)malloc(config->audioBuffer);
         while (size < config->audioBuffer) {
             result = ov_read(&_oggStream, data + size, config->audioBuffer - size, 0, 2, 1, &section);
             
@@ -357,7 +358,7 @@ bool DGAudio::_stream(ALuint* buffer) {
         }
         
         alBufferData(*buffer, _alFormat, data, size, _rate);
-        
+        delete(data);
         return true;
     }
     else return false;
