@@ -24,62 +24,7 @@
 DGCameraManager::DGCameraManager() {
     config = &DGConfig::getInstance();
     
-    _canBreathe = false;
-    _canWalk = false;
-    
-    _accelH = 0.0f;
-    _accelV = 0.0f;
-    
-    _angleH = 0.0f;
-    _angleV = 0.0f;
-    
-    _angleHLimit = (float)M_PI * 2;
-    _angleVLimit = (float)M_PI / 2;
-    
-    _bob.currentFactor = DGCamBreatheFactor;
-    _bob.currentSpeed = DGCamBreatheSpeed;    
-    _bob.direction = DGCamPause;
-    _bob.displace = 0.0f;
-    _bob.expireStrength = 0.0f;
-    _bob.inspireStrength = 0.0f;
-    _bob.nextPause = 0.0f;
-    _bob.position = 0.0f;
-    _bob.state = DGCamIdle;
-    _bob.timer = 0.0f;
-    
-    _deltaX = 0;
-    _deltaY = 0;
-    
-    _fovCurrent = DGCamFieldOfView;
-    _fovNormal = DGCamFieldOfView;
-
-    _dragNeutralZone = DGCamDragNeutralZone;
-    _freeNeutralZone = DGCamFreeNeutralZone;
-    
-    _orientation[0] = 0.0f;
-    _orientation[1] = 0.0f;
-    _orientation[2] = -1.0f;
-    _orientation[3] = 0.0f;
-    _orientation[4] = 1.0f; 
-    _orientation[5] = 0.0f; 
-    
-    _position[0] = 0.0f;
-    _position[1] = 0.0f;
-    _position[2] = 0.0f;
-    
-    _inertia = 1 / (float)DGCamInertia;
-    _inOrthoView = false;
-    _isPanning = false;
-    
-    _motionDown = 0.0f;
-    _motionLeft = 0.0f;
-    _motionRight = 0.0f;
-    _motionUp = 0.0f;
-    
-    _maxSpeed = 1.0f / (float)DGCamMaxSpeed;
-    _speedH = 0.0f;
-    _speedV = 0.0f;
-    _speedFactor = DGCamSpeedFactor;
+    _isInitialized = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -322,19 +267,27 @@ void DGCameraManager::setViewport(int width, int height) {
     
     // This forces the new display factor to be applied to the
     // current neutral zone (only in Free mode)
-    if (config->controlMode == DGMouseFree)
-        setNeutralZone(_freeNeutralZone);
+    switch (config->controlMode) {
+        case DGMouseDrag:
+            this->stopDragging(); // Refreshes the neutral zone and centers the cursor
+            break;
+        case DGMouseFree:
+            setNeutralZone(_freeNeutralZone);
+            break;
+    }
     
-    glViewport(0, 0, (GLint)_viewport.width, (GLint)_viewport.height);
-    
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    
-    // We need a very close clipping point because the cube is rendered in a small area
-    gluPerspective(_fovCurrent, (GLfloat)_viewport.width / (GLfloat)_viewport.height, 0.1f, 10.0f);
-    
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    if (_isInitialized) {    
+        glViewport(0, 0, (GLint)_viewport.width, (GLint)_viewport.height);
+        
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        
+        // We need a very close clipping point because the cube is rendered in a small area
+        gluPerspective(_fovCurrent, (GLfloat)_viewport.width / (GLfloat)_viewport.height, 0.1f, 10.0f);
+        
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+    }
 }
 
 void DGCameraManager::setWalk(bool enabled) {
@@ -346,7 +299,7 @@ void DGCameraManager::setWalk(bool enabled) {
 ////////////////////////////////////////////////////////////
 
 void DGCameraManager::beginOrthoView() {
-    if (!_inOrthoView) {
+    if (!_inOrthoView && _isInitialized) {
         // Switch to the projection view
         glMatrixMode(GL_PROJECTION);
         
@@ -366,9 +319,8 @@ void DGCameraManager::beginOrthoView() {
     }
 }
 
-
 void DGCameraManager::endOrthoView() {
-    if (_inOrthoView) {
+    if (_inOrthoView && _isInitialized) {
         // Go back to the projection view and its previous state
         glMatrixMode(GL_PROJECTION);
         glPopMatrix();
@@ -378,6 +330,67 @@ void DGCameraManager::endOrthoView() {
         
         _inOrthoView = false;
     }
+}
+
+void DGCameraManager::init() {
+    _canBreathe = false;
+    _canWalk = false;
+    
+    _accelH = 0.0f;
+    _accelV = 0.0f;
+    
+    _angleH = 0.0f;
+    _angleV = 0.0f;
+    
+    _angleHLimit = (float)M_PI * 2;
+    _angleVLimit = (float)M_PI / 2;
+    
+    _bob.currentFactor = DGCamBreatheFactor;
+    _bob.currentSpeed = DGCamBreatheSpeed;
+    _bob.direction = DGCamPause;
+    _bob.displace = 0.0f;
+    _bob.expireStrength = 0.0f;
+    _bob.inspireStrength = 0.0f;
+    _bob.nextPause = 0.0f;
+    _bob.position = 0.0f;
+    _bob.state = DGCamIdle;
+    _bob.timer = 0.0f;
+    
+    _deltaX = 0;
+    _deltaY = 0;
+    
+    _fovCurrent = DGCamFieldOfView;
+    _fovNormal = DGCamFieldOfView;
+    
+    _dragNeutralZone = DGCamDragNeutralZone;
+    _freeNeutralZone = DGCamFreeNeutralZone;
+    
+    _orientation[0] = 0.0f;
+    _orientation[1] = 0.0f;
+    _orientation[2] = -1.0f;
+    _orientation[3] = 0.0f;
+    _orientation[4] = 1.0f;
+    _orientation[5] = 0.0f;
+    
+    _position[0] = 0.0f;
+    _position[1] = 0.0f;
+    _position[2] = 0.0f;
+    
+    _inertia = 1 / (float)DGCamInertia;
+    _inOrthoView = false;
+    _isPanning = false;
+    
+    _motionDown = 0.0f;
+    _motionLeft = 0.0f;
+    _motionRight = 0.0f;
+    _motionUp = 0.0f;
+    
+    _maxSpeed = 1.0f / (float)DGCamMaxSpeed;
+    _speedH = 0.0f;
+    _speedV = 0.0f;
+    _speedFactor = DGCamSpeedFactor;
+    
+    _isInitialized = true;
 }
 
 void DGCameraManager::pan(int xPosition, int yPosition) {
@@ -599,9 +612,11 @@ void DGCameraManager::update() {
     if (_bob.state != DGCamIdle)
         _calculateBob();
     
-    gluLookAt(_position[0], _position[1] + (_bob.displace / 4), _position[2],
-              _orientation[0], _orientation[1] + _bob.displace, _orientation[2],
-              _orientation[3], _orientation[4], _orientation[5]);
+    if (_isInitialized) {    
+        gluLookAt(_position[0], _position[1] + (_bob.displace / 4), _position[2],
+                  _orientation[0], _orientation[1] + _bob.displace, _orientation[2],
+                  _orientation[3], _orientation[4], _orientation[5]);
+    }
     
     // Displace in x for scare
     /*gluLookAt(_position[0], _position[1], _position[2],

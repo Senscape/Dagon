@@ -95,7 +95,7 @@ void DGScript::init(int argc, char* argv[]) {
 		lua_pushvalue(_L, -1);
 		int ref = lua_ref(_L, LUA_REGISTRYINDEX);
 		lua_setfenv(_L, -2);
-		
+
 		lua_pcall(_L, 0, 0, 0);
 		
 		lua_rawgeti(_L, LUA_REGISTRYINDEX, ref);
@@ -108,7 +108,6 @@ void DGScript::init(int argc, char* argv[]) {
 	}
     
     lua_getglobal(_L, "_G");
-    
     _registerEnums();
     
     // Config modules path

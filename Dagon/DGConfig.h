@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 enum DGControlModes {
-    DGMouseDrag,
+    DGMouseDrag = 0,
     DGMouseFixed,
     DGMouseFree
 };
