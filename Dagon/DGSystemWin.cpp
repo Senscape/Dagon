@@ -493,6 +493,7 @@ DWORD WINAPI _videoThread(LPVOID lpParam) {
 
 // This function processes the main loop
 LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
+	WCHAR chars[2];
 	static bool isDragging = false;
     BYTE keyboardState[256];
 
@@ -619,7 +620,6 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 					DGControl::getInstance().processKey(DGKeyTab, DGKeyEventDown);
 					break;
 				default:
-					WCHAR chars[2];
 					if (GetKeyState(VK_CONTROL) < 0) {
 						ToUnicode(wParam, MapVirtualKey(wParam, 0), defKeyboardState, chars, 2, 0);
 						DGControl::getInstance().processKey(chars[0], DGKeyEventModified);
