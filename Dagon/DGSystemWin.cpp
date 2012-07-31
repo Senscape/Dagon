@@ -494,6 +494,7 @@ DWORD WINAPI _videoThread(LPVOID lpParam) {
 // This function processes the main loop
 LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	static bool isDragging = false;
+    BYTE keyboardState[256];
 
     switch(msg) {
 		case WM_ACTIVATE:
@@ -612,25 +613,33 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				case VK_SPACE:
 				case VK_RETURN:
 				case VK_BACK:	
-					DGControl::getInstance().processKey(wParam, false);
+					DGControl::getInstance().processKey(wParam, DGKeyEventDown);
 					break;
 				case VK_OEM_3: // Open console
-					DGControl::getInstance().processKey(DGKeyTab, false);
+					DGControl::getInstance().processKey(DGKeyTab, DGKeyEventDown);
 					break;
 				default:
 					WCHAR chars[2];
 					if (GetKeyState(VK_CONTROL) < 0) {
 						ToUnicode(wParam, MapVirtualKey(wParam, 0), defKeyboardState, chars, 2, 0);
-						DGControl::getInstance().processKey(chars[0], true);
+						DGControl::getInstance().processKey(chars[0], DGKeyEventModified);
 					}
 					else {
-						BYTE keyboardState[256];
 						GetKeyboardState(keyboardState);
 						ToUnicode(wParam, MapVirtualKey(wParam, 0), keyboardState, chars, 2, 0);
-						DGControl::getInstance().processKey(chars[0], false);
+						DGControl::getInstance().processKey(chars[0], DGKeyEventDown);
 					}
 					break;
 			}
+			wglMakeCurrent(NULL, NULL);
+			LeaveCriticalSection(&csSystemThread);
+			break;
+		case WM_KEYUP:
+			EnterCriticalSection(&csSystemThread);
+			wglMakeCurrent(g_hDC, g_hRC);
+            GetKeyboardState(keyboardState);
+            ToUnicode(wParam, MapVirtualKey(wParam, 0), keyboardState, chars, 2, 0);
+            DGControl::getInstance().processKey(chars[0], DGKeyEventUp);
 			wglMakeCurrent(NULL, NULL);
 			LeaveCriticalSection(&csSystemThread);
 			break;

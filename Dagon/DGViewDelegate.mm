@@ -85,10 +85,17 @@
 	else {
         keyCode = *[[theEvent charactersIgnoringModifiers] UTF8String];
         if ([theEvent modifierFlags] & NSCommandKeyMask)
-            control->processKey(keyCode, true);
+            control->processKey(keyCode, DGKeyEventModified);
         else
-            control->processKey(keyCode, false);
+            control->processKey(keyCode, DGKeyEventDown);
 	}
+}
+
+- (void)keyUp:(NSEvent *)theEvent {
+    int keyCode;
+    
+    keyCode = *[[theEvent charactersIgnoringModifiers] UTF8String];
+    control->processKey(keyCode, DGKeyEventUp);
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {

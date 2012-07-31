@@ -132,6 +132,9 @@ void DGControl::init() {
     _state = new DGState;
     _textureManager = new DGTextureManager;
     
+    _directControlActive = false;
+    _directControlHandler = timerManager->createManual(DGDirectControlRefresh);
+    
     _console = new DGConsole;
     if (config->debugMode) {
         // Console must be initialized after the Font Manager
@@ -206,50 +209,110 @@ void DGControl::processFunctionKey(int aKey) {
     }
 }
 
-void DGControl::processKey(int aKey, bool isModified) {
-    switch (aKey) {
-		case DGKeyEsc:
-            if (!_isShuttingDown) {
-                _scene->fadeOut();
-                _shutdownTimer = timerManager->createManual(1);
-                _isShuttingDown = true;
+void DGControl::processKey(int aKey, int eventFlags) {
+    switch (eventFlags) {
+        case DGKeyEventDown:
+            switch (aKey) {
+                case DGKeyEsc:
+                    if (feedManager->isPlaying())
+                        feedManager->cancel();
+                    else {
+                        if (!_isShuttingDown) {
+                            _scene->fadeOut();
+                            _shutdownTimer = timerManager->createManual(1);
+                            _isShuttingDown = true;
+                        }
+                    }
+                    break;
+                case DGKeyQuote:
+                case DGKeyTab:
+                    _console->toggle();
+                    break;
+                case DGKeySpacebar:
+                    if (_console->isHidden())
+                        config->showHelpers = !config->showHelpers;
+                    break;
+                case 'w':
+                case 'W':
+                    if (_console->isHidden()) {
+                        cameraManager->pan(DGCurrent, 0);
+                        _directControlActive = true;
+                    }
+                    break;
+                case 'a':
+                case 'A':
+                    if (_console->isHidden()) {
+                        cameraManager->pan(0, DGCurrent);
+                        _directControlActive = true;
+                    }
+                    break;
+                case 's':
+                case 'S':
+                    if (_console->isHidden()) {
+                        cameraManager->pan(DGCurrent, config->displayHeight);
+                        _directControlActive = true;
+                    }
+                    break;
+                case 'd':
+                case 'D':
+                    if (_console->isHidden()) {
+                        cameraManager->pan(config->displayWidth, DGCurrent);
+                        _directControlActive = true;
+                    }
+                    break;
             }
-			break;
-		case DGKeyQuote:
-		case DGKeyTab:         
-			_console->toggle();
-			break;
-		case DGKeySpacebar:
-            if (_console->isHidden()) 
-                config->showHelpers = !config->showHelpers;
-			break;
-        case 'f':
-        case 'F':
-            if (isModified) {
+            
+            // Process these keys only when the console is visible
+            if (!_console->isHidden()) {
+                switch (aKey) {
+                    case DGKeyEsc:
+                    case DGKeyQuote:
+                    case DGKeyTab:
+                        // Ignore these
+                        break;
+                    case DGKeyBackspace:
+                        _console->deleteChar();
+                        break;
+                    case DGKeyEnter:
+                        _console->execute();
+                        break;
+                    default:
+                        _console->inputChar(aKey);
+                        break;            
+                }  
+            }
+            break;
+            
+        case DGKeyEventModified:
+            case 'f':
+            case 'F':
                 config->fullScreen = !config->fullScreen;
-                system->toggleFullScreen();   
+                system->toggleFullScreen();
+                break;
+            break;
+            
+        case DGKeyEventUp:
+            if (_console->isHidden()) {
+                switch (aKey) {
+                    case 'w':
+                    case 'W':
+                        cameraManager->pan(DGCurrent, config->displayHeight / 2);
+                        break;
+                    case 'a':
+                    case 'A':
+                        cameraManager->pan(config->displayWidth / 2, DGCurrent);
+                        break;
+                    case 's':
+                    case 'S':
+                        cameraManager->pan(DGCurrent, config->displayHeight / 2);
+                        break;
+                    case 'd':
+                    case 'D':
+                        cameraManager->pan(config->displayWidth / 2, DGCurrent);
+                        break;
+                }
             }
-            break;          
-	}
-    
-    // Process these keys only when the console is visible
-    if (!_console->isHidden()) {
-        switch (aKey) {
-            case DGKeyEsc:
-            case DGKeyQuote:
-            case DGKeyTab: 
-                // Ignore these
-                break;
-            case DGKeyBackspace:
-                _console->deleteChar();
-                break;
-            case DGKeyEnter:
-                _console->execute();
-                break;
-            default:
-                _console->inputChar(aKey);
-                break;            
-        }  
+            break;
     }
 }
 
