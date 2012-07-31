@@ -91,7 +91,9 @@ public:
         return instance;
     }
 
+    void cancel();
     void init();
+    bool isPlaying();
     bool hasQueued();
     void queue(const char* text, const char* audio);
     void reshape();
