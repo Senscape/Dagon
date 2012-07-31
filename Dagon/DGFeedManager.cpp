@@ -48,6 +48,11 @@ DGFeedManager::~DGFeedManager() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+void DGFeedManager::cancel() {
+    _feedAudio->stop();
+    _dim();
+}
+
 void DGFeedManager::init() {
     _feedAudio = new DGAudio;
     _feedAudio->setStatic();
@@ -58,6 +63,10 @@ void DGFeedManager::init() {
 
 bool DGFeedManager::hasQueued() {
     return !_arrayOfFeeds.empty();
+}
+
+bool DGFeedManager::isPlaying() {
+    return _feedAudio->isPlaying();
 }
 
 void DGFeedManager::show(const char* text) {
@@ -118,11 +127,13 @@ void DGFeedManager::showAndPlay(const char* text, const char* audio) {
     if (_feedAudio->isLoaded())
         _feedAudio->unload();
     
-    _feedAudio->setResource(audio);
-    audioManager->requestAudio(_feedAudio);
-    DGSystem::getInstance().suspendThread(DGAudioThread);
-    _feedAudio->play();
-    DGSystem::getInstance().resumeThread(DGAudioThread);
+    if (!config->silentFeeds) {
+        _feedAudio->setResource(audio);
+        audioManager->requestAudio(_feedAudio);
+        DGSystem::getInstance().suspendThread(DGAudioThread);
+        _feedAudio->play();
+        DGSystem::getInstance().resumeThread(DGAudioThread);
+    }
 }
 
 // TODO: Note the font manager should purge unused fonts

@@ -53,6 +53,7 @@ enum DGConfigDefaults {
     DGDefShowHelpers = false,
 	DGDefShowSplash = true,
 	DGDefShowSpots = false,
+    DGDefSilentFeeds = false,
 	DGDefTexCompression = false,
 	DGDefVerticalSync = true
 };
@@ -116,6 +117,7 @@ public:
     bool showHelpers;
     bool showSplash;
 	bool showSpots;
+    bool silentFeeds;
     bool texCompression;
 	bool verticalSync;
     

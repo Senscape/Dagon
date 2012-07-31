@@ -142,6 +142,11 @@ static int DGConfigLibGet(lua_State *L) {
 		lua_pushboolean(L, DGConfig::getInstance().showSpots);
 		return 1;
 	}
+    
+	if (strcmp(key, "silentFeeds") == 0) {
+		lua_pushboolean(L, DGConfig::getInstance().silentFeeds);
+		return 1;
+	}
 	
 	if (strcmp(key, "texCompression") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().texCompression);
@@ -229,6 +234,9 @@ static int DGConfigLibSet(lua_State *L) {
 	
 	if (strcmp(key, "showSpots") == 0)
 		DGConfig::getInstance().showSpots = (bool)lua_toboolean(L, 3);
+    
+	if (strcmp(key, "silentFeeds") == 0)
+		DGConfig::getInstance().silentFeeds = (bool)lua_toboolean(L, 3);
 	
 	if (strcmp(key, "texCompression") == 0)
 		DGConfig::getInstance().texCompression = (bool)lua_toboolean(L, 3);

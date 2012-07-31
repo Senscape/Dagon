@@ -49,6 +49,7 @@ DGConfig::DGConfig() {
     showHelpers = DGDefShowHelpers;
 	showSplash = DGDefShowSplash;
 	showSpots = DGDefShowSpots;
+    silentFeeds = DGDefSilentFeeds;
 	texCompression = DGDefTexCompression;
     scare = DGDefScare;
 	verticalSync = DGDefVerticalSync;

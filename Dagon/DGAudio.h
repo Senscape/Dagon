@@ -118,6 +118,7 @@ public:
     
     bool isLoaded();
     bool isLoopable();
+    bool isPlaying();
     
     // Gets
     
