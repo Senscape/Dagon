@@ -174,6 +174,7 @@
 		FBC8883514574F08008D548F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		FBC8883614574F08008D548F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		FBC8883714574F08008D548F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		FBC942FE15C74E0700840D3E /* DGCamLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGCamLib.h; sourceTree = "<group>"; };
 		FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSystemLib.h; sourceTree = "<group>"; };
 		FBD2F64815064FD000AB6C31 /* DGAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGAudioManager.h; sourceTree = "<group>"; };
 		FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGAudioManager.cpp; sourceTree = "<group>"; };
@@ -216,6 +217,7 @@
 		FB0602B5158BD55B00D26AB9 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				FBC942FE15C74E0700840D3E /* DGCamLib.h */,
 				E817433514E6030A002CF502 /* DGConfigLib.h */,
 				FB0602B6158BD58200D26AB9 /* DGCursorLib.h */,
 				FBBC59A815AF41E9005D173B /* DGEffectsLib.h */,

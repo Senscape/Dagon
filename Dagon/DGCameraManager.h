@@ -31,6 +31,7 @@ enum DGCamBobDirections {
 };
 
 enum DGCamBobStates {
+    DGCamIdle,
     DGCamBreathing,
     DGCamScared,
     DGCamWalking
@@ -67,6 +68,7 @@ typedef struct {
     float nextPause;
     float position;
     int state;
+    int previousState;
     float timer;
 } DGCameraBob;
 
@@ -78,6 +80,9 @@ class DGConfig;
 
 class DGCameraManager {
     DGConfig* config;
+    
+    bool _canBreathe;
+    bool _canWalk;
     
     float _accelH;
     float _accelV;
@@ -141,6 +146,20 @@ public:
         return instance;
     }
     
+    // Checks
+    
+    // Gets
+    
+    float angleH();
+    float angleV();
+    bool canBreathe();
+    bool canWalk();
+    
+    // Sets
+    
+    
+    // State changes
+    
     void beginOrthoView();
     int cursorWhenPanning();    
     void endOrthoView();
@@ -154,7 +173,9 @@ public:
     void panToTargetAngle();
     float* position();
     void simulateWalk();
-    void setAngle(float horizontal, float verticalt);
+    void setAngle(float horizontal, float vertical);
+    void setBreathe(bool enabled);
+    void setWalk(bool enabled);
     void setTargetAngle(float horizontal, float vertical);
     void setFieldOfView(float fov);
     void setNeutralZone(int zone);
