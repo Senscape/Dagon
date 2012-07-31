@@ -381,17 +381,21 @@ void DGCameraManager::endOrthoView() {
 }
 
 void DGCameraManager::pan(int xPosition, int yPosition) {
-    if (xPosition > _panRegion.size.width)
-        _deltaX = xPosition - _panRegion.size.width;
-    else if (xPosition < _panRegion.origin.x)
-        _deltaX = xPosition - _panRegion.origin.x;
-    else _deltaX = 0.0f;
+    if (xPosition != DGCurrent) {
+        if (xPosition > _panRegion.size.width)
+            _deltaX = xPosition - _panRegion.size.width;
+        else if (xPosition < _panRegion.origin.x)
+            _deltaX = xPosition - _panRegion.origin.x;
+        else _deltaX = 0.0f;
+    }
         
-    if (yPosition > _panRegion.size.height)
-        _deltaY = _panRegion.size.height - yPosition;
-    else if (yPosition < _panRegion.origin.y)
-        _deltaY = _panRegion.origin.y - yPosition;
-    else _deltaY = 0.0f;
+    if (yPosition != DGCurrent) {
+        if (yPosition > _panRegion.size.height)
+            _deltaY = _panRegion.size.height - yPosition;
+        else if (yPosition < _panRegion.origin.y)
+            _deltaY = _panRegion.origin.y - yPosition;
+        else _deltaY = 0.0f;
+    }
     
     if (config->controlMode == DGMouseDrag) {
         _speedH = fabs((float)_deltaX) / (float)(_speedFactor * 2); // Make movement even smoother
