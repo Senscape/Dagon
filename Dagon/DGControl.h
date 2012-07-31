@@ -24,6 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
+#define DGDirectControlRefresh 0.5
 #define DGMaxHotKeys 13
 
 class DGAudioManager;
@@ -49,7 +50,7 @@ class DGTextureManager;
 class DGTimerManager;
 class DGVideoManager;
 
-enum DGEvents {
+enum DGEvents { // For Lua
 	DGEventEnterNode = 1, // Must implement
 	DGEventLeaveNode, // Must implement
 	DGEventEnterRoom, // Must implement
@@ -60,6 +61,12 @@ enum DGEvents {
 	DGEventMouseRightButton,
 	DGEventMouseMove,
 	DGEventResize
+};
+
+enum DGKeyEvents {
+    DGKeyEventDown = 0x2,
+    DGKeyEventModified = 0x4,
+    DGKeyEventUp = 0x6
 };
 
 enum DGMouseEvents {
@@ -132,6 +139,8 @@ class DGControl {
     DGHotkeyData _hotkeyData[DGMaxHotKeys];
     
     int _fpsCount;
+    bool _directControlActive;
+    int _directControlHandler;
     bool _isInitialized;
 	bool _isRunning;
     bool _isShuttingDown;
@@ -163,7 +172,7 @@ public:
     void cutscene(const char* fileName);    
     void lookAt(float horizontal, float vertical, bool instant);
     void processFunctionKey(int aKey);
-    void processKey(int aKey, bool isModified);
+    void processKey(int aKey, int eventFlags);
     void processMouse(int x, int y, int eventFlags);
     void registerGlobalHandler(int forEvent, int handlerForLua);
     void registerHotkey(int aKey, const char* luaCommandToExecute);
