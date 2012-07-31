@@ -45,7 +45,6 @@ DGCameraManager::DGCameraManager() {
     _bob.nextPause = 0.0f;
     _bob.position = 0.0f;
     _bob.state = DGCamIdle;
-    _bob.previousState = _bob.state;
     _bob.timer = 0.0f;
     
     _deltaX = 0;
@@ -79,7 +78,8 @@ DGCameraManager::DGCameraManager() {
     
     _maxSpeed = 1.0f / (float)DGCamMaxSpeed;
     _speedH = 0.0f;
-    _speedV = 0.0f;    
+    _speedV = 0.0f;
+    _speedFactor = DGCamSpeedFactor;
 }
 
 ////////////////////////////////////////////////////////////
@@ -91,16 +91,8 @@ DGCameraManager::~DGCameraManager() {
 }
 
 ////////////////////////////////////////////////////////////
-// Implementation
+// Implementation - Checks
 ////////////////////////////////////////////////////////////
-
-float DGCameraManager::angleH() {
-    return _angleH;
-}
-
-float DGCameraManager::angleV() {
-    return _angleV;
-}
 
 bool DGCameraManager::canBreathe() {
     return _canBreathe;
@@ -110,44 +102,20 @@ bool DGCameraManager::canWalk() {
     return _canWalk;
 }
 
-void DGCameraManager::setBreathe(bool enabled) {
-    _canBreathe = enabled;
-    
-    if (enabled) {
-        if (_bob.state == DGCamWalking)
-            _bob.previousState = DGCamBreathing;
-        else _bob.state = DGCamBreathing;
-    }
-    else {
-        if (_bob.state == DGCamWalking)
-            _bob.previousState = DGCamIdle;
-        else _bob.state = DGCamIdle;
-    }
+bool DGCameraManager::isPanning() {
+    return _isPanning;
 }
 
-void DGCameraManager::setWalk(bool enabled) {
-    _canWalk = enabled;
+////////////////////////////////////////////////////////////
+// Implementation - Gets
+////////////////////////////////////////////////////////////
+
+int DGCameraManager::angleHorizontal() {
+    return _toDegrees(_angleH, _angleHLimit);
 }
 
-void DGCameraManager::beginOrthoView() {
-    if (!_inOrthoView) {
-        // Switch to the projection view
-        glMatrixMode(GL_PROJECTION);
-        
-        // Save its current state and load a new identity
-        glPushMatrix();
-        glLoadIdentity();
-        
-        // Now we prepare our orthogonal projection
-        glOrtho(0, _viewport.width, _viewport.height, 0, -1, 1);
-        glMatrixMode(GL_MODELVIEW);
-        
-        // Note that transformations have been applied to the GL_MODELVIEW
-        // so we must reload the identity matrix
-        glLoadIdentity();
-        
-        _inOrthoView = true;
-    }
+int DGCameraManager::angleVertical() {
+    return _toDegrees(_angleV, _angleVLimit);
 }
 
 int DGCameraManager::cursorWhenPanning() {
@@ -161,7 +129,7 @@ int DGCameraManager::cursorWhenPanning() {
         if (_motionUp > 0.0f) return DGCursorDownRight;
         else if (_motionDown > 0.0f) return DGCursorUpRight;
         
-        return DGCursorRight;   
+        return DGCursorRight;
     }
     else if (_motionUp > 0.0f) return DGCursorDown;
     else if (_motionDown > 0.0f) return DGCursorUp;
@@ -172,25 +140,17 @@ int DGCameraManager::cursorWhenPanning() {
         return DGCursorNormal;
 }
 
-void DGCameraManager::endOrthoView() {
-    if (_inOrthoView) {
-        // Go back to the projection view and its previous state
-        glMatrixMode(GL_PROJECTION);
-        glPopMatrix();
-        
-        // Leave everything in model view just as it were before
-        glMatrixMode(GL_MODELVIEW);
-        
-        _inOrthoView = false;
-    }
-}
-
 float DGCameraManager::fieldOfView() {
     return _fovCurrent;
 }
 
-bool DGCameraManager::isPanning() {
-    return _isPanning;
+int DGCameraManager::inertia() {
+    return (1 / _inertia);
+}
+
+int DGCameraManager::maxSpeed() {
+    int speed = 1 / _maxSpeed;
+    return (100 - speed);
 }
 
 float DGCameraManager::motionHorizontal() {
@@ -206,138 +166,72 @@ int DGCameraManager::neutralZone() {
         case DGMouseDrag:
             return _dragNeutralZone;
         case DGMouseFixed:
-            return 0;            
+            return 0;
         case DGMouseFree:
             return _freeNeutralZone;
     }
     
-   return 0;
+    return 0;
 }
 
 float* DGCameraManager::orientation() {
     return _orientation;
 }
 
-void DGCameraManager::pan(int xPosition, int yPosition) {
-    if (xPosition > _panRegion.size.width)
-        _deltaX = xPosition - _panRegion.size.width;
-    else if (xPosition < _panRegion.origin.x)
-        _deltaX = xPosition - _panRegion.origin.x;
-    else _deltaX = 0.0f;
-        
-    if (yPosition > _panRegion.size.height)
-        _deltaY = _panRegion.size.height - yPosition;
-    else if (yPosition < _panRegion.origin.y)
-        _deltaY = _panRegion.origin.y - yPosition;
-    else _deltaY = 0.0f;
-    
-    if (config->controlMode == DGMouseDrag) {
-        _speedH = fabs((float)_deltaX) / (float)(DGCamSpeedFactor * 2); // Make movement even smoother
-        _speedV = fabs((float)_deltaY) / (float)(DGCamSpeedFactor * 2);
-    }
-    else {
-        _speedH = fabs((float)_deltaX) / (float)DGCamSpeedFactor;
-        _speedV = fabs((float)_deltaY) / (float)DGCamSpeedFactor;
-    }
-}
-
-void DGCameraManager::panToTargetAngle() {
-    if (_angleH < (_angleHTarget - _targetHError) || _angleH > (_angleHTarget + _targetHError)) {
-        _deltaX = (_angleHTarget - _angleH) * 360;
-        _speedH = fabs((float)_deltaX) / (float)DGCamSpeedFactor;
-    }
-    else {
-        _deltaX = 0;
-        _angleHTarget = _angleH;
-    }
-
-    if (_angleV < (_angleVTarget - _targetVError) || _angleV > (_angleVTarget + _targetVError)) {
-        _deltaY = (_angleVTarget - _angleV) * 360;
-        _speedV = fabs((float)_deltaY) / (float)DGCamSpeedFactor;
-    }
-    else {
-        _deltaY = 0;
-        _angleVTarget = _angleV;
-    }
-}
-
 float* DGCameraManager::position() {
     return _position;
 }
 
-void DGCameraManager::simulateWalk() {
-    if (_canWalk) {
-        _bob.currentFactor = DGCamWalkFactor;
-        _bob.currentSpeed = DGCamWalkSpeed;   
-        
-        _fovCurrent = _fovNormal + (float)DGCamWalkZoomIn;
-        
-        _bob.previousState = _bob.state;
-        _bob.state = DGCamWalking;
+int DGCameraManager::speedFactor() {
+    return _speedFactor / 10000;
+}
+
+int DGCameraManager::verticalLimit() {
+    return _toDegrees(_angleVLimit, M_PI * 2);
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Sets
+////////////////////////////////////////////////////////////
+
+void DGCameraManager::setAngleHorizontal(float horizontal) {
+    if (horizontal != DGCurrent) {
+        // Extrapolate the coordinates
+        _angleH = _toRadians(horizontal, _angleHLimit);
     }
 }
 
-void DGCameraManager::setAngle(float horizontal, float vertical) {
-    if (horizontal != DGCurrent) {
-        // Extrapolate the coordinates
-        horizontal = (horizontal * _angleHLimit) / 360.0f;
-        _angleH = horizontal;
-    }
-    
+void DGCameraManager::setAngleVertical(float vertical) {
     if (vertical != DGCurrent) {
         // Extrapolate the coordinates
-        vertical = (vertical * _angleVLimit) / 360.0f;
-        _angleV = vertical;
+        _angleV = _toRadians(vertical, _angleVLimit);
     }
 }
 
-void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
-    if (horizontal != DGCurrent) {
-        // Substract n times pi (fix probable double turn)
-        float pi, pos;
-        pi = _angleH / (M_PI * 2);
-		pos = pi - (float)(floor (pi));
-		_angleH = pos * 2 * M_PI;
-        
-        // Extrapolate the coordinates
-        _angleHTarget = (horizontal * _angleHLimit) / 360.0f;
-        
-        // Treat special case when angle is NORTH
-        // NOTE: Certain cases aren't supported in this code; ie:
-        // slightly rotated left of North, then setting target angle
-        // to East. This would be rarely required by the user though.
-        if (_angleHTarget == 0.0f) {
-            if (_angleH > M_PI)
-                _angleHTarget = (float)(M_PI*2);
-        }
-        
-        // FIXME: This division is related to the amount of configured inertia. Must fix later.
-        _targetHError = fabs(_angleHTarget - _angleH) / 5.0f;
-        
-        if (_targetHError < 0.02f)
-            _targetHError = 0.02f;
-    }
-    else {
-        _angleHTarget = _angleH;
-    }
+void DGCameraManager::setBreathe(bool enabled) {
+    _canBreathe = enabled;
     
-    if (vertical != DGCurrent) {
-        // Extrapolate the coordinates
-        _angleVTarget = (vertical * _angleVLimit) / 360.0f;
-        
-        // FIXME: This division is related to the amount of configured inertia. Must fix later.
-        _targetVError = fabs(_angleVTarget - _angleV) / 5.0f;
-        
-        //if (_targetVError < 0.001f)
-        _targetVError = 0.01f;
+    if (enabled) {
+        _bob.state = DGCamBreathing;
     }
     else {
-        _angleVTarget = _angleV;
+        _bob.state = DGCamIdle;
     }
 }
 
 void DGCameraManager::setFieldOfView(float fov) {
-    _fovNormal = DGCamFieldOfView;
+    _fovNormal = fov;
+    _fovCurrent = _fovNormal;
+    this->setViewport(config->displayWidth, config->displayHeight); // Update the viewport
+}
+
+void DGCameraManager::setInertia(int inertia) {
+    _inertia = 1 / (float)inertia;
+}
+
+void DGCameraManager::setMaxSpeed(int speed) {
+    int maxSpeed = 100 - speed;
+    _maxSpeed = 1.0f / (float)maxSpeed;
 }
 
 void DGCameraManager::setNeutralZone(int zone) {
@@ -367,6 +261,59 @@ void DGCameraManager::setNeutralZone(int zone) {
     }
 }
 
+void DGCameraManager::setSpeedFactor(int speed) {
+    _speedFactor = speed * 10000;
+}
+
+void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
+    if (horizontal != DGCurrent) {
+        // Substract n times pi (fix probable double turn)
+        float pi, pos;
+        pi = _angleH / (M_PI * 2);
+		pos = pi - (float)(floor (pi));
+		_angleH = pos * 2 * M_PI;
+        
+        // Extrapolate the coordinates
+        _angleHTarget = _toRadians(horizontal, _angleHLimit);
+        
+        // Treat special case when angle is NORTH
+        // NOTE: Certain cases aren't supported in this code; ie:
+        // slightly rotated left of North, then setting target angle
+        // to East. This would be rarely required by the user though.
+        if (_angleHTarget == 0.0f) {
+            if (_angleH > M_PI)
+                _angleHTarget = (float)(M_PI*2);
+        }
+        
+        // FIXME: This division is related to the amount of configured inertia. Must fix later.
+        _targetHError = fabs(_angleHTarget - _angleH) / 5.0f;
+        
+        if (_targetHError < 0.02f)
+            _targetHError = 0.02f;
+    }
+    else {
+        _angleHTarget = _angleH;
+    }
+    
+    if (vertical != DGCurrent) {
+        // Extrapolate the coordinates
+        _angleVTarget = _toRadians(vertical, _angleVLimit);;
+        
+        // FIXME: This division is related to the amount of configured inertia. Must fix later.
+        _targetVError = fabs(_angleVTarget - _angleV) / 5.0f;
+        
+        //if (_targetVError < 0.001f)
+        _targetVError = 0.01f;
+    }
+    else {
+        _angleVTarget = _angleV;
+    }
+}
+
+void DGCameraManager::setVerticalLimit(float limit) {
+    _angleVLimit = _toRadians(limit, M_PI * 2);
+}
+
 void DGCameraManager::setViewport(int width, int height) {
     // NOTE: if screen size is changed while in Drag mode, the neutral zone for Free mode isn't updated
     
@@ -379,7 +326,7 @@ void DGCameraManager::setViewport(int width, int height) {
         setNeutralZone(_freeNeutralZone);
     
     glViewport(0, 0, (GLint)_viewport.width, (GLint)_viewport.height);
-
+    
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     
@@ -389,6 +336,109 @@ void DGCameraManager::setViewport(int width, int height) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 }
+
+void DGCameraManager::setWalk(bool enabled) {
+    _canWalk = enabled;
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - State changes
+////////////////////////////////////////////////////////////
+
+void DGCameraManager::beginOrthoView() {
+    if (!_inOrthoView) {
+        // Switch to the projection view
+        glMatrixMode(GL_PROJECTION);
+        
+        // Save its current state and load a new identity
+        glPushMatrix();
+        glLoadIdentity();
+        
+        // Now we prepare our orthogonal projection
+        glOrtho(0, _viewport.width, _viewport.height, 0, -1, 1);
+        glMatrixMode(GL_MODELVIEW);
+        
+        // Note that transformations have been applied to the GL_MODELVIEW
+        // so we must reload the identity matrix
+        glLoadIdentity();
+        
+        _inOrthoView = true;
+    }
+}
+
+
+void DGCameraManager::endOrthoView() {
+    if (_inOrthoView) {
+        // Go back to the projection view and its previous state
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        
+        // Leave everything in model view just as it were before
+        glMatrixMode(GL_MODELVIEW);
+        
+        _inOrthoView = false;
+    }
+}
+
+void DGCameraManager::pan(int xPosition, int yPosition) {
+    if (xPosition > _panRegion.size.width)
+        _deltaX = xPosition - _panRegion.size.width;
+    else if (xPosition < _panRegion.origin.x)
+        _deltaX = xPosition - _panRegion.origin.x;
+    else _deltaX = 0.0f;
+        
+    if (yPosition > _panRegion.size.height)
+        _deltaY = _panRegion.size.height - yPosition;
+    else if (yPosition < _panRegion.origin.y)
+        _deltaY = _panRegion.origin.y - yPosition;
+    else _deltaY = 0.0f;
+    
+    if (config->controlMode == DGMouseDrag) {
+        _speedH = fabs((float)_deltaX) / (float)(_speedFactor * 2); // Make movement even smoother
+        _speedV = fabs((float)_deltaY) / (float)(_speedFactor * 2);
+    }
+    else {
+        _speedH = fabs((float)_deltaX) / (float)_speedFactor;
+        _speedV = fabs((float)_deltaY) / (float)_speedFactor;
+    }
+}
+
+void DGCameraManager::panToTargetAngle() {
+    if (_angleH < (_angleHTarget - _targetHError) || _angleH > (_angleHTarget + _targetHError)) {
+        _deltaX = (_angleHTarget - _angleH) * 360;
+        _speedH = fabs((float)_deltaX) / (float)_speedFactor;
+    }
+    else {
+        _deltaX = 0;
+        _angleHTarget = _angleH;
+    }
+
+    if (_angleV < (_angleVTarget - _targetVError) || _angleV > (_angleVTarget + _targetVError)) {
+        _deltaY = (_angleVTarget - _angleV) * 360;
+        _speedV = fabs((float)_deltaY) / (float)_speedFactor;
+    }
+    else {
+        _deltaY = 0;
+        _angleVTarget = _angleV;
+    }
+}
+
+void DGCameraManager::simulateWalk() {
+    if (_canWalk) {
+        _bob.currentFactor = DGCamWalkFactor;
+        _bob.currentSpeed = DGCamWalkSpeed;   
+        
+        _fovCurrent = _fovNormal + (float)DGCamWalkZoomIn;
+        
+        _bob.state = DGCamWalking;
+    }
+}
+
+void DGCameraManager::stopPanning() {
+    this->pan(config->displayWidth / 2, config->displayHeight / 2);
+}
+
+// For the DRAG mode
 
 void DGCameraManager::startDragging(int xPosition, int yPosition) {
     _panRegion.origin.x = xPosition - _dragNeutralZone;
@@ -403,10 +453,6 @@ void DGCameraManager::stopDragging() {
     _panRegion.size.width = (_viewport.width / 2) + _dragNeutralZone;
     _panRegion.size.height = (_viewport.height / 2) + _dragNeutralZone;
     
-    this->pan(config->displayWidth / 2, config->displayHeight / 2);
-}
-
-void DGCameraManager::stopPanning() {
     this->pan(config->displayWidth / 2, config->displayHeight / 2);
 }
 
@@ -585,7 +631,9 @@ void DGCameraManager::_calculateBob() {
                 _fovCurrent -= ((float)10 / DGCamWalkZoomIn) * config->globalSpeed();
             else {
                 _fovCurrent = _fovNormal;
-                _bob.state = _bob.previousState;
+                if (_canBreathe)
+                    _bob.state = DGCamBreathing;
+                else _bob.state = DGCamIdle;
             }
             
             this->setViewport(config->displayWidth, config->displayHeight);
@@ -626,4 +674,14 @@ void DGCameraManager::_calculateBob() {
             _bob.displace = sin(_bob.position) * cos(_bob.position) / _bob.currentFactor;
             break;    
     }
+}
+
+int DGCameraManager::_toDegrees(float angle, float limit) {
+    int degrees = (angle * 360.0f) / limit;
+    return degrees;
+}
+
+float DGCameraManager::_toRadians(float angle, float limit) {
+    float radians = (angle * limit) / 360.0f;
+    return radians;
 }

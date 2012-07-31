@@ -172,7 +172,8 @@ void DGControl::cutscene(const char* fileName) {
     
 void DGControl::lookAt(float horizontal, float vertical, bool instant) {
     if (instant) {
-        cameraManager->setAngle(horizontal, vertical);
+        cameraManager->setAngleHorizontal(horizontal);
+        cameraManager->setAngleVertical(vertical);
     }
     else {
         cameraManager->setTargetAngle(horizontal, vertical);
@@ -779,15 +780,16 @@ void DGControl::_updateView(int state, bool inBackground) {
         // BUG: This causes a crash sometimes. Why?
         _console->update();
         
+        // We do this here in case the command changes the viewport
+        cameraManager->endOrthoView();
+        
         if (_console->isReadyToProcess()) {
             char command[DGMaxLogLength];
             _console->getCommand(command);
             script->processCommand(command);
         }
     }
-    
-    // FIXME: Stack overflow, likely a beginOrthoView unclosed
-    cameraManager->endOrthoView();
+    else cameraManager->endOrthoView();
     
     audioManager->setOrientation(cameraManager->orientation());
     

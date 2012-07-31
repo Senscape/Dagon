@@ -68,7 +68,6 @@ typedef struct {
     float nextPause;
     float position;
     int state;
-    int previousState;
     float timer;
 } DGCameraBob;
 
@@ -127,8 +126,11 @@ class DGCameraManager {
     float _maxSpeed;
     float _speedH;
     float _speedV;
+    int _speedFactor;
     
     void _calculateBob();
+    int _toDegrees(float angle, float limit);
+    float _toRadians(float angle, float limit);
     
     // Private constructor/destructor
     DGCameraManager();
@@ -148,41 +150,51 @@ public:
     
     // Checks
     
-    // Gets
-    
-    float angleH();
-    float angleV();
     bool canBreathe();
     bool canWalk();
+    bool isPanning();
+    
+    // Gets
+    
+    int angleHorizontal();
+    int angleVertical();
+    int cursorWhenPanning();
+    float fieldOfView();
+    int inertia();
+    int maxSpeed();
+    float motionHorizontal();
+    float motionVertical();
+    int neutralZone();
+    float* orientation(); // Returns the current angle in vector form
+    float* position(); // Returns the position of the camera
+    int speedFactor();
+    int verticalLimit();
     
     // Sets
     
+    void setAngleHorizontal(float horizontal);
+    void setAngleVertical(float vertical);
+    void setBreathe(bool enabled);
+    void setFieldOfView(float fov);
+    void setInertia(int inertia);
+    void setMaxSpeed(int speed);
+    void setNeutralZone(int zone);
+    void setSpeedFactor(int speed);
+    void setTargetAngle(float horizontal, float vertical);    
+    void setVerticalLimit(float limit);
+    void setViewport(int width, int height);    
+    void setWalk(bool enabled);
     
     // State changes
     
     void beginOrthoView();
-    int cursorWhenPanning();    
     void endOrthoView();
-    float fieldOfView();
-    bool isPanning();
-    float motionHorizontal();
-    float motionVertical();    
-    int neutralZone();
-    float* orientation();
     void pan(int xPosition, int yPosition);
     void panToTargetAngle();
-    float* position();
     void simulateWalk();
-    void setAngle(float horizontal, float vertical);
-    void setBreathe(bool enabled);
-    void setWalk(bool enabled);
-    void setTargetAngle(float horizontal, float vertical);
-    void setFieldOfView(float fov);
-    void setNeutralZone(int zone);
     void stopPanning();
-    void setViewport(int width, int height);
 
-    // For the Drag mode
+    // For the DRAG mode
     void startDragging(int xPosition, int yPosition); // Recreates the neutral zone
     void stopDragging(); // Resets the neutral zone
     
