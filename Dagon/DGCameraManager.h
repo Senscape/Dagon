@@ -38,8 +38,8 @@ enum DGCamBobStates {
 };
 
 enum DGCamDefaults {
-    DGCamAccelerationFactor = 250,
-    DGCamDragNeutralZone = 100,    
+    DGCamAccelerationFactor = 150,
+    DGCamDragNeutralZone = 50,
 	DGCamFieldOfView = 55,
     DGCamFreeNeutralZone = 300,
     DGCamInertia = 350, // Maintain motion after panning stops
@@ -190,6 +190,7 @@ public:
     // State changes
     
     void beginOrthoView();
+    void directPan(int xPosition, int yPosition);
     void init();
     void endOrthoView();
     void pan(int xPosition, int yPosition);

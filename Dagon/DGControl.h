@@ -24,7 +24,6 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDirectControlRefresh 0.5
 #define DGMaxHotKeys 13
 
 class DGAudioManager;
@@ -138,9 +137,8 @@ class DGControl {
     DGEventHandlers _eventHandlers;
     DGHotkeyData _hotkeyData[DGMaxHotKeys];
     
-    int _fpsCount;
     bool _directControlActive;
-    int _directControlHandler;
+    int _fpsCount;
     bool _isInitialized;
 	bool _isRunning;
     bool _isShuttingDown;

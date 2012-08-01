@@ -133,9 +133,6 @@ void DGControl::init() {
     _state = new DGState;
     _textureManager = new DGTextureManager;
     
-    _directControlActive = false;
-    _directControlHandler = timerManager->createManual(DGDirectControlRefresh);
-    
     _console = new DGConsole;
     if (config->debugMode) {
         // Console must be initialized after the Font Manager
@@ -153,6 +150,7 @@ void DGControl::init() {
     }
     else renderManager->resetFade();
     
+    _directControlActive = true;
     _isInitialized = true;
 	_isRunning = true;
 }
@@ -237,28 +235,24 @@ void DGControl::processKey(int aKey, int eventFlags) {
                 case 'W':
                     if (_console->isHidden()) {
                         cameraManager->pan(DGCurrent, 0);
-                        _directControlActive = true;
                     }
                     break;
                 case 'a':
                 case 'A':
                     if (_console->isHidden()) {
                         cameraManager->pan(0, DGCurrent);
-                        _directControlActive = true;
                     }
                     break;
                 case 's':
                 case 'S':
                     if (_console->isHidden()) {
                         cameraManager->pan(DGCurrent, config->displayHeight);
-                        _directControlActive = true;
                     }
                     break;
                 case 'd':
                 case 'D':
                     if (_console->isHidden()) {
                         cameraManager->pan(config->displayWidth, DGCurrent);
-                        _directControlActive = true;
                     }
                     break;
             }
@@ -318,8 +312,15 @@ void DGControl::processKey(int aKey, int eventFlags) {
 }
 
 void DGControl::processMouse(int x, int y, int eventFlags) {
-    cursorManager->updateCoords(x, y);
+    // TODO: Horrible nesting of IFs here... improve
     
+    if (config->controlMode == DGMouseFixed) {
+        if (!_directControlActive) {
+            cursorManager->updateCoords(x, y);
+        }
+    }
+    else cursorManager->updateCoords(x, y);
+        
     if (!cursorManager->isEnabled() || cursorManager->isFading()) {
         // Ignore all the rest
         cursorManager->setCursor(DGCursorNormal);
@@ -334,15 +335,33 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         script->processCallback(_eventHandlers.mouseButton, 0);
     }
     
-    if ((eventFlags == DGMouseEventRightUp) && _eventHandlers.hasMouseRightButton) {
-        script->processCallback(_eventHandlers.mouseRightButton, 0);
+    if (config->controlMode == DGMouseFixed) {
+        if (eventFlags == DGMouseEventRightUp) {
+            _directControlActive = !_directControlActive;
+        }
+    }
+    else {
+        if ((eventFlags == DGMouseEventRightUp) && _eventHandlers.hasMouseRightButton) {
+            script->processCallback(_eventHandlers.mouseRightButton, 0);
+        }
     }
     
     // The overlay system is handled differently than the spots, so we
     // do everything here. Eventually, we should tide up things a little.
 
+    bool canProcess = false;
+    
+    if (config->controlMode == DGMouseFixed) {
+        if (!_directControlActive)
+            canProcess = true;
+    }
+    else {
+        if (!cursorManager->isDragging())
+            canProcess = true;
+    }
+    
     // TODO: Use active overlays only
-    if (!cursorManager->isDragging()) {
+    if (canProcess) {
         if (_interface->scanOverlays()) {
             if ((eventFlags == DGMouseEventUp) && cursorManager->hasAction()) {
                 _processAction();
@@ -379,18 +398,34 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
             }
             break;
             
+        case DGMouseFixed:
+            if (_directControlActive) {
+                cursorManager->updateCoords(config->displayWidth / 2, config->displayHeight / 2); // Forced
+            
+                if (eventFlags == DGMouseEventMove) {
+                    cameraManager->directPan(x, y);
+                }
+            }
+            
+            if (eventFlags == DGMouseEventUp) {
+                if (cursorManager->hasAction()) {
+                    _processAction();
+                }
+            }
+            break;
+            
         case DGMouseDrag:
             if (eventFlags == DGMouseEventDrag) {
                 if (cursorManager->isDragging()) {
                     cameraManager->pan(x, y);
                     cursorManager->setCursor(cameraManager->cursorWhenPanning());
                 }
-                else cursorManager->setDragging(true);
             }
             
             // FIXME: Start dragging a few milliseconds after the mouse if down
-            if (eventFlags == DGMouseEventDown) {
+            if (eventFlags == DGMouseEventDown && !cursorManager->onButton()) {
                 cameraManager->startDragging(x, y);
+                cursorManager->setDragging(true);
             }
             
             if (eventFlags == DGMouseEventUp) {

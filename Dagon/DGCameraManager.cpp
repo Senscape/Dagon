@@ -186,9 +186,6 @@ void DGCameraManager::setNeutralZone(int zone) {
             break;
             
         case DGMouseFixed:
-            // Nothing to do here
-            break;
-            
         case DGMouseFree:
             // We calculate the factor to stretch the neutral zone with
             // the display height
@@ -269,6 +266,8 @@ void DGCameraManager::setViewport(int width, int height) {
     // current neutral zone (only in Free mode)
     switch (config->controlMode) {
         case DGMouseDrag:
+            this->setNeutralZone(_dragNeutralZone);
+        case DGMouseFixed:
             this->stopDragging(); // Refreshes the neutral zone and centers the cursor
             break;
         case DGMouseFree:
@@ -330,6 +329,31 @@ void DGCameraManager::endOrthoView() {
         
         _inOrthoView = false;
     }
+}
+
+void DGCameraManager::directPan(int xPosition, int yPosition) {
+    static int xPrevious = config->displayWidth / 2;
+    static int yPrevious = config->displayHeight / 2;
+    
+    if (xPosition < xPrevious) {
+        _angleH -= _maxSpeed;
+    }
+    else if (xPosition > xPrevious) {
+        _angleH += _maxSpeed;
+    }
+    
+    if (yPosition < yPrevious) {
+        _angleV += _maxSpeed / 1.5f;
+    }
+    else if (yPosition > yPrevious) {
+        _angleV -= _maxSpeed / 1.5f;
+    }
+    
+    if ((xPosition > 1) && (xPosition < (config->displayWidth - 1)))
+        xPrevious = xPosition;
+    
+    if ((yPosition > 1) && (yPosition < (config->displayHeight - 1)))
+        yPrevious = yPosition;
 }
 
 void DGCameraManager::init() {
