@@ -203,14 +203,33 @@ void DGSystem::init() {
         log->trace(DGModSystem, "%s", DGMsg040000);
         
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+        NSScreen *mainScreen = [NSScreen mainScreen];
+        NSRect screenRect = [mainScreen visibleFrame];
+        NSPoint origin;
+        
+        if (config->displayWidth > screenRect.size.width) {
+            config->displayWidth = screenRect.size.width;
+            origin.x = 0;
+        }
+        else {
+            origin.x = (screenRect.size.width - config->displayWidth) / 2;
+        }
+        
+        if (config->displayHeight > screenRect.size.height) {
+            config->displayHeight = screenRect.size.height;
+            origin.y = 0;
+        }
+        else {
+            origin.y = (screenRect.size.height - config->displayHeight) / 2;
+        }
         
         // Programmatically create a window
         window = [[NSWindow alloc]
-                  initWithContentRect: NSMakeRect(config->displayWidth / 2, config->displayHeight / 2, config->displayWidth, config->displayHeight)
+                  initWithContentRect: NSMakeRect(origin.x, origin.y, config->displayWidth, config->displayHeight)
                   styleMask: NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask | NSResizableWindowMask
                   backing: NSBackingStoreBuffered
                   defer: NO
-                  screen: [NSScreen mainScreen]];
+                  screen: mainScreen];
         
         // Programmatically create our NSView delegate
         NSRect mainDisplayRect, viewRect;
