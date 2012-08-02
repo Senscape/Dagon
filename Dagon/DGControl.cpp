@@ -581,17 +581,24 @@ void DGControl::switchTo(DGObject* theTarget) {
             _scene->setRoom((DGRoom*)theTarget);
             timerManager->setLuaObject(_currentRoom->luaObject());
             
-            if (!_currentRoom->hasNodes())
+            if (!_currentRoom->hasNodes()) {
                 log->warning(DGModControl, "%s: %s", DGMsg130000, _currentRoom->name());
+                return;
+            }
 
             break;
         case DGObjectNode:
             if (_currentRoom) {
                 DGNode* node = (DGNode*)theTarget;
-                if (!_currentRoom->switchTo(node))
+                if (!_currentRoom->switchTo(node)) {
                     log->error(DGModControl, "%s: %s (%s)", DGMsg230000, node->name(), _currentRoom->name()); // Bad node
+                    return;
+                }
             }
-            else log->error(DGModControl, "%s", DGMsg230001);
+            else {
+                log->error(DGModControl, "%s", DGMsg230001);
+                return;
+            }
             break;
     }
     
