@@ -497,6 +497,9 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 	static bool isDragging = false;
     BYTE keyboardState[256];
 
+	int width = DGConfig::getInstance().displayWidth;
+	int height = DGConfig::getInstance().displayHeight;
+
     switch(msg) {
 		case WM_ACTIVATE:
 			switch (wParam) {
@@ -522,6 +525,17 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			}
 			break;
 		case WM_MOUSEMOVE:
+			// For the fixed control mode, we reset the cursor position when it drifts out of the screen
+			if (DGControl::getInstance().isDirectControlActive()) {
+				if ((LOWORD(lParam) <= 1) || (LOWORD(lParam) >= (width - 1))) {
+					SetCursorPos(width / 2, height / 2);
+				}
+
+				if ((HIWORD(lParam) <= 1) || (HIWORD(lParam) >= (height - 1))) {
+					SetCursorPos(width / 2, height / 2);
+				}
+			}
+
 			EnterCriticalSection(&csSystemThread);
 			wglMakeCurrent(g_hDC, g_hRC);
 			if (isDragging)
@@ -544,8 +558,7 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				if (!PtInRect(&rect, pt)) {
 					EnterCriticalSection(&csSystemThread);
 					wglMakeCurrent(g_hDC, g_hRC);
-					DGControl::getInstance().processMouse(DGConfig::getInstance().displayWidth / 2, 
-					DGConfig::getInstance().displayHeight / 2, DGMouseEventMove);
+					DGControl::getInstance().processMouse(width / 2, height / 2, DGMouseEventMove);
 					wglMakeCurrent(NULL, NULL);
 					LeaveCriticalSection(&csSystemThread);
 

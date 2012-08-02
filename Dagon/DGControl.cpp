@@ -171,6 +171,13 @@ void DGControl::cutscene(const char* fileName) {
     _state->set(DGStateCutscene);
     cursorManager->fadeOut();
 }
+
+bool DGControl::isDirectControlActive() {
+	if (config->controlMode == DGMouseFixed)
+		return _directControlActive;
+	else
+		return false;
+}
     
 void DGControl::lookAt(float horizontal, float vertical, bool instant) {
     if (instant) {
