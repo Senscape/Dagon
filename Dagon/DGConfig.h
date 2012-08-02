@@ -35,13 +35,12 @@ enum DGConfigDefaults {
     DGDefAudioDevice = 0,    
     DGDefAutopaths = true,    
     DGDefAutorun = true,
-    DGDefBundleEnabled = true, // Not exported to Lua
+    DGDefBundleEnabled = true,
     DGDefControlMode = DGMouseFree,
 	DGDefDisplayWidth = 1280,
 	DGDefDisplayHeight = 800,
 	DGDefDisplayDepth = 24,
-	DGDefDebugMode = true, // This shouldn't default to true, careful while finding paths
-    DGDefDust = false,  // Move to effects
+	DGDefDebugMode = false,
     DGDefEffects = true,
 	DGDefForcedFullScreen = false,
 	DGDefFramebuffer = true,
@@ -49,7 +48,6 @@ enum DGConfigDefaults {
 	DGDefFullScreen = false,
 	DGDefLog = true,
     DGDefMute = false,
-    DGDefScare = false, // Move to effects
     DGDefShowHelpers = false,
 	DGDefShowSplash = true,
 	DGDefShowSpots = false,
@@ -106,7 +104,6 @@ public:
 	int displayHeight;
 	int displayDepth;
     bool debugMode;
-    bool dust;
     bool effects;
 	bool forcedFullScreen;
     bool framebuffer;
@@ -114,7 +111,6 @@ public:
 	bool fullScreen;
     bool log;
     bool mute;
-    bool scare;
     bool showHelpers;
     bool showSplash;
 	bool showSpots;

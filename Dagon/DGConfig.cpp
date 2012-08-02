@@ -38,7 +38,6 @@ DGConfig::DGConfig() {
 	displayHeight = DGDefDisplayHeight;
 	displayDepth = DGDefDisplayDepth;
 	debugMode = DGDefDebugMode;
-	dust = DGDefDust;
 	forcedFullScreen = DGDefForcedFullScreen;
     framebuffer = DGDefFramebuffer;
     framerate = DGDefFramerate;
@@ -51,7 +50,6 @@ DGConfig::DGConfig() {
 	showSpots = DGDefShowSpots;
     silentFeeds = DGDefSilentFeeds;
 	texCompression = DGDefTexCompression;
-    scare = DGDefScare;
     subtitles = DGDefSubtitles;
 	verticalSync = DGDefVerticalSync;
 	
