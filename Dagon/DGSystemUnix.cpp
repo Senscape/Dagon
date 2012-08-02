@@ -142,7 +142,6 @@ void DGSystem::findPaths(int argc, char* argv[]) {
 
 void DGSystem::init() {
     if (!_isInitialized) {
-        log->trace(DGModSystem, "========================================");
         log->trace(DGModSystem, "%s", DGMsg040000); 
 
 		XInitThreads();
