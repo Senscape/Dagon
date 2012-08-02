@@ -255,15 +255,17 @@ void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glScalef(1.0f * (_helperLoop * 2.0f), 1.0f * (_helperLoop * 2.0f), 0);   
     }
-    else glBlendFunc(GL_ONE, GL_ONE);
+    else {
+        glScalef(1.0f, 1.1f, 0);
+        glBlendFunc(GL_ONE, GL_ONE);
+    }
     
 	glVertexPointer(2, GL_FLOAT, 0, _defCursor);
 	
 	glDrawArrays(GL_LINE_LOOP, 0, (DGDefCursorDetail / 2) + 2);
     
 	if (animate) glScalef(0.85f * _helperLoop, 0.85f * _helperLoop, 0);
-    else glScalef(0.85f, 0.85f, 0);   
-    
+    else glScalef(0.835f, 0.85f, 0);
 	glDrawArrays(GL_TRIANGLE_FAN, 0, (DGDefCursorDetail / 2) + 2);
 	glPopMatrix();
     
