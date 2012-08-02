@@ -52,6 +52,7 @@ DGConfig::DGConfig() {
     silentFeeds = DGDefSilentFeeds;
 	texCompression = DGDefTexCompression;
     scare = DGDefScare;
+    subtitles = DGDefSubtitles;
 	verticalSync = DGDefVerticalSync;
 	
     _fps = 0;

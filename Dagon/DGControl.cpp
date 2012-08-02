@@ -279,11 +279,13 @@ void DGControl::processKey(int aKey, int eventFlags) {
             break;
             
         case DGKeyEventModified:
-            case 'f':
-            case 'F':
-                config->fullScreen = !config->fullScreen;
-                system->toggleFullScreen();
-                break;
+            switch (aKey) {
+                case 'f':
+                case 'F':
+                    config->fullScreen = !config->fullScreen;
+                    system->toggleFullScreen();
+                    break;
+            }
             break;
             
         case DGKeyEventUp:
