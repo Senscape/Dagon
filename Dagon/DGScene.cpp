@@ -218,10 +218,13 @@ void DGScene::setRoom(DGRoom* room) {
     // Determine if spots can be drawn
     DGNode* node = _currentRoom->currentNode();
     
-    if (node->hasSpots())
-        _canDrawSpots = true;
-    else
-        _canDrawSpots = false;
+    if (node) {
+        if (node->hasSpots())
+            _canDrawSpots = true;
+        else
+            _canDrawSpots = false;
+    }
+    else _canDrawSpots = false;
 }
 
 ////////////////////////////////////////////////////////////
