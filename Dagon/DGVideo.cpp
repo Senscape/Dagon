@@ -442,7 +442,7 @@ void DGVideo::_initConversionToRGB() {
 			_lookUpTable.m_plRV[i] = 408 * (16 - 128);
 			_lookUpTable.m_plGV[i] = -208 * (16 - 128);	// Green tweaked -2?
 			_lookUpTable.m_plGU[i] = -100 * (16 - 128);
-			_lookUpTable.m_plBU[i] = 517 * (16 - 126);
+			_lookUpTable.m_plBU[i] = 517 * (16 - 128);
 		}
 		else {
 			_lookUpTable.m_plRV[i] = _lookUpTable.m_plRV[240];
