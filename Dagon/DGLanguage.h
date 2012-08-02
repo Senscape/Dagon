@@ -94,6 +94,7 @@
 #define DGMsg250009 "Error while executing callback"
 #define DGMsg250010 "Syntax error"
 #define DGMsg250011 "Function expected as second parameter in register()"
+#define DGMsg250012 "Bad configuration file"
 
 // Font module
 #define DGMsg060000 "Initializing font manager..."
