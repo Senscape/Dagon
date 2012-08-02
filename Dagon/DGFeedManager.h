@@ -97,9 +97,9 @@ public:
     bool hasQueued();
     void queue(const char* text, const char* audio);
     void reshape();
+    void setFont(const char* fromFileName, unsigned int heightOfFont);    
     void show(const char* text);
     void showAndPlay(const char* text, const char* audio);
-    void setFont(const char* fromFileName, unsigned int heightOfFont);
     void update();
 };
 

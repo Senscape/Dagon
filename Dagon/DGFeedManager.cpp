@@ -69,29 +69,17 @@ bool DGFeedManager::isPlaying() {
     return _feedAudio->isPlaying();
 }
 
-void DGFeedManager::show(const char* text) {
-    string str = text;
-    size_t maxChars = config->displayWidth / _feedHeight;
-    size_t even = str.length() / (str.length() / maxChars + 1);
-    size_t currSpace = 0;
-    size_t nextSpace = 0; 
-    
-    _dim();
-    while (nextSpace != str.npos) {
-        nextSpace = str.find(" " , even + currSpace);
-        string substr = str.substr(currSpace, (nextSpace - currSpace));
-        
+void DGFeedManager::queue(const char* text, const char* audio) {
+    if (_feedAudio->state() != DGAudioPlaying) {
+        this->showAndPlay(text, audio);
+    }
+    else {
         DGFeed feed;
         
-        strncpy(feed.text, substr.c_str(), DGMaxFeedLength);
-        _calculatePosition(&feed);
-        feed.color = DGColorWhite - 0xFF000000;
-        feed.state = DGFeedFadeIn;
-        feed.timerHandle = timerManager->createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable  
+        strncpy(feed.text, text, DGMaxFeedLength);
+        strncpy(feed.audio, audio, DGMaxFileLength);
         
-        _arrayOfActiveFeeds.push_back(feed);
-        
-        currSpace = currSpace + substr.length() + 1;
+        _arrayOfFeeds.push_back(feed);
     }
 }
 
@@ -107,17 +95,37 @@ void DGFeedManager::reshape() {
     }
 }
 
-void DGFeedManager::queue(const char* text, const char* audio) {
-    if (_feedAudio->state() != DGAudioPlaying) {
-        this->showAndPlay(text, audio);
-    }
-    else {
-        DGFeed feed;
+// TODO: Note the font manager should purge unused fonts
+void DGFeedManager::setFont(const char* fromFileName, unsigned int heightOfFont) {
+    _feedFont = fontManager->load(fromFileName, heightOfFont);
+    _feedHeight = heightOfFont;
+}
+
+void DGFeedManager::show(const char* text) {
+    if (config->subtitles && (strcmp(text, "") != 0)) {
+        string str = text;
+        size_t maxChars = config->displayWidth / _feedHeight;
+        size_t even = str.length() / (str.length() / maxChars + 1);
+        size_t currSpace = 0;
+        size_t nextSpace = 0;
         
-        strncpy(feed.text, text, DGMaxFeedLength);
-        strncpy(feed.audio, audio, DGMaxFileLength);
-        
-        _arrayOfFeeds.push_back(feed);
+        _dim();
+        while (nextSpace != str.npos) {
+            nextSpace = str.find(" " , even + currSpace);
+            string substr = str.substr(currSpace, (nextSpace - currSpace));
+            
+            DGFeed feed;
+            
+            strncpy(feed.text, substr.c_str(), DGMaxFeedLength);
+            _calculatePosition(&feed);
+            feed.color = DGColorWhite - 0xFF000000;
+            feed.state = DGFeedFadeIn;
+            feed.timerHandle = timerManager->createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable
+            
+            _arrayOfActiveFeeds.push_back(feed);
+            
+            currSpace = currSpace + substr.length() + 1;
+        }
     }
 }
 
@@ -136,12 +144,6 @@ void DGFeedManager::showAndPlay(const char* text, const char* audio) {
     }
 }
 
-// TODO: Note the font manager should purge unused fonts
-void DGFeedManager::setFont(const char* fromFileName, unsigned int heightOfFont) {
-    _feedFont = fontManager->load(fromFileName, heightOfFont);
-    _feedHeight = heightOfFont;
-}
-
 void DGFeedManager::update() {
     vector<DGFeed>::iterator it;
     
@@ -150,7 +152,7 @@ void DGFeedManager::update() {
     while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
         switch ((*it).state) {
             case DGFeedFadeIn:
-                (*it).color += 0x10000000;
+                (*it).color += 0x08000000;
                 if ((*it).color >= 0xEE000000) {
                     // (*it).color = DGColorWhite;
                     (*it).state = DGFeedIdle;

@@ -144,6 +144,11 @@ static int DGConfigLibGet(lua_State *L) {
 		return 1;
 	}
     
+	if (strcmp(key, "subtitles") == 0) {
+		lua_pushboolean(L, DGConfig::getInstance().subtitles);
+		return 1;
+	}
+    
 	if (strcmp(key, "silentFeeds") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().silentFeeds);
 		return 1;
@@ -241,7 +246,10 @@ static int DGConfigLibSet(lua_State *L) {
     
 	if (strcmp(key, "silentFeeds") == 0)
 		DGConfig::getInstance().silentFeeds = (bool)lua_toboolean(L, 3);
-	
+
+    if (strcmp(key, "subtitles") == 0)
+		DGConfig::getInstance().subtitles = (bool)lua_toboolean(L, 3);
+    
 	if (strcmp(key, "texCompression") == 0)
 		DGConfig::getInstance().texCompression = (bool)lua_toboolean(L, 3);
 	
