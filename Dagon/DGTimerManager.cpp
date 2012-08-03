@@ -46,12 +46,14 @@ DGTimerManager::~DGTimerManager() {
 bool DGTimerManager::checkManual(int handle) {
     DGTimer* timer = _lookUp(handle);
     
-    time_t currentTime = DGSystem::getInstance().wallTime();
-    double duration = (double)(currentTime - timer->lastTime) / CLOCKS_PER_SEC;
-    
-    if (duration > timer->trigger) {
-        timer->lastTime = currentTime;
-        return true;
+    if (timer->isEnabled) {
+        time_t currentTime = DGSystem::getInstance().wallTime();
+        double duration = (double)(currentTime - timer->lastTime) / CLOCKS_PER_SEC;
+        
+        if (duration > timer->trigger) {
+            timer->lastTime = currentTime;
+            return true;
+        }
     }
     
     return false;
@@ -129,7 +131,8 @@ void DGTimerManager::disable(int handle) {
 
 void DGTimerManager::enable(int handle) {
     DGTimer* timer = _lookUp(handle);
-    timer->isEnabled = true;    
+    timer->isEnabled = true;
+    timer->lastTime = DGSystem::getInstance().wallTime();
 }
 
 void DGTimerManager::process() {
