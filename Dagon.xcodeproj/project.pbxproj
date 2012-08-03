@@ -185,6 +185,7 @@
 		FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGConsole.cpp; sourceTree = "<group>"; };
 		FBE8A80D1590E90600C6D44A /* DGVideoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGVideoManager.h; sourceTree = "<group>"; };
 		FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGVideoManager.cpp; sourceTree = "<group>"; };
+		FBE9FF2D15CB71B700CBB2D9 /* DGSlideProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGSlideProxy.h; sourceTree = "<group>"; };
 		FBF931CA15ADB2E90042F7FC /* FreeType.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FreeType.framework; path = Frameworks/FreeType.framework; sourceTree = "<group>"; };
 		FBFB04BC1583E520002280E1 /* DGSplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGSplashData.c; sourceTree = "<group>"; };
 		FBFCC9EF14BB361B003211AD /* DGTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGTexture.h; sourceTree = "<group>"; };
@@ -451,6 +452,7 @@
 				FBABA63A156583EC0009889F /* DGOverlayProxy.h */,
 				E8E0194814E366B800173A2D /* DGProxy.h */,
 				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
+				FBE9FF2D15CB71B700CBB2D9 /* DGSlideProxy.h */,
 				FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */,
 			);
 			name = Proxys;

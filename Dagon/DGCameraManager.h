@@ -77,10 +77,14 @@ class DGConfig;
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
+// TODO: This got fairly messy... Need to separate most of this into another class,
+// DGCameraState. Or even merge the camera state with the general State Manager.
+
 class DGCameraManager {
     DGConfig* config;
 
     bool _isInitialized;
+    bool _isLocked;
     
     bool _canBreathe;
     bool _canWalk;
@@ -90,6 +94,9 @@ class DGCameraManager {
     
     GLfloat _angleH;
     GLfloat _angleV;
+    
+    GLfloat _angleHPrevious;
+    GLfloat _angleVPrevious;
     
     GLfloat _angleHTarget;
     GLfloat _angleVTarget;
@@ -103,6 +110,7 @@ class DGCameraManager {
     
     GLfloat _fovCurrent;
     GLfloat _fovNormal;
+    GLfloat _fovPrevious;
     
     int _deltaX;
     int _deltaY;
@@ -201,6 +209,9 @@ public:
     // For the DRAG mode
     void startDragging(int xPosition, int yPosition); // Recreates the neutral zone
     void stopDragging(); // Resets the neutral zone
+    
+    void lock();
+    void unlock();
     
     void update();
 };

@@ -122,6 +122,7 @@ void DGScript::init(int argc, char* argv[]) {
     Luna<DGNodeProxy>::Register(_L);
     Luna<DGOverlayProxy>::Register(_L);    
     Luna<DGRoomProxy>::Register(_L);
+    Luna<DGSlideProxy>::Register(_L);
     Luna<DGSpotProxy>::Register(_L);
     
     // Register all libs
@@ -486,6 +487,9 @@ int DGScript::_globalSwitch(lua_State *L) {
         case DGObjectRoom:
             DGControl::getInstance().switchTo(DGProxyToRoom(L, 1));
             break;
+        case DGObjectSlide:
+            DGControl::getInstance().switchTo(DGProxyToSlide(L, 1));
+            break;
         case DGObjectGeneric:
             DGLog::getInstance().error(DGModScript, "%s", DGMsg250000);
             break;
@@ -546,6 +550,7 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, TALK, DGCursorTalk);
     DGLuaEnum(_L, CUSTOM, DGCursorCustom);
     
+    DGLuaEnum(_L, SLIDE, DGNorth);
     DGLuaEnum(_L, NORTH, DGNorth);
     DGLuaEnum(_L, EAST, DGEast);
     DGLuaEnum(_L, WEST, DGWest);
