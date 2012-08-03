@@ -33,6 +33,7 @@ DGRenderManager::DGRenderManager() {
     
     _blendTexture = NULL;
     _fadeTexture = NULL;
+    _fadeWithZoom = false;
     _helperLoop = 0.0f;
     
     _blendNextUpdate = false;
@@ -122,11 +123,12 @@ void DGRenderManager::init() {
 // Implementation - Blend and fades
 ////////////////////////////////////////////////////////////
 
-void DGRenderManager::blendNextUpdate() {
+void DGRenderManager::blendNextUpdate(bool fadeWithZoom) {
     _blendOpacity = 0.0f;
     _blendTexture->bind();
     this->copyView();
     _blendNextUpdate = true;
+    _fadeWithZoom = fadeWithZoom;
 }
 
 void DGRenderManager::fadeInNextUpdate() {
@@ -532,8 +534,21 @@ void DGRenderManager::copyView() {
 
 void DGRenderManager::blendView() {
 	if (_blendNextUpdate) {
-		int xStretch = _blendOpacity * (config->displayWidth / 4);
-		int yStretch = _blendOpacity * (config->displayHeight / 4);
+		int xStretch;
+		int yStretch;
+        
+        if (_fadeWithZoom) {
+            xStretch = _blendOpacity * (config->displayWidth / 4);
+            yStretch = _blendOpacity * (config->displayHeight / 4);
+            
+            // This should a bit faster than the walk_time factor
+            _blendOpacity += 0.015f * config->globalSpeed();
+        }
+        else {
+            xStretch = 0;
+            yStretch = 0;
+            _blendOpacity += 0.0125f * config->globalSpeed();
+        }
         
         // Note the coordinates here are inverted because of the way the screen is captured
         float coords[] = {-xStretch, config->displayHeight + yStretch, 
@@ -546,8 +561,6 @@ void DGRenderManager::blendView() {
 		_blendTexture->bind();
 		this->drawSlide(coords);
         
-		// This should a bit faster than the walk_time factor
-		_blendOpacity += 0.015f * config->globalSpeed();
         if (_blendNextUpdate) {
             if (_blendOpacity >= 1.0f) {
                 _blendOpacity = 0.0f;

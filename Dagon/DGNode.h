@@ -39,6 +39,7 @@ class DGNode : public DGObject {
     bool _hasBundleName;
     DGNode* _previousNode;
     bool _isSlide;
+    int _slideReturn;
     
     std::vector<DGSpot*> _arrayOfSpots;
     std::vector<DGSpot*>::iterator _it;
@@ -64,6 +65,7 @@ public:
     const char* description();
     DGSpot* currentSpot();
     DGNode* previousNode();
+    int slideReturn();
     
     // Sets
     
@@ -71,6 +73,7 @@ public:
     void setDescription(const char* description);
     void setPreviousNode(DGNode* node);
     void setSlide(bool enabled);
+    void setSlideReturn(int luaHandler);
     
     // State changes
     

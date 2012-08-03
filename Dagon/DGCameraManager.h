@@ -211,6 +211,7 @@ public:
     void stopDragging(); // Resets the neutral zone
     
     void lock();
+    bool isLocked();
     void unlock();
     
     void update();

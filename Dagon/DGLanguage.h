@@ -65,6 +65,7 @@
 #define DGMsg130001 "No spots to draw"
 #define DGMsg230000 "Node not added to current room"
 #define DGMsg230001 "No current room specified"
+#define DGMsg230002 "Slide not added to current room"
 
 // System module
 #define DGMsg040000 "Initializing system..."

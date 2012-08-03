@@ -63,7 +63,7 @@ public:
         
         // Back
         
-        int coordsBack[] = {0, 1280, 2048, 1280, 2048, 2048, 0, 2048};
+        int coordsBack[] = {0, 1280, 2048, 1280, 2048, 1624, 0, 1624};
         arrayOfCoordinates.assign(coordsBack, coordsBack + 8);
         spot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
         
@@ -101,7 +101,9 @@ public:
     // Add a spot to the node
     int addSpot(lua_State *L) {
         if (DGCheckProxy(L, 1) == DGObjectSpot) {
-            n->addSpot(DGProxyToSpot(L, 1));
+            DGSpot* spot = DGProxyToSpot(L, 1);
+            spot->setOrigin(64, 424);
+            n->addSpot(spot);
             
             // Now we get the metatable of the added spot and set it
             // as a return value
@@ -109,6 +111,15 @@ public:
             lua_setmetatable(L, -2);
             
             return 1;
+        }
+        
+        return 0;
+    }
+    
+    // Process a custom action
+    int onReturn(lua_State *L) {
+        if (lua_isfunction(L, 1)) {
+            n->setSlideReturn(luaL_ref(L, LUA_REGISTRYINDEX));
         }
         
         return 0;
@@ -129,6 +140,7 @@ const char DGSlideProxy::className[] = DGSlideProxyName;
 Luna<DGSlideProxy>::RegType DGSlideProxy::methods[] = {
     DGObjectMethods(DGSlideProxy),
     method(DGSlideProxy, addSpot),
+    method(DGSlideProxy, onReturn),
     {0,0}
 };
 
