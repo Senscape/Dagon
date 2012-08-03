@@ -133,6 +133,9 @@ void DGControl::init() {
     _state = new DGState;
     _textureManager = new DGTextureManager;
     
+    _dragTimer = timerManager->createManual(DGTimeToStartDragging);
+    timerManager->disable(_dragTimer);
+    
     _console = new DGConsole;
     if (config->debugMode) {
         // Console must be initialized after the Font Manager
@@ -433,16 +436,17 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
             
             // FIXME: Start dragging a few milliseconds after the mouse if down
             if (eventFlags == DGMouseEventDown && !cursorManager->onButton()) {
-                cameraManager->startDragging(x, y);
-                cursorManager->setDragging(true);
+                timerManager->enable(_dragTimer);
             }
             
             if (eventFlags == DGMouseEventUp) {
+                timerManager->disable(_dragTimer); // Cancel the current check
+                
                 if (cursorManager->isDragging()) {
                     cursorManager->setDragging(false);
                     cameraManager->stopDragging();
                 }
-                else if (cursorManager->hasAction()) {                    
+                else if (cursorManager->hasAction()) {
                     _processAction();
                 }
             }
@@ -563,43 +567,81 @@ void DGControl::sleep(int forSeconds) {
 
 void DGControl::switchTo(DGObject* theTarget) {
     static bool firstSwitch = true;
+    bool performWalk;
     
-    if (!firstSwitch) {
-        _updateView(DGStateNode, true);
-        renderManager->blendNextUpdate();
-        cameraManager->simulateWalk();
-    }
+    _updateView(DGStateNode, true);
+    renderManager->blendNextUpdate();
     
     audioManager->clear();
     
     system->suspendThread(DGVideoThread);
     videoManager->flush();
     
-    switch (theTarget->type()) {
-        case DGObjectRoom:
-            _currentRoom = (DGRoom*)theTarget;
-            _scene->setRoom((DGRoom*)theTarget);
-            timerManager->setLuaObject(_currentRoom->luaObject());
-            
-            if (!_currentRoom->hasNodes()) {
-                log->warning(DGModControl, "%s: %s", DGMsg130000, _currentRoom->name());
-                return;
-            }
-
-            break;
-        case DGObjectNode:
-            if (_currentRoom) {
-                DGNode* node = (DGNode*)theTarget;
-                if (!_currentRoom->switchTo(node)) {
-                    log->error(DGModControl, "%s: %s (%s)", DGMsg230000, node->name(), _currentRoom->name()); // Bad node
+    if (theTarget) {
+        switch (theTarget->type()) {
+            case DGObjectRoom:
+                _currentRoom = (DGRoom*)theTarget;
+                _scene->setRoom((DGRoom*)theTarget);
+                timerManager->setLuaObject(_currentRoom->luaObject());
+                
+                if (!_currentRoom->hasNodes()) {
+                    log->warning(DGModControl, "%s: %s", DGMsg130000, _currentRoom->name());
                     return;
                 }
-            }
-            else {
-                log->error(DGModControl, "%s", DGMsg230001);
-                return;
-            }
-            break;
+                performWalk = true;
+                
+                break;
+            case DGObjectSlide:
+                if (_currentRoom) {
+                    DGNode* node = (DGNode*)theTarget;
+                        node->setPreviousNode(this->currentNode());
+                    
+                    if (!_currentRoom->switchTo(node)) {
+                        log->error(DGModControl, "%s: %s (%s)", DGMsg230000, node->name(), _currentRoom->name()); // Bad node
+                        return;
+                    }
+                    
+                    if (_directControlActive)
+                        _directControlActive = false;
+                    
+                    cameraManager->lock();
+                    performWalk = false;
+                }
+                else {
+                    log->error(DGModControl, "%s", DGMsg230001);
+                    return;
+                }
+
+                break;
+            case DGObjectNode:
+                if (_currentRoom) {
+                    DGNode* node = (DGNode*)theTarget;
+                    if (!_currentRoom->switchTo(node)) {
+                        log->error(DGModControl, "%s: %s (%s)", DGMsg230000, node->name(), _currentRoom->name()); // Bad node
+                        return;
+                    }
+                    performWalk = true;
+                }
+                else {
+                    log->error(DGModControl, "%s", DGMsg230001);
+                    return;
+                }
+                
+                break;
+        }
+    }
+    else {
+        // Only slides switch to NULL targets, so we check whether the new object is another slide.
+        // If it isn't, we unlock the camera.
+        if (_currentRoom) {
+            DGNode* node = this->currentNode()->previousNode();
+            _currentRoom->switchTo(node);
+            
+            if (!node->isSlide())
+                cameraManager->unlock();
+            
+            performWalk = false;
+        }
     }
     
     if (_currentRoom) {
@@ -608,6 +650,18 @@ void DGControl::switchTo(DGObject* theTarget) {
             DGNode* currentNode = _currentRoom->currentNode();
             _textureManager->flush();
             
+            if (!firstSwitch && performWalk) {
+                cameraManager->simulateWalk();
+            
+                // Finally, check if must play a single footstep
+                if (_currentRoom->hasDefaultFootstep()) {
+                    _currentRoom->defaultFootstep()->unload();
+                    audioManager->requestAudio(_currentRoom->defaultFootstep());
+                    _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+                    _currentRoom->defaultFootstep()->play();
+                }
+            }
+                
             if (currentNode->hasSpots()) {                
                 currentNode->beginIteratingSpots();
                 do {
@@ -683,15 +737,6 @@ void DGControl::switchTo(DGObject* theTarget) {
                 it++;
             }
         }
-        
-        // Finally, check if must play a single footstep
-        if (_currentRoom->hasDefaultFootstep() && !firstSwitch) {
-            _currentRoom->defaultFootstep()->unload();
-            audioManager->requestAudio(_currentRoom->defaultFootstep());
-            _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-            _currentRoom->defaultFootstep()->play();
-        }
-        else firstSwitch = false;
     }
     
     audioManager->flush();
@@ -699,6 +744,9 @@ void DGControl::switchTo(DGObject* theTarget) {
     system->resumeThread(DGVideoThread);
     
     cameraManager->stopPanning();
+    
+    if (firstSwitch)
+        firstSwitch = false;
 }
 
 void DGControl::syncSpot(DGSpot* spot) {
@@ -787,7 +835,17 @@ bool DGControl::update() {
 				_updateView(_state->current(), false);
 				break;
 		}
-
+        
+        if (config->controlMode == DGMouseDrag) {
+            if (timerManager->checkManual(_dragTimer)) {
+                DGPoint position = cursorManager->position();
+                cameraManager->startDragging(position.x, position.y);
+                cursorManager->setDragging(true);
+                
+                timerManager->disable(_dragTimer);            
+            }
+        }
+        
 		if (_isShuttingDown) {
 			if (timerManager->checkManual(_shutdownTimer)) {
 				this->terminate();

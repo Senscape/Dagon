@@ -24,6 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
+#define DGTimeToStartDragging 0.5f
 #define DGMaxHotKeys 13
 
 class DGAudioManager;
@@ -138,6 +139,7 @@ class DGControl {
     DGHotkeyData _hotkeyData[DGMaxHotKeys];
     
     bool _directControlActive;
+    int _dragTimer;
     int _fpsCount;
     bool _isInitialized;
 	bool _isRunning;

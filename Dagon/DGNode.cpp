@@ -25,7 +25,8 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGNode::DGNode() {
-    _hasBundleName = false;    
+    _hasBundleName = false;
+    _isSlide = false;
     this->setType(DGObjectNode);
 }
 
@@ -61,6 +62,10 @@ bool DGNode::hasSpots() {
     return !_arrayOfSpots.empty();
 }
 
+bool DGNode::isSlide() {
+    return _isSlide;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
@@ -77,6 +82,10 @@ const char* DGNode::description() {
     return _description.c_str();
 }
 
+DGNode* DGNode::previousNode() {
+    return _previousNode;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
@@ -88,6 +97,14 @@ void DGNode::setBundleName(const char* name) {
 
 void DGNode::setDescription(const char* description) {
     _description = description;
+}
+
+void DGNode::setPreviousNode(DGNode* node) {
+    _previousNode = node;
+}
+
+void DGNode::setSlide(bool enabled) {
+    _isSlide = enabled;
 }
 
 ////////////////////////////////////////////////////////////

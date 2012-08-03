@@ -179,19 +179,23 @@ public:
                 s->setTexture(texture);
                 break;
             case SWITCH:
+                action.type = DGActionSwitch;
+                action.cursor = DGCursorForward;
+                action.luaObject = s->luaObject();
+                
                 type = DGCheckProxy(L, 2);
                 if (type == DGObjectNode)
                     action.target = DGProxyToNode(L, 2);
+                else if (type == DGObjectSlide) {
+                    action.cursor = DGCursorLook;
+                    action.target = DGProxyToSlide(L, 2);
+                }
                 else if (type == DGObjectRoom)
                     action.target = DGProxyToRoom(L, 2);
                 else {
                     DGLog::getInstance().error(DGModScript, "%s", DGMsg250005);
                     return 0;
                 }
-                
-                action.type = DGActionSwitch;
-                action.cursor = DGCursorForward;
-                action.luaObject = s->luaObject();
                 
                 s->setAction(&action);
                 if (!s->hasColor())

@@ -37,6 +37,8 @@ class DGNode : public DGObject {
     
     char _bundleName[DGMaxObjectName];
     bool _hasBundleName;
+    DGNode* _previousNode;
+    bool _isSlide;
     
     std::vector<DGSpot*> _arrayOfSpots;
     std::vector<DGSpot*>::iterator _it;
@@ -54,18 +56,21 @@ public:
     
     bool hasBundleName();
     bool hasSpots();
+    bool isSlide();
     
     // Gets
     
     char* bundleName();
     const char* description();
     DGSpot* currentSpot();
-    
+    DGNode* previousNode();
     
     // Sets
     
     void setBundleName(const char* name);
     void setDescription(const char* description);
+    void setPreviousNode(DGNode* node);
+    void setSlide(bool enabled);
     
     // State changes
     

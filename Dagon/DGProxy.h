@@ -42,6 +42,7 @@ extern "C" {
 #define DGNodeProxyName "Node"
 #define DGOverlayProxyName "Overlay"
 #define DGRoomProxyName "Room"
+#define DGSlideProxyName "Slide"
 #define DGSpotProxyName "Spot"
 
 #define method(class, name) {#name, &class::name}
@@ -53,6 +54,7 @@ static DGImage* DGProxyToImage(lua_State *L, int idx);
 static DGNode* DGProxyToNode(lua_State *L, int idx);
 static DGOverlay* DGProxyToOverlay(lua_State *L, int idx);
 static DGRoom* DGProxyToRoom(lua_State *L, int idx);
+static DGNode* DGProxyToSlide(lua_State *L, int idx);
 static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 
 // Now that the proxy functions has been declared, we
@@ -66,6 +68,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 #include "DGNodeProxy.h"
 #include "DGOverlayProxy.h"
 #include "DGRoomProxy.h"
+#include "DGSlideProxy.h"
 #include "DGSpotProxy.h"
 
 // We include non-proxy libraries here as well
@@ -127,8 +130,11 @@ int DGCheckProxy(lua_State *L, int idx) {
         if (_checkutype(L, idx, DGRoomProxy::className))
             return DGObjectRoom; // It's a room
         
+        if (_checkutype(L, idx, DGSlideProxy::className))
+            return DGObjectSlide; // It's a slide
+        
         if (_checkutype(L, idx, DGSpotProxy::className))
-            return DGObjectSpot; // It's a room        
+            return DGObjectSpot; // It's a spot        
         
         return DGObjectGeneric; // None of the above, we return a generic type
     }
@@ -164,6 +170,11 @@ DGOverlay* DGProxyToOverlay(lua_State *L, int idx) {
 DGRoom* DGProxyToRoom(lua_State *L, int idx) {
     DGRoomProxy* r = Luna<DGRoomProxy>::check(L, idx);
     return r->ptr();    
+}
+
+DGNode* DGProxyToSlide(lua_State *L, int idx) {
+    DGSlideProxy* s = Luna<DGSlideProxy>::check(L, idx);
+    return s->ptr();
 }
 
 DGSpot* DGProxyToSpot(lua_State *L, int idx) {

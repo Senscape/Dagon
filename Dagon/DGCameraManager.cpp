@@ -154,7 +154,7 @@ void DGCameraManager::setAngleVertical(float vertical) {
 }
 
 void DGCameraManager::setBreathe(bool enabled) {
-    _canBreathe = enabled;
+    _canBreathe = true;
     
     if (enabled) {
         _bob.state = DGCamBreathing;
@@ -165,9 +165,11 @@ void DGCameraManager::setBreathe(bool enabled) {
 }
 
 void DGCameraManager::setFieldOfView(float fov) {
-    _fovNormal = fov;
-    _fovCurrent = _fovNormal;
-    this->setViewport(config->displayWidth, config->displayHeight); // Update the viewport
+    if (!_isLocked) {
+        _fovNormal = fov;
+        _fovCurrent = _fovNormal;
+        this->setViewport(config->displayWidth, config->displayHeight); // Update the viewport
+    }
 }
 
 void DGCameraManager::setInertia(int inertia) {
@@ -335,36 +337,42 @@ void DGCameraManager::directPan(int xPosition, int yPosition) {
     static int xPrevious = config->displayWidth / 2;
     static int yPrevious = config->displayHeight / 2;
     
-    if (xPosition < xPrevious) {
-        _angleH -= _maxSpeed;
+    if (!_isLocked) {
+        if (xPosition < xPrevious) {
+            _angleH -= _maxSpeed;
+        }
+        else if (xPosition > xPrevious) {
+            _angleH += _maxSpeed;
+        }
+        
+        if (yPosition < yPrevious) {
+            _angleV += _maxSpeed / 1.5f;
+        }
+        else if (yPosition > yPrevious) {
+            _angleV -= _maxSpeed / 1.5f;
+        }
+        
+        if ((xPosition > 1) && (xPosition < (config->displayWidth - 1)))
+            xPrevious = xPosition;
+        
+        if ((yPosition > 1) && (yPosition < (config->displayHeight - 1)))
+            yPrevious = yPosition;
     }
-    else if (xPosition > xPrevious) {
-        _angleH += _maxSpeed;
-    }
-    
-    if (yPosition < yPrevious) {
-        _angleV += _maxSpeed / 1.5f;
-    }
-    else if (yPosition > yPrevious) {
-        _angleV -= _maxSpeed / 1.5f;
-    }
-    
-    if ((xPosition > 1) && (xPosition < (config->displayWidth - 1)))
-        xPrevious = xPosition;
-    
-    if ((yPosition > 1) && (yPosition < (config->displayHeight - 1)))
-        yPrevious = yPosition;
 }
 
 void DGCameraManager::init() {
     _canBreathe = false;
     _canWalk = false;
+    _isLocked = false;
     
     _accelH = 0.0f;
     _accelV = 0.0f;
     
     _angleH = 0.0f;
     _angleV = 0.0f;
+    
+    _angleHPrevious = 0.0f;
+    _angleVPrevious = 0.0f;
     
     _angleHLimit = (float)M_PI * 2;
     _angleVLimit = (float)M_PI / 2;
@@ -385,6 +393,7 @@ void DGCameraManager::init() {
     
     _fovCurrent = DGCamFieldOfView;
     _fovNormal = DGCamFieldOfView;
+    _fovPrevious = DGCamFieldOfView;
     
     _dragNeutralZone = DGCamDragNeutralZone;
     _freeNeutralZone = DGCamFreeNeutralZone;
@@ -418,49 +427,53 @@ void DGCameraManager::init() {
 }
 
 void DGCameraManager::pan(int xPosition, int yPosition) {
-    if (xPosition != DGCurrent) {
-        if (xPosition > _panRegion.size.width)
-            _deltaX = xPosition - _panRegion.size.width;
-        else if (xPosition < _panRegion.origin.x)
-            _deltaX = xPosition - _panRegion.origin.x;
-        else _deltaX = 0.0f;
-    }
+    if (!_isLocked) {
+        if (xPosition != DGCurrent) {
+            if (xPosition > _panRegion.size.width)
+                _deltaX = xPosition - _panRegion.size.width;
+            else if (xPosition < _panRegion.origin.x)
+                _deltaX = xPosition - _panRegion.origin.x;
+            else _deltaX = 0.0f;
+        }
+            
+        if (yPosition != DGCurrent) {
+            if (yPosition > _panRegion.size.height)
+                _deltaY = _panRegion.size.height - yPosition;
+            else if (yPosition < _panRegion.origin.y)
+                _deltaY = _panRegion.origin.y - yPosition;
+            else _deltaY = 0.0f;
+        }
         
-    if (yPosition != DGCurrent) {
-        if (yPosition > _panRegion.size.height)
-            _deltaY = _panRegion.size.height - yPosition;
-        else if (yPosition < _panRegion.origin.y)
-            _deltaY = _panRegion.origin.y - yPosition;
-        else _deltaY = 0.0f;
-    }
-    
-    if (config->controlMode == DGMouseDrag) {
-        _speedH = fabs((float)_deltaX) / (float)(_speedFactor * 2); // Make movement even smoother
-        _speedV = fabs((float)_deltaY) / (float)(_speedFactor * 2);
-    }
-    else {
-        _speedH = fabs((float)_deltaX) / (float)_speedFactor;
-        _speedV = fabs((float)_deltaY) / (float)_speedFactor;
+        if (config->controlMode == DGMouseDrag) {
+            _speedH = fabs((float)_deltaX) / (float)(_speedFactor * 2); // Make movement even smoother
+            _speedV = fabs((float)_deltaY) / (float)(_speedFactor * 2);
+        }
+        else {
+            _speedH = fabs((float)_deltaX) / (float)_speedFactor;
+            _speedV = fabs((float)_deltaY) / (float)_speedFactor;
+        }
     }
 }
 
 void DGCameraManager::panToTargetAngle() {
-    if (_angleH < (_angleHTarget - _targetHError) || _angleH > (_angleHTarget + _targetHError)) {
-        _deltaX = (_angleHTarget - _angleH) * 360;
-        _speedH = fabs((float)_deltaX) / (float)_speedFactor;
-    }
-    else {
-        _deltaX = 0;
-        _angleHTarget = _angleH;
-    }
+    if (!_isLocked) {
+        if (_angleH < (_angleHTarget - _targetHError) || _angleH > (_angleHTarget + _targetHError)) {
+            _deltaX = (_angleHTarget - _angleH) * 360;
+            _speedH = fabs((float)_deltaX) / (float)_speedFactor;
+        }
+        else {
+            _deltaX = 0;
+            _angleHTarget = _angleH;
+        }
 
-    if (_angleV < (_angleVTarget - _targetVError) || _angleV > (_angleVTarget + _targetVError)) {
-        _deltaY = (_angleVTarget - _angleV) * 360;
-        _speedV = fabs((float)_deltaY) / (float)_speedFactor;
-    }
-    else {
-        _deltaY = 0;
-        _angleVTarget = _angleV;
+        if (_angleV < (_angleVTarget - _targetVError) || _angleV > (_angleVTarget + _targetVError)) {
+            _deltaY = (_angleVTarget - _angleV) * 360;
+            _speedV = fabs((float)_deltaY) / (float)_speedFactor;
+        }
+        else {
+            _deltaY = 0;
+            _angleVTarget = _angleV;
+        }
     }
 }
 
@@ -495,6 +508,40 @@ void DGCameraManager::stopDragging() {
     _panRegion.size.height = (_viewport.height / 2) + _dragNeutralZone;
     
     this->pan(config->displayWidth / 2, config->displayHeight / 2);
+}
+
+void DGCameraManager::lock() {
+    this->stopPanning();
+    
+    _motionDown = 0;
+    _motionUp = 0;
+    _motionLeft = 0;
+    _motionRight = 0;
+    
+    _angleHPrevious = _angleH;
+    _angleVPrevious = _angleV;
+    _fovPrevious = _fovCurrent;
+    
+    _angleH = 0.0f;
+    _angleV = 0.0f;
+    
+    // Not necessary after all
+    /*if (_canBreathe)
+        _fovCurrent = 55.0f;
+    else
+        _fovCurrent = 55.0f;*/
+    
+    this->setViewport(config->displayWidth, config->displayHeight);
+    _isLocked = true;
+}
+
+void DGCameraManager::unlock() {
+    _angleH = _angleHPrevious;
+    _angleV = _angleVPrevious;
+    _fovCurrent = _fovPrevious;
+    
+    this->setViewport(config->displayWidth, config->displayHeight);
+    _isLocked = false;
 }
 
 void DGCameraManager::update() {
