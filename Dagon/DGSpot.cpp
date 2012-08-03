@@ -194,6 +194,16 @@ void DGSpot::setColor(int aColor) {
     _hasColor = true;
 }
 
+void DGSpot::setOrigin(int x, int y) {
+    for (int i = 0; i < _arrayOfCoordinates.size(); i += 2) {
+        _arrayOfCoordinates[i] += x;
+        _arrayOfCoordinates[i + 1] += y;
+    }
+    
+    _xOrigin = x;
+    _yOrigin = y;
+}
+
 void DGSpot::setTexture(DGTexture* aTexture) {
     _attachedTexture = aTexture;
     _hasTexture = true;

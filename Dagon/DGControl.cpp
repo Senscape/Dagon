@@ -570,7 +570,6 @@ void DGControl::switchTo(DGObject* theTarget) {
     bool performWalk;
     
     _updateView(DGStateNode, true);
-    renderManager->blendNextUpdate();
     
     audioManager->clear();
     
@@ -580,6 +579,8 @@ void DGControl::switchTo(DGObject* theTarget) {
     if (theTarget) {
         switch (theTarget->type()) {
             case DGObjectRoom:
+                renderManager->blendNextUpdate(true);
+                
                 _currentRoom = (DGRoom*)theTarget;
                 _scene->setRoom((DGRoom*)theTarget);
                 timerManager->setLuaObject(_currentRoom->luaObject());
@@ -592,12 +593,14 @@ void DGControl::switchTo(DGObject* theTarget) {
                 
                 break;
             case DGObjectSlide:
+                renderManager->blendNextUpdate();
+                
                 if (_currentRoom) {
                     DGNode* node = (DGNode*)theTarget;
-                        node->setPreviousNode(this->currentNode());
+                    node->setPreviousNode(this->currentNode());
                     
                     if (!_currentRoom->switchTo(node)) {
-                        log->error(DGModControl, "%s: %s (%s)", DGMsg230000, node->name(), _currentRoom->name()); // Bad node
+                        log->error(DGModControl, "%s: %s (%s)", DGMsg230002, node->name(), _currentRoom->name()); // Bad slide
                         return;
                     }
                     
@@ -614,6 +617,8 @@ void DGControl::switchTo(DGObject* theTarget) {
 
                 break;
             case DGObjectNode:
+                renderManager->blendNextUpdate(true);
+                
                 if (_currentRoom) {
                     DGNode* node = (DGNode*)theTarget;
                     if (!_currentRoom->switchTo(node)) {
@@ -634,10 +639,18 @@ void DGControl::switchTo(DGObject* theTarget) {
         // Only slides switch to NULL targets, so we check whether the new object is another slide.
         // If it isn't, we unlock the camera.
         if (_currentRoom) {
-            DGNode* node = this->currentNode()->previousNode();
-            _currentRoom->switchTo(node);
+            renderManager->blendNextUpdate();
             
-            if (!node->isSlide())
+            DGNode* currentNode = this->currentNode();
+            DGNode* previousNode = currentNode->previousNode();
+            
+            _currentRoom->switchTo(previousNode);
+            
+            if (currentNode->slideReturn()) {
+                script->processCallback(currentNode->slideReturn(), currentNode->luaObject());
+            }
+            
+            if (!previousNode->isSlide())
                 cameraManager->unlock();
             
             performWalk = false;
@@ -649,18 +662,6 @@ void DGControl::switchTo(DGObject* theTarget) {
             // Now we proceed to load the textures of the current node
             DGNode* currentNode = _currentRoom->currentNode();
             _textureManager->flush();
-            
-            if (!firstSwitch && performWalk) {
-                cameraManager->simulateWalk();
-            
-                // Finally, check if must play a single footstep
-                if (_currentRoom->hasDefaultFootstep()) {
-                    _currentRoom->defaultFootstep()->unload();
-                    audioManager->requestAudio(_currentRoom->defaultFootstep());
-                    _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-                    _currentRoom->defaultFootstep()->play();
-                }
-            }
                 
             if (currentNode->hasSpots()) {                
                 currentNode->beginIteratingSpots();
@@ -735,6 +736,18 @@ void DGControl::switchTo(DGObject* theTarget) {
                 (*it)->play();
                 
                 it++;
+            }
+        }
+        
+        if (!firstSwitch && performWalk) {
+            cameraManager->simulateWalk();
+            
+            // Finally, check if must play a single footstep
+            if (_currentRoom->hasDefaultFootstep()) {
+                _currentRoom->defaultFootstep()->unload();
+                audioManager->requestAudio(_currentRoom->defaultFootstep());
+                _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+                _currentRoom->defaultFootstep()->play();
             }
         }
     }

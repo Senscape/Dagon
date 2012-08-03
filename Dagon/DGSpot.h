@@ -98,6 +98,7 @@ public:
     void setAction(DGAction* anAction);
     void setAudio(DGAudio* anAudio);
     void setColor(int aColor);
+    void setOrigin(int x, int y);
     void setTexture(DGTexture* aTexture);
     void setVideo(DGVideo* aVideo);
     void setVolume(float theVolume);

@@ -42,9 +42,35 @@ public:
         int flags = DGSpotUser;
         float volume = 1.0f;
         
-        if (lua_istable(L, 3)) {
+        int params = lua_gettop(L);
+        int direction = DGNorth;
+        int coordsIndex;
+        int flagsIndex;
+        
+        if (params == 3) {
+            direction = luaL_checknumber(L, 1);
+            coordsIndex = 2;
+            flagsIndex = 3;
+        }
+        else if (params == 2) {
+            if (lua_isnumber(L, 1)) {
+                direction = lua_tonumber(L, 1);
+                coordsIndex = 2;
+                flagsIndex = 3; // Won't pass the check
+            }
+            else {
+                coordsIndex = 1;
+                flagsIndex = 2;
+            }
+        }
+        else if (params == 1) {
+            coordsIndex = 1;
+        }
+        else return; // Everything is wrong!
+        
+        if (lua_istable(L, flagsIndex)) {
             lua_pushnil(L);
-            while (lua_next(L, 3) != 0) {
+            while (lua_next(L, flagsIndex) != 0) {
                 const char* key = lua_tostring(L, -2);
                 
                 // We can only read the key as a string, so we have no choice but
@@ -70,17 +96,17 @@ public:
             }
         }
         
-        if (lua_istable(L, 2)) {
+        if (lua_istable(L, coordsIndex)) {
             std::vector<int> arrayOfCoords;
             
             lua_pushnil(L);  // First key
-            while (lua_next(L, 2) != 0) {
+            while (lua_next(L, coordsIndex) != 0) {
                 // Uses key at index -2 and value at index -1
                 arrayOfCoords.push_back(lua_tonumber(L, -1));
                 lua_pop(L, 1);
             }
-            
-            s = new DGSpot(arrayOfCoords, luaL_checknumber(L, 1), flags);
+    
+            s = new DGSpot(arrayOfCoords, direction, flags);
             s->setVolume(volume);
         }
         else luaL_error(L, DGMsg250004);

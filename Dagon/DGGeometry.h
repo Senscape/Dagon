@@ -34,4 +34,6 @@ typedef struct {
     double z;
 } DGVector;
 
+// Add functions to make point, size, etc.
+
 #endif // DG_GEOMETRY_H

@@ -511,36 +511,46 @@ void DGCameraManager::stopDragging() {
 }
 
 void DGCameraManager::lock() {
-    this->stopPanning();
-    
-    _motionDown = 0;
-    _motionUp = 0;
-    _motionLeft = 0;
-    _motionRight = 0;
-    
-    _angleHPrevious = _angleH;
-    _angleVPrevious = _angleV;
-    _fovPrevious = _fovCurrent;
-    
-    _angleH = 0.0f;
-    _angleV = 0.0f;
-    
-    // Not necessary after all
-    /*if (_canBreathe)
-        _fovCurrent = 55.0f;
-    else
-        _fovCurrent = 55.0f;*/
-    
-    this->setViewport(config->displayWidth, config->displayHeight);
-    _isLocked = true;
+    if (!_isLocked) {
+        this->stopPanning();
+        
+        _motionDown = 0;
+        _motionUp = 0;
+        _motionLeft = 0;
+        _motionRight = 0;
+        
+        _angleHPrevious = _angleH;
+        _angleVPrevious = _angleV;
+        _fovPrevious = _fovCurrent;
+        
+        _angleH = 0.0f;
+        _angleV = 0.0f;
+        
+        // Not necessary after all
+        /*if (_canBreathe)
+            _fovCurrent = 55.0f;
+        else
+            _fovCurrent = 55.0f;
+        
+        this->setViewport(config->displayWidth, config->displayHeight);*/
+        
+        _isLocked = true;
+    }
+}
+
+bool DGCameraManager::isLocked() {
+    return _isLocked;
 }
 
 void DGCameraManager::unlock() {
     _angleH = _angleHPrevious;
     _angleV = _angleVPrevious;
-    _fovCurrent = _fovPrevious;
     
-    this->setViewport(config->displayWidth, config->displayHeight);
+    // Not necessary after all
+    /*_fovCurrent = _fovPrevious;
+    
+    this->setViewport(config->displayWidth, config->displayHeight);*/
+    
     _isLocked = false;
 }
 

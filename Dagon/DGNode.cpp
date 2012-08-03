@@ -27,6 +27,8 @@ using namespace std;
 DGNode::DGNode() {
     _hasBundleName = false;
     _isSlide = false;
+    _slideReturn = 0;
+    
     this->setType(DGObjectNode);
 }
 
@@ -64,6 +66,10 @@ bool DGNode::hasSpots() {
 
 bool DGNode::isSlide() {
     return _isSlide;
+}
+
+int DGNode::slideReturn() {
+    return _slideReturn;
 }
 
 ////////////////////////////////////////////////////////////
@@ -105,6 +111,10 @@ void DGNode::setPreviousNode(DGNode* node) {
 
 void DGNode::setSlide(bool enabled) {
     _isSlide = enabled;
+}
+
+void DGNode::setSlideReturn(int luaHandler) {
+    _slideReturn = luaHandler;
 }
 
 ////////////////////////////////////////////////////////////

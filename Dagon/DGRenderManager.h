@@ -55,6 +55,7 @@ class DGRenderManager {
     
     bool _framebufferEnabled;
     bool _effectsEnabled;
+    bool _fadeWithZoom;
     bool _texturesEnabled;
     
     DGTexture* _blendTexture;
@@ -88,7 +89,7 @@ public:
     
     // Control blend and fades
     
-    void blendNextUpdate();
+    void blendNextUpdate(bool fadeWithZoom = false);
     void fadeInNextUpdate();
     void fadeOutNextUpdate();
     void resetFade();
