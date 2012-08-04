@@ -214,6 +214,7 @@ void DGSystem::init() {
         // Now we're ready to init the controller instance
         control = &DGControl::getInstance();
         control->init();
+		control->update();
         
         // Check if we must enable vertical sync
         if (config->verticalSync) {

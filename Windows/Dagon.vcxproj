@@ -57,6 +57,7 @@
     <ClInclude Include="..\Dagon\DGRoomProxy.h" />
     <ClInclude Include="..\Dagon\DGScene.h" />
     <ClInclude Include="..\Dagon\DGScript.h" />
+    <ClInclude Include="..\Dagon\DGSlideProxy.h" />
     <ClInclude Include="..\Dagon\DGSpot.h" />
     <ClInclude Include="..\Dagon\DGSpotProxy.h" />
     <ClInclude Include="..\Dagon\DGState.h" />
@@ -80,6 +81,7 @@
     <ClCompile Include="..\Dagon\DGConsole.cpp" />
     <ClCompile Include="..\Dagon\DGControl.cpp" />
     <ClCompile Include="..\Dagon\DGCursorManager.cpp" />
+    <ClCompile Include="..\Dagon\DGDustData.c" />
     <ClCompile Include="..\Dagon\DGEffectsManager.cpp" />
     <ClCompile Include="..\Dagon\DGFeedManager.cpp" />
     <ClCompile Include="..\Dagon\DGFont.cpp" />
