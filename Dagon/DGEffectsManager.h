@@ -29,6 +29,7 @@
 
 enum DGEffects {
     DGEffectAdjust,
+    DGEffectDust,
     DGEffectMotionBlur,
     DGEffectNoise,
     DGEffectSepia,
@@ -51,6 +52,7 @@ enum DGEffectsValues {
 
 class DGCameraManager;
 class DGConfig;
+class DGTexture;
 class DGTimerManager;
 
 // Reference to embedded dust data
@@ -71,12 +73,15 @@ class DGEffectsManager {
     GLuint _fragment;
     GLuint _program;
     
+    DGTexture* _dustTexture;
     char* _shaderData;
 
     bool _adjustEnabled;
     float _adjustBrightness;
     float _adjustSaturation;
     float _adjustContrast;
+    
+    bool _dustEnabled;
     
     bool _motionBlurEnabled;
     float _motionBlurIntensity;
@@ -100,6 +105,8 @@ class DGEffectsManager {
     
     bool _textFileRead();
     
+    int _randomize(); // For dust
+    
     // Private constructor/destructor
     DGEffectsManager();
     ~DGEffectsManager();
@@ -116,7 +123,7 @@ public:
         return instance;
     }
     
-    void drawDust(); // Test
+    void drawDust();
     void init();
     void pause();
     void play();

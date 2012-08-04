@@ -17,14 +17,13 @@
 #include "DGCameraManager.h"
 #include "DGConfig.h"
 #include "DGEffectsManager.h"
+#include "DGTexture.h"
 #include "DGTimerManager.h"
 
 ////////////////////////////////////////////////////////////
-#include "DGTexture.h"
-#define N_DUST 1000
-#define DUST_FACTOR 32767.0f
 
-DGTexture* dustTexture;
+#define N_DUST 2500
+#define DUST_FACTOR 32767.0f
 
 static struct particle {
 	GLfloat x,y,z;
@@ -32,53 +31,6 @@ static struct particle {
 	GLfloat xd,yd,zd;
 	GLfloat cs;
 } p[N_DUST];
-
-int randomize(bool full);
-int randomize(bool full) {
-    int n = 32768;
-    if (full)
-        while (n > 32767)
-            n = rand() / 32767;
-    else
-        while (n < 0 || n > 32767)
-            n = rand() / 32767;
-    return n;
-}
-
-void DGEffectsManager::drawDust() {
-    int i;
-    float s = 0.0015f;
-    
-    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    dustTexture->bind();
-    for (i = 0; i < N_DUST; i++)
-    {
-        p[i].x+=p[i].xd/100.0f;
-        p[i].y+=p[i].yd/100.0f;
-        p[i].z+=p[i].zd/100.0f;
-        if (p[i].y<=-0.5f)
-        {   // This should be defined according to the size of the cube
-            p[i].xd=-(randomize(true)/DUST_FACTOR-0.5f)/200.0f;
-            p[i].zd=-(randomize(true)/DUST_FACTOR-0.5f)/200.0f;
-            p[i].yd=-randomize(true)/DUST_FACTOR/100.0f;
-            p[i].x=(randomize(true)/DUST_FACTOR-0.5f);
-            p[i].y=randomize(false)/DUST_FACTOR;
-            p[i].z=(randomize(true)/DUST_FACTOR-0.5f);
-        }
-        
-        glBegin(GL_QUADS);
-        glTexCoord2f(0.0f, 0.0f);
-        glVertex3f(p[i].x,p[i].y,p[i].z+s);
-        glTexCoord2f(0.0f, 1.0f);
-        glVertex3f(p[i].x,p[i].y+s,p[i].z+s);
-        glTexCoord2f(1.0f, 1.0f);
-        glVertex3f(p[i].x+s,p[i].y+s,p[i].z+s);
-        glTexCoord2f(1.0f, 0.0f);
-        glVertex3f(p[i].x+s,p[i].y,p[i].z+s);
-        glEnd();
-    }
-}
-////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -90,6 +42,7 @@ DGEffectsManager::DGEffectsManager() {
     timerManager = &DGTimerManager::getInstance();
     
     _adjustEnabled = false;
+    _dustEnabled = false;
     _motionBlurEnabled = false;
     _noiseEnabled = false;
     _sepiaEnabled = false;
@@ -123,6 +76,8 @@ DGEffectsManager::~DGEffectsManager() {
 		glDeleteShader(_fragment);
 		glDeleteProgram(_program);
         
+        delete _dustTexture;
+        
 		_isActive = false;
         _isInitialized = false;
 	}    
@@ -131,6 +86,42 @@ DGEffectsManager::~DGEffectsManager() {
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
+
+void DGEffectsManager::drawDust() {
+    int i;
+    float s = 0.0015f;
+    
+    if (_dustEnabled) {
+        glColor4f(0.66f, 1.0f, 1.0f, 0.5f);
+        //glColor4f(0.15f, 0.2f, 0.25f, 1.0f);
+        _dustTexture->bind();
+        for (i = 0; i < N_DUST; i++) {
+            p[i].x+=p[i].xd/100.0f;
+            p[i].y+=p[i].yd/100.0f;
+            p[i].z+=p[i].zd/100.0f;
+            if (p[i].y<=-0.5f)
+            {   // This should be defined according to the size of the cube
+                p[i].xd=-(_randomize()/DUST_FACTOR-0.5f)/200.0f;
+                p[i].zd=-(_randomize()/DUST_FACTOR-0.5f)/200.0f;
+                p[i].yd=-_randomize()/DUST_FACTOR/100.0f;
+                p[i].x=(_randomize()/DUST_FACTOR-0.5f);
+                p[i].y=_randomize()/DUST_FACTOR;
+                p[i].z=(_randomize()/DUST_FACTOR-0.5f);
+            }
+            
+            glBegin(GL_QUADS);
+            glTexCoord2f(0.0f, 0.0f);
+            glVertex3f(p[i].x,p[i].y,p[i].z+s);
+            glTexCoord2f(0.0f, 1.0f);
+            glVertex3f(p[i].x,p[i].y+s,p[i].z+s);
+            glTexCoord2f(1.0f, 1.0f);
+            glVertex3f(p[i].x+s,p[i].y+s,p[i].z+s);
+            glTexCoord2f(1.0f, 0.0f);
+            glVertex3f(p[i].x+s,p[i].y,p[i].z+s);
+            glEnd();
+        }
+    }
+}
 
 void DGEffectsManager::init() {
     const char* pointerToData;
@@ -165,19 +156,18 @@ void DGEffectsManager::init() {
     this->setValue(DGEffectSharpenIntensity, _sharpenIntensity);
     this->setValue(DGEffectSharpenRatio, _sharpenRatio);
 
-    ////////////////////////////////////////////////////////////
+    // Initialize dust
     for (int i = 0; i < N_DUST; i++) {
-        p[i].xd=-(randomize(true)/DUST_FACTOR-0.5f)/200.0f;
-        p[i].zd=-(randomize(true)/DUST_FACTOR-0.5f)/200.0f;
-        p[i].yd=-randomize(true)/DUST_FACTOR/100.0f;
-        p[i].x=(randomize(true)/DUST_FACTOR-0.5f);
-        p[i].y=randomize(false)/DUST_FACTOR;
-        p[i].z=(randomize(true)/DUST_FACTOR-0.5f);
+        p[i].xd=-(_randomize()/DUST_FACTOR-0.5f)/200.0f;
+        p[i].zd=-(_randomize()/DUST_FACTOR-0.5f)/200.0f;
+        p[i].yd=-_randomize()/DUST_FACTOR/100.0f;
+        p[i].x=(_randomize()/DUST_FACTOR-0.5f);
+        p[i].y=_randomize()/DUST_FACTOR;
+        p[i].z=(_randomize()/DUST_FACTOR-0.5f);
     }
     
-    dustTexture = new DGTexture;
-    dustTexture->loadFromMemory(DGDefDustBinary);
-    ////////////////////////////////////////////////////////////
+    _dustTexture = new DGTexture;
+    _dustTexture->loadFromMemory(DGDefDustBinary);
 }
 
 void DGEffectsManager::pause() {
@@ -205,6 +195,10 @@ void DGEffectsManager::setEnabled(int effectID, bool enabled) {
             case DGEffectAdjust:
                 _adjustEnabled = enabled;
                 parameter = glGetUniformLocation(_program, "AdjustEnabled");
+                break;
+                
+            case DGEffectDust:
+                _dustEnabled = enabled;
                 break;
                 
             case DGEffectMotionBlur:
@@ -401,6 +395,10 @@ float DGEffectsManager::value(int valueID) {
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
+
+int DGEffectsManager::_randomize() {
+    return rand() % (int)DUST_FACTOR;
+}
 
 // Modified from Lighthouse 3D
 bool DGEffectsManager::_textFileRead() {
