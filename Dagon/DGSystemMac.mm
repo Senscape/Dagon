@@ -191,6 +191,8 @@ void DGSystem::findPaths(int argc, char* argv[]) {
             NSString *resDirectory = [[NSBundle mainBundle] resourcePath];
             resDirectory = [[resDirectory stringByAppendingString:@"/"] stringByAppendingString:@DGDefResourcePath];
             config->setPath(DGPathRes, [resDirectory UTF8String]);
+            
+            chdir([appDirectory UTF8String]);
         }   
         
         [pool release];
@@ -199,6 +201,7 @@ void DGSystem::findPaths(int argc, char* argv[]) {
 
 void DGSystem::init() {
     if (!_isInitialized) {
+        log->trace(DGModSystem, "========================================");
         log->trace(DGModSystem, "%s", DGMsg040000);
         
         NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
