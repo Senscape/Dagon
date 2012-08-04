@@ -200,6 +200,9 @@
     <ClInclude Include="..\Other Sources\stb_image.h">
       <Filter>Other Sources</Filter>
     </ClInclude>
+    <ClInclude Include="..\Dagon\DGSlideProxy.h">
+      <Filter>Controller\Proxys</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Dagon\DGConfig.cpp">
@@ -305,5 +308,8 @@
       <Filter>Data</Filter>
     </ClCompile>
     <ClCompile Include="..\Dagon\main.cpp" />
+    <ClCompile Include="..\Dagon\DGDustData.c">
+      <Filter>Data</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
