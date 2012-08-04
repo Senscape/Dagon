@@ -231,6 +231,8 @@ void DGRenderManager::disableAlpha() {
 }
 
 void DGRenderManager::disablePostprocess() {
+    effectsManager->drawDust();
+    
     if (_framebufferEnabled)
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); // Unbind our texture
 }

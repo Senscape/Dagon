@@ -40,6 +40,7 @@
 		FB31E0F115B73F6100EE3642 /* FreeType.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FBF931CA15ADB2E90042F7FC /* FreeType.framework */; };
 		FB34FB1814DB126F007D2EE1 /* DGSystemMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */; };
 		FB34FB1914DB126F007D2EE1 /* DGViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */; };
+		FB3B4DC615CD7EC6000B69C6 /* DGDustData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB3B4DC515CD7EC6000B69C6 /* DGDustData.c */; };
 		FB6A1E9315AC7E5D000C0222 /* DGEffectsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */; };
 		FBA2C77E14DC13B40098E334 /* DGRenderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */; };
 		FBA2C78114DC654B0098E334 /* DGControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78014DC654B0098E334 /* DGControl.cpp */; };
@@ -142,6 +143,7 @@
 		FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DGSystemMac.mm; sourceTree = "<group>"; };
 		FB34FB1414DB126F007D2EE1 /* DGViewDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGViewDelegate.h; sourceTree = "<group>"; };
 		FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DGViewDelegate.mm; sourceTree = "<group>"; };
+		FB3B4DC515CD7EC6000B69C6 /* DGDustData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGDustData.c; sourceTree = "<group>"; };
 		FB6A1E9015AC7E52000C0222 /* DGEffectsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEffectsManager.h; sourceTree = "<group>"; };
 		FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGEffectsManager.cpp; sourceTree = "<group>"; };
 		FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGRenderManager.cpp; sourceTree = "<group>"; };
@@ -434,6 +436,7 @@
 		FBDF7B71148C69E4003A96B3 /* Data */ = {
 			isa = PBXGroup;
 			children = (
+				FB3B4DC515CD7EC6000B69C6 /* DGDustData.c */,
 				E8CF666D14EFE7F100B4562B /* DGFontData.c */,
 				FBBC59AB15AF5E87005D173B /* DGShaderData.c */,
 				FBFB04BC1583E520002280E1 /* DGSplashData.c */,
@@ -580,6 +583,7 @@
 				FBBC137B15C47397009CBF47 /* DGAppDelegate.mm in Sources */,
 				FBBC137D15C47428009CBF47 /* main.m in Sources */,
 				FBBC138215C4808A009CBF47 /* DGWindowDelegate.mm in Sources */,
+				FB3B4DC615CD7EC6000B69C6 /* DGDustData.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

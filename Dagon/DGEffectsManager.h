@@ -53,6 +53,9 @@ class DGCameraManager;
 class DGConfig;
 class DGTimerManager;
 
+// Reference to embedded dust data
+extern "C" const unsigned char DGDefDustBinary[];
+
 // Reference to embedded shader data
 extern "C" const char DGDefShaderData[];
 
@@ -113,6 +116,7 @@ public:
         return instance;
     }
     
+    void drawDust(); // Test
     void init();
     void pause();
     void play();
