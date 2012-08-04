@@ -369,6 +369,7 @@ void DGSystem::terminate() {
     }
 }
 
+// 10.6 support adapted from Boxer app by Alun Bestor
 void DGSystem::toggleFullScreen() {
     // TODO: Suspend the timer to avoid multiple redraws
     if (lionFullscreen) {
