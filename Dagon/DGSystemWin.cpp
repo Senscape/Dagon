@@ -66,6 +66,7 @@ PFNWGLEXTGETSWAPINTERVALPROC wglGetSwapIntervalEXT = NULL;
 BYTE defKeyboardState[256];
 int previousWidth;
 int previousHeight;
+bool _isMinimized;
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -78,6 +79,7 @@ DGSystem::DGSystem() {
     config = &DGConfig::getInstance();
     
     _isInitialized = false;
+	_isMinimized = false;
     _isRunning = false;
 }
 
@@ -161,7 +163,7 @@ void DGSystem::init() {
         // Prepare the string to set the window title
         WCHAR title[DGMaxPathLength];
         MultiByteToWideChar(0, 0, config->script(), DGMaxFileLength, title, DGMaxFileLength);
-        
+
         WNDCLASSEX winClass;        
         winClass.lpszClassName = L"DG_WINDOWS_CLASS";
         winClass.cbSize        = sizeof(WNDCLASSEX);
@@ -178,7 +180,7 @@ void DGSystem::init() {
         
         if (!RegisterClassEx(&winClass))
             return;
-        
+
         // Now we create the actual window
         g_hWnd = CreateWindowEx(WS_EX_OVERLAPPEDWINDOW, L"DG_WINDOWS_CLASS", title,
                                 WS_OVERLAPPEDWINDOW | WS_VISIBLE, 0, 0, 
@@ -186,7 +188,7 @@ void DGSystem::init() {
         
         if (g_hWnd == NULL)
             return;
-        
+
         ShowWindow(g_hWnd, SW_SHOWNORMAL);
         UpdateWindow(g_hWnd);
         
@@ -194,7 +196,7 @@ void DGSystem::init() {
         GLuint PixelFormat;
         PIXELFORMATDESCRIPTOR pfd;
         memset(&pfd, 0, sizeof(PIXELFORMATDESCRIPTOR));
-        
+
         pfd.nSize      = sizeof(PIXELFORMATDESCRIPTOR);
         pfd.nVersion   = 1;
         pfd.dwFlags    = PFD_DRAW_TO_WINDOW |PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
@@ -207,10 +209,8 @@ void DGSystem::init() {
         SetPixelFormat( g_hDC, PixelFormat, &pfd);
         g_hRC = wglCreateContext(g_hDC);
         wglMakeCurrent(g_hDC, g_hRC);
-
 		// FIXME: This doesn't work if the CTRL key is pressed when launching
 		GetKeyboardState(defKeyboardState);
-        
         // Now we're ready to init the controller instance
         control = &DGControl::getInstance();
         control->init();
@@ -503,7 +503,10 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 		case WM_ACTIVATE:
 			switch (wParam) {
 				case WA_ACTIVE:
-					LeaveCriticalSection(&csSystemThread);
+					if (_isMinimized) {
+						LeaveCriticalSection(&csSystemThread);
+						_isMinimized = false;
+					}
 					break;
 			}
 			break;
@@ -513,6 +516,7 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			switch (wParam) {
 				case SIZE_MINIMIZED:
 					EnterCriticalSection(&csSystemThread);
+					_isMinimized = true;
 					break;
 				default:
 					EnterCriticalSection(&csSystemThread);
