@@ -20,6 +20,67 @@
 #include "DGTimerManager.h"
 
 ////////////////////////////////////////////////////////////
+#include "DGTexture.h"
+#define N_DUST 1000
+#define DUST_FACTOR 32767.0f
+
+DGTexture* dustTexture;
+
+static struct particle {
+	GLfloat x,y,z;
+	GLfloat r,g,b;
+	GLfloat xd,yd,zd;
+	GLfloat cs;
+} p[N_DUST];
+
+int randomize(bool full);
+int randomize(bool full) {
+    int n = 32768;
+    if (full)
+        while (n > 32767)
+            n = rand() / 32767;
+    else
+        while (n < 0 || n > 32767)
+            n = rand() / 32767;
+    return n;
+}
+
+void DGEffectsManager::drawDust() {
+    int i;
+    float s = 0.0015f;
+    
+    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+    dustTexture->bind();
+    for (i = 0; i < N_DUST; i++)
+    {
+        p[i].x+=p[i].xd/100.0f;
+        p[i].y+=p[i].yd/100.0f;
+        p[i].z+=p[i].zd/100.0f;
+        if (p[i].y<=-0.5f)
+        {   // This should be defined according to the size of the cube
+            p[i].xd=-(randomize(true)/DUST_FACTOR-0.5f)/200.0f;
+            p[i].zd=-(randomize(true)/DUST_FACTOR-0.5f)/200.0f;
+            p[i].yd=-randomize(true)/DUST_FACTOR/100.0f;
+            p[i].x=(randomize(true)/DUST_FACTOR-0.5f);
+            p[i].y=randomize(false)/DUST_FACTOR;
+            p[i].z=(randomize(true)/DUST_FACTOR-0.5f);
+        }
+        
+        glBegin(GL_QUADS);
+        glTexCoord2f(0.0f, 0.0f);
+        glVertex3f(p[i].x,p[i].y,p[i].z+s);
+        glTexCoord2f(0.0f, 1.0f);
+        glVertex3f(p[i].x,p[i].y+s,p[i].z+s);
+        glTexCoord2f(1.0f, 1.0f);
+        glVertex3f(p[i].x+s,p[i].y+s,p[i].z+s);
+        glTexCoord2f(1.0f, 0.0f);
+        glVertex3f(p[i].x+s,p[i].y,p[i].z+s);
+        glEnd();
+    }
+}
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
@@ -103,6 +164,20 @@ void DGEffectsManager::init() {
     this->setValue(DGEffectSepiaIntensity, _sepiaIntensity);
     this->setValue(DGEffectSharpenIntensity, _sharpenIntensity);
     this->setValue(DGEffectSharpenRatio, _sharpenRatio);
+
+    ////////////////////////////////////////////////////////////
+    for (int i = 0; i < N_DUST; i++) {
+        p[i].xd=-(randomize(true)/DUST_FACTOR-0.5f)/200.0f;
+        p[i].zd=-(randomize(true)/DUST_FACTOR-0.5f)/200.0f;
+        p[i].yd=-randomize(true)/DUST_FACTOR/100.0f;
+        p[i].x=(randomize(true)/DUST_FACTOR-0.5f);
+        p[i].y=randomize(false)/DUST_FACTOR;
+        p[i].z=(randomize(true)/DUST_FACTOR-0.5f);
+    }
+    
+    dustTexture = new DGTexture;
+    dustTexture->loadFromMemory(DGDefDustBinary);
+    ////////////////////////////////////////////////////////////
 }
 
 void DGEffectsManager::pause() {
