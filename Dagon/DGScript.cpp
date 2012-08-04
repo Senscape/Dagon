@@ -91,7 +91,7 @@ void DGScript::init(int argc, char* argv[]) {
     
     // The following code attempts to load a config file, and if it does exist
     // copy the created table to the DGConfig metatable
-    if (luaL_loadfile(_L, config->path(DGPathUser, DGDefConfigFile)) == 0) {
+    if (luaL_loadfile(_L, config->path(DGPathApp, DGDefConfigFile)) == 0) {
 		lua_newtable(_L);
 		lua_pushvalue(_L, -1);
 		int ref = lua_ref(_L, LUA_REGISTRYINDEX);
