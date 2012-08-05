@@ -414,12 +414,12 @@ void DGSystem::toggleFullScreen() {
         
         if (config->fullScreen) {
             [view enterFullScreenMode: [NSScreen mainScreen] withOptions: FullScreen_Options];
-            [NSCursor hide];
+            //[NSCursor hide];
         }
         else {
             [view exitFullScreenModeWithOptions: FullScreen_Options];
             [window makeFirstResponder:view];
-            [NSCursor unhide];
+            //[NSCursor unhide];
         }
         
         //And now fade back in from black asynchronously
