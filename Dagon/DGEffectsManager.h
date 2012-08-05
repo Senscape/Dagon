@@ -26,6 +26,8 @@
 
 #define DGEffectsFileName       "DGShaderData.fs"
 #define DGEffectsReadFromFile   0
+#define DGEffectsMaxDust        10000
+#define DGEffectsDustFactor     32767.0f
 
 enum DGEffects {
     DGEffectAdjust,
@@ -41,6 +43,10 @@ enum DGEffectsValues {
     DGEffectAdjustBrightness,
     DGEffectAdjustSaturation,
     DGEffectAdjustContrast,
+    DGEffectDustColor,
+    DGEffectDustIntensity,
+    DGEffectDustSize,
+    DGEffectDustSpeed,
     DGEffectMotionBlurIntensity,
     DGEffectNoiseIntensity,
     DGEffectSepiaIntensity,    
@@ -49,6 +55,13 @@ enum DGEffectsValues {
     DGEffectThrobStyle,
     DGEffectThrobIntensity
 };
+
+typedef struct {
+	GLfloat x,y,z;
+	GLfloat r,g,b;
+	GLfloat xd,yd,zd;
+	GLfloat cs;
+} DGParticle;
 
 class DGCameraManager;
 class DGConfig;
@@ -73,6 +86,8 @@ class DGEffectsManager {
     GLuint _fragment;
     GLuint _program;
     
+    DGParticle _particles[DGEffectsMaxDust];
+    
     DGTexture* _dustTexture;
     char* _shaderData;
 
@@ -82,6 +97,10 @@ class DGEffectsManager {
     float _adjustContrast;
     
     bool _dustEnabled;
+    int _dustColor;
+    float _dustIntensity;
+    float _dustSize;    
+    float _dustSpeed;
     
     bool _motionBlurEnabled;
     float _motionBlurIntensity;
@@ -125,6 +144,7 @@ public:
     
     void drawDust();
     void init();
+    bool isEnabled(int effectID);
     void pause();
     void play();
     void setEnabled(int effectID, bool enabled);
