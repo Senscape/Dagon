@@ -43,6 +43,26 @@ static int DGEffectsLibGet(lua_State *L) {
         return 1;
     }
     
+	if (strcmp(key, "dust") == 0) {
+        lua_pushnumber(L, effectsManager->value(DGEffectDustIntensity) / 100.0f);
+        return 1;
+    }
+    
+	if (strcmp(key, "dustColor") == 0) {
+        lua_pushnumber(L, effectsManager->value(DGEffectDustColor));
+        return 1;
+    }
+    
+	if (strcmp(key, "dustSpeed") == 0) {
+        lua_pushnumber(L, 100.0f - effectsManager->value(DGEffectDustSpeed));
+        return 1;
+    }
+    
+	if (strcmp(key, "dustSize") == 0) {
+        lua_pushnumber(L, effectsManager->value(DGEffectDustSize) * 10000.0f);
+        return 1;
+    }
+    
 	if (strcmp(key, "saturation") == 0) {
         lua_pushnumber(L, effectsManager->value(DGEffectAdjustSaturation) * 100.0f);
         return 1;
@@ -97,6 +117,27 @@ static int DGEffectsLibSet(lua_State *L) {
     
 	if (strcmp(key, "saturation") == 0) {
         effectsManager->setValue(DGEffectAdjustSaturation, value);
+    }
+    
+    if (strcmp(key, "dust") == 0) {
+        if (value) {
+            effectsManager->setEnabled(DGEffectDust, true);
+            effectsManager->setValue(DGEffectDustIntensity, value * 10000.0f);
+        }
+        else effectsManager->setEnabled(DGEffectDust, false);
+    }
+    
+    if (strcmp(key, "dustColor") == 0) {
+        unsigned int color = lua_tonumber(L, 3);
+        effectsManager->setValue(DGEffectDustColor, color);
+    }
+    
+    if (strcmp(key, "dustSpeed") == 0) {
+        effectsManager->setValue(DGEffectDustSpeed, 100.0f - lua_tonumber(L, 3));
+    }
+    
+    if (strcmp(key, "dustSize") == 0) {
+        effectsManager->setValue(DGEffectDustSize, lua_tonumber(L, 3) / 10000.0f);
     }
     
     // Special case to enable/disable adjustment if three values are normal

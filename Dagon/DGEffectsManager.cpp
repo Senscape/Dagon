@@ -21,18 +21,6 @@
 #include "DGTimerManager.h"
 
 ////////////////////////////////////////////////////////////
-
-#define N_DUST 2500
-#define DUST_FACTOR 32767.0f
-
-static struct particle {
-	GLfloat x,y,z;
-	GLfloat r,g,b;
-	GLfloat xd,yd,zd;
-	GLfloat cs;
-} p[N_DUST];
-
-////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
@@ -52,6 +40,10 @@ DGEffectsManager::DGEffectsManager() {
     _adjustBrightness = 1.0f;
     _adjustSaturation = 1.0f;
     _adjustContrast = 1.0f;
+    _dustColor = DGColorWhite;
+    _dustIntensity = 0.0f;
+    _dustSize = 0.0005f;
+    _dustSpeed = 100.0f;
     _motionBlurIntensity = 4.0f; // Lowest
     _noiseIntensity = 0.0f;
     _sepiaIntensity = 0.0f;
@@ -88,38 +80,52 @@ DGEffectsManager::~DGEffectsManager() {
 ////////////////////////////////////////////////////////////
 
 void DGEffectsManager::drawDust() {
-    int i;
-    float s = 0.0015f;
-    
     if (_dustEnabled) {
-        glColor4f(0.66f, 1.0f, 1.0f, 0.5f);
-        //glColor4f(0.15f, 0.2f, 0.25f, 1.0f);
+        // Temporary
+        glPushMatrix();
+        
+        glColor4f(0.66f, 1.0f, 1.0f, 0.8f);
+        
+        // FIXME: This is a repeated method from DGRenderManager - it would be best to avoid this
+        /*uint32_t aux = _dustColor;
+            
+        uint8_t b = (aux & 0x000000ff);
+        uint8_t g = (aux & 0x0000ff00) >> 8;
+        uint8_t r = (aux & 0x00ff0000) >> 16;
+        uint8_t a = (aux & 0xff000000) >> 24;
+            
+        glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));*/
+        
         _dustTexture->bind();
-        for (i = 0; i < N_DUST; i++) {
-            p[i].x+=p[i].xd/100.0f;
-            p[i].y+=p[i].yd/100.0f;
-            p[i].z+=p[i].zd/100.0f;
-            if (p[i].y<=-0.5f)
-            {   // This should be defined according to the size of the cube
-                p[i].xd=-(_randomize()/DUST_FACTOR-0.5f)/200.0f;
-                p[i].zd=-(_randomize()/DUST_FACTOR-0.5f)/200.0f;
-                p[i].yd=-_randomize()/DUST_FACTOR/100.0f;
-                p[i].x=(_randomize()/DUST_FACTOR-0.5f);
-                p[i].y=_randomize()/DUST_FACTOR;
-                p[i].z=(_randomize()/DUST_FACTOR-0.5f);
+        for (int i = 0; i < _dustIntensity; i++) {
+            _particles[i].x += _particles[i].xd / _dustSpeed;
+            _particles[i].y += _particles[i].yd / _dustSpeed;
+            _particles[i].z += _particles[i].zd / _dustSpeed;
+            if (_particles[i].y <= -0.5f) {
+                _particles[i].xd =-(_randomize() / DGEffectsDustFactor - 0.5f) / 200.0f;
+                _particles[i].zd =-(_randomize() / DGEffectsDustFactor - 0.5f) / 200.0f;
+                _particles[i].yd =-_randomize() / DGEffectsDustFactor / 100.0f;
+                _particles[i].x = _randomize() / DGEffectsDustFactor - 0.5f;
+                _particles[i].y =_randomize() / DGEffectsDustFactor;
+                _particles[i].z = _randomize() / DGEffectsDustFactor - 0.5f;
             }
             
-            glBegin(GL_QUADS);
-            glTexCoord2f(0.0f, 0.0f);
-            glVertex3f(p[i].x,p[i].y,p[i].z+s);
-            glTexCoord2f(0.0f, 1.0f);
-            glVertex3f(p[i].x,p[i].y+s,p[i].z+s);
-            glTexCoord2f(1.0f, 1.0f);
-            glVertex3f(p[i].x+s,p[i].y+s,p[i].z+s);
-            glTexCoord2f(1.0f, 0.0f);
-            glVertex3f(p[i].x+s,p[i].y,p[i].z+s);
-            glEnd();
+            GLfloat texCoords[] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f};
+            glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+            
+            glRotatef(1.0f, 0.0f, 1.0f, 0.0f);
+            
+            GLfloat quadCoords[] = {
+                _particles[i].x, _particles[i].y, _particles[i].z + _dustSize,
+                _particles[i].x, _particles[i].y + _dustSize, _particles[i].z + _dustSize,
+                _particles[i].x + _dustSize, _particles[i].y + _dustSize, _particles[i].z + _dustSize,
+                _particles[i].x + _dustSize, _particles[i].y, _particles[i].z + _dustSize };
+            
+            glVertexPointer(3, GL_FLOAT, 0, quadCoords);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
         }
+        
+        glPopMatrix();
     }
 }
 
@@ -157,17 +163,44 @@ void DGEffectsManager::init() {
     this->setValue(DGEffectSharpenRatio, _sharpenRatio);
 
     // Initialize dust
-    for (int i = 0; i < N_DUST; i++) {
-        p[i].xd=-(_randomize()/DUST_FACTOR-0.5f)/200.0f;
-        p[i].zd=-(_randomize()/DUST_FACTOR-0.5f)/200.0f;
-        p[i].yd=-_randomize()/DUST_FACTOR/100.0f;
-        p[i].x=(_randomize()/DUST_FACTOR-0.5f);
-        p[i].y=_randomize()/DUST_FACTOR;
-        p[i].z=(_randomize()/DUST_FACTOR-0.5f);
+    for (int i = 0; i < DGEffectsMaxDust; i++) {
+        _particles[i].xd = -(_randomize() / DGEffectsDustFactor - 0.5f) / 200.0f;
+        _particles[i].zd = -(_randomize() / DGEffectsDustFactor - 0.5f) / 200.0f;
+        _particles[i].yd = -_randomize() / DGEffectsDustFactor / 100.0f;
+        _particles[i].x = _randomize() / DGEffectsDustFactor - 0.5f;
+        _particles[i].y = _randomize() / DGEffectsDustFactor;
+        _particles[i].z = _randomize() / DGEffectsDustFactor - 0.5f;
     }
     
     _dustTexture = new DGTexture;
     _dustTexture->loadFromMemory(DGDefDustBinary);
+}
+
+bool DGEffectsManager::isEnabled(int effectID) {
+    switch (effectID) {
+        case DGEffectAdjust:
+            return _adjustEnabled;
+            
+        case DGEffectDust:
+            return _dustEnabled;
+            
+        case DGEffectMotionBlur:
+            return _motionBlurEnabled;
+            
+        case DGEffectNoise:
+            return _noiseEnabled;
+            
+        case DGEffectSepia:
+            return _sepiaEnabled;
+            
+        case DGEffectSharpen:
+            return _sharpenEnabled;
+            
+        case DGEffectThrob:
+            return _throbEnabled;
+    }
+    
+    return false;
 }
 
 void DGEffectsManager::pause() {
@@ -199,7 +232,8 @@ void DGEffectsManager::setEnabled(int effectID, bool enabled) {
                 
             case DGEffectDust:
                 _dustEnabled = enabled;
-                break;
+                this->pause();
+                return;
                 
             case DGEffectMotionBlur:
                 _motionBlurEnabled = enabled;
@@ -265,6 +299,27 @@ void DGEffectsManager::setValue(int valueID, float value) {
                 parameter = glGetUniformLocation(_program, "AdjustContrast");
                 _adjustContrast = value;
                 break;
+                
+            case DGEffectDustColor:
+                _dustColor = (int)value;
+                this->pause();
+                return;
+                
+            case DGEffectDustIntensity:
+                if (value < DGEffectsMaxDust)
+                    _dustIntensity = value;
+                this->pause();
+                return;
+                
+            case DGEffectDustSize:
+                _dustSize = value;
+                this->pause();
+                return;
+                
+            case DGEffectDustSpeed:
+                _dustSpeed = value;
+                this->pause();
+                return;
                 
             case DGEffectMotionBlurIntensity:
                 parameter = glGetUniformLocation(_program, "MotionBlurIntensity");
@@ -379,6 +434,10 @@ float DGEffectsManager::value(int valueID) {
         case DGEffectAdjustBrightness: return _adjustBrightness;
         case DGEffectAdjustSaturation: return _adjustSaturation;
         case DGEffectAdjustContrast: return _adjustContrast;
+        case DGEffectDustColor: return _dustColor;
+        case DGEffectDustIntensity: return _dustIntensity;
+        case DGEffectDustSize: return _dustSize;
+        case DGEffectDustSpeed: return _dustSpeed;
         case DGEffectMotionBlurIntensity: return _motionBlurIntensity;
         case DGEffectNoiseIntensity: return _noiseIntensity;
         case DGEffectSepiaIntensity: return _sepiaIntensity;
@@ -397,7 +456,7 @@ float DGEffectsManager::value(int valueID) {
 ////////////////////////////////////////////////////////////
 
 int DGEffectsManager::_randomize() {
-    return rand() % (int)DUST_FACTOR;
+    return rand() % (int)DGEffectsDustFactor;
 }
 
 // Modified from Lighthouse 3D
