@@ -49,8 +49,14 @@ DGFeedManager::~DGFeedManager() {
 ////////////////////////////////////////////////////////////
 
 void DGFeedManager::cancel() {
+    this->clear();
+    
     _feedAudio->stop();
     _dim();
+}
+
+void DGFeedManager::clear() {
+    _arrayOfFeeds.clear();
 }
 
 void DGFeedManager::init() {
