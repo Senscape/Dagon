@@ -444,14 +444,8 @@ void DGCameraManager::pan(int xPosition, int yPosition) {
             else _deltaY = 0.0f;
         }
         
-        if (config->controlMode == DGMouseDrag) {
-            _speedH = fabs((float)_deltaX) / (float)(_speedFactor * 2); // Make movement even smoother
-            _speedV = fabs((float)_deltaY) / (float)(_speedFactor * 2);
-        }
-        else {
-            _speedH = fabs((float)_deltaX) / (float)_speedFactor;
-            _speedV = fabs((float)_deltaY) / (float)_speedFactor;
-        }
+        _speedH = fabs((float)_deltaX) / (float)_speedFactor;
+        _speedV = fabs((float)_deltaY) / (float)_speedFactor;
     }
 }
 
