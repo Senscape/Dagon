@@ -99,8 +99,9 @@
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-    if (!config->fullScreen)    
+    if (!config->fullScreen) {
         [NSCursor hide];
+    }
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
@@ -129,9 +130,18 @@
 - (void)mouseMoved:(NSEvent *)theEvent {
     NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     isMouseInside = ([self hitTest:mouseLoc] == self);
-    
     if (isMouseInside)
         control->processMouse(mouseLoc.x, mouseLoc.y, DGMouseEventMove);
+    
+    if (config->fullScreen) {
+        // Right border
+        if (mouseLoc.x > config->displayWidth - 3) {
+            CGPoint position;
+            position.x = config->displayWidth - 4;
+            position.y = mouseLoc.y;
+            CGWarpMouseCursorPosition(position);
+        }
+    }
 }
 
 - (void)mouseUp:(NSEvent *)theEvent {

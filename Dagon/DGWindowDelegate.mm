@@ -49,26 +49,20 @@
 - (void)windowWillEnterFullScreen:(NSNotification *)notification {
     config->fullScreen = true;
     [NSCursor hide];
-    
-  /*  [[NSApplication sharedApplication]
-     setPresentationOptions: NSApplicationPresentationFullScreen];*/
 }
 
 - (void)windowDidEnterFullScreen:(NSNotification *)notification {
     [window makeKeyAndOrderFront:window];
-    [window setLevel:CGShieldingWindowLevel()];
-}
-
-- (void)windowWillExitFullScreen:(NSNotification *)notification {
-    [window setLevel:NSNormalWindowLevel];
 }
 
 - (void)windowDidExitFullScreen:(NSNotification *)notification {
     config->fullScreen = false;
     [NSCursor unhide];
-    
-    /*[[NSApplication sharedApplication]
-     setPresentationOptions: NSApplicationPresentationDefault];*/
+}
+
+- (NSApplicationPresentationOptions) window:(NSWindow *)window willUseFullScreenPresentationOptions: (NSApplicationPresentationOptions)proposedOptions {
+	NSApplicationPresentationOptions customOptions = NSApplicationPresentationFullScreen | NSApplicationPresentationHideDock | NSApplicationPresentationHideMenuBar;
+	return customOptions;
 }
 
 @end

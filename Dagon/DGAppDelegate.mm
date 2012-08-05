@@ -31,6 +31,7 @@
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
     DGScript* script;
+    CGDisplayHideCursor(kCGDirectMainDisplay);
     
     script = &DGScript::getInstance();
     script->init(*_NSGetArgc(), *_NSGetArgv());
