@@ -53,13 +53,18 @@ static int DGEffectsLibGet(lua_State *L) {
         return 1;
     }
     
+    if (strcmp(key, "dustSize") == 0) {
+        lua_pushnumber(L, effectsManager->value(DGEffectDustSize) * 10000.0f);
+        return 1;
+    }
+    
 	if (strcmp(key, "dustSpeed") == 0) {
         lua_pushnumber(L, 100.0f - effectsManager->value(DGEffectDustSpeed));
         return 1;
     }
     
-	if (strcmp(key, "dustSize") == 0) {
-        lua_pushnumber(L, effectsManager->value(DGEffectDustSize) * 10000.0f);
+    if (strcmp(key, "dustSpread") == 0) {
+        lua_pushnumber(L, 100.0f - (effectsManager->value(DGEffectDustSpread) / 10.0f));
         return 1;
     }
     
@@ -108,36 +113,40 @@ static int DGEffectsLibSet(lua_State *L) {
 	const char *key = luaL_checkstring(L, 2);
 	
 	if (strcmp(key, "brightness") == 0) {
-        effectsManager->setValue(DGEffectAdjustBrightness, value);
+        effectsManager->setValuef(DGEffectAdjustBrightness, value);
     }
     
 	if (strcmp(key, "contrast") == 0) {
-        effectsManager->setValue(DGEffectAdjustContrast, value);
+        effectsManager->setValuef(DGEffectAdjustContrast, value);
     }
     
 	if (strcmp(key, "saturation") == 0) {
-        effectsManager->setValue(DGEffectAdjustSaturation, value);
+        effectsManager->setValuef(DGEffectAdjustSaturation, value);
     }
     
     if (strcmp(key, "dust") == 0) {
         if (value) {
             effectsManager->setEnabled(DGEffectDust, true);
-            effectsManager->setValue(DGEffectDustIntensity, value * 10000.0f);
+            effectsManager->setValuef(DGEffectDustIntensity, value * 10000.0f);
         }
         else effectsManager->setEnabled(DGEffectDust, false);
     }
     
     if (strcmp(key, "dustColor") == 0) {
         unsigned int color = lua_tonumber(L, 3);
-        effectsManager->setValue(DGEffectDustColor, color);
-    }
-    
-    if (strcmp(key, "dustSpeed") == 0) {
-        effectsManager->setValue(DGEffectDustSpeed, 100.0f - lua_tonumber(L, 3));
+        effectsManager->setValuei(DGEffectDustColor, color);
     }
     
     if (strcmp(key, "dustSize") == 0) {
-        effectsManager->setValue(DGEffectDustSize, lua_tonumber(L, 3) / 10000.0f);
+        effectsManager->setValuef(DGEffectDustSize, lua_tonumber(L, 3) / 10000.0f);
+    }
+    
+    if (strcmp(key, "dustSpeed") == 0) {
+        effectsManager->setValuef(DGEffectDustSpeed, 100.0f - lua_tonumber(L, 3));
+    }
+    
+    if (strcmp(key, "dustSpread") == 0) {
+        effectsManager->setValuef(DGEffectDustSpread, 1000.0f - (value * 1000.0f));
     }
     
     // Special case to enable/disable adjustment if three values are normal
@@ -151,7 +160,7 @@ static int DGEffectsLibSet(lua_State *L) {
 	if (strcmp(key, "motionBlur") == 0) {
         if (value) {
             effectsManager->setEnabled(DGEffectMotionBlur, true);
-            effectsManager->setValue(DGEffectMotionBlurIntensity, (10.0f - value));
+            effectsManager->setValuef(DGEffectMotionBlurIntensity, (10.0f - value));
         }
         else effectsManager->setEnabled(DGEffectMotionBlur, false);
     }
@@ -159,7 +168,7 @@ static int DGEffectsLibSet(lua_State *L) {
 	if (strcmp(key, "noise") == 0) {
         if (value) {
             effectsManager->setEnabled(DGEffectNoise, true);
-            effectsManager->setValue(DGEffectNoiseIntensity, value);
+            effectsManager->setValuef(DGEffectNoiseIntensity, value);
         }
         else effectsManager->setEnabled(DGEffectNoise, false);
     }
@@ -167,7 +176,7 @@ static int DGEffectsLibSet(lua_State *L) {
 	if (strcmp(key, "sepia") == 0) {
         if (value) {
             effectsManager->setEnabled(DGEffectSepia, true);
-            effectsManager->setValue(DGEffectSepiaIntensity, value);
+            effectsManager->setValuef(DGEffectSepiaIntensity, value);
         }
         else effectsManager->setEnabled(DGEffectSepia, false);
     }
@@ -175,7 +184,7 @@ static int DGEffectsLibSet(lua_State *L) {
 	if (strcmp(key, "sharpen") == 0) {
         if (value) {
             effectsManager->setEnabled(DGEffectSharpen, true);
-            effectsManager->setValue(DGEffectSharpenIntensity, value);
+            effectsManager->setValuef(DGEffectSharpenIntensity, value);
         }
         else effectsManager->setEnabled(DGEffectSharpen, false);
     }
@@ -183,13 +192,13 @@ static int DGEffectsLibSet(lua_State *L) {
 	if (strcmp(key, "throb") == 0) {
         if (value) {
             effectsManager->setEnabled(DGEffectThrob, true);
-            effectsManager->setValue(DGEffectThrobIntensity, (100.0f - (value * 100.0f)));
+            effectsManager->setValuef(DGEffectThrobIntensity, (100.0f - (value * 100.0f)));
         }
         else effectsManager->setEnabled(DGEffectThrob, false);
     }
     
 	if (strcmp(key, "throbStyle") == 0) {
-        effectsManager->setValue(DGEffectThrobStyle, value * 100.0f);
+        effectsManager->setValuef(DGEffectThrobStyle, value * 100.0f);
     }
     
  	return 0;
