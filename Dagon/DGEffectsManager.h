@@ -47,6 +47,7 @@ enum DGEffectsValues {
     DGEffectDustIntensity,
     DGEffectDustSize,
     DGEffectDustSpeed,
+    DGEffectDustSpread,
     DGEffectMotionBlurIntensity,
     DGEffectNoiseIntensity,
     DGEffectSepiaIntensity,    
@@ -101,6 +102,7 @@ class DGEffectsManager {
     float _dustIntensity;
     float _dustSize;    
     float _dustSpeed;
+    float _dustSpread;
     
     bool _motionBlurEnabled;
     float _motionBlurIntensity;
@@ -124,7 +126,7 @@ class DGEffectsManager {
     
     bool _textFileRead();
     
-    int _randomize(); // For dust
+    void _buildParticle(int idx); // For dust
     
     // Private constructor/destructor
     DGEffectsManager();
@@ -148,7 +150,8 @@ public:
     void pause();
     void play();
     void setEnabled(int effectID, bool enabled);
-    void setValue(int valueID, float value);
+    void setValuef(int valueID, float value);
+    void setValuei(int valueID, int value);
     void update();
     float value(int valueID);
 };
