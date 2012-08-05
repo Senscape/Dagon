@@ -145,7 +145,7 @@ void DGControl::init() {
     
     // If the splash screen is enabled, load its data and set the correct state
     if (config->showSplash) {
-        config->effects = false;
+        _cancelSplash = false;
         _scene->loadSplash();
         _state->set(DGStateSplash);
         cursorManager->disable();
@@ -223,13 +223,18 @@ void DGControl::processKey(int aKey, int eventFlags) {
         case DGKeyEventDown:
             switch (aKey) {
                 case DGKeyEsc:
-                    if (feedManager->isPlaying())
-                        feedManager->cancel();
+                    if (_state->current() == DGStateSplash) {
+                        _cancelSplash = true;
+                    }
                     else {
-                        if (!_isShuttingDown) {
-                            _scene->fadeOut();
-                            _shutdownTimer = timerManager->createManual(1);
-                            _isShuttingDown = true;
+                        if (feedManager->isPlaying())
+                            feedManager->cancel();
+                        else {
+                            if (!_isShuttingDown) {
+                                _scene->fadeOut();
+                                _shutdownTimer = timerManager->createManual(1);
+                                _isShuttingDown = true;
+                            }
                         }
                     }
                     break;
@@ -571,14 +576,15 @@ void DGControl::switchTo(DGObject* theTarget) {
     
     _updateView(DGStateNode, true);
     
-    audioManager->clear();
-    
     system->suspendThread(DGVideoThread);
     videoManager->flush();
     
     if (theTarget) {
         switch (theTarget->type()) {
             case DGObjectRoom:
+                audioManager->clear();
+                feedManager->clear(); // Clear all pending feeds
+                
                 renderManager->blendNextUpdate(true);
                 
                 _currentRoom = (DGRoom*)theTarget;
@@ -617,6 +623,8 @@ void DGControl::switchTo(DGObject* theTarget) {
 
                 break;
             case DGObjectNode:
+                audioManager->clear();
+                
                 renderManager->blendNextUpdate(true);
                 
                 if (_currentRoom) {
@@ -639,6 +647,8 @@ void DGControl::switchTo(DGObject* theTarget) {
         // Only slides switch to NULL targets, so we check whether the new object is another slide.
         // If it isn't, we unlock the camera.
         if (_currentRoom) {
+            audioManager->clear();
+            
             renderManager->blendNextUpdate();
             
             DGNode* currentNode = this->currentNode();
@@ -937,8 +947,7 @@ void DGControl::_updateView(int state, bool inBackground) {
                 _scene->fadeOut();
             }
             
-            if (timerManager->checkManual(handlerOut)) {
-                config->effects = true;
+            if (timerManager->checkManual(handlerOut) || _cancelSplash) {
                 cursorManager->enable();
                 renderManager->clearView();
                 renderManager->resetFade();
