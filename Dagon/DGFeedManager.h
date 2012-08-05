@@ -92,6 +92,7 @@ public:
     }
 
     void cancel();
+    void clear(); // Clear pending feeds
     void init();
     bool isPlaying();
     bool hasQueued();
