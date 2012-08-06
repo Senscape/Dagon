@@ -99,18 +99,14 @@
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent {
-    if (!config->fullScreen) {
-        [NSCursor hide];
-    }
+    [NSCursor hide];
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    if (!config->fullScreen) {
-        // We do this Only when the Free mode is on
-        if (config->controlMode == DGMouseFree)
-            control->processMouse(config->displayWidth / 2, config->displayHeight / 2, DGMouseEventMove);
-        [NSCursor unhide];
-    }
+    // We do this Only when the Free mode is on
+    if (config->controlMode == DGMouseFree)
+        control->processMouse(config->displayWidth / 2, config->displayHeight / 2, DGMouseEventMove);
+    [NSCursor unhide];
 }
 
 - (void)mouseDown:(NSEvent *)theEvent {
@@ -128,18 +124,30 @@
 }
 
 - (void)mouseMoved:(NSEvent *)theEvent {
+    static bool shouldHideCursor = false;
     NSPoint mouseLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
     isMouseInside = ([self hitTest:mouseLoc] == self);
     if (isMouseInside)
         control->processMouse(mouseLoc.x, mouseLoc.y, DGMouseEventMove);
     
     if (config->fullScreen) {
+        // Left border
+        if (mouseLoc.x < 2) {
+            shouldHideCursor = true;
+        }
         // Right border
-        if (mouseLoc.x > config->displayWidth - 3) {
-            CGPoint position;
-            position.x = config->displayWidth - 4;
-            position.y = mouseLoc.y;
-            CGWarpMouseCursorPosition(position);
+        else if (mouseLoc.x > config->displayWidth - 2) {
+            shouldHideCursor = true;
+        }
+        // Bottom border
+        else if (mouseLoc.y > config->displayHeight - 2) {
+            shouldHideCursor = true;
+        }
+        else {
+            if (shouldHideCursor) {
+                [NSCursor hide];
+                shouldHideCursor = false;
+            }
         }
     }
 }
