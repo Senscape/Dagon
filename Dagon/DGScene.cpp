@@ -296,10 +296,10 @@ void DGScene::drawSplash() {
     _splashTexture->bind();
     
     // Note this is inverted
-    float coords[] = {0, config->displayHeight, 
-        config->displayWidth, config->displayHeight, 
+    float coords[] = {0, 0,
         config->displayWidth, 0,
-        0, 0}; 
+        config->displayWidth, config->displayHeight,
+        0, config->displayHeight}; 
     
     cameraManager->beginOrthoView();
     renderManager->enableTextures();
@@ -308,7 +308,7 @@ void DGScene::drawSplash() {
 
 void DGScene::loadSplash() {
     _splashTexture = new DGTexture;
-    _splashTexture->loadFromMemory(DGDefSplashBinary);
+    _splashTexture->loadFromMemory(DGDefSplashBinary, 179608);
     _isSplashLoaded = true;
 }
 
