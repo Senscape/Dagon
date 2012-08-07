@@ -328,14 +328,15 @@ void DGTexture::load() {
     }    
 }
 
-void DGTexture::loadFromMemory(const unsigned char* dataToLoad) {
+void DGTexture::loadFromMemory(const unsigned char* dataToLoad, long size) {
     int x, y, comp;
     GLint format = 0, internalFormat = 0;
     
     if (_isLoaded)
         return;
     
-    _bitmap = (GLubyte*)stbi_load_from_memory(dataToLoad, 173487, &x, &y, &comp, STBI_default);
+    // Note the size is hardcoded
+    _bitmap = (GLubyte*)stbi_load_from_memory(dataToLoad, (int)size, &x, &y, &comp, STBI_default);
     
     if (_bitmap) {
         _width = x;
