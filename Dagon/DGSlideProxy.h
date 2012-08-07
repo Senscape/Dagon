@@ -63,19 +63,21 @@ public:
         
         // Back
         
-        int coordsBack[] = {0, 1280, 2048, 1280, 2048, 1624, 0, 1624};
-        arrayOfCoordinates.assign(coordsBack, coordsBack + 8);
-        spot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
-        
-        DGAction action;
-        action.type = DGActionSwitch;
-        action.cursor = DGCursorBackward;
-        action.target = NULL; // Current node
-        
-        spot->setAction(&action);
-        spot->setColor(0);
-        
-        n->addSpot(spot);
+        if (lua_toboolean(L, 3) != true) {
+            int coordsBack[] = {0, 1280, 2048, 1280, 2048, 1624, 0, 1624};
+            arrayOfCoordinates.assign(coordsBack, coordsBack + 8);
+            spot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
+            
+            DGAction action;
+            action.type = DGActionSwitch;
+            action.cursor = DGCursorBackward;
+            action.target = NULL; // Current node
+            
+            spot->setAction(&action);
+            spot->setColor(0);
+            
+            n->addSpot(spot);
+        }
         
         // Register the node in the controller (generates the bundle)
         DGControl::getInstance().registerObject(n);
