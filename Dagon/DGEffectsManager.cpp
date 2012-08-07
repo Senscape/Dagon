@@ -162,7 +162,7 @@ void DGEffectsManager::init() {
     }
     
     _dustTexture = new DGTexture;
-    _dustTexture->loadFromMemory(DGDefDustBinary);
+    _dustTexture->loadFromMemory(DGDefDustBinary, 3666);
 }
 
 bool DGEffectsManager::isEnabled(int effectID) {
