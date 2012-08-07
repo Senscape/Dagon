@@ -647,8 +647,6 @@ void DGControl::switchTo(DGObject* theTarget) {
         // Only slides switch to NULL targets, so we check whether the new object is another slide.
         // If it isn't, we unlock the camera.
         if (_currentRoom) {
-            audioManager->clear();
-            
             renderManager->blendNextUpdate();
             
             DGNode* currentNode = this->currentNode();
@@ -732,7 +730,7 @@ void DGControl::switchTo(DGObject* theTarget) {
         }
         
         // This has to be done every time so that room audios keep playing
-        if (_currentRoom->hasAudios()) {
+        if (_currentRoom->hasAudios() && (!_currentRoom->currentNode()->isSlide() && theTarget != NULL)) {
             vector<DGAudio*>::iterator it;
             vector<DGAudio*> arrayOfAudios = _currentRoom->arrayOfAudios();
             
