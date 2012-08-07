@@ -101,7 +101,7 @@ public:
     void load();
     
     // Textures loaded from memory are not managed
-    void loadFromMemory(const unsigned char* dataToLoad);
+    void loadFromMemory(const unsigned char* dataToLoad, long size);
     void loadRawData(const unsigned char* dataToLoad, int width, int height);
     void saveToFile(const char* fileName);
     void unload();
