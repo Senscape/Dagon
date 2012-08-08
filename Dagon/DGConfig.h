@@ -40,7 +40,7 @@ enum DGConfigDefaults {
 	DGDefDisplayWidth = 1280,
 	DGDefDisplayHeight = 800,
 	DGDefDisplayDepth = 24,
-	DGDefDebugMode = false,
+	DGDefDebugMode = true,
     DGDefEffects = true,
 	DGDefForcedFullScreen = false,
 	DGDefFramebuffer = true,
