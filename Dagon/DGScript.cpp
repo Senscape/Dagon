@@ -81,7 +81,6 @@ void DGScript::execute() {
 void DGScript::init(int argc, char* argv[]) {
     char script[DGMaxFileLength];
     
-    log->trace(DGModSystem, "========================================");
     // First thing we do is get the paths to load the script
     // (note that it's not necessary to init the system)
     system->findPaths(argc, argv);
@@ -106,8 +105,13 @@ void DGScript::init(int argc, char* argv[]) {
 			
 			lua_pop(_L, 1);
 		}
+
+		log->trace(DGModSystem, "========================================");
 	}
-    else log->error(DGModScript, "%s", DGMsg250012);
+    else {
+		log->trace(DGModSystem, "========================================");
+		log->error(DGModScript, "%s", DGMsg250012);
+	}
     
     lua_getglobal(_L, "_G");
     _registerEnums();
