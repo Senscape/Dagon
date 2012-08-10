@@ -18,10 +18,10 @@ SRC_DIR:= ../Dagon
 CC:= gcc
 INCLUDE:= -I $(SRC_DIR) -I $(OTHERS_DIR) -I /usr/include/freetype2 -I /usr/include/lua5.1
 LIBS:= -Wl -lXxf86vm -lGL -lGLU -lGLEW -lopenal -llua5.1 -lfreetype -logg -lvorbis -lvorbisfile -ltheora -lm
-CFLAGS:= -O2 -Wall $(INCLUDE)
+CFLAGS:= -O2 -Wall -static $(INCLUDE)
 
 MODULES:= DGAudio DGAudioManager DGButton DGCameraManager \
- DGConfig DGConsole DGControl DGCursorManager DGEffectsManager \
+ DGConfig DGConsole DGControl DGCursorManager DGDustData DGEffectsManager \
  DGFeedManager DGFont DGFontData DGFontManager DGImage \
  DGInterface DGLog DGNode DGObject DGOverlay DGRenderManager \
  DGRoom DGScene	DGScript DGShaderData DGSplashData DGSpot DGState \
@@ -54,6 +54,8 @@ $(OBJS_DIR)/%.o: $(SRC_DIR)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
 #--- Special cases
+$(OBJS_DIR)/DGDustData.o: $(SRC_DIR)/DGDustData.c
+	$(CC) $(CFLAGS) -c $< -o $@
 $(OBJS_DIR)/DGFontData.o: $(SRC_DIR)/DGFontData.c
 	$(CC) $(CFLAGS) -c $< -o $@
 $(OBJS_DIR)/DGShaderData.o: $(SRC_DIR)/DGShaderData.c
