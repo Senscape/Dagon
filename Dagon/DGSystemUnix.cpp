@@ -214,7 +214,7 @@ void DGSystem::run() {
 	_isRunning = true;
 	while (_isRunning) {
 		// Check for events
-		while (XPending(GLWin.dpy) > 0) {
+		while (XEventsQueued(GLWin.dpy, QueuedAlready) > 0) {
 			XNextEvent(GLWin.dpy, &event);
 			
 			switch (event.type) {
