@@ -138,14 +138,17 @@ void DGSystem::destroyThreads() {
 	pthread_mutex_lock(&_audioMutex);
 	DGAudioManager::getInstance().terminate();
 	pthread_mutex_unlock(&_audioMutex);
+	pthread_join(tAudioThread, NULL);
 
 	pthread_mutex_lock(&_timerMutex);
 	DGTimerManager::getInstance().terminate();
 	pthread_mutex_unlock(&_timerMutex);
+	pthread_join(tTimerThread, NULL);
 
 	pthread_mutex_lock(&_videoMutex);
 	DGVideoManager::getInstance().terminate();
 	pthread_mutex_unlock(&_videoMutex);
+	pthread_join(tVideoThread, NULL);
 
 	_areThreadsActive = false;
 }
@@ -304,6 +307,17 @@ void DGSystem::run() {
 			}
 		}
 	}
+
+
+	if (config->debugMode) {
+		pthread_mutex_lock(&_systemMutex);
+		DGControl::getInstance().terminate();
+		pthread_mutex_unlock(&_systemMutex);
+		pthread_join(tProfilerThread, NULL);
+	}
+
+	pthread_join(tSystemThread, NULL);
+	killGLWindow();
 }
 
 void DGSystem::setTitle(const char* title) {
@@ -327,8 +341,7 @@ void DGSystem::suspendThread(int threadID) {
 }
 
 void DGSystem::terminate() {
-	killGLWindow();
-
+	this->destroyThreads();
 	_isRunning = false;
 }
 
