@@ -198,6 +198,9 @@ void DGSystem::resumeThread(int threadID){
 }
 
 void DGSystem::run() {
+	if (config->fullScreen)	
+		toggleFullScreen();
+
 	char buffer[80];
 	static bool isDragging = false;
 	static bool isModified = false;
@@ -330,23 +333,6 @@ void DGSystem::terminate() {
 }
 
 void DGSystem::toggleFullScreen() {
-	toggleWMFullScreen();
-}
-
-void DGSystem::update() {
-	glXSwapBuffers(GLWin.dpy, GLWin.win);
-}
-
-time_t DGSystem::wallTime() {
-	// FIXME: Confirm this works with several threads
-	return clock();
-}
-
-////////////////////////////////////////////////////////////
-// Implementation - Private methods
-////////////////////////////////////////////////////////////
-
-void toggleWMFullScreen() {
 	Atom wmState = XInternAtom(GLWin.dpy, "_NET_WM_STATE", False);
         Atom fullscreenAttr = XInternAtom(GLWin.dpy, "_NET_WM_STATE_FULLSCREEN", True);
 
@@ -363,6 +349,19 @@ void toggleWMFullScreen() {
 
 	XSendEvent(GLWin.dpy, DefaultRootWindow(GLWin.dpy), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
 }
+
+void DGSystem::update() {
+	glXSwapBuffers(GLWin.dpy, GLWin.win);
+}
+
+time_t DGSystem::wallTime() {
+	// FIXME: Confirm this works with several threads
+	return clock();
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Private methods
+////////////////////////////////////////////////////////////
 
 bool createGLWindow(char* title, int width, int height, int bits,
                     bool fullscreenflag) {
@@ -453,8 +452,6 @@ bool createGLWindow(char* title, int width, int height, int bits,
 					  GrabModeAsync, CurrentTime);
         XGrabPointer(GLWin.dpy, GLWin.win, True, ButtonPressMask,
 					 GrabModeAsync, GrabModeAsync, GLWin.win, None, CurrentTime);
-
-	toggleWMFullScreen();
     }
     else
     {
