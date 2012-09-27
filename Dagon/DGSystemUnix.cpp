@@ -299,8 +299,12 @@ void DGSystem::run() {
 					pthread_mutex_unlock(&_systemMutex);
 					break;			
 				case ClientMessage:
-					// TODO: Simulate ESC key
-					this->terminate();
+					// Simulate ESC key
+					pthread_mutex_lock(&_systemMutex);
+					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+					control->processKey(DGKeyEsc, DGKeyEventDown);
+					glXMakeCurrent(GLWin.dpy, None, NULL);
+					pthread_mutex_unlock(&_systemMutex);
 					break;
 				default:
 					break;
