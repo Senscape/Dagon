@@ -109,6 +109,18 @@ DGSystem::~DGSystem() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+void DGSystem::browse(const char* url) {
+	char aux[DGMaxFileLength];
+
+	if (config->fullScreen) {
+		this->toggleFullScreen();
+	}
+
+	strcpy(aux, "xdg-open ");
+	strcat(aux, url);
+	system(aux);
+}
+
 void DGSystem::createThreads() {
 	pthread_create(&tAudioThread, NULL, &_audioThread, NULL);
 	pthread_create(&tTimerThread, NULL, &_timerThread, NULL);
@@ -158,6 +170,8 @@ void DGSystem::init() {
 		// Now we're ready to init the controller instance
     	control = &DGControl::getInstance();
     	control->init();
+	control->reshape(config->displayWidth, config->displayHeight);
+	control->update();
         _isInitialized = true;
 
         log->trace(DGModSystem, "%s", DGMsg040001);
@@ -182,6 +196,9 @@ void DGSystem::resumeThread(int threadID){
 }
 
 void DGSystem::run() {
+	char buffer[80];
+	static bool isDragging = false;
+	static bool isModified = false;
 	XEvent event;
     KeySym key;
 
@@ -208,35 +225,71 @@ void DGSystem::run() {
 	                    GLWin.width = event.xconfigure.width;
 	                    GLWin.height = event.xconfigure.height;
 						pthread_mutex_lock(&_systemMutex);
-						config->displayWidth = GLWin.width;
-						config->displayHeight = GLWin.height;
+						glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+						control->reshape(GLWin.width, GLWin.height);
+						glXMakeCurrent(GLWin.dpy, None, NULL);
 						pthread_mutex_unlock(&_systemMutex);
 	                }
 					break;
 				case MotionNotify:
 					pthread_mutex_lock(&_systemMutex);
 					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
-					control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventMove);
+					if (isDragging)
+						control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventDrag);
+					else
+						control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventMove);
 					glXMakeCurrent(GLWin.dpy, None, NULL);
 					pthread_mutex_unlock(&_systemMutex);
 					break;
 				case ButtonPress:
+					pthread_mutex_lock(&_systemMutex);
+					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+					if (event.xbutton.button == 1)
+						control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventDown);
+					else if (event.xbutton.button == 3) 
+						control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventRightDown);
+					glXMakeCurrent(GLWin.dpy, None, NULL);
+					pthread_mutex_unlock(&_systemMutex);
+					isDragging = true;
 					break;
 				case ButtonRelease:
 					pthread_mutex_lock(&_systemMutex);
 					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
-					control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventUp);
+					if (event.xbutton.button == 1)
+						control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventUp);
+					else if (event.xbutton.button == 3) 
+						control->processMouse(event.xbutton.x, event.xbutton.y, DGMouseEventRightUp);
 					glXMakeCurrent(GLWin.dpy, None, NULL);
 					pthread_mutex_unlock(&_systemMutex);
+					isDragging = false;
 					break;
-                case KeyPress:
-                    key = XLookupKeysym(&event.xkey, 0);
+                		case KeyPress:
 					pthread_mutex_lock(&_systemMutex);
 					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
-					control->processKey(key, false);
+					if (XLookupString(&event.xkey, buffer, 80, &key, 0)) {
+						if (isModified) {
+							control->processKey(key, DGKeyEventModified);
+							isModified = false;
+						}
+						else
+    							control->processKey(key, DGKeyEventDown);
+					}
+					else {
+						if ((key == XK_Control_L) || (key == XK_Control_R))
+							isModified = true;
+					}
 					glXMakeCurrent(GLWin.dpy, None, NULL);
 					pthread_mutex_unlock(&_systemMutex);
 					break;
+
+                		case KeyRelease:
+                    			key = XLookupKeysym(&event.xkey, 0);
+					pthread_mutex_lock(&_systemMutex);
+					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+    					control->processKey(key, DGKeyEventUp);
+					glXMakeCurrent(GLWin.dpy, None, NULL);
+					pthread_mutex_unlock(&_systemMutex);
+					break;			
 				case ClientMessage:
 					// TODO: Simulate ESC key
 					this->terminate();
@@ -274,10 +327,8 @@ void DGSystem::terminate() {
 	_isRunning = false;
 }
 
-void DGSystem::toggleFullScreen() { 
-	killGLWindow();
-	GLWin.fs = config->fullScreen;
-    createGLWindow("Dagon", config->displayWidth, config->displayHeight, config->displayDepth, GLWin.fs);
+void DGSystem::toggleFullScreen() {
+	log->warning(DGModSystem, "Toggling fullscreen currently disabled in Linux");
 }
 
 void DGSystem::update() {
@@ -329,6 +380,7 @@ bool createGLWindow(char* title, int width, int height, int bits,
             bestMode = i;
         }
     }
+
     // get an appropriate visual
     vi = glXChooseVisual(GLWin.dpy, GLWin.screen, attrListDbl);
     if (vi == NULL)
@@ -352,11 +404,22 @@ bool createGLWindow(char* title, int width, int height, int bits,
 	
     if (GLWin.fs)
     {
-        XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, modes[bestMode]);
-        XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
-        dpyWidth = modes[bestMode]->hdisplay;
-        dpyHeight = modes[bestMode]->vdisplay;
-        printf("Resolution %dx%d\n", dpyWidth, dpyHeight);
+	if (DGConfig::getInstance().forcedFullScreen) {
+        	XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, modes[bestMode]);
+        	XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
+        	dpyWidth = modes[bestMode]->hdisplay;
+        	dpyHeight = modes[bestMode]->vdisplay;
+        	printf("Resolution %dx%d\n", dpyWidth, dpyHeight);
+	}
+	else {
+        	XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.deskMode);
+        	XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);
+        	dpyWidth = (&GLWin.deskMode)->hdisplay;
+        	dpyHeight = (&GLWin.deskMode)->vdisplay;
+		DGConfig::getInstance().displayWidth = dpyWidth;
+		DGConfig::getInstance().displayHeight = dpyHeight;
+        	printf("Resolution %dx%d\n", dpyWidth, dpyHeight);
+	}
         XFree(modes);
 		
         // create a fullscreen window
@@ -391,6 +454,7 @@ bool createGLWindow(char* title, int width, int height, int bits,
     }       
     // connect the glx-context to the window
     glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+
     XGetGeometry(GLWin.dpy, GLWin.win, &winDummy, &GLWin.x, &GLWin.y,
 				 &GLWin.width, &GLWin.height, &borderDummy, &GLWin.depth);
     printf("Depth %d\n", GLWin.depth);
@@ -398,6 +462,20 @@ bool createGLWindow(char* title, int width, int height, int bits,
         printf("Congrats, you have Direct Rendering!\n");
     else
         printf("Sorry, no Direct Rendering possible!\n");
+
+	// Hide the cursor
+
+	Cursor invisibleCursor;
+	Pixmap bitmapNoData;
+	XColor black;
+	static char noData[] = { 0,0,0,0,0,0,0,0 };
+	black.red = black.green = black.blue = 0;
+
+	bitmapNoData = XCreateBitmapFromData(GLWin.dpy, GLWin.win, noData, 8, 8);
+	invisibleCursor = XCreatePixmapCursor(GLWin.dpy, bitmapNoData, bitmapNoData, 
+                                     &black, &black, 0, 0);
+	XDefineCursor(GLWin.dpy,GLWin.win, invisibleCursor);
+	XFreeCursor(GLWin.dpy, invisibleCursor);
 	
     return true;    
 }
