@@ -19,6 +19,8 @@
 #include <pthread.h>
 #include <sys/time.h>
 
+#include <unistd.h>
+
 #include "DGAudioManager.h"
 #include "DGConfig.h"
 #include "DGControl.h"
