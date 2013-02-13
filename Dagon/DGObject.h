@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -43,7 +43,7 @@ enum DGObjectTypes {
 	DGObjectGeneric,
 	DGObjectAudio,
     DGObjectButton,
-    DGObjectCursor, // Not really objects
+    DGObjectCursor, // Cursors are not really separate objects, but for convenience we include them here
 	DGObjectFont,
     DGObjectImage,
 	DGObjectNode,
@@ -58,8 +58,6 @@ enum DGObjectTypes {
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
-
-// TODO: Lots of stuff to add here: enable, disable, alpha property, etc.
 
 class DGObject {
     unsigned int _id;

@@ -1,13 +1,19 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
 // distribute this file in accordance with the terms of the
 // license agreement accompanying it.
 //
+////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////
+// DISCLAIMER: This file is quite messy and requires a major
+// overhaul, especially the processing of input.
+// Proceed at your own risk.
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
@@ -66,10 +72,10 @@ DGControl::DGControl() {
 	_isRunning = false;
     
     // This is used to randomize the color of certain spots,
-    // should be called once
+    // should be called once during initialization.
     srand((unsigned)time(0));
     
-    // For precaution
+    // For precaution, we set all these to false
     
     _eventHandlers.hasEnterNode = false;
     _eventHandlers.hasLeaveNode = false;
@@ -686,7 +692,7 @@ void DGControl::switchTo(DGObject* theTarget) {
                     }
                     
                     // TODO: Merge the video autoplay with spot properties
-                    // TODO: Decide after video finishes playing if texture is showed or removed
+                    // TODO: Decide after video finishes playing if last frame is showed or removed
                     if (spot->hasVideo()) {
                         DGVideo* video = spot->video();
                         videoManager->requestVideo(video);
@@ -906,14 +912,13 @@ void DGControl::_processAction(){
 void DGControl::_updateView(int state, bool inBackground) {
     // TODO: Suspend all operations when doing a switch
     // FIXME: Add a render stack of DGObjects, especially for overlays
-    // IMPORTANT: Ensure this function is thread-safe when
-    // switching rooms or nodes
+    // IMPORTANT: Ensure this function is thread-safe when switching rooms or nodes
     
     // Setup the scene
     
     _scene->clear();
     
-    // Do this in a viewtimer
+    // Do this in a viewtimer for the frame limitter feature
     switch (state) {
         case DGStateCutscene:
             if (!_scene->drawCutscene()) {
@@ -959,7 +964,7 @@ void DGControl::_updateView(int state, bool inBackground) {
     }
     
     if (!inBackground) {
-        // User post render operations, supporting textures
+        // User post-render operations, supporting textures
         if (_eventHandlers.hasPostRender)
             script->processCallback(_eventHandlers.postRender, 0);
     }
@@ -967,7 +972,7 @@ void DGControl::_updateView(int state, bool inBackground) {
     // General fade, affects every graphic on screen
     renderManager->fadeView();
     
-    // Debug info, if enabled
+    // Debug info (if enabled)
     if (_console->isEnabled() && !inBackground) {
         _fpsCount++;
         // BUG: This causes a crash sometimes. Why?

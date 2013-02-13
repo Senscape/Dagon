@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -27,12 +27,12 @@
 
 using namespace std;
 
-// The way the engine is designed, all static Lua functions will
-// have to grab a reference to the control singleton and log if necessary
-// No performance hit but something to keep in mind
+// The way the engine is designed, all static Lua functions will have
+// to grab a reference to the Control singleton and Log when required.
+// No performance hit whatsoever but something to keep in mind.
 
-// Spots launch audio and video, then perform a switch in that order
-// To avoid doing too many customs
+// Spots launch audio and video, then perform a switch in that order.
+// This is to avoid doing many customs.
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -89,7 +89,7 @@ void DGScript::init(int argc, char* argv[]) {
     luaL_openlibs(_L);
     
     // The following code attempts to load a config file, and if it does exist
-    // copy the created table to the DGConfig metatable
+    // copies the created table to the DGConfig metatable
     if (luaL_loadfile(_L, config->path(DGPathApp, DGDefConfigFile)) == 0) {
 		lua_newtable(_L);
 		lua_pushvalue(_L, -1);
@@ -209,7 +209,7 @@ bool DGScript::isExecutingModule() {
 
 void DGScript::processCallback(int handler, int object) {
     if (object) {
-        // Grab the reference to the Lua object and set it as 'self'
+        // Grab the reference to the Lua object and set it to 'self'
         lua_rawgeti(_thread, LUA_REGISTRYINDEX, object);
         lua_setglobal(_thread, "self");
     }
@@ -430,8 +430,11 @@ int DGScript::_globalRegister(lua_State *L) {
 
 int DGScript::_globalRoom(lua_State *L) {
     // NOTE: This is a convenience Lua hack, which in theory is 100% safe.
-    // Must do losts of testing. Basically, this helper creates a room instance,
+    // Must do lots of testing. Basically, this helper creates a room instance,
     // loads the corresponding Lua file and makes sure it's never loaded twice.
+    //
+    // UPDATE: So far it has worked great. Our motto is: "if it works, it stays".
+    // PS: Not really.
     
     char module[DGMaxObjectName];
     strncpy(module, luaL_checkstring(L, 1), DGMaxObjectName);
@@ -456,7 +459,7 @@ int DGScript::_globalRoom(lua_State *L) {
         }
     }
     
-    // Nothing to do...
+    // Nothing else to do...
     
     return 0;
 }

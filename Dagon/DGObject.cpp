@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -43,7 +43,7 @@ DGObject::DGObject() {
 ////////////////////////////////////////////////////////////
 
 DGObject::~DGObject() {
-    // Do some checks here and confirm the retainCount is OK
+    // TODO: Do some checks here and confirm the retainCount is OK
 }
 
 ////////////////////////////////////////////////////////////
@@ -144,7 +144,7 @@ void DGObject::enable() {
 }
 
 void DGObject::fadeIn() {
-    // Force object enabled
+    // Force object to enabled state
     _isEnabled = true;
     
     _fadeLevel = 0.0f;

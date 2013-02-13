@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -195,7 +195,7 @@ static int DGConfigLibSet(lua_State *L) {
     
     if (strcmp(key, "controlMode") == 0) {
 		DGConfig::getInstance().controlMode = (int)luaL_checknumber(L, 3);
-        // Must refresh the viewport
+        // Must refresh the viewport with this change
         DGCameraManager::getInstance().setViewport(DGConfig::getInstance().displayWidth, DGConfig::getInstance().displayHeight);
     }
 	

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -43,9 +43,7 @@ public:
             lua_pushnil(L);
             while (lua_next(L, 2) != 0) {
                 const char* key = lua_tostring(L, -2);
-                
-                // We can only read the key as a string, so we have no choice but
-                // do an ugly nesting of strcmps()
+
                 if (strcmp(key, "loop") == 0) a->setLoopable(lua_toboolean(L, -1));
                 if (strcmp(key, "volume") == 0) a->setDefaultFadeLevel((float)(lua_tonumber(L, -1) / 100));
                 

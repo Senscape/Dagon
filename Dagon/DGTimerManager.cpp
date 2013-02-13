@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -59,7 +59,6 @@ bool DGTimerManager::checkManual(int handle) {
     return false;
 }
 
-// TODO: Trigger should always be above 1 second
 int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, int luaObject) {
     DGTimer timer;
     
@@ -191,9 +190,8 @@ void DGTimerManager::terminate() {
 	_isRunning = false;
 }
 
-
 // FIXME: This is quite sucky. Timers keep looping and being checked even if they
-// were already triggered. Should have different arrays here.
+// were already triggered. Should have different arrays here per each kind of timer.
 bool DGTimerManager::update() {
 	if (_isRunning) {
 		std::vector<DGTimer>::iterator it;

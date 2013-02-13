@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -170,8 +170,8 @@ void DGSystem::init() {
 		// Now we're ready to init the controller instance
     	control = &DGControl::getInstance();
     	control->init();
-	control->reshape(config->displayWidth, config->displayHeight);
-	control->update();
+        control->reshape(config->displayWidth, config->displayHeight);
+        control->update();
         _isInitialized = true;
 
         log->trace(DGModSystem, "%s", DGMsg040001);
@@ -360,9 +360,9 @@ bool createGLWindow(char* title, int width, int height, int bits,
     unsigned int borderDummy;
     
     GLWin.fs = fullscreenflag;
-    // set best mode to current
+    // Set best mode to current
     bestMode = 0;
-    // get a connection
+    // Get a connection
     GLWin.dpy = XOpenDisplay(0);
     GLWin.screen = DefaultScreen(GLWin.dpy);
     XF86VidModeQueryVersion(GLWin.dpy, &vidModeMajorVersion,
@@ -370,9 +370,9 @@ bool createGLWindow(char* title, int width, int height, int bits,
     printf("XF86VidModeExtension-Version %d.%d\n", vidModeMajorVersion,
 		   vidModeMinorVersion);
     XF86VidModeGetAllModeLines(GLWin.dpy, GLWin.screen, &modeNum, &modes);
-    // save desktop-resolution before switching modes
+    // Save desktop-resolution before switching modes
     GLWin.deskMode = *modes[0];
-    // look for mode with requested resolution
+    // Look for mode with requested resolution
     for (i = 0; i < modeNum; i++)
     {
         if ((modes[i]->hdisplay == width) && (modes[i]->vdisplay == height))
@@ -381,7 +381,7 @@ bool createGLWindow(char* title, int width, int height, int bits,
         }
     }
 
-    // get an appropriate visual
+    // Get an appropriate visual
     vi = glXChooseVisual(GLWin.dpy, GLWin.screen, attrListDbl);
     if (vi == NULL)
     {
@@ -394,9 +394,9 @@ bool createGLWindow(char* title, int width, int height, int bits,
     }
     glXQueryVersion(GLWin.dpy, &glxMajorVersion, &glxMinorVersion);
     printf("glX-Version %d.%d\n", glxMajorVersion, glxMinorVersion);
-    // create a GLX context
+    // Create a GLX context
     GLWin.ctx = glXCreateContext(GLWin.dpy, vi, 0, GL_TRUE);
-    // create a color map
+    // Create a color map
     cmap = XCreateColormap(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
 						   vi->visual, AllocNone);
     GLWin.attr.colormap = cmap;
@@ -422,7 +422,7 @@ bool createGLWindow(char* title, int width, int height, int bits,
 	}
         XFree(modes);
 		
-        // create a fullscreen window
+        // Create a fullscreen window
         GLWin.attr.override_redirect = True;
         GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
 		ButtonReleaseMask | StructureNotifyMask | PointerMotionMask;
@@ -439,20 +439,20 @@ bool createGLWindow(char* title, int width, int height, int bits,
     }
     else
     {
-        // create a window in window mode
+        // Create a window in window mode
         GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
 		ButtonReleaseMask | StructureNotifyMask | PointerMotionMask;
         GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
 								  0, 0, width, height, 0, vi->depth, InputOutput, vi->visual,
 								  CWBorderPixel | CWColormap | CWEventMask, &GLWin.attr);
-        // only set window title and handle wm_delete_events if in windowed mode
+        // Only set window title and handle wm_delete_events if in windowed mode
         wmDelete = XInternAtom(GLWin.dpy, "WM_DELETE_WINDOW", True);
         XSetWMProtocols(GLWin.dpy, GLWin.win, &wmDelete, 1);
         XSetStandardProperties(GLWin.dpy, GLWin.win, title,
 							   title, None, NULL, 0, NULL);
         XMapRaised(GLWin.dpy, GLWin.win);
     }       
-    // connect the glx-context to the window
+    // Connect the glx-context to the window
     glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
 
     XGetGeometry(GLWin.dpy, GLWin.win, &winDummy, &GLWin.x, &GLWin.y,
@@ -490,7 +490,7 @@ GLvoid killGLWindow() {
         GLWin.ctx = NULL;
     }
 
-    // switch back to original desktop resolution if we were in fs
+    // Switch back to original desktop resolution if we were in fs
     if (GLWin.fs) {
         XF86VidModeSwitchToMode(GLWin.dpy, GLWin.screen, &GLWin.deskMode);
         XF86VidModeSetViewPort(GLWin.dpy, GLWin.screen, 0, 0);

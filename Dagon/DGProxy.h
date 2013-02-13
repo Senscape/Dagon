@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -134,7 +134,9 @@ int DGCheckProxy(lua_State *L, int idx) {
             return DGObjectSlide; // It's a slide
         
         if (_checkutype(L, idx, DGSpotProxy::className))
-            return DGObjectSpot; // It's a spot        
+            return DGObjectSpot; // It's a spot
+        
+        // No, it's Superman!
         
         return DGObjectGeneric; // None of the above, we return a generic type
     }

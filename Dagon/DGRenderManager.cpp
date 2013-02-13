@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -104,7 +104,7 @@ void DGRenderManager::init() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
 	_blendTexture = new DGTexture(0, 0, 0); // All default values
-    _fadeTexture = new DGTexture(1, 1, 0); // Minimal, black texture   
+    _fadeTexture = new DGTexture(1, 1, 0); // Minimal black texture   
     _fadeTexture->setFadeSpeed(DGFadeFastest);
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
@@ -297,8 +297,10 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 		case DGNorth:
 			glTranslatef(-x, y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2); // Size is divided in half because of the way we draw the cube
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1; // We must invert the coordinates in some cases
+                // Size is divided in half because of the way we draw the cube
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+                // We must invert the coordinates in some cases
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
 				spotVertCoords[j + 2] = 0.0f;
 			}
 			break;
@@ -451,7 +453,7 @@ void DGRenderManager::drawSlide(float* withArrayOfCoordinates) {
 }
 
 void DGRenderManager::setAlpha(float alpha) {
-    // NOTE: This resets the current so it should be used with care
+    // NOTE: This resets the current color so it should be used with care
     glColor4f(1.0f, 1.0f, 1.0f, alpha);
 }
 
@@ -614,7 +616,7 @@ void DGRenderManager::fadeView() {
 
 DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     DGPoint center;    
-    int vertex = arrayOfCoordinates.size() / 2;
+    int vertex = arrayOfCoordinates.size() / 2.0f;
     
     double area = 0.0;
     double x0 = 0.0; // Current vertex X
@@ -669,9 +671,11 @@ void DGRenderManager::_initFrameBuffer() {
     glGenFramebuffersEXT(1, &_fbo); // Generate one frame buffer and store the ID in fbo  
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, _fbo); // Bind our frame buffer  
     
-    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, _fboTexture, 0); // Attach the texture fbo_texture to the color buffer in our frame buffer  
+    // Attach the texture fbo_texture to the color buffer in our frame buffer
+    glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, _fboTexture, 0);
     
-    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, _fboDepth); // Attach the depth buffer fbo_depth to our frame buffer  
+    // Attach the depth buffer fbo_depth to our frame buffer
+    glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT, GL_RENDERBUFFER_EXT, _fboDepth);
     
     GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT); // Check that status of our generated frame buffer  
     
@@ -693,8 +697,9 @@ void DGRenderManager::_initFrameBufferDepthBuffer() {
     glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 
                              config->displayWidth, config->displayHeight);
     
+    // Set the render buffer of this buffer to the depth buffer
     glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
-                                 GL_RENDERBUFFER_EXT, _fboDepth); // Set the render buffer of this buffer to the depth buffer  
+                                 GL_RENDERBUFFER_EXT, _fboDepth);
     
     glBindRenderbufferEXT(GL_RENDERBUFFER_EXT, 0); // Unbind the render buffer  
 }
