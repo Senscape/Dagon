@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -126,7 +126,7 @@ void DGImage::setSize(float width, float height) {
 
 void DGImage::setTexture(const char* fromFileName) {
     // TODO: Important! Should determine first if the texture already exists,
-    // to avoid repeating resources. Eventually, this would be done with the
+    // to avoid repeating resources. Eventually, this would be done via the
     // resource manager.
     DGTexture* texture;
     

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -103,7 +103,7 @@
 }
 
 - (void)mouseExited:(NSEvent *)theEvent {
-    // We do this Only when the Free mode is on
+    // We do this only when the Free mode is on
     if (config->controlMode == DGMouseFree)
         control->processMouse(config->displayWidth / 2, config->displayHeight / 2, DGMouseEventMove);
     [NSCursor unhide];
@@ -175,6 +175,7 @@
 
 - (void)scrollWheel:(NSEvent *)theEvent {
     if (isMouseInside) {
+        // TODO: Flawed experiment, should implement this
         /*float x = [theEvent deltaX];
         float y = [theEvent deltaY];
         NSLog(@"(%0.0f, %0.0f)", x, y);*/

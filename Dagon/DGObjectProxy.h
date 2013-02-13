@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -22,7 +22,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// Helper quickly add the default methods
+// Helper to quickly add the default methods
 #define DGObjectMethods(proxy) \
 method(proxy, disable), \
 method(proxy, enable), \

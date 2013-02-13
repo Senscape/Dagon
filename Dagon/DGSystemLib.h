@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -48,8 +48,8 @@ static int DGSystemLibRun(lua_State *L) {
 }
 
 static int DGSystemLibUpdate(lua_State *L) {
-    // We allow this in case the user wants to implement a loop of some kind
-    // Currently has a conflict if there's an event hook registered
+    // We allow this in case the user wants to implement a loop of some kind.
+    // FIXME: Currently has a conflict if there's an event hook registered.
     DGControl::getInstance().update();
 	
 	return 0;

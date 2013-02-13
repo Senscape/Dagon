@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -21,7 +21,7 @@
 
 using namespace std;
 
-// TODO: Watch out with the context here!
+// TODO: Watch out with the OpenAL context here!
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -44,7 +44,7 @@ DGAudioManager::~DGAudioManager() {
     // audio was created by Lua or by another class
     
     // Each audio object should unregister itself if
-    // destructed
+    // destroyed
 
     if (!_arrayOfAudios.empty()) {
         vector<DGAudio*>::iterator it;
@@ -131,7 +131,7 @@ void DGAudioManager::init() {
     log->trace(DGModAudio, "%s", DGMsg070000);
     system = &DGSystem::getInstance();
     
-    // OpenAl sucks in Windows, so let's support forcing the audio device
+// OpenAl sucks on Windows, so let's support forcing the audio device on this platform
 #ifdef DGPlatformWindows
     char deviceName[256];
 	char *defaultDevice;

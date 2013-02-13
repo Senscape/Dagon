@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -73,7 +73,7 @@ int DGTextureManager::itemsInBundle(const char* nameOfBundle) {
 
 void DGTextureManager::flush() {
     // This function is called every time a switch is performed
-    // and unloads the least used textures if necessary
+    // and unloads the least used textures when necessary
     
     long texturesToUnload = _arrayOfActiveTextures.size() - DGMaxActiveTextures;
 
@@ -91,18 +91,15 @@ void DGTextureManager::registerTexture(DGTexture* target) {
     
     if (!target->hasResource()) {
         // We attempt loading the resource with automatically generated filenames
-
         char fileToLoad[DGMaxFileLength];
         
         if (config->bundleEnabled) {
             // Attempt loading the bundle
-            
             snprintf(fileToLoad, DGMaxFileLength, "%s.%s", target->name(), config->texExtension());
             
         }
         else {
             // Attempt loading individual file with generated index and default extension
-            
             snprintf(fileToLoad, DGMaxFileLength, "%s%0" in_between(DGFileSeqDigits) "d.%s", target->name(),
                      target->indexInBundle() + DGFileSeqStart, config->texExtension());
         }

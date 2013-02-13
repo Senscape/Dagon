@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -92,7 +92,7 @@ public:
              r->setDefaultFoostep((DGAudio*)DGProxyToAudio(L, 1));
         }
         else {
-            // If not, create and set (deleted by the Audio Manager)
+            // If not, create and set (this is later deleted by the Audio Manager)
             DGAudio* audio = new DGAudio;
             audio->setResource(luaL_checkstring(L, 1));
             

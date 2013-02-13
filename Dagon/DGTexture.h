@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// TODO: We should convert all short vars to int, also read all the new defines
+// TODO: We should convert all short vars to int for better speed here, also read new defines
 
 typedef struct {
 	//char	name[DGMaxFileLength];
@@ -63,7 +63,7 @@ class DGTexture : public DGObject {
     int _indexInBundle;
 	bool _isLoaded;
     
-    // This is used to keep trace of the most used textures
+    // This is used to keep track of the most used textures
     unsigned int _usageCount;
     
     // Eventually all file management will be handled by a DGResourceManager object

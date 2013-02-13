@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -28,8 +28,8 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// These are static private in order to keep a clean and
-// portable header
+// These are static and private in order to keep a clean and
+// portable header.
 
 bool lionFullscreen = false;
 
@@ -295,9 +295,9 @@ void DGSystem::resumeThread(int threadID) {
 }
 
 // TODO: Note this isn't quite multithreaded yet.
-// The timer is running in the main process and thus the OpenGL context doesn't
-// have to be shared.
 void DGSystem::run() {
+    // The timer is running in the main process and thus the OpenGL context doesn't
+    // have to be shared.
     _mainLoop = CreateDispatchTimer((1.0f / config->framerate) * NSEC_PER_SEC, 0,
                                     dispatch_get_main_queue(),
                                     ^{ control->update(); });
@@ -369,7 +369,7 @@ void DGSystem::terminate() {
     }
 }
 
-// 10.6 support adapted from Boxer app by Alun Bestor
+// 10.6 support adapted from Boxer app by Alun Bestor: http://boxerapp.com
 void DGSystem::toggleFullScreen() {
     // TODO: Suspend the timer to avoid multiple redraws
     if (lionFullscreen) {
