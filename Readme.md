@@ -35,4 +35,4 @@ Feel free to visit our forums to discuss the engine and request technical suppor
 Copyright (c) 2012 Senscape s.r.l.
 All rights reserved.
 
-Senscape permits you to use, modify, and distribute this file in accordance with the terms of the Common Development and Distribution License (CDDL) agreement. A copy of the License can be found in the Documents folder.
+Senscape permits you to use, modify, and distribute these files in accordance with the terms of the Common Development and Distribution License (CDDL) agreement. A copy of the License can be found in the Documents folder.
