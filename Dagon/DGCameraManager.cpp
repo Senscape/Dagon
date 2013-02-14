@@ -140,14 +140,14 @@ int DGCameraManager::verticalLimit() {
 ////////////////////////////////////////////////////////////
 
 void DGCameraManager::setAngleHorizontal(float horizontal) {
-    if (horizontal != DGCurrent) {
+	if (fabs(horizontal - DGCurrent) > DGEpsilon) {
         // Extrapolate the coordinates
         _angleH = _toRadians(horizontal, _angleHLimit);
     }
 }
 
 void DGCameraManager::setAngleVertical(float vertical) {
-    if (vertical != DGCurrent) {
+	if (fabs(vertical - DGCurrent) > DGEpsilon) {
         // Extrapolate the coordinates
         _angleV = _toRadians(vertical, _angleVLimit);
     }
@@ -210,7 +210,7 @@ void DGCameraManager::setSpeedFactor(int speed) {
 }
 
 void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
-    if (horizontal != DGCurrent) {
+    if (fabs(horizontal - DGCurrent) > DGEpsilon) {
         // Substract n times pi (fix probable double turn)
         float pi, pos;
         pi = _angleH / (M_PI * 2);
@@ -224,7 +224,7 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         // TODO: Certain cases aren't supported in this code; ie:
         // slightly rotated left of North, then setting target angle
         // to East. Needs improving.
-        if (_angleHTarget == 0.0f) {
+        if (fabs(_angleHTarget) < DGEpsilon) {
             if (_angleH > M_PI)
                 _angleHTarget = (float)(M_PI*2);
         }
@@ -239,9 +239,9 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         _angleHTarget = _angleH;
     }
     
-    if (vertical != DGCurrent) {
+	if (fabs(vertical - DGCurrent) > DGEpsilon) {
         // Extrapolate the coordinates
-        _angleVTarget = _toRadians(vertical, _angleVLimit);;
+        _angleVTarget = _toRadians(vertical, _angleVLimit);
         
         // FIXME: This division is related to the amount of configured inertia. Not right.
         _targetVError = fabs(_angleVTarget - _angleV) / 5.0f;
@@ -649,17 +649,17 @@ void DGCameraManager::update() {
     }
     
     // Apply horizontal motion
-    if (_motionLeft)
+	if (fabs(_motionLeft) > DGEpsilon)
         _angleH -= sin(_accelH) * _motionLeft;
     
-    if (_motionRight)
+    if (fabs(_motionRight) > DGEpsilon)
         _angleH += sin(_accelH) * _motionRight;
     
     // Apply vertical motion
-    if (_motionDown)
+    if (fabs(_motionDown) > DGEpsilon)
         _angleV += sin(_accelV) * _motionDown;
     
-    if (_motionUp)
+    if (fabs(_motionUp) > DGEpsilon)
         _angleV -= sin(_accelV) * _motionUp;    
     
     // Limit horizontal rotation

@@ -105,6 +105,7 @@ void DGSystem::browse(const char* url) {
 	ShellExecute(NULL, L"open", urlW, NULL, NULL, SW_SHOWNORMAL);
 }
 
+// http://www.viva64.com/en/d/0102/
 void DGSystem::createThreads() {
 	InitializeCriticalSection(&csAudioThread);
 	hAudioThread = CreateThread(NULL, 0, _audioThread, NULL, 0, NULL);

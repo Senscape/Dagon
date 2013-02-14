@@ -467,7 +467,7 @@ void DGRenderManager::setColor(int color, float alpha) {
     
 	glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
     
-    if (alpha)
+    if (fabs(alpha) > DGEpsilon)
         glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), alpha); // Force specified alpha
     else
         glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));

@@ -486,7 +486,7 @@ void DGTexture::saveToFile(const char* fileName){
             _depth = 24; // Hardcoded to 24 bits
             
             mode = _depth / 8;
-            if ((_depth == 24) || (_depth == 32))
+            if ((_depth == 24) || (_depth == 32)) // the conditional expression is always true
                 type = 2;
             else
                 type = 3;

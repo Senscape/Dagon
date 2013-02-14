@@ -47,6 +47,8 @@
 #define mkstr(a) # a
 #define in_between(a) mkstr(a)
 
+#define DGEpsilon 0.001
+
 enum DGCursorTypes {
     DGCursorNormal = 0,
     DGCursorDrag,
