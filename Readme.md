@@ -28,7 +28,7 @@ To create your own project, copy the Dagon binary in a folder with a _main.lua_ 
 
 ### Support
 
-Feel free to visit our forums to discuss the engine and request technical support: http://www.senscape.com/forums
+Feel free to visit our forums to discuss the engine and request technical support: http://www.senscape.com/forum
 
 ### Copyright
 
