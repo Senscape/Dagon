@@ -32,7 +32,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-bool createGLWindow(char* title, int width, int height, int bits,
+bool createGLWindow(const char* title, int width, int height, int bits,
                     bool fullscreenflag);
 
 GLvoid killGLWindow();
@@ -344,7 +344,7 @@ time_t DGSystem::wallTime() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-bool createGLWindow(char* title, int width, int height, int bits,
+bool createGLWindow(const char* title, int width, int height, int bits,
                     bool fullscreenflag) {
     XVisualInfo *vi;
     Colormap cmap;
