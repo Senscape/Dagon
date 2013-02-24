@@ -283,8 +283,27 @@ void DGSystem::run() {
     							control->processKey(key, DGKeyEventDown);
 					}
 					else {
-						if ((key == XK_Control_L) || (key == XK_Control_R))
-							isModified = true;
+						switch (key) {
+							case XK_F1:
+							case XK_F2:
+							case XK_F3:
+							case XK_F4:
+							case XK_F5:
+							case XK_F6:
+							case XK_F7:
+							case XK_F8:
+							case XK_F9:
+							case XK_F10:
+							case XK_F11:
+							case XK_F12:
+								control->processFunctionKey(key);
+								break;
+
+							case XK_Control_L:
+							case XK_Control_R:
+								isModified = true;
+								break;
+						}
 					}
 					glXMakeCurrent(GLWin.dpy, None, NULL);
 					pthread_mutex_unlock(&_systemMutex);
