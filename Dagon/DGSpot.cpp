@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -131,7 +131,7 @@ DGTexture* DGSpot::texture() {
 }
 
 int DGSpot::vertexCount() {
-    return (_arrayOfCoordinates.size() / 2);
+    return (_arrayOfCoordinates.size() / 2.0f);
 }
 
 DGVideo* DGSpot::video() {
@@ -182,7 +182,7 @@ void DGSpot::setColor(int aColor) {
     if (!aColor) {
         int r, g, b;
         
-        // Make sure we avoid black
+        // Make sure we avoid black while generating the color
         r = (rand() % 255) + 1;
         g = (rand() % 255) + 1;
         b = (rand() % 255) + 1;

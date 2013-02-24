@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -137,7 +137,7 @@ void DGInterface::drawOverlays() {
                 
                 // Now images
                 // NOTE: This isn't quite right, images should be drawn first. Perhaps
-                // allow the user to setup the order for each overlay.
+                // allow the user to setup the drawing order for each overlay.
                 if ((*itOverlay)->hasImages()) {
                     (*itOverlay)->beginIteratingImages();
                     

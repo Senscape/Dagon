@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -61,8 +61,7 @@ public:
         
         n->addSpot(spot);
         
-        // Back
-        
+        // Back        
         if (lua_toboolean(L, 3) != true) {
             int coordsBack[] = {0, 1280, 2048, 1280, 2048, 1624, 0, 1624};
             arrayOfCoordinates.assign(coordsBack, coordsBack + 8);

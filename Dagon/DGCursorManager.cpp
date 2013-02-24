@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -151,6 +151,8 @@ void DGCursorManager::updateCoords(int x, int y) {
     _x = x;
     _y = y;
     
+    // NOTE: I have no idea why I commented this out. I'm sure there was
+    // a good reason, so for now let's leave it like this, shall we?
     /*if (_hasImage) {
         _arrayOfCoords[0] = _x - _half + (*_current).origin.x;
         _arrayOfCoords[1] = _y - _half + (*_current).origin.y;

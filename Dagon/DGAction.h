@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -25,7 +25,7 @@
 
 class DGObject;
 
-// Enum begins at 100 to avoid conflicts with objects
+// Enum here begins at 100 to avoid conflicts with objects IDs
 enum DGActionTypes {
 	DGActionFunction = 100,
 	DGActionFeed,

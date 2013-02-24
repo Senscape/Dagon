@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -126,7 +126,7 @@ void DGAudio::load() {
     if (!_isLoaded) { 
         FILE* fh;
         
-        // FIXME: This object shouldn't reference DGConfig, let the manager do it
+        // FIXME: This object shouldn't reference DGConfig, let the Audio Manager do this
         const char* fileToLoad = _randomizeFile(_resource.name);
         fh = fopen(config->path(DGPathRes, fileToLoad, DGObjectAudio), "rb");	
         
@@ -263,10 +263,10 @@ void DGAudio::update() {
         }
         
         // Run fade operations
-        // TODO: Better change the name of the DGObject function
+        // TODO: Better change the name of the DGObject "updateFade" function, it's somewhat confusing
         this->updateFade();
         
-        // FIXME: Not very elegant as we're doing this every time
+        // FIXME: Not very elegant as we're doing this check every time
         if (config->mute) {
             alSourcef(_alSource, AL_GAIN, 0.0f);
         }
@@ -304,11 +304,11 @@ void DGAudio::_emptyBuffers() {
 
 const char* DGAudio::_randomizeFile(const char* fileName) {
     if (strstr(fileName, ".ogg")) { // Was extension specified?
-        return fileName; // Return as-is
+        return fileName; // Then return as-is
     }
     else { // Randomize
         static char fileToLoad[DGMaxFileLength];
-        int index = (rand() % 6); // Allow to configure
+        int index = (rand() % 6); // TODO: Allow to configure this value
         
         snprintf(fileToLoad, DGMaxFileLength, "%s%0" in_between(DGFileSeqDigits) "d.%s", fileName,
                  index + DGFileSeqStart, "ogg");
@@ -318,8 +318,7 @@ const char* DGAudio::_randomizeFile(const char* fileName) {
 }
 
 bool DGAudio::_stream(ALuint* buffer) {
-    // This is a failsafe; if this is true, we won't attempt
-    // to stream anymore
+    // This is a failsafe; if this is true, we won't attempt to stream anymore
     static bool _hasStreamingError = false;         
     
     if (!_hasStreamingError) {
@@ -344,8 +343,7 @@ bool DGAudio::_stream(ALuint* buffer) {
                 return false;
             }
             else if (result == OV_HOLE) {
-                // May return OV_HOLE after we rewind the stream,
-                // so we just re-loop
+                // May return OV_HOLE after we rewind the stream, so we just re-loop
                 continue;
             }
             else if (result < 0) {

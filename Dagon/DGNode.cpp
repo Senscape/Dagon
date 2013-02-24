@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -37,7 +37,7 @@ DGNode::DGNode() {
 ////////////////////////////////////////////////////////////
 
 DGNode::~DGNode() {
-    // Note that we only delete spots created by this class, not the ones from the user
+    // Note that we only delete spots automatically created by this class, not the ones by the user
 	_it = _arrayOfSpots.begin();
 
     while (_it != _arrayOfSpots.end()) {
@@ -59,7 +59,7 @@ bool DGNode::hasBundleName() {
 }
 
 bool DGNode::hasSpots() {
-    // This should never happen but we check it anyway to
+    // This should never happen (zero spots) but we check it anyway to
     // avoid any crashes
     return !_arrayOfSpots.empty();
 }
@@ -165,7 +165,7 @@ bool DGNode::iterateSpots() {
 
 void DGNode::_link(unsigned int direction, DGAction* action) {
     // We ensure the texture is properly stretched, so we take the default cube size
-    // TODO: This setting should be obtained from the DGConfig class
+    // TODO: This setting should be obtained directly from the DGConfig class
     int minorBound = (int)(DGDefTexSize / 3);
     int majorBound = (int)(DGDefTexSize / 1.5f);
     int offset = (int)(DGDefTexSize/3);

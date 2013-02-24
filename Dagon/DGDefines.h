@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -15,7 +15,7 @@
 
 // Defaults
 
-#define	DGDefScriptFile     "Main" // Also window name
+#define	DGDefScriptFile     "Main" // Also name of the window
 #define	DGDefAudioPath      "Audio/"
 #define	DGDefCursorPath     "Cursors/"
 #define	DGDefFontPath       "Fonts/"
@@ -27,7 +27,7 @@
 #define	DGDefConfigFile		"Dagon.cfg"
 #define	DGDefLogFile		"Dagon.log"
 #define DGDefTexExtension	"tex"
-#define DGDefTexSize		2048 // TODO: We should be able to read this value from each texture
+#define DGDefTexSize		2048 // TODO: We should be able to read this value from each texture bundle
 
 // Maximums
 
@@ -67,7 +67,7 @@ enum DGCursorTypes {
 };
 
 // The first six elements are the same as the faces of the cube
-// We map these to the positions in arrays, we must be extra-careful about their values
+// We map these to the positions in arrays, so we must be extra-careful about their values
 
 enum DGDirections {
 	DGNorth = 0,

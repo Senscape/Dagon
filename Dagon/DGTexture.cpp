@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -25,7 +25,7 @@
 ////////////////////////////////////////////////////////////
 
 //char TEXIdent[] = "DG_TEX"; // Tex files identifier
-char TEXIdent[] = "KS_TEX"; // Tex files identifier
+char TEXIdent[] = "KS_TEX"; // We keep this one for backward compatibility, but it will change!
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -138,8 +138,7 @@ int DGTexture::width() {
 ////////////////////////////////////////////////////////////
 
 void DGTexture::increaseUsageCount() {
-    // We only keep trace of the usage count if the
-    // texture is loaded
+    // We only keep track of the usage count if the texture is loaded
     if (_isLoaded)
         _usageCount++;
 }
@@ -335,7 +334,6 @@ void DGTexture::loadFromMemory(const unsigned char* dataToLoad, long size) {
     if (_isLoaded)
         return;
     
-    // Note the size is hardcoded
     _bitmap = (GLubyte*)stbi_load_from_memory(dataToLoad, (int)size, &x, &y, &comp, STBI_default);
     
     if (_bitmap) {
@@ -418,7 +416,6 @@ void DGTexture::loadRawData(const unsigned char* dataToLoad, int width, int heig
         _isLoaded = true;
     }
     else {
-        // NOTE: Careful with this! Binding another texture in the loop
         glBindTexture(GL_TEXTURE_2D, _ident);
         glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGR, GL_UNSIGNED_BYTE, dataToLoad);
     }
@@ -486,7 +483,7 @@ void DGTexture::saveToFile(const char* fileName){
             glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &_width);
             glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, &_height);
             //glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_DEPTH, &texture_data->depth);
-            _depth = 24;
+            _depth = 24; // Hardcoded to 24 bits
             
             mode = _depth / 8;
             if ((_depth == 24) || (_depth == 32))

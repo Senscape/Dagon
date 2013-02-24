@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -33,7 +33,7 @@ class DGSpot;
 class DGNode : public DGObject {
     // The bundle name is neither a filename or name of the node,
     // the Texture Manager uses it later to generate the corresponding
-    // filename. This would be the name of the Lua object.
+    // filenames. This would be the name of the Lua object.
     
     char _bundleName[DGMaxObjectName];
     bool _hasBundleName;
@@ -46,8 +46,6 @@ class DGNode : public DGObject {
     std::string _description;    
     
     void _link(unsigned int direction, DGAction* action);
-    
-    // Footstep?
     
 public:
     DGNode();

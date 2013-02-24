@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -64,7 +64,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
 	va_list	ap;
 	
 	if (text == NULL)
-		*line=0;
+		*line = 0;
 	else {
 		va_start(ap, text);
 	    vsprintf(line, text, ap);
@@ -128,7 +128,7 @@ void DGFont::setColor(int color) {
 void DGFont::setDefault(unsigned int heightOfFont) {	
     _height = (float)heightOfFont;
     
-	// WARNING: No way of determining that 49052.. Careful!
+	// WARNING: That 49052 size may not be exact... Careful!
 	if (FT_New_Memory_Face(*_library, DGDefFontBinary, 49052, 0, &_face)) {
         log->error(DGModFont, "%s", DGMsg260004);
         return;
@@ -205,7 +205,7 @@ void DGFont::_loadFont() {
 		width = _next(bitmap.width);
 		height = _next(bitmap.rows);
 		
-		expandedData = (GLubyte*)malloc(2 * width * height); // Is there a sizeof() missing here?
+		expandedData = (GLubyte*)malloc(2 * width * height); // FIXME: Is there a sizeof() missing here?
 		
 		for (int j = 0; j < height; j++) {
 			for (int i = 0; i < width; i++) {

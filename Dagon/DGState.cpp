@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -9,6 +9,9 @@
 // license agreement accompanying it.
 //
 ////////////////////////////////////////////////////////////
+
+// TODO: This is like... the saddest state manager ever. Must
+// migrate more functionality here.
 
 ////////////////////////////////////////////////////////////
 // Headers

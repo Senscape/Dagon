@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -148,8 +148,8 @@ enum DGKeys {
     
 #ifdef DGPlatformWindows
 enum DGKeys {
-    // This is a mix of Windows defs and unicode chars
-	DGKeyBackspace = 8, // Look for hex value
+    // This is a mix of Windows defaults and unicode chars
+	DGKeyBackspace = 8, // For some reason the hex value doesn't work here (this does, so there)
 	DGKeyF1 = VK_F1,
 	DGKeyF2 = VK_F2,
 	DGKeyF3 = VK_F3,	

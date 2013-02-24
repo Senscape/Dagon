@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -18,7 +18,7 @@
 #include "DGConfig.h"
 #include "DGFeedManager.h"
 #include "DGFontManager.h"
-#include "DGSystem.h" // Temporary, this should be resolved by the audio manager
+#include "DGSystem.h" // Not very nice to include system functions here
 #include "DGTimerManager.h"
 
 using namespace std;

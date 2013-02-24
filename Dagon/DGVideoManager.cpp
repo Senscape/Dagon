@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -82,7 +82,7 @@ void DGVideoManager::flush() {
 void DGVideoManager::init() {
     log->trace(DGModVideo, "%s", DGMsg080000);
     
-    // Eventually lots of Theora initialization will be moved here
+    // Eventually lots of Theora initialization process will be moved here
     
     _isInitialized = true;
 	_isRunning = true;

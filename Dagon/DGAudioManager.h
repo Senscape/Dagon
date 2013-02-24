@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -12,9 +12,6 @@
 
 #ifndef DG_AUDIOMANAGER_H
 #define DG_AUDIOMANAGER_H
-
-// TODO: Obviously, it makes sense to have all these managers
-// inherit from a base, singleton manager
 
 ////////////////////////////////////////////////////////////
 // Headers

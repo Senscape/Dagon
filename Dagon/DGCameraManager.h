@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -79,6 +79,7 @@ class DGConfig;
 
 // TODO: This got fairly messy... Need to separate most of this into another class,
 // DGCameraState. Or even merge the camera state with the general State Manager.
+// I don't know... every time I rewrote this file, it always got messy. Bloody cameras.
 
 class DGCameraManager {
     DGConfig* config;
