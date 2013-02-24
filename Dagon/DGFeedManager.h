@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -92,7 +92,7 @@ public:
     }
 
     void cancel();
-    void clear(); // Clear pending feeds
+    void clear(); // For clearing pending feeds
     void init();
     bool isPlaying();
     bool hasQueued();

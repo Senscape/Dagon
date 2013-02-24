@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -52,7 +52,7 @@ class DGCursorManager : public DGObject {
     bool _hasAction;
     bool _hasImage;
     bool _isDragging;
-    bool _onButton; // Decide in control?
+    bool _onButton; // Decide in Control?
     DGAction* _pointerToAction;    
     int _size;
     int _x;

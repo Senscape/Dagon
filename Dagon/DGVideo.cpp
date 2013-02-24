@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -22,7 +22,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// FIXME: The lookup table is shared by all objects but it should go in the manager
+// FIXME: No need to include this lookup table here, should go in the manager
 
 struct DGLookUpTable{
     int32_t m_plY[256];
@@ -326,7 +326,7 @@ void DGVideo::update() {
         if (duration >= _frameDuration) {
             yuv_buffer yuv;
             
-            // Skip frames?
+            // TODO: Skip frames if required here?
             //int frames = (int)floor(duration / _frameDuration);
             //for (int i = 1; i <= frames; i++)
                 _prepareFrame();
@@ -356,6 +356,7 @@ size_t DGVideo::_bufferData(ogg_sync_state* oy) {
 	return(bytes);
 }
 
+// TODO: This method needs a massive overhaul. It's slow and colors aren't accurate.
 void DGVideo::_convertToRGB(uint8_t* puc_y, int stride_y,
                    uint8_t* puc_u, uint8_t* puc_v, int stride_uv,
                    uint8_t* puc_out, int width_y, int height_y,
@@ -364,7 +365,7 @@ void DGVideo::_convertToRGB(uint8_t* puc_y, int stride_y,
 	int stride_diff = 6 * _stride_out - 3 * width_y;
 	
 	if (height_y < 0) {
-		/* we are flipping our output upside-down */
+		// We are flipping our output upside-down
 		height_y  = -height_y;
 		puc_y     += (height_y     - 1) * stride_y ;
 		puc_u     += (height_y / 2 - 1) * stride_uv;
@@ -434,19 +435,19 @@ void DGVideo::_initConversionToRGB() {
 		
 		if ((i >= 16) && (i <= 240)) {
 			_lookUpTable.m_plRV[i] = 408 * (i - 128);
-			_lookUpTable.m_plGV[i] = -208 * (i - 128);	// Green tweaked -2?
+			_lookUpTable.m_plGV[i] = -208 * (i - 128);	// Green tweaked to -2
 			_lookUpTable.m_plGU[i] = -100 * (i - 128);
 			_lookUpTable.m_plBU[i] = 517 * (i - 128);
 		}
 		else if (i < 16) {
 			_lookUpTable.m_plRV[i] = 408 * (16 - 128);
-			_lookUpTable.m_plGV[i] = -208 * (16 - 128);	// Green tweaked -2?
+			_lookUpTable.m_plGV[i] = -208 * (16 - 128);	// Green tweaked to -2
 			_lookUpTable.m_plGU[i] = -100 * (16 - 128);
 			_lookUpTable.m_plBU[i] = 517 * (16 - 128);
 		}
 		else {
 			_lookUpTable.m_plRV[i] = _lookUpTable.m_plRV[240];
-			_lookUpTable.m_plGV[i] = _lookUpTable.m_plGV[240];	// Green tweaked -2?
+			_lookUpTable.m_plGV[i] = _lookUpTable.m_plGV[240];	// Green tweaked to -2
 			_lookUpTable.m_plGU[i] = _lookUpTable.m_plGU[240];
 			_lookUpTable.m_plBU[i] = _lookUpTable.m_plBU[240];
 		}

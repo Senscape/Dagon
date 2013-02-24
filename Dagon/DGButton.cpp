@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -105,13 +105,13 @@ void DGButton::setAction(DGAction* anAction) {
 }
 
 void DGButton::setFont(const char* fromFileName, unsigned int heightOfFont) {
-    // FIXME: Wrong, this will load many repeated fonts!
+    // FIXME: Wrong, this can load many repeated fonts!
     _font = fontManager->load(fromFileName, heightOfFont);
 }
 
 void DGButton::setOnHoverTexture(const char* fromFileName) {
-    // TODO: Important! Should determine first if the texture already exists,
-    // to avoid repeating resources. Eventually, this would be done with the
+    // TODO: Important! We should determine first if the texture already exists,
+    // to avoid repeating resources. Eventually, this would be done via the
     // resource manager.
     DGTexture* texture;
     
@@ -129,6 +129,6 @@ void DGButton::setText(const char* text){
 }
 
 void DGButton::setTextColor(int aColor) {
-    // Note this expects one of the pre-generated colors
+    // Note this expects one of our pre-generated colors
     _textColor = aColor;
 }

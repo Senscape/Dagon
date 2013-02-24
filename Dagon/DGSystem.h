@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -14,7 +14,7 @@
 #define	DG_SYSTEM_H
 
 // TODO: Separate each implementation into different headers,
-// then this one loads the appropriate one accordingly
+// then this one loads the appropriate one accordingly.
 
 ////////////////////////////////////////////////////////////
 // Headers

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -255,7 +255,7 @@ bool DGLog::iterateHistory() {
 }
 
 void DGLog::getCurrentLine(DGLogData* pointerToLogData) {
-    // BUG: This is crashing sometimes, probably because the iterator is not set
+    // BUG: This is crashing in rare occasions, probably because the iterator is not set
     strcpy(pointerToLogData->line, _it->line);
     pointerToLogData->color = _it->color;
     pointerToLogData->module = _it->module;

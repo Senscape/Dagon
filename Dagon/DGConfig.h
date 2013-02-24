@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -64,12 +64,12 @@ enum DGPaths {
 };
 
 ////////////////////////////////////////////////////////////
-// Interface
+// Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
 class DGConfig {
     char _appPath[DGMaxPathLength];
-    char _resPath[DGMaxPathLength]; // Not to be confused with catalog
+    char _resPath[DGMaxPathLength];
     char _scriptName[DGMaxFileLength];
 	char _userPath[DGMaxPathLength];
     char _texExtension[4];

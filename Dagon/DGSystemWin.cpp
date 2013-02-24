@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -290,6 +290,7 @@ void DGSystem::run() {
 }
 
 void DGSystem::setTitle(const char* title) {
+    // NOTE: This sometimes crashes. No idea why. It seems correct.
 	/*WCHAR str[DGMaxLogLength];
 	MultiByteToWideChar(0,0, title, DGMaxLogLength, str, DGMaxLogLength);
     SetWindowText(g_hWnd, str);*/

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -85,7 +85,6 @@ void DGEffectsManager::drawDust() {
         // Temporary
         glPushMatrix();
         
-        // FIXME: This is a repeated method from DGRenderManager - it would be best to avoid this
         uint32_t aux = _dustColor;
             
         uint8_t b = (aux & 0x000000ff);
@@ -485,7 +484,7 @@ void DGEffectsManager::_buildParticle(int idx) {
     _particles[idx].z = s / DGEffectsDustFactor - 0.5f;
 }
 
-// Modified from Lighthouse 3D
+// Modified example from Lighthouse 3D: http://www.lighthouse3d.com
 bool DGEffectsManager::_textFileRead() {
 	FILE* fh;
 	long size = 0;

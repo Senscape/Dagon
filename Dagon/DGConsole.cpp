@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -131,7 +131,7 @@ void DGConsole::update() {
             case DGConsoleHidden:
                 // Set the color used for information
                 renderManager->setColor(DGColorBrightCyan);
-                // Leave 20 pixels in case OS interfaces covers the text
+                // Leave 20 pixels in case OS interfaces covers the text (like Mac)
                 _font->print(DGInfoMargin, DGInfoMargin + 20, 
                              "Viewport size: %d x %d", config->displayWidth, config->displayHeight);                
                 _font->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize + 20, 
@@ -167,7 +167,7 @@ void DGConsole::update() {
             
             // Draw the slide
             renderManager->disableTextures();
-            renderManager->setColor(0x25AA0000); // TODO: Add a mask color to achieve this (ie: ColoRed + Shade)
+            renderManager->setColor(0x25AA0000); // TODO: Add a mask color to achieve this (ie: Red + Shade)
             renderManager->drawSlide(coords);
             renderManager->enableTextures();
             

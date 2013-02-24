@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -55,7 +55,7 @@ DGConfig::DGConfig() {
 	
     _fps = 0;
     
-	//TODO: If vertical sync is enabled this should not be necessary!
+	// FIXME: This "global speed" setting is sometimes broken on Windows, must implement a frame limiter
 	// This is a readonly setting
 	_globalSpeed = 60.0f / (float)framerate;
 }

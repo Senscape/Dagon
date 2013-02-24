@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -67,7 +67,7 @@ public:
 			flagsIndex = 3; // Won't pass the check
             coordsIndex = 1;
         }
-        else return; // Everything is wrong!
+        else return; // Everything is wrong! Do panic!
         
         if (lua_istable(L, flagsIndex)) {
             lua_pushnil(L);

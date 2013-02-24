@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -221,15 +221,15 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         _angleHTarget = _toRadians(horizontal, _angleHLimit);
         
         // Treat special case when angle is NORTH
-        // NOTE: Certain cases aren't supported in this code; ie:
+        // TODO: Certain cases aren't supported in this code; ie:
         // slightly rotated left of North, then setting target angle
-        // to East. This would be rarely required by the user though.
+        // to East. Needs improving.
         if (_angleHTarget == 0.0f) {
             if (_angleH > M_PI)
                 _angleHTarget = (float)(M_PI*2);
         }
         
-        // FIXME: This division is related to the amount of configured inertia. Must fix later.
+        // FIXME: This division is related to the amount of configured inertia. Not right.
         _targetHError = fabs(_angleHTarget - _angleH) / 5.0f;
         
         if (_targetHError < 0.02f)
@@ -243,7 +243,7 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         // Extrapolate the coordinates
         _angleVTarget = _toRadians(vertical, _angleVLimit);;
         
-        // FIXME: This division is related to the amount of configured inertia. Must fix later.
+        // FIXME: This division is related to the amount of configured inertia. Not right.
         _targetVError = fabs(_angleVTarget - _angleV) / 5.0f;
         
         //if (_targetVError < 0.001f)
@@ -762,7 +762,7 @@ void DGCameraManager::_calculateBob() {
                 if (_bob.state != DGCamBreathing)
                     _bob.nextPause = 0;
                 else
-                    _bob.nextPause = (float)((rand() % 3) + 1); // Make the breathing more irregular
+                    _bob.nextPause = (float)((rand() % 3) + 1); // For making the breathing more irregular
             }
             
             _bob.displace = sin(_bob.position) * cos(_bob.position) / _bob.currentFactor;

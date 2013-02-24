@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011 Senscape s.r.l.
+// Copyright (c) 2012 Senscape s.r.l.
 // All rights reserved.
 //
 // NOTICE: Senscape permits you to use, modify, and
@@ -74,7 +74,7 @@ public:
     bool checkManual(int handle);
     int create(double trigger, bool shouldLoop, int handlerForLua, int luaObject = 0); // Returns a handle
     int createInternal(double trigger, void (*callback)()); // For timers created by the engine (not Lua)
-    int createManual(double trigger); // For timers that are manually checked
+    int createManual(double trigger); // For timers that are manually checked by the user
     void destroy(int handle);    
     void disable(int handle);
     void enable(int handle);
