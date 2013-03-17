@@ -88,7 +88,7 @@ DGControl::DGControl() {
     _eventHandlers.hasMouseMove = false;
     _eventHandlers.hasResize = false;
     
-    for (int i = 0; i <= DGMaxHotKeys; i++)
+	for (int i = 0; i < DGMaxHotKeys; i++)
 		_hotkeyData[i].enabled = false;
 }
 

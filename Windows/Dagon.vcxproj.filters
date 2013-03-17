@@ -311,5 +311,8 @@
     <ClCompile Include="..\Dagon\DGDustData.c">
       <Filter>Data</Filter>
     </ClCompile>
+    <ClCompile Include="..\Dagon\DGGeometry.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
