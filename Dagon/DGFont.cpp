@@ -18,6 +18,9 @@
 #include "DGFont.h"
 #include "DGLog.h"
 
+#include <algorithm>
+#include <limits>
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -56,24 +59,37 @@ bool DGFont::isLoaded() {
 }
 
 
-static int vsnprintf_wrapper(
+#ifndef _MSC_VER
+#	define c99_vsnprintf vsnprintf
+#else
+/* Microsoft CRT vsnprintf() does not conform to C99.
+ * Credit goes to http://stackoverflow.com/a/8712996
+ */
+static int c99_vsnprintf(
 	char *buf,
 	size_t size,
 	const char *format,
 	va_list ap
 ) {
-	int count = vsnprintf(buf, size, format, ap);
-#ifndef _MSC_VER
-	if (count >= 0 && static_cast<size_t>(count) >= size)
-		count = size - 1;
-#else
-	/* Microsoft's CRT returns a non-standard value, if vsnprintf() wants to
-	 * write more than 'size' chars.
-	 */
+	int count = (buf != NULL && size > 0) ?
+		_vsnprintf_s(buf, size, _TRUNCATE, format, ap) :
+		-1;
 	if (count < 0)
-		count = size - 1;
-#endif
+		count = _vscprintf(format, ap);
 	return count;
+}
+#endif
+
+
+template <size_t Size>
+static inline int vsnprintf_truncate(
+	char (&buf)[Size],
+	const char *format,
+	va_list ap
+) {
+	return std::min<int>(
+			c99_vsnprintf(buf, Size, format, ap),
+			std::min<size_t>(Size - 1, std::numeric_limits<int>::max()));
 }
 
 
@@ -90,7 +106,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
 		length = 0;
 	} else {
 		va_start(ap, text);
-		length = vsnprintf_wrapper(line, sizeof(line), text, ap);
+		length = vsnprintf_truncate(line, text, ap);
 		va_end(ap);
 	}
 	
