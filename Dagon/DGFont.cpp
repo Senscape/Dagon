@@ -55,19 +55,42 @@ bool DGFont::isLoaded() {
     return _isLoaded;
 }
 
+
+static int vsnprintf_wrapper(
+	char *buf,
+	size_t size,
+	const char *format,
+	va_list ap
+) {
+	int count = vsnprintf(buf, size, format, ap);
+#ifndef _MSC_VER
+	if (count >= 0 && static_cast<size_t>(count) >= size)
+		count = size - 1;
+#else
+	/* Microsoft's CRT returns a non-standard value, if vsnprintf() wants to
+	 * write more than 'size' chars.
+	 */
+	if (count < 0)
+		count = size - 1;
+#endif
+	return count;
+}
+
+
 void DGFont::print(int x, int y, const char* text, ...) {
     if (!_isLoaded)
         return;
     
 	char line[DGMaxFeedLength];
-    const char* c;
+	int length;
 	va_list	ap;
 	
-	if (text == NULL)
+	if (text == NULL) {
 		*line = 0;
-	else {
+		length = 0;
+	} else {
 		va_start(ap, text);
-	    vsprintf(line, text, ap);
+		length = vsnprintf_wrapper(line, sizeof(line), text, ap);
 		va_end(ap);
 	}
 	
@@ -77,8 +100,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
     glPushMatrix();
     glTranslatef(x, y, 0);
     
-    c = line;
-    for (int j = 0; j < strlen(line); j++) {
+    for (const char* c = line; length > 0; c++, length--) {
         int ch = *c;
         
         GLfloat texCoords[] = {	0, 0,
@@ -104,8 +126,6 @@ void DGFont::print(int x, int y, const char* text, ...) {
         
         glPopMatrix();
         glTranslatef((GLfloat)(_glyph[ch].advance >> 6), 0, 0);
-        
-        c++;
     }
     
     glPopMatrix();
