@@ -209,7 +209,7 @@ void DGTexture::load() {
             
             // Skip subheaders based on the index
             if (_indexInBundle) {
-                unsigned int i;
+                int i;
                 
                 for (i = 0; i < _indexInBundle; i++) {
                     if (!fread(&subheader, 1, sizeof(subheader), fh))
