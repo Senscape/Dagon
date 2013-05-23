@@ -182,7 +182,7 @@ public:
     void reshape(int width, int height);
     void sleep(int forSeconds);
     void syncSpot(DGSpot* spot);
-    void switchTo(DGObject* theTarget); 
+    void switchTo(DGObject* theTarget, bool instant = false);
     void takeSnapshot();
     void terminate();
     

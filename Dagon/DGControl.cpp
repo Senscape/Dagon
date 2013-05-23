@@ -576,7 +576,7 @@ void DGControl::sleep(int forSeconds) {
     cursorManager->fadeOut();
 }
 
-void DGControl::switchTo(DGObject* theTarget) {
+void DGControl::switchTo(DGObject* theTarget, bool instant) {
     static bool firstSwitch = true;
     bool performWalk;
     
@@ -601,6 +601,7 @@ void DGControl::switchTo(DGObject* theTarget) {
                     log->warning(DGModControl, "%s: %s", DGMsg130000, _currentRoom->name());
                     return;
                 }
+                
                 performWalk = true;
                 
                 break;
@@ -753,15 +754,24 @@ void DGControl::switchTo(DGObject* theTarget) {
             }
         }
         
-        if (!firstSwitch && performWalk) {
+        if (!firstSwitch && performWalk && !instant) {
             cameraManager->simulateWalk();
+            DGNode* currentNode = this->currentNode();
             
             // Finally, check if must play a single footstep
-            if (_currentRoom->hasDefaultFootstep()) {
-                _currentRoom->defaultFootstep()->unload();
-                audioManager->requestAudio(_currentRoom->defaultFootstep());
-                _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-                _currentRoom->defaultFootstep()->play();
+            if (currentNode->hasFootstep()) {
+                currentNode->footstep()->unload();
+                audioManager->requestAudio(currentNode->footstep());
+                currentNode->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+                currentNode->footstep()->play();
+            }
+            else {
+                if (_currentRoom->hasDefaultFootstep()) {
+                    _currentRoom->defaultFootstep()->unload();
+                    audioManager->requestAudio(_currentRoom->defaultFootstep());
+                    _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+                    _currentRoom->defaultFootstep()->play();
+                }
             }
         }
     }

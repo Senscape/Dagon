@@ -489,13 +489,13 @@ int DGScript::_globalSnap(lua_State *L) {
 int DGScript::_globalSwitch(lua_State *L) {
     switch (DGCheckProxy(L, 1)) {
         case DGObjectNode:
-            DGControl::getInstance().switchTo(DGProxyToNode(L, 1));
+            DGControl::getInstance().switchTo(DGProxyToNode(L, 1), lua_toboolean(L, 2));
             break;
         case DGObjectRoom:
-            DGControl::getInstance().switchTo(DGProxyToRoom(L, 1));
+            DGControl::getInstance().switchTo(DGProxyToRoom(L, 1), lua_toboolean(L, 2));
             break;
         case DGObjectSlide:
-            DGControl::getInstance().switchTo(DGProxyToSlide(L, 1));
+            DGControl::getInstance().switchTo(DGProxyToSlide(L, 1), lua_toboolean(L, 2));
             break;
         case DGObjectGeneric:
             DGLog::getInstance().error(DGModScript, "%s", DGMsg250000);
