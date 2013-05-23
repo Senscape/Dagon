@@ -61,7 +61,7 @@ public:
     
     // Sets
     
-    void setDefaultFoostep(DGAudio* theFootstep);
+    void setDefaultFootstep(DGAudio* theFootstep);
     void setEffects(int theEffectFlags);
     
     // State changes

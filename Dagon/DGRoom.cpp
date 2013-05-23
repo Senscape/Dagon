@@ -78,7 +78,7 @@ int DGRoom::effectsFlags() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void DGRoom::setDefaultFoostep(DGAudio* theFootstep) {
+void DGRoom::setDefaultFootstep(DGAudio* theFootstep) {
     _defaultFootstep = theFootstep;
     _hasDefaultFootstep = true;
 }
