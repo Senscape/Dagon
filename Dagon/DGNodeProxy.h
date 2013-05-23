@@ -148,6 +148,25 @@ public:
         
     }
     
+    // Set a custom footstep
+    int setFootstep(lua_State *L) {
+        if (DGCheckProxy(L, 1) == DGObjectAudio) {
+            // Just set the audio object
+            n->setFootstep((DGAudio*)DGProxyToAudio(L, 1));
+        }
+        else {
+            // If not, create and set (this is later deleted by the Audio Manager)
+            DGAudio* audio = new DGAudio;
+            audio->setResource(luaL_checkstring(L, 1));
+            
+            DGAudioManager::getInstance().registerAudio(audio);
+            
+            n->setFootstep(audio);
+        }
+        
+        return 0;
+    }
+    
     DGNode* ptr() { return n; }
     
 private:
@@ -164,6 +183,7 @@ Luna<DGNodeProxy>::RegType DGNodeProxy::methods[] = {
     DGObjectMethods(DGNodeProxy),    
     method(DGNodeProxy, addSpot),
     method(DGNodeProxy, link),
+    method(DGNodeProxy, setFootstep),
     {0,0}
 };
 
