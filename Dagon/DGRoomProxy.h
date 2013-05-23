@@ -89,7 +89,7 @@ public:
     int setDefaultFootstep(lua_State *L) {
         if (DGCheckProxy(L, 1) == DGObjectAudio) {
             // Just set the audio object
-             r->setDefaultFoostep((DGAudio*)DGProxyToAudio(L, 1));
+             r->setDefaultFootstep((DGAudio*)DGProxyToAudio(L, 1));
         }
         else {
             // If not, create and set (this is later deleted by the Audio Manager)
@@ -98,7 +98,7 @@ public:
             
             DGAudioManager::getInstance().registerAudio(audio);
             
-            r->setDefaultFoostep(audio);
+            r->setDefaultFootstep(audio);
         }
         
         return 0;
