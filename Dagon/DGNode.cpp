@@ -14,6 +14,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "DGAudio.h"
 #include "DGNode.h"
 #include "DGSpot.h"
 #include "DGTexture.h"
@@ -58,6 +59,10 @@ bool DGNode::hasBundleName() {
     return _hasBundleName;
 }
 
+bool DGNode::hasFootstep() {
+    return _hasFootstep;
+}
+
 bool DGNode::hasSpots() {
     // This should never happen (zero spots) but we check it anyway to
     // avoid any crashes
@@ -84,6 +89,10 @@ char* DGNode::bundleName() {
     return _bundleName;
 }
 
+DGAudio* DGNode::footstep() {
+    return _footstep;
+}
+
 const char* DGNode::description() {
     return _description.c_str();
 }
@@ -103,6 +112,11 @@ void DGNode::setBundleName(const char* name) {
 
 void DGNode::setDescription(const char* description) {
     _description = description;
+}
+
+void DGNode::setFootstep(DGAudio* theFootstep) {
+    _footstep = theFootstep;
+    _hasFootstep = true;
 }
 
 void DGNode::setPreviousNode(DGNode* node) {
@@ -125,7 +139,7 @@ void DGNode::addCustomLink(unsigned withDirection, int luaHandler) {
     DGAction action;
     
     action.type = DGActionFunction;
-    action.cursor = DGCursorUse;
+    action.cursor = DGCursorForward;
     action.luaHandler = luaHandler;
     
     _link(withDirection, &action);
