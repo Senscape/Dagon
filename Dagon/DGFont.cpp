@@ -87,9 +87,10 @@ static inline int vsnprintf_truncate(
 	const char *format,
 	va_list ap
 ) {
-	return std::min<int>(
+	using namespace std;
+	return min<int>(
 			c99_vsnprintf(buf, Size, format, ap),
-			std::min<size_t>(Size - 1, std::numeric_limits<int>::max()));
+			Size > 0 ? min<size_t>(Size - 1, numeric_limits<int>::max()) : 0);
 }
 
 
