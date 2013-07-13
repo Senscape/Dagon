@@ -52,7 +52,7 @@
 #define snprintf _snprintf
 #endif
 
-#elif __linux
+#elif __linux || defined(__FreeBSD__)
 
 #define DGPlatformLinux
 #include <X11/Xlib.h>              
