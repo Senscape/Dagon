@@ -195,7 +195,7 @@ void DGSpot::setColor(int aColor) {
 }
 
 void DGSpot::setOrigin(int x, int y) {
-    for (int i = 0; i < _arrayOfCoordinates.size(); i += 2) {
+    for (size_t i = 0; i < _arrayOfCoordinates.size(); i += 2) {
         _arrayOfCoordinates[i] += x;
         _arrayOfCoordinates[i + 1] += y;
     }
