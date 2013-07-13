@@ -18,6 +18,7 @@
 #include <GL/glx.h>
 #include <pthread.h>
 #include <sys/time.h>
+#include <unistd.h>
 
 #include "DGAudioManager.h"
 #include "DGConfig.h"
@@ -34,6 +35,7 @@
 
 bool createGLWindow(char* title, int width, int height, int bits,
                     bool fullscreenflag);
+void toggleWMFullScreen();
 
 GLvoid killGLWindow();
 
@@ -113,7 +115,7 @@ void DGSystem::browse(const char* url) {
 	char aux[DGMaxFileLength];
 
 	if (config->fullScreen) {
-		this->toggleFullScreen();
+		XIconifyWindow(GLWin.dpy, GLWin.win, GLWin.screen);
 	}
 
 	strcpy(aux, "xdg-open ");
@@ -136,14 +138,17 @@ void DGSystem::destroyThreads() {
 	pthread_mutex_lock(&_audioMutex);
 	DGAudioManager::getInstance().terminate();
 	pthread_mutex_unlock(&_audioMutex);
+	pthread_join(tAudioThread, NULL);
 
 	pthread_mutex_lock(&_timerMutex);
 	DGTimerManager::getInstance().terminate();
 	pthread_mutex_unlock(&_timerMutex);
+	pthread_join(tTimerThread, NULL);
 
 	pthread_mutex_lock(&_videoMutex);
 	DGVideoManager::getInstance().terminate();
 	pthread_mutex_unlock(&_videoMutex);
+	pthread_join(tVideoThread, NULL);
 
 	_areThreadsActive = false;
 }
@@ -196,6 +201,9 @@ void DGSystem::resumeThread(int threadID){
 }
 
 void DGSystem::run() {
+	if (config->fullScreen)	
+		toggleFullScreen();
+
 	char buffer[80];
 	static bool isDragging = false;
 	static bool isModified = false;
@@ -209,7 +217,7 @@ void DGSystem::run() {
 	_isRunning = true;
 	while (_isRunning) {
 		// Check for events
-		while (XPending(GLWin.dpy) > 0) {
+		while (XEventsQueued(GLWin.dpy, QueuedAlready) > 0) {
 			XNextEvent(GLWin.dpy, &event);
 			
 			switch (event.type) {
@@ -275,8 +283,27 @@ void DGSystem::run() {
     							control->processKey(key, DGKeyEventDown);
 					}
 					else {
-						if ((key == XK_Control_L) || (key == XK_Control_R))
-							isModified = true;
+						switch (key) {
+							case XK_F1:
+							case XK_F2:
+							case XK_F3:
+							case XK_F4:
+							case XK_F5:
+							case XK_F6:
+							case XK_F7:
+							case XK_F8:
+							case XK_F9:
+							case XK_F10:
+							case XK_F11:
+							case XK_F12:
+								control->processFunctionKey(key);
+								break;
+
+							case XK_Control_L:
+							case XK_Control_R:
+								isModified = true;
+								break;
+						}
 					}
 					glXMakeCurrent(GLWin.dpy, None, NULL);
 					pthread_mutex_unlock(&_systemMutex);
@@ -291,14 +318,29 @@ void DGSystem::run() {
 					pthread_mutex_unlock(&_systemMutex);
 					break;			
 				case ClientMessage:
-					// TODO: Simulate ESC key
-					this->terminate();
+					// Simulate ESC key
+					pthread_mutex_lock(&_systemMutex);
+					glXMakeCurrent(GLWin.dpy, GLWin.win, GLWin.ctx);
+					control->processKey(DGKeyEsc, DGKeyEventDown);
+					glXMakeCurrent(GLWin.dpy, None, NULL);
+					pthread_mutex_unlock(&_systemMutex);
 					break;
 				default:
 					break;
 			}
 		}
 	}
+
+
+	if (config->debugMode) {
+		pthread_mutex_lock(&_systemMutex);
+		DGControl::getInstance().terminate();
+		pthread_mutex_unlock(&_systemMutex);
+		pthread_join(tProfilerThread, NULL);
+	}
+
+	pthread_join(tSystemThread, NULL);
+	killGLWindow();
 }
 
 void DGSystem::setTitle(const char* title) {
@@ -322,13 +364,26 @@ void DGSystem::suspendThread(int threadID) {
 }
 
 void DGSystem::terminate() {
-	killGLWindow();
-
+	this->destroyThreads();
 	_isRunning = false;
 }
 
 void DGSystem::toggleFullScreen() {
-	log->warning(DGModSystem, "Toggling fullscreen currently disabled in Linux");
+	Atom wmState = XInternAtom(GLWin.dpy, "_NET_WM_STATE", False);
+        Atom fullscreenAttr = XInternAtom(GLWin.dpy, "_NET_WM_STATE_FULLSCREEN", True);
+
+	XEvent event;
+	event.xclient.type=ClientMessage;
+	event.xclient.serial = 0;
+	event.xclient.send_event=True;
+	event.xclient.window=GLWin.win;
+	event.xclient.message_type=wmState;
+	event.xclient.format=32;
+	event.xclient.data.l[0] = 2;
+	event.xclient.data.l[1] = fullscreenAttr;
+	event.xclient.data.l[2] = 0;
+
+	XSendEvent(GLWin.dpy, DefaultRootWindow(GLWin.dpy), False, SubstructureRedirectMask | SubstructureNotifyMask, &event);
 }
 
 void DGSystem::update() {
@@ -422,14 +477,11 @@ bool createGLWindow(char* title, int width, int height, int bits,
 	}
         XFree(modes);
 		
-        // Create a fullscreen window
-        GLWin.attr.override_redirect = True;
         GLWin.attr.event_mask = ExposureMask | KeyPressMask | ButtonPressMask |
 		ButtonReleaseMask | StructureNotifyMask | PointerMotionMask;
         GLWin.win = XCreateWindow(GLWin.dpy, RootWindow(GLWin.dpy, vi->screen),
 								  0, 0, dpyWidth, dpyHeight, 0, vi->depth, InputOutput, vi->visual,
-								  CWBorderPixel | CWColormap | CWEventMask | CWOverrideRedirect,
-								  &GLWin.attr);
+								  CWBorderPixel | CWColormap | CWEventMask, &GLWin.attr);
         XWarpPointer(GLWin.dpy, None, GLWin.win, 0, 0, 0, 0, 0, 0);
 		XMapRaised(GLWin.dpy, GLWin.win);
         XGrabKeyboard(GLWin.dpy, GLWin.win, True, GrabModeAsync,
