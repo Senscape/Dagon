@@ -47,7 +47,7 @@ class DGCursorManager : public DGObject {
     
     std::vector<DGCursorData> _arrayOfCursors;
     std::vector<DGCursorData>::iterator _current;
-    float _arrayOfCoords[8];
+    int _arrayOfCoords[8];
     int _half;
     bool _hasAction;
     bool _hasImage;
@@ -78,7 +78,7 @@ public:
 
     DGAction* action();
     void bindImage();
-    float* arrayOfCoords();   
+    int* arrayOfCoords();
     bool hasAction();
     bool hasImage();
     bool isDragging();

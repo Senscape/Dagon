@@ -88,7 +88,7 @@ DGTexture* DGImage::texture() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-float* DGImage::arrayOfCoordinates() {
+int* DGImage::arrayOfCoordinates() {
     return _arrayOfCoordinates;
 }
 

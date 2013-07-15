@@ -241,7 +241,7 @@ bool DGScene::drawCutscene() {
         _cutsceneTexture->bind();
         
         // Note this is inverted
-        float coords[] = {0, 0,
+        int coords[] = {0, 0,
             config->displayWidth, 0,
             config->displayWidth, config->displayHeight,
             0, config->displayHeight};
@@ -296,7 +296,7 @@ void DGScene::drawSplash() {
     _splashTexture->bind();
     
     // Note this is inverted
-    float coords[] = {0, 0,
+    int coords[] = {0, 0,
         config->displayWidth, 0,
         config->displayWidth, config->displayHeight,
         0, config->displayHeight}; 

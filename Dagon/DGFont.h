@@ -33,8 +33,8 @@
 typedef struct {
 	float x;
 	float y;
-	int width;
-	int rows;
+	GLshort width;
+	GLshort rows;
 	int left;
 	int top;
 	long advance;

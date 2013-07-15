@@ -160,7 +160,7 @@ void DGConsole::update() {
             DGLogData logData;
             int row = (DGConsoleRows - 2); // Extra row saved for prompt
             
-            float coords[] = { 0, -_offset, 
+            int coords[] = { 0, -_offset,
                 config->displayWidth, -_offset,
                 config->displayWidth, _size - _offset,
                 0, _size - _offset };

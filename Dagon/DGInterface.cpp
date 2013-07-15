@@ -177,7 +177,7 @@ bool DGInterface::scanOverlays() {
                         DGButton* button = (*itOverlay)->currentButton();
                         if (button->isEnabled()) {
                             DGPoint position = cursorManager->position();
-                            float* arrayOfCoordinates = button->arrayOfCoordinates();
+                            int* arrayOfCoordinates = button->arrayOfCoordinates();
                             if (position.x >= arrayOfCoordinates[0] && position.y >= arrayOfCoordinates[1] &&
                                 position.x <= arrayOfCoordinates[4] && position.y <= arrayOfCoordinates[5]) {
                                 

@@ -65,7 +65,7 @@ void DGCursorManager::bindImage() {
     (*_current).image->bind();
 }
 
-float* DGCursorManager::arrayOfCoords() {
+int* DGCursorManager::arrayOfCoords() {
     return _arrayOfCoords;
 }
 
