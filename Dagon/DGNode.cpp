@@ -27,6 +27,7 @@ using namespace std;
 
 DGNode::DGNode() {
     _hasBundleName = false;
+    _hasFootstep = false;
     _isSlide = false;
     _slideReturn = 0;
     
