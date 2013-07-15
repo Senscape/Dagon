@@ -18,9 +18,6 @@
 #include "DGFont.h"
 #include "DGLog.h"
 
-#include <algorithm>
-#include <limits>
-
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -58,42 +55,6 @@ bool DGFont::isLoaded() {
     return _isLoaded;
 }
 
-
-#ifndef _MSC_VER
-#	define c99_vsnprintf vsnprintf
-#else
-/* Microsoft CRT vsnprintf() does not conform to C99.
- * Credit goes to http://stackoverflow.com/a/8712996
- */
-static int c99_vsnprintf(
-	char *buf,
-	size_t size,
-	const char *format,
-	va_list ap
-) {
-	int count = (buf != NULL && size > 0) ?
-		_vsnprintf_s(buf, size, _TRUNCATE, format, ap) :
-		-1;
-	if (count < 0)
-		count = _vscprintf(format, ap);
-	return count;
-}
-#endif
-
-
-template <size_t Size>
-static inline int vsnprintf_truncate(
-	char (&buf)[Size],
-	const char *format,
-	va_list ap
-) {
-	using namespace std;
-	return min<int>(
-			c99_vsnprintf(buf, Size, format, ap),
-			Size > 0 ? min<size_t>(Size - 1, numeric_limits<int>::max()) : 0);
-}
-
-
 void DGFont::print(int x, int y, const char* text, ...) {
     if (!_isLoaded)
         return;
@@ -107,7 +68,9 @@ void DGFont::print(int x, int y, const char* text, ...) {
 		length = 0;
 	} else {
 		va_start(ap, text);
-		length = vsnprintf_truncate(line, text, ap);
+		// TODO: Test if vsnprintf() works as expected on VS 2012,
+        // otherwise use fix from main branch
+        length = vsnprintf(line, DGMaxFeedLength, text, ap);
 		va_end(ap);
 	}
 	
