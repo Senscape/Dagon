@@ -106,12 +106,15 @@ void DGScript::init(int argc, char* argv[]) {
 			lua_pop(_L, 1);
 		}
 
-		log->trace(DGModSystem, "========================================");
+		log->trace(DGModScript, "========================================");
 	}
     else {
-		log->trace(DGModSystem, "========================================");
+		log->trace(DGModScript, "========================================");
 		log->error(DGModScript, "%s", DGMsg250012);
 	}
+    
+    log->trace(DGModScript, "%s", DGMsg050000);
+    log->info(DGModScript, "%s: %s", DGMsg050001, LUA_RELEASE);
     
     lua_getglobal(_L, "_G");
     _registerEnums();

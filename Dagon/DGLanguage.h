@@ -55,6 +55,7 @@
 #define DGMsg020001 "OpenGL version"
 #define DGMsg020002 "Visual effects not supported on this system"
 #define DGMsg020003	"Could not create framebuffer"
+#define DGMsg020004	"GLEW version"
 #define DGMsg220001	"OpenGL error"
 
 // Control module
@@ -83,6 +84,8 @@
 #define DGMsg040103 "I'm afraid, Dave"
 
 // Script module
+#define DGMsg050000 "Initializing script..."
+#define DGMsg050001 "Lua version"
 #define DGMsg250000 "Switch: Not a room or node"
 #define DGMsg250001 "Switch: Not an object"
 #define DGMsg250002 "Table with coordinates expected to link node"
@@ -108,6 +111,8 @@
 
 // Audio module
 #define DGMsg070000 "Initializing audio manager..."
+#define DGMsg070001 "OpenAL version"
+#define DGMsg070002 "Vorbis version"
 #define DGMsg270001 "Failed to initialize OpenAL device"
 #define DGMsg270002 "Failed to create OpenAL context"
 #define DGMsg270003 "OpenAL error"
@@ -122,6 +127,7 @@
 #define DGMsg080002 "Enumerating devices..."
 #define DGMsg080003 "Opening default device"
 #define DGMsg080004 "Opening device"
+#define DGMsg080005 "Theora version"
 #define DGMsg280002 "File not found"
 #define DGMsg280003 "Error parsing stream headers"
 #define DGMsg280004 "End of file while searching for codec headers"

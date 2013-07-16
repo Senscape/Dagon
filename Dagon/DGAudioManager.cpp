@@ -221,6 +221,9 @@ void DGAudioManager::init() {
 		return;
 	}
     
+    log->info(DGModAudio, "%s: %s", DGMsg070001, alGetString(AL_VERSION));
+    log->info(DGModAudio, "%s: %s", DGMsg070002, vorbis_version_string());
+    
     _isInitialized = true;
 	_isRunning = true;
 }

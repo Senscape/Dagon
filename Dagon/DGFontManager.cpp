@@ -48,12 +48,16 @@ DGFontManager::~DGFontManager() {
 
 void DGFontManager::init(){
     log->trace(DGModFont, "%s", DGMsg060000);
-	log->info(DGModFont, "%s: %d.%d.%d", DGMsg060001, FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
 	
 	if (FT_Init_FreeType(&_library)) {
 		log->error(DGModFont, "%s", DGMsg260002);
         return;
     }
+    
+    int major, minor, patch;
+    
+    FT_Library_Version(_library, &major, &minor, &patch);
+    log->info(DGModFont, "%s: %d.%d.%d", DGMsg060001, major, minor, patch);
     
     _isInitialized = true;
 }

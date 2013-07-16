@@ -64,6 +64,10 @@ void DGRenderManager::init() {
     
 	glewInit();
     
+    version = glewGetString(GLEW_VERSION);
+    
+    log->info(DGModRender, "%s: %s", DGMsg020004, version);
+    
 	if (glewIsSupported("GL_VERSION_2_0")) {
 		_effectsEnabled = true;
         effectsManager->init();
