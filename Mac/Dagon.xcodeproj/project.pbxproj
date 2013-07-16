@@ -16,11 +16,9 @@
 		E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */; };
 		FB0602B4158BC6B800D26AB9 /* DGInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */; };
 		FB0602B8158FB18000D26AB9 /* DGVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0602B7158FB18000D26AB9 /* DGVideo.cpp */; };
-		FB0F421B14896D0A00BE880D /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421A14896D0A00BE880D /* Credits.rtf */; };
 		FB0F421E14896D3600BE880D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421C14896D3600BE880D /* MainMenu.xib */; };
 		FB0F422114896D3C00BE880D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421F14896D3C00BE880D /* InfoPlist.strings */; };
 		FB247287148C061F00F7D1B6 /* Dagon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FB247286148C061F00F7D1B6 /* Dagon.icns */; };
-		FB247302148C154900F7D1B6 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = FB247301148C154900F7D1B6 /* stb_image.c */; };
 		FB26300514D33B3200EAD41A /* DGLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300414D33B3200EAD41A /* DGLog.cpp */; };
 		FB26300914D3490300EAD41A /* DGState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300814D3490300EAD41A /* DGState.cpp */; };
 		FB26303A14D713DB00EAD41A /* DGConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26303914D713DB00EAD41A /* DGConfig.cpp */; };
@@ -41,11 +39,14 @@
 		FBABA6381565539B0009889F /* DGButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6371565539B0009889F /* DGButton.cpp */; };
 		FBB4763015D01D2E00514FE6 /* DGSplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBB4762F15D01D2E00514FE6 /* DGSplashData.c */; };
 		FBBC137B15C47397009CBF47 /* DGAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FBBC137A15C47397009CBF47 /* DGAppDelegate.mm */; };
-		FBBC137D15C47428009CBF47 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FBBC137C15C47428009CBF47 /* main.m */; };
 		FBBC138215C4808A009CBF47 /* DGWindowDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FBBC138115C4808A009CBF47 /* DGWindowDelegate.mm */; };
 		FBBC59AC15AF5E87005D173B /* DGShaderData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBBC59AB15AF5E87005D173B /* DGShaderData.c */; };
-		FBBE56DA17949AD5002CBF3C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB24729A148C0B1000F7D1B6 /* OpenGL.framework */; };
 		FBBE56DB17949ADF002CBF3C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
+		FBBE56DD1795B4BA002CBF3C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FBBE56DC1795B4BA002CBF3C /* Credits.rtf */; };
+		FBBE56E11795B526002CBF3C /* Dagon.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FBBE56E01795B526002CBF3C /* Dagon.entitlements */; };
+		FBBE56E31795B539002CBF3C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE56E21795B539002CBF3C /* OpenGL.framework */; };
+		FBBE56E71795B5E1002CBF3C /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = FBBE56E51795B5E1002CBF3C /* stb_image.c */; };
+		FBBE56EB1795B994002CBF3C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FBBE56EA1795B994002CBF3C /* main.m */; };
 		FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */; };
 		FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE208DF1589745B002F7D46 /* DGScene.cpp */; };
 		FBE7EDE3153F603D00F43EDA /* DGConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */; };
@@ -84,26 +85,18 @@
 		E8E0194914E366B800173A2D /* DGRoomProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRoomProxy.h; sourceTree = "<group>"; };
 		E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGScript.cpp; sourceTree = "<group>"; };
 		E8ECDFCC14E216B900A6BA8D /* DGScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGScript.h; sourceTree = "<group>"; };
-		E8ECDFCF14E216D900A6BA8D /* Luna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Luna.h; path = "Other Sources/Luna.h"; sourceTree = SOURCE_ROOT; };
 		FB0602B2158BC6AC00D26AB9 /* DGInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGInterface.h; sourceTree = "<group>"; };
 		FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGInterface.cpp; sourceTree = "<group>"; };
 		FB0602B6158BD58200D26AB9 /* DGCursorLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGCursorLib.h; sourceTree = "<group>"; };
 		FB0602B7158FB18000D26AB9 /* DGVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGVideo.cpp; sourceTree = "<group>"; };
 		FB0602B9158FB18C00D26AB9 /* DGVideo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGVideo.h; sourceTree = "<group>"; };
 		FB0769D71508F228009EA1AF /* DGAudioProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGAudioProxy.h; sourceTree = "<group>"; };
-		FB0F421A14896D0A00BE880D /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = ../Documents/Credits.rtf; sourceTree = "<group>"; };
 		FB0F421D14896D3600BE880D /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = Resources/English.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		FB0F422014896D3C00BE880D /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
-		FB0F422414896E2300BE880D /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Prefix.pch; path = "../Other Sources/Prefix.pch"; sourceTree = "<group>"; };
-		FB0F422514896E6D00BE880D /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = ../Info.plist; sourceTree = "<group>"; };
 		FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSpotProxy.h; sourceTree = "<group>"; };
-		FB24727D148C054C00F7D1B6 /* Dagon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Dagon.entitlements; path = ../Resources/Dagon.entitlements; sourceTree = "<group>"; };
 		FB247286148C061F00F7D1B6 /* Dagon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Dagon.icns; sourceTree = "<group>"; };
-		FB24729A148C0B1000F7D1B6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
 		FB2472AC148C0EC500F7D1B6 /* DGColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGColors.h; sourceTree = "<group>"; };
 		FB2472B5148C0EC500F7D1B6 /* DGDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGDefines.h; sourceTree = "<group>"; };
-		FB247301148C154900F7D1B6 /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = stb_image.c; path = "Other Sources/stb_image.c"; sourceTree = SOURCE_ROOT; };
-		FB24730C148C186E00F7D1B6 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stb_image.h; path = "Other Sources/stb_image.h"; sourceTree = SOURCE_ROOT; };
 		FB26300414D33B3200EAD41A /* DGLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGLog.cpp; sourceTree = "<group>"; };
 		FB26300714D33B3D00EAD41A /* DGLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGLog.h; sourceTree = "<group>"; };
 		FB26300814D3490300EAD41A /* DGState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGState.cpp; sourceTree = "<group>"; };
@@ -150,11 +143,18 @@
 		FBB4762F15D01D2E00514FE6 /* DGSplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGSplashData.c; sourceTree = "<group>"; };
 		FBBC137915C47397009CBF47 /* DGAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGAppDelegate.h; sourceTree = "<group>"; };
 		FBBC137A15C47397009CBF47 /* DGAppDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DGAppDelegate.mm; sourceTree = "<group>"; };
-		FBBC137C15C47428009CBF47 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FBBC137E15C48008009CBF47 /* DGWindowDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGWindowDelegate.h; sourceTree = "<group>"; };
 		FBBC138115C4808A009CBF47 /* DGWindowDelegate.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DGWindowDelegate.mm; sourceTree = "<group>"; };
 		FBBC59A815AF41E9005D173B /* DGEffectsLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEffectsLib.h; sourceTree = "<group>"; };
 		FBBC59AB15AF5E87005D173B /* DGShaderData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGShaderData.c; sourceTree = "<group>"; };
+		FBBE56DC1795B4BA002CBF3C /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = ../../Documents/Credits.rtf; sourceTree = "<group>"; };
+		FBBE56DE1795B4C9002CBF3C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
+		FBBE56E01795B526002CBF3C /* Dagon.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Dagon.entitlements; sourceTree = "<group>"; };
+		FBBE56E21795B539002CBF3C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		FBBE56E41795B5E1002CBF3C /* Luna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Luna.h; sourceTree = "<group>"; };
+		FBBE56E51795B5E1002CBF3C /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
+		FBBE56E61795B5E1002CBF3C /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
+		FBBE56EA1795B994002CBF3C /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = ../Source/main.m; sourceTree = "<group>"; };
 		FBC8882E14574F08008D548F /* Dagon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dagon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FBC8883214574F08008D548F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		FBC8883514574F08008D548F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -184,7 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FBBE56DB17949ADF002CBF3C /* Cocoa.framework in Frameworks */,
-				FBBE56DA17949AD5002CBF3C /* OpenGL.framework in Frameworks */,
+				FBBE56E31795B539002CBF3C /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -206,11 +206,15 @@
 		FB247283148C05E900F7D1B6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				FBBE56DC1795B4BA002CBF3C /* Credits.rtf */,
+				FBBE56E01795B526002CBF3C /* Dagon.entitlements */,
 				FB247286148C061F00F7D1B6 /* Dagon.icns */,
+				FBBE56DE1795B4C9002CBF3C /* Info.plist */,
+				FB0F421F14896D3C00BE880D /* InfoPlist.strings */,
 				FB0F421C14896D3600BE880D /* MainMenu.xib */,
 			);
 			name = Resources;
-			path = ../Resources;
+			path = Mac/Resources;
 			sourceTree = "<group>";
 		};
 		FB247313148C672A00F7D1B6 /* Model */ = {
@@ -241,6 +245,7 @@
 				FB0602B7158FB18000D26AB9 /* DGVideo.cpp */,
 			);
 			name = Model;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		FB247318148C676A00F7D1B6 /* Controller */ = {
@@ -270,6 +275,7 @@
 				FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */,
 			);
 			name = Controller;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		FB247319148C677800F7D1B6 /* View */ = {
@@ -291,6 +297,7 @@
 				FBE208DF1589745B002F7D46 /* DGScene.cpp */,
 			);
 			name = View;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		FB24731A148C67A200F7D1B6 /* Common */ = {
@@ -308,6 +315,7 @@
 				FBA2C78414DC74840098E334 /* DGVersion.h */,
 			);
 			name = Common;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		FBBC137815C47382009CBF47 /* Delegates */ = {
@@ -321,6 +329,7 @@
 				FBBC138115C4808A009CBF47 /* DGWindowDelegate.mm */,
 			);
 			name = Delegates;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		FBC8882314574F07008D548F = {
@@ -338,13 +347,14 @@
 				FBC8882E14574F08008D548F /* Dagon.app */,
 			);
 			name = Products;
+			path = ..;
 			sourceTree = "<group>";
 		};
 		FBC8883114574F08008D548F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				FBC8883214574F08008D548F /* Cocoa.framework */,
-				FB24729A148C0B1000F7D1B6 /* OpenGL.framework */,
+				FBBE56E21795B539002CBF3C /* OpenGL.framework */,
 				FBC8883414574F08008D548F /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -363,32 +373,28 @@
 		FBC8883814574F08008D548F /* Dagon */ = {
 			isa = PBXGroup;
 			children = (
-				FB24727D148C054C00F7D1B6 /* Dagon.entitlements */,
 				FBBC137815C47382009CBF47 /* Delegates */,
 				FB24731A148C67A200F7D1B6 /* Common */,
 				FB247313148C672A00F7D1B6 /* Model */,
 				FB247318148C676A00F7D1B6 /* Controller */,
 				FB247319148C677800F7D1B6 /* View */,
 				FBDF7B71148C69E4003A96B3 /* Data */,
+				FBC8883914574F08008D548F /* Other Sources */,
 				FB247283148C05E900F7D1B6 /* Resources */,
-				FBC8883914574F08008D548F /* Supporting Files */,
 			);
-			path = Dagon;
+			name = Dagon;
+			path = ..;
 			sourceTree = "<group>";
 		};
-		FBC8883914574F08008D548F /* Supporting Files */ = {
+		FBC8883914574F08008D548F /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
-				FB0F421A14896D0A00BE880D /* Credits.rtf */,
-				FB0F422514896E6D00BE880D /* Info.plist */,
-				FB0F421F14896D3C00BE880D /* InfoPlist.strings */,
-				E8ECDFCF14E216D900A6BA8D /* Luna.h */,
-				FBBC137C15C47428009CBF47 /* main.m */,
-				FB0F422414896E2300BE880D /* Prefix.pch */,
-				FB24730C148C186E00F7D1B6 /* stb_image.h */,
-				FB247301148C154900F7D1B6 /* stb_image.c */,
+				FBBE56E41795B5E1002CBF3C /* Luna.h */,
+				FBBE56EA1795B994002CBF3C /* main.m */,
+				FBBE56E51795B5E1002CBF3C /* stb_image.c */,
+				FBBE56E61795B5E1002CBF3C /* stb_image.h */,
 			);
-			name = "Supporting Files";
+			path = "Other Sources";
 			sourceTree = "<group>";
 		};
 		FBDF7B71148C69E4003A96B3 /* Data */ = {
@@ -400,6 +406,7 @@
 				FBB4762F15D01D2E00514FE6 /* DGSplashData.c */,
 			);
 			name = Data;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		FBE208E315897A9A002F7D46 /* Proxys */ = {
@@ -473,10 +480,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB0F421B14896D0A00BE880D /* Credits.rtf in Resources */,
 				FB0F421E14896D3600BE880D /* MainMenu.xib in Resources */,
 				FB0F422114896D3C00BE880D /* InfoPlist.strings in Resources */,
 				FB247287148C061F00F7D1B6 /* Dagon.icns in Resources */,
+				FBBE56DD1795B4BA002CBF3C /* Credits.rtf in Resources */,
+				FBBE56E11795B526002CBF3C /* Dagon.entitlements in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,7 +502,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = "/usr/bin/perl -w";
-			shellScript = "# Auto increment version number from build common file\n\ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n\n# Get the current build number\n$version_file=\"Dagon/DGVersion.h\";\n\nopen(FH, $version_file) || die(\"Cannot open file\");\n@raw_data = <FH>; \nclose(FH);\n\n@version_major = split(/ /, $raw_data[15]);\n@version_minor = split(/ /, $raw_data[16]);\n@version_release = split(/ /, $raw_data[17]);\n@version_build = split(/ /, $raw_data[18]);\n\nprint \"Build $version_build[2]\\n\"; \n++$version_build[2];\n\nsplice(@raw_data, 18, 1, \"#define DGVersionBuild $version_build[2]\\n\");\n\nopen(FH, \">$version_file\") || die(\"Cannot Open File\");\nflock(FH, LOCK_EX);\nseek(FH, 0, SEEK_SET); \nprint FH @raw_data;\nclose(FH);\n\n$plist_bin = \"/usr/libexec/PlistBuddy\";\n$plist_file =\"Info.plist\";\n\nchomp($version_major[2]);\nchomp($version_minor[2]);\n\nsystem(\"$plist_bin -c 'Set :CFBundleShortVersionString $version_major[2].$version_minor[2]' $plist_file\");\nsystem(\"$plist_bin -c 'Set :CFBundleVersion $version_build[2]' $plist_file\");";
+			shellScript = "# Auto increment version number from build common file\n\ndie \"$0: Must be run from Xcode\" unless $ENV{\"BUILT_PRODUCTS_DIR\"};\n\n# Get the current build number\n$version_file=\"../Source/DGVersion.h\";\n\nopen(FH, $version_file) || die(\"Cannot open file\");\n@raw_data = <FH>; \nclose(FH);\n\n@version_major = split(/ /, $raw_data[15]);\n@version_minor = split(/ /, $raw_data[16]);\n@version_release = split(/ /, $raw_data[17]);\n@version_build = split(/ /, $raw_data[18]);\n\nprint \"Build $version_build[2]\\n\"; \n++$version_build[2];\n\nsplice(@raw_data, 18, 1, \"#define DGVersionBuild $version_build[2]\\n\");\n\nopen(FH, \">$version_file\") || die(\"Cannot Open File\");\nflock(FH, LOCK_EX);\nseek(FH, 0, SEEK_SET); \nprint FH @raw_data;\nclose(FH);\n\n$plist_bin = \"/usr/libexec/PlistBuddy\";\n$plist_file =\"Info.plist\";\n\nchomp($version_major[2]);\nchomp($version_minor[2]);\n\nsystem(\"$plist_bin -c 'Set :CFBundleShortVersionString $version_major[2].$version_minor[2]' $plist_file\");\nsystem(\"$plist_bin -c 'Set :CFBundleVersion $version_build[2]' $plist_file\");";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -503,7 +511,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB247302148C154900F7D1B6 /* stb_image.c in Sources */,
 				FB279DA914AA8AA0002D48FC /* DGObject.cpp in Sources */,
 				FB279DAE14AB61A1002D48FC /* DGSpot.cpp in Sources */,
 				FB279DB214ACD224002D48FC /* DGNode.cpp in Sources */,
@@ -538,10 +545,11 @@
 				FB6A1E9315AC7E5D000C0222 /* DGEffectsManager.cpp in Sources */,
 				FBBC59AC15AF5E87005D173B /* DGShaderData.c in Sources */,
 				FBBC137B15C47397009CBF47 /* DGAppDelegate.mm in Sources */,
-				FBBC137D15C47428009CBF47 /* main.m in Sources */,
 				FBBC138215C4808A009CBF47 /* DGWindowDelegate.mm in Sources */,
 				FB3B4DC615CD7EC6000B69C6 /* DGDustData.c in Sources */,
 				FBB4763015D01D2E00514FE6 /* DGSplashData.c in Sources */,
+				FBBE56E71795B5E1002CBF3C /* stb_image.c in Sources */,
+				FBBE56EB1795B994002CBF3C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,6 +571,7 @@
 				FB0F422014896D3C00BE880D /* English */,
 			);
 			name = InfoPlist.strings;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -597,9 +606,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					Libraries/Headers,
-					Libraries/Headers/freetype2,
-					"\"Other Sources\"",
+					../Libraries/Headers,
+					../Libraries/Headers/freetype2,
+					"../\"Other Sources\"",
 				);
 				INFOPLIST_FILE = "";
 				INSTALL_PATH = /Applications;
@@ -633,9 +642,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					Libraries/Headers,
-					Libraries/Headers/freetype2,
-					"\"Other Sources\"",
+					../Libraries/Headers,
+					../Libraries/Headers/freetype2,
+					"../\"Other Sources\"",
 				);
 				INFOPLIST_FILE = "";
 				INSTALL_PATH = /Applications;
@@ -652,12 +661,12 @@
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Other Sources/Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					Libraries/Mac,
+					../Libraries/Mac,
 				);
 				OTHER_LDFLAGS = (
 					"-lglew",
@@ -682,12 +691,12 @@
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Other Sources/Prefix.pch";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					Libraries/Mac,
+					../Libraries/Mac,
 				);
 				OTHER_LDFLAGS = (
 					"-lglew",
