@@ -111,8 +111,8 @@ DGControl::~DGControl() {
 ////////////////////////////////////////////////////////////
 
 void DGControl::init() {
-    log->info(DGModControl, "%s: %d.%d.%d%s%d", DGMsg030000, DGVersionMajor,
-              DGVersionMinor, DGVersionRelease, DGVersionType, DGVersionBuild);
+    log->info(DGModControl, "%s: %s", DGMsg030000, DGVersionString);
+    log->info(DGModControl, "%s: %d", DGMsg030003, DGVersionBuild);
     
 	log->trace(DGModControl, "%s", DGMsg030001);
     

@@ -13,10 +13,14 @@
 #ifndef DG_VERSION_H
 #define DG_VERSION_H
 
-#define DGVersionMajor 1
-#define DGVersionMinor 0
-#define DGVersionRelease 0
-#define DGVersionBuild 1014
+#define DGVersionMajor "0"
+#define DGVersionMinor "9"
+#define DGVersionRelease "5"
+
+#define DGVersionBuild 1000
+#define DGVersionNum 100
 #define DGVersionType "a"
+
+#define DGVersionString DGVersionMajor "." DGVersionMinor "." DGVersionRelease DGVersionType
 
 #endif // DG_VERSION_H

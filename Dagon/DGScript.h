@@ -17,11 +17,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-extern "C" {
-#include "lua.h"
-#include "lualib.h"
-#include "lauxlib.h"
-}
+#include "Lua.hpp"
 
 #include "DGAction.h"
 #include "DGConfig.h"
