@@ -20,14 +20,6 @@
 		FB0F421E14896D3600BE880D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421C14896D3600BE880D /* MainMenu.xib */; };
 		FB0F422114896D3C00BE880D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421F14896D3C00BE880D /* InfoPlist.strings */; };
 		FB247287148C061F00F7D1B6 /* Dagon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FB247286148C061F00F7D1B6 /* Dagon.icns */; };
-		FB247292148C09F400F7D1B6 /* libGLEW.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB24728C148C09F400F7D1B6 /* libGLEW.a */; };
-		FB247293148C09F400F7D1B6 /* liblua.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB24728D148C09F400F7D1B6 /* liblua.a */; };
-		FB247294148C09F400F7D1B6 /* libogg.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB24728E148C09F400F7D1B6 /* libogg.a */; };
-		FB247295148C09F400F7D1B6 /* libtheora.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB24728F148C09F400F7D1B6 /* libtheora.a */; };
-		FB247296148C09F400F7D1B6 /* libvorbis.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB247290148C09F400F7D1B6 /* libvorbis.a */; };
-		FB247297148C09F400F7D1B6 /* libvorbisfile.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB247291148C09F400F7D1B6 /* libvorbisfile.a */; };
-		FB24729B148C0B1000F7D1B6 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB247299148C0B1000F7D1B6 /* OpenAL.framework */; };
-		FB24729C148C0B1000F7D1B6 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB24729A148C0B1000F7D1B6 /* OpenGL.framework */; };
 		FB247302148C154900F7D1B6 /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = FB247301148C154900F7D1B6 /* stb_image.c */; };
 		FB26300514D33B3200EAD41A /* DGLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300414D33B3200EAD41A /* DGLog.cpp */; };
 		FB26300914D3490300EAD41A /* DGState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300814D3490300EAD41A /* DGState.cpp */; };
@@ -37,7 +29,6 @@
 		FB279DB214ACD224002D48FC /* DGNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB114ACD223002D48FC /* DGNode.cpp */; };
 		FB279DB514ADF3A5002D48FC /* DGRoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB414ADF3A5002D48FC /* DGRoom.cpp */; };
 		FB279DBA14AE1736002D48FC /* DGAudio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB714AE14AF002D48FC /* DGAudio.cpp */; };
-		FB31E0F115B73F6100EE3642 /* FreeType.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FBF931CA15ADB2E90042F7FC /* FreeType.framework */; };
 		FB34FB1814DB126F007D2EE1 /* DGSystemMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1314DB126F007D2EE1 /* DGSystemMac.mm */; };
 		FB34FB1914DB126F007D2EE1 /* DGViewDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FB34FB1514DB126F007D2EE1 /* DGViewDelegate.mm */; };
 		FB3B4DC615CD7EC6000B69C6 /* DGDustData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB3B4DC515CD7EC6000B69C6 /* DGDustData.c */; };
@@ -53,12 +44,12 @@
 		FBBC137D15C47428009CBF47 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FBBC137C15C47428009CBF47 /* main.m */; };
 		FBBC138215C4808A009CBF47 /* DGWindowDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = FBBC138115C4808A009CBF47 /* DGWindowDelegate.mm */; };
 		FBBC59AC15AF5E87005D173B /* DGShaderData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBBC59AB15AF5E87005D173B /* DGShaderData.c */; };
-		FBC8883314574F08008D548F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
+		FBBE56DA17949AD5002CBF3C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB24729A148C0B1000F7D1B6 /* OpenGL.framework */; };
+		FBBE56DB17949ADF002CBF3C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
 		FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */; };
 		FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE208DF1589745B002F7D46 /* DGScene.cpp */; };
 		FBE7EDE3153F603D00F43EDA /* DGConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE7EDE2153F603D00F43EDA /* DGConsole.cpp */; };
 		FBE8A8101590E91100C6D44A /* DGVideoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */; };
-		FBF931CB15ADB2E90042F7FC /* FreeType.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBF931CA15ADB2E90042F7FC /* FreeType.framework */; };
 		FBFCC9F114BB3624003211AD /* DGTexture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFCC9F014BB3624003211AD /* DGTexture.cpp */; };
 		FBFD855914C4CCE9000E82B2 /* DGTextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBFD855814C4CCE9000E82B2 /* DGTextureManager.cpp */; };
 /* End PBXBuildFile section */
@@ -70,7 +61,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				FB31E0F115B73F6100EE3642 /* FreeType.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -109,13 +99,6 @@
 		FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSpotProxy.h; sourceTree = "<group>"; };
 		FB24727D148C054C00F7D1B6 /* Dagon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = Dagon.entitlements; path = ../Resources/Dagon.entitlements; sourceTree = "<group>"; };
 		FB247286148C061F00F7D1B6 /* Dagon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Dagon.icns; sourceTree = "<group>"; };
-		FB24728C148C09F400F7D1B6 /* libGLEW.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGLEW.a; path = Libraries/libGLEW.a; sourceTree = "<group>"; };
-		FB24728D148C09F400F7D1B6 /* liblua.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = liblua.a; path = Libraries/liblua.a; sourceTree = "<group>"; };
-		FB24728E148C09F400F7D1B6 /* libogg.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libogg.a; path = Libraries/libogg.a; sourceTree = "<group>"; };
-		FB24728F148C09F400F7D1B6 /* libtheora.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libtheora.a; path = Libraries/libtheora.a; sourceTree = "<group>"; };
-		FB247290148C09F400F7D1B6 /* libvorbis.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbis.a; path = Libraries/libvorbis.a; sourceTree = "<group>"; };
-		FB247291148C09F400F7D1B6 /* libvorbisfile.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libvorbisfile.a; path = Libraries/libvorbisfile.a; sourceTree = "<group>"; };
-		FB247299148C0B1000F7D1B6 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = ../../../../System/Library/Frameworks/OpenAL.framework; sourceTree = "<group>"; };
 		FB24729A148C0B1000F7D1B6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = ../../../../System/Library/Frameworks/OpenGL.framework; sourceTree = "<group>"; };
 		FB2472AC148C0EC500F7D1B6 /* DGColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGColors.h; sourceTree = "<group>"; };
 		FB2472B5148C0EC500F7D1B6 /* DGDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGDefines.h; sourceTree = "<group>"; };
@@ -189,7 +172,6 @@
 		FBE8A80D1590E90600C6D44A /* DGVideoManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGVideoManager.h; sourceTree = "<group>"; };
 		FBE8A80F1590E91100C6D44A /* DGVideoManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGVideoManager.cpp; sourceTree = "<group>"; };
 		FBE9FF2D15CB71B700CBB2D9 /* DGSlideProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGSlideProxy.h; sourceTree = "<group>"; };
-		FBF931CA15ADB2E90042F7FC /* FreeType.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FreeType.framework; path = Frameworks/FreeType.framework; sourceTree = "<group>"; };
 		FBFCC9EF14BB361B003211AD /* DGTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGTexture.h; sourceTree = "<group>"; };
 		FBFCC9F014BB3624003211AD /* DGTexture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGTexture.cpp; sourceTree = "<group>"; };
 		FBFD855814C4CCE9000E82B2 /* DGTextureManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGTextureManager.cpp; sourceTree = "<group>"; };
@@ -201,16 +183,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FBC8883314574F08008D548F /* Cocoa.framework in Frameworks */,
-				FB24729B148C0B1000F7D1B6 /* OpenAL.framework in Frameworks */,
-				FB24729C148C0B1000F7D1B6 /* OpenGL.framework in Frameworks */,
-				FBF931CB15ADB2E90042F7FC /* FreeType.framework in Frameworks */,
-				FB247292148C09F400F7D1B6 /* libGLEW.a in Frameworks */,
-				FB247293148C09F400F7D1B6 /* liblua.a in Frameworks */,
-				FB247294148C09F400F7D1B6 /* libogg.a in Frameworks */,
-				FB247295148C09F400F7D1B6 /* libtheora.a in Frameworks */,
-				FB247296148C09F400F7D1B6 /* libvorbis.a in Frameworks */,
-				FB247297148C09F400F7D1B6 /* libvorbisfile.a in Frameworks */,
+				FBBE56DB17949ADF002CBF3C /* Cocoa.framework in Frameworks */,
+				FBBE56DA17949AD5002CBF3C /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,19 +211,6 @@
 			);
 			name = Resources;
 			path = ../Resources;
-			sourceTree = "<group>";
-		};
-		FB247298148C0AA400F7D1B6 /* Libraries */ = {
-			isa = PBXGroup;
-			children = (
-				FB24728C148C09F400F7D1B6 /* libGLEW.a */,
-				FB24728D148C09F400F7D1B6 /* liblua.a */,
-				FB24728E148C09F400F7D1B6 /* libogg.a */,
-				FB24728F148C09F400F7D1B6 /* libtheora.a */,
-				FB247290148C09F400F7D1B6 /* libvorbis.a */,
-				FB247291148C09F400F7D1B6 /* libvorbisfile.a */,
-			);
-			name = Libraries;
 			sourceTree = "<group>";
 		};
 		FB247313148C672A00F7D1B6 /* Model */ = {
@@ -383,10 +344,7 @@
 			isa = PBXGroup;
 			children = (
 				FBC8883214574F08008D548F /* Cocoa.framework */,
-				FB247299148C0B1000F7D1B6 /* OpenAL.framework */,
 				FB24729A148C0B1000F7D1B6 /* OpenGL.framework */,
-				FBF931CA15ADB2E90042F7FC /* FreeType.framework */,
-				FB247298148C0AA400F7D1B6 /* Libraries */,
 				FBC8883414574F08008D548F /* Other Frameworks */,
 			);
 			name = Frameworks;
@@ -622,7 +580,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = Frameworks;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -665,7 +623,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = Frameworks;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -693,18 +651,25 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Other Sources/Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Libraries\"",
+					Libraries/Mac,
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lglew",
+					"-lglfw3",
+					"-lfreetype",
+					"-llua",
+					"-lopenal",
+					"-logg",
+					"-ltheoradec",
+					"-lvorbis",
+					"-lvorbisfile",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -716,18 +681,25 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/Frameworks\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Other Sources/Prefix.pch";
 				INFOPLIST_FILE = Info.plist;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/Libraries\"",
+					Libraries/Mac,
 				);
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-lglew",
+					"-lglfw3",
+					"-lfreetype",
+					"-llua",
+					"-lopenal",
+					"-logg",
+					"-ltheoradec",
+					"-lvorbis",
+					"-lvorbisfile",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
