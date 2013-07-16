@@ -14,9 +14,6 @@
 #ifndef DG_SYSTEM_H
 #define	DG_SYSTEM_H
 
-// TODO: Separate each implementation into different headers,
-// then this one loads the appropriate one accordingly.
-
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
@@ -57,6 +54,16 @@ class DGSystem {
     bool _areThreadsActive;
     bool _isInitialized;
     bool _isRunning;
+    
+    GLFWmonitor* monitor;
+    GLFWwindow* window;
+    
+    static void _charCallback(GLFWwindow* window, unsigned int character);
+    static void _cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
+    static void _errorCallback(int error, const char* description);
+    static void _keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+    static void _mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
+    static void _sizeCallback(GLFWwindow* window, int width, int height);
     
     // Private constructor/destructor
     DGSystem();

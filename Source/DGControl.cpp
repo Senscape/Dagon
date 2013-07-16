@@ -112,9 +112,6 @@ DGControl::~DGControl() {
 ////////////////////////////////////////////////////////////
 
 void DGControl::init() {
-    log->info(DGModControl, "%s: %s", DGMsg030000, DGVersionString);
-    log->info(DGModControl, "%s: %d", DGMsg030003, DGVersionBuild);
-    
 	log->trace(DGModControl, "%s", DGMsg030001);
     
     renderManager->init();
@@ -180,6 +177,10 @@ void DGControl::cutscene(const char* fileName) {
     _scene->loadCutscene(fileName);
     _state->set(DGStateCutscene);
     cursorManager->fadeOut();
+}
+
+bool DGControl::isConsoleActive() {
+    return !_console->isHidden();
 }
 
 bool DGControl::isDirectControlActive() {

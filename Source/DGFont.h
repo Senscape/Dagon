@@ -21,9 +21,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
-#include FT_STROKER_H
 
-#include <GL/glew.h>
 #include "DGPlatform.h"
 
 ////////////////////////////////////////////////////////////

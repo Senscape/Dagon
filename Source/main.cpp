@@ -21,5 +21,5 @@ int main(int argc, char *argv[]) {
     script->init(argc, argv);
     script->run();
     
-	return 0;
+    return 0;
 }

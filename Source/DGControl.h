@@ -171,7 +171,8 @@ public:
     void init();
     DGNode* currentNode();
     DGRoom* currentRoom();
-    void cutscene(const char* fileName); 
+    void cutscene(const char* fileName);
+	bool isConsoleActive();    
 	bool isDirectControlActive();
     void lookAt(float horizontal, float vertical, bool instant);
     void processFunctionKey(int aKey);

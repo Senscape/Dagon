@@ -22,17 +22,8 @@
 #include "DGLog.h"
 #include "DGPlatform.h"
 
-#ifdef DGPlatformMac
-
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
-
-#else
-
 #include <AL/al.h>
 #include <AL/alc.h>
-
-#endif
 
 #define OV_EXCLUDE_STATIC_CALLBACKS
 #include <ogg/ogg.h>

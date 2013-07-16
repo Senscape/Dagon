@@ -58,16 +58,17 @@ DGRenderManager::~DGRenderManager() {
 ////////////////////////////////////////////////////////////
 
 void DGRenderManager::init() {
-	const GLubyte* version = glGetString(GL_VERSION);
+    
+    glewInit();
+    
+    const GLubyte* version = glewGetString(GLEW_VERSION);
+    
+    log->info(DGModRender, "%s: %s", DGMsg020004, version);
+    
+    version = glGetString(GL_VERSION);
     
 	log->trace(DGModRender, "%s", DGMsg020000);
 	log->info(DGModRender, "%s: %s", DGMsg020001, version);
-    
-	glewInit();
-    
-    version = glewGetString(GLEW_VERSION);
-    
-    log->info(DGModRender, "%s: %s", DGMsg020004, version);
     
 	if (glewIsSupported("GL_VERSION_2_0")) {
 		_effectsEnabled = true;

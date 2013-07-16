@@ -21,17 +21,8 @@
 #include "DGAudio.h"
 #include "DGPlatform.h"
 
-#ifdef DGPlatformMac
-
-#include <OpenAL/al.h>
-#include <OpenAL/alc.h>
-
-#else
-
 #include <AL/al.h>
 #include <AL/alc.h>
-
-#endif
 
 ////////////////////////////////////////////////////////////
 // Definitions
