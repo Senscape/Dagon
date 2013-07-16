@@ -535,6 +535,12 @@ int DGScript::_globalStopTimer(lua_State *L) {
 	return 0;
 }
 
+int DGScript::_globalVersion(lua_State *L) {
+    lua_pushstring(L, DGVersionString);
+	
+	return 1;
+}
+
 void DGScript::_registerEnums() {
     // Push all enum values
     DGLuaEnum(_L, AUDIO, DGObjectAudio);
@@ -644,6 +650,7 @@ void DGScript::_registerGlobals() {
         {"switch", _globalSwitch},
         {"startTimer", _globalStartTimer},
         {"stopTimer", _globalStopTimer},
+        {"version", _globalVersion},
         {NULL, NULL}
     };
     
