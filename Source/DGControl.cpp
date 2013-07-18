@@ -65,7 +65,6 @@ DGControl::DGControl() {
     
     _currentRoom = NULL;
     
-    _fpsCount = 0;
     _sleepTimer = 0;
     
     _isInitialized = false;
@@ -808,7 +807,7 @@ void DGControl::takeSnapshot() {
     
 	strftime(buffer, DGMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
     
-    system->update();
+    //system->update();
     cameraManager->beginOrthoView();
     renderManager->drawPostprocessedView();
     texture.bind();
@@ -818,18 +817,6 @@ void DGControl::takeSnapshot() {
     texture.saveToFile(buffer);   
     
     config->texCompression = previousTexCompression;
-}
-
-bool DGControl::profiler() {
-	if (_isRunning) {
-		// Store the last FPS count and reset
-		config->setFramesPerSecond(_fpsCount);
-		_fpsCount = 0;
-
-		return true;
-	}
-
-	return false;
 }
 
 void DGControl::terminate() {
@@ -986,7 +973,6 @@ void DGControl::_updateView(int state, bool inBackground) {
     
     // Debug info (if enabled)
     if (_console->isEnabled() && !inBackground) {
-        _fpsCount++;
         // BUG: This causes a crash sometimes. Why?
         _console->update();
         
@@ -1009,6 +995,6 @@ void DGControl::_updateView(int state, bool inBackground) {
     
     if (!inBackground) {
         // Flush the buffers
-        system->update();
+        //system->update();
     }
 }

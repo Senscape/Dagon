@@ -142,7 +142,6 @@ class DGControl {
     bool _cancelSplash;
     bool _directControlActive;
     int _dragTimer;
-    int _fpsCount;
     bool _isInitialized;
 	bool _isRunning;
     bool _isShuttingDown;
@@ -187,9 +186,6 @@ public:
     void switchTo(DGObject* theTarget, bool instant = false);
     void takeSnapshot();
     void terminate();
-    
-    // These methods are called asynchronously
-    bool profiler();
     bool update();
 };
 

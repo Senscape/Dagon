@@ -24,7 +24,8 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGNumberOfThreads 3
+#define DGFramerateLimiter 1
+#define DGFrameratePrecision 0.33
 
 enum DGThreads {
     DGAudioThread,
@@ -55,9 +56,13 @@ class DGSystem {
     bool _isInitialized;
     bool _isRunning;
     
+    int _frameSkip;
+    int _targetFrameSkip;
+    
     GLFWmonitor* monitor;
     GLFWwindow* window;
     
+    double _calculateFrames(double theInterval);
     static void _charCallback(GLFWwindow* window, unsigned int character);
     static void _cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
     static void _errorCallback(int error, const char* description);
@@ -92,8 +97,7 @@ public:
     void suspendThread(int threadID);
     void terminate();
     void toggleFullScreen();
-	void update();
-    time_t wallTime();
+    double wallTime();
 };
 
 #endif // DG_SYSTEM_H

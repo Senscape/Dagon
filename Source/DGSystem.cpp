@@ -46,6 +46,9 @@ DGSystem::DGSystem() {
     _areThreadsActive = false;
     _isInitialized = false;
     _isRunning = false;
+    
+    _frameSkip = 0;
+    _targetFrameSkip = 0;
 }
 
 ////////////////////////////////////////////////////////////
@@ -114,6 +117,9 @@ void DGSystem::init() {
         
         glfwMakeContextCurrent(window);
         
+        // Set vertical sync according to our configuration
+        glfwSwapInterval(config->verticalSync);
+        
         // This doesn't seem to be working on windowed mode
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
        
@@ -144,13 +150,44 @@ void DGSystem::resumeThread(int threadID) {
     }
 }
 
-void DGSystem::run() { 
+void DGSystem::run() {
     _isRunning = true;
+
+    double startTime = glfwGetTime();
+    double updateInterval = 1.0 / (double)config->framerate;
     
     while (!glfwWindowShouldClose(window)) {
-        control->update();
+        if (DGFramerateLimiter) {
+            /* Following this game loop model:
+            
+            time = GetTime();
+            loop
+            while time < GetTime()
+            UpdateGameState()
+            time += update_interval
+            end
+             
+            DrawStuff()
+            SwapBuffers()
+            end
+            */
+            while (startTime < glfwGetTime()) {
+                config->setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
+                control->update();
+            
+                glfwSwapBuffers(window);
+                glfwPollEvents();
+            
+                startTime += updateInterval;
+            }
+        }
+        else {
+            config->setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
+            control->update();
         
-        glfwPollEvents();
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+        }
     }
     
     glfwDestroyWindow(window);
@@ -194,17 +231,37 @@ void DGSystem::toggleFullScreen() {
     log->warning(DGModSystem, "Toggling fullscreen currently disabled");
 }
 
-void DGSystem::update() {
-    glfwSwapBuffers(window);
-}
-
-time_t DGSystem::wallTime() {
+double DGSystem::wallTime() {
     return glfwGetTime();
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
+
+double DGSystem::_calculateFrames(double theInterval = 1.0) {
+	static double lastTime = glfwGetTime();
+	static int fpsFrameCount = 0;
+	static double fps = 0.0;
+    
+	double currentTime = glfwGetTime();
+
+	if (theInterval < 0.1)
+		theInterval = 0.1;
+    
+	if (theInterval > 10.0)
+		theInterval = 10.0;
+    
+	if ((currentTime - lastTime) > theInterval) {
+		fps = (double)fpsFrameCount / (currentTime - lastTime);
+
+		fpsFrameCount = 0;
+		lastTime = glfwGetTime();
+	}
+	else fpsFrameCount++;
+
+	return fps;
+}
 
 void DGSystem::_charCallback(GLFWwindow* window, unsigned int character) {
     if (DGControl::getInstance().isConsoleActive() || character == DGKeyQuote)
@@ -310,4 +367,5 @@ void DGSystem::_sizeCallback(GLFWwindow* window, int width, int height) {
     
     // Update view for live resize
     DGControl::getInstance().update();
+    glfwSwapBuffers(window);
 }
