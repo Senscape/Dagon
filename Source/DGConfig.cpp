@@ -54,11 +54,8 @@ DGConfig::DGConfig() {
     subtitles = DGDefSubtitles;
 	verticalSync = DGDefVerticalSync;
 	
+    _globalSpeed = 1.0;
     _fps = 0;
-    
-	// FIXME: This "global speed" setting is sometimes broken on Windows, must implement a frame limiter
-	// This is a readonly setting
-	_globalSpeed = 60.0f / (float)framerate;
 }
 
 ////////////////////////////////////////////////////////////
@@ -73,15 +70,17 @@ DGConfig::~DGConfig() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-float DGConfig::globalSpeed() {
+double DGConfig::globalSpeed() {
     return _globalSpeed;
 }
 
-int DGConfig::framesPerSecond() {
+double DGConfig::framesPerSecond() {
     return _fps;
 }
 
-void DGConfig::setFramesPerSecond(int fps) {
+void DGConfig::setFramesPerSecond(double fps) {
+    _globalSpeed = (double)DGDefFramerate / _fps;
+    
     _fps = fps;
 }
 

@@ -651,17 +651,17 @@ void DGCameraManager::update() {
     
     // Apply horizontal motion
     if (_motionLeft)
-        _angleH -= sin(_accelH) * _motionLeft;
+        _angleH -= sin(_accelH) * _motionLeft * config->globalSpeed();
     
     if (_motionRight)
-        _angleH += sin(_accelH) * _motionRight;
+        _angleH += sin(_accelH) * _motionRight * config->globalSpeed();
     
     // Apply vertical motion
     if (_motionDown)
-        _angleV += sin(_accelV) * _motionDown;
+        _angleV += sin(_accelV) * _motionDown * config->globalSpeed();
     
     if (_motionUp)
-        _angleV -= sin(_accelV) * _motionUp;    
+        _angleV -= sin(_accelV) * _motionUp * config->globalSpeed();
     
     // Limit horizontal rotation
     if (_angleH > (GLfloat)_angleHLimit)

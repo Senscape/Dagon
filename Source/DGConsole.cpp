@@ -132,15 +132,14 @@ void DGConsole::update() {
             case DGConsoleHidden:
                 // Set the color used for information
                 renderManager->setColor(DGColorBrightCyan);
-                // Leave 20 pixels in case OS interfaces covers the text (like Mac)
-                _font->print(DGInfoMargin, DGInfoMargin + 20, 
+                _font->print(DGInfoMargin, DGInfoMargin, 
                              "Viewport size: %d x %d", config->displayWidth, config->displayHeight);                
-                _font->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize + 20, 
+                _font->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize, 
                              "Coordinates: (%d, %d)", (int)position.x, (int)position.y);
-                _font->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2 + 20), 
-                             "Viewing angle: %2.1f", cameraManager->fieldOfView());
-                _font->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3 + 20), 
-                             "FPS: %d", config->framesPerSecond()); 
+                _font->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2), 
+                             "Viewing angle: %2.0f", cameraManager->fieldOfView());
+                _font->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
+                             "FPS: %2.0f", config->framesPerSecond()); 
                 
                 break;            
             case DGConsoleHiding:
@@ -150,7 +149,7 @@ void DGConsole::update() {
                     _state = DGConsoleHidden;
                 break;
             case DGConsoleShowing:
-                if (_offset > 0)
+                if (_offset > 0 && _offset > -_size)
                     _offset -= DGConsoleSpeed;
                 else
                     _state = DGConsoleVisible;
