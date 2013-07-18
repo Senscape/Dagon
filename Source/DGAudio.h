@@ -86,6 +86,7 @@ class DGAudio : public DGObject {
     bool _isLoopable;
     bool _isMatched;
 
+    std::mutex _mutex;
     int _state;
     
     // Method used to fill buffers

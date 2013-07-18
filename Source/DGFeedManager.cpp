@@ -29,7 +29,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGFeedManager::DGFeedManager() {
-    audioManager = &DGAudioManager::getInstance();  
+    audioManager = &DGAudioManager::instance();  
     config = &DGConfig::getInstance();
     fontManager = &DGFontManager::getInstance();    
     timerManager = &DGTimerManager::getInstance();   
@@ -145,9 +145,7 @@ void DGFeedManager::showAndPlay(const char* text, const char* audio) {
     if (!config->silentFeeds) {
         _feedAudio->setResource(audio);
         audioManager->requestAudio(_feedAudio);
-        DGSystem::getInstance().suspendThread(DGAudioThread);
         _feedAudio->play();
-        DGSystem::getInstance().resumeThread(DGAudioThread);
     }
 }
 

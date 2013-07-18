@@ -30,7 +30,6 @@
 
 class DGConfig;
 class DGLog;
-class DGSystem;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
@@ -39,30 +38,28 @@ class DGSystem;
 class DGAudioManager {
     DGConfig* config;
     DGLog* log;
-    DGSystem* system;
     
     ALCdevice* _alDevice;
     ALCcontext* _alContext;
+    
+    std::thread _audioThread;
+    
+    std::mutex _mutexForArray;
     std::vector<DGAudio*> _arrayOfAudios;
     std::vector<DGAudio*> _arrayOfActiveAudios;
     
     bool _isInitialized;
 	bool _isRunning;
     
-    // Private constructor/destructor
     DGAudioManager();
+    DGAudioManager(DGAudioManager const&);
+    DGAudioManager& operator=(DGAudioManager const&);
     ~DGAudioManager();
-    // Stop the compiler generating methods of copy the object
-    DGAudioManager(DGAudioManager const& copy);            // Not implemented
-    DGAudioManager& operator=(DGAudioManager const& copy); // Not implemented
     
 public:
-    static DGAudioManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGAudioManager instance;
-        return instance;
+    static DGAudioManager& instance() {
+        static DGAudioManager audioManager;
+        return audioManager;
     }
     
     // These two methods have similar purposes: clear() notifies the manager

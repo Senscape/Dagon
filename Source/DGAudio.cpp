@@ -47,8 +47,7 @@ DGAudio::DGAudio() {
 ////////////////////////////////////////////////////////////
 
 DGAudio::~DGAudio() {
-    // Force an unload
-    this->unload();
+    // Let the manager perform the unload
 }
 
 ////////////////////////////////////////////////////////////
@@ -64,6 +63,8 @@ bool DGAudio::isLoopable() {
 }
 
 bool DGAudio::isPlaying() {
+    std::lock_guard<std::mutex> guard(_mutex);
+    
     return (_state == DGAudioPlaying);
 }
 
@@ -124,6 +125,8 @@ void DGAudio::setResource(const char* fromFileName) {
 ////////////////////////////////////////////////////////////
 
 void DGAudio::load() {
+    std::lock_guard<std::mutex> guard(_mutex);
+    
     if (!_isLoaded) { 
         FILE* fh;
         
@@ -199,6 +202,8 @@ void DGAudio::match(DGAudio* matchedAudio) {
 }
 
 void DGAudio::play() {
+    std::lock_guard<std::mutex> guard(_mutex);
+    
     if (_isLoaded && (_state != DGAudioPlaying)) {
         if (_isMatched)
             ov_time_seek(&_oggStream, _matchedAudio->cursor());
@@ -211,16 +216,20 @@ void DGAudio::play() {
 }
 
 void DGAudio::pause() {
+    std::lock_guard<std::mutex> guard(_mutex);
+    
     if (_state == DGAudioPlaying) {
         alSourceStop(_alSource);
 
         _state = DGAudioPaused;
         
         _verifyError("pause");
-    } 
+    }
 }
 
 void DGAudio::stop() {
+    std::lock_guard<std::mutex> guard(_mutex);
+    
     if ((_state == DGAudioPlaying) || (_state == DGAudioPaused)) {
         alSourceStop(_alSource);
 
@@ -232,9 +241,14 @@ void DGAudio::stop() {
 }
 
 void DGAudio::unload() {
+    std::lock_guard<std::mutex> guard(_mutex);
+    
     if (_isLoaded) {
-        if (_state == DGAudioPlaying)
-            this->stop();
+        if (_state == DGAudioPlaying) {
+            alSourceStop(_alSource);
+            ov_raw_seek(&_oggStream, 0);
+            _state = DGAudioStopped;
+        }
 
 		_emptyBuffers();
 		
@@ -250,6 +264,8 @@ void DGAudio::unload() {
 }
 
 void DGAudio::update() {
+    std::lock_guard<std::mutex> guard(_mutex);
+    
     if (_state == DGAudioPlaying) {
         int processed;
         
@@ -276,8 +292,10 @@ void DGAudio::update() {
             // that we're done with this audio
             if (this->fadeLevel() > 0.0f)
                 alSourcef(_alSource, AL_GAIN, this->fadeLevel());
-            else
-                this->pause();
+            else {
+                alSourceStop(_alSource);
+                _state = DGAudioPaused;
+            }
         }
     }
 }
@@ -338,8 +356,11 @@ bool DGAudio::_stream(ALuint* buffer) {
                 // EOF
                 if (_isLoopable)
                     ov_raw_seek(&_oggStream, 0);
-                else
-                    this->stop();
+                else {
+                    alSourceStop(_alSource);
+                    ov_raw_seek(&_oggStream, 0);
+                    _state = DGAudioStopped;
+                }
                 
                 return false;
             }

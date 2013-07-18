@@ -53,7 +53,7 @@ public:
         }
         
         // Register the new audio
-        DGAudioManager::getInstance().registerAudio(a);
+        DGAudioManager::instance().registerAudio(a);
         
         // Init the base class
         this->setObject(a);
@@ -79,7 +79,7 @@ public:
     // Play the audio
     int play(lua_State *L) {
         // Request the audio
-        DGAudioManager::getInstance().requestAudio(a);
+        DGAudioManager::instance().requestAudio(a);
         a->play();
         
         return 0;

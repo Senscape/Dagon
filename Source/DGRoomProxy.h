@@ -97,7 +97,7 @@ public:
             DGAudio* audio = new DGAudio;
             audio->setResource(luaL_checkstring(L, 1));
             
-            DGAudioManager::getInstance().registerAudio(audio);
+            DGAudioManager::instance().registerAudio(audio);
             
             r->setDefaultFootstep(audio);
         }

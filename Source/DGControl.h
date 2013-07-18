@@ -113,7 +113,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////
 
 class DGControl {
-    DGAudioManager* audioManager;
+    DGAudioManager& audioManager;
     DGCameraManager* cameraManager;    
     DGConfig* config;
     DGCursorManager* cursorManager;

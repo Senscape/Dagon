@@ -18,11 +18,8 @@
 #include "DGAudioManager.h"
 #include "DGConfig.h"
 #include "DGLog.h"
-#include "DGSystem.h"
 
 using namespace std;
-
-// TODO: Watch out with the OpenAL context here!
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -46,16 +43,21 @@ DGAudioManager::~DGAudioManager() {
     
     // Each audio object should unregister itself if
     // destroyed
+    _isRunning = false;
 
+    _audioThread.join();
+    
     if (!_arrayOfAudios.empty()) {
         vector<DGAudio*>::iterator it;
         
-        it = _arrayOfAudios.begin();
+        _mutexForArray.lock();
         
+        it = _arrayOfAudios.begin();
         while (it != _arrayOfAudios.end()) {
 			(*it)->unload();
             it++;
-        }   
+        }
+        _mutexForArray.unlock();
     }
     
     // Now we shut down OpenAL completely
@@ -75,6 +77,7 @@ void DGAudioManager::clear() {
         if (!_arrayOfActiveAudios.empty()) {
             vector<DGAudio*>::iterator it;
             
+            _mutexForArray.lock();
             it = _arrayOfActiveAudios.begin();
             
             while (it != _arrayOfActiveAudios.end()) {
@@ -82,6 +85,7 @@ void DGAudioManager::clear() {
                 
                 it++;
             }
+            _mutexForArray.unlock();
         }
     }
 }
@@ -94,6 +98,7 @@ void DGAudioManager::flush() {
             vector<DGAudio*>::iterator it;
             
 			while (!done) {
+                _mutexForArray.lock();
 				it = _arrayOfActiveAudios.begin();
 				done = true;
 				while ((it != _arrayOfActiveAudios.end())) {
@@ -101,10 +106,8 @@ void DGAudioManager::flush() {
 						if ((*it)->state() == DGAudioStopped) { // Had to move this outside the switch
 							// TODO: Automatically flush stopped and non-retained audios after
 							// n update cycles
-							DGSystem::getInstance().suspendThread(DGAudioThread);
 							(*it)->unload();
 							_arrayOfActiveAudios.erase(it);
-							DGSystem::getInstance().resumeThread(DGAudioThread);
 							done = false;
 							break;
 						}
@@ -123,6 +126,7 @@ void DGAudioManager::flush() {
 					}
 					else it++;
 				}
+                _mutexForArray.unlock();
 			}
         }
     }
@@ -130,10 +134,7 @@ void DGAudioManager::flush() {
 
 void DGAudioManager::init() {
     log->trace(DGModAudio, "%s", DGMsg070000);
-    system = &DGSystem::getInstance();
     
-// OpenAl sucks on Windows, so let's support forcing the audio device on this platform
-#ifdef DGPlatformWindows
     char deviceName[256];
 	char *defaultDevice;
 	char *deviceList;
@@ -165,11 +166,11 @@ void DGAudioManager::init() {
                 int i;
                 
                 numDevices++;
-                log->trace(DGModAudio, "%s", DGMsg080002);
+                /*log->trace(DGModAudio, "%s", DGMsg080002);
                 log->trace(DGModAudio, "0. NULL");
                 for (i = 0; i < numDevices; i++) {
                     log->trace(DGModAudio, "%d. %s", i + 1, devices[i]);
-                }
+                }*/
                 
                 i = config->audioDevice;
                 if ((i != 0) && (strlen(devices[i - 1]) < 256)) {
@@ -186,10 +187,6 @@ void DGAudioManager::init() {
 		log->trace(DGModAudio, "%s: %s", DGMsg080004, deviceName);
 		_alDevice = alcOpenDevice((ALCchar*)deviceName); // Use the name from the enumeration process
 	}
-    
-#else
-    _alDevice = alcOpenDevice(NULL);
-#endif
     
     if (!_alDevice) {
         log->error(DGModAudio, "%s", DGMsg270001);
@@ -223,10 +220,17 @@ void DGAudioManager::init() {
 	}
     
     log->info(DGModAudio, "%s: %s", DGMsg070001, alGetString(AL_VERSION));
-    //log->info(DGModAudio, "%s: %s", DGMsg070002, vorbis_version_string());
+    log->info(DGModAudio, "%s: %s", DGMsg070002, vorbis_version_string());
     
     _isInitialized = true;
 	_isRunning = true;
+    
+    _audioThread = thread([](){
+        chrono::milliseconds dura(1);
+        while (DGAudioManager::instance().update()) {
+            this_thread::sleep_for(dura);
+        }
+    });
 }
 
 void DGAudioManager::registerAudio(DGAudio* target) {
@@ -256,10 +260,11 @@ void DGAudioManager::requestAudio(DGAudio* target) {
         it++;
     }
     
-    DGSystem::getInstance().suspendThread(DGAudioThread);
-    if (!isActive)
+    if (!isActive) {
+        _mutexForArray.lock();
         _arrayOfActiveAudios.push_back(target);
-    DGSystem::getInstance().resumeThread(DGAudioThread);
+        _mutexForArray.unlock();
+    }
     
     // FIXME: Not very elegant. Must implement a state condition for
     // each audio object. Perhaps use AL_STATE even.
@@ -284,12 +289,14 @@ bool DGAudioManager::update() {
         if (!_arrayOfActiveAudios.empty()) {
             vector<DGAudio*>::iterator it;
             
+            _mutexForArray.lock();
             it = _arrayOfActiveAudios.begin();
             
             while (it != _arrayOfActiveAudios.end()) {
                 (*it)->update();
                 it++;
             }
+            _mutexForArray.unlock();
         }
 
 		return true;

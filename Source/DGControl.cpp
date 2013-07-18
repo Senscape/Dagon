@@ -49,8 +49,9 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGControl::DGControl() {
-    audioManager = &DGAudioManager::getInstance();
+DGControl::DGControl() :
+    audioManager(DGAudioManager::instance())
+{
     cameraManager = &DGCameraManager::getInstance();    
     config = &DGConfig::getInstance();  
     cursorManager = &DGCursorManager::getInstance();  
@@ -120,7 +121,7 @@ void DGControl::init() {
     cameraManager->setViewport(config->displayWidth, config->displayHeight);
     
     // Init the audio manager
-    audioManager->init();
+    audioManager.init();
     
     // Init the font library
     fontManager->init();
@@ -583,13 +584,12 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
     
     _updateView(DGStateNode, true);
     
-    system->suspendThread(DGVideoThread);
     videoManager->flush();
     
     if (theTarget) {
         switch (theTarget->type()) {
             case DGObjectRoom:
-                audioManager->clear();
+                audioManager.clear();
                 feedManager->clear(); // Clear all pending feeds
                 
                 renderManager->blendNextUpdate(true);
@@ -631,7 +631,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
 
                 break;
             case DGObjectNode:
-                audioManager->clear();
+                audioManager.clear();
                 
                 renderManager->blendNextUpdate(true);
                 
@@ -688,7 +688,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                         DGAudio* audio = spot->audio();
                         
                         // Request the audio
-                        audioManager->requestAudio(audio);
+                        audioManager.requestAudio(audio);
                         audio->setPosition(spot->face(), spot->origin());
                         audio->setDefaultFadeLevel(spot->volume());
                     }
@@ -748,7 +748,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 if ((*it)->state() != DGAudioPlaying)
                     (*it)->fadeIn();
                 
-                audioManager->requestAudio((*it));                
+                audioManager.requestAudio((*it));
                 (*it)->play();
                 
                 it++;
@@ -762,14 +762,14 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             // Finally, check if must play a single footstep
             if (currentNode->hasFootstep()) {
                 currentNode->footstep()->unload();
-                audioManager->requestAudio(currentNode->footstep());
+                audioManager.requestAudio(currentNode->footstep());
                 currentNode->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
                 currentNode->footstep()->play();
             }
             else {
                 if (_currentRoom->hasDefaultFootstep()) {
                     _currentRoom->defaultFootstep()->unload();
-                    audioManager->requestAudio(_currentRoom->defaultFootstep());
+                    audioManager.requestAudio(_currentRoom->defaultFootstep());
                     _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
                     _currentRoom->defaultFootstep()->play();
                 }
@@ -777,9 +777,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
         }
     }
     
-    audioManager->flush();
-    
-    system->resumeThread(DGVideoThread);
+    audioManager.flush();
     
     cameraManager->stopPanning();
     
@@ -987,11 +985,9 @@ void DGControl::_updateView(int state, bool inBackground) {
     }
     else cameraManager->endOrthoView();
     
-    audioManager->setOrientation(cameraManager->orientation());
+    audioManager.setOrientation(cameraManager->orientation());
     
-    system->suspendThread(DGTimerThread);
     timerManager->process();
-    system->resumeThread(DGTimerThread);
     
     if (!inBackground) {
         // Flush the buffers

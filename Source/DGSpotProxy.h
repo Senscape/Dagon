@@ -147,7 +147,7 @@ public:
                     audio = new DGAudio;
                     audio->setResource(luaL_checkstring(L, 2));
                     
-                    DGAudioManager::getInstance().registerAudio(audio);
+                    DGAudioManager::instance().registerAudio(audio);
                     
                     if (s->hasFlag(DGSpotLoop))
                         audio->setLoopable(true);
