@@ -264,7 +264,6 @@ void DGScene::loadCutscene(const char* fileName) {
     _cutsceneTexture = new DGTexture;
     
     _cutscene.setResource(config->path(DGPathRes, fileName, DGObjectVideo));
-    DGSystem::getInstance().suspendThread(DGVideoThread);
     videoManager->requestVideo(&_cutscene);
     
     if (_cutscene.isLoaded()) {
@@ -275,13 +274,10 @@ void DGScene::loadCutscene(const char* fileName) {
 
         _isCutsceneLoaded = true;
     }
-    DGSystem::getInstance().resumeThread(DGVideoThread);
 }
 
 void DGScene::unloadCutscene() {
-    DGSystem::getInstance().suspendThread(DGVideoThread);
     _cutscene.unload();
-    DGSystem::getInstance().resumeThread(DGVideoThread);
     
     _cutsceneTexture->unload();
     delete _cutsceneTexture;

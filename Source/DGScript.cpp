@@ -72,10 +72,6 @@ void DGScript::execute() {
         if (int result = lua_resume(_thread, 0))
             _error(result);
     }
-    
-    // Ensure the threads are always created after the script is executed,
-    // even if an error was raised
-    system->createThreads();
 }
 
 // TODO: Support loading script from parameters
@@ -197,7 +193,6 @@ void DGScript::init(int argc, char* argv[]) {
         // Not found!
         log->error(DGModScript, "%s: %s", DGMsg250003, script);
         DGControl::getInstance().processKey(DGKeyTab, false); // Simulate tab key to open the console
-        system->createThreads();
         system->run();
     }
 }
@@ -385,8 +380,8 @@ int DGScript::_globalPlay(lua_State *L) {
     DGAudio* audio = new DGAudio;
     
     audio->setResource(luaL_checkstring(L, 1));
-    DGAudioManager::getInstance().registerAudio(audio);
-    DGAudioManager::getInstance().requestAudio(audio);
+    DGAudioManager::instance().registerAudio(audio);
+    DGAudioManager::instance().requestAudio(audio);
     audio->play();
     
 	return 0;

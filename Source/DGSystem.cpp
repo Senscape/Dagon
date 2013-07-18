@@ -15,13 +15,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudioManager.h"
 #include "DGConfig.h"
 #include "DGControl.h"
 #include "DGLog.h"
 #include "DGSystem.h"
-#include "DGTimerManager.h"
-#include "DGVideoManager.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -37,18 +34,11 @@ int _isDragging = false;
 // TODO: At this point the system module should copy the config file
 // into the user folder
 DGSystem::DGSystem() {  
-    audioManager = &DGAudioManager::getInstance();
     log = &DGLog::getInstance();
     config = &DGConfig::getInstance();
-    timerManager = &DGTimerManager::getInstance();  
-    videoManager = &DGVideoManager::getInstance();
-    
-    _areThreadsActive = false;
+
     _isInitialized = false;
     _isRunning = false;
-    
-    _frameSkip = 0;
-    _targetFrameSkip = 0;
 }
 
 ////////////////////////////////////////////////////////////
@@ -65,14 +55,6 @@ DGSystem::~DGSystem() {
 
 void DGSystem::browse(const char* url) {
     log->warning(DGModSystem, "Browsing is currently disabled");
-}
-
-void DGSystem::createThreads() {
-    _areThreadsActive = true;
-}
-
-void DGSystem::destroyThreads() {    
-    _areThreadsActive = false;
 }
 
 void DGSystem::findPaths(int argc, char* argv[]) {
@@ -144,12 +126,6 @@ void DGSystem::init() {
     else log->warning(DGModSystem, "%s", DGMsg140002);
 }
 
-void DGSystem::resumeThread(int threadID) {
-    if (_areThreadsActive) {
-
-    }
-}
-
 void DGSystem::run() {
     _isRunning = true;
 
@@ -200,19 +176,8 @@ void DGSystem::setTitle(const char* title) {
     glfwSetWindowTitle(window, title);
 }
 
-void DGSystem::suspendThread(int threadID) {
-    if (_areThreadsActive) {
-
-    }
-}
-
 void DGSystem::terminate() {
     int r = arc4random() % 8; // Double the replies, so that the default one appears often
-    
-    if (_isRunning) {
-        if (_areThreadsActive)
-            destroyThreads();
-    }
     
     switch (r) {
         default:
