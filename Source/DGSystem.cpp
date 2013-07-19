@@ -132,7 +132,7 @@ void DGSystem::run() {
     double startTime = glfwGetTime();
     double updateInterval = 1.0 / (double)config->framerate;
     
-    while (!glfwWindowShouldClose(window)) {
+    while (_isRunning && !glfwWindowShouldClose(window)) {
         if (DGFramerateLimiter) {
             /* Following this game loop model:
             
@@ -197,6 +197,7 @@ void DGSystem::toggleFullScreen() {
 }
 
 double DGSystem::wallTime() {
+    // FIXME: This keeps being called after the application is shutting down
     return glfwGetTime();
 }
 
