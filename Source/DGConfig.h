@@ -33,14 +33,14 @@ enum DGControlModes {
 enum DGConfigDefaults {
 	DGDefAntialiasing = false,
 	DGDefAudioBuffer = 8192,
-    DGDefAudioDevice = 0,    
+    DGDefAudioDevice = 0,
     DGDefAutopaths = true,    
     DGDefAutorun = true,
     DGDefBundleEnabled = true,
     DGDefControlMode = DGMouseFree,
-	DGDefDisplayWidth = 1280,
-	DGDefDisplayHeight = 800,
-	DGDefDisplayDepth = 24,
+	DGDefDisplayWidth = 0,
+	DGDefDisplayHeight = 0,
+	DGDefDisplayDepth = 32,
 	DGDefDebugMode = true,
     DGDefEffects = true,
 	DGDefForcedFullScreen = false,
@@ -78,6 +78,8 @@ class DGConfig {
     
     double _fps;
     double _globalSpeed;
+    double _globalSpeedPrecision;
+    double _targetGlobalSpeed;
     
     // Private constructor/destructor
     DGConfig();

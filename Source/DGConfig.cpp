@@ -55,8 +55,10 @@ DGConfig::DGConfig() {
     subtitles = DGDefSubtitles;
 	verticalSync = DGDefVerticalSync;
 	
-    _globalSpeed = 1.0;
     _fps = 0;
+    _globalSpeed = 1.0;
+    _globalSpeedPrecision = DGFrameratePrecision / 10.0;
+    _targetGlobalSpeed = 1.0;
 }
 
 ////////////////////////////////////////////////////////////
@@ -72,6 +74,11 @@ DGConfig::~DGConfig() {
 ////////////////////////////////////////////////////////////
 
 double DGConfig::globalSpeed() {
+    if (_globalSpeed < _targetGlobalSpeed)
+        _globalSpeed += _globalSpeedPrecision;
+    else if (_globalSpeed > _targetGlobalSpeed)
+        _globalSpeed -= _globalSpeedPrecision;
+    
     return _globalSpeed;
 }
 
@@ -80,7 +87,7 @@ double DGConfig::framesPerSecond() {
 }
 
 void DGConfig::setFramesPerSecond(double fps) {
-    _globalSpeed = (double)DGDefFramerate / _fps;
+    _targetGlobalSpeed = (double)DGDefFramerate / _fps;
     
     _fps = fps;
 }
