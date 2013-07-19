@@ -54,6 +54,7 @@ DGAudioManager::~DGAudioManager() {
         
         it = _arrayOfAudios.begin();
         while (it != _arrayOfAudios.end()) {
+            // FIXME: Should delete here and let the audio object unload itself
 			(*it)->unload();
             it++;
         }

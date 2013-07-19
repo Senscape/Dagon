@@ -63,7 +63,7 @@ bool DGAudio::isLoopable() {
 }
 
 bool DGAudio::isPlaying() {
-    std::lock_guard<std::mutex> guard(_mutex);
+    lock_guard<mutex> guard(_mutex);
     
     return (_state == DGAudioPlaying);
 }
@@ -125,7 +125,7 @@ void DGAudio::setResource(const char* fromFileName) {
 ////////////////////////////////////////////////////////////
 
 void DGAudio::load() {
-    std::lock_guard<std::mutex> guard(_mutex);
+    lock_guard<mutex> guard(_mutex);
     
     if (!_isLoaded) { 
         FILE* fh;
@@ -202,7 +202,7 @@ void DGAudio::match(DGAudio* matchedAudio) {
 }
 
 void DGAudio::play() {
-    std::lock_guard<std::mutex> guard(_mutex);
+    lock_guard<mutex> guard(_mutex);
     
     if (_isLoaded && (_state != DGAudioPlaying)) {
         if (_isMatched)
@@ -216,7 +216,7 @@ void DGAudio::play() {
 }
 
 void DGAudio::pause() {
-    std::lock_guard<std::mutex> guard(_mutex);
+    lock_guard<mutex> guard(_mutex);
     
     if (_state == DGAudioPlaying) {
         alSourceStop(_alSource);
@@ -228,7 +228,7 @@ void DGAudio::pause() {
 }
 
 void DGAudio::stop() {
-    std::lock_guard<std::mutex> guard(_mutex);
+    lock_guard<mutex> guard(_mutex);
     
     if ((_state == DGAudioPlaying) || (_state == DGAudioPaused)) {
         alSourceStop(_alSource);
@@ -241,7 +241,7 @@ void DGAudio::stop() {
 }
 
 void DGAudio::unload() {
-    std::lock_guard<std::mutex> guard(_mutex);
+    lock_guard<mutex> guard(_mutex);
     
     if (_isLoaded) {
         if (_state == DGAudioPlaying) {
@@ -264,7 +264,7 @@ void DGAudio::unload() {
 }
 
 void DGAudio::update() {
-    std::lock_guard<std::mutex> guard(_mutex);
+    lock_guard<mutex> guard(_mutex);
     
     if (_state == DGAudioPlaying) {
         int processed;
