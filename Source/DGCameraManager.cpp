@@ -190,17 +190,16 @@ void DGCameraManager::setNeutralZone(int zone) {
             
         case DGMouseFixed:
         case DGMouseFree:
-            // We calculate the factor to stretch the neutral zone with
-            // the display height
-            float factor = (float)_viewport.height / (float)DGDefDisplayHeight;
-            
             _freeNeutralZone = zone;
             
+            int percentageX = ((config->displayWidth * zone) / 100) / 2;
+            int percentageY = ((config->displayHeight * zone) / 100) / 2;
+            
             // Update panning regions with the new neutral zone
-            _panRegion.origin.x = (_viewport.width / 2) - _freeNeutralZone * factor;
-            _panRegion.origin.y = (_viewport.height / 2) - _freeNeutralZone * factor;
-            _panRegion.size.width = (_viewport.width / 2) + _freeNeutralZone * factor;
-            _panRegion.size.height = (_viewport.height / 2) + _freeNeutralZone * factor;
+            _panRegion.origin.x = (_viewport.width / 2) - percentageX;
+            _panRegion.origin.y = (_viewport.height / 2) - percentageY;
+            _panRegion.size.width = (_viewport.width / 2) + percentageX;
+            _panRegion.size.height = (_viewport.height / 2) + percentageY;
             
             break;
     }
@@ -261,7 +260,7 @@ void DGCameraManager::setVerticalLimit(float limit) {
 
 void DGCameraManager::setViewport(int width, int height) {
     // NOTE: if screen size is changed while in Drag mode, the neutral zone for Free mode isn't updated
-    
+
     _viewport.width = width;
     _viewport.height = height;
     
@@ -278,7 +277,7 @@ void DGCameraManager::setViewport(int width, int height) {
             break;
     }
     
-    if (_isInitialized) {    
+    if (_isInitialized) {
         glViewport(0, 0, (GLint)_viewport.width, (GLint)_viewport.height);
         
         glMatrixMode(GL_PROJECTION);
@@ -521,14 +520,6 @@ void DGCameraManager::lock() {
         _angleH = 0.0f;
         _angleV = 0.0f;
         
-        // Not necessary after all
-        /*if (_canBreathe)
-            _fovCurrent = 55.0f;
-        else
-            _fovCurrent = 55.0f;
-        
-        this->setViewport(config->displayWidth, config->displayHeight);*/
-        
         _isLocked = true;
     }
 }
@@ -540,11 +531,6 @@ bool DGCameraManager::isLocked() {
 void DGCameraManager::unlock() {
     _angleH = _angleHPrevious;
     _angleV = _angleVPrevious;
-    
-    // Not necessary after all
-    /*_fovCurrent = _fovPrevious;
-    
-    this->setViewport(config->displayWidth, config->displayHeight);*/
     
     _isLocked = false;
 }
@@ -723,7 +709,7 @@ void DGCameraManager::_calculateBob() {
         case DGCamWalking:
             // Perform walk FX operations
             if (_fovCurrent > _fovNormal)
-                _fovCurrent -= ((float)10 / DGCamWalkZoomIn) * config->globalSpeed();
+                _fovCurrent -= (10.0 / DGCamWalkZoomIn) * config->globalSpeed();
             else {
                 _fovCurrent = _fovNormal;
                 if (_canBreathe)
