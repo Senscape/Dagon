@@ -80,15 +80,17 @@ class DGVideo : public DGObject {
     DGTheoraInfo* _theoraInfo;
     
     bool _doesAutoplay;
-    float _frameDuration;
+    double _frameDuration;
     FILE* _handle;
     bool _hasNewFrame;
     bool _hasResource;
     bool _isLoaded;
     bool _isLoopable;
     bool _isSynced;
-    time_t _lastTime;
+    double _lastTime;
     int _state;
+    
+    std::mutex _mutex;
     
     // Eventually all file management will be handled by a DGResourceManager object
     char _resource[DGMaxFileLength];

@@ -38,17 +38,23 @@ DGVideoManager::DGVideoManager() {
 ////////////////////////////////////////////////////////////
 
 DGVideoManager::~DGVideoManager() {
+    _isRunning = false;
+    
+    _videoThread.join();
+    
     // WARNING: This code assumes videos are never created
     // directly in the script
     if (!_arrayOfVideos.empty()) {
         vector<DGVideo*>::iterator it;
      
+        _mutexForArray.lock();
         it = _arrayOfVideos.begin();
      
         while (it != _arrayOfVideos.end()) {
             delete *it;
             it++;
-        } 
+        }
+        _mutexForArray.unlock();
      }
 }
 
@@ -64,6 +70,7 @@ void DGVideoManager::flush() {
             vector<DGVideo*>::iterator it;
             
 			while (!done) {
+                _mutexForArray.lock();
 				it = _arrayOfActiveVideos.begin();
 				done = true;
 				while (it != _arrayOfActiveVideos.end()) {
@@ -75,6 +82,7 @@ void DGVideoManager::flush() {
 					}
 					else it++;
 				}
+                _mutexForArray.unlock();
 			}
         }
     }
@@ -88,6 +96,13 @@ void DGVideoManager::init() {
     
     _isInitialized = true;
 	_isRunning = true;
+    
+    _videoThread = thread([](){
+        chrono::milliseconds dura(1);
+        while (DGVideoManager::getInstance().update()) {
+            this_thread::sleep_for(dura);
+        }
+    });
 }
 
 void DGVideoManager::registerVideo(DGVideo* target) {
@@ -115,8 +130,11 @@ void DGVideoManager::requestVideo(DGVideo* target) {
         it++;
     }
     
-    if (!isActive)
+    if (!isActive) {
+        _mutexForArray.lock();
         _arrayOfActiveVideos.push_back(target);
+        _mutexForArray.unlock();
+    }
 }
 
 void DGVideoManager::terminate() {
@@ -128,12 +146,16 @@ bool DGVideoManager::update() {
     if (_isRunning) {
         if (!_arrayOfActiveVideos.empty()) {
             vector<DGVideo*>::iterator it;
+            
+            _mutexForArray.lock();
             it = _arrayOfActiveVideos.begin();
             
             while (it != _arrayOfActiveVideos.end()) {
                 (*it)->update();
                 it++;
             }
+            
+            _mutexForArray.unlock();
         }
 
 		return true;

@@ -19,6 +19,8 @@
 #include "DGSystem.h"
 #include "DGVideo.h"
 
+using namespace std;
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -164,6 +166,8 @@ void DGVideo::setSynced(bool synced) {
 ////////////////////////////////////////////////////////////
 
 void DGVideo::load() {
+    lock_guard<mutex> guard(_mutex);
+    
     int stateFlag = 0;
     
     if (!_hasResource) {
@@ -261,15 +265,18 @@ void DGVideo::load() {
         _queuePage(_theoraInfo, &_theoraInfo->og);
     }
     
-    _frameDuration = (float)(1/((double)_theoraInfo->ti.fps_numerator / _theoraInfo->ti.fps_denominator));
+    _frameDuration = (1.0/((double)_theoraInfo->ti.fps_numerator / _theoraInfo->ti.fps_denominator));
     _isLoaded = true;
 }
 
 void DGVideo::play() {
+    lock_guard<mutex> guard(_mutex);
+    
     if (_state == DGVideoInitial) {
         _lastTime = _frameDuration; // Forces a first update
         _state = DGVideoPlaying;
-        this->update();
+        // FIXME: Commenting this for now (should eliminate a black frame)
+        //this->update();
     }
     else { // If paused or stopped
         _state = DGVideoPlaying;
@@ -277,11 +284,15 @@ void DGVideo::play() {
 }
 
 void DGVideo::pause() {
+    lock_guard<mutex> guard(_mutex);
+    
     if (_state == DGVideoPlaying)
         _state = DGVideoPaused;
 }
 
 void DGVideo::stop() {
+    lock_guard<mutex> guard(_mutex);
+    
     if (_state == DGVideoPlaying) {
         _state = DGVideoStopped;
         
@@ -292,6 +303,8 @@ void DGVideo::stop() {
 }
 
 void DGVideo::unload() {
+    lock_guard<mutex> guard(_mutex);
+    
     if (_isLoaded) {
         _isLoaded = false;
         _state = DGVideoInitial;
@@ -320,9 +333,11 @@ void DGVideo::unload() {
 }
 
 void DGVideo::update() {
+    lock_guard<mutex> guard(_mutex);
+    
     if (_state == DGVideoPlaying) {
-        time_t currentTime = DGSystem::getInstance().wallTime();
-        double duration = (double)(currentTime - _lastTime) / CLOCKS_PER_SEC;
+        double currentTime = DGSystem::getInstance().wallTime();
+        double duration = (currentTime - _lastTime);
         
         if (duration >= _frameDuration) {
             yuv_buffer yuv;
@@ -478,7 +493,11 @@ int DGVideo::_prepareFrame() {
 				ogg_stream_reset(&_theoraInfo->to);
 			}
 			else {
-				this->stop();
+                _state = DGVideoStopped;
+                
+                // Rewind
+                fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
+                ogg_stream_reset(&_theoraInfo->to);
 			}
             
 			break;

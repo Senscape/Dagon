@@ -39,6 +39,9 @@ class DGVideoManager {
     DGConfig* config;
     DGLog* log;
     
+    std::thread _videoThread;
+    
+    std::mutex _mutexForArray;    
     std::vector<DGVideo*> _arrayOfVideos;
     std::vector<DGVideo*> _arrayOfActiveVideos;
     
