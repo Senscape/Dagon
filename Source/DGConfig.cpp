@@ -41,6 +41,7 @@ DGConfig::DGConfig() {
 	debugMode = DGDefDebugMode;
 	forcedFullScreen = DGDefForcedFullScreen;
     framebuffer = DGDefFramebuffer;
+    frameLimiter = DGDefFrameLimiter;
     framerate = DGDefFramerate;
 	fullScreen = DGDefFullScreen;
 	effects = DGDefEffects;

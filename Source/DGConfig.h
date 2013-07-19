@@ -45,6 +45,7 @@ enum DGConfigDefaults {
     DGDefEffects = true,
 	DGDefForcedFullScreen = false,
 	DGDefFramebuffer = true,
+    DGDefFrameLimiter = false,
 	DGDefFramerate = 60,
 	DGDefFullScreen = false,
 	DGDefLog = true,
@@ -108,6 +109,7 @@ public:
     bool effects;
 	bool forcedFullScreen;
     bool framebuffer;
+    bool frameLimiter;
 	int framerate;
 	bool fullScreen;
     bool log;
