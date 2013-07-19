@@ -71,6 +71,8 @@ bool DGTimerManager::checkManual(int handle) {
 }
 
 int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, int luaObject) {
+   // lock_guard<mutex> guard(_mutexForArray);
+    
     DGTimer timer;
     
     timer.handle = _handles;
@@ -83,8 +85,10 @@ int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, i
     timer.trigger = trigger;
     timer.luaHandler = handlerForLua;
     timer.luaObject = luaObject;
-    
+
+    _mutexForArray.lock();
     _arrayOfTimers.push_back(timer);
+    _mutexForArray.unlock();
     
     _handles++;
 
@@ -92,6 +96,8 @@ int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, i
 }
 
 int DGTimerManager::createInternal(double trigger, void (*callback)()) {
+    //lock_guard<mutex> guard(_mutexForArray);
+    
     DGTimer timer;
     
     timer.handle = _handles;
@@ -104,7 +110,9 @@ int DGTimerManager::createInternal(double trigger, void (*callback)()) {
     
     timer.trigger = trigger;
     
+    _mutexForArray.lock();
     _arrayOfTimers.push_back(timer);
+    _mutexForArray.unlock();
     
     _handles++;
     
@@ -122,8 +130,10 @@ int DGTimerManager::createManual(double trigger) {
     timer.type = DGTimerManual;
     
     timer.trigger = trigger;
-    
+
+    _mutexForArray.lock();
     _arrayOfTimers.push_back(timer);
+    _mutexForArray.unlock();
     
     _handles++;
     
@@ -150,6 +160,7 @@ void DGTimerManager::process() {
     
     std::vector<DGTimer>::iterator it;
     
+    _mutexForArray.lock();    
     it = _arrayOfTimers.begin();
     
     while (it != _arrayOfTimers.end()) {
@@ -179,6 +190,8 @@ void DGTimerManager::process() {
                             (*it).isEnabled = false;
                         }
                         
+                        // Must unlock here for precaution
+                        _mutexForArray.unlock();
                         DGScript::getInstance().processCallback((*it).luaHandler, 0);
                         keepProcessing = false;
                         break;
@@ -191,6 +204,8 @@ void DGTimerManager::process() {
         
         it++;
     }
+    
+    _mutexForArray.unlock();
 }
 
 void DGTimerManager::setLuaObject(int luaObject) {
@@ -207,6 +222,7 @@ bool DGTimerManager::update() {
 	if (_isRunning) {
 		std::vector<DGTimer>::iterator it;
     
+        _mutexForArray.lock();
 		it = _arrayOfTimers.begin();
     
 		while (it != _arrayOfTimers.end()) {
@@ -223,6 +239,8 @@ bool DGTimerManager::update() {
         
 			it++;
 		}
+        _mutexForArray.unlock();
+        
 		return true;
 	}
 
@@ -236,14 +254,18 @@ bool DGTimerManager::update() {
 DGTimer* DGTimerManager::_lookUp(int handle) {
     std::vector<DGTimer>::iterator it;
     
+    _mutexForArray.lock();
     it = _arrayOfTimers.begin();
     
     while (it != _arrayOfTimers.end()) {
-        if ((*it).handle == handle)
+        if ((*it).handle == handle) {            
+            _mutexForArray.unlock();
             return &(*it);
+        }
         
         it++;
     }
     
+    _mutexForArray.unlock();
     return NULL;
 }

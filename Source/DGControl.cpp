@@ -938,8 +938,8 @@ void DGControl::_updateView(int state, bool inBackground) {
             
             break;
         case DGStateSplash:
-            static int handlerIn = timerManager->createManual(3);
-            static int handlerOut = timerManager->createManual(4);
+            static int handlerIn = timerManager->createManual(4);
+            static int handlerOut = timerManager->createManual(5);
             
             _scene->drawSplash();
             
@@ -989,6 +989,8 @@ void DGControl::_updateView(int state, bool inBackground) {
     
     timerManager->process();
     
+    // FIXME: Reverting this brought a problem with the video sync test
+    // (GUI elements flash when sync is over)
     if (!inBackground) {
         // Flush the buffers
         //system->update();

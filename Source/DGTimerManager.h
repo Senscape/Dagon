@@ -54,6 +54,7 @@ class DGTimerManager {
 
 	bool _isRunning;
     
+    std::mutex _mutexForArray;
     std::thread _timerThread;
     DGTimer* _lookUp(int handle);
     
