@@ -84,14 +84,29 @@ void DGSystem::init() {
         glfwWindowHint(GLFW_BLUE_BITS, 8);
         glfwWindowHint(GLFW_ALPHA_BITS, 8);
         
+        monitor = glfwGetPrimaryMonitor();
+        const GLFWvidmode* videoMode = glfwGetVideoMode(monitor);
+        
+        if (!config->displayWidth || !config->displayHeight) {
+            config->displayWidth = videoMode->width;
+            config->displayHeight = videoMode->height;
+            
+            if (config->fullScreen) {
+                config->displayWidth = videoMode->width;
+                config->displayHeight = videoMode->height;
+            }
+            else {
+                // Use a third the screen
+                config->displayWidth = videoMode->width / 1.5;
+                config->displayHeight = videoMode->height / 1.5;
+            }
+        }
+        
         if (config->fullScreen)
-            monitor = glfwGetPrimaryMonitor();
+            window = glfwCreateWindow(config->displayWidth, config->displayHeight, "Dagon", monitor, NULL);
         else
-            monitor = NULL;
+            window = glfwCreateWindow(config->displayWidth, config->displayHeight, "Dagon", NULL, NULL);
         
-        // TODO: If width or height are zero, then attempt to get best resolution
-        
-        window = glfwCreateWindow(config->displayWidth, config->displayHeight, "Dagon", monitor, NULL);
         if (!window) {
             glfwTerminate();
             exit(EXIT_FAILURE);
@@ -141,19 +156,6 @@ void DGSystem::run() {
     
     while (_isRunning && !glfwWindowShouldClose(window)) {
         if (config->frameLimiter) {
-            /* Following this game loop model:
-            
-            time = GetTime();
-            loop
-            while time < GetTime()
-            UpdateGameState()
-            time += update_interval
-            end
-             
-            DrawStuff()
-            SwapBuffers()
-            end
-            */
             while (startTime < glfwGetTime()) {
                 config->setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
                 control->update();
@@ -172,6 +174,8 @@ void DGSystem::run() {
             glfwPollEvents();
         }
     }
+    
+    _isRunning = false;
     
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -195,8 +199,6 @@ void DGSystem::terminate() {
     }
     
     glfwSetWindowShouldClose(window, GL_TRUE);
-    
-    _isRunning = false;
 }
 
 void DGSystem::toggleFullScreen() {

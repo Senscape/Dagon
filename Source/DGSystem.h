@@ -24,8 +24,6 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGFrameratePrecision 0.5
-
 class DGConfig;
 class DGControl;
 class DGLog;

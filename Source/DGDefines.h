@@ -42,6 +42,8 @@
 
 // Others
 
+#define DGFrameratePrecision 0.25
+
 #define DGFileSeqStart      1
 #define	DGFileSeqDigits     3
 
