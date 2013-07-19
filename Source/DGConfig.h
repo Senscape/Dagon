@@ -43,7 +43,6 @@ enum DGConfigDefaults {
 	DGDefDisplayDepth = 32,
 	DGDefDebugMode = true,
     DGDefEffects = true,
-	DGDefForcedFullScreen = false,
 	DGDefFramebuffer = true,
     DGDefFrameLimiter = false,
 	DGDefFramerate = 60,
@@ -109,7 +108,6 @@ public:
 	int displayDepth;
     bool debugMode;
     bool effects;
-	bool forcedFullScreen;
     bool framebuffer;
     bool frameLimiter;
 	int framerate;

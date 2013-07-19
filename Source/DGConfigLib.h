@@ -94,11 +94,6 @@ static int DGConfigLibGet(lua_State *L) {
 		lua_pushboolean(L, DGConfig::getInstance().effects);
 		return 1;
 	}
-
-	if (strcmp(key, "forcedFullscreen") == 0) {
-		lua_pushboolean(L, DGConfig::getInstance().forcedFullScreen);
-		return 1;
-	}
     
     if (strcmp(key, "framebuffer") == 0) {
 		lua_pushboolean(L, DGConfig::getInstance().framebuffer);
@@ -214,9 +209,6 @@ static int DGConfigLibSet(lua_State *L) {
 	
 	if (strcmp(key, "effects") == 0)
 		DGConfig::getInstance().effects = (bool)lua_toboolean(L, 3);
-
-	if (strcmp(key, "forcedFullscreen") == 0)
-		DGConfig::getInstance().forcedFullScreen = (bool)lua_toboolean(L, 3);
     
 	if (strcmp(key, "framebuffer") == 0)
 		DGConfig::getInstance().framebuffer = (bool)lua_toboolean(L, 3);

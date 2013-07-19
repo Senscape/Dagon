@@ -39,7 +39,6 @@ DGConfig::DGConfig() {
 	displayHeight = DGDefDisplayHeight;
 	displayDepth = DGDefDisplayDepth;
 	debugMode = DGDefDebugMode;
-	forcedFullScreen = DGDefForcedFullScreen;
     framebuffer = DGDefFramebuffer;
     frameLimiter = DGDefFrameLimiter;
     framerate = DGDefFramerate;
