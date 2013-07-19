@@ -30,6 +30,14 @@ DGTimerManager::DGTimerManager() {
     _luaObject = 0;
 
 	_isRunning = true;
+    
+    // TODO: Move this to init()
+    _timerThread = thread([](){
+        chrono::milliseconds dura(1);
+        while (DGTimerManager::getInstance().update()) {
+            this_thread::sleep_for(dura);
+        }
+    });
 }
 
 ////////////////////////////////////////////////////////////
@@ -37,7 +45,9 @@ DGTimerManager::DGTimerManager() {
 ////////////////////////////////////////////////////////////
 
 DGTimerManager::~DGTimerManager() {
-    // Nothing to do here
+    _isRunning = false;
+    
+    _timerThread.join();
 }
 
 ////////////////////////////////////////////////////////////
@@ -48,8 +58,8 @@ bool DGTimerManager::checkManual(int handle) {
     DGTimer* timer = _lookUp(handle);
     
     if (timer->isEnabled) {
-        time_t currentTime = DGSystem::getInstance().wallTime();
-        double duration = (double)(currentTime - timer->lastTime) / CLOCKS_PER_SEC;
+        double currentTime = DGSystem::getInstance().wallTime();
+        double duration = currentTime - timer->lastTime;
         
         if (duration > timer->trigger) {
             timer->lastTime = currentTime;
@@ -200,8 +210,8 @@ bool DGTimerManager::update() {
 		it = _arrayOfTimers.begin();
     
 		while (it != _arrayOfTimers.end()) {
-			time_t currentTime = DGSystem::getInstance().wallTime();
-			double duration = (double)(currentTime - (*it).lastTime) / CLOCKS_PER_SEC;
+			double currentTime = DGSystem::getInstance().wallTime();
+			double duration = currentTime - (*it).lastTime;
         
 			DGTimer* timer = &(*it);
         

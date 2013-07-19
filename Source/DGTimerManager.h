@@ -35,7 +35,7 @@ typedef struct {
     bool isEnabled;
     bool isLoopable;
     bool hasTriggered;
-    time_t lastTime;    
+    double lastTime;
     int luaHandler;
     void (*handler)();
     int luaObject;
@@ -54,6 +54,7 @@ class DGTimerManager {
 
 	bool _isRunning;
     
+    std::thread _timerThread;
     DGTimer* _lookUp(int handle);
     
     // Private constructor/destructor
