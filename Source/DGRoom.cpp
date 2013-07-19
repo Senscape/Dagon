@@ -75,6 +75,10 @@ int DGRoom::effectsFlags() {
     return _effectsFlags;
 }
 
+DGNode* DGRoom::iterator() {
+    return *_it;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
@@ -104,6 +108,19 @@ DGNode* DGRoom::addNode(DGNode* aNode) {
     _arrayOfNodes.push_back(aNode);
     
     return aNode;   
+}
+
+void DGRoom::beginIteratingNodes() {
+    _it = _arrayOfNodes.begin();
+}
+
+bool DGRoom::iterateNodes() {
+    _it++;
+    
+    if (_it == _arrayOfNodes.end())
+        return false;
+    else
+        return true;
 }
 
 bool DGRoom::switchTo(DGNode* theNode) {

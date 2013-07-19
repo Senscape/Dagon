@@ -33,6 +33,7 @@ class DGNode;
 
 class DGRoom : public DGObject {
     std::vector<DGNode*> _arrayOfNodes;
+    std::vector<DGNode*>::iterator _it;    
     DGNode* _currentNode;
     
     // NOTE: When switching rooms, confirm if a given audio is already playing, so that no unnecessary fade ins/outs
@@ -69,6 +70,9 @@ public:
     
     DGAudio* addAudio(DGAudio* anAudio);
     DGNode* addNode(DGNode* aNode);
+    void beginIteratingNodes();
+    bool iterateNodes();
+    DGNode* iterator();
     bool switchTo(DGNode* theNode);
 };
 

@@ -30,11 +30,12 @@
 // This is temporary until we actually test how much memory is available.
 // NOT accurate! It's only a reference value since textures are flushed
 // before the next switch.
-#define DGMaxActiveTextures 6
+#define DGMaxActiveTextures 18
 
 class DGConfig;
 class DGLog;
 class DGNode;
+class DGRoom;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -44,20 +45,34 @@ class DGTextureManager {
     DGConfig* config;
     DGLog* log;
     
+    std::thread _preloaderThread;
+    
     std::vector<DGTexture*> _arrayOfActiveTextures;
     std::vector<DGTexture*> _arrayOfTextures;
+
+    DGRoom* _roomToPreload;
+    
+    DGTextureManager();
+    DGTextureManager(DGTextureManager const&);
+    DGTextureManager& operator=(DGTextureManager const&);
+    ~DGTextureManager();
     
 public:
-    DGTextureManager();
-    ~DGTextureManager();
+    static DGTextureManager& instance() {
+        static DGTextureManager textureManager;
+        return textureManager;
+    }
     
     void appendTextureToBundle(const char* nameOfBundle, DGTexture* textureToAppend);
     void createBundle(const char* nameOfBundle);
     int itemsInBundle(const char* nameOfBundle);
     void flush();
+    void init();
     void registerTexture(DGTexture* target);
     void requestBundle(DGNode* forNode);
     void requestTexture(DGTexture* target);
+    void setRoomToPreload(DGRoom* theRoom);
+    bool updatePreloader();
 };
 
 #endif // DG_TEXTUREMANAGER_H

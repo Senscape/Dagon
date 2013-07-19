@@ -21,6 +21,8 @@
 #include "DGTexture.h"
 #include "stb_image.h"
 
+using namespace std;
+
 ////////////////////////////////////////////////////////////
 // Defines
 ////////////////////////////////////////////////////////////
@@ -40,6 +42,7 @@ DGTexture::DGTexture() {
 
     _compressionLevel = config->texCompression;
     _hasResource = false;
+    _isBitmapLoaded = false;
 	_isLoaded = false;
     
     _usageCount = 0;
@@ -158,11 +161,15 @@ void DGTexture::setResource(const char* fromFileName) {
 ////////////////////////////////////////////////////////////
 
 void DGTexture::bind() {
+    lock_guard<mutex> guard(_mutex);
+    
     if (_isLoaded)
         glBindTexture(GL_TEXTURE_2D, _ident);
 }
 
 void DGTexture::clear() {
+    lock_guard<mutex> guard(_mutex);
+    
     _bitmap = (GLubyte*)calloc(_width * _height * _depth, sizeof(GLubyte));
     
     glBindTexture(GL_TEXTURE_2D, _ident);
@@ -173,6 +180,8 @@ void DGTexture::clear() {
 }
 
 void DGTexture::load() {
+    lock_guard<mutex> guard(_mutex);
+    
     FILE* fh;
     char magic[10]; // Used to identity file types
     GLint format = 0, internalFormat = 0;
@@ -258,15 +267,19 @@ void DGTexture::load() {
         else {
             int x, y, comp;
             
-            fseek(fh, 0, SEEK_SET);
-            _bitmap = (GLubyte*)stbi_load_from_file(fh, &x, &y, &comp, STBI_default);
+            if (!_isBitmapLoaded) {
+                fseek(fh, 0, SEEK_SET);
+                _bitmap = (GLubyte*)stbi_load_from_file(fh, &x, &y, &comp, STBI_default);
+
+                if (_bitmap) {
+                    _width = x;
+                    _height = y;
+                    _depth = comp;
+                }
+            }
             
             if (_bitmap) {
-                _width = x;
-                _height = y;
-                _depth = comp;
-                
-                switch (comp) {
+                switch (_depth) {
                     case STBI_grey:
                         format = GL_LUMINANCE;				
                         if (_compressionLevel)							
@@ -296,7 +309,7 @@ void DGTexture::load() {
                             internalFormat = GL_RGBA;
                         break;
                     default:
-                        log->warning(DGModTexture, "%s: (%s) %d", DGMsg210003, _resource, comp);
+                        log->warning(DGModTexture, "%s: (%s) %d", DGMsg210003, _resource, _depth);
                         break;
                 }
                 
@@ -326,6 +339,23 @@ void DGTexture::load() {
         // File not found
         log->error(DGModTexture, "%s: %s", DGMsg210000, _resource);
     }    
+}
+
+void DGTexture::loadBitmap() {
+    int x, y, comp;
+    FILE* fh = fopen(_resource, "rb");
+    
+    if (fh != NULL) {
+        _bitmap = (GLubyte*)stbi_load_from_file(fh, &x, &y, &comp, STBI_default);
+        
+        if (_bitmap) {
+            _width = x;
+            _height = y;
+            _depth = comp;
+        
+            _isBitmapLoaded = true;
+        }
+    }
 }
 
 void DGTexture::loadFromMemory(const unsigned char* dataToLoad, long size) {
@@ -539,6 +569,7 @@ void DGTexture::unload() {
     if (_isLoaded) {
         glDeleteTextures(1, &_ident);
         _usageCount = 0;
+        _isBitmapLoaded = false;
         _isLoaded = false;
     }
 }

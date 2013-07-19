@@ -61,7 +61,10 @@ class DGTexture : public DGObject {
 	GLint _depth;
     bool _hasResource;
     int _indexInBundle;
+	bool _isBitmapLoaded;
 	bool _isLoaded;
+    
+    std::mutex _mutex;    
     
     // This is used to keep track of the most used textures
     unsigned int _usageCount;
@@ -99,6 +102,7 @@ public:
     void bind();
     void clear();
     void load();
+    void loadBitmap(); // Temporary to test preloader
     
     // Textures loaded from memory are not managed
     void loadFromMemory(const unsigned char* dataToLoad, long size);

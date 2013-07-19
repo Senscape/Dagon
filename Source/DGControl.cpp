@@ -50,7 +50,8 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGControl::DGControl() :
-    audioManager(DGAudioManager::instance())
+    audioManager(DGAudioManager::instance()),
+    textureManager(DGTextureManager::instance())
 {
     cameraManager = &DGCameraManager::getInstance();    
     config = &DGConfig::getInstance();  
@@ -103,7 +104,6 @@ DGControl::~DGControl() {
         delete _interface;
         delete _state;
         delete _scene;
-        delete _textureManager;
     }
 }
 
@@ -126,6 +126,9 @@ void DGControl::init() {
     // Init the font library
     fontManager->init();
     
+    // Init the texture manager
+    //textureManager.init(); // Preloader thread not working yet
+    
     // Init the video manager
     videoManager->init();
     
@@ -135,7 +138,6 @@ void DGControl::init() {
     _scene = new DGScene;
     
     _state = new DGState;
-    _textureManager = new DGTextureManager;
     
     _dragTimer = timerManager->createManual(DGTimeToStartDragging);
     timerManager->disable(_dragTimer);
@@ -541,7 +543,7 @@ void DGControl::registerHotkey(int aKey, const char* luaCommandToExecute) {
 void DGControl::registerObject(DGObject* theTarget) {
     switch (theTarget->type()) {
         case DGObjectNode:
-             _textureManager->requestBundle((DGNode*)theTarget);
+             textureManager.requestBundle((DGNode*)theTarget);
             break;
         case DGObjectOverlay:
             _interface->addOverlay((DGOverlay*)theTarget);
@@ -602,6 +604,8 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                     log->warning(DGModControl, "%s: %s", DGMsg130000, _currentRoom->name());
                     return;
                 }
+                
+                textureManager.setRoomToPreload(_currentRoom);
                 
                 performWalk = true;
                 
@@ -677,7 +681,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
         if (_currentRoom->hasNodes()) {
             // Now we proceed to load the textures of the current node
             DGNode* currentNode = _currentRoom->currentNode();
-            _textureManager->flush();
+            textureManager.flush();
                 
             if (currentNode->hasSpots()) {                
                 currentNode->beginIteratingSpots();
@@ -715,7 +719,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                     }
                     
                     if (spot->hasTexture()) {
-                        _textureManager->requestTexture(spot->texture());
+                        textureManager.requestTexture(spot->texture());
                         
                         // Only resize if nothing but origin
                         if (spot->vertexCount() == 1)

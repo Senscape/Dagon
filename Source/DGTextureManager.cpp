@@ -18,6 +18,7 @@
 #include "DGConfig.h"
 #include "DGLog.h"
 #include "DGNode.h"
+#include "DGRoom.h"
 #include "DGSpot.h"
 #include "DGTextureManager.h"
 
@@ -36,6 +37,8 @@ bool DGTextureSort(DGTexture* t1, DGTexture* t2);
 DGTextureManager::DGTextureManager() {
     log = &DGLog::getInstance();
     config = &DGConfig::getInstance();
+    
+    _roomToPreload = NULL;
 }
 
 ////////////////////////////////////////////////////////////
@@ -84,6 +87,15 @@ void DGTextureManager::flush() {
         
         texturesToUnload--;
     }
+}
+
+void DGTextureManager::init() {
+    _preloaderThread = thread([](){
+        chrono::milliseconds dura(1);
+        while (DGTextureManager::instance().updatePreloader()) {
+            this_thread::sleep_for(dura);
+        }
+    });
 }
 
 void DGTextureManager::registerTexture(DGTexture* target) {
@@ -153,6 +165,37 @@ void DGTextureManager::requestTexture(DGTexture* target) {
     target->increaseUsageCount();
     
     sort(_arrayOfActiveTextures.begin(), _arrayOfActiveTextures.end(), DGTextureSort);
+}
+
+void DGTextureManager::setRoomToPreload(DGRoom* theRoom) {
+    _roomToPreload = theRoom;
+}
+
+bool DGTextureManager::updatePreloader() {
+    if (_roomToPreload) {
+        if (_roomToPreload->hasNodes()) {
+            _roomToPreload->beginIteratingNodes();
+            do {
+                DGNode* node = _roomToPreload->iterator();
+                if (node->hasSpots()) {
+                    node->beginIteratingSpots();
+                    do {
+                        DGSpot* spot = node->currentSpot();
+                        
+                        if (spot->hasTexture()) {
+                            if (!spot->texture()->isLoaded()) {
+                                spot->texture()->loadBitmap();
+                                
+                                //_arrayOfActiveTextures.push_back(spot->texture());
+                            }
+                        }
+                    } while (node->iterateSpots());
+                }
+            } while (_roomToPreload->iterateNodes());
+        }
+    }
+    
+    return true;
 }
 
 ////////////////////////////////////////////////////////////

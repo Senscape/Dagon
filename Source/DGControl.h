@@ -123,6 +123,7 @@ class DGControl {
     DGRenderManager* renderManager;
     DGScript* script;
     DGSystem* system;
+    DGTextureManager& textureManager;    
     DGTimerManager* timerManager;
     DGVideoManager* videoManager;    
     
@@ -134,7 +135,6 @@ class DGControl {
     DGScene* _scene;   
     DGSpot* _syncedSpot;
     DGState* _state;
-    DGTextureManager* _textureManager;
     
     DGEventHandlers _eventHandlers;
     DGHotkeyData _hotkeyData[DGMaxHotKeys];

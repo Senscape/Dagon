@@ -217,6 +217,8 @@ double DGSystem::wallTime() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
+// NOTE: For best precision, this should be suspended when
+// performing a switch (the most expensive operation).
 double DGSystem::_calculateFrames(double theInterval = 1.0) {
 	static double lastTime = glfwGetTime();
 	static int fpsFrameCount = 0;
