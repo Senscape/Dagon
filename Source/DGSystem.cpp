@@ -100,7 +100,14 @@ void DGSystem::init() {
         glfwMakeContextCurrent(window);
         
         // Set vertical sync according to our configuration
-        glfwSwapInterval(config->verticalSync);
+        if (config->verticalSync) {
+            glfwSwapInterval(1);
+        }
+        else {
+            // Force our own frame limiter on
+            config->frameLimiter = true;
+            glfwSwapInterval(0);
+        }
         
         // This doesn't seem to be working on windowed mode
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
@@ -133,7 +140,7 @@ void DGSystem::run() {
     double updateInterval = 1.0 / (double)config->framerate;
     
     while (_isRunning && !glfwWindowShouldClose(window)) {
-        if (DGFramerateLimiter) {
+        if (config->frameLimiter) {
             /* Following this game loop model:
             
             time = GetTime();
@@ -194,11 +201,19 @@ void DGSystem::terminate() {
 
 void DGSystem::toggleFullScreen() {
     log->warning(DGModSystem, "Toggling fullscreen currently disabled");
+     glfwMakeContextCurrent(NULL);
+    glfwCreateWindow(config->displayWidth, config->displayHeight, "Dagon", monitor, NULL);
+    
+   
+    glfwMakeContextCurrent(window);
 }
 
 double DGSystem::wallTime() {
-    // FIXME: This keeps being called after the application is shutting down
-    return glfwGetTime();
+    // FIXME: This is a shoddy way to confirm if the GLFW library is initialized
+    if (_isRunning)
+        return glfwGetTime();
+    else
+        return 0;
 }
 
 ////////////////////////////////////////////////////////////

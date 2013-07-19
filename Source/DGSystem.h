@@ -24,8 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGFramerateLimiter 0
-#define DGFrameratePrecision 0.33
+#define DGFrameratePrecision 0.5
 
 class DGConfig;
 class DGControl;

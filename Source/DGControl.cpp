@@ -240,7 +240,7 @@ void DGControl::processKey(int aKey, int eventFlags) {
                         else {
                             if (!_isShuttingDown) {
                                 _scene->fadeOut();
-                                _shutdownTimer = timerManager->createManual(1);
+                                _shutdownTimer = timerManager->createManual(1.5);
                                 _isShuttingDown = true;
                             }
                         }
