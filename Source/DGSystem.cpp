@@ -201,11 +201,6 @@ void DGSystem::terminate() {
 
 void DGSystem::toggleFullScreen() {
     log->warning(DGModSystem, "Toggling fullscreen currently disabled");
-     glfwMakeContextCurrent(NULL);
-    glfwCreateWindow(config->displayWidth, config->displayHeight, "Dagon", monitor, NULL);
-    
-   
-    glfwMakeContextCurrent(window);
 }
 
 double DGSystem::wallTime() {
