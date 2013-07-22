@@ -75,6 +75,7 @@
 #define DGMsg040001 "System ready!"
 #define DGMsg040002 "GLFW version"
 #define DGMsg140002 "System already initialized"
+#define DGMsg140003 "System not initialized"
 #define DGMsg240003 "Could not set vertical sync"
 #define DGMsg240004 "Could not create controller thread"
 #define DGMsg240005 "Could not enter fullscreen"

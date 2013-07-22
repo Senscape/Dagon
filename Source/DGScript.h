@@ -18,12 +18,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "Lua.hpp"
-
 #include "DGAction.h"
-#include "DGConfig.h"
-#include "DGControl.h"
 #include "DGPlatform.h"
+
+#include "Lua.hpp"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -43,8 +41,8 @@ enum DGAttachTypes {
 lua_pushnumber(L, val); \
 lua_setfield(L, -2, #name);
 
+class DGConfig;
 class DGLog;
-class DGSystem;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
@@ -53,7 +51,6 @@ class DGSystem;
 class DGScript {
     DGConfig& config;
     DGLog& log;
-    DGSystem& system;
     
     std::vector<std::string> _arrayOfModuleNames;
     bool _isInitialized;
@@ -95,8 +92,7 @@ public:
         return script;
     }
     
-    void execute();
-    void init(int argc, char* argv[]);
+    void init();
     const char* module();
     bool isExecutingModule();    
     void processCallback(int handler, int object);    

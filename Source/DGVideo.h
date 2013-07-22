@@ -26,6 +26,8 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
+class DGSystem;
+
 enum DGVideoStates {
     DGVideoInitial,
     DGVideoPlaying,
@@ -75,6 +77,7 @@ class DGLog;
 
 class DGVideo : public DGObject {
     DGLog& log;
+    DGSystem* system;
     
     DGFrame _currentFrame;
     DGTheoraInfo* _theoraInfo;
@@ -130,7 +133,7 @@ public:
     void setAutoplay(bool autoplay);
     void setLoopable(bool loopable);
     void setResource(const char* fromFileName);
-    void setSynced(bool synced);    
+    void setSynced(bool synced);
     
     // State changes
     

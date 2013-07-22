@@ -24,26 +24,25 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGControl.h"
-#include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
 static int DGSystemLibBrowse(lua_State *L) {
-    DGSystem::instance().browse(lua_tostring(L, 1));
+    //DGSystem::instance().browse(lua_tostring(L, 1));
     
     return 0;
 }
 
 static int DGSystemLibInit(lua_State *L) {
-    DGSystem::instance().init();
+    DGControl::instance().init();
     
     return 0;
 }
 
 static int DGSystemLibRun(lua_State *L) {
-    DGSystem::instance().run();
+    DGControl::instance().run();
 	
 	return 0;
 }

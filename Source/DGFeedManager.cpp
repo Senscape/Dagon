@@ -19,7 +19,6 @@
 #include "DGConfig.h"
 #include "DGFeedManager.h"
 #include "DGFontManager.h"
-#include "DGSystem.h" // Not very nice to include system functions here
 #include "DGTimerManager.h"
 
 using namespace std;

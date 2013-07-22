@@ -25,7 +25,6 @@
 
 #include "DGAudioManager.h"
 #include "DGSpot.h"
-#include "DGSystem.h"
 #include "DGTexture.h"
 #include "DGVideoManager.h"
 

@@ -22,7 +22,6 @@
 #include "DGLog.h"
 #include "DGProxy.h"
 #include "DGScript.h"
-#include "DGSystem.h"
 #include "DGTimerManager.h"
 
 #include "Luna.h"
@@ -42,8 +41,7 @@ using namespace std;
 
 DGScript::DGScript() :
     config(DGConfig::instance()),
-    log(DGLog::instance()),
-    system(DGSystem::instance())
+    log(DGLog::instance())
 {
     _isInitialized = false;
     _isSuspended = false;
@@ -67,21 +65,10 @@ DGScript::~DGScript() {
 // create a string with the actual modification, ie: spot:enable()
 // Filter switch and other heavy duty operations.
 
-void DGScript::execute() {
-    if (_isInitialized) {
-        if (int result = lua_resume(_thread, 0))
-            _error(result);
-    }
-}
-
 // TODO: Support loading script from parameters
 // TODO: Consider seeking paths again if debug mode was enabled
-void DGScript::init(int argc, char* argv[]) {
+void DGScript::init() {
     char script[DGMaxFileLength];
-    
-    // First thing we do is get the paths to load the script
-    // (note that it's not necessary to init the system)
-    system.findPaths(argc, argv);
     
     _L = lua_open();
     luaL_openlibs(_L);
@@ -103,13 +90,9 @@ void DGScript::init(int argc, char* argv[]) {
 			
 			lua_pop(_L, 1);
 		}
-
-		log.trace(DGModScript, "========================================");
 	}
-    else {
-		log.trace(DGModScript, "========================================");
+    else
 		log.error(DGModScript, "%s", DGMsg250012);
-	}
     
     log.trace(DGModScript, "%s", DGMsg050000);
     log.info(DGModScript, "%s: %s", DGMsg050001, LUA_RELEASE);
@@ -180,10 +163,6 @@ void DGScript::init(int argc, char* argv[]) {
     // Now we register the global functions that don't belong to any library
     _registerGlobals();
     
-    // If autorun is enabled, automatically init the system
-    if (config.autorun)
-        system.init();
-    
     // We're ready to roll, let's attempt to load the script in a Lua thread
     _thread = lua_newthread(_L);
     snprintf(script, DGMaxFileLength, "%s.lua", config.script());
@@ -193,7 +172,6 @@ void DGScript::init(int argc, char* argv[]) {
         // Not found!
         log.error(DGModScript, "%s: %s", DGMsg250003, script);
         DGControl::instance().processKey(DGKeyTab, false); // Simulate tab key to open the console
-        system.run();
     }
 }
 
@@ -242,13 +220,8 @@ void DGScript::resume() {
 
 void DGScript::run() {
     if (_isInitialized) {
-        // TODO: This doesn't work if autorun is disabled
-        if (!config.showSplash)
-            this->execute();
-
-        // Check if we must start the main loop ourselves
-        if (config.autorun)
-            system.run();
+        if (int result = lua_resume(_thread, 0))
+            _error(result);
     }
 }
 

@@ -130,6 +130,9 @@ public:
     
     const char*	texExtension();
     void setTexExtension(const char* ext);
+    
+    // TODO: Provide members to save/load configurations (also used by system to
+    // save them in the user's folder
 };
 
 #endif // DG_CONFIG_H

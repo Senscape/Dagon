@@ -54,7 +54,7 @@ DGConfig::DGConfig() {
     subtitles = DGDefSubtitles;
 	verticalSync = DGDefVerticalSync;
 	
-    _fps = 0;
+    _fps = DGDefFramerate;
     _globalSpeed = 1.0;
     _globalSpeedPrecision = DGFrameratePrecision / 10.0;
     _targetGlobalSpeed = 1.0;

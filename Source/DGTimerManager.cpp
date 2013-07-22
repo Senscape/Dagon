@@ -45,9 +45,6 @@ DGTimerManager::DGTimerManager() {
 ////////////////////////////////////////////////////////////
 
 DGTimerManager::~DGTimerManager() {
-    _isRunning = false;
-    
-    _timerThread.join();
 }
 
 ////////////////////////////////////////////////////////////
@@ -58,7 +55,7 @@ bool DGTimerManager::checkManual(int handle) {
     DGTimer* timer = _lookUp(handle);
     
     if (timer->isEnabled) {
-        double currentTime = DGSystem::instance().wallTime();
+        double currentTime = system->time();
         double duration = currentTime - timer->lastTime;
         
         if (duration > timer->trigger) {
@@ -71,15 +68,13 @@ bool DGTimerManager::checkManual(int handle) {
 }
 
 int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, int luaObject) {
-   // lock_guard<mutex> guard(_mutexForArray);
-    
     DGTimer timer;
     
     timer.handle = _handles;
     timer.hasTriggered = false;
     timer.isEnabled = true;
     timer.isLoopable = shouldLoop;
-    timer.lastTime = DGSystem::instance().wallTime();
+    timer.lastTime = system->time();
     timer.type = DGTimerNormal;    
     
     timer.trigger = trigger;
@@ -96,8 +91,6 @@ int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, i
 }
 
 int DGTimerManager::createInternal(double trigger, void (*callback)()) {
-    //lock_guard<mutex> guard(_mutexForArray);
-    
     DGTimer timer;
     
     timer.handle = _handles;
@@ -105,7 +98,7 @@ int DGTimerManager::createInternal(double trigger, void (*callback)()) {
     timer.handler = callback;
     timer.isEnabled = true;
     timer.isLoopable = false;  
-    timer.lastTime = DGSystem::instance().wallTime();
+    timer.lastTime = system->time();
     timer.type = DGTimerInternal;
     
     timer.trigger = trigger;
@@ -126,7 +119,7 @@ int DGTimerManager::createManual(double trigger) {
     timer.hasTriggered = false;
     timer.isEnabled = true;
     timer.isLoopable = false;   
-    timer.lastTime = DGSystem::instance().wallTime();
+    timer.lastTime = system->time();
     timer.type = DGTimerManual;
     
     timer.trigger = trigger;
@@ -152,7 +145,7 @@ void DGTimerManager::disable(int handle) {
 void DGTimerManager::enable(int handle) {
     DGTimer* timer = _lookUp(handle);
     timer->isEnabled = true;
-    timer->lastTime = DGSystem::instance().wallTime();
+    timer->lastTime = system->time();
 }
 
 void DGTimerManager::process() {
@@ -176,14 +169,14 @@ void DGTimerManager::process() {
                         if ((*it).luaObject) { // Belongs to a Lua object?
                             if ((*it).luaObject != _luaObject) {
                                 (*it).hasTriggered = false;
-                                (*it).lastTime = DGSystem::instance().wallTime(); // Reset timer
+                                (*it).lastTime = system->time(); // Reset timer
                                 break; // Do not invoke the handler
                             }
                         }
                         
                         if ((*it).isLoopable) {
                             (*it).hasTriggered = false;
-                            (*it).lastTime = DGSystem::instance().wallTime();
+                            (*it).lastTime = system->time();
                         }
                         else {
                             // Should destroy in reality
@@ -212,8 +205,14 @@ void DGTimerManager::setLuaObject(int luaObject) {
     _luaObject = luaObject;
 }
 
+void DGTimerManager::setSystem(DGSystem* theSystem) {
+    system = theSystem;
+}
+
 void DGTimerManager::terminate() {
-	_isRunning = false;
+    _isRunning = false;
+    
+    _timerThread.join();
 }
 
 // FIXME: This is quite sucky. Timers keep looping and being checked even if they
@@ -226,7 +225,7 @@ bool DGTimerManager::update() {
 		it = _arrayOfTimers.begin();
     
 		while (it != _arrayOfTimers.end()) {
-			double currentTime = DGSystem::instance().wallTime();
+			double currentTime = system->time();
 			double duration = currentTime - (*it).lastTime;
         
 			DGTimer* timer = &(*it);

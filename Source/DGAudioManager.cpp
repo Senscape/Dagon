@@ -38,35 +38,6 @@ DGAudioManager::DGAudioManager()  :
 ////////////////////////////////////////////////////////////
 
 DGAudioManager::~DGAudioManager() {
-    // FIXME: Here it's important to determine if the
-    // audio was created by Lua or by another class
-    
-    // Each audio object should unregister itself if
-    // destroyed
-    _isRunning = false;
-
-    _audioThread.join();
-    
-    if (!_arrayOfAudios.empty()) {
-        vector<DGAudio*>::iterator it;
-        
-        _mutexForArray.lock();
-        
-        it = _arrayOfAudios.begin();
-        while (it != _arrayOfAudios.end()) {
-            // FIXME: Should delete here and let the audio object unload itself
-			(*it)->unload();
-            it++;
-        }
-        _mutexForArray.unlock();
-    }
-    
-    // Now we shut down OpenAL completely
-    if (_isInitialized) {
-        alcMakeContextCurrent(NULL);
-        alcDestroyContext(_alContext);
-        alcCloseDevice(_alDevice);
-    }
 }
 
 ////////////////////////////////////////////////////////////
@@ -281,7 +252,35 @@ void DGAudioManager::setOrientation(float* orientation) {
 }
 
 void DGAudioManager::terminate() {
-	_isRunning = false;
+    // FIXME: Here it's important to determine if the
+    // audio was created by Lua or by another class
+    
+    // Each audio object should unregister itself if
+    // destroyed
+    _isRunning = false;
+    
+    _audioThread.join();
+    
+    if (!_arrayOfAudios.empty()) {
+        vector<DGAudio*>::iterator it;
+        
+        _mutexForArray.lock();
+        
+        it = _arrayOfAudios.begin();
+        while (it != _arrayOfAudios.end()) {
+            // FIXME: Should delete here and let the audio object unload itself
+			(*it)->unload();
+            it++;
+        }
+        _mutexForArray.unlock();
+    }
+    
+    // Now we shut down OpenAL completely
+    if (_isInitialized) {
+        alcMakeContextCurrent(NULL);
+        alcDestroyContext(_alContext);
+        alcCloseDevice(_alDevice);
+    }
 }
 
 // Asynchronous method

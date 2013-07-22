@@ -338,7 +338,8 @@ void DGVideo::update() {
     lock_guard<mutex> guard(_mutex);
     
     if (_state == DGVideoPlaying) {
-        double currentTime = DGSystem::instance().wallTime();
+        // FIXME: This is seriously wrong as system() isn't initialized
+        double currentTime = system->time();
         double duration = (currentTime - _lastTime);
         
         if (duration >= _frameDuration) {

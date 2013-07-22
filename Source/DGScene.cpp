@@ -27,6 +27,8 @@
 #include "DGTexture.h"
 #include "DGVideoManager.h"
 
+#include "DGState.h"
+
 using namespace std;
 
 DGVideo _cutscene; // FIXME: Static to avoid Theora issues, revise later
@@ -43,9 +45,6 @@ DGScene::DGScene() :
     renderManager(DGRenderManager::instance()),
     videoManager(DGVideoManager::instance())
 {
-    _canDrawSpots = false;
-    _isCutsceneLoaded = false;
-    _isSplashLoaded = false;
 }
 
 ////////////////////////////////////////////////////////////

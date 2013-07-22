@@ -11,13 +11,13 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include "DGScript.h"
+#include "DGControl.h"
 
 int main(int argc, char *argv[]) {
-    DGScript& script = DGScript::instance();
-    
-    script.init(argc, argv);
-    script.run();
+    DGControl& control = DGControl::instance();
+
+    control.init();
+    control.run();
     
     return 0;
 }

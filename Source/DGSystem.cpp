@@ -21,57 +21,26 @@
 #include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
-// Definitions
-////////////////////////////////////////////////////////////
-
-// Control should decide this
-int _isDragging = false;
-
-////////////////////////////////////////////////////////////
-// Implementation - Constructor
-////////////////////////////////////////////////////////////
-
-// TODO: At this point the system module should copy the config file
-// into the user folder
-DGSystem::DGSystem() :
-    config(DGConfig::instance()),
-    log(DGLog::instance())
-{
-    _isInitialized = false;
-    _isRunning = false;
-}
-
-////////////////////////////////////////////////////////////
-// Implementation - Destructor
-////////////////////////////////////////////////////////////
-
-DGSystem::~DGSystem() {
-    // The shutdown sequence is performed in the terminate() method
-}
-
-////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
 
 void DGSystem::browse(const char* url) {
+    // TODO: Re-implement
     log.warning(DGModSystem, "Browsing is currently disabled");
 }
 
-void DGSystem::findPaths(int argc, char* argv[]) {
-    // Implement
+void DGSystem::findPaths() {
+    // TODO: Re-implement
 }
 
-void DGSystem::init() {
+bool DGSystem::init() {
     if (!_isInitialized) {
         log.trace(DGModSystem, "%s", DGMsg040000);
-        
-        log.info(DGModControl, "%s: %s", DGMsg030000, DGVersionString);
-        log.info(DGModControl, "%s: %d", DGMsg030003, DGVersionBuild);
         
         glfwSetErrorCallback(_errorCallback);
         
         if (!glfwInit())
-            exit(EXIT_FAILURE);
+            return false;
         
         int major, minor, rev;
         glfwGetVersion(&major, &minor, &rev);
@@ -96,7 +65,7 @@ void DGSystem::init() {
                 config.displayHeight = videoMode->height;
             }
             else {
-                // Use a third the screen
+                // Use a third of the screen
                 config.displayWidth = videoMode->width / 1.5;
                 config.displayHeight = videoMode->height / 1.5;
             }
@@ -109,7 +78,7 @@ void DGSystem::init() {
         
         if (!window) {
             glfwTerminate();
-            exit(EXIT_FAILURE);
+            return false;
         }
         
         glfwMakeContextCurrent(window);
@@ -132,93 +101,47 @@ void DGSystem::init() {
         glfwSetKeyCallback(window, _keyCallback);
         glfwSetMouseButtonCallback(window, _mouseButtonCallback);
         glfwSetWindowSizeCallback(window, _sizeCallback);
-        
-        control = &DGControl::instance();
-        control->init();
-        
-        // Force a reshape to calculate the size of the cursor
-        control->reshape(config.displayWidth, config.displayHeight);
-        
-        // Update once to show a black screen
-        control->update();
+        glfwSetWindowCloseCallback(window, _closeCallback);
         
         _isInitialized = true;
-        log.trace(DGModSystem, "%s", DGMsg040001);
     }
     else log.warning(DGModSystem, "%s", DGMsg140002);
-}
-
-void DGSystem::run() {
-    _isRunning = true;
-
-    double startTime = glfwGetTime();
-    double updateInterval = 1.0 / (double)config.framerate;
     
-    while (_isRunning && !glfwWindowShouldClose(window)) {
-        if (config.frameLimiter) {
-            while (startTime < glfwGetTime()) {
-                config.setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
-                control->update();
-            
-                glfwSwapBuffers(window);
-                glfwPollEvents();
-            
-                startTime += updateInterval;
-            }
-        }
-        else {
-            config.setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
-            control->update();
-        
-            glfwSwapBuffers(window);
-            glfwPollEvents();
-        }
-    }
-    
-    _isRunning = false;
-    
-    glfwDestroyWindow(window);
-    glfwTerminate();
-    
-    exit(EXIT_SUCCESS);
+    return true;
 }
 
 void DGSystem::setTitle(const char* title) {
     glfwSetWindowTitle(window, title);
 }
 
-void DGSystem::terminate() {
-    int r = arc4random() % 8; // Double the replies, so that the default one appears often
-    
-    switch (r) {
-        default:
-        case 0: log.trace(DGModSystem, "%s", DGMsg040100); break;
-        case 1: log.trace(DGModSystem, "%s", DGMsg040101); break;
-        case 2: log.trace(DGModSystem, "%s", DGMsg040102); break;
-        case 3: log.trace(DGModSystem, "%s", DGMsg040103); break;
-    }
-    
-    glfwSetWindowShouldClose(window, GL_TRUE);
+void DGSystem::update() {
+    config.setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
+    glfwSwapBuffers(window);
+    glfwPollEvents();
 }
 
-void DGSystem::toggleFullScreen() {
+void DGSystem::terminate() {
+    _isInitialized = false;
+    
+    glfwDestroyWindow(window);
+    glfwTerminate();
+}
+
+void DGSystem::toggleFullscreen() {
+    // TODO: Re-implement when GLFW 3.1 is ready
     log.warning(DGModSystem, "Toggling fullscreen currently disabled");
 }
 
-double DGSystem::wallTime() {
-    // FIXME: This is a shoddy way to confirm if the GLFW library is initialized
-    if (_isRunning)
-        return glfwGetTime();
-    else
-        return 0;
+double DGSystem::time() {
+    return glfwGetTime();
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-// NOTE: For best precision, this should be suspended when
-// performing a switch (the most expensive operation).
+// TODO: For best precision, this should be suspended when
+// performing a switch (the most expensive operation)
 double DGSystem::_calculateFrames(double theInterval = 1.0) {
 	static double lastTime = glfwGetTime();
 	static int fpsFrameCount = 0;
@@ -248,6 +171,11 @@ void DGSystem::_charCallback(GLFWwindow* window, unsigned int character) {
         DGControl::instance().processKey(character, DGKeyEventDown);
 }
 
+void DGSystem::_closeCallback(GLFWwindow* window) {
+    // Simulate an escape key event
+    DGControl::instance().processKey(DGKeyEsc, DGKeyEventDown);
+}
+
 void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
     int width = DGConfig::instance().displayWidth;
 	int height = DGConfig::instance().displayHeight;
@@ -262,10 +190,7 @@ void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) 
         }
     }
     
-    if (_isDragging)
-        DGControl::instance().processMouse(xpos, ypos, DGMouseEventDrag);
-    else
-        DGControl::instance().processMouse(xpos, ypos, DGMouseEventMove);
+    DGControl::instance().processMouse(xpos, ypos, DGMouseEventMove);
 }
 
 void DGSystem::_errorCallback(int error, const char* description) {
@@ -322,18 +247,14 @@ void DGSystem::_mouseButtonCallback(GLFWwindow* window, int button, int action, 
     double xpos, ypos;
     
     if (action == GLFW_PRESS) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT)
             event = DGMouseEventDown;
-            _isDragging = true;
-        }
         else if (button == GLFW_MOUSE_BUTTON_RIGHT)
             event = DGMouseEventRightDown;
     }
     else if (action == GLFW_RELEASE) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT)
             event = DGMouseEventUp;
-            _isDragging = false;
-        }
         else if (button == GLFW_MOUSE_BUTTON_RIGHT)
             event = DGMouseEventRightUp;
     }
@@ -344,8 +265,4 @@ void DGSystem::_mouseButtonCallback(GLFWwindow* window, int button, int action, 
 
 void DGSystem::_sizeCallback(GLFWwindow* window, int width, int height) {
     DGControl::instance().reshape(width, height);
-    
-    // Update view for live resize
-    DGControl::instance().update();
-    glfwSwapBuffers(window);
 }

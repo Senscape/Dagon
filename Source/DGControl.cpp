@@ -60,7 +60,7 @@ DGControl::DGControl() :
     log(DGLog::instance()),
     renderManager(DGRenderManager::instance()),
     script(DGScript::instance()),
-    system(DGSystem::instance()),
+    system(DGConfig::instance(), DGLog::instance()),
     timerManager(DGTimerManager::instance()),
     videoManager(DGVideoManager::instance())
 {
@@ -112,7 +112,14 @@ DGControl::~DGControl() {
 ////////////////////////////////////////////////////////////
 
 void DGControl::init() {
-	log.trace(DGModControl, "%s", DGMsg030001);
+    log.trace(DGModControl, "========================================");
+    log.info(DGModControl, "%s: %s", DGMsg030000, DGVersionString);
+    log.info(DGModControl, "%s: %d", DGMsg030003, DGVersionBuild);
+    
+    system.init();
+    
+    // Do this before system
+    script.init();
     
     renderManager.init();
     renderManager.resetView(); // Test for errors
@@ -139,6 +146,7 @@ void DGControl::init() {
     
     _state = new DGState;
     
+    timerManager.setSystem(&system);
     _dragTimer = timerManager.createManual(DGTimeToStartDragging);
     timerManager.disable(_dragTimer);
     
@@ -162,6 +170,14 @@ void DGControl::init() {
     _directControlActive = true;
     _isInitialized = true;
 	_isRunning = true;
+    
+    // Force a redraw to avoid an annoying blink
+    this->reshape(config.displayWidth, config.displayHeight);
+    
+    if (!config.showSplash)
+        script.run();
+    
+    log.trace(DGModControl, "%s", DGMsg040001);
 }
 
 DGNode* DGControl::currentNode() {
@@ -308,7 +324,7 @@ void DGControl::processKey(int aKey, int eventFlags) {
                 case 'f':
                 case 'F':
                     config.fullScreen = !config.fullScreen;
-                    system.toggleFullScreen();
+                    system.toggleFullscreen();
                     break;
             }
             break;
@@ -555,6 +571,7 @@ void DGControl::registerObject(DGObject* theTarget) {
 }
 
 void DGControl::reshape(int width, int height) {
+    // TODO: Must store the initial width value
     int size = (width * DGDefCursorSize) / 1920;
     
     if (size > DGMaxCursorSize)
@@ -571,7 +588,27 @@ void DGControl::reshape(int width, int height) {
     renderManager.reshape();
     
     if (_eventHandlers.hasResize)
-        script.processCallback(_eventHandlers.resize, 0);    
+        script.processCallback(_eventHandlers.resize, 0);
+    
+    this->update();
+}
+
+void DGControl::run() {
+    _isRunning = true;
+    
+    double startTime = system.time();
+    double updateInterval = 1.0 / (double)config.framerate;
+    
+    while (_isRunning) {
+        if (config.frameLimiter) {
+            while (startTime < system.time()) {
+                this->update();
+                startTime += updateInterval;
+            }
+        }
+        else
+            this->update();
+    }
 }
 
 void DGControl::sleep(int forSeconds) {
@@ -735,10 +772,10 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             }
             
             // Prepare the name for the window
-            char title[DGMaxObjectName];
+          /*  char title[DGMaxObjectName];
             snprintf(title, DGMaxObjectName, "%s (%s, %s)", config.script(), 
                      _currentRoom->name(), currentNode->description());
-            system.setTitle(title);
+            system.setTitle(title);*/
         }
         
         // This has to be done every time so that room audios keep playing
@@ -809,7 +846,6 @@ void DGControl::takeSnapshot() {
     
 	strftime(buffer, DGMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
     
-    //system.update();
     cameraManager.beginOrthoView();
     renderManager.drawPostprocessedView();
     texture.bind();
@@ -823,6 +859,21 @@ void DGControl::takeSnapshot() {
 
 void DGControl::terminate() {
 	_isRunning = false;
+    
+    audioManager.terminate();
+    timerManager.terminate();
+    videoManager.terminate();
+    
+    int r = rand() % 8; // Double the replies, so that the default one appears often
+     
+    switch (r) {
+        default:
+        case 0: log.trace(DGModControl, "%s", DGMsg040100); break;
+        case 1: log.trace(DGModControl, "%s", DGMsg040101); break;
+        case 2: log.trace(DGModControl, "%s", DGMsg040102); break;
+        case 3: log.trace(DGModControl, "%s", DGMsg040103); break;
+    }
+    
     system.terminate();
 }
 
@@ -958,7 +1009,7 @@ void DGControl::_updateView(int state, bool inBackground) {
                 _state->set(DGStateNode);
                 _scene->unloadSplash();
                 
-                script.execute();
+                script.run();
             }
             
             break;
@@ -993,10 +1044,8 @@ void DGControl::_updateView(int state, bool inBackground) {
     
     timerManager.process();
     
-    // FIXME: Reverting this brought a problem with the video sync test
-    // (GUI elements flash when sync is over)
     if (!inBackground) {
         // Flush the buffers
-        //system.update();
+        system.update();
     }
 }

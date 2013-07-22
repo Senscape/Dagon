@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_TIMER_H
-#define DG_TIMER_H
+#ifndef DG_TIMERMANAGER_H
+#define DG_TIMERMANAGER_H
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -23,6 +23,8 @@
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
+
+class DGSystem;
 
 enum DGTimerTypes {
     DGTimerInternal,
@@ -48,6 +50,8 @@ typedef struct {
 ////////////////////////////////////////////////////////////
 
 class DGTimerManager {
+    DGSystem* system;
+    
     std::vector<DGTimer> _arrayOfTimers;
     int _handles; // Maintains a count of handles
     int _luaObject;
@@ -78,8 +82,9 @@ public:
     void enable(int handle);
     void process();
     void setLuaObject(int luaObject);
+    void setSystem(DGSystem* theSystem);
 	void terminate();
     bool update();
 };
 
-#endif // DG_TIMER_H
+#endif // DG_TIMERMANAGER_H

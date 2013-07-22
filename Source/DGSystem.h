@@ -25,51 +25,44 @@
 ////////////////////////////////////////////////////////////
 
 class DGConfig;
-class DGControl;
 class DGLog;
 
 ////////////////////////////////////////////////////////////
-// Interface - Singleton class
+// Interface
 ////////////////////////////////////////////////////////////
 
 class DGSystem {
-    DGControl* control;
     DGConfig& config;
     DGLog& log;
 
-    bool _isInitialized;
-    bool _isRunning;
-    
+    bool _isInitialized = false;
+
     GLFWmonitor* monitor;
     GLFWwindow* window;
     
     double _calculateFrames(double theInterval);
     static void _charCallback(GLFWwindow* window, unsigned int character);
+    static void _closeCallback(GLFWwindow* window);    
     static void _cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
     static void _errorCallback(int error, const char* description);
     static void _keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
     static void _mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     static void _sizeCallback(GLFWwindow* window, int width, int height);
     
-    DGSystem();
-    DGSystem(DGSystem const&);
-    DGSystem& operator=(DGSystem const&);
-    ~DGSystem();
-    
 public:
-    static DGSystem& instance() {
-        static DGSystem system;
-        return system;
-    }
+    DGSystem(DGConfig& theConfig, DGLog& theLog) :
+        config(theConfig),
+        log(theLog) {};
+    ~DGSystem() {};
     
     void browse(const char* url);
-    void findPaths(int argc, char* argv[]);
-    void init();
-    void run();
+    void findPaths();
+    bool init();
     void setTitle(const char* title);
     void terminate();
-    void toggleFullScreen();
-    double wallTime();
+    void toggleFullscreen();
+    void update();
+    double time();
 };
 
 #endif // DG_SYSTEM_H

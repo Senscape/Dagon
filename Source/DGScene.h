@@ -29,6 +29,7 @@ class DGConfig;
 class DGCursorManager;
 class DGRenderManager;
 class DGRoom;
+class DGState;
 class DGTexture;
 class DGVideoManager;
 
@@ -50,9 +51,9 @@ class DGScene {
     DGTexture* _cutsceneTexture;
     DGTexture* _splashTexture;
     
-    bool _canDrawSpots; // This bool is used to make checks faster
-    bool _isCutsceneLoaded;
-    bool _isSplashLoaded;
+    bool _canDrawSpots = false; // This bool is used to make checks faster
+    bool _isCutsceneLoaded = false;
+    bool _isSplashLoaded = false;
     
 public:
     DGScene();

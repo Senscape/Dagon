@@ -20,6 +20,7 @@
 
 #include "DGAction.h"
 #include "DGPlatform.h"
+#include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -46,7 +47,6 @@ class DGScene;
 class DGScript;
 class DGSpot;
 class DGState;
-class DGSystem;
 class DGTextureManager;
 class DGTimerManager;
 class DGVideoManager;
@@ -122,10 +122,11 @@ class DGControl {
     DGLog& log;
     DGRenderManager& renderManager;
     DGScript& script;
-    DGSystem& system;
     DGTextureManager& textureManager;    
     DGTimerManager& timerManager;
     DGVideoManager& videoManager;
+    
+    DGSystem system;
     
     std::vector<DGRoom*> _arrayOfRooms;
     DGRoom* _currentRoom;
@@ -151,20 +152,15 @@ class DGControl {
     void _processAction();
     void _updateView(int state, bool inBackground);
     
-    // Private constructor/destructor
     DGControl();
+    DGControl(DGControl const&);
+    DGControl& operator=(DGControl const&);
     ~DGControl();
-    // Stop the compiler generating methods of copy the object
-    DGControl(DGControl const& copy);            // Not implemented
-    DGControl& operator=(DGControl const& copy); // Not implemented
     
 public:
     static DGControl& instance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGControl instance;
-        return instance;
+        static DGControl control;
+        return control;
     }
     
     void init();
@@ -184,6 +180,7 @@ public:
     void sleep(int forSeconds);
     void syncSpot(DGSpot* spot);
     void switchTo(DGObject* theTarget, bool instant = false);
+    void run();
     void takeSnapshot();
     void terminate();
     bool update();

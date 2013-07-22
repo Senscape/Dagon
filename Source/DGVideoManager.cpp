@@ -38,24 +38,6 @@ DGVideoManager::DGVideoManager() :
 ////////////////////////////////////////////////////////////
 
 DGVideoManager::~DGVideoManager() {
-    _isRunning = false;
-    
-    _videoThread.join();
-    
-    // WARNING: This code assumes videos are never created
-    // directly in the script
-    if (!_arrayOfVideos.empty()) {
-        vector<DGVideo*>::iterator it;
-     
-        _mutexForArray.lock();
-        it = _arrayOfVideos.begin();
-     
-        while (it != _arrayOfVideos.end()) {
-            delete *it;
-            it++;
-        }
-        _mutexForArray.unlock();
-     }
 }
 
 ////////////////////////////////////////////////////////////
@@ -138,9 +120,25 @@ void DGVideoManager::requestVideo(DGVideo* target) {
 }
 
 void DGVideoManager::terminate() {
-	_isRunning = false;
+    _isRunning = false;
+    
+    _videoThread.join();
+    
+    // WARNING: This code assumes videos are never created
+    // directly in the script
+    if (!_arrayOfVideos.empty()) {
+        vector<DGVideo*>::iterator it;
+        
+        _mutexForArray.lock();
+        it = _arrayOfVideos.begin();
+        
+        while (it != _arrayOfVideos.end()) {
+            delete *it;
+            it++;
+        }
+        _mutexForArray.unlock();
+    }
 }
-
 
 bool DGVideoManager::update() {
     if (_isRunning) {
