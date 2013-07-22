@@ -82,7 +82,7 @@ class DGConfig;
 // I don't know... every time I rewrote this file, it always got messy. Bloody cameras.
 
 class DGCameraManager {
-    DGConfig* config;
+    DGConfig& config;
 
     bool _isInitialized;
     bool _isLocked;
@@ -143,20 +143,15 @@ class DGCameraManager {
     int _toDegrees(float angle, float limit);
     float _toRadians(float angle, float limit);
     
-    // Private constructor/destructor
     DGCameraManager();
+    DGCameraManager(DGCameraManager const&);
+    DGCameraManager& operator=(DGCameraManager const&);
     ~DGCameraManager();
-    // Stop the compiler generating methods of copy the object
-    DGCameraManager(DGCameraManager const& copy);            // Not implemented
-    DGCameraManager& operator=(DGCameraManager const& copy); // Not implemented
     
 public:
-    static DGCameraManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGCameraManager instance;
-        return instance;
+    static DGCameraManager& instance() {
+        static DGCameraManager cameraManager;
+        return cameraManager;
     }
     
     // Checks

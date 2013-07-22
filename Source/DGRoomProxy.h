@@ -45,7 +45,7 @@ public:
         r->setName(luaL_checkstring(L, 1));
         
         // Register the new room
-        DGControl::getInstance().registerObject(r);
+        DGControl::instance().registerObject(r);
         
         // Init the base class
         this->setObject(r);
@@ -107,14 +107,14 @@ public:
     
     int startTimer(lua_State *L) {
         if (!lua_isfunction(L, -1)) {
-            DGLog::getInstance().trace(DGModScript, "%s", DGMsg250006);
+            DGLog::instance().trace(DGModScript, "%s", DGMsg250006);
             
             return 0;
         }
         
         int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
         bool shouldLoop = lua_toboolean(L, 2);
-        int handle = DGTimerManager::getInstance().create(luaL_checknumber(L, 1), shouldLoop, ref, r->luaObject());
+        int handle = DGTimerManager::instance().create(luaL_checknumber(L, 1), shouldLoop, ref, r->luaObject());
         
         lua_pushnumber(L, handle);
         

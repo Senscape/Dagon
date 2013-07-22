@@ -25,10 +25,10 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGAudioManager::DGAudioManager() {
-    log = &DGLog::getInstance();
-    config = &DGConfig::getInstance();
-
+DGAudioManager::DGAudioManager()  :
+    config(DGConfig::instance()),
+    log(DGLog::instance())
+{
     _isInitialized = false;
 	_isRunning = false;
 }
@@ -134,7 +134,7 @@ void DGAudioManager::flush() {
 }
 
 void DGAudioManager::init() {
-    log->trace(DGModAudio, "%s", DGMsg070000);
+    log.trace(DGModAudio, "%s", DGMsg070000);
     
     char deviceName[256];
 	char *defaultDevice;
@@ -143,7 +143,7 @@ void DGAudioManager::init() {
 	int	numDevices, numDefaultDevice;
     
 	strcpy(deviceName, "");
-	if (config->debugMode) {
+	if (config.debugMode) {
         if (alcIsExtensionPresent(NULL, (ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
             defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
             deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
@@ -167,13 +167,13 @@ void DGAudioManager::init() {
                 int i;
                 
                 numDevices++;
-                /*log->trace(DGModAudio, "%s", DGMsg080002);
-                log->trace(DGModAudio, "0. NULL");
+                /*log.trace(DGModAudio, "%s", DGMsg080002);
+                log.trace(DGModAudio, "0. NULL");
                 for (i = 0; i < numDevices; i++) {
-                    log->trace(DGModAudio, "%d. %s", i + 1, devices[i]);
+                    log.trace(DGModAudio, "%d. %s", i + 1, devices[i]);
                 }*/
                 
-                i = config->audioDevice;
+                i = config.audioDevice;
                 if ((i != 0) && (strlen(devices[i - 1]) < 256)) {
                     strcpy(deviceName, devices[i - 1]);
                 }
@@ -182,22 +182,22 @@ void DGAudioManager::init() {
 	}
     
     if (strlen(deviceName) == 0) {
-		log->trace(DGModAudio, "%s", DGMsg080003);
+		log.trace(DGModAudio, "%s", DGMsg080003);
 		_alDevice = alcOpenDevice(NULL); // Select the preferred device
 	} else {
-		log->trace(DGModAudio, "%s: %s", DGMsg080004, deviceName);
+		log.trace(DGModAudio, "%s: %s", DGMsg080004, deviceName);
 		_alDevice = alcOpenDevice((ALCchar*)deviceName); // Use the name from the enumeration process
 	}
     
     if (!_alDevice) {
-        log->error(DGModAudio, "%s", DGMsg270001);
+        log.error(DGModAudio, "%s", DGMsg270001);
         return;
     }
     
 	_alContext = alcCreateContext(_alDevice, NULL);
     
     if (!_alContext) {
-        log->error(DGModAudio, "%s", DGMsg270002);
+        log.error(DGModAudio, "%s", DGMsg270002);
         
         return;
     }
@@ -216,12 +216,12 @@ void DGAudioManager::init() {
     ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
-		log->error(DGModAudio, "%s: init (%d)", DGMsg270003, error);
+		log.error(DGModAudio, "%s: init (%d)", DGMsg270003, error);
 		return;
 	}
     
-    log->info(DGModAudio, "%s: %s", DGMsg070001, alGetString(AL_VERSION));
-    log->info(DGModAudio, "%s: %s", DGMsg070002, vorbis_version_string());
+    log.info(DGModAudio, "%s: %s", DGMsg070001, alGetString(AL_VERSION));
+    log.info(DGModAudio, "%s: %s", DGMsg070002, vorbis_version_string());
     
     _isInitialized = true;
 	_isRunning = true;

@@ -34,10 +34,10 @@ bool DGTextureSort(DGTexture* t1, DGTexture* t2);
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGTextureManager::DGTextureManager() {
-    log = &DGLog::getInstance();
-    config = &DGConfig::getInstance();
-    
+DGTextureManager::DGTextureManager() :
+    config(DGConfig::instance()),
+    log(DGLog::instance())
+{
     _roomToPreload = NULL;
 }
 
@@ -106,18 +106,18 @@ void DGTextureManager::registerTexture(DGTexture* target) {
         // We attempt loading the resource with automatically generated filenames
         char fileToLoad[DGMaxFileLength];
         
-        if (config->bundleEnabled) {
+        if (config.bundleEnabled) {
             // Attempt loading the bundle
-            snprintf(fileToLoad, DGMaxFileLength, "%s.%s", target->name(), config->texExtension());
+            snprintf(fileToLoad, DGMaxFileLength, "%s.%s", target->name(), config.texExtension());
             
         }
         else {
             // Attempt loading individual file with generated index and default extension
             snprintf(fileToLoad, DGMaxFileLength, "%s%0" in_between(DGFileSeqDigits) "d.%s", target->name(),
-                     target->indexInBundle() + DGFileSeqStart, config->texExtension());
+                     target->indexInBundle() + DGFileSeqStart, config.texExtension());
         }
         
-        target->setResource(config->path(DGPathRes, fileToLoad, DGObjectNode));
+        target->setResource(config.path(DGPathRes, fileToLoad, DGObjectNode));
     }
     
     _arrayOfTextures.push_back(target);

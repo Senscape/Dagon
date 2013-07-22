@@ -58,20 +58,15 @@ class DGTimerManager {
     std::thread _timerThread;
     DGTimer* _lookUp(int handle);
     
-    // Private constructor/destructor
     DGTimerManager();
+    DGTimerManager(DGTimerManager const&);
+    DGTimerManager& operator=(DGTimerManager const&);
     ~DGTimerManager();
-    // Stop the compiler generating methods of copy the object
-    DGTimerManager(DGTimerManager const& copy);            // Not implemented
-    DGTimerManager& operator=(DGTimerManager const& copy); // Not implemented
     
 public:
-    static DGTimerManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGTimerManager instance;
-        return instance;
+    static DGTimerManager& instance() {
+        static DGTimerManager timerManager;
+        return timerManager;
     }
     
     bool checkManual(int handle);

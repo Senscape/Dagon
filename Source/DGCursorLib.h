@@ -33,31 +33,31 @@
 ////////////////////////////////////////////////////////////
 
 static int DGCursorLibDisable(lua_State *L) {
-    DGCursorManager::getInstance().DGObject::disable();
+    DGCursorManager::instance().DGObject::disable();
 	
 	return 0;
 }
 
 static int DGCursorLibEnable(lua_State *L) {
-    DGCursorManager::getInstance().DGObject::enable();
+    DGCursorManager::instance().DGObject::enable();
 	
 	return 0;
 }
 
 static int DGCursorLibFadeIn(lua_State *L) {
-    DGCursorManager::getInstance().DGObject::fadeIn();
+    DGCursorManager::instance().DGObject::fadeIn();
 	
 	return 0;
 }
 
 static int DGCursorLibFadeOut(lua_State *L) {
-    DGCursorManager::getInstance().DGObject::fadeOut();
+    DGCursorManager::instance().DGObject::fadeOut();
 	
 	return 0;
 }
 
 static int DGCursorLibLoad(lua_State *L) {
-    DGCursorManager::getInstance().load(luaL_checknumber(L, 1), luaL_checkstring(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
+    DGCursorManager::instance().load(luaL_checknumber(L, 1), luaL_checkstring(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
     
     return 0;
 }

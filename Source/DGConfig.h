@@ -80,20 +80,15 @@ class DGConfig {
     double _globalSpeedPrecision;
     double _targetGlobalSpeed;
     
-    // Private constructor/destructor
     DGConfig();
+    DGConfig(DGConfig const&);
+    DGConfig& operator=(DGConfig const&);
     ~DGConfig();
-    // Stop the compiler generating methods of copy the object
-    DGConfig(DGConfig const& copy);            // Not implemented
-    DGConfig& operator=(DGConfig const& copy); // Not implemented
     
 public:
-    static DGConfig& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGConfig instance;
-        return instance;
+    static DGConfig& instance() {
+        static DGConfig config;
+        return config;
     }
     
     bool antialiasing;

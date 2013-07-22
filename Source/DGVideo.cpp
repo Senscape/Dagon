@@ -41,8 +41,9 @@ static struct DGLookUpTable _lookUpTable;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGVideo::DGVideo() {
-    log = &DGLog::getInstance();
+DGVideo::DGVideo() :
+    log(DGLog::instance())
+{
     this->setType(DGObjectVideo);
     
     _hasNewFrame = false;
@@ -59,8 +60,9 @@ DGVideo::DGVideo() {
     _initConversionToRGB();
 }
 
-DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced) {
-    log = &DGLog::getInstance();
+DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced)  :
+    log(DGLog::instance())
+{
     this->setType(DGObjectVideo);
     
     _hasResource = false;
@@ -171,16 +173,16 @@ void DGVideo::load() {
     int stateFlag = 0;
     
     if (!_hasResource) {
-        log->error(DGModVideo, "%s", DGMsg280005);
+        log.error(DGModVideo, "%s", DGMsg280005);
         return;
     }
     
-    //log->trace(DGModVideo, "%s %s", DGMsg080001, _resource);
+    //log.trace(DGModVideo, "%s %s", DGMsg080001, _resource);
     
     _handle = fopen(_resource, "rb");
     
     if (_handle == NULL) {
-        log->error(DGModVideo, "%s: %s", DGMsg280002, _resource);
+        log.error(DGModVideo, "%s: %s", DGMsg280002, _resource);
         return;
     }
     
@@ -224,12 +226,12 @@ void DGVideo::load() {
         while (_theoraInfo->theora_p && (_theoraInfo->theora_p < 3) && 
                (ret = ogg_stream_packetout(&_theoraInfo->to, &_theoraInfo->op))) {
             if (ret < 0) {
-                log->error(DGModVideo, "%s", DGMsg280003);
+                log.error(DGModVideo, "%s", DGMsg280003);
                 return;
             }
             
             if (theora_decode_header(&_theoraInfo->ti, &_theoraInfo->tc, &_theoraInfo->op)) {
-                log->error(DGModVideo, "%s", DGMsg280003);
+                log.error(DGModVideo, "%s", DGMsg280003);
                 return;
             }
             
@@ -243,7 +245,7 @@ void DGVideo::load() {
         else {
             size_t ret = _bufferData(&_theoraInfo->oy);
             if (ret == 0) {
-                log->error(DGModVideo, "%s", DGMsg280004);
+                log.error(DGModVideo, "%s", DGMsg280004);
                 return;
             }
         }
@@ -336,7 +338,7 @@ void DGVideo::update() {
     lock_guard<mutex> guard(_mutex);
     
     if (_state == DGVideoPlaying) {
-        double currentTime = DGSystem::getInstance().wallTime();
+        double currentTime = DGSystem::instance().wallTime();
         double duration = (currentTime - _lastTime);
         
         if (duration >= _frameDuration) {

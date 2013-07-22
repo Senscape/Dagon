@@ -36,8 +36,8 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGVideoManager {
-    DGConfig* config;
-    DGLog* log;
+    DGConfig& config;
+    DGLog& log;
     
     std::thread _videoThread;
     
@@ -48,20 +48,15 @@ class DGVideoManager {
     bool _isInitialized;
 	bool _isRunning;
     
-    // Private constructor/destructor
     DGVideoManager();
+    DGVideoManager(DGVideoManager const&);
+    DGVideoManager& operator=(DGVideoManager const&);
     ~DGVideoManager();
-    // Stop the compiler generating methods of copy the object
-    DGVideoManager(DGVideoManager const& copy);            // Not implemented
-    DGVideoManager& operator=(DGVideoManager const& copy); // Not implemented
     
 public:
-    static DGVideoManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGVideoManager instance;
-        return instance;
+    static DGVideoManager& instance() {
+        static DGVideoManager videoManager;
+        return videoManager;
     }
     
     void flush();

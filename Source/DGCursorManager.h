@@ -44,7 +44,7 @@ typedef struct {
 
 // TODO: Define origin for cursors (for better placement)
 class DGCursorManager : public DGObject {
-    DGConfig* config;
+    DGConfig& config;
     
     std::vector<DGCursorData> _arrayOfCursors;
     std::vector<DGCursorData>::iterator _current;
@@ -61,20 +61,15 @@ class DGCursorManager : public DGObject {
     
     void _set(int type);
     
-    // Private constructor/destructor
     DGCursorManager();
+    DGCursorManager(DGCursorManager const&);
+    DGCursorManager& operator=(DGCursorManager const&);
     ~DGCursorManager();
-    // Stop the compiler generating methods of copy the object
-    DGCursorManager(DGCursorManager const& copy);            // Not implemented
-    DGCursorManager& operator=(DGCursorManager const& copy); // Not implemented
     
 public:
-    static DGCursorManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGCursorManager instance;
-        return instance;
+    static DGCursorManager& instance() {
+        static DGCursorManager cursorManager;
+        return cursorManager;
     }
 
     DGAction* action();

@@ -64,8 +64,8 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGAudio : public DGObject {
-    DGConfig* config;
-    DGLog* log;
+    DGConfig& config;
+    DGLog& log;
     
     DGAudio* _matchedAudio;
     

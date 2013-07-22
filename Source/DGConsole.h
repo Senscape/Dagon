@@ -50,12 +50,12 @@ class DGRenderManager;
 ////////////////////////////////////////////////////////////
 
 class DGConsole {
-    DGCameraManager* cameraManager;
-    DGConfig* config;
-    DGCursorManager* cursorManager;
-    DGFontManager* fontManager;
-    DGLog* log;
-    DGRenderManager* renderManager;
+    DGCameraManager& cameraManager;
+    DGConfig& config;
+    DGCursorManager& cursorManager;
+    DGFontManager& fontManager;
+    DGLog& log;
+    DGRenderManager& renderManager;
     
     DGFont* _font;
     

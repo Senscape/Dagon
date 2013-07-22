@@ -61,10 +61,10 @@ class DGTimerManager;
 ////////////////////////////////////////////////////////////
 
 class DGFeedManager {
-    DGAudioManager* audioManager;    
-    DGConfig* config;
-    DGFontManager* fontManager;
-    DGTimerManager* timerManager;
+    DGAudioManager& audioManager;
+    DGConfig& config;
+    DGFontManager& fontManager;
+    DGTimerManager& timerManager;
     
     DGAudio* _feedAudio;
     std::vector<DGFeed> _arrayOfActiveFeeds;
@@ -76,20 +76,15 @@ class DGFeedManager {
     void _dim();
     void _flush();
     
-    // Private constructor/destructor
     DGFeedManager();
+    DGFeedManager(DGFeedManager const&);
+    DGFeedManager& operator=(DGFeedManager const&);
     ~DGFeedManager();
-    // Stop the compiler generating methods of copy the object
-    DGFeedManager(DGFeedManager const& copy);            // Not implemented
-    DGFeedManager& operator=(DGFeedManager const& copy); // Not implemented
     
 public:
-    static DGFeedManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGFeedManager instance;
-        return instance;
+    static DGFeedManager& instance() {
+        static DGFeedManager feedManager;
+        return feedManager;
     }
 
     void cancel();

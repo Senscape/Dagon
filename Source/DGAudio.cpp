@@ -23,10 +23,10 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGAudio::DGAudio() {
-    config = &DGConfig::getInstance();
-    log = &DGLog::getInstance();
-    
+DGAudio::DGAudio() :
+    config(DGConfig::instance()),
+    log(DGLog::instance())
+{
     _oggCallbacks.read_func = _oggRead;
 	_oggCallbacks.seek_func = _oggSeek;
 	_oggCallbacks.close_func = _oggClose;
@@ -132,7 +132,7 @@ void DGAudio::load() {
         
         // FIXME: This object shouldn't reference DGConfig, let the Audio Manager do this
         const char* fileToLoad = _randomizeFile(_resource.name);
-        fh = fopen(config->path(DGPathRes, fileToLoad, DGObjectAudio), "rb");	
+        fh = fopen(config.path(DGPathRes, fileToLoad, DGObjectAudio), "rb");	
         
         if (fh != NULL) {
             fseek(fh, 0, SEEK_END);
@@ -143,7 +143,7 @@ void DGAudio::load() {
             _resource.dataRead = 0;
             
             if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
-                log->error(DGModAudio, "%s", DGMsg270007);
+                log.error(DGModAudio, "%s", DGMsg270007);
                 return;
             }
             
@@ -157,7 +157,7 @@ void DGAudio::load() {
             else if (_channels == 2 ) _alFormat = AL_FORMAT_STEREO16;
             else {
                 // Invalid number of channels
-                log->error(DGModAudio, "%s: %s", DGMsg270006, fileToLoad);
+                log.error(DGModAudio, "%s: %s", DGMsg270006, fileToLoad);
                 return;
             }
             
@@ -177,7 +177,7 @@ void DGAudio::load() {
         
 			alSourceQueueBuffers(_alSource, DGAudioNumberOfBuffers, _alBuffers);
     
-            if (config->mute || this->fadeLevel() < 0.0f) {
+            if (config.mute || this->fadeLevel() < 0.0f) {
                 alSourcef(_alSource, AL_GAIN, 0.0f);
             }
             else {
@@ -192,7 +192,7 @@ void DGAudio::load() {
             
             _isLoaded = true;
         }
-        else log->error(DGModAudio, "%s: %s", DGMsg270005, fileToLoad);
+        else log.error(DGModAudio, "%s: %s", DGMsg270005, fileToLoad);
     }
 }
 
@@ -284,7 +284,7 @@ void DGAudio::update() {
         this->updateFade();
         
         // FIXME: Not very elegant as we're doing this check every time
-        if (config->mute) {
+        if (config.mute) {
             alSourcef(_alSource, AL_GAIN, 0.0f);
         }
         else {
@@ -346,9 +346,9 @@ bool DGAudio::_stream(ALuint* buffer) {
         int section;
         long result;
         
-		data = (char*)malloc(config->audioBuffer);
-        while (size < config->audioBuffer) {
-            result = ov_read(&_oggStream, data + size, config->audioBuffer - size, 0, 2, 1, &section);
+		data = (char*)malloc(config.audioBuffer);
+        while (size < config.audioBuffer) {
+            result = ov_read(&_oggStream, data + size, config.audioBuffer - size, 0, 2, 1, &section);
             
             if (result > 0)
                 size += result;
@@ -370,7 +370,7 @@ bool DGAudio::_stream(ALuint* buffer) {
             }
             else if (result < 0) {
                 // Error
-                log->error(DGModAudio, "%s: %s", DGMsg270004, _resource.name);
+                log.error(DGModAudio, "%s: %s", DGMsg270004, _resource.name);
                 _hasStreamingError = true;
                 
                 return false;
@@ -388,7 +388,7 @@ ALboolean DGAudio::_verifyError(const char* operation) {
    	ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
-		log->error(DGModAudio, "%s: %s: %s (%d)", DGMsg270003, _resource.name, operation, error);
+		log.error(DGModAudio, "%s: %s: %s (%d)", DGMsg270003, _resource.name, operation, error);
         
 		return AL_FALSE;
 	}

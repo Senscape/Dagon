@@ -25,10 +25,10 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGVideoManager::DGVideoManager() {
-    log = &DGLog::getInstance();
-    config = &DGConfig::getInstance();
-    
+DGVideoManager::DGVideoManager() :
+    config(DGConfig::instance()),
+    log(DGLog::instance())
+{
     _isInitialized = false;
 	_isRunning = false;
 }
@@ -89,8 +89,8 @@ void DGVideoManager::flush() {
 }
 
 void DGVideoManager::init() {
-    log->trace(DGModVideo, "%s", DGMsg080000);
-    //log->info(DGModVideo, "%s: %s", DGMsg080005, theora_version_string());
+    log.trace(DGModVideo, "%s", DGMsg080000);
+    //log.info(DGModVideo, "%s: %s", DGMsg080005, theora_version_string());
     
     // Eventually lots of Theora initialization process will be moved here
     
@@ -99,7 +99,7 @@ void DGVideoManager::init() {
     
     _videoThread = thread([](){
         chrono::milliseconds dura(1);
-        while (DGVideoManager::getInstance().update()) {
+        while (DGVideoManager::instance().update()) {
             this_thread::sleep_for(dura);
         }
     });

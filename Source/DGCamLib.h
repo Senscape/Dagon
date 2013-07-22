@@ -33,53 +33,53 @@ static int DGCamLibGet(lua_State *L) {
 	const char *key = luaL_checkstring(L, 2);
 	
 	if (strcmp(key, "breathe") == 0) {
-		lua_pushboolean(L, DGCameraManager::getInstance().canBreathe());
+		lua_pushboolean(L, DGCameraManager::instance().canBreathe());
 		return 1;
 	}
     
     if (strcmp(key, "fov") == 0) {
-		lua_pushnumber(L, DGCameraManager::getInstance().fieldOfView());
+		lua_pushnumber(L, DGCameraManager::instance().fieldOfView());
 		return 1;
 	}
     
     if (strcmp(key, "horizontal") == 0) {
-        lua_pushnumber(L, DGCameraManager::getInstance().angleHorizontal());
+        lua_pushnumber(L, DGCameraManager::instance().angleHorizontal());
 		return 1;
 	}
     
     if (strcmp(key, "inertia") == 0) {
-        lua_pushnumber(L, DGCameraManager::getInstance().inertia());
+        lua_pushnumber(L, DGCameraManager::instance().inertia());
 		return 1;
 	}
     
     if (strcmp(key, "neutralZone") == 0) {
-        lua_pushnumber(L, DGCameraManager::getInstance().neutralZone());
+        lua_pushnumber(L, DGCameraManager::instance().neutralZone());
 		return 1;
 	}
     
     
     if (strcmp(key, "speed") == 0) {
-        lua_pushnumber(L, DGCameraManager::getInstance().maxSpeed());
+        lua_pushnumber(L, DGCameraManager::instance().maxSpeed());
 		return 1;
 	}
     
     if (strcmp(key, "smooth") == 0) {
-        lua_pushnumber(L, DGCameraManager::getInstance().speedFactor());
+        lua_pushnumber(L, DGCameraManager::instance().speedFactor());
 		return 1;
 	}
     
     if (strcmp(key, "vertical") == 0) {
-        lua_pushnumber(L, DGCameraManager::getInstance().angleVertical());
+        lua_pushnumber(L, DGCameraManager::instance().angleVertical());
 		return 1;
 	}
     
     if (strcmp(key, "verticalLimit") == 0) {
-        lua_pushnumber(L, DGCameraManager::getInstance().verticalLimit());
+        lua_pushnumber(L, DGCameraManager::instance().verticalLimit());
 		return 1;
 	}
     
 	if (strcmp(key, "walk") == 0) {
-		lua_pushboolean(L, DGCameraManager::getInstance().canWalk());
+		lua_pushboolean(L, DGCameraManager::instance().canWalk());
 		return 1;
 	}
 	
@@ -90,34 +90,34 @@ static int DGCamLibSet(lua_State *L) {
 	const char *key = luaL_checkstring(L, 2);
 	
 	if (strcmp(key, "breathe") == 0)
-		DGCameraManager::getInstance().setBreathe((bool)lua_toboolean(L, 3));
+		DGCameraManager::instance().setBreathe((bool)lua_toboolean(L, 3));
     
     if (strcmp(key, "fov") == 0)
-		DGCameraManager::getInstance().setFieldOfView(lua_tonumber(L, 3));
+		DGCameraManager::instance().setFieldOfView(lua_tonumber(L, 3));
     
     if (strcmp(key, "horizontal") == 0)
-		DGCameraManager::getInstance().setAngleHorizontal(lua_tonumber(L, 3));
+		DGCameraManager::instance().setAngleHorizontal(lua_tonumber(L, 3));
     
     if (strcmp(key, "inertia") == 0)
-		DGCameraManager::getInstance().setInertia(lua_tonumber(L, 3));
+		DGCameraManager::instance().setInertia(lua_tonumber(L, 3));
     
     if (strcmp(key, "neutralZone") == 0)
-		DGCameraManager::getInstance().setNeutralZone(lua_tonumber(L, 3));
+		DGCameraManager::instance().setNeutralZone(lua_tonumber(L, 3));
     
     if (strcmp(key, "speed") == 0)
-		DGCameraManager::getInstance().setMaxSpeed(lua_tonumber(L, 3));
+		DGCameraManager::instance().setMaxSpeed(lua_tonumber(L, 3));
     
     if (strcmp(key, "smooth") == 0)
-		DGCameraManager::getInstance().setSpeedFactor(lua_tonumber(L, 3));
+		DGCameraManager::instance().setSpeedFactor(lua_tonumber(L, 3));
     
     if (strcmp(key, "vertical") == 0)
-		DGCameraManager::getInstance().setAngleVertical(lua_tonumber(L, 3));
+		DGCameraManager::instance().setAngleVertical(lua_tonumber(L, 3));
     
     if (strcmp(key, "verticalLimit") == 0)
-		DGCameraManager::getInstance().setVerticalLimit(lua_tonumber(L, 3));
+		DGCameraManager::instance().setVerticalLimit(lua_tonumber(L, 3));
     
 	if (strcmp(key, "walk") == 0)
-		DGCameraManager::getInstance().setWalk((bool)lua_toboolean(L, 3));
+		DGCameraManager::instance().setWalk((bool)lua_toboolean(L, 3));
 	
 	return 0;
 }

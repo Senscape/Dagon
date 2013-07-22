@@ -57,7 +57,7 @@ public:
         DGSpot* spot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
         
         DGTexture* texture = new DGTexture;
-        texture->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 1), DGObjectImage));
+        texture->setResource(DGConfig::instance().path(DGPathRes, luaL_checkstring(L, 1), DGObjectImage));
         spot->setTexture(texture);
         
         n->addSpot(spot);
@@ -80,13 +80,13 @@ public:
         }
         
         // Register the node in the controller (generates the bundle)
-        DGControl::getInstance().registerObject(n);
+        DGControl::instance().registerObject(n);
         
-        if (DGScript::getInstance().isExecutingModule()) {
+        if (DGScript::instance().isExecutingModule()) {
             // A module is being executed, so we know a room
             // object of the same name exists
             
-            lua_getglobal(L, DGScript::getInstance().module());
+            lua_getglobal(L, DGScript::instance().module());
             DGRoom* r = DGProxyToRoom(L, -1);
             
             // We add the node automatically

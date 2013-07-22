@@ -36,8 +36,8 @@ class DGTexture;
 ////////////////////////////////////////////////////////////
 
 class DGButton : public DGImage {
-    DGConfig* config;
-    DGFontManager* fontManager;
+    DGConfig& config;
+    DGFontManager& fontManager;
     
     int _textColor;
     

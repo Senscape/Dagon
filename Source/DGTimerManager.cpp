@@ -34,7 +34,7 @@ DGTimerManager::DGTimerManager() {
     // TODO: Move this to init()
     _timerThread = thread([](){
         chrono::milliseconds dura(1);
-        while (DGTimerManager::getInstance().update()) {
+        while (DGTimerManager::instance().update()) {
             this_thread::sleep_for(dura);
         }
     });
@@ -58,7 +58,7 @@ bool DGTimerManager::checkManual(int handle) {
     DGTimer* timer = _lookUp(handle);
     
     if (timer->isEnabled) {
-        double currentTime = DGSystem::getInstance().wallTime();
+        double currentTime = DGSystem::instance().wallTime();
         double duration = currentTime - timer->lastTime;
         
         if (duration > timer->trigger) {
@@ -79,7 +79,7 @@ int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, i
     timer.hasTriggered = false;
     timer.isEnabled = true;
     timer.isLoopable = shouldLoop;
-    timer.lastTime = DGSystem::getInstance().wallTime();
+    timer.lastTime = DGSystem::instance().wallTime();
     timer.type = DGTimerNormal;    
     
     timer.trigger = trigger;
@@ -105,7 +105,7 @@ int DGTimerManager::createInternal(double trigger, void (*callback)()) {
     timer.handler = callback;
     timer.isEnabled = true;
     timer.isLoopable = false;  
-    timer.lastTime = DGSystem::getInstance().wallTime();
+    timer.lastTime = DGSystem::instance().wallTime();
     timer.type = DGTimerInternal;
     
     timer.trigger = trigger;
@@ -126,7 +126,7 @@ int DGTimerManager::createManual(double trigger) {
     timer.hasTriggered = false;
     timer.isEnabled = true;
     timer.isLoopable = false;   
-    timer.lastTime = DGSystem::getInstance().wallTime();
+    timer.lastTime = DGSystem::instance().wallTime();
     timer.type = DGTimerManual;
     
     timer.trigger = trigger;
@@ -152,7 +152,7 @@ void DGTimerManager::disable(int handle) {
 void DGTimerManager::enable(int handle) {
     DGTimer* timer = _lookUp(handle);
     timer->isEnabled = true;
-    timer->lastTime = DGSystem::getInstance().wallTime();
+    timer->lastTime = DGSystem::instance().wallTime();
 }
 
 void DGTimerManager::process() {
@@ -176,14 +176,14 @@ void DGTimerManager::process() {
                         if ((*it).luaObject) { // Belongs to a Lua object?
                             if ((*it).luaObject != _luaObject) {
                                 (*it).hasTriggered = false;
-                                (*it).lastTime = DGSystem::getInstance().wallTime(); // Reset timer
+                                (*it).lastTime = DGSystem::instance().wallTime(); // Reset timer
                                 break; // Do not invoke the handler
                             }
                         }
                         
                         if ((*it).isLoopable) {
                             (*it).hasTriggered = false;
-                            (*it).lastTime = DGSystem::getInstance().wallTime();
+                            (*it).lastTime = DGSystem::instance().wallTime();
                         }
                         else {
                             // Should destroy in reality
@@ -192,7 +192,7 @@ void DGTimerManager::process() {
                         
                         // Must unlock here for precaution
                         _mutexForArray.unlock();
-                        DGScript::getInstance().processCallback((*it).luaHandler, 0);
+                        DGScript::instance().processCallback((*it).luaHandler, 0);
                         keepProcessing = false;
                         break;
                 }
@@ -226,7 +226,7 @@ bool DGTimerManager::update() {
 		it = _arrayOfTimers.begin();
     
 		while (it != _arrayOfTimers.end()) {
-			double currentTime = DGSystem::getInstance().wallTime();
+			double currentTime = DGSystem::instance().wallTime();
 			double duration = currentTime - (*it).lastTime;
         
 			DGTimer* timer = &(*it);

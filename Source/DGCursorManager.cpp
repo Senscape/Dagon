@@ -25,14 +25,15 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGCursorManager::DGCursorManager() {
-    config = &DGConfig::getInstance();
+DGCursorManager::DGCursorManager() :
+    config(DGConfig::instance())
+{
     _hasAction = false;
     _hasImage = false;
     _isDragging = false;
     _onButton = false;
-    _x = config->displayWidth / 2;
-    _y = config->displayHeight / 2;
+    _x = config.displayWidth / 2;
+    _y = config.displayHeight / 2;
     
     this->setFadeSpeed(DGFadeFastest); // Cursor always fades with fastest speed
     this->setSize(DGDefCursorSize);
@@ -88,7 +89,7 @@ void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config->path(DGPathRes, imageFromFile, DGObjectCursor));
+    texture->setResource(config.path(DGPathRes, imageFromFile, DGObjectCursor));
     texture->load();
     
     cursor.type = type;

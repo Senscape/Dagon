@@ -24,7 +24,6 @@
 #include "DGRoom.h"
 #include "DGScene.h"
 #include "DGSpot.h"
-#include "DGSystem.h" // Temporary, we don't want this class calling system
 #include "DGTexture.h"
 #include "DGVideoManager.h"
 
@@ -37,13 +36,13 @@ DGVideo _cutscene; // FIXME: Static to avoid Theora issues, revise later
 ////////////////////////////////////////////////////////////
 
 // TODO: Improve rendering of layers supporting active layers
-DGScene::DGScene() {
-    cameraManager = &DGCameraManager::getInstance(); 
-    config = &DGConfig::getInstance();  
-    cursorManager = &DGCursorManager::getInstance();
-    renderManager = &DGRenderManager::getInstance();
-    videoManager = &DGVideoManager::getInstance();
-    
+DGScene::DGScene() :
+    cameraManager(DGCameraManager::instance()),
+    config(DGConfig::instance()),
+    cursorManager(DGCursorManager::instance()),
+    renderManager(DGRenderManager::instance()),
+    videoManager(DGVideoManager::instance())
+{
     _canDrawSpots = false;
     _isCutsceneLoaded = false;
     _isSplashLoaded = false;
@@ -66,11 +65,11 @@ DGScene::~DGScene() {
 ////////////////////////////////////////////////////////////
 
 void DGScene::clear() {
-    renderManager->resetView();
-    renderManager->clearView();
+    renderManager.resetView();
+    renderManager.clearView();
     
     // This is the first method we call because it sets the view
-    cameraManager->update();
+    cameraManager.update();
 }
 
 void DGScene::drawSpots() {
@@ -79,11 +78,11 @@ void DGScene::drawSpots() {
     if (_canDrawSpots) {
         DGNode* currentNode = _currentRoom->currentNode();
         if (currentNode->isEnabled()) {
-            renderManager->enablePostprocess();
-            renderManager->clearView();
+            renderManager.enablePostprocess();
+            renderManager.clearView();
             
             currentNode->updateFade();
-            renderManager->setAlpha(currentNode->fadeLevel());
+            renderManager.setAlpha(currentNode->fadeLevel());
             
             currentNode->beginIteratingSpots();
             do {
@@ -101,52 +100,52 @@ void DGScene::drawSpots() {
                             }
                             
                             spot->texture()->bind();
-                            renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                            renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
                         }
                     }
                     else {
                         // Draw right away...
                         spot->texture()->bind();
-                        renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                        renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
                     }
                 }
             } while (currentNode->iterateSpots());
             
-            if (config->showSpots) {
-                renderManager->disableTextures();
+            if (config.showSpots) {
+                renderManager.disableTextures();
                 
                 currentNode->beginIteratingSpots();
                 do {
                     DGSpot* spot = currentNode->currentSpot();
                     
                     if (spot->hasColor() && spot->isEnabled()) {
-                        renderManager->setColor(0x2500AAAA);
-                        renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                        renderManager.setColor(0x2500AAAA);
+                        renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
                     }
                 } while (currentNode->iterateSpots());
                 
-                renderManager->enableTextures();
+                renderManager.enableTextures();
             }
             
-            renderManager->disablePostprocess();
+            renderManager.disablePostprocess();
             processed = true;
         }
     }
     
     
     // Blends, gamma, etc.
-    cameraManager->beginOrthoView();
+    cameraManager.beginOrthoView();
     if (processed)
-        renderManager->drawPostprocessedView();
-    renderManager->blendView();
+        renderManager.drawPostprocessedView();
+    renderManager.blendView();
 }
 
 void DGScene::fadeIn() {
-    renderManager->fadeInNextUpdate();
+    renderManager.fadeInNextUpdate();
 }
 
 void DGScene::fadeOut() {
-    renderManager->fadeOutNextUpdate();
+    renderManager.fadeOutNextUpdate();
 }
 
 bool DGScene::scanSpots() {
@@ -159,8 +158,8 @@ bool DGScene::scanSpots() {
         
         // Check if the current node is enabled
         if (currentNode->isEnabled()) {
-            renderManager->disableAlpha();
-            renderManager->disableTextures();
+            renderManager.disableAlpha();
+            renderManager.disableTextures();
             
             // First pass: draw the colored spots
             currentNode->beginIteratingSpots();
@@ -168,8 +167,8 @@ bool DGScene::scanSpots() {
                 DGSpot* spot = currentNode->currentSpot();
                 
                 if (spot->hasColor() && spot->isEnabled()) {
-                    renderManager->setColor(spot->color());
-                    renderManager->drawPolygon(spot->arrayOfCoordinates(), spot->face());
+                    renderManager.setColor(spot->color());
+                    renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
                 }
             } while (currentNode->iterateSpots());
             
@@ -177,15 +176,15 @@ bool DGScene::scanSpots() {
             // set action, if available
             
             // FIXME: Should unify the checks here a bit more...
-            if (!cursorManager->isDragging() && !cursorManager->onButton()) {
-                DGPoint position = cursorManager->position();
-                int color = renderManager->testColor(position.x, position.y);
+            if (!cursorManager.isDragging() && !cursorManager.onButton()) {
+                DGPoint position = cursorManager.position();
+                int color = renderManager.testColor(position.x, position.y);
                 if (color) {
                     currentNode->beginIteratingSpots();
                     do {
                         DGSpot* spot = currentNode->currentSpot();
                         if (color == spot->color()) {
-                            cursorManager->setAction(spot->action());
+                            cursorManager.setAction(spot->action());
                             foundAction = true;
                             
                             break;
@@ -194,20 +193,20 @@ bool DGScene::scanSpots() {
                 }
                 
                 if (!foundAction) {
-                    cursorManager->removeAction();
+                    cursorManager.removeAction();
                     
-                    if (cameraManager->isPanning())
-                        cursorManager->setCursor(cameraManager->cursorWhenPanning());
-                    else cursorManager->setCursor(DGCursorNormal);
+                    if (cameraManager.isPanning())
+                        cursorManager.setCursor(cameraManager.cursorWhenPanning());
+                    else cursorManager.setCursor(DGCursorNormal);
                 }
             }
             
-            renderManager->enableAlpha();
-            renderManager->enableTextures();
+            renderManager.enableAlpha();
+            renderManager.enableTextures();
         }
     }
     
-    renderManager->clearView();
+    renderManager.clearView();
     
     if (foundAction) return true;
     else return false;
@@ -243,16 +242,16 @@ bool DGScene::drawCutscene() {
         
         // Note this is inverted
         int coords[] = {0, 0,
-            config->displayWidth, 0,
-            config->displayWidth, config->displayHeight,
-            0, config->displayHeight};
+            config.displayWidth, 0,
+            config.displayWidth, config.displayHeight,
+            0, config.displayHeight};
         
-        renderManager->enablePostprocess();
-        cameraManager->beginOrthoView();
-        renderManager->enableTextures();
-        renderManager->drawSlide(coords);
-        renderManager->disablePostprocess();
-        renderManager->drawPostprocessedView();
+        renderManager.enablePostprocess();
+        cameraManager.beginOrthoView();
+        renderManager.enableTextures();
+        renderManager.drawSlide(coords);
+        renderManager.disablePostprocess();
+        renderManager.drawPostprocessedView();
         
         return true;
     }
@@ -263,8 +262,8 @@ bool DGScene::drawCutscene() {
 void DGScene::loadCutscene(const char* fileName) {
     _cutsceneTexture = new DGTexture;
     
-    _cutscene.setResource(config->path(DGPathRes, fileName, DGObjectVideo));
-    videoManager->requestVideo(&_cutscene);
+    _cutscene.setResource(config.path(DGPathRes, fileName, DGObjectVideo));
+    videoManager.requestVideo(&_cutscene);
     
     if (_cutscene.isLoaded()) {
         _cutscene.play();
@@ -294,13 +293,13 @@ void DGScene::drawSplash() {
     
     // Note this is inverted
     int coords[] = {0, 0,
-        config->displayWidth, 0,
-        config->displayWidth, config->displayHeight,
-        0, config->displayHeight}; 
+        config.displayWidth, 0,
+        config.displayWidth, config.displayHeight,
+        0, config.displayHeight}; 
     
-    cameraManager->beginOrthoView();
-    renderManager->enableTextures();
-    renderManager->drawSlide(coords);
+    cameraManager.beginOrthoView();
+    renderManager.enableTextures();
+    renderManager.drawSlide(coords);
 }
 
 void DGScene::loadSplash() {

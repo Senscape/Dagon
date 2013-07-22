@@ -74,7 +74,7 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGVideo : public DGObject {
-    DGLog* log;
+    DGLog& log;
     
     DGFrame _currentFrame;
     DGTheoraInfo* _theoraInfo;

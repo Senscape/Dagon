@@ -92,7 +92,7 @@ public:
                 break;
             case FUNCTION:
                 if (!lua_isfunction(L, 2)) {
-                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
+                    DGLog::instance().error(DGModScript, "%s", DGMsg250006);
                     return 0;
                 }
                 
@@ -109,7 +109,7 @@ public:
                 else if (type == DGObjectRoom)
                     action.target = DGProxyToRoom(L, 2);
                 else {
-                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250005);
+                    DGLog::instance().error(DGModScript, "%s", DGMsg250005);
                     return 0;
                 }
                 

@@ -34,8 +34,8 @@ class DGLog;
 
 class DGSystem {
     DGControl* control;
-    DGConfig* config;
-    DGLog* log;
+    DGConfig& config;
+    DGLog& log;
 
     bool _isInitialized;
     bool _isRunning;
@@ -51,20 +51,15 @@ class DGSystem {
     static void _mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
     static void _sizeCallback(GLFWwindow* window, int width, int height);
     
-    // Private constructor/destructor
     DGSystem();
+    DGSystem(DGSystem const&);
+    DGSystem& operator=(DGSystem const&);
     ~DGSystem();
-    // Stop the compiler generating methods of copy the object
-    DGSystem(DGSystem const& copy);            // Not implemented
-    DGSystem& operator=(DGSystem const& copy); // Not implemented
     
 public:
-    static DGSystem& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGSystem instance;
-        return instance;
+    static DGSystem& instance() {
+        static DGSystem system;
+        return system;
     }
     
     void browse(const char* url);

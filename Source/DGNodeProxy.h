@@ -63,13 +63,13 @@ public:
         n->setName(luaL_checkstring(L, 1));
         
         // Register the node in the controller (generates the bundle)
-        DGControl::getInstance().registerObject(n);
+        DGControl::instance().registerObject(n);
         
-        if (DGScript::getInstance().isExecutingModule()) {
+        if (DGScript::instance().isExecutingModule()) {
             // A module is being executed, so we know a room
             // object of the same name exists
             
-            lua_getglobal(L, DGScript::getInstance().module());
+            lua_getglobal(L, DGScript::instance().module());
             DGRoom* r = DGProxyToRoom(L, -1);
             
             // We add the node automatically

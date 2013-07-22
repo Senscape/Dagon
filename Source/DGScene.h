@@ -39,11 +39,11 @@ class DGVideoManager;
 // TODO: Unify splash and cutscene codes
 class DGScene {
     // References to singletons
-    DGCameraManager* cameraManager;    
-    DGConfig* config;
-    DGCursorManager* cursorManager;   
-    DGRenderManager* renderManager;
-    DGVideoManager* videoManager;
+    DGCameraManager& cameraManager;
+    DGConfig& config;
+    DGCursorManager& cursorManager;
+    DGRenderManager& renderManager;
+    DGVideoManager& videoManager;
     
     // Other classes
     DGRoom* _currentRoom;

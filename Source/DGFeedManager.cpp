@@ -28,12 +28,12 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGFeedManager::DGFeedManager() {
-    audioManager = &DGAudioManager::instance();  
-    config = &DGConfig::getInstance();
-    fontManager = &DGFontManager::getInstance();    
-    timerManager = &DGTimerManager::getInstance();   
-    
+DGFeedManager::DGFeedManager() :
+    audioManager(DGAudioManager::instance()),
+    config(DGConfig::instance()),
+    fontManager(DGFontManager::instance()),
+    timerManager(DGTimerManager::instance())
+{
     _feedHeight = DGDefFeedSize;
 }
 
@@ -63,9 +63,9 @@ void DGFeedManager::clear() {
 void DGFeedManager::init() {
     _feedAudio = new DGAudio;
     _feedAudio->setStatic();
-    audioManager->registerAudio(_feedAudio);
+    audioManager.registerAudio(_feedAudio);
     
-    _feedFont = fontManager->loadDefault();
+    _feedFont = fontManager.loadDefault();
 }
 
 bool DGFeedManager::hasQueued() {
@@ -104,14 +104,14 @@ void DGFeedManager::reshape() {
 
 // TODO: Note the font manager should purge unused fonts
 void DGFeedManager::setFont(const char* fromFileName, unsigned int heightOfFont) {
-    _feedFont = fontManager->load(fromFileName, heightOfFont);
+    _feedFont = fontManager.load(fromFileName, heightOfFont);
     _feedHeight = heightOfFont;
 }
 
 void DGFeedManager::show(const char* text) {
-    if (config->subtitles && (strcmp(text, "") != 0)) {
+    if (config.subtitles && (strcmp(text, "") != 0)) {
         string str = text;
-        size_t maxChars = config->displayWidth / _feedHeight;
+        size_t maxChars = config.displayWidth / _feedHeight;
         size_t even = str.length() / (str.length() / maxChars + 1);
         size_t currSpace = 0;
         size_t nextSpace = 0;
@@ -127,7 +127,7 @@ void DGFeedManager::show(const char* text) {
             _calculatePosition(&feed);
             feed.color = DGColorWhite - 0xFF000000;
             feed.state = DGFeedFadeIn;
-            feed.timerHandle = timerManager->createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable
+            feed.timerHandle = timerManager.createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable
             
             _arrayOfActiveFeeds.push_back(feed);
             
@@ -142,9 +142,9 @@ void DGFeedManager::showAndPlay(const char* text, const char* audio) {
     if (_feedAudio->isLoaded())
         _feedAudio->unload();
     
-    if (!config->silentFeeds) {
+    if (!config.silentFeeds) {
         _feedAudio->setResource(audio);
-        audioManager->requestAudio(_feedAudio);
+        audioManager.requestAudio(_feedAudio);
         _feedAudio->play();
     }
 }
@@ -164,7 +164,7 @@ void DGFeedManager::update() {
                 }
                 break;
             case DGFeedIdle:
-                if (timerManager->checkManual((*it).timerHandle))
+                if (timerManager.checkManual((*it).timerHandle))
                     (*it).state = DGFeedFadeOut;
                 break;
             case DGFeedFadeOut:
@@ -224,8 +224,8 @@ void DGFeedManager::_calculatePosition(DGFeed* feed) {
     int width = (_feedHeight * 0.66f); // We have no option but to estimate this
     size_t length = strlen(feed->text) * width;
     
-    feed->location.x = (config->displayWidth / 2) - (length / 2);
-    feed->location.y = config->displayHeight - _feedHeight - DGFeedMargin;
+    feed->location.x = (config.displayWidth / 2) - (length / 2);
+    feed->location.y = config.displayHeight - _feedHeight - DGFeedMargin;
 }
 
 void DGFeedManager::_dim() {

@@ -33,10 +33,10 @@ int _isDragging = false;
 
 // TODO: At this point the system module should copy the config file
 // into the user folder
-DGSystem::DGSystem() {  
-    log = &DGLog::getInstance();
-    config = &DGConfig::getInstance();
-
+DGSystem::DGSystem() :
+    config(DGConfig::instance()),
+    log(DGLog::instance())
+{
     _isInitialized = false;
     _isRunning = false;
 }
@@ -54,7 +54,7 @@ DGSystem::~DGSystem() {
 ////////////////////////////////////////////////////////////
 
 void DGSystem::browse(const char* url) {
-    log->warning(DGModSystem, "Browsing is currently disabled");
+    log.warning(DGModSystem, "Browsing is currently disabled");
 }
 
 void DGSystem::findPaths(int argc, char* argv[]) {
@@ -63,10 +63,10 @@ void DGSystem::findPaths(int argc, char* argv[]) {
 
 void DGSystem::init() {
     if (!_isInitialized) {
-        log->trace(DGModSystem, "%s", DGMsg040000);
+        log.trace(DGModSystem, "%s", DGMsg040000);
         
-        log->info(DGModControl, "%s: %s", DGMsg030000, DGVersionString);
-        log->info(DGModControl, "%s: %d", DGMsg030003, DGVersionBuild);
+        log.info(DGModControl, "%s: %s", DGMsg030000, DGVersionString);
+        log.info(DGModControl, "%s: %d", DGMsg030003, DGVersionBuild);
         
         glfwSetErrorCallback(_errorCallback);
         
@@ -76,7 +76,7 @@ void DGSystem::init() {
         int major, minor, rev;
         glfwGetVersion(&major, &minor, &rev);
         
-        log->info(DGModSystem, "%s: %d.%d.%d", DGMsg040002, major, minor, rev);
+        log.info(DGModSystem, "%s: %d.%d.%d", DGMsg040002, major, minor, rev);
         
         // Have to make sure these are all set to 8 bits (GFW 3.0.0 defaults to 5,5,5)
         glfwWindowHint(GLFW_RED_BITS, 8);
@@ -87,25 +87,25 @@ void DGSystem::init() {
         monitor = glfwGetPrimaryMonitor();
         const GLFWvidmode* videoMode = glfwGetVideoMode(monitor);
         
-        if (!config->displayWidth || !config->displayHeight) {
-            config->displayWidth = videoMode->width;
-            config->displayHeight = videoMode->height;
+        if (!config.displayWidth || !config.displayHeight) {
+            config.displayWidth = videoMode->width;
+            config.displayHeight = videoMode->height;
             
-            if (config->fullScreen) {
-                config->displayWidth = videoMode->width;
-                config->displayHeight = videoMode->height;
+            if (config.fullScreen) {
+                config.displayWidth = videoMode->width;
+                config.displayHeight = videoMode->height;
             }
             else {
                 // Use a third the screen
-                config->displayWidth = videoMode->width / 1.5;
-                config->displayHeight = videoMode->height / 1.5;
+                config.displayWidth = videoMode->width / 1.5;
+                config.displayHeight = videoMode->height / 1.5;
             }
         }
         
-        if (config->fullScreen)
-            window = glfwCreateWindow(config->displayWidth, config->displayHeight, "Dagon", monitor, NULL);
+        if (config.fullScreen)
+            window = glfwCreateWindow(config.displayWidth, config.displayHeight, "Dagon", monitor, NULL);
         else
-            window = glfwCreateWindow(config->displayWidth, config->displayHeight, "Dagon", NULL, NULL);
+            window = glfwCreateWindow(config.displayWidth, config.displayHeight, "Dagon", NULL, NULL);
         
         if (!window) {
             glfwTerminate();
@@ -115,12 +115,12 @@ void DGSystem::init() {
         glfwMakeContextCurrent(window);
         
         // Set vertical sync according to our configuration
-        if (config->verticalSync) {
+        if (config.verticalSync) {
             glfwSwapInterval(1);
         }
         else {
             // Force our own frame limiter on
-            config->frameLimiter = true;
+            config.frameLimiter = true;
             glfwSwapInterval(0);
         }
         
@@ -133,31 +133,31 @@ void DGSystem::init() {
         glfwSetMouseButtonCallback(window, _mouseButtonCallback);
         glfwSetWindowSizeCallback(window, _sizeCallback);
         
-        control = &DGControl::getInstance();
+        control = &DGControl::instance();
         control->init();
         
         // Force a reshape to calculate the size of the cursor
-        control->reshape(config->displayWidth, config->displayHeight);
+        control->reshape(config.displayWidth, config.displayHeight);
         
         // Update once to show a black screen
         control->update();
         
         _isInitialized = true;
-        log->trace(DGModSystem, "%s", DGMsg040001);
+        log.trace(DGModSystem, "%s", DGMsg040001);
     }
-    else log->warning(DGModSystem, "%s", DGMsg140002);
+    else log.warning(DGModSystem, "%s", DGMsg140002);
 }
 
 void DGSystem::run() {
     _isRunning = true;
 
     double startTime = glfwGetTime();
-    double updateInterval = 1.0 / (double)config->framerate;
+    double updateInterval = 1.0 / (double)config.framerate;
     
     while (_isRunning && !glfwWindowShouldClose(window)) {
-        if (config->frameLimiter) {
+        if (config.frameLimiter) {
             while (startTime < glfwGetTime()) {
-                config->setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
+                config.setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
                 control->update();
             
                 glfwSwapBuffers(window);
@@ -167,7 +167,7 @@ void DGSystem::run() {
             }
         }
         else {
-            config->setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
+            config.setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
             control->update();
         
             glfwSwapBuffers(window);
@@ -192,17 +192,17 @@ void DGSystem::terminate() {
     
     switch (r) {
         default:
-        case 0: log->trace(DGModSystem, "%s", DGMsg040100); break;
-        case 1: log->trace(DGModSystem, "%s", DGMsg040101); break;
-        case 2: log->trace(DGModSystem, "%s", DGMsg040102); break;
-        case 3: log->trace(DGModSystem, "%s", DGMsg040103); break;
+        case 0: log.trace(DGModSystem, "%s", DGMsg040100); break;
+        case 1: log.trace(DGModSystem, "%s", DGMsg040101); break;
+        case 2: log.trace(DGModSystem, "%s", DGMsg040102); break;
+        case 3: log.trace(DGModSystem, "%s", DGMsg040103); break;
     }
     
     glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 void DGSystem::toggleFullScreen() {
-    log->warning(DGModSystem, "Toggling fullscreen currently disabled");
+    log.warning(DGModSystem, "Toggling fullscreen currently disabled");
 }
 
 double DGSystem::wallTime() {
@@ -244,15 +244,15 @@ double DGSystem::_calculateFrames(double theInterval = 1.0) {
 }
 
 void DGSystem::_charCallback(GLFWwindow* window, unsigned int character) {
-    if (DGControl::getInstance().isConsoleActive() || character == DGKeyQuote)
-        DGControl::getInstance().processKey(character, DGKeyEventDown);
+    if (DGControl::instance().isConsoleActive() || character == DGKeyQuote)
+        DGControl::instance().processKey(character, DGKeyEventDown);
 }
 
 void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
-    int width = DGConfig::getInstance().displayWidth;
-	int height = DGConfig::getInstance().displayHeight;
+    int width = DGConfig::instance().displayWidth;
+	int height = DGConfig::instance().displayHeight;
     
-    if (DGControl::getInstance().isDirectControlActive()) {
+    if (DGControl::instance().isDirectControlActive()) {
         if ((xpos <= 1) || ypos >= (width - 1)) {
             glfwSetCursorPos(window, width / 2, height / 2);
         }
@@ -263,13 +263,13 @@ void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) 
     }
     
     if (_isDragging)
-        DGControl::getInstance().processMouse(xpos, ypos, DGMouseEventDrag);
+        DGControl::instance().processMouse(xpos, ypos, DGMouseEventDrag);
     else
-        DGControl::getInstance().processMouse(xpos, ypos, DGMouseEventMove);
+        DGControl::instance().processMouse(xpos, ypos, DGMouseEventMove);
 }
 
 void DGSystem::_errorCallback(int error, const char* description) {
-    DGLog::getInstance().error(DGModSystem, "%s", description);
+    DGLog::instance().error(DGModSystem, "%s", description);
 }
 
 void DGSystem::_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -300,7 +300,7 @@ void DGSystem::_keyCallback(GLFWwindow* window, int key, int scancode, int actio
         case GLFW_KEY_F11:
         case GLFW_KEY_F12:
             if (event == DGKeyEventDown)
-                DGControl::getInstance().processFunctionKey(key);
+                DGControl::instance().processFunctionKey(key);
             break;
             
         // We process these keys regardless of the console state
@@ -308,11 +308,11 @@ void DGSystem::_keyCallback(GLFWwindow* window, int key, int scancode, int actio
         case GLFW_KEY_ESCAPE:
         case GLFW_KEY_TAB:
         case GLFW_KEY_ENTER:
-            DGControl::getInstance().processKey(key, event);
+            DGControl::instance().processKey(key, event);
             break;
         default:
-            if (!DGControl::getInstance().isConsoleActive())
-                DGControl::getInstance().processKey(key, event);
+            if (!DGControl::instance().isConsoleActive())
+                DGControl::instance().processKey(key, event);
             break;
     }
 }
@@ -339,13 +339,13 @@ void DGSystem::_mouseButtonCallback(GLFWwindow* window, int button, int action, 
     }
     
     glfwGetCursorPos(window, &xpos, &ypos);
-    DGControl::getInstance().processMouse(xpos, ypos, event);
+    DGControl::instance().processMouse(xpos, ypos, event);
 }
 
 void DGSystem::_sizeCallback(GLFWwindow* window, int width, int height) {
-    DGControl::getInstance().reshape(width, height);
+    DGControl::instance().reshape(width, height);
     
     // Update view for live resize
-    DGControl::getInstance().update();
+    DGControl::instance().update();
     glfwSwapBuffers(window);
 }

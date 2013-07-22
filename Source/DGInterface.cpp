@@ -32,11 +32,12 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGInterface::DGInterface() {
-    cameraManager = &DGCameraManager::getInstance(); 
-    config = &DGConfig::getInstance();  
-    cursorManager = &DGCursorManager::getInstance();
-    renderManager = &DGRenderManager::getInstance();
+DGInterface::DGInterface() :
+    cameraManager(DGCameraManager::instance()),
+    config(DGConfig::instance()),
+    cursorManager(DGCursorManager::instance()),
+    renderManager(DGRenderManager::instance())
+{
 }
 
 ////////////////////////////////////////////////////////////
@@ -56,46 +57,46 @@ void DGInterface::addOverlay(DGOverlay* overlay) {
 }
 
 void DGInterface::drawCursor() {
-    renderManager->setAlpha(1.0f);
+    renderManager.setAlpha(1.0f);
     
     // Mouse cursor
-    if (cursorManager->isEnabled()) {
-        if (cursorManager->hasImage()) { // A bitmap cursor is currently set
-            cursorManager->updateFade(); // Process fade (supported only with bitmaps)
-            cursorManager->bindImage();
-            renderManager->setAlpha(cursorManager->fadeLevel());
-            renderManager->drawSlide(cursorManager->arrayOfCoords());
+    if (cursorManager.isEnabled()) {
+        if (cursorManager.hasImage()) { // A bitmap cursor is currently set
+            cursorManager.updateFade(); // Process fade (supported only with bitmaps)
+            cursorManager.bindImage();
+            renderManager.setAlpha(cursorManager.fadeLevel());
+            renderManager.drawSlide(cursorManager.arrayOfCoords());
         }
         else {
-            DGPoint position = cursorManager->position();
+            DGPoint position = cursorManager.position();
             
-            renderManager->disableTextures(); // Default cursor doesn't require textures
-            if (cursorManager->onButton() || cursorManager->hasAction())
-                renderManager->setColor(DGColorBrightRed);
+            renderManager.disableTextures(); // Default cursor doesn't require textures
+            if (cursorManager.onButton() || cursorManager.hasAction())
+                renderManager.setColor(DGColorBrightRed);
             else
-                renderManager->setColor(DGColorDarkGray);
-            renderManager->drawHelper(position.x, position.y, false);
-            renderManager->enableTextures();
+                renderManager.setColor(DGColorDarkGray);
+            renderManager.drawHelper(position.x, position.y, false);
+            renderManager.enableTextures();
         }
     }
 }
 
 void DGInterface::drawHelpers() {
-    renderManager->disableTextures();
+    renderManager.disableTextures();
     
     // Helpers
-    if (config->showHelpers) {
-        if (renderManager->beginIteratingHelpers()) { // Check if we have any
+    if (config.showHelpers) {
+        if (renderManager.beginIteratingHelpers()) { // Check if we have any
             do {
-                DGPoint point = renderManager->currentHelper();
-                renderManager->setColor(DGColorBrightCyan);
-                renderManager->drawHelper(point.x, point.y, true);
+                DGPoint point = renderManager.currentHelper();
+                renderManager.setColor(DGColorBrightCyan);
+                renderManager.drawHelper(point.x, point.y, true);
                 
-            } while (renderManager->iterateHelpers());
+            } while (renderManager.iterateHelpers());
         }
     }
     
-    renderManager->enableTextures();
+    renderManager.enableTextures();
 }
 
 void DGInterface::drawOverlays() {
@@ -117,20 +118,20 @@ void DGInterface::drawOverlays() {
                             button->updateFade();
                             
                             if (button->hasTexture()) {
-                                renderManager->setAlpha(button->fadeLevel());
+                                renderManager.setAlpha(button->fadeLevel());
                                 button->texture()->bind();
-                                renderManager->drawSlide(button->arrayOfCoordinates());
+                                renderManager.drawSlide(button->arrayOfCoordinates());
                             }
                             
                             if (button->hasText()) {
                                 DGPoint position = button->position();
                                // int color = button->textColor();
                                 if (button->isFading())
-                                    renderManager->setColor(button->textColor(), button->fadeLevel());
+                                    renderManager.setColor(button->textColor(), button->fadeLevel());
                                 else
-                                    renderManager->setColor(button->textColor());
+                                    renderManager.setColor(button->textColor());
                                 button->font()->print(position.x, position.y, button->text());
-                                renderManager->setColor(DGColorWhite); // Reset the color
+                                renderManager.setColor(DGColorWhite); // Reset the color
                             }
                         }
                     } while ((*itOverlay)->iterateButtons());
@@ -147,8 +148,8 @@ void DGInterface::drawOverlays() {
                         if (image->isEnabled()) {
                             image->updateFade(); // Perform any necessary updates
                             image->texture()->bind();
-                            renderManager->setAlpha(image->fadeLevel());
-                            renderManager->drawSlide(image->arrayOfCoordinates());
+                            renderManager.setAlpha(image->fadeLevel());
+                            renderManager.drawSlide(image->arrayOfCoordinates());
                         }
                     } while ((*itOverlay)->iterateImages());
                 }
@@ -161,7 +162,7 @@ void DGInterface::drawOverlays() {
 }
 
 bool DGInterface::scanOverlays() {
-    cursorManager->setOnButton(false);
+    cursorManager.setOnButton(false);
     
     if (!_arrayOfOverlays.empty()) {
         vector<DGOverlay*>::reverse_iterator itOverlay;
@@ -177,14 +178,14 @@ bool DGInterface::scanOverlays() {
                     do {
                         DGButton* button = (*itOverlay)->currentButton();
                         if (button->isEnabled()) {
-                            DGPoint position = cursorManager->position();
+                            DGPoint position = cursorManager.position();
                             int* arrayOfCoordinates = button->arrayOfCoordinates();
                             if (position.x >= arrayOfCoordinates[0] && position.y >= arrayOfCoordinates[1] &&
                                 position.x <= arrayOfCoordinates[4] && position.y <= arrayOfCoordinates[5]) {
                                 
-                                cursorManager->setOnButton(true);
+                                cursorManager.setOnButton(true);
                                 if (button->hasAction())
-                                    cursorManager->setAction(button->action());
+                                    cursorManager.setAction(button->action());
                                 
                                 return true;
                             }

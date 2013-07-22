@@ -76,13 +76,13 @@ extern "C" const unsigned char DGDefDustBinary[];
 extern "C" const char DGDefShaderData[];
 
 ////////////////////////////////////////////////////////////
-// Interface
+// Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
 class DGEffectsManager {
-    DGConfig* config;
-    DGCameraManager* cameraManager;
-    DGTimerManager* timerManager;
+    DGConfig& config;
+    DGCameraManager& cameraManager;
+    DGTimerManager& timerManager;
     
     GLuint _fragment;
     GLuint _program;
@@ -128,21 +128,16 @@ class DGEffectsManager {
     
     void _buildParticle(int idx); // For dust
     
-    // Private constructor/destructor
     DGEffectsManager();
+    DGEffectsManager(DGEffectsManager const&);
+    DGEffectsManager& operator=(DGEffectsManager const&);
     ~DGEffectsManager();
-    // Stop the compiler generating methods of copy the object
-    DGEffectsManager(DGEffectsManager const& copy);            // Not implemented
-    DGEffectsManager& operator=(DGEffectsManager const& copy); // Not implemented
     
 public:
-    static DGEffectsManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGEffectsManager instance;
-        return instance;
-    }
+    static DGEffectsManager& instance() {
+        static DGEffectsManager effectsManager;
+        return effectsManager;
+}
     
     void drawDust();
     void init();

@@ -30,10 +30,10 @@ class DGRenderManager;
 
 class DGInterface {
     // References to singletons
-    DGCameraManager* cameraManager;    
-    DGConfig* config;
-    DGCursorManager* cursorManager;
-    DGRenderManager* renderManager;
+    DGCameraManager& cameraManager;
+    DGConfig& config;
+    DGCursorManager& cursorManager;
+    DGRenderManager& renderManager;
     
     std::vector<DGOverlay*> _arrayOfOverlays;
     std::vector<DGOverlay*> _arrayOfActiveOverlays; // Visible overlays go here

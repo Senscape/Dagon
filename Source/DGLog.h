@@ -61,27 +61,23 @@ class DGConfig;
 ////////////////////////////////////////////////////////////
 
 class DGLog {
-    DGConfig* config;
+    DGConfig& config;
     
     std::ofstream _filestr;
     std::vector<DGLogData> _history;
     std::vector<DGLogData>::reverse_iterator _it;
     void _log(DGLogData* data);
     
-    // Private constructor/destructor
     DGLog();
+    DGLog(DGLog const&);
+    DGLog& operator=(DGLog const&);
     ~DGLog();
-    // Stop the compiler generating methods of copy the object
-    DGLog(DGLog const& copy);            // Not implemented
-    DGLog& operator=(DGLog const& copy); // Not implemented
     
 public:
-    static DGLog& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGLog instance;
-        return instance;
+    static DGLog& instance() {
+        static DGLog log;
+        return log;
+        
     }
     
     void command(int forModule, const char* theString, ...);

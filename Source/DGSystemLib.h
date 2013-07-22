@@ -31,19 +31,19 @@
 ////////////////////////////////////////////////////////////
 
 static int DGSystemLibBrowse(lua_State *L) {
-    DGSystem::getInstance().browse(lua_tostring(L, 1));
+    DGSystem::instance().browse(lua_tostring(L, 1));
     
     return 0;
 }
 
 static int DGSystemLibInit(lua_State *L) {
-    DGSystem::getInstance().init();
+    DGSystem::instance().init();
     
     return 0;
 }
 
 static int DGSystemLibRun(lua_State *L) {
-    DGSystem::getInstance().run();
+    DGSystem::instance().run();
 	
 	return 0;
 }
@@ -51,13 +51,13 @@ static int DGSystemLibRun(lua_State *L) {
 static int DGSystemLibUpdate(lua_State *L) {
     // We allow this in case the user wants to implement a loop of some kind.
     // FIXME: Currently has a conflict if there's an event hook registered.
-    DGControl::getInstance().update();
+    DGControl::instance().update();
 	
 	return 0;
 }
 
 static int DGSystemLibTerminate(lua_State *L) {
-    DGControl::getInstance().terminate();
+    DGControl::instance().terminate();
 	
 	return 0;
 }

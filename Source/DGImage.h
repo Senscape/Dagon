@@ -32,7 +32,7 @@ class DGTexture;
 ////////////////////////////////////////////////////////////
 
 class DGImage : public DGObject {
-    DGConfig* config;
+    DGConfig& config;
     
     DGTexture* _attachedTexture;
     int _arrayOfCoordinates[8];

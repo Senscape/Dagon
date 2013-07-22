@@ -27,11 +27,11 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGRenderManager::DGRenderManager() {
-    config = &DGConfig::getInstance();
-    effectsManager = &DGEffectsManager::getInstance();    
-    log = &DGLog::getInstance();
-    
+DGRenderManager::DGRenderManager() :
+    config(DGConfig::instance()),
+    effectsManager(DGEffectsManager::instance()),
+    log(DGLog::instance())
+{
     _blendTexture = NULL;
     _fadeTexture = NULL;
     _fadeWithZoom = false;
@@ -63,19 +63,19 @@ void DGRenderManager::init() {
     
     const GLubyte* version = glewGetString(GLEW_VERSION);
     
-    log->info(DGModRender, "%s: %s", DGMsg020004, version);
+    log.info(DGModRender, "%s: %s", DGMsg020004, version);
     
     version = glGetString(GL_VERSION);
     
-	log->trace(DGModRender, "%s", DGMsg020000);
-	log->info(DGModRender, "%s: %s", DGMsg020001, version);
+	log.trace(DGModRender, "%s", DGMsg020000);
+	log.info(DGModRender, "%s: %s", DGMsg020001, version);
     
 	if (glewIsSupported("GL_VERSION_2_0")) {
 		_effectsEnabled = true;
-        effectsManager->init();
+        effectsManager.init();
 	}
 	else {
-		log->warning(DGModRender, "%s", DGMsg020002);
+		log.warning(DGModRender, "%s", DGMsg020002);
 		_effectsEnabled = false;
 	}
     
@@ -94,7 +94,7 @@ void DGRenderManager::init() {
     //glDepthFunc(GL_ALWAYS);
 	//glDepthMask(GL_TRUE);
     
-	if (config->antialiasing) {
+	if (config.antialiasing) {
 		// FIXME: Some of these options may be introducing black lines
 		glEnable(GL_POINT_SMOOTH);
 		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
@@ -115,13 +115,13 @@ void DGRenderManager::init() {
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
 	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
-		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 1.87f * M_PI / DGDefCursorDetail)) * config->displayWidth);
-		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 1.87f * M_PI / DGDefCursorDetail)) * config->displayHeight);
+		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 1.87f * M_PI / DGDefCursorDetail)) * config.displayWidth);
+		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 1.87f * M_PI / DGDefCursorDetail)) * config.displayHeight);
 	}    
     
     glEnableClientState(GL_VERTEX_ARRAY);
     
-    if (config->framebuffer)
+    if (config.framebuffer)
         _initFrameBuffer();
 }
 
@@ -175,7 +175,7 @@ DGVector DGRenderManager::project(float x, float y, float z) {
                &winX, &winY, &winZ);
     
     vector.x = (double)winX;
-    vector.y = config->displayHeight - (double)winY; // This one must be inverted
+    vector.y = config.displayHeight - (double)winY; // This one must be inverted
     vector.z = (double)winZ;
     
     return vector;
@@ -237,7 +237,7 @@ void DGRenderManager::disableAlpha() {
 }
 
 void DGRenderManager::disablePostprocess() {
-    effectsManager->drawDust();
+    effectsManager.drawDust();
     
     if (_framebufferEnabled)
         glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0); // Unbind our texture
@@ -426,19 +426,19 @@ void DGRenderManager::drawPostprocessedView() {
     if (_framebufferEnabled) {
         glBindTexture(GL_TEXTURE_2D, _fboTexture); // Bind our frame buffer texture
     
-        if (config->effects) {
-            effectsManager->play();
-            effectsManager->update();
+        if (config.effects) {
+            effectsManager.play();
+            effectsManager.update();
         }
         
-        int coords[] = {0, config->displayHeight,
-            config->displayWidth, config->displayHeight,
-            config->displayWidth, 0,
+        int coords[] = {0, config.displayHeight,
+            config.displayWidth, config.displayHeight,
+            config.displayWidth, 0,
             0, 0};
         
         this->drawSlide(coords);
         
-        effectsManager->pause();
+        effectsManager.pause();
         
         glBindTexture(GL_TEXTURE_2D, 0); // Unbind any textures
     }
@@ -487,7 +487,7 @@ int	DGRenderManager::testColor(int xPosition, int yPosition) {
 	uint32_t aux;
     
     // Note we flip the Y coordinate here because only the orthogonal projection is flipped
-	glReadPixels(xPosition, config->displayHeight - yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+	glReadPixels(xPosition, config.displayHeight - yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
     
     r = (GLint)pixel[0];
 	g = (GLint)pixel[1];
@@ -539,7 +539,7 @@ void DGRenderManager::clearView() {
 }
 
 void DGRenderManager::copyView() {
-   	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config->displayWidth, config->displayHeight, 0); 
+   	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config.displayWidth, config.displayHeight, 0); 
 }
 
 void DGRenderManager::blendView() {
@@ -548,22 +548,22 @@ void DGRenderManager::blendView() {
 		int yStretch;
         
         if (_fadeWithZoom) {
-            xStretch = _blendOpacity * (config->displayWidth / 4);
-            yStretch = _blendOpacity * (config->displayHeight / 4);
+            xStretch = _blendOpacity * (config.displayWidth / 4);
+            yStretch = _blendOpacity * (config.displayHeight / 4);
             
             // This should a bit faster than the walk_time factor
-            _blendOpacity += 0.015f * config->globalSpeed();
+            _blendOpacity += 0.015f * config.globalSpeed();
         }
         else {
             xStretch = 0;
             yStretch = 0;
-            _blendOpacity += 0.0125f * config->globalSpeed();
+            _blendOpacity += 0.0125f * config.globalSpeed();
         }
         
         // Note the coordinates here are inverted because of the way the screen is captured
-        int coords[] = {-xStretch, config->displayHeight + yStretch,
-            config->displayWidth + xStretch, config->displayHeight + yStretch, 
-            config->displayWidth + xStretch, -yStretch,
+        int coords[] = {-xStretch, config.displayHeight + yStretch,
+            config.displayWidth + xStretch, config.displayHeight + yStretch, 
+            config.displayWidth + xStretch, -yStretch,
             -xStretch, -yStretch}; 
         
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f - _blendOpacity);
@@ -582,13 +582,13 @@ void DGRenderManager::blendView() {
 
 void DGRenderManager::resetView() {
     // Check for errors in loop
-    if (config->debugMode) {
+    if (config.debugMode) {
         GLenum errCode;
         const GLubyte *errString;
         
         if ((errCode = glGetError()) != GL_NO_ERROR) {
             errString = gluErrorString(errCode);
-            log->error(DGModRender, "%s: %s", DGMsg220001, errString);
+            log.error(DGModRender, "%s: %s", DGMsg220001, errString);
         }
     }
     
@@ -598,7 +598,7 @@ void DGRenderManager::resetView() {
 
 void DGRenderManager::reshape() {
     glBindTexture(GL_TEXTURE_2D, _fboTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, config->displayWidth, config->displayHeight, 0,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, config.displayWidth, config.displayHeight, 0,
                  GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 }
 
@@ -606,9 +606,9 @@ void DGRenderManager::fadeView() {
     // FIXME: This is done every time and it sucks
     
     int coords[] = {0, 0,
-        config->displayWidth, 0, 
-        config->displayWidth, config->displayHeight,
-        0, config->displayHeight};
+        config.displayWidth, 0, 
+        config.displayWidth, config.displayHeight,
+        0, config.displayHeight};
     
     _fadeTexture->updateFade();
     _fadeTexture->bind();    
@@ -686,7 +686,7 @@ void DGRenderManager::_initFrameBuffer() {
     GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT); // Check that status of our generated frame buffer  
     
     if (status != GL_FRAMEBUFFER_COMPLETE_EXT) { // If the frame buffer does not report back as complete
-        log->warning(DGModRender, "%s", DGMsg020003);
+        log.warning(DGModRender, "%s", DGMsg020003);
         _framebufferEnabled = false;
     }
     else _framebufferEnabled = true;
@@ -701,7 +701,7 @@ void DGRenderManager::_initFrameBufferDepthBuffer() {
     
     // Set the render buffer storage to be a depth component, with a width and height of the window  
     glRenderbufferStorageEXT(GL_RENDERBUFFER_EXT, GL_DEPTH_COMPONENT, 
-                             config->displayWidth, config->displayHeight);
+                             config.displayWidth, config.displayHeight);
     
     // Set the render buffer of this buffer to the depth buffer
     glFramebufferRenderbufferEXT(GL_FRAMEBUFFER_EXT, GL_DEPTH_ATTACHMENT_EXT,
@@ -714,7 +714,7 @@ void DGRenderManager::_initFrameBufferTexture() {
     glGenTextures(1, &_fboTexture); // Generate one texture  
     glBindTexture(GL_TEXTURE_2D, _fboTexture); // Bind the texture fbo_texture
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, config->displayWidth, config->displayHeight, 0, 
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, config.displayWidth, config.displayHeight, 0, 
                  GL_RGBA, GL_UNSIGNED_BYTE, NULL); // Create a standard texture with the width and height of our window  
     
     // Setup the basic texture parameters  

@@ -40,13 +40,13 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGScript::DGScript() {
-    log = &DGLog::getInstance();
-    config = &DGConfig::getInstance();        
-    system = &DGSystem::getInstance();
-    
+DGScript::DGScript() :
+    config(DGConfig::instance()),
+    log(DGLog::instance()),
+    system(DGSystem::instance())
+{
     _isInitialized = false;
-    _isSuspended = false;    
+    _isSuspended = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -81,14 +81,14 @@ void DGScript::init(int argc, char* argv[]) {
     
     // First thing we do is get the paths to load the script
     // (note that it's not necessary to init the system)
-    system->findPaths(argc, argv);
+    system.findPaths(argc, argv);
     
     _L = lua_open();
     luaL_openlibs(_L);
     
     // The following code attempts to load a config file, and if it does exist
     // copies the created table to the DGConfig metatable
-    if (luaL_loadfile(_L, config->path(DGPathApp, DGDefConfigFile)) == 0) {
+    if (luaL_loadfile(_L, config.path(DGPathApp, DGDefConfigFile)) == 0) {
 		lua_newtable(_L);
 		lua_pushvalue(_L, -1);
 		int ref = lua_ref(_L, LUA_REGISTRYINDEX);
@@ -104,15 +104,15 @@ void DGScript::init(int argc, char* argv[]) {
 			lua_pop(_L, 1);
 		}
 
-		log->trace(DGModScript, "========================================");
+		log.trace(DGModScript, "========================================");
 	}
     else {
-		log->trace(DGModScript, "========================================");
-		log->error(DGModScript, "%s", DGMsg250012);
+		log.trace(DGModScript, "========================================");
+		log.error(DGModScript, "%s", DGMsg250012);
 	}
     
-    log->trace(DGModScript, "%s", DGMsg050000);
-    log->info(DGModScript, "%s: %s", DGMsg050001, LUA_RELEASE);
+    log.trace(DGModScript, "%s", DGMsg050000);
+    log.info(DGModScript, "%s: %s", DGMsg050001, LUA_RELEASE);
     
     lua_getglobal(_L, "_G");
     _registerEnums();
@@ -181,19 +181,19 @@ void DGScript::init(int argc, char* argv[]) {
     _registerGlobals();
     
     // If autorun is enabled, automatically init the system
-    if (config->autorun)
-        system->init();
+    if (config.autorun)
+        system.init();
     
     // We're ready to roll, let's attempt to load the script in a Lua thread
     _thread = lua_newthread(_L);
-    snprintf(script, DGMaxFileLength, "%s.lua", config->script());
-    if (luaL_loadfile(_thread, config->path(DGPathApp, script)) == 0)
+    snprintf(script, DGMaxFileLength, "%s.lua", config.script());
+    if (luaL_loadfile(_thread, config.path(DGPathApp, script)) == 0)
         _isInitialized = true;
     else {
         // Not found!
-        log->error(DGModScript, "%s: %s", DGMsg250003, script);
-        DGControl::getInstance().processKey(DGKeyTab, false); // Simulate tab key to open the console
-        system->run();
+        log.error(DGModScript, "%s: %s", DGMsg250003, script);
+        DGControl::instance().processKey(DGKeyTab, false); // Simulate tab key to open the console
+        system.run();
     }
 }
 
@@ -243,12 +243,12 @@ void DGScript::resume() {
 void DGScript::run() {
     if (_isInitialized) {
         // TODO: This doesn't work if autorun is disabled
-        if (!config->showSplash)
+        if (!config.showSplash)
             this->execute();
 
         // Check if we must start the main loop ourselves
-        if (config->autorun)
-            system->run();
+        if (config.autorun)
+            system.run();
     }
 }
 
@@ -277,26 +277,26 @@ void DGScript::_error(int result) {
     if (result != LUA_YIELD) {
         switch (result) {
             case LUA_ERRRUN:
-                log->error(DGModScript, "%s", DGMsg250007);
+                log.error(DGModScript, "%s", DGMsg250007);
                 break;
             case LUA_ERRMEM:
-                log->error(DGModScript, "%s", DGMsg250008);
+                log.error(DGModScript, "%s", DGMsg250008);
                 break;
             case LUA_ERRERR:
-                log->error(DGModScript, "%s", DGMsg250009);
+                log.error(DGModScript, "%s", DGMsg250009);
                 break;
             case LUA_ERRSYNTAX:
-                log->error(DGModScript, "%s", DGMsg250010);
+                log.error(DGModScript, "%s", DGMsg250010);
                 break;            
         }
         
         // Now print the last Lua string in the stack, which should indicate the error
-        log->error(DGModScript, "%s", lua_tostring(_L, -1));
+        log.error(DGModScript, "%s", lua_tostring(_L, -1));
     }
 }
 
 int DGScript::_globalCurrentNode(lua_State *L) {
-    DGNode* node = DGControl::getInstance().currentNode();
+    DGNode* node = DGControl::instance().currentNode();
     
     // Grab the reference to the Lua object and set it as 'self'
     if (node) {
@@ -309,7 +309,7 @@ int DGScript::_globalCurrentNode(lua_State *L) {
 }
 
 int DGScript::_globalCurrentRoom(lua_State *L) {
-    DGRoom* room = DGControl::getInstance().currentRoom();
+    DGRoom* room = DGControl::instance().currentRoom();
     
     // Grab the reference to the Lua object and set it as 'self'
     if (room) {
@@ -322,22 +322,22 @@ int DGScript::_globalCurrentRoom(lua_State *L) {
 }
 
 int DGScript::_globalCutscene(lua_State *L) {
-    DGControl::getInstance().cutscene(luaL_checkstring(L, 1));
+    DGControl::instance().cutscene(luaL_checkstring(L, 1));
     
-    return DGScript::getInstance().suspend();
+    return DGScript::instance().suspend();
 }
 
 int DGScript::_globalFeed(lua_State *L) {
     if (lua_isstring(L, 2)) {
-        DGFeedManager::getInstance().showAndPlay(luaL_checkstring(L, 1), lua_tostring(L, 2));
+        DGFeedManager::instance().showAndPlay(luaL_checkstring(L, 1), lua_tostring(L, 2));
     }
-    else DGFeedManager::getInstance().show(luaL_checkstring(L, 1));
+    else DGFeedManager::instance().show(luaL_checkstring(L, 1));
 	
 	return 0;
 }
 
 int DGScript::_globalHotkey(lua_State *L) {
-    DGControl::getInstance().registerHotkey((int)luaL_checknumber(L, 1), luaL_checkstring(L, 2));
+    DGControl::instance().registerHotkey((int)luaL_checknumber(L, 1), luaL_checkstring(L, 2));
 	
 	return 0;
 }
@@ -370,10 +370,10 @@ int DGScript::_globalLookAt(lua_State *L) {
     }
       
     
-    DGControl::getInstance().lookAt(horizontal, vertical, instant);
+    DGControl::instance().lookAt(horizontal, vertical, instant);
     
     if (instant) return 0;
-    else return DGScript::getInstance().suspend();
+    else return DGScript::instance().suspend();
 }
 
 int DGScript::_globalPlay(lua_State *L) {
@@ -388,7 +388,7 @@ int DGScript::_globalPlay(lua_State *L) {
 }
 
 int DGScript::_globalQueue(lua_State *L) {
-    DGFeedManager::getInstance().queue(luaL_checkstring(L, 1), lua_tostring(L, 2));
+    DGFeedManager::instance().queue(luaL_checkstring(L, 1), lua_tostring(L, 2));
 	
 	return 0;
 }
@@ -408,7 +408,7 @@ int DGScript::_globalPrint (lua_State *L) {
 			return luaL_error(L, LUA_QL("tostring") " must return a string to "
 							  LUA_QL("print"));
 		if (i > 1) fputs("\t", stdout);
-        DGLog::getInstance().trace(DGModNone, "%s", s);
+        DGLog::instance().trace(DGModNone, "%s", s);
 		lua_pop(L, 1);  /* pop result */
 	}
 	return 0;
@@ -416,14 +416,14 @@ int DGScript::_globalPrint (lua_State *L) {
 
 int DGScript::_globalRegister(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
-        DGLog::getInstance().error(DGModScript, DGMsg250011);
+        DGLog::instance().error(DGModScript, DGMsg250011);
 		
 		return 0;
 	}
 	
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // pop and return a reference to the table.
 	
-    DGControl::getInstance().registerGlobalHandler((unsigned int)luaL_checknumber(L, 1), ref);
+    DGControl::instance().registerGlobalHandler((unsigned int)luaL_checknumber(L, 1), ref);
 	
 	return 0;
 }
@@ -452,10 +452,10 @@ int DGScript::_globalRoom(lua_State *L) {
         // TODO: Read rooms from path
         snprintf(script, DGMaxFileLength, "%s.lua", module);
         
-        if (luaL_loadfile(L, DGConfig::getInstance().path(DGPathApp, script, DGObjectRoom)) == 0) {
-            DGScript::getInstance().setModule(module);
+        if (luaL_loadfile(L, DGConfig::instance().path(DGPathApp, script, DGObjectRoom)) == 0) {
+            DGScript::instance().setModule(module);
             lua_pcall(L, 0, 0, 0);
-            DGScript::getInstance().unsetModule();
+            DGScript::instance().unsetModule();
         }
     }
     
@@ -465,15 +465,15 @@ int DGScript::_globalRoom(lua_State *L) {
 }
 
 int DGScript::_globalSleep(lua_State *L) {
-    DGControl::getInstance().sleep((int)luaL_checknumber(L, 1));
+    DGControl::instance().sleep((int)luaL_checknumber(L, 1));
     
-    return DGScript::getInstance().suspend();
+    return DGScript::instance().suspend();
 }
 
 int DGScript::_globalSetFont(lua_State *L) {
     switch ((int)luaL_checknumber(L, 1)) {
         case FEED:
-            DGFeedManager::getInstance().setFont(luaL_checkstring(L, 2), luaL_checknumber(L, 3));
+            DGFeedManager::instance().setFont(luaL_checkstring(L, 2), luaL_checknumber(L, 3));
             break;
     }
     
@@ -481,7 +481,7 @@ int DGScript::_globalSetFont(lua_State *L) {
 }
 
 int DGScript::_globalSnap(lua_State *L) {
-    DGControl::getInstance().takeSnapshot();
+    DGControl::instance().takeSnapshot();
 	
 	return 0;
 }
@@ -489,20 +489,20 @@ int DGScript::_globalSnap(lua_State *L) {
 int DGScript::_globalSwitch(lua_State *L) {
     switch (DGCheckProxy(L, 1)) {
         case DGObjectNode:
-            DGControl::getInstance().switchTo(DGProxyToNode(L, 1), lua_toboolean(L, 2));
+            DGControl::instance().switchTo(DGProxyToNode(L, 1), lua_toboolean(L, 2));
             break;
         case DGObjectRoom:
-            DGControl::getInstance().switchTo(DGProxyToRoom(L, 1), lua_toboolean(L, 2));
+            DGControl::instance().switchTo(DGProxyToRoom(L, 1), lua_toboolean(L, 2));
             break;
         case DGObjectSlide:
-            DGControl::getInstance().switchTo(DGProxyToSlide(L, 1), lua_toboolean(L, 2));
+            DGControl::instance().switchTo(DGProxyToSlide(L, 1), lua_toboolean(L, 2));
             break;
         case DGObjectGeneric:
-            DGLog::getInstance().error(DGModScript, "%s", DGMsg250000);
+            DGLog::instance().error(DGModScript, "%s", DGMsg250000);
             break;
             
         case DGObjectNone:
-            DGLog::getInstance().error(DGModScript, "%s", DGMsg250001);
+            DGLog::instance().error(DGModScript, "%s", DGMsg250001);
             break;
     }
     
@@ -511,14 +511,14 @@ int DGScript::_globalSwitch(lua_State *L) {
 
 int DGScript::_globalStartTimer(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
-		DGLog::getInstance().trace(DGModScript, "%s", DGMsg250006);
+		DGLog::instance().trace(DGModScript, "%s", DGMsg250006);
         
 		return 0;
 	}
 	
 	int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
     bool shouldLoop = lua_toboolean(L, 2);
-	int handle = DGTimerManager::getInstance().create(luaL_checknumber(L, 1), shouldLoop, ref);
+	int handle = DGTimerManager::instance().create(luaL_checknumber(L, 1), shouldLoop, ref);
     
     lua_pushnumber(L, handle);
 	
@@ -526,7 +526,7 @@ int DGScript::_globalStartTimer(lua_State *L) {
 }
 
 int DGScript::_globalStopTimer(lua_State *L) {
-    DGTimerManager::getInstance().disable(luaL_checknumber(L, 1));
+    DGTimerManager::instance().disable(luaL_checknumber(L, 1));
 	
 	return 0;
 }

@@ -22,9 +22,9 @@
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGCameraManager::DGCameraManager() {
-    config = &DGConfig::getInstance();
-    
+DGCameraManager::DGCameraManager() :
+    config(DGConfig::instance())
+{
     _isInitialized = false;
 }
 
@@ -80,7 +80,7 @@ int DGCameraManager::cursorWhenPanning() {
     else if (_motionUp > 0.0f) return DGCursorDown;
     else if (_motionDown > 0.0f) return DGCursorUp;
     
-    if (config->controlMode == DGMouseDrag)
+    if (config.controlMode == DGMouseDrag)
         return DGCursorDrag;
     else
         return DGCursorNormal;
@@ -108,7 +108,7 @@ float DGCameraManager::motionVertical() {
 }
 
 int DGCameraManager::neutralZone() {
-    switch (config->controlMode) {
+    switch (config.controlMode) {
         case DGMouseDrag:
             return _dragNeutralZone;
         case DGMouseFixed:
@@ -169,7 +169,7 @@ void DGCameraManager::setFieldOfView(float fov) {
     if (!_isLocked) {
         _fovNormal = fov;
         _fovCurrent = _fovNormal;
-        this->setViewport(config->displayWidth, config->displayHeight); // Update the viewport
+        this->setViewport(config.displayWidth, config.displayHeight); // Update the viewport
     }
 }
 
@@ -183,7 +183,7 @@ void DGCameraManager::setMaxSpeed(int speed) {
 }
 
 void DGCameraManager::setNeutralZone(int zone) {
-    switch (config->controlMode) {
+    switch (config.controlMode) {
         case DGMouseDrag:
             _dragNeutralZone = zone;
             break;
@@ -192,8 +192,8 @@ void DGCameraManager::setNeutralZone(int zone) {
         case DGMouseFree:
             _freeNeutralZone = zone;
             
-            int percentageX = ((config->displayWidth * zone) / 100) / 2;
-            int percentageY = ((config->displayHeight * zone) / 100) / 2;
+            int percentageX = ((config.displayWidth * zone) / 100) / 2;
+            int percentageY = ((config.displayHeight * zone) / 100) / 2;
             
             // Update panning regions with the new neutral zone
             _panRegion.origin.x = (_viewport.width / 2) - percentageX;
@@ -266,7 +266,7 @@ void DGCameraManager::setViewport(int width, int height) {
     
     // This forces the new display factor to be applied to the
     // current neutral zone (only in Free mode)
-    switch (config->controlMode) {
+    switch (config.controlMode) {
         case DGMouseDrag:
             this->setNeutralZone(_dragNeutralZone);
         case DGMouseFixed:
@@ -334,8 +334,8 @@ void DGCameraManager::endOrthoView() {
 }
 
 void DGCameraManager::directPan(int xPosition, int yPosition) {
-    static int xPrevious = config->displayWidth / 2;
-    static int yPrevious = config->displayHeight / 2;
+    static int xPrevious = config.displayWidth / 2;
+    static int yPrevious = config.displayHeight / 2;
     
     if (!_isLocked) {
         if (xPosition < xPrevious) {
@@ -352,10 +352,10 @@ void DGCameraManager::directPan(int xPosition, int yPosition) {
             _angleV -= _maxSpeed / 1.5f;
         }
         
-        if ((xPosition > 1) && (xPosition < (config->displayWidth - 1)))
+        if ((xPosition > 1) && (xPosition < (config.displayWidth - 1)))
             xPrevious = xPosition;
         
-        if ((yPosition > 1) && (yPosition < (config->displayHeight - 1)))
+        if ((yPosition > 1) && (yPosition < (config.displayHeight - 1)))
             yPrevious = yPosition;
     }
 }
@@ -483,7 +483,7 @@ void DGCameraManager::simulateWalk() {
 }
 
 void DGCameraManager::stopPanning() {
-    this->pan(config->displayWidth / 2, config->displayHeight / 2);
+    this->pan(config.displayWidth / 2, config.displayHeight / 2);
 }
 
 // For the DRAG mode
@@ -501,7 +501,7 @@ void DGCameraManager::stopDragging() {
     _panRegion.size.width = (_viewport.width / 2) + _dragNeutralZone;
     _panRegion.size.height = (_viewport.height / 2) + _dragNeutralZone;
     
-    this->pan(config->displayWidth / 2, config->displayHeight / 2);
+    this->pan(config.displayWidth / 2, config.displayHeight / 2);
 }
 
 void DGCameraManager::lock() {
@@ -637,17 +637,17 @@ void DGCameraManager::update() {
     
     // Apply horizontal motion
     if (_motionLeft)
-        _angleH -= sin(_accelH) * _motionLeft * config->globalSpeed();
+        _angleH -= sin(_accelH) * _motionLeft * config.globalSpeed();
     
     if (_motionRight)
-        _angleH += sin(_accelH) * _motionRight * config->globalSpeed();
+        _angleH += sin(_accelH) * _motionRight * config.globalSpeed();
     
     // Apply vertical motion
     if (_motionDown)
-        _angleV += sin(_accelV) * _motionDown * config->globalSpeed();
+        _angleV += sin(_accelV) * _motionDown * config.globalSpeed();
     
     if (_motionUp)
-        _angleV -= sin(_accelV) * _motionUp * config->globalSpeed();
+        _angleV -= sin(_accelV) * _motionUp * config.globalSpeed();
     
     // Limit horizontal rotation
     if (_angleH > (GLfloat)_angleHLimit)
@@ -709,7 +709,7 @@ void DGCameraManager::_calculateBob() {
         case DGCamWalking:
             // Perform walk FX operations
             if (_fovCurrent > _fovNormal)
-                _fovCurrent -= (10.0 / DGCamWalkZoomIn) * config->globalSpeed();
+                _fovCurrent -= (10.0 / DGCamWalkZoomIn) * config.globalSpeed();
             else {
                 _fovCurrent = _fovNormal;
                 if (_canBreathe)
@@ -717,7 +717,7 @@ void DGCameraManager::_calculateBob() {
                 else _bob.state = DGCamIdle;
             }
             
-            this->setViewport(config->displayWidth, config->displayHeight);
+            this->setViewport(config.displayWidth, config.displayHeight);
             break;
     }
     

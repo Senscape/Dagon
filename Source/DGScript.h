@@ -51,9 +51,9 @@ class DGSystem;
 ////////////////////////////////////////////////////////////
 
 class DGScript {
-    DGConfig* config;
-    DGLog* log;
-    DGSystem* system;
+    DGConfig& config;
+    DGLog& log;
+    DGSystem& system;
     
     std::vector<std::string> _arrayOfModuleNames;
     bool _isInitialized;
@@ -84,20 +84,15 @@ class DGScript {
     void _registerEnums();
     void _registerGlobals();
     
-    // Private constructor/destructor
     DGScript();
+    DGScript(DGScript const&);
+    DGScript& operator=(DGScript const&);
     ~DGScript();
-    // Stop the compiler generating methods of copy the object
-    DGScript(DGScript const& copy);            // Not implemented
-    DGScript& operator=(DGScript const& copy); // Not implemented
     
 public:
-    static DGScript& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGScript instance;
-        return instance;
+    static DGScript& instance() {
+        static DGScript script;
+        return script;
     }
     
     void execute();

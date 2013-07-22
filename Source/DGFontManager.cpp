@@ -24,9 +24,9 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGFontManager::DGFontManager() {
-    log = &DGLog::getInstance();
-    
+DGFontManager::DGFontManager() :
+    log(DGLog::instance())
+{
     _isInitialized = false;
 }
 
@@ -48,17 +48,17 @@ DGFontManager::~DGFontManager() {
 ////////////////////////////////////////////////////////////
 
 void DGFontManager::init(){
-    log->trace(DGModFont, "%s", DGMsg060000);
+    log.trace(DGModFont, "%s", DGMsg060000);
 	
 	if (FT_Init_FreeType(&_library)) {
-		log->error(DGModFont, "%s", DGMsg260002);
+		log.error(DGModFont, "%s", DGMsg260002);
         return;
     }
     
     int major, minor, patch;
     
     FT_Library_Version(_library, &major, &minor, &patch);
-    log->info(DGModFont, "%s: %d.%d.%d", DGMsg060001, major, minor, patch);
+    log.info(DGModFont, "%s: %d.%d.%d", DGMsg060001, major, minor, patch);
     
     _isInitialized = true;
 }

@@ -42,7 +42,7 @@ public:
         o->setName(luaL_checkstring(L, 1));
         
         // Register the new overlay
-        DGControl::getInstance().registerObject(o);
+        DGControl::instance().registerObject(o);
         
         // Init the base class
         this->setObject(o);

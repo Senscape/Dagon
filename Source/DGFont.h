@@ -51,8 +51,8 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGFont : public DGObject {
-    DGConfig* config;
-    DGLog* log;
+    DGConfig& config;
+    DGLog& log;
     
     FT_Face _face;
     DGGlyph _glyph[128];

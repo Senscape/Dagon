@@ -24,8 +24,9 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGLog::DGLog() {
-    config = &DGConfig::getInstance();
+DGLog::DGLog() :
+    config(DGConfig::instance())
+{
 }
 
 ////////////////////////////////////////////////////////////
@@ -42,9 +43,9 @@ DGLog::~DGLog() {
 ////////////////////////////////////////////////////////////
 
 void DGLog::_log(DGLogData* data) {
-	if (config->log) {
+	if (config.log) {
         if (!_filestr.is_open())
-            _filestr.open(config->path(DGPathUser, DGDefLogFile), fstream::app);
+            _filestr.open(config.path(DGPathUser, DGDefLogFile), fstream::app);
         
         time_t now = time(0);
         struct tm* tm = localtime(&now);
@@ -148,7 +149,7 @@ void DGLog::_log(DGLogData* data) {
     
     _history.push_back(*data);
     
-    if (config->debugMode) {
+    if (config.debugMode) {
         // Echo to console
         printf("%s\n", data->line);
     }

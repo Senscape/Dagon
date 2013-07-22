@@ -175,7 +175,7 @@ public:
                 break;
             case FUNCTION:
                 if (!lua_isfunction(L, 2)) {
-                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250006);
+                    DGLog::instance().error(DGModScript, "%s", DGMsg250006);
                     return 0;
                 }
                 
@@ -198,7 +198,7 @@ public:
                 // resource of the texture.
                 
                 texture = new DGTexture;
-                texture->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2), DGObjectImage));
+                texture->setResource(DGConfig::instance().path(DGPathRes, luaL_checkstring(L, 2), DGObjectImage));
                 
                 // If we have a third parameter, use it to set the index inside a bundle
                 if (lua_isnumber(L, 3))
@@ -221,7 +221,7 @@ public:
                 else if (type == DGObjectRoom)
                     action.target = DGProxyToRoom(L, 2);
                 else {
-                    DGLog::getInstance().error(DGModScript, "%s", DGMsg250005);
+                    DGLog::instance().error(DGModScript, "%s", DGMsg250005);
                     return 0;
                 }
                 
@@ -243,9 +243,9 @@ public:
                 video = new DGVideo(autoplay, loop, sync);
                 
                 // TODO: Path is set by the video manager
-                video->setResource(DGConfig::getInstance().path(DGPathRes, luaL_checkstring(L, 2), DGObjectVideo));
+                video->setResource(DGConfig::instance().path(DGPathRes, luaL_checkstring(L, 2), DGObjectVideo));
                 s->setVideo(video);
-                DGVideoManager::getInstance().registerVideo(video);
+                DGVideoManager::instance().registerVideo(video);
                 
                 break;                
         }
@@ -280,8 +280,8 @@ public:
         // Test for synced audio or video
         if (s->hasVideo()) {
             if (s->isPlaying() && s->video()->isSynced()) {
-                DGControl::getInstance().syncSpot(s);
-                return DGScript::getInstance().suspend();
+                DGControl::instance().syncSpot(s);
+                return DGScript::instance().suspend();
             }
         }
         

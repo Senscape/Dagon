@@ -39,7 +39,7 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGFontManager {
-    DGLog* log;
+    DGLog& log;
     
     std::vector<DGFont*> _arrayOfFonts;
     
@@ -47,20 +47,15 @@ class DGFontManager {
     bool _isInitialized;
     FT_Library _library;
     
-    // Private constructor/destructor
     DGFontManager();
+    DGFontManager(DGFontManager const&);
+    DGFontManager& operator=(DGFontManager const&);
     ~DGFontManager();
-    // Stop the compiler generating methods of copy the object
-    DGFontManager(DGFontManager const& copy);            // Not implemented
-    DGFontManager& operator=(DGFontManager const& copy); // Not implemented
     
 public:
-    static DGFontManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGFontManager instance;
-        return instance;
+    static DGFontManager& instance() {
+        static DGFontManager fontManager;
+        return fontManager;
     }
     
     void init();

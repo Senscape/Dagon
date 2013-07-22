@@ -23,9 +23,9 @@
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGImage::DGImage() {
-    config = &DGConfig::getInstance();
-    
+DGImage::DGImage() :
+    config(DGConfig::instance())
+{
     _rect.origin.x = 0;
     _rect.origin.y = 0; 
     _rect.size.width = 0;
@@ -36,9 +36,9 @@ DGImage::DGImage() {
     this->setType(DGObjectImage);    
 }
 
-DGImage::DGImage(const char* fromFileName) {
-    config = &DGConfig::getInstance();
-    
+DGImage::DGImage(const char* fromFileName) :
+    config(DGConfig::instance())
+{
     this->setTexture(fromFileName);
     if (_attachedTexture->isLoaded()) {
         _rect.origin.x = 0;
@@ -132,7 +132,7 @@ void DGImage::setTexture(const char* fromFileName) {
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config->path(DGPathRes, fromFileName, DGObjectImage));
+    texture->setResource(config.path(DGPathRes, fromFileName, DGObjectImage));
     texture->load();
     
     _attachedTexture = texture;

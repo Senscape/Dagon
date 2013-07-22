@@ -26,17 +26,17 @@ using namespace std;
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGButton::DGButton() {
-    config = &DGConfig::getInstance();
-    fontManager = &DGFontManager::getInstance();
-    
+DGButton::DGButton() :
+    config(DGConfig::instance()),
+    fontManager(DGFontManager::instance())
+{
     _textColor = DGColorWhite;
     
     _hasAction = false;
     _hasOnHoverTexture = false;
     _hasText = false;
     
-    _font = fontManager->loadDefault();
+    _font = fontManager.loadDefault();
     
     this->setFadeSpeed(DGFadeNormal);
     this->setType(DGObjectButton);
@@ -107,7 +107,7 @@ void DGButton::setAction(DGAction* anAction) {
 
 void DGButton::setFont(const char* fromFileName, unsigned int heightOfFont) {
     // FIXME: Wrong, this can load many repeated fonts!
-    _font = fontManager->load(fromFileName, heightOfFont);
+    _font = fontManager.load(fromFileName, heightOfFont);
 }
 
 void DGButton::setOnHoverTexture(const char* fromFileName) {
@@ -117,7 +117,7 @@ void DGButton::setOnHoverTexture(const char* fromFileName) {
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config->path(DGPathRes, fromFileName, DGObjectImage));
+    texture->setResource(config.path(DGPathRes, fromFileName, DGObjectImage));
     texture->load();
     
     _attachedOnHoverTexture = texture;

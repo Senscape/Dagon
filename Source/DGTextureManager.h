@@ -42,8 +42,8 @@ class DGRoom;
 ////////////////////////////////////////////////////////////
 
 class DGTextureManager {
-    DGConfig* config;
-    DGLog* log;
+    DGConfig& config;
+    DGLog& log;
     
     std::thread _preloaderThread;
     

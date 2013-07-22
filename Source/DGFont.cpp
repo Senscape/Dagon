@@ -23,10 +23,10 @@
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGFont::DGFont() {
-    config = &DGConfig::getInstance();
-    log = &DGLog::getInstance();
-    
+DGFont::DGFont() :
+    config(DGConfig::instance()),
+    log(DGLog::instance())
+{
     _isLoaded = false;
     
     this->setType(DGObjectFont);
@@ -131,7 +131,7 @@ void DGFont::setDefault(unsigned int heightOfFont) {
     
 	// WARNING: That 49052 size may not be exact... Careful!
 	if (FT_New_Memory_Face(*_library, DGDefFontBinary, 49052, 0, &_face)) {
-        log->error(DGModFont, "%s", DGMsg260004);
+        log.error(DGModFont, "%s", DGMsg260004);
         return;
     }
 	
@@ -147,8 +147,8 @@ void DGFont::setLibrary(FT_Library* library) {
 void DGFont::setResource(const char* fromFileName, unsigned int heightOfFont) {
     _height = (float)heightOfFont;
     
-    if (FT_New_Face(*_library, config->path(DGPathRes, fromFileName, DGObjectFont), 0, &_face)) {
-        log->error(DGModFont, "%s: %s", DGMsg260003, fromFileName);
+    if (FT_New_Face(*_library, config.path(DGPathRes, fromFileName, DGObjectFont), 0, &_face)) {
+        log.error(DGModFont, "%s: %s", DGMsg260003, fromFileName);
         return;
     }
 	
@@ -179,12 +179,12 @@ void DGFont::_loadFont() {
 		GLubyte* expandedData;
 		
 		if (FT_Load_Glyph(_face, FT_Get_Char_Index(_face, ch), FT_LOAD_DEFAULT)) {
-			log->error(DGModFont, "%s: %c", DGMsg260005, ch);
+			log.error(DGModFont, "%s: %c", DGMsg260005, ch);
             return;
         }
 		
 		if (FT_Get_Glyph(_face->glyph, &glyph)) {
-			log->error(DGModFont, "%s: %c", DGMsg260006, ch);
+			log.error(DGModFont, "%s: %c", DGMsg260006, ch);
             return;
         }
         

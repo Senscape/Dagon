@@ -114,18 +114,18 @@ typedef struct {
 
 class DGControl {
     DGAudioManager& audioManager;
-    DGCameraManager* cameraManager;    
-    DGConfig* config;
-    DGCursorManager* cursorManager;
-    DGFeedManager* feedManager;
-    DGFontManager* fontManager;
-    DGLog* log;
-    DGRenderManager* renderManager;
-    DGScript* script;
-    DGSystem* system;
+    DGCameraManager& cameraManager;
+    DGConfig& config;
+    DGCursorManager& cursorManager;
+    DGFeedManager& feedManager;
+    DGFontManager& fontManager;
+    DGLog& log;
+    DGRenderManager& renderManager;
+    DGScript& script;
+    DGSystem& system;
     DGTextureManager& textureManager;    
-    DGTimerManager* timerManager;
-    DGVideoManager* videoManager;    
+    DGTimerManager& timerManager;
+    DGVideoManager& videoManager;
     
     std::vector<DGRoom*> _arrayOfRooms;
     DGRoom* _currentRoom;
@@ -159,7 +159,7 @@ class DGControl {
     DGControl& operator=(DGControl const& copy); // Not implemented
     
 public:
-    static DGControl& getInstance() {
+    static DGControl& instance() {
         // The only instance
         // Guaranteed to be lazy initialized
         // Guaranteed that it will be destroyed correctly

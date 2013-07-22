@@ -36,8 +36,8 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGAudioManager {
-    DGConfig* config;
-    DGLog* log;
+    DGConfig& config;
+    DGLog& log;
     
     ALCdevice* _alDevice;
     ALCcontext* _alContext;

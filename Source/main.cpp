@@ -14,12 +14,10 @@
 #include "DGScript.h"
 
 int main(int argc, char *argv[]) {
-    DGScript* script;
+    DGScript& script = DGScript::instance();
     
-    script = &DGScript::getInstance();
-    
-    script->init(argc, argv);
-    script->run();
+    script.init(argc, argv);
+    script.run();
     
     return 0;
 }

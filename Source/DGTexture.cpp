@@ -34,13 +34,13 @@ char TEXIdent[] = "KS_TEX"; // We keep this one for backward compatibility, but 
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGTexture::DGTexture() {
+DGTexture::DGTexture() :
+    config(DGConfig::instance()),
+    log(DGLog::instance())
+{
     this->setType(DGObjectTexture);
     
-    config = &DGConfig::getInstance();
-    log = &DGLog::getInstance();
-
-    _compressionLevel = config->texCompression;
+    _compressionLevel = config.texCompression;
     _hasResource = false;
     _isBitmapLoaded = false;
 	_isLoaded = false;
@@ -48,13 +48,13 @@ DGTexture::DGTexture() {
     _usageCount = 0;
 }
 
-DGTexture::DGTexture(int width, int height, int depth) {
+DGTexture::DGTexture(int width, int height, int depth) :
+    config(DGConfig::instance()),
+    log(DGLog::instance())
+{
     int comp;
     
     this->setType(DGObjectTexture);
-    
-    config = &DGConfig::getInstance();
-    log = &DGLog::getInstance();
     
     if (!width) width = DGDefTexSize;
     if (!height) height = DGDefTexSize;
@@ -78,7 +78,7 @@ DGTexture::DGTexture(int width, int height, int depth) {
     
     free(_bitmap);
     
-    _compressionLevel = config->texCompression;
+    _compressionLevel = config.texCompression;
     
     // The texture doesn't require a resource, so we make it clear
     _hasResource = true;
@@ -190,7 +190,7 @@ void DGTexture::load() {
         return;
     
     if (!_hasResource) {
-        log->error(DGModTexture, "%s: %s", DGMsg210004, this->name());
+        log.error(DGModTexture, "%s: %s", DGMsg210004, this->name());
         
         return;
     }
@@ -200,7 +200,7 @@ void DGTexture::load() {
     if (fh != NULL) {
         if (fread(&magic, sizeof(magic), 1, fh) == 0) {
             // Couldn't read magic number
-            log->error(DGModTexture, "%s: %s", DGMsg210002, _resource);
+            log.error(DGModTexture, "%s: %s", DGMsg210002, _resource);
         }
         
         if (memcmp(TEXIdent, &magic, 7) == 0) {
@@ -250,7 +250,7 @@ void DGTexture::load() {
                 if (compressed == GL_TRUE)
                     _isLoaded = true;
                 else
-                    log->error(DGModTexture, "%s: %s", DGMsg210002, fh);
+                    log.error(DGModTexture, "%s: %s", DGMsg210002, fh);
             }
             else {
                 glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, _bitmap); // Only RGB is supported
@@ -309,7 +309,7 @@ void DGTexture::load() {
                             internalFormat = GL_RGBA;
                         break;
                     default:
-                        log->warning(DGModTexture, "%s: (%s) %d", DGMsg210003, _resource, _depth);
+                        log.warning(DGModTexture, "%s: (%s) %d", DGMsg210003, _resource, _depth);
                         break;
                 }
                 
@@ -329,7 +329,7 @@ void DGTexture::load() {
             }
             else {
                 // Nothing loaded
-                log->error(DGModTexture, "%s: (%s) %s", DGMsg210001, _resource, stbi_failure_reason());
+                log.error(DGModTexture, "%s: (%s) %s", DGMsg210001, _resource, stbi_failure_reason());
             }
         }
         
@@ -337,7 +337,7 @@ void DGTexture::load() {
     }
     else {
         // File not found
-        log->error(DGModTexture, "%s: %s", DGMsg210000, _resource);
+        log.error(DGModTexture, "%s: %s", DGMsg210000, _resource);
     }    
 }
 
@@ -402,7 +402,7 @@ void DGTexture::loadFromMemory(const unsigned char* dataToLoad, long size) {
                     internalFormat = GL_RGBA;
                 break;
             default:
-                log->warning(DGModTexture, "%s: %d", DGMsg210003, comp);
+                log.warning(DGModTexture, "%s: %d", DGMsg210003, comp);
                 break;
         }
         
@@ -422,7 +422,7 @@ void DGTexture::loadFromMemory(const unsigned char* dataToLoad, long size) {
     }
     else {
         // Nothing loaded
-        log->error(DGModTexture, "%s: %s", DGMsg210001, stbi_failure_reason());
+        log.error(DGModTexture, "%s: %s", DGMsg210001, stbi_failure_reason());
     }
 }
 

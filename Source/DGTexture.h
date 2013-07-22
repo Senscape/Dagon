@@ -50,8 +50,8 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGTexture : public DGObject {
-    DGConfig* config;
-    DGLog* log;
+    DGConfig& config;
+    DGLog& log;
     
     GLubyte* _bitmap;
     unsigned int _compressionLevel;

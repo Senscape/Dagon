@@ -39,9 +39,9 @@ extern "C" const unsigned char DGDefSplashBinary[];
 ////////////////////////////////////////////////////////////
 
 class DGRenderManager {
-    DGConfig* config;
-    DGEffectsManager* effectsManager;    
-    DGLog* log;
+    DGConfig& config;
+    DGEffectsManager& effectsManager;
+    DGLog& log;
     
     GLuint _fbo; // The frame buffer object  
     GLuint _fboDepth; // The depth buffer for the frame buffer object  
@@ -69,20 +69,15 @@ class DGRenderManager {
     std::vector<DGPoint> _arrayOfHelpers;
     std::vector<DGPoint>::iterator _itHelper;
     
-    // Private constructor/destructor
     DGRenderManager();
+    DGRenderManager(DGRenderManager const&);
+    DGRenderManager& operator=(DGRenderManager const&);
     ~DGRenderManager();
-    // Stop the compiler generating methods of copy the object
-    DGRenderManager(DGRenderManager const& copy);            // Not implemented
-    DGRenderManager& operator=(DGRenderManager const& copy); // Not implemented
     
 public:
-    static DGRenderManager& getInstance() {
-        // The only instance
-        // Guaranteed to be lazy initialized
-        // Guaranteed that it will be destroyed correctly
-        static DGRenderManager instance;
-        return instance;
+    static DGRenderManager& instance() {
+        static DGRenderManager renderManager;
+        return renderManager;
     }
     
     void init();
