@@ -14,9 +14,6 @@
 #ifndef DG_VIDEOMANAGER_H
 #define DG_VIDEOMANAGER_H
 
-// TODO: Obviously, it makes sense to have all these managers
-// inherit from a base, singleton manager
-
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
@@ -59,9 +56,8 @@ public:
         return videoManager;
     }
     
-    void flush();
-    
     void init();
+    void flush();    
     void registerVideo(DGVideo* target);
     void requestVideo(DGVideo* target);
 	void terminate();

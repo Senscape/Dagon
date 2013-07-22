@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGAction.h"
+#include "DGEvent.h"
 #include "DGPlatform.h"
 #include "DGSystem.h"
 
@@ -26,7 +27,6 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGTimeToStartDragging 0.25f
 #define DGMaxHotKeys 13
 
 class DGAudioManager;
@@ -51,34 +51,6 @@ class DGTextureManager;
 class DGTimerManager;
 class DGVideoManager;
 
-enum DGEvents { // For Lua
-	DGEventEnterNode = 1, // Must implement
-	DGEventLeaveNode, // Must implement
-	DGEventEnterRoom, // Must implement
-	DGEventLeaveRoom, // Must implement
-	DGEventPreRender, // Must implement
-	DGEventPostRender,
-	DGEventMouseButton,
-	DGEventMouseRightButton,
-	DGEventMouseMove,
-	DGEventResize
-};
-
-enum DGKeyEvents {
-    DGKeyEventDown = 0x2,
-    DGKeyEventModified = 0x4,
-    DGKeyEventUp = 0x6
-};
-
-enum DGMouseEvents {
-    DGMouseEventDown = 0x1,    
-    DGMouseEventDrag = 0x2,
-    DGMouseEventMove = 0x4,
-    DGMouseEventUp = 0x8,
-    DGMouseEventRightDown = 0x10,
-    DGMouseEventRightUp = 0x12
-};
-
 typedef struct {
 	bool hasEnterNode;
     int	enterNode;
@@ -99,7 +71,7 @@ typedef struct {
 	bool hasMouseRightButton;
 	int	mouseRightButton;
 	bool hasResize;
-	int	resize;	
+	int	resize;
 } DGEventHandlers;
 
 typedef struct {
@@ -142,7 +114,6 @@ class DGControl {
     
     bool _cancelSplash;
     bool _directControlActive;
-    int _dragTimer;
     bool _isInitialized;
 	bool _isRunning;
     bool _isShuttingDown;
@@ -175,7 +146,8 @@ public:
     void processMouse(int x, int y, int eventFlags);
     void registerGlobalHandler(int forEvent, int handlerForLua);
     void registerHotkey(int aKey, const char* luaCommandToExecute);
-    void registerObject(DGObject* theTarget);    
+    void registerObject(DGObject* theTarget);
+    void requestObject(DGObject* theTarget);
     void reshape(int width, int height);
     void sleep(int forSeconds);
     void syncSpot(DGSpot* spot);

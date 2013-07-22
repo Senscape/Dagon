@@ -120,6 +120,7 @@
 		FB40B97A1795E4BA00788AF1 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		FB6A1E9015AC7E52000C0222 /* DGEffectsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEffectsManager.h; sourceTree = "<group>"; };
 		FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGEffectsManager.cpp; sourceTree = "<group>"; };
+		FB9A5C8B179DCFB600D7234F /* DGEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEvent.h; sourceTree = "<group>"; };
 		FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGRenderManager.cpp; sourceTree = "<group>"; };
 		FBA2C77F14DC13BF0098E334 /* DGRenderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRenderManager.h; sourceTree = "<group>"; };
 		FBA2C78014DC654B0098E334 /* DGControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGControl.cpp; sourceTree = "<group>"; };
@@ -255,6 +256,7 @@
 				E8362A6914F1B1A1005B20EF /* DGFeedManager.cpp */,
 				E8362A6D14F2FBFB005B20EF /* DGFontManager.h */,
 				E8362A6B14F2FBE1005B20EF /* DGFontManager.cpp */,
+				FB9A5C8B179DCFB600D7234F /* DGEvent.h */,
 				E8ECDFCC14E216B900A6BA8D /* DGScript.h */,
 				E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */,
 				FB26300A14D3491000EAD41A /* DGState.h */,

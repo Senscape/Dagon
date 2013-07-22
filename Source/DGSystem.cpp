@@ -168,12 +168,12 @@ double DGSystem::_calculateFrames(double theInterval = 1.0) {
 
 void DGSystem::_charCallback(GLFWwindow* window, unsigned int character) {
     if (DGControl::instance().isConsoleActive() || character == DGKeyQuote)
-        DGControl::instance().processKey(character, DGKeyEventDown);
+        DGControl::instance().processKey(character, DGEventKeyDown);
 }
 
 void DGSystem::_closeCallback(GLFWwindow* window) {
     // Simulate an escape key event
-    DGControl::instance().processKey(DGKeyEsc, DGKeyEventDown);
+    DGControl::instance().processKey(DGKeyEsc, DGEventKeyDown);
 }
 
 void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
@@ -190,7 +190,7 @@ void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) 
         }
     }
     
-    DGControl::instance().processMouse(xpos, ypos, DGMouseEventMove);
+    DGControl::instance().processMouse(xpos, ypos, DGEventMouseMove);
 }
 
 void DGSystem::_errorCallback(int error, const char* description) {
@@ -202,12 +202,12 @@ void DGSystem::_keyCallback(GLFWwindow* window, int key, int scancode, int actio
     
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {
         if (mods)
-            event = DGKeyEventModified;
+            event = DGEventKeyModified;
         else
-            event = DGKeyEventDown;
+            event = DGEventKeyDown;
     }
     else if (action == GLFW_RELEASE) {
-        event = DGKeyEventUp;
+        event = DGEventKeyUp;
     }
     
     switch (key) {
@@ -224,7 +224,7 @@ void DGSystem::_keyCallback(GLFWwindow* window, int key, int scancode, int actio
         case GLFW_KEY_F10:
         case GLFW_KEY_F11:
         case GLFW_KEY_F12:
-            if (event == DGKeyEventDown)
+            if (event == DGEventKeyDown)
                 DGControl::instance().processFunctionKey(key);
             break;
             
@@ -243,20 +243,20 @@ void DGSystem::_keyCallback(GLFWwindow* window, int key, int scancode, int actio
 }
 
 void DGSystem::_mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-    int event = DGMouseEventMove;
+    int event = DGEventMouseMove;
     double xpos, ypos;
     
     if (action == GLFW_PRESS) {
         if (button == GLFW_MOUSE_BUTTON_LEFT)
-            event = DGMouseEventDown;
+            event = DGEventMouseDown;
         else if (button == GLFW_MOUSE_BUTTON_RIGHT)
-            event = DGMouseEventRightDown;
+            event = DGEventMouseRightDown;
     }
     else if (action == GLFW_RELEASE) {
         if (button == GLFW_MOUSE_BUTTON_LEFT)
-            event = DGMouseEventUp;
+            event = DGEventMouseUp;
         else if (button == GLFW_MOUSE_BUTTON_RIGHT)
-            event = DGMouseEventRightUp;
+            event = DGEventMouseRightUp;
     }
     
     glfwGetCursorPos(window, &xpos, &ypos);

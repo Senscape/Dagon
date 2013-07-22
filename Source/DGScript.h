@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGAction.h"
+#include "DGEvent.h"
 #include "DGPlatform.h"
 
 #include "Lua.hpp"

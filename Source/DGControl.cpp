@@ -147,8 +147,6 @@ void DGControl::init() {
     _state = new DGState;
     
     timerManager.setSystem(&system);
-    _dragTimer = timerManager.createManual(DGTimeToStartDragging);
-    timerManager.disable(_dragTimer);
     
     _console = new DGConsole;
     if (config.debugMode) {
@@ -246,7 +244,7 @@ void DGControl::processFunctionKey(int aKey) {
 
 void DGControl::processKey(int aKey, int eventFlags) {
     switch (eventFlags) {
-        case DGKeyEventDown:
+        case DGEventKeyDown:
             switch (aKey) {
                 case DGKeyEsc:
                     if (_state->current() == DGStateSplash) {
@@ -319,7 +317,7 @@ void DGControl::processKey(int aKey, int eventFlags) {
             }
             break;
             
-        case DGKeyEventModified:
+        case DGEventKeyModified:
             switch (aKey) {
                 case 'f':
                 case 'F':
@@ -329,7 +327,7 @@ void DGControl::processKey(int aKey, int eventFlags) {
             }
             break;
             
-        case DGKeyEventUp:
+        case DGEventKeyUp:
             if (_console->isHidden()) {
                 switch (aKey) {
                     case 'w':
@@ -371,20 +369,20 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         return;
     }
             
-    if ((eventFlags == DGMouseEventMove) && (_eventHandlers.hasMouseMove))
+    if ((eventFlags == DGEventMouseMove) && (_eventHandlers.hasMouseMove))
         script.processCallback(_eventHandlers.mouseMove, 0);
     
-    if ((eventFlags == DGMouseEventUp) && _eventHandlers.hasMouseButton) {
+    if ((eventFlags == DGEventMouseUp) && _eventHandlers.hasMouseButton) {
         script.processCallback(_eventHandlers.mouseButton, 0);
     }
     
     if (config.controlMode == DGMouseFixed) {
-        if (eventFlags == DGMouseEventRightUp) {
+        if (eventFlags == DGEventMouseRightUp) {
             _directControlActive = !_directControlActive;
         }
     }
     else {
-        if ((eventFlags == DGMouseEventRightUp) && _eventHandlers.hasMouseRightButton) {
+        if ((eventFlags == DGEventMouseRightUp) && _eventHandlers.hasMouseRightButton) {
             script.processCallback(_eventHandlers.mouseRightButton, 0);
         }
     }
@@ -406,7 +404,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
     // TODO: Use active overlays only
     if (canProcess) {
         if (_interface->scanOverlays()) {
-            if ((eventFlags == DGMouseEventUp) && cursorManager.hasAction()) {
+            if ((eventFlags == DGEventMouseUp) && cursorManager.hasAction()) {
                 _processAction();
                 
                 // Repeat the scan in case the button is no longer visible  
@@ -420,7 +418,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
 
     switch (config.controlMode) {
         case DGMouseFree:
-            if (eventFlags == DGMouseEventMove) {
+            if (eventFlags == DGEventMouseMove) {
                 if (!cursorManager.onButton()) {
                     cameraManager.pan(x, y);
                     
@@ -435,7 +433,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
                 else cameraManager.stopPanning();
             }
             
-            if (eventFlags == DGMouseEventUp) {
+            if (eventFlags == DGEventMouseUp) {
                 if (cursorManager.hasAction())
                     _processAction();
             }
@@ -445,43 +443,16 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
             if (_directControlActive) {
                 cursorManager.updateCoords(config.displayWidth / 2, config.displayHeight / 2); // Forced
             
-                if (eventFlags == DGMouseEventMove) {
+                if (eventFlags == DGEventMouseMove) {
                     cameraManager.directPan(x, y);
                 }
             }
             
-            if (eventFlags == DGMouseEventUp) {
+            if (eventFlags == DGEventMouseUp) {
                 if (cursorManager.hasAction()) {
                     _processAction();
                 }
             }
-            break;
-            
-        case DGMouseDrag:
-            if (eventFlags == DGMouseEventDrag) {
-                if (cursorManager.isDragging()) {
-                    cameraManager.pan(x, y);
-                    cursorManager.setCursor(cameraManager.cursorWhenPanning());
-                }
-            }
-            
-            // FIXME: Start dragging a few milliseconds after the mouse if down
-            if (eventFlags == DGMouseEventDown && !cursorManager.onButton()) {
-                timerManager.enable(_dragTimer);
-            }
-            
-            if (eventFlags == DGMouseEventUp) {
-                timerManager.disable(_dragTimer); // Cancel the current check
-                
-                if (cursorManager.isDragging()) {
-                    cursorManager.setDragging(false);
-                    cameraManager.stopDragging();
-                }
-                else if (cursorManager.hasAction()) {
-                    _processAction();
-                }
-            }
-            
             break;
     }
 }
@@ -512,11 +483,11 @@ void DGControl::registerGlobalHandler(int forEvent, int handlerForLua) {
 			_eventHandlers.postRender = handlerForLua;
 			_eventHandlers.hasPostRender = true;
 			break;
-		case DGEventMouseButton:
+		case DGEventMouseDown:
 			_eventHandlers.mouseButton = handlerForLua;
 			_eventHandlers.hasMouseButton = true;
 			break;
-		case DGEventMouseRightButton:
+		case DGEventMouseRightDown:
 			_eventHandlers.mouseRightButton = handlerForLua;
 			_eventHandlers.hasMouseRightButton = true;
 			break;
@@ -558,6 +529,9 @@ void DGControl::registerHotkey(int aKey, const char* luaCommandToExecute) {
 
 void DGControl::registerObject(DGObject* theTarget) {
     switch (theTarget->type()) {
+        case DGObjectAudio:
+            audioManager.registerAudio((DGAudio*)theTarget);
+            break;
         case DGObjectNode:
              textureManager.requestBundle((DGNode*)theTarget);
             break;
@@ -566,6 +540,20 @@ void DGControl::registerObject(DGObject* theTarget) {
             break;
         case DGObjectRoom: 
             _arrayOfRooms.push_back((DGRoom*)theTarget);
+            break;
+        case DGObjectVideo:
+            videoManager.registerVideo((DGVideo*)theTarget);
+            break;
+    }
+}
+
+void DGControl::requestObject(DGObject* theTarget) {
+    switch (theTarget->type()) {
+        case DGObjectAudio:
+            audioManager.requestAudio((DGAudio*)theTarget);
+            break;
+        case DGObjectVideo:
+            videoManager.requestVideo((DGVideo*)theTarget);
             break;
     }
 }
@@ -914,16 +902,6 @@ bool DGControl::update() {
 				_updateView(_state->current(), false);
 				break;
 		}
-        
-        if (config.controlMode == DGMouseDrag) {
-            if (timerManager.checkManual(_dragTimer)) {
-                DGPoint position = cursorManager.position();
-                cameraManager.startDragging(position.x, position.y);
-                cursorManager.setDragging(true);
-                
-                timerManager.disable(_dragTimer);            
-            }
-        }
         
 		if (_isShuttingDown) {
 			if (timerManager.checkManual(_shutdownTimer)) {

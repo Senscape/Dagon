@@ -559,8 +559,8 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, LEAVE_ROOM, DGEventLeaveRoom);
     DGLuaEnum(_L, PRE_RENDER, DGEventPreRender);
     DGLuaEnum(_L, POST_RENDER, DGEventPostRender);
-    DGLuaEnum(_L, MOUSE_BUTTON, DGEventMouseButton);
-    DGLuaEnum(_L, MOUSE_RIGHT_BUTTON, DGEventMouseRightButton);
+    DGLuaEnum(_L, MOUSE_BUTTON, DGEventMouseDown);
+    DGLuaEnum(_L, MOUSE_RIGHT_BUTTON, DGEventMouseRightDown);
     DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
     DGLuaEnum(_L, RESIZE, DGEventResize);
 
