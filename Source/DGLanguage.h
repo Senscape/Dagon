@@ -66,6 +66,7 @@
 #define DGMsg030003 "Build"
 #define DGMsg130000 "No nodes to load in room"
 #define DGMsg130001 "No spots to draw"
+#define DGMsg130002 "Creating objects in runtime is not recommended"
 #define DGMsg230000 "Node not added to current room"
 #define DGMsg230001 "No current room specified"
 #define DGMsg230002 "Slide not added to current room"

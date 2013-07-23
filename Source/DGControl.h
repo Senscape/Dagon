@@ -116,6 +116,7 @@ class DGControl {
     bool _directControlActive;
     bool _isInitialized;
 	bool _isRunning;
+    bool _isShowingSplash = false; // Move this to state manager
     bool _isShuttingDown;
 	int _shutdownTimer;
     int _sleepTimer;
@@ -155,7 +156,7 @@ public:
     void run();
     void takeSnapshot();
     void terminate();
-    bool update();
+    void update();
 };
 
 #endif // DG_CONTROL_H

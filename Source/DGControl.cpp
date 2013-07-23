@@ -167,13 +167,14 @@ void DGControl::init() {
     
     _directControlActive = true;
     _isInitialized = true;
-	_isRunning = true;
     
     // Force a redraw to avoid an annoying blink
     this->reshape(config.displayWidth, config.displayHeight);
     
     if (!config.showSplash)
         script.run();
+    else
+        _isShowingSplash = true;
     
     log.trace(DGModControl, "%s", DGMsg040001);
 }
@@ -545,6 +546,9 @@ void DGControl::registerObject(DGObject* theTarget) {
             videoManager.registerVideo((DGVideo*)theTarget);
             break;
     }
+    
+    if (_isRunning && !_isShowingSplash)
+        log.warning(DGModControl, "%s: %s", DGMsg130002, theTarget->name());
 }
 
 void DGControl::requestObject(DGObject* theTarget) {
@@ -760,10 +764,10 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             }
             
             // Prepare the name for the window
-          /*  char title[DGMaxObjectName];
+            char title[DGMaxObjectName];
             snprintf(title, DGMaxObjectName, "%s (%s, %s)", config.script(), 
                      _currentRoom->name(), currentNode->description());
-            system.setTitle(title);*/
+            system.setTitle(title);
         }
         
         // This has to be done every time so that room audios keep playing
@@ -865,54 +869,48 @@ void DGControl::terminate() {
     system.terminate();
 }
 
-bool DGControl::update() {
-	if (_isRunning) {
-		switch (_state->current()) {
-			case DGStateLookAt:
-				cameraManager.panToTargetAngle();
-				_updateView(_state->previous(), false);
-            
-				if (!cameraManager.isPanning()) {
-					 _state->setPrevious();
-					cursorManager.fadeIn();
-					script.resume(); 
-				}
-				break;
-			case DGStateSleep:
-				if (timerManager.checkManual(_sleepTimer)) {
-					_state->setPrevious();
-					cursorManager.fadeIn();
-					script.resume();
-				}
-				else {
-					_updateView(_state->previous(), false);
-				}
-
-				break;
-			case DGStateVideoSync:
-				_updateView(_state->previous(), false);
-            
-				if (!_syncedSpot->video()->isPlaying()) {
-					_state->setPrevious();
-					cursorManager.fadeIn();
-					script.resume(); 
-				}
-				break;      
-			default:
-				_updateView(_state->current(), false);
-				break;
-		}
+void DGControl::update() {
+    switch (_state->current()) {
+        case DGStateLookAt:
+            cameraManager.panToTargetAngle();
+            _updateView(_state->previous(), false);
         
-		if (_isShuttingDown) {
-			if (timerManager.checkManual(_shutdownTimer)) {
-				this->terminate();
-			}
-		}
+            if (!cameraManager.isPanning()) {
+                 _state->setPrevious();
+                cursorManager.fadeIn();
+                script.resume();
+            }
+            break;
+        case DGStateSleep:
+            if (timerManager.checkManual(_sleepTimer)) {
+                _state->setPrevious();
+                cursorManager.fadeIn();
+                script.resume();
+            }
+            else {
+                _updateView(_state->previous(), false);
+            }
 
-		return true;
-	}
-
-	return false;
+            break;
+        case DGStateVideoSync:
+            _updateView(_state->previous(), false);
+        
+            if (!_syncedSpot->video()->isPlaying()) {
+                _state->setPrevious();
+                cursorManager.fadeIn();
+                script.resume(); 
+            }
+            break;      
+        default:
+            _updateView(_state->current(), false);
+            break;
+    }
+    
+    if (_isShuttingDown) {
+        if (timerManager.checkManual(_shutdownTimer)) {
+            this->terminate();
+        }
+    }
 }
 
 ////////////////////////////////////////////////////////////
@@ -988,6 +986,8 @@ void DGControl::_updateView(int state, bool inBackground) {
                 _scene->unloadSplash();
                 
                 script.run();
+                
+                _isShowingSplash = false;
             }
             
             break;
