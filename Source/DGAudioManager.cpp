@@ -138,11 +138,13 @@ void DGAudioManager::init() {
                 int i;
                 
                 numDevices++;
-                /*log.trace(DGModAudio, "%s", DGMsg080002);
-                log.trace(DGModAudio, "0. NULL");
-                for (i = 0; i < numDevices; i++) {
-                    log.trace(DGModAudio, "%d. %s", i + 1, devices[i]);
-                }*/
+                if (config.debugMode) {
+                    log.trace(DGModAudio, "%s", DGMsg080002);
+                    log.trace(DGModAudio, "0. NULL");
+                    for (i = 0; i < numDevices; i++) {
+                        log.trace(DGModAudio, "%d. %s", i + 1, devices[i]);
+                    }
+                }
                 
                 i = config.audioDevice;
                 if ((i != 0) && (strlen(devices[i - 1]) < 256)) {
