@@ -13,6 +13,8 @@
 #ifndef DG_DEFINES_H
 #define	DG_DEFINES_H
 
+#include <float.h>
+
 // Defaults
 
 #define	DGDefScriptFile     "Main" // Also name of the window
@@ -43,6 +45,8 @@
 
 #define DGFileSeqStart      1
 #define	DGFileSeqDigits     3
+
+#define DGEpsilon			FLT_EPSILON
 
 #define mkstr(a) # a
 #define in_between(a) mkstr(a)
