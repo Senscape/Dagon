@@ -80,6 +80,9 @@ static int c99_vsnprintf(
 }
 #endif
 
+#ifdef max
+#undef max
+#endif
 
 template <size_t Size>
 static inline int vsnprintf_truncate(

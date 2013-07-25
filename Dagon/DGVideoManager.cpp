@@ -46,7 +46,7 @@ DGVideoManager::~DGVideoManager() {
      
         while (it != _arrayOfVideos.end()) {
             delete *it;
-            it++;
+            ++it;
         } 
      }
 }
@@ -72,7 +72,7 @@ void DGVideoManager::flush() {
 						done = false;
 						break;
 					}
-					else it++;
+					else ++it;
 				}
 			}
         }
@@ -110,7 +110,7 @@ void DGVideoManager::requestVideo(DGVideo* target) {
             break;
         }
         
-        it++;
+        ++it;
     }
     
     if (!isActive)
@@ -130,7 +130,7 @@ bool DGVideoManager::update() {
             
             while (it != _arrayOfActiveVideos.end()) {
                 (*it)->update();
-                it++;
+                ++it;
             }
         }
 

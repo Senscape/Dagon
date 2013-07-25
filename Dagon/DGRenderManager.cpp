@@ -45,10 +45,10 @@ DGRenderManager::DGRenderManager() {
 ////////////////////////////////////////////////////////////
 
 DGRenderManager::~DGRenderManager() {
-    if (_blendTexture)
+    //if (_blendTexture) // isn't required
         delete _blendTexture;
     
-    if (_fadeTexture)
+    //if (_fadeTexture) // isn't required
         delete _fadeTexture;
 }
 
@@ -514,7 +514,7 @@ DGPoint DGRenderManager::currentHelper() {
 }
 
 bool DGRenderManager::iterateHelpers() {
-    _itHelper++;
+    ++_itHelper;
     
     if (_itHelper == _arrayOfHelpers.end())
         return false;

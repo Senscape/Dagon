@@ -97,7 +97,7 @@ void DGFeedManager::reshape() {
     while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
         _calculatePosition(&(*it));
         
-        it++;
+        ++it;
     }
 }
 
@@ -201,7 +201,7 @@ void DGFeedManager::update() {
             _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         }
         
-        it++;
+        ++it;
     }
     
     // Check for queued feeds
@@ -237,7 +237,7 @@ void DGFeedManager::_dim() {
     while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
         if ((*it).state == DGFeedIdle)
             (*it).state = DGFeedFadeOutSlow;
-        it++;
+        ++it;
     }
 }
 
@@ -257,7 +257,7 @@ void DGFeedManager::_flush() {
                 break;
             }
             
-            it++;
+            ++it;
         }
     }
 }

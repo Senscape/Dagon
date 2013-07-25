@@ -747,10 +747,10 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 if ((*it)->state() != DGAudioPlaying)
                     (*it)->fadeIn();
                 
-                audioManager->requestAudio((*it));                
+                audioManager->requestAudio((*it));
                 (*it)->play();
                 
-                it++;
+                ++it;
             }
         }
         

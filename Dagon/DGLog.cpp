@@ -246,7 +246,7 @@ bool DGLog::beginIteratingHistory() {
 }
 
 bool DGLog::iterateHistory() {
-    _it++;
+    ++_it;
     
     if (_it == (_history.rend() - 1) || _history.empty()) // Bypass the first line  
         return false;

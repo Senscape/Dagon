@@ -48,7 +48,7 @@ DGCursorManager::~DGCursorManager() {
         
         while (_current != _arrayOfCursors.end()) {
             delete (*_current).image;
-            _current++;
+            ++_current;
         }   
     } 
 }
@@ -189,7 +189,7 @@ void DGCursorManager::_set(int type) {
                 return;
             }
             
-            _current++;
+            ++_current;
         } 
     }
     
