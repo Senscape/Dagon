@@ -87,6 +87,7 @@
     <ClCompile Include="..\Dagon\DGFont.cpp" />
     <ClCompile Include="..\Dagon\DGFontData.c" />
     <ClCompile Include="..\Dagon\DGFontManager.cpp" />
+    <ClCompile Include="..\Dagon\DGGeometry.cpp" />
     <ClCompile Include="..\Dagon\DGImage.cpp" />
     <ClCompile Include="..\Dagon\DGInterface.cpp" />
     <ClCompile Include="..\Dagon\DGLog.cpp" />

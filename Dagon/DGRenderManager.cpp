@@ -542,8 +542,8 @@ void DGRenderManager::blendView() {
 		int yStretch;
         
         if (_fadeWithZoom) {
-            xStretch = _blendOpacity * (config->displayWidth / 4);
-            yStretch = _blendOpacity * (config->displayHeight / 4);
+            xStretch = _blendOpacity * (config->displayWidth >> 2); // (config->displayWidth / 4)
+            yStretch = _blendOpacity * (config->displayHeight >> 2); // (config->displayHeight / 4)
             
             // This should a bit faster than the walk_time factor
             _blendOpacity += 0.015f * config->globalSpeed();
@@ -617,7 +617,7 @@ void DGRenderManager::fadeView() {
 DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     DGPoint center;
     int size = arrayOfCoordinates.size();
-    int vertex = size / 2;
+    int vertex = size >> 1; // size / 2
     
     double area = 0.0;
     double x0 = 0.0; // Current vertex X
@@ -631,10 +631,10 @@ DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     
     // For all vertices
     for (int i = 0; i < vertex; ++i) {
-        x0 = arrayOfCoordinates[i*2 + 0];
-        y0 = arrayOfCoordinates[i*2 + 1];
-        x1 = arrayOfCoordinates[(i*2 + 2) % size];
-        y1 = arrayOfCoordinates[(i*2 + 3) % size];
+        x0 = arrayOfCoordinates[i << 1];				// i*2 + 0
+        y0 = arrayOfCoordinates[(i << 1) + 1];			// i*2 + 1
+        x1 = arrayOfCoordinates[((i << 1) + 2) % size];	// i*2 + 2
+        y1 = arrayOfCoordinates[((i << 1) + 3) % size];	// i*2 + 3
         
         a = (x0 * y1) - (x1 * y0);
         area += a;
