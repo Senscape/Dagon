@@ -80,9 +80,6 @@ static int c99_vsnprintf(
 }
 #endif
 
-#ifdef max
-#undef max
-#endif
 
 template <size_t Size>
 static inline int vsnprintf_truncate(
@@ -91,9 +88,20 @@ static inline int vsnprintf_truncate(
 	va_list ap
 ) {
 	using namespace std;
-	return min<int>(
+
+#ifdef max
+#undef max
+#endif
+
+	int retVal = min<int>(
 			c99_vsnprintf(buf, Size, format, ap),
 			Size > 0 ? min<size_t>(Size - 1, numeric_limits<int>::max()) : 0);
+
+#ifndef max
+#define max(a,b) (((a) > (b)) ? (a) : (b))
+#endif
+
+	return retVal;
 }
 
 
