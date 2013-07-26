@@ -131,7 +131,7 @@ DGTexture* DGSpot::texture() {
 }
 
 int DGSpot::vertexCount() {
-    return (_arrayOfCoordinates.size() / 2.0f);
+    return (_arrayOfCoordinates.size() >> 1);
 }
 
 DGVideo* DGSpot::video() {

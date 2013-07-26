@@ -368,8 +368,8 @@ void DGVideo::_convertToRGB(uint8_t* puc_y, int stride_y,
 		// We are flipping our output upside-down
 		height_y  = -height_y;
 		puc_y     += (height_y     - 1) * stride_y ;
-		puc_u     += (height_y / 2 - 1) * stride_uv;
-		puc_v     += (height_y / 2 - 1) * stride_uv;
+		puc_u     += ((height_y >> 1) - 1) * stride_uv;
+		puc_v     += ((height_y >> 1) - 1) * stride_uv;
 		stride_y  = -stride_y;
 		stride_uv = -stride_uv;
 	}

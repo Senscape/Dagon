@@ -43,22 +43,26 @@ typedef struct {
     double z;
 } DGVector;
 
-inline DGPoint DGMakePoint(double x, double y);
-inline DGSize DGMakeSize(double w, double h);
-inline DGRect DGMakeRect(double x, double y, double w, double h);
+DGPoint DGMakePoint(double x, double y);
+DGSize DGMakeSize(double w, double h);
+DGRect DGMakeRect(double x, double y, double w, double h);
 
 extern const DGPoint DGZeroPoint;
 extern const DGSize DGZeroSize;
 extern const DGRect DGZeroRect;
 
-inline double DGMaxX(DGRect rect);
-inline double DGMaxY(DGRect rect);
-inline double DGMidX(DGRect rect);
-inline double DGMidY(DGRect rect);
-inline double DGMinX(DGRect rect);
-inline double DGMinY(DGRect rect);
-inline double DGWidth(DGRect rect);
-inline double DGHeigth(DGRect rect);
+double DGMaxX(DGRect rect);
+double DGMaxY(DGRect rect);
+double DGMidX(DGRect rect);
+double DGMidY(DGRect rect);
+double DGMinX(DGRect rect);
+double DGMinY(DGRect rect);
+double DGWidth(DGRect rect);
+double DGHeigth(DGRect rect);
+
+void DGMovePoint(DGPoint& point, double offsetX, double offsetY);
+void DGMoveRect(DGRect& rect, double offsetX, double offsetY);
+void DGScaleRect(DGRect& rect, double factor);
 
 // Add other geometry functions...
 

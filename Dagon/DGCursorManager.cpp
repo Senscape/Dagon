@@ -30,8 +30,8 @@ DGCursorManager::DGCursorManager() {
     _hasImage = false;
     _isDragging = false;
     _onButton = false;
-    _x = config->displayWidth / 2;
-    _y = config->displayHeight / 2;
+    _x = config->displayWidth >> 1;
+    _y = config->displayHeight >> 1;
     
     this->setFadeSpeed(DGFadeFastest); // Cursor always fades with fastest speed
     this->setSize(DGDefCursorSize);
@@ -92,8 +92,7 @@ void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int
     
     cursor.type = type;
     cursor.image = texture;
-    cursor.origin.x = _half - offsetX;
-    cursor.origin.y = _half - offsetY;
+    cursor.origin = DGMakePoint(_half - offsetX, _half - offsetY);
 
     _arrayOfCursors.push_back(cursor);
 }
@@ -103,10 +102,7 @@ bool DGCursorManager::onButton() {
 }
 
 DGPoint DGCursorManager::position() {
-    DGPoint position;
-    
-    position.x = _x;
-    position.y = _y;
+    DGPoint position = DGMakePoint(_x, _y);
     
     return position;
 }
@@ -142,7 +138,7 @@ void DGCursorManager::setCursor(int type) {
 
 void DGCursorManager::setSize(int size) {
     _size = size;
-    _half = _size / 2;
+    _half = _size >> 1;
     
     this->updateCoords(_x, _y);
 }

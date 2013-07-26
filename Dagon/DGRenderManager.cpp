@@ -266,11 +266,11 @@ void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
     
 	glVertexPointer(2, GL_FLOAT, 0, _defCursor);
 	
-	glDrawArrays(GL_LINE_LOOP, 0, (DGDefCursorDetail / 2) + 2);
+	glDrawArrays(GL_LINE_LOOP, 0, (DGDefCursorDetail >> 1) + 2);
     
 	if (animate) glScalef(0.85f * _helperLoop, 0.85f * _helperLoop, 0);
     else glScalef(0.835f, 0.85f, 0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, (DGDefCursorDetail / 2) + 2);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, (DGDefCursorDetail >> 1) + 2);
 	glPopMatrix();
     
 	glEnable(GL_LINE_SMOOTH);
@@ -288,7 +288,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
     int i, j;
     int cubeTextureSize = DGDefTexSize;
     int sizeOfArray = (int)withArrayOfCoordinates.size();
-	int numCoords = sizeOfArray + (sizeOfArray / 2);
+	int numCoords = sizeOfArray + (sizeOfArray >> 1);
 	GLfloat* spotVertCoords = new GLfloat[numCoords];
     
 	glPushMatrix();
@@ -298,9 +298,9 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 			glTranslatef(-x, y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
                 // Size is divided in half because of the way we draw the cube
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1);
                 // We must invert the coordinates in some cases
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
 				spotVertCoords[j + 2] = 0.0f;
 			}
 			break;
@@ -308,15 +308,15 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 			glTranslatef(x, y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = 0.0f;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);               
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
+				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1);               
 			}
 			break;
 		case DGSouth:
 			glTranslatef(x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1) * -1;
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
 				spotVertCoords[j + 2] = 0.0f;
 			}			
 			break;
@@ -324,24 +324,24 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 			glTranslatef(-x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = 0.0f;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize/ 2 ) * -1;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;             
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
+				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1) * -1;             
 			}
 			break;
 		case DGUp:
 			glTranslatef(-x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1);
 				spotVertCoords[j + 1] = 0.0f;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
 			}
 			break;
 		case DGDown:
 			glTranslatef(-x, -y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1);
 				spotVertCoords[j + 1] = 0.0f;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2);
+				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1);
 			}
 			break;				
 	}
@@ -365,34 +365,34 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
         
         switch (onFace) {
             case DGNorth:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1);
+                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;
                 z = 0.0f;
                 break;
             case DGEast:
                 x = 0.0f;
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;                
-                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);                  
+                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;                
+                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1);                  
                 break;
             case DGSouth:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;
-				y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1) * -1;
+				y = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;
 				z = 0.0f;
                 break;
             case DGWest:
                 x = 0.0f;
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;                
-                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;  
+                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;                
+                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1) * -1;  
                 break;
             case DGUp:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
+                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1);
                 y = 0.0f;                
-                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;
                 break;                 
             case DGDown:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
+                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1);
                 y = 0.0f;
-                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2);                
+                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1);                
                 break;                
         }
         
@@ -409,7 +409,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
     }
     
 	glVertexPointer(3, GL_FLOAT, 0, spotVertCoords);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray / 2);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray >> 1);
     
     delete spotVertCoords;
     

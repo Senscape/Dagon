@@ -314,19 +314,19 @@ void DGControl::processKey(int aKey, int eventFlags) {
                 switch (aKey) {
                     case 'w':
                     case 'W':
-                        cameraManager->pan(DGCurrent, config->displayHeight / 2);
+                        cameraManager->pan(DGCurrent, config->displayHeight >> 1);
                         break;
                     case 'a':
                     case 'A':
-                        cameraManager->pan(config->displayWidth / 2, DGCurrent);
+                        cameraManager->pan(config->displayWidth >> 1, DGCurrent);
                         break;
                     case 's':
                     case 'S':
-                        cameraManager->pan(DGCurrent, config->displayHeight / 2);
+                        cameraManager->pan(DGCurrent, config->displayHeight >> 1);
                         break;
                     case 'd':
                     case 'D':
-                        cameraManager->pan(config->displayWidth / 2, DGCurrent);
+                        cameraManager->pan(config->displayWidth >> 1, DGCurrent);
                         break;
                 }
             }
@@ -423,7 +423,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
             
         case DGMouseFixed:
             if (_directControlActive) {
-                cursorManager->updateCoords(config->displayWidth / 2, config->displayHeight / 2); // Forced
+                cursorManager->updateCoords(config->displayWidth >> 1, config->displayHeight >> 1); // Forced
             
                 if (eventFlags == DGMouseEventMove) {
                     cameraManager->directPan(x, y);

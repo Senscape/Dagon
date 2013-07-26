@@ -196,10 +196,10 @@ void DGCameraManager::setNeutralZone(int zone) {
             _freeNeutralZone = zone;
             
             // Update panning regions with the new neutral zone
-            _panRegion.origin.x = (_viewport.width / 2) - _freeNeutralZone * factor;
-            _panRegion.origin.y = (_viewport.height / 2) - _freeNeutralZone * factor;
-            _panRegion.size.width = (_viewport.width / 2) + _freeNeutralZone * factor;
-            _panRegion.size.height = (_viewport.height / 2) + _freeNeutralZone * factor;
+            _panRegion = DGMakeRect((_viewport.width * 0.5) - _freeNeutralZone * factor,
+				(_viewport.height * 0.5) - _freeNeutralZone * factor,
+				(_viewport.width * 0.5) + _freeNeutralZone * factor,
+				(_viewport.height * 0.5) + _freeNeutralZone * factor);
             
             break;
     }
@@ -334,8 +334,8 @@ void DGCameraManager::endOrthoView() {
 }
 
 void DGCameraManager::directPan(int xPosition, int yPosition) {
-    static int xPrevious = config->displayWidth / 2;
-    static int yPrevious = config->displayHeight / 2;
+    static int xPrevious = config->displayWidth >> 1;
+    static int yPrevious = config->displayHeight >> 1;
     
     if (!_isLocked) {
         if (xPosition < xPrevious) {
@@ -375,7 +375,7 @@ void DGCameraManager::init() {
     _angleVPrevious = 0.0f;
     
     _angleHLimit = (float)M_PI * 2;
-    _angleVLimit = (float)M_PI / 2;
+    _angleVLimit = (float)M_PI * 0.5f;
     
     _bob.currentFactor = DGCamBreatheFactor;
     _bob.currentSpeed = DGCamBreatheSpeed;
@@ -483,25 +483,25 @@ void DGCameraManager::simulateWalk() {
 }
 
 void DGCameraManager::stopPanning() {
-    this->pan(config->displayWidth / 2, config->displayHeight / 2);
+    this->pan(config->displayWidth >> 1, config->displayHeight >> 1);
 }
 
 // For the DRAG mode
 
 void DGCameraManager::startDragging(int xPosition, int yPosition) {
-    _panRegion.origin.x = xPosition - _dragNeutralZone;
-    _panRegion.origin.y = yPosition - _dragNeutralZone;
-    _panRegion.size.width = xPosition + _dragNeutralZone;
-    _panRegion.size.height = yPosition + _dragNeutralZone;
+    _panRegion = DGMakeRect(xPosition - _dragNeutralZone,
+		yPosition - _dragNeutralZone,
+		xPosition + _dragNeutralZone,
+		yPosition + _dragNeutralZone);
 }
 
 void DGCameraManager::stopDragging() {
-    _panRegion.origin.x = (_viewport.width / 2) - _dragNeutralZone;
-    _panRegion.origin.y = (_viewport.height / 2) - _dragNeutralZone;
-    _panRegion.size.width = (_viewport.width / 2) + _dragNeutralZone;
-    _panRegion.size.height = (_viewport.height / 2) + _dragNeutralZone;
+    _panRegion = DGMakeRect((_viewport.width * 0.5) - _dragNeutralZone,
+		(_viewport.height * 0.5) - _dragNeutralZone,
+		(_viewport.width * 0.5) + _dragNeutralZone,
+		(_viewport.height * 0.5) + _dragNeutralZone);
     
-    this->pan(config->displayWidth / 2, config->displayHeight / 2);
+    this->pan(config->displayWidth >> 1, config->displayHeight >> 1);
 }
 
 void DGCameraManager::lock() {

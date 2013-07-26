@@ -25,10 +25,7 @@
 DGImage::DGImage() {
     config = &DGConfig::getInstance();
     
-    _rect.origin.x = 0;
-    _rect.origin.y = 0; 
-    _rect.size.width = 0;
-    _rect.size.height = 0;
+    _rect = DGZeroRect;
     
     _hasTexture = false;
     
@@ -40,11 +37,9 @@ DGImage::DGImage(const char* fromFileName) {
     
     this->setTexture(fromFileName);
     if (_attachedTexture->isLoaded()) {
-        _rect.origin.x = 0;
-        _rect.origin.y = 0; 
+        _rect.origin = DGZeroPoint;
         
-        _rect.size.width = _attachedTexture->width();
-        _rect.size.height = _attachedTexture->height();
+        _rect.size = DGMakeSize(_attachedTexture->width(), _attachedTexture->height());
         
         _calculateCoordinates();
     }
@@ -93,17 +88,15 @@ float* DGImage::arrayOfCoordinates() {
 }
 
 void DGImage::move(float offsetX, float offsetY) {
-    _rect.origin.x += offsetX;
-    _rect.origin.y += offsetY;
+	DGMoveRect(_rect, offsetX, offsetY);
     
     _calculateCoordinates();
 }
 
 void DGImage::scale(float factor) {
-    _rect.size.width *= factor;
-    _rect.size.height *= factor;
+    DGScaleRect(_rect, factor);
     
-    _calculateCoordinates();    
+    _calculateCoordinates();
 }
 
 ////////////////////////////////////////////////////////////
@@ -111,15 +104,13 @@ void DGImage::scale(float factor) {
 ////////////////////////////////////////////////////////////
 
 void DGImage::setPosition(float x, float y) {
-    _rect.origin.x = x;
-    _rect.origin.y = y;
+    _rect.origin = DGMakePoint(x, y);
     
-    _calculateCoordinates();    
+    _calculateCoordinates();
 }
 
 void DGImage::setSize(float width, float height) {
-    _rect.size.width = width;
-    _rect.size.height = height;
+    _rect.size = DGMakeSize(width, height);
     
     _calculateCoordinates(); 
 }
@@ -143,15 +134,15 @@ void DGImage::setTexture(const char* fromFileName) {
 ////////////////////////////////////////////////////////////
 
 void DGImage::_calculateCoordinates() {
-    _arrayOfCoordinates[0] = _rect.origin.x;
-    _arrayOfCoordinates[1] = _rect.origin.y;
+    _arrayOfCoordinates[0] = DGMinX(_rect);
+    _arrayOfCoordinates[1] = DGMinY(_rect);
     
-    _arrayOfCoordinates[2] = _rect.origin.x + _rect.size.width;
-    _arrayOfCoordinates[3] = _rect.origin.y;
+    _arrayOfCoordinates[2] = DGMaxX(_rect);
+    _arrayOfCoordinates[3] = DGMinY(_rect);
     
-    _arrayOfCoordinates[4] = _rect.origin.x + _rect.size.width;
-    _arrayOfCoordinates[5] = _rect.origin.y + _rect.size.height;
+    _arrayOfCoordinates[4] = DGMaxX(_rect);
+    _arrayOfCoordinates[5] = DGMaxY(_rect);
     
-    _arrayOfCoordinates[6] = _rect.origin.x;
-    _arrayOfCoordinates[7] = _rect.origin.y + _rect.size.height;    
+    _arrayOfCoordinates[6] = DGMinX(_rect);
+    _arrayOfCoordinates[7] = DGMaxY(_rect);   
 }

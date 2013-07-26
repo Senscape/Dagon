@@ -1,6 +1,6 @@
 #include "DGGeometry.h"
 
-inline DGPoint DGMakePoint(double x, double y)
+DGPoint DGMakePoint(double x, double y)
 {
 	DGPoint point;
 	point.x = x;
@@ -9,7 +9,7 @@ inline DGPoint DGMakePoint(double x, double y)
 	return point;
 }
 
-inline DGSize DGMakeSize(double w, double h)
+DGSize DGMakeSize(double w, double h)
 {
 	DGSize size;
 	size.width = w;
@@ -18,7 +18,7 @@ inline DGSize DGMakeSize(double w, double h)
 	return size;
 }
 
-inline DGRect DGMakeRect(double x, double y, double w, double h)
+DGRect DGMakeRect(double x, double y, double w, double h)
 {
 	DGRect rect;
 	rect.origin.x = x;
@@ -33,42 +33,59 @@ const DGPoint DGZeroPoint = DGMakePoint(0.0, 0.0);
 const DGSize DGZeroSize = DGMakeSize(0.0, 0.0);
 const DGRect DGZeroRect = DGMakeRect(0.0, 0.0, 0.0, 0.0);
 
-inline double DGMaxX(DGRect rect)
+double DGMaxX(DGRect rect)
 {
 	return rect.origin.x + rect.size.width;
 }
 
-inline double DGMaxY(DGRect rect)
+double DGMaxY(DGRect rect)
 {
 	return rect.origin.y + rect.size.height;
 }
 
-inline double DGMidX(DGRect rect)
+double DGMidX(DGRect rect)
 {
 	return rect.origin.x + rect.size.width * 0.5;
 }
 
-inline double DGMidY(DGRect rect)
+double DGMidY(DGRect rect)
 {
 	return rect.origin.y + rect.size.height * 0.5;
 }
 
-inline double DGMinX(DGRect rect)
+double DGMinX(DGRect rect)
 {
 	return rect.origin.x;
 }
 
-inline double DGMinY(DGRect rect)
+double DGMinY(DGRect rect)
 {
 	return rect.origin.y;
 }
 
-inline double DGWidth(DGRect rect)
+double DGWidth(DGRect rect)
 {
 	return rect.size.width;
 }
 
-inline double DGHeigth(DGRect rect)
+double DGHeigth(DGRect rect)
 {
 	return rect.size.height;
+}
+
+void DGMovePoint(DGPoint& point, double offsetX, double offsetY)
+{
+	point.x += offsetX;
+	point.y += offsetY;
+}
+
+void DGMoveRect(DGRect& rect, double offsetX, double offsetY)
+{
+	DGMovePoint(rect.origin, offsetX, offsetY);
+}
+
+void DGScaleRect(DGRect& rect, double factor)
+{
+	rect.size.width *= factor;
+	rect.size.height *= factor;
 }
