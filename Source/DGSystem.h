@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-class DGConfig;
+class Config;
 class DGLog;
 
 ////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGSystem {
-    DGConfig& config;
+    Config& config;
     DGLog& log;
 
     bool _isInitialized = false;
@@ -50,7 +50,7 @@ class DGSystem {
     static void _sizeCallback(GLFWwindow* window, int width, int height);
     
 public:
-    DGSystem(DGConfig& theConfig, DGLog& theLog) :
+    DGSystem(Config& theConfig, DGLog& theLog) :
         config(theConfig),
         log(theLog) {};
     ~DGSystem() {};

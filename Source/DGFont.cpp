@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGFont.h"
 #include "DGLog.h"
 
@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 DGFont::DGFont() :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     log(DGLog::instance())
 {
     _isLoaded = false;
@@ -147,7 +147,7 @@ void DGFont::setLibrary(FT_Library* library) {
 void DGFont::setResource(const char* fromFileName, unsigned int heightOfFont) {
     _height = (float)heightOfFont;
     
-    if (FT_New_Face(*_library, config.path(DGPathRes, fromFileName, DGObjectFont), 0, &_face)) {
+    if (FT_New_Face(*_library, config.path(kPathResources, fromFileName, DGObjectFont).c_str(), 0, &_face)) {
         log.error(DGModFont, "%s: %s", DGMsg260003, fromFileName);
         return;
     }

@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGEffectsManager.h"
 #include "DGLog.h"
 #include "DGRenderManager.h"
@@ -28,7 +28,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGRenderManager::DGRenderManager() :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     effectsManager(DGEffectsManager::instance()),
     log(DGLog::instance())
 {

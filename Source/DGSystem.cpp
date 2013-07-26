@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGControl.h"
 #include "DGLog.h"
 #include "DGSystem.h"
@@ -60,7 +60,7 @@ bool DGSystem::init() {
             config.displayWidth = videoMode->width;
             config.displayHeight = videoMode->height;
             
-            if (config.fullScreen) {
+            if (config.fullscreen) {
                 config.displayWidth = videoMode->width;
                 config.displayHeight = videoMode->height;
             }
@@ -71,7 +71,7 @@ bool DGSystem::init() {
             }
         }
         
-        if (config.fullScreen)
+        if (config.fullscreen)
             window = glfwCreateWindow(config.displayWidth, config.displayHeight, "Dagon", monitor, NULL);
         else
             window = glfwCreateWindow(config.displayWidth, config.displayHeight, "Dagon", NULL, NULL);
@@ -177,8 +177,8 @@ void DGSystem::_closeCallback(GLFWwindow* window) {
 }
 
 void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
-    int width = DGConfig::instance().displayWidth;
-	int height = DGConfig::instance().displayHeight;
+    int width = Config::instance().displayWidth;
+	int height = Config::instance().displayHeight;
     
     if (DGControl::instance().isDirectControlActive()) {
         if ((xpos <= 1) || ypos >= (width - 1)) {

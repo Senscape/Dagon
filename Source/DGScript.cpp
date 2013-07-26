@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGAudioManager.h"
 #include "DGCursorManager.h"
 #include "DGFeedManager.h"
@@ -40,7 +40,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGScript::DGScript() :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     log(DGLog::instance())
 {
     _isInitialized = false;
@@ -74,8 +74,8 @@ void DGScript::init() {
     luaL_openlibs(_L);
     
     // The following code attempts to load a config file, and if it does exist
-    // copies the created table to the DGConfig metatable
-    if (luaL_loadfile(_L, config.path(DGPathApp, DGDefConfigFile)) == 0) {
+    // copies the created table to the Config metatable
+    if (luaL_loadfile(_L, config.path(kPathApp, DGDefConfigFile, DGObjectGeneric).c_str()) == 0) {
 		lua_newtable(_L);
 		lua_pushvalue(_L, -1);
 		int ref = lua_ref(_L, LUA_REGISTRYINDEX);
@@ -86,7 +86,7 @@ void DGScript::init() {
 		lua_rawgeti(_L, LUA_REGISTRYINDEX, ref);
 		lua_pushnil(_L);
 		while (lua_next(_L, 1) != 0) {
-			DGConfigLibSet(_L);
+			ConfigLibSet(_L);
 			
 			lua_pop(_L, 1);
 		}
@@ -123,8 +123,8 @@ void DGScript::init() {
     
     lua_pushvalue(_L, -1);
 	
-	luaL_newmetatable(_L, "DGConfigLib");
-	luaL_register(_L, NULL, DGConfigLib);
+	luaL_newmetatable(_L, "ConfigLib");
+	luaL_register(_L, NULL, ConfigLib);
 	lua_setmetatable(_L, -2);
 	
 	lua_newtable(_L);
@@ -165,8 +165,8 @@ void DGScript::init() {
     
     // We're ready to roll, let's attempt to load the script in a Lua thread
     _thread = lua_newthread(_L);
-    snprintf(script, DGMaxFileLength, "%s.lua", config.script());
-    if (luaL_loadfile(_thread, config.path(DGPathApp, script)) == 0)
+    snprintf(script, DGMaxFileLength, "%s.lua", config.script().c_str());
+    if (luaL_loadfile(_thread, config.path(kPathApp, script, DGObjectGeneric).c_str()) == 0)
         _isInitialized = true;
     else {
         // Not found!
@@ -425,7 +425,7 @@ int DGScript::_globalRoom(lua_State *L) {
         // TODO: Read rooms from path
         snprintf(script, DGMaxFileLength, "%s.lua", module);
         
-        if (luaL_loadfile(L, DGConfig::instance().path(DGPathApp, script, DGObjectRoom)) == 0) {
+        if (luaL_loadfile(L, Config::instance().path(kPathApp, script, DGObjectRoom).c_str()) == 0) {
             DGScript::instance().setModule(module);
             lua_pcall(L, 0, 0, 0);
             DGScript::instance().unsetModule();
@@ -549,9 +549,9 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, SOUTHWEST, DGSouthWest);
     DGLuaEnum(_L, CURRENT, DGCurrent);
     
-    DGLuaEnum(_L, DRAG, DGMouseDrag);
-    DGLuaEnum(_L, FIXED, DGMouseFixed);
-    DGLuaEnum(_L, FREE, DGMouseFree);
+    DGLuaEnum(_L, DRAG, kControlDrag);
+    DGLuaEnum(_L, FIXED, kControlFixed);
+    DGLuaEnum(_L, FREE, kControlFree);
     
     DGLuaEnum(_L, ENTER_NODE, DGEventEnterNode);
     DGLuaEnum(_L, ENTER_ROOM, DGEventEnterRoom);
@@ -564,22 +564,22 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
     DGLuaEnum(_L, RESIZE, DGEventResize);
 
-	DGLuaEnum(_L, BLACK, DGColorBlack);
-	DGLuaEnum(_L, BLUE, DGColorBlue);
-	DGLuaEnum(_L, GREEN, DGColorGreen);
-	DGLuaEnum(_L, CYAN, DGColorCyan);
-	DGLuaEnum(_L, RED, DGColorRed);
-	DGLuaEnum(_L, MAGENTA, DGColorMagenta);
-	DGLuaEnum(_L, BROWN, DGColorBrown);
-	DGLuaEnum(_L, LIGHTGRAY, DGColorLightGray);
-	DGLuaEnum(_L, DARKGRAY, DGColorDarkGray);
-	DGLuaEnum(_L, BRIGHTBLUE, DGColorBrightBlue);
-	DGLuaEnum(_L, BRIGHTGREEN, DGColorBrightGreen);
-	DGLuaEnum(_L, BRIGHTCYAN, DGColorBrightCyan);
-	DGLuaEnum(_L, BRIGHTRED, DGColorBrightRed);
-	DGLuaEnum(_L, BRIGHTMAGENTA, DGColorBrightMagenta);
-	DGLuaEnum(_L, YELLOW, DGColorYellow);
-	DGLuaEnum(_L, WHITE, DGColorWhite);
+	DGLuaEnum(_L, BLACK, kColorBlack);
+	DGLuaEnum(_L, BLUE, kColorBlue);
+	DGLuaEnum(_L, GREEN, kColorGreen);
+	DGLuaEnum(_L, CYAN, kColorCyan);
+	DGLuaEnum(_L, RED, kColorRed);
+	DGLuaEnum(_L, MAGENTA, kColorMagenta);
+	DGLuaEnum(_L, BROWN, kColorBrown);
+	DGLuaEnum(_L, LIGHTGRAY, kColorLightGray);
+	DGLuaEnum(_L, DARKGRAY, kColorDarkGray);
+	DGLuaEnum(_L, BRIGHTBLUE, kColorBrightBlue);
+	DGLuaEnum(_L, BRIGHTGREEN, kColorBrightGreen);
+	DGLuaEnum(_L, BRIGHTCYAN, kColorBrightCyan);
+	DGLuaEnum(_L, BRIGHTRED, kColorBrightRed);
+	DGLuaEnum(_L, BRIGHTMAGENTA, kColorBrightMagenta);
+	DGLuaEnum(_L, YELLOW, kColorYellow);
+	DGLuaEnum(_L, WHITE, kColorWhite);
     
     DGLuaEnum(_L, F1, DGKeyF1);
 	DGLuaEnum(_L, F2, DGKeyF2);

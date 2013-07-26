@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGAudioManager.h"
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGLog.h"
 
 using namespace std;
@@ -26,7 +26,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGAudioManager::DGAudioManager()  :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     log(DGLog::instance())
 {
     _isInitialized = false;

@@ -54,14 +54,14 @@ typedef struct {
     int type;
 } DGLogData;
 
-class DGConfig;
+class Config;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
 class DGLog {
-    DGConfig& config;
+    Config& config;
     
     std::ofstream _filestr;
     std::vector<DGLogData> _history;

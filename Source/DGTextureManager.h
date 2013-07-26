@@ -32,7 +32,7 @@
 // before the next switch.
 #define DGMaxActiveTextures 18
 
-class DGConfig;
+class Config;
 class DGLog;
 class DGNode;
 class DGRoom;
@@ -42,7 +42,7 @@ class DGRoom;
 ////////////////////////////////////////////////////////////
 
 class DGTextureManager {
-    DGConfig& config;
+    Config& config;
     DGLog& log;
     
     std::thread _preloaderThread;

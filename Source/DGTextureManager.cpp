@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGLog.h"
 #include "DGNode.h"
 #include "DGRoom.h"
@@ -35,7 +35,7 @@ bool DGTextureSort(DGTexture* t1, DGTexture* t2);
 ////////////////////////////////////////////////////////////
 
 DGTextureManager::DGTextureManager() :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     log(DGLog::instance())
 {
     _roomToPreload = NULL;
@@ -108,16 +108,16 @@ void DGTextureManager::registerTexture(DGTexture* target) {
         
         if (config.bundleEnabled) {
             // Attempt loading the bundle
-            snprintf(fileToLoad, DGMaxFileLength, "%s.%s", target->name(), config.texExtension());
+            snprintf(fileToLoad, DGMaxFileLength, "%s.%s", target->name(), config.texExtension().c_str());
             
         }
         else {
             // Attempt loading individual file with generated index and default extension
             snprintf(fileToLoad, DGMaxFileLength, "%s%0" in_between(DGFileSeqDigits) "d.%s", target->name(),
-                     target->indexInBundle() + DGFileSeqStart, config.texExtension());
+                     target->indexInBundle() + DGFileSeqStart, config.texExtension().c_str());
         }
         
-        target->setResource(config.path(DGPathRes, fileToLoad, DGObjectNode));
+        target->setResource(config.path(kPathResources, fileToLoad, DGObjectNode).c_str());
     }
     
     _arrayOfTextures.push_back(target);
@@ -131,7 +131,7 @@ void DGTextureManager::requestBundle(DGNode* forNode) {
         for (int i = 0; i < 6; i++) {
             std::vector<int> arrayOfCoordinates;
             // We ensure the texture is properly stretched, so we take the default cube size
-            // TODO: This setting should be obtained from the DGConfig class
+            // TODO: This setting should be obtained from the Config class
             int coords[] = {0, 0, DGDefTexSize, 0, DGDefTexSize, DGDefTexSize, 0, DGDefTexSize};
             unsigned arraySize = sizeof(coords) / sizeof(int);
             

@@ -27,7 +27,7 @@ using namespace std;
 
 DGSpot::DGSpot(std::vector<int> withArrayOfCoordinates, unsigned int onFace, int withFlags) {
 	// Init data with default values
-	_color = DGColorBlack;
+	_color = kColorBlack;
 	_flags = withFlags;
 	
 	_isPlaying = false;

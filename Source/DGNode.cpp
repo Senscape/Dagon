@@ -181,7 +181,7 @@ bool DGNode::iterateSpots() {
 
 void DGNode::_link(unsigned int direction, DGAction* action) {
     // We ensure the texture is properly stretched, so we take the default cube size
-    // TODO: This setting should be obtained directly from the DGConfig class
+    // TODO: This setting should be obtained directly from the Config class
     int minorBound = (int)(DGDefTexSize / 3);
     int majorBound = (int)(DGDefTexSize / 1.5f);
     int offset = (int)(DGDefTexSize/3);

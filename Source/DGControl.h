@@ -31,7 +31,7 @@
 
 class DGAudioManager;
 class DGCameraManager;
-class DGConfig;
+class Config;
 class DGConsole;
 class DGCursorManager;
 class DGFont;
@@ -87,7 +87,7 @@ typedef struct {
 class DGControl {
     DGAudioManager& audioManager;
     DGCameraManager& cameraManager;
-    DGConfig& config;
+    Config& config;
     DGCursorManager& cursorManager;
     DGFeedManager& feedManager;
     DGFontManager& fontManager;

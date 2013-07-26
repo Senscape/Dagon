@@ -71,7 +71,7 @@ typedef struct {
     float timer;
 } DGCameraBob;
 
-class DGConfig;
+class Config;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
@@ -82,7 +82,7 @@ class DGConfig;
 // I don't know... every time I rewrote this file, it always got messy. Bloody cameras.
 
 class DGCameraManager {
-    DGConfig& config;
+    Config& config;
 
     bool _isInitialized;
     bool _isLocked;

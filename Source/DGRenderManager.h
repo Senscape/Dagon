@@ -26,7 +26,7 @@
 
 #define DGDefCursorDetail 30
 
-class DGConfig;
+class Config;
 class DGEffectsManager;
 class DGLog;
 class DGTexture;
@@ -39,7 +39,7 @@ extern "C" const unsigned char DGDefSplashBinary[];
 ////////////////////////////////////////////////////////////
 
 class DGRenderManager {
-    DGConfig& config;
+    Config& config;
     DGEffectsManager& effectsManager;
     DGLog& log;
     

@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-class DGConfig;
+class Config;
 class DGTexture;
 
 ////////////////////////////////////////////////////////////
@@ -32,7 +32,7 @@ class DGTexture;
 ////////////////////////////////////////////////////////////
 
 class DGImage : public DGObject {
-    DGConfig& config;
+    Config& config;
     
     DGTexture* _attachedTexture;
     int _arrayOfCoordinates[8];

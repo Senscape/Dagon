@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGImage.h"
 #include "DGTexture.h"
 
@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 DGImage::DGImage() :
-    config(DGConfig::instance())
+    config(Config::instance())
 {
     _rect.origin.x = 0;
     _rect.origin.y = 0; 
@@ -37,7 +37,7 @@ DGImage::DGImage() :
 }
 
 DGImage::DGImage(const char* fromFileName) :
-    config(DGConfig::instance())
+    config(Config::instance())
 {
     this->setTexture(fromFileName);
     if (_attachedTexture->isLoaded()) {
@@ -132,7 +132,7 @@ void DGImage::setTexture(const char* fromFileName) {
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config.path(DGPathRes, fromFileName, DGObjectImage));
+    texture->setResource(config.path(kPathResources, fromFileName, DGObjectImage).c_str());
     texture->load();
     
     _attachedTexture = texture;

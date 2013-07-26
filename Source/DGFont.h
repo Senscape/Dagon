@@ -43,7 +43,7 @@ typedef struct {
 // executable and declared in DGFontData.c
 extern "C" const unsigned char DGDefFontBinary[];
 
-class DGConfig;
+class Config;
 class DGLog;
 
 ////////////////////////////////////////////////////////////
@@ -51,7 +51,7 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGFont : public DGObject {
-    DGConfig& config;
+    Config& config;
     DGLog& log;
     
     FT_Face _face;

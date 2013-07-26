@@ -65,7 +65,7 @@ typedef struct {
 } DGParticle;
 
 class DGCameraManager;
-class DGConfig;
+class Config;
 class DGTexture;
 class DGTimerManager;
 
@@ -80,7 +80,7 @@ extern "C" const char DGDefShaderData[];
 ////////////////////////////////////////////////////////////
 
 class DGEffectsManager {
-    DGConfig& config;
+    Config& config;
     DGCameraManager& cameraManager;
     DGTimerManager& timerManager;
     

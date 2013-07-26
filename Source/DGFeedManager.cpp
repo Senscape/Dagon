@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGAudioManager.h"
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGFeedManager.h"
 #include "DGFontManager.h"
 #include "DGTimerManager.h"
@@ -29,7 +29,7 @@ using namespace std;
 
 DGFeedManager::DGFeedManager() :
     audioManager(DGAudioManager::instance()),
-    config(DGConfig::instance()),
+    config(Config::instance()),
     fontManager(DGFontManager::instance()),
     timerManager(DGTimerManager::instance())
 {
@@ -124,7 +124,7 @@ void DGFeedManager::show(const char* text) {
             
             strncpy(feed.text, substr.c_str(), DGMaxFeedLength);
             _calculatePosition(&feed);
-            feed.color = DGColorWhite - 0xFF000000;
+            feed.color = kColorWhite - 0xFF000000;
             feed.state = DGFeedFadeIn;
             feed.timerHandle = timerManager.createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable
             
@@ -190,7 +190,7 @@ void DGFeedManager::update() {
             
             // Shadow code
             if (DGFeedShadowEnabled) {
-                _feedFont->setColor(DGColorBlack & (*it).color);
+                _feedFont->setColor(kColorBlack & (*it).color);
                 _feedFont->print((*it).location.x + DGFeedShadowDistance,
                                  (*it).location.y + displace + DGFeedShadowDistance, (*it).text);
             }

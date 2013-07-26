@@ -24,7 +24,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGAudio::DGAudio() :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     log(DGLog::instance())
 {
     _oggCallbacks.read_func = _oggRead;
@@ -130,9 +130,9 @@ void DGAudio::load() {
     if (!_isLoaded) { 
         FILE* fh;
         
-        // FIXME: This object shouldn't reference DGConfig, let the Audio Manager do this
+        // FIXME: This object shouldn't reference Config, let the Audio Manager do this
         const char* fileToLoad = _randomizeFile(_resource.name);
-        fh = fopen(config.path(DGPathRes, fileToLoad, DGObjectAudio), "rb");	
+        fh = fopen(config.path(kPathResources, fileToLoad, DGObjectAudio).c_str(), "rb");
         
         if (fh != NULL) {
             fseek(fh, 0, SEEK_END);

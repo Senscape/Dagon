@@ -197,7 +197,7 @@ public:
                 // resource of the texture.
                 
                 texture = new DGTexture;
-                texture->setResource(DGConfig::instance().path(DGPathRes, luaL_checkstring(L, 2), DGObjectImage));
+                texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 2), DGObjectImage).c_str());
                 
                 // If we have a third parameter, use it to set the index inside a bundle
                 if (lua_isnumber(L, 3))
@@ -242,7 +242,7 @@ public:
                 video = new DGVideo(autoplay, loop, sync);
                 
                 // TODO: Path is set by the video manager
-                video->setResource(DGConfig::instance().path(DGPathRes, luaL_checkstring(L, 2), DGObjectVideo));
+                video->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 2), DGObjectVideo).c_str());
                 s->setVideo(video);
                 DGVideoManager::instance().registerVideo(video);
                 

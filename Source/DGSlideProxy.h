@@ -57,7 +57,7 @@ public:
         DGSpot* spot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
         
         DGTexture* texture = new DGTexture;
-        texture->setResource(DGConfig::instance().path(DGPathRes, luaL_checkstring(L, 1), DGObjectImage));
+        texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 1), DGObjectImage).c_str());
         spot->setTexture(texture);
         
         n->addSpot(spot);

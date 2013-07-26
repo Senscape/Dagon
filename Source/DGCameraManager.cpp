@@ -16,14 +16,14 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGCameraManager.h"
-#include "DGConfig.h"
+#include "Config.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
 DGCameraManager::DGCameraManager() :
-    config(DGConfig::instance())
+    config(Config::instance())
 {
     _isInitialized = false;
 }
@@ -80,7 +80,7 @@ int DGCameraManager::cursorWhenPanning() {
     else if (_motionUp > 0.0f) return DGCursorDown;
     else if (_motionDown > 0.0f) return DGCursorUp;
     
-    if (config.controlMode == DGMouseDrag)
+    if (config.controlMode == kControlDrag)
         return DGCursorDrag;
     else
         return DGCursorNormal;
@@ -109,11 +109,11 @@ float DGCameraManager::motionVertical() {
 
 int DGCameraManager::neutralZone() {
     switch (config.controlMode) {
-        case DGMouseDrag:
+        case kControlDrag:
             return _dragNeutralZone;
-        case DGMouseFixed:
+        case kControlFixed:
             return 0;
-        case DGMouseFree:
+        case kControlFree:
             return _freeNeutralZone;
     }
     
@@ -184,12 +184,12 @@ void DGCameraManager::setMaxSpeed(int speed) {
 
 void DGCameraManager::setNeutralZone(int zone) {
     switch (config.controlMode) {
-        case DGMouseDrag:
+        case kControlDrag:
             _dragNeutralZone = zone;
             break;
             
-        case DGMouseFixed:
-        case DGMouseFree:
+        case kControlFixed:
+        case kControlFree:
             _freeNeutralZone = zone;
             
             int percentageX = ((config.displayWidth * zone) / 100) / 2;
@@ -267,12 +267,12 @@ void DGCameraManager::setViewport(int width, int height) {
     // This forces the new display factor to be applied to the
     // current neutral zone (only in Free mode)
     switch (config.controlMode) {
-        case DGMouseDrag:
+        case kControlDrag:
             this->setNeutralZone(_dragNeutralZone);
-        case DGMouseFixed:
+        case kControlFixed:
             this->stopDragging(); // Refreshes the neutral zone and centers the cursor
             break;
-        case DGMouseFree:
+        case kControlFree:
             setNeutralZone(_freeNeutralZone);
             break;
     }

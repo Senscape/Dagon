@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGCameraManager.h"
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGEffectsManager.h"
 #include "DGTexture.h"
 #include "DGTimerManager.h"
@@ -27,7 +27,7 @@
 
 DGEffectsManager::DGEffectsManager() :
     cameraManager(DGCameraManager::instance()),
-    config(DGConfig::instance()),
+    config(Config::instance()),
     timerManager(DGTimerManager::instance())
 {
     _adjustEnabled = false;
@@ -41,7 +41,7 @@ DGEffectsManager::DGEffectsManager() :
     _adjustBrightness = 1.0f;
     _adjustSaturation = 1.0f;
     _adjustContrast = 1.0f;
-    _dustColor = DGColorWhite;
+    _dustColor = kColorWhite;
     _dustIntensity = 0.0f;
     _dustSize = 0.0007f;
     _dustSpeed = 99.0f;

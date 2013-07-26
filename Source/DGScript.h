@@ -42,7 +42,7 @@ enum DGAttachTypes {
 lua_pushnumber(L, val); \
 lua_setfield(L, -2, #name);
 
-class DGConfig;
+class Config;
 class DGLog;
 
 ////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGScript {
-    DGConfig& config;
+    Config& config;
     DGLog& log;
     
     std::vector<std::string> _arrayOfModuleNames;

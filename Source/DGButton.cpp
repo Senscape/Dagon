@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGButton.h"
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGFontManager.h"
 #include "DGTexture.h"
 
@@ -27,10 +27,10 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGButton::DGButton() :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     fontManager(DGFontManager::instance())
 {
-    _textColor = DGColorWhite;
+    _textColor = kColorWhite;
     
     _hasAction = false;
     _hasOnHoverTexture = false;
@@ -117,7 +117,7 @@ void DGButton::setOnHoverTexture(const char* fromFileName) {
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config.path(DGPathRes, fromFileName, DGObjectImage));
+    texture->setResource(config.path(kPathResources, fromFileName, DGObjectImage).c_str());
     texture->load();
     
     _attachedOnHoverTexture = texture;

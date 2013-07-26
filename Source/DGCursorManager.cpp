@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGCursorManager.h"
 #include "DGTextureManager.h"
 
@@ -26,7 +26,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGCursorManager::DGCursorManager() :
-    config(DGConfig::instance())
+    config(Config::instance())
 {
     _hasAction = false;
     _hasImage = false;
@@ -89,7 +89,7 @@ void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config.path(DGPathRes, imageFromFile, DGObjectCursor));
+    texture->setResource(config.path(kPathResources, imageFromFile, DGObjectCursor).c_str());
     texture->load();
     
     cursor.type = type;

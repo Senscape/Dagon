@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGCameraManager.h"
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGConsole.h"
 #include "DGCursorManager.h"
 #include "DGLog.h"
@@ -31,7 +31,7 @@ using namespace std;
 
 DGConsole::DGConsole() :
     cameraManager(DGCameraManager::instance()),
-    config(DGConfig::instance()),
+    config(Config::instance()),
     cursorManager(DGCursorManager::instance()),
     fontManager(DGFontManager::instance()),
     log(DGLog::instance()),
@@ -131,7 +131,7 @@ void DGConsole::update() {
         switch (_state) {
             case DGConsoleHidden:
                 // Set the color used for information
-                renderManager.setColor(DGColorBrightCyan);
+                renderManager.setColor(kColorBrightCyan);
                 _font->print(DGInfoMargin, DGInfoMargin, 
                              "Viewport size: %d x %d", config.displayWidth, config.displayHeight);                
                 _font->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize, 
@@ -183,7 +183,7 @@ void DGConsole::update() {
                 } while (log.iterateHistory());
             }
             
-            renderManager.setColor(DGColorBrightGreen);
+            renderManager.setColor(kColorBrightGreen);
             _font->print(DGConsoleMargin, (_size - (DGConsoleSpacing + DGDefFontSize)) - _offset, ">%s_", _command.c_str());
         }
     }

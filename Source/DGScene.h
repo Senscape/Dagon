@@ -25,7 +25,7 @@
 ////////////////////////////////////////////////////////////
 
 class DGCameraManager;
-class DGConfig;
+class Config;
 class DGCursorManager;
 class DGRenderManager;
 class DGRoom;
@@ -41,7 +41,7 @@ class DGVideoManager;
 class DGScene {
     // References to singletons
     DGCameraManager& cameraManager;
-    DGConfig& config;
+    Config& config;
     DGCursorManager& cursorManager;
     DGRenderManager& renderManager;
     DGVideoManager& videoManager;

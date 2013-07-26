@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGCameraManager.h"
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGCursorManager.h"
 #include "DGFont.h"
 #include "DGNode.h"
@@ -40,7 +40,7 @@ DGVideo _cutscene; // FIXME: Static to avoid Theora issues, revise later
 // TODO: Improve rendering of layers supporting active layers
 DGScene::DGScene() :
     cameraManager(DGCameraManager::instance()),
-    config(DGConfig::instance()),
+    config(Config::instance()),
     cursorManager(DGCursorManager::instance()),
     renderManager(DGRenderManager::instance()),
     videoManager(DGVideoManager::instance())
@@ -261,7 +261,7 @@ bool DGScene::drawCutscene() {
 void DGScene::loadCutscene(const char* fileName) {
     _cutsceneTexture = new DGTexture;
     
-    _cutscene.setResource(config.path(DGPathRes, fileName, DGObjectVideo));
+    _cutscene.setResource(config.path(kPathResources, fileName, DGObjectVideo).c_str());
     videoManager.requestVideo(&_cutscene);
     
     if (_cutscene.isLoaded()) {

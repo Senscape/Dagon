@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGLog.h"
 
 using namespace std;
@@ -25,7 +25,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGLog::DGLog() :
-    config(DGConfig::instance())
+    config(Config::instance())
 {
 }
 
@@ -45,7 +45,7 @@ DGLog::~DGLog() {
 void DGLog::_log(DGLogData* data) {
 	if (config.log) {
         if (!_filestr.is_open())
-            _filestr.open(config.path(DGPathUser, DGDefLogFile), fstream::app);
+            _filestr.open(config.path(kPathUserData, DGDefLogFile, DGObjectGeneric).c_str(), fstream::app);
         
         time_t now = time(0);
         struct tm* tm = localtime(&now);
@@ -167,7 +167,7 @@ void DGLog::command(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorBrightMagenta;
+	data.color = kColorBrightMagenta;
 	data.module = forModule;
 	data.type = DGLogTrace;
 	
@@ -182,7 +182,7 @@ void DGLog::error(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorBrightRed;
+	data.color = kColorBrightRed;
 	data.module = forModule;
 	data.type = DGLogError;
 	
@@ -197,7 +197,7 @@ void DGLog::info(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorBrightCyan;
+	data.color = kColorBrightCyan;
 	data.module = forModule;
 	data.type = DGLogTrace;
 	
@@ -212,7 +212,7 @@ void DGLog::trace(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorWhite;
+	data.color = kColorWhite;
 	data.module = forModule;
 	data.type = DGLogTrace;
 	
@@ -227,7 +227,7 @@ void DGLog::warning(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorYellow;
+	data.color = kColorYellow;
 	data.module = forModule;
 	data.type = DGLogWarning;
 	

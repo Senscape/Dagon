@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 class DGCameraManager;
-class DGConfig;
+class Config;
 class DGCursorManager;
 class DGOverlay;
 class DGRenderManager;
@@ -31,7 +31,7 @@ class DGRenderManager;
 class DGInterface {
     // References to singletons
     DGCameraManager& cameraManager;
-    DGConfig& config;
+    Config& config;
     DGCursorManager& cursorManager;
     DGRenderManager& renderManager;
     

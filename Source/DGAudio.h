@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGLog.h"
 #include "DGPlatform.h"
 
@@ -56,7 +56,7 @@ typedef struct {
     int index;
 } DGResource;
 
-class DGConfig;
+class Config;
 class DGLog;
 
 ////////////////////////////////////////////////////////////
@@ -64,7 +64,7 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGAudio : public DGObject {
-    DGConfig& config;
+    Config& config;
     DGLog& log;
     
     DGAudio* _matchedAudio;

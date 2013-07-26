@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGLog.h"
 #include "DGVideoManager.h"
 
@@ -26,7 +26,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGVideoManager::DGVideoManager() :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     log(DGLog::instance())
 {
     _isInitialized = false;

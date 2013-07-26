@@ -42,7 +42,7 @@ typedef struct {
 	int		format;
 } TEXSubHeader;
 
-class DGConfig;
+class Config;
 class DGLog;
 
 ////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ class DGLog;
 ////////////////////////////////////////////////////////////
 
 class DGTexture : public DGObject {
-    DGConfig& config;
+    Config& config;
     DGLog& log;
     
     GLubyte* _bitmap;

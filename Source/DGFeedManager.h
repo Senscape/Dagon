@@ -51,7 +51,7 @@ typedef struct {
 
 class DGAudio;
 class DGAudioManager;
-class DGConfig;
+class Config;
 class DGFont;
 class DGFontManager;
 class DGTimerManager;
@@ -62,7 +62,7 @@ class DGTimerManager;
 
 class DGFeedManager {
     DGAudioManager& audioManager;
-    DGConfig& config;
+    Config& config;
     DGFontManager& fontManager;
     DGTimerManager& timerManager;
     

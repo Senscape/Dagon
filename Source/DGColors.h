@@ -11,26 +11,28 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_COLORS_H
-#define	DG_COLORS_H
+#ifndef DAGON_COLORS_H_
+#define	DAGON_COLORS_H_
 
 // All these colors have full opacity
 
-#define	DGColorBlack			0xFF000000
-#define	DGColorBlue             0xFF0000AA
-#define	DGColorGreen			0xFF00AA00
-#define	DGColorCyan             0xFF00AAAA
-#define	DGColorRed              0xFFAA0000
-#define	DGColorMagenta          0xFFAA00AA
-#define	DGColorBrown			0xFFAA5500
-#define	DGColorLightGray		0xFFAAAAAA
-#define	DGColorDarkGray         0xFF555555
-#define	DGColorBrightBlue		0xFF5555FF
-#define	DGColorBrightGreen      0xFF55FF55
-#define	DGColorBrightCyan		0xFF55FFFF
-#define	DGColorBrightRed		0xFFFF5555
-#define	DGColorBrightMagenta	0xFFFF55FF
-#define	DGColorYellow			0xFFFFFF55
-#define	DGColorWhite			0xFFFFFFFF
+enum Colors {
+  kColorBlack = 0xFF000000,
+  kColorBlue = 0xFF0000AA,
+  kColorGreen = 0xFF00AA00,
+  kColorCyan = 0xFF00AAAA,
+  kColorRed = 0xFFAA0000,
+  kColorMagenta = 0xFFAA00AA,
+  kColorBrown = 0xFFAA5500,
+  kColorLightGray = 0xFFAAAAAA,
+  kColorDarkGray = 0xFF555555,
+  kColorBrightBlue = 0xFF5555FF,
+  kColorBrightGreen = 0xFF55FF55,
+  kColorBrightCyan = 0xFF55FFFF,
+  kColorBrightRed = 0xFFFF5555,
+  kColorBrightMagenta = 0xFFFF55FF,
+  kColorYellow = 0xFFFFFF55,
+  kColorWhite = 0xFFFFFFFF
+};
 
-#endif // DG_COLORS_H
+#endif // DAGON_COLORS_H_

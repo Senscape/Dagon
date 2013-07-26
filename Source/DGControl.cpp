@@ -23,7 +23,7 @@
 
 #include "DGAudioManager.h"
 #include "DGCameraManager.h"
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGConsole.h"
 #include "DGControl.h"
 #include "DGCursorManager.h"
@@ -53,14 +53,14 @@ DGControl::DGControl() :
     audioManager(DGAudioManager::instance()),
     textureManager(DGTextureManager::instance()),
     cameraManager(DGCameraManager::instance()),
-    config(DGConfig::instance()),
+    config(Config::instance()),
     cursorManager(DGCursorManager::instance()),
     feedManager(DGFeedManager::instance()),
     fontManager(DGFontManager::instance()),
     log(DGLog::instance()),
     renderManager(DGRenderManager::instance()),
     script(DGScript::instance()),
-    system(DGConfig::instance(), DGLog::instance()),
+    system(Config::instance(), DGLog::instance()),
     timerManager(DGTimerManager::instance()),
     videoManager(DGVideoManager::instance())
 {
@@ -187,7 +187,7 @@ DGNode* DGControl::currentNode() {
 }
 
 DGRoom* DGControl::currentRoom() {
-    return _currentRoom;
+  return _currentRoom;
 }
 
 void DGControl::cutscene(const char* fileName) {
@@ -201,7 +201,7 @@ bool DGControl::isConsoleActive() {
 }
 
 bool DGControl::isDirectControlActive() {
-	if (config.controlMode == DGMouseFixed)
+	if (config.controlMode == kControlFixed)
 		return _directControlActive;
 	else
 		return false;
@@ -322,7 +322,7 @@ void DGControl::processKey(int aKey, int eventFlags) {
             switch (aKey) {
                 case 'f':
                 case 'F':
-                    config.fullScreen = !config.fullScreen;
+                    config.fullscreen = !config.fullscreen;
                     system.toggleFullscreen();
                     break;
             }
@@ -356,7 +356,7 @@ void DGControl::processKey(int aKey, int eventFlags) {
 void DGControl::processMouse(int x, int y, int eventFlags) {
     // TODO: Horrible nesting of IFs here... improve
     
-    if (config.controlMode == DGMouseFixed) {
+    if (config.controlMode == kControlFixed) {
         if (!_directControlActive) {
             cursorManager.updateCoords(x, y);
         }
@@ -377,7 +377,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         script.processCallback(_eventHandlers.mouseButton, 0);
     }
     
-    if (config.controlMode == DGMouseFixed) {
+    if (config.controlMode == kControlFixed) {
         if (eventFlags == DGEventMouseRightUp) {
             _directControlActive = !_directControlActive;
         }
@@ -393,7 +393,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
 
     bool canProcess = false;
     
-    if (config.controlMode == DGMouseFixed) {
+    if (config.controlMode == kControlFixed) {
         if (!_directControlActive)
             canProcess = true;
     }
@@ -418,7 +418,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
     }
 
     switch (config.controlMode) {
-        case DGMouseFree:
+        case kControlFree:
             if (eventFlags == DGEventMouseMove) {
                 if (!cursorManager.onButton()) {
                     cameraManager.pan(x, y);
@@ -440,7 +440,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
             }
             break;
             
-        case DGMouseFixed:
+        case kControlFixed:
             if (_directControlActive) {
                 cursorManager.updateCoords(config.displayWidth / 2, config.displayHeight / 2); // Forced
             
@@ -765,7 +765,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             
             // Prepare the name for the window
             char title[DGMaxObjectName];
-            snprintf(title, DGMaxObjectName, "%s (%s, %s)", config.script(), 
+            snprintf(title, DGMaxObjectName, "%s (%s, %s)", config.script().c_str(),
                      _currentRoom->name(), currentNode->description());
             system.setTitle(title);
         }

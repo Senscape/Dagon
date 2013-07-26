@@ -38,7 +38,7 @@ enum DGConsoleStates {
 };
 
 class DGCameraManager;
-class DGConfig;
+class Config;
 class DGCursorManager;
 class DGFont;
 class DGFontManager;
@@ -51,7 +51,7 @@ class DGRenderManager;
 
 class DGConsole {
     DGCameraManager& cameraManager;
-    DGConfig& config;
+    Config& config;
     DGCursorManager& cursorManager;
     DGFontManager& fontManager;
     DGLog& log;

@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGLanguage.h"
 #include "DGLog.h"
 #include "DGTexture.h"
@@ -35,7 +35,7 @@ char TEXIdent[] = "KS_TEX"; // We keep this one for backward compatibility, but 
 ////////////////////////////////////////////////////////////
 
 DGTexture::DGTexture() :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     log(DGLog::instance())
 {
     this->setType(DGObjectTexture);
@@ -49,7 +49,7 @@ DGTexture::DGTexture() :
 }
 
 DGTexture::DGTexture(int width, int height, int depth) :
-    config(DGConfig::instance()),
+    config(Config::instance()),
     log(DGLog::instance())
 {
     int comp;

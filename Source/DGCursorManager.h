@@ -29,7 +29,7 @@
 #define DGMaxCursorSize 128
 #define DGMinCursorSize 32
 
-class DGConfig;
+class Config;
 class DGTexture;
 
 typedef struct {
@@ -44,7 +44,7 @@ typedef struct {
 
 // TODO: Define origin for cursors (for better placement)
 class DGCursorManager : public DGObject {
-    DGConfig& config;
+    Config& config;
     
     std::vector<DGCursorData> _arrayOfCursors;
     std::vector<DGCursorData>::iterator _current;

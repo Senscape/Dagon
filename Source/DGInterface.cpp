@@ -17,7 +17,7 @@
 
 #include "DGButton.h"
 #include "DGCameraManager.h"
-#include "DGConfig.h"
+#include "Config.h"
 #include "DGCursorManager.h"
 #include "DGFont.h"
 #include "DGImage.h"
@@ -34,7 +34,7 @@ using namespace std;
 
 DGInterface::DGInterface() :
     cameraManager(DGCameraManager::instance()),
-    config(DGConfig::instance()),
+    config(Config::instance()),
     cursorManager(DGCursorManager::instance()),
     renderManager(DGRenderManager::instance())
 {
@@ -72,9 +72,9 @@ void DGInterface::drawCursor() {
             
             renderManager.disableTextures(); // Default cursor doesn't require textures
             if (cursorManager.onButton() || cursorManager.hasAction())
-                renderManager.setColor(DGColorBrightRed);
+                renderManager.setColor(kColorBrightRed);
             else
-                renderManager.setColor(DGColorDarkGray);
+                renderManager.setColor(kColorDarkGray);
             renderManager.drawHelper(position.x, position.y, false);
             renderManager.enableTextures();
         }
@@ -89,7 +89,7 @@ void DGInterface::drawHelpers() {
         if (renderManager.beginIteratingHelpers()) { // Check if we have any
             do {
                 DGPoint point = renderManager.currentHelper();
-                renderManager.setColor(DGColorBrightCyan);
+                renderManager.setColor(kColorBrightCyan);
                 renderManager.drawHelper(point.x, point.y, true);
                 
             } while (renderManager.iterateHelpers());
@@ -131,7 +131,7 @@ void DGInterface::drawOverlays() {
                                 else
                                     renderManager.setColor(button->textColor());
                                 button->font()->print(position.x, position.y, button->text());
-                                renderManager.setColor(DGColorWhite); // Reset the color
+                                renderManager.setColor(kColorWhite); // Reset the color
                             }
                         }
                     } while ((*itOverlay)->iterateButtons());

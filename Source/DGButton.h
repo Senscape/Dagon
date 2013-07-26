@@ -26,7 +26,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-class DGConfig;
+class Config;
 class DGFont;
 class DGFontManager;
 class DGTexture;
@@ -36,7 +36,7 @@ class DGTexture;
 ////////////////////////////////////////////////////////////
 
 class DGButton : public DGImage {
-    DGConfig& config;
+    Config& config;
     DGFontManager& fontManager;
     
     int _textColor;
