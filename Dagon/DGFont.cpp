@@ -46,6 +46,20 @@ DGFont::~DGFont() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+DGGlyph DGMakeGlyph(float x, float y, FT_Bitmap bitmap, FT_BitmapGlyph bitmapGlyph, FT_Face face)
+{
+	DGGlyph glyph;
+	glyph.x = x;
+	glyph.y = y;
+	glyph.width = bitmap.width;
+	glyph.rows = bitmap.rows;
+	glyph.left = bitmapGlyph->left;
+	glyph.top = bitmapGlyph->top;
+	glyph.advance = face->glyph->advance.x;
+
+	return glyph;
+}
+
 void DGFont::clear() {
     if (_isLoaded) {
         glDeleteTextures(128, _textures);
@@ -266,13 +280,7 @@ void DGFont::_loadFont() {
 		x = (float)bitmap.width / (float)width;
 		y = (float)bitmap.rows / (float)height;
 		
-		_glyph[ch].x = x; 
-		_glyph[ch].y = y;
-		_glyph[ch].width = bitmap.width;
-		_glyph[ch].rows = bitmap.rows;
-		_glyph[ch].left = bitmapGlyph->left;
-		_glyph[ch].top = bitmapGlyph->top;
-		_glyph[ch].advance = _face->glyph->advance.x;
+		_glyph[ch] = DGMakeGlyph(x, y, bitmap, bitmapGlyph, _face);
 		
 		glBindTexture(GL_TEXTURE_2D, _textures[ch]);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);

@@ -39,7 +39,9 @@ typedef struct {
 	int top;
 	long advance;
 } DGGlyph;
- 
+
+DGGlyph DGMakeGlyph(float x, float y, FT_Bitmap bitmap, FT_BitmapGlyph bitmapGlyph, FT_Face face);
+
 // When default font is selected, we use data embedded in the
 // executable and declared in DGFontData.c
 extern "C" const unsigned char DGDefFontBinary[];

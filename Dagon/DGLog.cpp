@@ -157,6 +157,16 @@ void DGLog::_log(DGLogData* data) {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+DGLogData DGMakeLogData(int color, int module, int type)
+{
+	DGLogData logData;
+	logData.color = color;
+	logData.module = module;
+	logData.type = type;
+
+	return logData;
+}
+
 void DGLog::command(int forModule, const char* theString, ...) {
     DGLogData data;
 	va_list ap;
@@ -165,9 +175,7 @@ void DGLog::command(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorBrightMagenta;
-	data.module = forModule;
-	data.type = DGLogTrace;
+	data = DGMakeLogData(DGColorBrightMagenta, forModule, DGLogTrace);
 	
 	_log(&data);
 }
@@ -180,9 +188,7 @@ void DGLog::error(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorBrightRed;
-	data.module = forModule;
-	data.type = DGLogError;
+	data = DGMakeLogData(DGColorBrightRed, forModule, DGLogError);
 	
 	_log(&data); 
 }
@@ -195,9 +201,7 @@ void DGLog::info(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorBrightCyan;
-	data.module = forModule;
-	data.type = DGLogTrace;
+	data = DGMakeLogData(DGColorBrightCyan, forModule, DGLogTrace);
 	
 	_log(&data);
 }
@@ -210,9 +214,7 @@ void DGLog::trace(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorWhite;
-	data.module = forModule;
-	data.type = DGLogTrace;
+	data = DGMakeLogData(DGColorWhite, forModule, DGLogTrace);
 	
 	_log(&data); 
 }
@@ -225,9 +227,7 @@ void DGLog::warning(int forModule, const char* theString, ...) {
 	vsprintf(data.line, theString, ap);
 	va_end(ap);
 	
-	data.color = DGColorYellow;
-	data.module = forModule;
-	data.type = DGLogWarning;
+	data = DGMakeLogData(DGColorYellow, forModule, DGLogWarning);
 	
 	_log(&data);    
 }

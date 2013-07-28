@@ -37,6 +37,8 @@ typedef struct {
     DGPoint origin;
 } DGCursorData;
 
+DGCursorData DGMakeCursorData(int type, DGTexture* image, DGPoint origin);
+
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////

@@ -34,6 +34,15 @@ struct DGLookUpTable{
 
 static struct DGLookUpTable _lookUpTable;
 
+void setValuesInLookUpTable(DGLookUpTable& lookUpTable, int index, int32_t Y, int32_t RV, int32_t GV, int32_t GU, int32_t BU)
+{
+	lookUpTable.m_plY[index] = Y;
+	lookUpTable.m_plRV[index] = RV;
+	lookUpTable.m_plGV[index] = GV;
+	lookUpTable.m_plGU[index] = GU;
+	lookUpTable.m_plBU[index] = BU;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -426,30 +435,35 @@ void DGVideo::_convertToRGB(uint8_t* puc_y, int stride_y,
 void DGVideo::_initConversionToRGB() {
 	for (int i = 0; i < 256; i++) {
 		if (i >= 16)
+		{
 			if (i > 240)
-				_lookUpTable.m_plY[i] = _lookUpTable.m_plY[240];
+			{
+				setValuesInLookUpTable(_lookUpTable, i,
+					_lookUpTable.m_plY[240],
+					_lookUpTable.m_plRV[240],
+					_lookUpTable.m_plGV[240], // Green tweaked to -2
+					_lookUpTable.m_plGU[240],
+					_lookUpTable.m_plBU[240]);
+			}
 			else
-				_lookUpTable.m_plY[i] = 298 * (i - 16);
-			else
-				_lookUpTable.m_plY[i] = 0;
-		
-		if ((i >= 16) && (i <= 240)) {
-			_lookUpTable.m_plRV[i] = 408 * (i - 128);
-			_lookUpTable.m_plGV[i] = -208 * (i - 128);	// Green tweaked to -2
-			_lookUpTable.m_plGU[i] = -100 * (i - 128);
-			_lookUpTable.m_plBU[i] = 517 * (i - 128);
+			{
+				static const int factor = 16 - 128;
+				setValuesInLookUpTable(_lookUpTable, i,
+					298 * (i - 16),
+					408 * factor,
+					-208 * factor, // Green tweaked to -2
+					-100 * factor,
+					517 * factor);
+			}
 		}
-		else if (i < 16) {
-			_lookUpTable.m_plRV[i] = 408 * (16 - 128);
-			_lookUpTable.m_plGV[i] = -208 * (16 - 128);	// Green tweaked to -2
-			_lookUpTable.m_plGU[i] = -100 * (16 - 128);
-			_lookUpTable.m_plBU[i] = 517 * (16 - 128);
-		}
-		else {
-			_lookUpTable.m_plRV[i] = _lookUpTable.m_plRV[240];
-			_lookUpTable.m_plGV[i] = _lookUpTable.m_plGV[240];	// Green tweaked to -2
-			_lookUpTable.m_plGU[i] = _lookUpTable.m_plGU[240];
-			_lookUpTable.m_plBU[i] = _lookUpTable.m_plBU[240];
+		else
+		{
+			setValuesInLookUpTable(_lookUpTable, i,
+				0,
+				408 * (i - 128),
+				-208 * (i - 128), // Green tweaked to -2
+				-100 * (i - 128),
+				517 * (i - 128));
 		}
 	}
 }

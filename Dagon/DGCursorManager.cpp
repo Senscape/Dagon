@@ -57,6 +57,16 @@ DGCursorManager::~DGCursorManager() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
+DGCursorData DGMakeCursorData(int type, DGTexture* image, DGPoint origin)
+{
+	DGCursorData cursorData;
+	cursorData.type = type;
+	cursorData.image = image;
+	cursorData.origin = origin;
+
+	return cursorData;
+}
+
 DGAction* DGCursorManager::action() {
     return _pointerToAction;
 }
@@ -83,18 +93,13 @@ bool DGCursorManager::isDragging() {
 
 // NOTE: These textures aren't managed
 void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int offsetY) {
-    DGCursorData cursor;
     DGTexture* texture;
     
     texture = new DGTexture;
     texture->setResource(config->path(DGPathRes, imageFromFile, DGObjectCursor));
     texture->load();
-    
-    cursor.type = type;
-    cursor.image = texture;
-    cursor.origin = DGMakePoint(_half - offsetX, _half - offsetY);
 
-    _arrayOfCursors.push_back(cursor);
+    _arrayOfCursors.push_back(DGMakeCursorData(type, texture, DGMakePoint(_half - offsetX, _half - offsetY)));
 }
 
 bool DGCursorManager::onButton() {
@@ -102,9 +107,7 @@ bool DGCursorManager::onButton() {
 }
 
 DGPoint DGCursorManager::position() {
-    DGPoint position = DGMakePoint(_x, _y);
-    
-    return position;
+    return DGMakePoint(_x, _y);
 }
 
 void DGCursorManager::removeAction() {
