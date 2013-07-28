@@ -148,7 +148,6 @@ void DGRenderManager::resetFade() {
 ////////////////////////////////////////////////////////////
 
 DGVector DGRenderManager::project(float x, float y, float z) {
-    DGVector vector;
     GLdouble winX, winY, winZ;
     
     // Arrays to hold matrix information
@@ -167,16 +166,13 @@ DGVector DGRenderManager::project(float x, float y, float z) {
     gluProject((GLdouble)x, GLdouble(y), GLdouble(z),
                modelView, projection, viewport,
                &winX, &winY, &winZ);
-    
-    vector.x = (double)winX;
-    vector.y = config->displayHeight - (double)winY; // This one must be inverted
-    vector.z = (double)winZ;
-    
-    return vector;
+
+    return DGMakeVector((double)winX,
+        config->displayHeight - (double)winY, // This one must be inverted
+        (double)winZ);
 }
 
 DGVector DGRenderManager::unProject(int x, int y) {
-    DGVector vector;
     GLdouble objX, objY, objZ;
     
     // Arrays to hold matrix information
@@ -195,12 +191,8 @@ DGVector DGRenderManager::unProject(int x, int y) {
     gluUnProject((GLdouble)x, GLdouble(y), 0.0f,
                  modelView, projection, viewport,
                  &objX, &objY, &objZ);
-    
-    vector.x = objX;
-    vector.y = objY;
-    vector.z = objZ;
-    
-    return vector;
+
+    return DGMakeVector(objX, objY, objZ);
 }
 
 ////////////////////////////////////////////////////////////
@@ -399,12 +391,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
         DGVector vector = this->project(x, y, z);
         
         if (vector.z < 1.0f) { // Only store coordinates on screen
-            DGPoint point;
-            
-            point.x = (int)vector.x;
-            point.y = (int)vector.y;  
-            
-            _arrayOfHelpers.push_back(point);
+            _arrayOfHelpers.push_back(DGMakePoint((int)vector.x, (int)vector.y));
         }
     }
     
@@ -615,7 +602,7 @@ void DGRenderManager::fadeView() {
 ////////////////////////////////////////////////////////////
 
 DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
-    DGPoint center;
+    DGPoint center = DGZeroPoint;
     int size = arrayOfCoordinates.size();
     int vertex = size >> 1; // size / 2
     
@@ -625,9 +612,6 @@ DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     double x1 = 0.0; // Next vertex X
     double y1 = 0.0; // Next vertex Y
     double a = 0.0;  // Partial signed area
-    
-	center.x = 0;
-	center.y = 0;
     
     // For all vertices
     for (int i = 0; i < vertex; ++i) {
@@ -639,11 +623,10 @@ DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
         a = (x0 * y1) - (x1 * y0);
         area += a;
         
-        center.x += (x0 + x1) * a;
-        center.y += (y0 + y1) * a;
+        DGMovePoint(center, (x0 + x1) * a, (y0 + y1) * a);
     }
     
-    area *= 3.0; // three * operations and one / operation in 646-649 lines instead 3 * and 2 /
+    area *= 3.0;
     double invArea = 1.0 / area;
     center.x *= invArea;
     center.y *= invArea;

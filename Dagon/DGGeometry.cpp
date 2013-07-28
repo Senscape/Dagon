@@ -1,3 +1,16 @@
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2012-2013 Senscape s.r.l.
+// Copyright (c) 2013 Alexander Alekseev
+// All rights reserved.
+//
+// NOTICE: Senscape permits you to use, modify, and
+// distribute this file in accordance with the terms of the
+// license agreement accompanying it.
+//
+////////////////////////////////////////////////////////////
+
 #include "DGGeometry.h"
 
 DGPoint DGMakePoint(double x, double y)
@@ -29,9 +42,20 @@ DGRect DGMakeRect(double x, double y, double w, double h)
 	return rect;
 }
 
+DGVector DGMakeVector(double x, double y, double z)
+{
+	DGVector v;
+	v.x = x;
+	v.y = y;
+	v.z = z;
+
+	return v;
+}
+
 const DGPoint DGZeroPoint = DGMakePoint(0.0, 0.0);
 const DGSize DGZeroSize = DGMakeSize(0.0, 0.0);
 const DGRect DGZeroRect = DGMakeRect(0.0, 0.0, 0.0, 0.0);
+const DGVector DGZeroVector = DGMakeVector(0.0, 0.0, 0.0);
 
 double DGMaxX(DGRect rect)
 {
