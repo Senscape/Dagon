@@ -49,7 +49,7 @@ DGTextureManager::~DGTextureManager() {
         
         while (it != _arrayOfTextures.end()) {
             delete *it;
-            it++;
+            ++it;
         }   
     }
 }

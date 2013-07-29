@@ -30,8 +30,8 @@ DGCursorManager::DGCursorManager() {
     _hasImage = false;
     _isDragging = false;
     _onButton = false;
-    _x = config->displayWidth / 2;
-    _y = config->displayHeight / 2;
+    _x = config->displayWidth >> 1;
+    _y = config->displayHeight >> 1;
     
     this->setFadeSpeed(DGFadeFastest); // Cursor always fades with fastest speed
     this->setSize(DGDefCursorSize);
@@ -48,7 +48,7 @@ DGCursorManager::~DGCursorManager() {
         
         while (_current != _arrayOfCursors.end()) {
             delete (*_current).image;
-            _current++;
+            ++_current;
         }   
     } 
 }
@@ -56,6 +56,16 @@ DGCursorManager::~DGCursorManager() {
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
+
+DGCursorData DGMakeCursorData(int type, DGTexture* image, DGPoint origin)
+{
+	DGCursorData cursorData;
+	cursorData.type = type;
+	cursorData.image = image;
+	cursorData.origin = origin;
+
+	return cursorData;
+}
 
 DGAction* DGCursorManager::action() {
     return _pointerToAction;
@@ -83,19 +93,13 @@ bool DGCursorManager::isDragging() {
 
 // NOTE: These textures aren't managed
 void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int offsetY) {
-    DGCursorData cursor;
     DGTexture* texture;
     
     texture = new DGTexture;
     texture->setResource(config->path(DGPathRes, imageFromFile, DGObjectCursor));
     texture->load();
-    
-    cursor.type = type;
-    cursor.image = texture;
-    cursor.origin.x = _half - offsetX;
-    cursor.origin.y = _half - offsetY;
 
-    _arrayOfCursors.push_back(cursor);
+    _arrayOfCursors.push_back(DGMakeCursorData(type, texture, DGMakePoint(_half - offsetX, _half - offsetY)));
 }
 
 bool DGCursorManager::onButton() {
@@ -103,12 +107,7 @@ bool DGCursorManager::onButton() {
 }
 
 DGPoint DGCursorManager::position() {
-    DGPoint position;
-    
-    position.x = _x;
-    position.y = _y;
-    
-    return position;
+    return DGMakePoint(_x, _y);
 }
 
 void DGCursorManager::removeAction() {
@@ -142,7 +141,7 @@ void DGCursorManager::setCursor(int type) {
 
 void DGCursorManager::setSize(int size) {
     _size = size;
-    _half = _size / 2;
+    _half = _size >> 1;
     
     this->updateCoords(_x, _y);
 }
@@ -189,7 +188,7 @@ void DGCursorManager::_set(int type) {
                 return;
             }
             
-            _current++;
+            ++_current;
         } 
     }
     

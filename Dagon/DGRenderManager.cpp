@@ -45,10 +45,10 @@ DGRenderManager::DGRenderManager() {
 ////////////////////////////////////////////////////////////
 
 DGRenderManager::~DGRenderManager() {
-    if (_blendTexture)
+    //if (_blendTexture) // isn't required
         delete _blendTexture;
     
-    if (_fadeTexture)
+    //if (_fadeTexture) // isn't required
         delete _fadeTexture;
 }
 
@@ -148,7 +148,6 @@ void DGRenderManager::resetFade() {
 ////////////////////////////////////////////////////////////
 
 DGVector DGRenderManager::project(float x, float y, float z) {
-    DGVector vector;
     GLdouble winX, winY, winZ;
     
     // Arrays to hold matrix information
@@ -167,16 +166,13 @@ DGVector DGRenderManager::project(float x, float y, float z) {
     gluProject((GLdouble)x, GLdouble(y), GLdouble(z),
                modelView, projection, viewport,
                &winX, &winY, &winZ);
-    
-    vector.x = (double)winX;
-    vector.y = config->displayHeight - (double)winY; // This one must be inverted
-    vector.z = (double)winZ;
-    
-    return vector;
+
+    return DGMakeVector((double)winX,
+        config->displayHeight - (double)winY, // This one must be inverted
+        (double)winZ);
 }
 
 DGVector DGRenderManager::unProject(int x, int y) {
-    DGVector vector;
     GLdouble objX, objY, objZ;
     
     // Arrays to hold matrix information
@@ -195,12 +191,8 @@ DGVector DGRenderManager::unProject(int x, int y) {
     gluUnProject((GLdouble)x, GLdouble(y), 0.0f,
                  modelView, projection, viewport,
                  &objX, &objY, &objZ);
-    
-    vector.x = objX;
-    vector.y = objY;
-    vector.z = objZ;
-    
-    return vector;
+
+    return DGMakeVector(objX, objY, objZ);
 }
 
 ////////////////////////////////////////////////////////////
@@ -266,11 +258,11 @@ void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
     
 	glVertexPointer(2, GL_FLOAT, 0, _defCursor);
 	
-	glDrawArrays(GL_LINE_LOOP, 0, (DGDefCursorDetail / 2) + 2);
+	glDrawArrays(GL_LINE_LOOP, 0, (DGDefCursorDetail >> 1) + 2);
     
 	if (animate) glScalef(0.85f * _helperLoop, 0.85f * _helperLoop, 0);
     else glScalef(0.835f, 0.85f, 0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, (DGDefCursorDetail / 2) + 2);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, (DGDefCursorDetail >> 1) + 2);
 	glPopMatrix();
     
 	glEnable(GL_LINE_SMOOTH);
@@ -288,7 +280,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
     int i, j;
     int cubeTextureSize = DGDefTexSize;
     int sizeOfArray = (int)withArrayOfCoordinates.size();
-	int numCoords = sizeOfArray + (sizeOfArray / 2);
+	int numCoords = sizeOfArray + (sizeOfArray >> 1);
 	GLfloat* spotVertCoords = new GLfloat[numCoords];
     
 	glPushMatrix();
@@ -298,9 +290,9 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 			glTranslatef(-x, y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
                 // Size is divided in half because of the way we draw the cube
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1);
                 // We must invert the coordinates in some cases
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
 				spotVertCoords[j + 2] = 0.0f;
 			}
 			break;
@@ -308,15 +300,15 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 			glTranslatef(x, y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = 0.0f;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);               
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
+				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1);               
 			}
 			break;
 		case DGSouth:
 			glTranslatef(x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1) * -1;
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
 				spotVertCoords[j + 2] = 0.0f;
 			}			
 			break;
@@ -324,24 +316,24 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 			glTranslatef(-x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = 0.0f;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize/ 2 ) * -1;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;             
+				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
+				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1) * -1;             
 			}
 			break;
 		case DGUp:
 			glTranslatef(-x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1);
 				spotVertCoords[j + 1] = 0.0f;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1) * -1;
 			}
 			break;
 		case DGDown:
 			glTranslatef(-x, -y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize >> 1);
 				spotVertCoords[j + 1] = 0.0f;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2);
+				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize >> 1);
 			}
 			break;				
 	}
@@ -365,51 +357,46 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
         
         switch (onFace) {
             case DGNorth:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1);
+                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;
                 z = 0.0f;
                 break;
             case DGEast:
                 x = 0.0f;
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;                
-                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);                  
+                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;                
+                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1);                  
                 break;
             case DGSouth:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;
-				y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1) * -1;
+				y = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;
 				z = 0.0f;
                 break;
             case DGWest:
                 x = 0.0f;
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;                
-                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;  
+                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;                
+                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1) * -1;  
                 break;
             case DGUp:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
+                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1);
                 y = 0.0f;                
-                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1) * -1;
                 break;                 
             case DGDown:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
+                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize >> 1);
                 y = 0.0f;
-                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2);                
+                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1);                
                 break;                
         }
         
         DGVector vector = this->project(x, y, z);
         
         if (vector.z < 1.0f) { // Only store coordinates on screen
-            DGPoint point;
-            
-            point.x = (int)vector.x;
-            point.y = (int)vector.y;  
-            
-            _arrayOfHelpers.push_back(point);
+            _arrayOfHelpers.push_back(DGMakePoint((int)vector.x, (int)vector.y));
         }
     }
     
 	glVertexPointer(3, GL_FLOAT, 0, spotVertCoords);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray / 2);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray >> 1);
     
     delete spotVertCoords;
     
@@ -467,7 +454,7 @@ void DGRenderManager::setColor(int color, float alpha) {
     
 	glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
     
-    if (alpha)
+    if (fabs(alpha) > DGEpsilon)
         glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), alpha); // Force specified alpha
     else
         glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
@@ -514,7 +501,7 @@ DGPoint DGRenderManager::currentHelper() {
 }
 
 bool DGRenderManager::iterateHelpers() {
-    _itHelper++;
+    ++_itHelper;
     
     if (_itHelper == _arrayOfHelpers.end())
         return false;
@@ -542,8 +529,8 @@ void DGRenderManager::blendView() {
 		int yStretch;
         
         if (_fadeWithZoom) {
-            xStretch = _blendOpacity * (config->displayWidth / 4);
-            yStretch = _blendOpacity * (config->displayHeight / 4);
+            xStretch = _blendOpacity * (config->displayWidth >> 2); // (config->displayWidth / 4)
+            yStretch = _blendOpacity * (config->displayHeight >> 2); // (config->displayHeight / 4)
             
             // This should a bit faster than the walk_time factor
             _blendOpacity += 0.015f * config->globalSpeed();
@@ -615,8 +602,9 @@ void DGRenderManager::fadeView() {
 ////////////////////////////////////////////////////////////
 
 DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
-    DGPoint center;    
-    int vertex = arrayOfCoordinates.size() / 2.0f;
+    DGPoint center = DGZeroPoint;
+    int size = arrayOfCoordinates.size();
+    int vertex = size >> 1; // size / 2
     
     double area = 0.0;
     double x0 = 0.0; // Current vertex X
@@ -625,40 +613,23 @@ DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     double y1 = 0.0; // Next vertex Y
     double a = 0.0;  // Partial signed area
     
-    // For all vertices except last
-    int i;
-
-	center.x = 0;
-	center.y = 0;
-    
-    for (i = 0; i < (vertex - 1); i++) {
-        x0 = arrayOfCoordinates[i*2 + 0];
-        y0 = arrayOfCoordinates[i*2 + 1];
-        x1 = arrayOfCoordinates[i*2 + 2];
-        y1 = arrayOfCoordinates[i*2 + 3];
+    // For all vertices
+    for (int i = 0; i < vertex; ++i) {
+        x0 = arrayOfCoordinates[i << 1];				// i*2 + 0
+        y0 = arrayOfCoordinates[(i << 1) + 1];			// i*2 + 1
+        x1 = arrayOfCoordinates[((i << 1) + 2) % size];	// i*2 + 2
+        y1 = arrayOfCoordinates[((i << 1) + 3) % size];	// i*2 + 3
         
         a = (x0 * y1) - (x1 * y0);
         area += a;
         
-        center.x += (x0 + x1) * a;
-        center.y += (y0 + y1) * a;
+        DGMovePoint(center, (x0 + x1) * a, (y0 + y1) * a);
     }
     
-    // Do last vertex
-    x0 = arrayOfCoordinates[i*2 + 0];
-    y0 = arrayOfCoordinates[i*2 + 1];
-    x1 = arrayOfCoordinates[0];
-    y1 = arrayOfCoordinates[1];
-    
-    a = (x0 * y1) - (x1 * y0);
-    area += a;
-    
-    center.x += (x0 + x1) * a;
-    center.y += (y0 + y1) * a;
-    
-    area *= 0.5f;
-    center.x /= (6 * area);
-    center.y /= (6 * area);
+    area *= 3.0;
+    double invArea = 1.0 / area;
+    center.x *= invArea;
+    center.y *= invArea;
     
     return center;
 }

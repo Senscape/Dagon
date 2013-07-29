@@ -166,7 +166,7 @@ void DGNode::beginIteratingSpots() {
 }
 
 bool DGNode::iterateSpots() {
-    _it++;
+    ++_it;
     
     if (_it == _arrayOfSpots.end())
         return false;

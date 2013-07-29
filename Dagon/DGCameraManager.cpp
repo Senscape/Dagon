@@ -140,14 +140,14 @@ int DGCameraManager::verticalLimit() {
 ////////////////////////////////////////////////////////////
 
 void DGCameraManager::setAngleHorizontal(float horizontal) {
-    if (horizontal != DGCurrent) {
+    if (fabs(horizontal - DGCurrent) > DGEpsilon) {
         // Extrapolate the coordinates
         _angleH = _toRadians(horizontal, _angleHLimit);
     }
 }
 
 void DGCameraManager::setAngleVertical(float vertical) {
-    if (vertical != DGCurrent) {
+    if (fabs(vertical - DGCurrent) > DGEpsilon) {
         // Extrapolate the coordinates
         _angleV = _toRadians(vertical, _angleVLimit);
     }
@@ -196,10 +196,10 @@ void DGCameraManager::setNeutralZone(int zone) {
             _freeNeutralZone = zone;
             
             // Update panning regions with the new neutral zone
-            _panRegion.origin.x = (_viewport.width / 2) - _freeNeutralZone * factor;
-            _panRegion.origin.y = (_viewport.height / 2) - _freeNeutralZone * factor;
-            _panRegion.size.width = (_viewport.width / 2) + _freeNeutralZone * factor;
-            _panRegion.size.height = (_viewport.height / 2) + _freeNeutralZone * factor;
+            _panRegion = DGMakeRect((_viewport.width * 0.5) - _freeNeutralZone * factor,
+				(_viewport.height * 0.5) - _freeNeutralZone * factor,
+				(_viewport.width * 0.5) + _freeNeutralZone * factor,
+				(_viewport.height * 0.5) + _freeNeutralZone * factor);
             
             break;
     }
@@ -210,7 +210,7 @@ void DGCameraManager::setSpeedFactor(int speed) {
 }
 
 void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
-    if (horizontal != DGCurrent) {
+    if (fabs(horizontal - DGCurrent) > DGEpsilon) {
         // Substract n times pi (fix probable double turn)
         float pi, pos;
         pi = _angleH / (M_PI * 2);
@@ -224,7 +224,7 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         // TODO: Certain cases aren't supported in this code; ie:
         // slightly rotated left of North, then setting target angle
         // to East. Needs improving.
-        if (_angleHTarget == 0.0f) {
+        if (fabs(_angleHTarget) < DGEpsilon) {
             if (_angleH > M_PI)
                 _angleHTarget = (float)(M_PI*2);
         }
@@ -239,7 +239,7 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         _angleHTarget = _angleH;
     }
     
-    if (vertical != DGCurrent) {
+    if (fabs(vertical - DGCurrent) > DGEpsilon) {
         // Extrapolate the coordinates
         _angleVTarget = _toRadians(vertical, _angleVLimit);;
         
@@ -261,8 +261,7 @@ void DGCameraManager::setVerticalLimit(float limit) {
 void DGCameraManager::setViewport(int width, int height) {
     // NOTE: if screen size is changed while in Drag mode, the neutral zone for Free mode isn't updated
     
-    _viewport.width = width;
-    _viewport.height = height;
+    _viewport = DGMakeSize(width, height);
     
     // This forces the new display factor to be applied to the
     // current neutral zone (only in Free mode)
@@ -334,8 +333,8 @@ void DGCameraManager::endOrthoView() {
 }
 
 void DGCameraManager::directPan(int xPosition, int yPosition) {
-    static int xPrevious = config->displayWidth / 2;
-    static int yPrevious = config->displayHeight / 2;
+    static int xPrevious = config->displayWidth >> 1;
+    static int yPrevious = config->displayHeight >> 1;
     
     if (!_isLocked) {
         if (xPosition < xPrevious) {
@@ -375,7 +374,7 @@ void DGCameraManager::init() {
     _angleVPrevious = 0.0f;
     
     _angleHLimit = (float)M_PI * 2;
-    _angleVLimit = (float)M_PI / 2;
+    _angleVLimit = (float)M_PI * 0.5f;
     
     _bob.currentFactor = DGCamBreatheFactor;
     _bob.currentSpeed = DGCamBreatheSpeed;
@@ -483,25 +482,25 @@ void DGCameraManager::simulateWalk() {
 }
 
 void DGCameraManager::stopPanning() {
-    this->pan(config->displayWidth / 2, config->displayHeight / 2);
+    this->pan(config->displayWidth >> 1, config->displayHeight >> 1);
 }
 
 // For the DRAG mode
 
 void DGCameraManager::startDragging(int xPosition, int yPosition) {
-    _panRegion.origin.x = xPosition - _dragNeutralZone;
-    _panRegion.origin.y = yPosition - _dragNeutralZone;
-    _panRegion.size.width = xPosition + _dragNeutralZone;
-    _panRegion.size.height = yPosition + _dragNeutralZone;
+    _panRegion = DGMakeRect(xPosition - _dragNeutralZone,
+		yPosition - _dragNeutralZone,
+		xPosition + _dragNeutralZone,
+		yPosition + _dragNeutralZone);
 }
 
 void DGCameraManager::stopDragging() {
-    _panRegion.origin.x = (_viewport.width / 2) - _dragNeutralZone;
-    _panRegion.origin.y = (_viewport.height / 2) - _dragNeutralZone;
-    _panRegion.size.width = (_viewport.width / 2) + _dragNeutralZone;
-    _panRegion.size.height = (_viewport.height / 2) + _dragNeutralZone;
+    _panRegion = DGMakeRect((_viewport.width * 0.5) - _dragNeutralZone,
+		(_viewport.height * 0.5) - _dragNeutralZone,
+		(_viewport.width * 0.5) + _dragNeutralZone,
+		(_viewport.height * 0.5) + _dragNeutralZone);
     
-    this->pan(config->displayWidth / 2, config->displayHeight / 2);
+    this->pan(config->displayWidth >> 1, config->displayHeight >> 1);
 }
 
 void DGCameraManager::lock() {
@@ -649,17 +648,17 @@ void DGCameraManager::update() {
     }
     
     // Apply horizontal motion
-    if (_motionLeft)
+    if (fabs(_motionLeft) > DGEpsilon)
         _angleH -= sin(_accelH) * _motionLeft;
     
-    if (_motionRight)
+    if (fabs(_motionRight) > DGEpsilon)
         _angleH += sin(_accelH) * _motionRight;
     
     // Apply vertical motion
-    if (_motionDown)
+    if (fabs(_motionDown) > DGEpsilon)
         _angleV += sin(_accelV) * _motionDown;
     
-    if (_motionUp)
+    if (fabs(_motionUp) > DGEpsilon)
         _angleV -= sin(_accelV) * _motionUp;    
     
     // Limit horizontal rotation

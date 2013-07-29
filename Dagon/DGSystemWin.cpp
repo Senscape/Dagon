@@ -533,11 +533,11 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 			// For the fixed control mode, we reset the cursor position when it drifts out of the screen
 			if (DGControl::getInstance().isDirectControlActive()) {
 				if ((LOWORD(lParam) <= 1) || (LOWORD(lParam) >= (width - 1))) {
-					SetCursorPos(width / 2, height / 2);
+					SetCursorPos(width >> 1, height >> 1);
 				}
 
 				if ((HIWORD(lParam) <= 1) || (HIWORD(lParam) >= (height - 1))) {
-					SetCursorPos(width / 2, height / 2);
+					SetCursorPos(width >> 1, height >> 1);
 				}
 			}
 
@@ -563,7 +563,7 @@ LRESULT CALLBACK _WindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) 
 				if (!PtInRect(&rect, pt)) {
 					EnterCriticalSection(&csSystemThread);
 					wglMakeCurrent(g_hDC, g_hRC);
-					DGControl::getInstance().processMouse(width / 2, height / 2, DGMouseEventMove);
+					DGControl::getInstance().processMouse(width >> 1, height >> 1, DGMouseEventMove);
 					wglMakeCurrent(NULL, NULL);
 					LeaveCriticalSection(&csSystemThread);
 

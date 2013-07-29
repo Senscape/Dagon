@@ -154,7 +154,7 @@ void DGInterface::drawOverlays() {
                 
             }
             
-            itOverlay++;
+            ++itOverlay;
         }
     }   
 }
@@ -192,7 +192,7 @@ bool DGInterface::scanOverlays() {
                 }
             }
             
-            itOverlay++;
+            ++itOverlay;
         }
     }
     

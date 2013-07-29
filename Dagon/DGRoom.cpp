@@ -108,7 +108,7 @@ DGNode* DGRoom::addNode(DGNode* aNode) {
 bool DGRoom::switchTo(DGNode* theNode) {
     vector<DGNode*>::iterator it;
 
-    for (it = _arrayOfNodes.begin(); it != _arrayOfNodes.end(); it++) {
+    for (it = _arrayOfNodes.begin(); it != _arrayOfNodes.end(); ++it) {
         if (*it == theNode) {
             // Node found, OK
             _currentNode = theNode;

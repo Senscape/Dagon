@@ -53,6 +53,8 @@ typedef struct {
     int type;
 } DGLogData;
 
+DGLogData DGMakeLogData(int color, int module, int type);
+
 class DGConfig;
 
 ////////////////////////////////////////////////////////////

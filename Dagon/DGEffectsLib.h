@@ -125,7 +125,7 @@ static int DGEffectsLibSet(lua_State *L) {
     }
     
     if (strcmp(key, "dust") == 0) {
-        if (value) {
+        if (fabs(value) > DGEpsilon) {
             effectsManager->setEnabled(DGEffectDust, true);
             effectsManager->setValuef(DGEffectDustIntensity, value * 10000.0f);
         }
@@ -150,15 +150,15 @@ static int DGEffectsLibSet(lua_State *L) {
     }
     
     // Special case to enable/disable adjustment if three values are normal
-    if (effectsManager->value(DGEffectAdjustBrightness) == 1.0f &&
-        effectsManager->value(DGEffectAdjustSaturation) == 1.0f &&
-        effectsManager->value(DGEffectAdjustContrast) == 1.0f) {
+    if ((fabs(effectsManager->value(DGEffectAdjustBrightness) - 1.0f) < DGEpsilon) &&
+        (fabs(effectsManager->value(DGEffectAdjustSaturation) - 1.0f) < DGEpsilon) &&
+        (fabs(effectsManager->value(DGEffectAdjustContrast) - 1.0f) < DGEpsilon)) {
         effectsManager->setEnabled(DGEffectAdjust, false);
     }
     else effectsManager->setEnabled(DGEffectAdjust, true);
     
 	if (strcmp(key, "motionBlur") == 0) {
-        if (value) {
+        if (fabs(value) > DGEpsilon) {
             effectsManager->setEnabled(DGEffectMotionBlur, true);
             effectsManager->setValuef(DGEffectMotionBlurIntensity, (10.0f - value));
         }
@@ -166,7 +166,7 @@ static int DGEffectsLibSet(lua_State *L) {
     }
     
 	if (strcmp(key, "noise") == 0) {
-        if (value) {
+        if (fabs(value) > DGEpsilon) {
             effectsManager->setEnabled(DGEffectNoise, true);
             effectsManager->setValuef(DGEffectNoiseIntensity, value);
         }
@@ -174,7 +174,7 @@ static int DGEffectsLibSet(lua_State *L) {
     }
     
 	if (strcmp(key, "sepia") == 0) {
-        if (value) {
+        if (fabs(value) > DGEpsilon) {
             effectsManager->setEnabled(DGEffectSepia, true);
             effectsManager->setValuef(DGEffectSepiaIntensity, value);
         }
@@ -182,7 +182,7 @@ static int DGEffectsLibSet(lua_State *L) {
     }
     
 	if (strcmp(key, "sharpen") == 0) {
-        if (value) {
+        if (fabs(value) > DGEpsilon) {
             effectsManager->setEnabled(DGEffectSharpen, true);
             effectsManager->setValuef(DGEffectSharpenIntensity, value);
         }
@@ -190,7 +190,7 @@ static int DGEffectsLibSet(lua_State *L) {
     }
     
 	if (strcmp(key, "throb") == 0) {
-        if (value) {
+        if (fabs(value) > DGEpsilon) {
             effectsManager->setEnabled(DGEffectThrob, true);
             effectsManager->setValuef(DGEffectThrobIntensity, (100.0f - (value * 100.0f)));
         }

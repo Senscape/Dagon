@@ -127,7 +127,7 @@ void DGOverlay::fadeIn() {
         
         while (itButton != _arrayOfButtons.end()) {
             (*itButton)->fadeIn();
-            itButton++;
+            ++itButton;
         }
     }
     
@@ -139,7 +139,7 @@ void DGOverlay::fadeIn() {
         
         while (itImage != _arrayOfImages.end()) {
             (*itImage)->fadeIn();
-            itImage++;
+            ++itImage;
         }
     }
 }
@@ -153,7 +153,7 @@ void DGOverlay::fadeOut() {
         
         while (itButton != _arrayOfButtons.end()) {
             (*itButton)->fadeOut();
-            itButton++;
+            ++itButton;
         }
     }
     
@@ -165,19 +165,19 @@ void DGOverlay::fadeOut() {
         
         while (itImage != _arrayOfImages.end()) {
             (*itImage)->fadeOut();
-            itImage++;
+            ++itImage;
         }
     }
 }
 
 bool DGOverlay::iterateButtons() {
     if (_isIteratingBackwards) {
-        _ritButton++;
+        ++_ritButton;
         if (_ritButton == _arrayOfButtons.rend()) return false;
         else return true;  
     }
     else {
-        _itButton++;
+        ++_itButton;
         if (_itButton == _arrayOfButtons.end()) return false;
         else return true;
     }
@@ -186,7 +186,7 @@ bool DGOverlay::iterateButtons() {
 }
 
 bool DGOverlay::iterateImages() {
-    _itImage++;
+    ++_itImage;
     
     if (_itImage == _arrayOfImages.end())
         return false;
@@ -203,7 +203,7 @@ void DGOverlay::move(int offsetX, int offsetY) {
         
         while (itButton != _arrayOfButtons.end()) {
             (*itButton)->move(offsetX, offsetY);
-            itButton++;
+            ++itButton;
         }
     }
     
@@ -215,7 +215,7 @@ void DGOverlay::move(int offsetX, int offsetY) {
         
         while (itImage != _arrayOfImages.end()) {
             (*itImage)->move(offsetX, offsetY);
-            itImage++;
+            ++itImage;
         }
     }
     

@@ -97,7 +97,7 @@ void DGFeedManager::reshape() {
     while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
         _calculatePosition(&(*it));
         
-        it++;
+        ++it;
     }
 }
 
@@ -201,7 +201,7 @@ void DGFeedManager::update() {
             _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
         }
         
-        it++;
+        ++it;
     }
     
     // Check for queued feeds
@@ -225,8 +225,7 @@ void DGFeedManager::_calculatePosition(DGFeed* feed) {
     int width = (_feedHeight * 0.66f); // We have no option but to estimate this
     size_t length = strlen(feed->text) * width;
     
-    feed->location.x = (config->displayWidth / 2) - (length / 2);
-    feed->location.y = config->displayHeight - _feedHeight - DGFeedMargin;
+    feed->location = DGMakePoint((config->displayWidth >> 1) - (length / 2), config->displayHeight - _feedHeight - DGFeedMargin);
 }
 
 void DGFeedManager::_dim() {
@@ -237,7 +236,7 @@ void DGFeedManager::_dim() {
     while (it != _arrayOfActiveFeeds.end() && !_arrayOfActiveFeeds.empty()) {
         if ((*it).state == DGFeedIdle)
             (*it).state = DGFeedFadeOutSlow;
-        it++;
+        ++it;
     }
 }
 
@@ -257,7 +256,7 @@ void DGFeedManager::_flush() {
                 break;
             }
             
-            it++;
+            ++it;
         }
     }
 }

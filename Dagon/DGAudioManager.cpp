@@ -53,7 +53,7 @@ DGAudioManager::~DGAudioManager() {
         
         while (it != _arrayOfAudios.end()) {
 			(*it)->unload();
-            it++;
+            ++it;
         }   
     }
     
@@ -79,7 +79,7 @@ void DGAudioManager::clear() {
             while (it != _arrayOfActiveAudios.end()) {
                 (*it)->release();
                 
-                it++;
+                ++it;
             }
         }
     }
@@ -111,16 +111,16 @@ void DGAudioManager::flush() {
 							switch ((*it)->state()) {
 								case DGAudioPlaying:
 									(*it)->fadeOut();
-									it++;
+									++it;
 									break;
 								case DGAudioPaused:
 								default:
-									it++;
+									++it;
 									break;
 							}
 						}
 					}
-					else it++;
+					else ++it;
 				}
 			}
         }
@@ -178,7 +178,7 @@ void DGAudioManager::init() {
         }
 	}
     
-    if (strlen(deviceName) == 0) {
+    if (deviceName[0] == '\0') {
 		log->trace(DGModAudio, "%s", DGMsg080003);
 		_alDevice = alcOpenDevice(NULL); // Select the preferred device
 	} else {
@@ -249,7 +249,7 @@ void DGAudioManager::requestAudio(DGAudio* target) {
             break;
         }
         
-        it++;
+        ++it;
     }
     
     DGSystem::getInstance().suspendThread(DGAudioThread);
@@ -284,7 +284,7 @@ bool DGAudioManager::update() {
             
             while (it != _arrayOfActiveAudios.end()) {
                 (*it)->update();
-                it++;
+                ++it;
             }
         }
 

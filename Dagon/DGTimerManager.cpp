@@ -178,7 +178,7 @@ void DGTimerManager::process() {
             }
         }
         
-        it++;
+        ++it;
     }
 }
 
@@ -210,7 +210,7 @@ bool DGTimerManager::update() {
 				}
 			}
         
-			it++;
+			++it;
 		}
 		return true;
 	}
@@ -231,7 +231,7 @@ DGTimer* DGTimerManager::_lookUp(int handle) {
         if ((*it).handle == handle)
             return &(*it);
         
-        it++;
+        ++it;
     }
     
     return NULL;
