@@ -55,12 +55,12 @@ enum LogTypes {
 	kLogWarning
 };
 
-typedef struct {
+struct LogData {
   std::string line;
   int color;
   int module;
   int type;
-} LogData;
+};
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
