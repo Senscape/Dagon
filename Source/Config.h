@@ -102,21 +102,18 @@ class Config {
   bool subtitles = kDefSubtitles;
   bool texCompression = kDefTexCompression;
 	bool verticalSync = kDefVerticalSync;
-    
-  double globalSpeed();
-    
-  double framesPerSecond();
-  void setFramesPerSecond(double fps);
   
+  double framesPerSecond();
+  double globalSpeed();
   std::string path(int ofType, const std::string &forFile, int andObject);
-  void setPath(int forType, const std::string &path);
-    
   std::string script();
-  void setScript(const std::string &name);
-    
   std::string texExtension();
+
+  void setFramesPerSecond(double fps);
+  void setPath(int forType, const std::string &path);
+  void setScript(const std::string &name);
   void setTexExtension(const std::string &ext);
-    
+  
   // TODO: Provide members to save/load configurations
   // (also used by system to save them in the user's folder)
   

@@ -24,23 +24,18 @@
 // Implementation
 ////////////////////////////////////////////////////////////
 
-double Config::globalSpeed() {
-  if (_globalSpeed < _targetGlobalSpeed) {
-      _globalSpeed += _globalSpeedPrecision;
-  } else if (_globalSpeed > _targetGlobalSpeed) {
-      _globalSpeed -= _globalSpeedPrecision;
-  }
-    
-  return _globalSpeed;
-}
-
 double Config::framesPerSecond() {
   return _fps;
 }
 
-void Config::setFramesPerSecond(double fps) {
-  _targetGlobalSpeed = kDefFramerate / _fps;
-  _fps = fps;
+double Config::globalSpeed() {
+  if (_globalSpeed < _targetGlobalSpeed) {
+    _globalSpeed += _globalSpeedPrecision;
+  } else if (_globalSpeed > _targetGlobalSpeed) {
+    _globalSpeed -= _globalSpeedPrecision;
+  }
+  
+  return _globalSpeed;
 }
 
 std::string Config::path(int ofType, const std::string &forFile,
@@ -96,10 +91,23 @@ std::string Config::path(int ofType, const std::string &forFile,
       break;
     }
   }
-
+  
   fullPath += forFile;
 	
-	return fullPath;   
+	return fullPath;
+}
+
+std::string Config::script() {
+  return _scriptName;
+}
+
+std::string	Config::texExtension() {
+  return _texExtension;
+}
+
+void Config::setFramesPerSecond(double fps) {
+  _targetGlobalSpeed = kDefFramerate / _fps;
+  _fps = fps;
 }
 
 void Config::setPath(int forType, const std::string &path) {
@@ -122,16 +130,8 @@ void Config::setPath(int forType, const std::string &path) {
   }
 }
 
-std::string Config::script() {
-  return _scriptName;
-}
-
 void Config::setScript(const std::string &name) {
   _scriptName = name;
-}
-
-std::string	Config::texExtension() {
-  return _texExtension;
 }
 
 void Config::setTexExtension(const std::string &ext) {
