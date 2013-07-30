@@ -167,13 +167,13 @@ double DGSystem::_calculateFrames(double theInterval = 1.0) {
 }
 
 void DGSystem::_charCallback(GLFWwindow* window, unsigned int character) {
-    if (DGControl::instance().isConsoleActive() || character == DGKeyQuote)
+    if (DGControl::instance().isConsoleActive() || character == kKeyQuote)
         DGControl::instance().processKey(character, DGEventKeyDown);
 }
 
 void DGSystem::_closeCallback(GLFWwindow* window) {
     // Simulate an escape key event
-    DGControl::instance().processKey(DGKeyEsc, DGEventKeyDown);
+    DGControl::instance().processKey(kKeyEscape, DGEventKeyDown);
 }
 
 void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {

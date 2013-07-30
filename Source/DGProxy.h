@@ -24,7 +24,7 @@ extern "C" {
 }
 #include "Luna.h"
 
-#include "DGPlatform.h"
+#include "Platform.h"
 #include "DGAudio.h"
 #include "DGButton.h"
 #include "DGImage.h"

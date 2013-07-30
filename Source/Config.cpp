@@ -131,7 +131,7 @@ void Config::setScript(const std::string &name) {
 }
 
 std::string	Config::texExtension() {
-  return _texExtension.c_str();
+  return _texExtension;
 }
 
 void Config::setTexExtension(const std::string &ext) {

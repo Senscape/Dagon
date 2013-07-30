@@ -23,7 +23,7 @@
 #include FT_GLYPH_H
 
 #include "DGFont.h"
-#include "DGPlatform.h"
+#include "Platform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions

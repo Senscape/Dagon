@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_PLATFORM_H
-#define DG_PLATFORM_H
+#ifndef DAGON_PLATFORM_H_
+#define DAGON_PLATFORM_H_
 
 ////////////////////////////////////////////////////////////
 // Detect the current OS
@@ -24,21 +24,21 @@
 
 #if ((TARGET_OS_IPHONE) || (TARGET_IPHONE_SIMULATOR))
 
-#define DGPlatformiOS
+#define PlatformiOS
 
 #else
 
-#define DGPlatformMac
+#define PlatformMac
 
 #endif
 
 #elif ((_WIN32) || (_WIN64))
 
-#define DGPlatformWindows
+#define DagonPlatformWindows
 
 #elif __linux || defined(__FreeBSD__)
 
-#define DGPlatformLinux
+#define PlatformLinux
 
 #endif
 
@@ -82,31 +82,31 @@
 #include "Geometry.h"
 #include "Language.h"
 #include "DGObject.h"
-#include "DGVersion.h"
+#include "Version.h"
 
 ////////////////////////////////////////////////////////////
 // Key definitions
 ////////////////////////////////////////////////////////////
 
-enum DGKeys {
-	DGKeyBackspace = GLFW_KEY_BACKSPACE,
-  DGKeyF1 = GLFW_KEY_F1,
-	DGKeyF2 = GLFW_KEY_F2,
-	DGKeyF3 = GLFW_KEY_F3,
-	DGKeyF4 = GLFW_KEY_F4,
-  DGKeyF5 = GLFW_KEY_F5,
-	DGKeyF6 = GLFW_KEY_F6,
-	DGKeyF7 = GLFW_KEY_F7,
-	DGKeyF8 = GLFW_KEY_F8,
-	DGKeyF9 = GLFW_KEY_F9,
-	DGKeyF10 = GLFW_KEY_F10,
-	DGKeyF11 = GLFW_KEY_F11,
-	DGKeyF12 = GLFW_KEY_F12,
-	DGKeyEsc = GLFW_KEY_ESCAPE,
-	DGKeyQuote = 0x60,
-	DGKeyTab = GLFW_KEY_TAB,
-	DGKeyEnter = GLFW_KEY_ENTER,
-	DGKeySpacebar = GLFW_KEY_SPACE
+enum InputKeys {
+	kKeyBackspace = GLFW_KEY_BACKSPACE,
+  kKeyF1 = GLFW_KEY_F1,
+	kKeyF2 = GLFW_KEY_F2,
+	kKeyF3 = GLFW_KEY_F3,
+	kKeyF4 = GLFW_KEY_F4,
+  kKeyF5 = GLFW_KEY_F5,
+	kKeyF6 = GLFW_KEY_F6,
+	kKeyF7 = GLFW_KEY_F7,
+	kKeyF8 = GLFW_KEY_F8,
+	kKeyF9 = GLFW_KEY_F9,
+	kKeyF10 = GLFW_KEY_F10,
+	kKeyF11 = GLFW_KEY_F11,
+	kKeyF12 = GLFW_KEY_F12,
+	kKeyEscape = GLFW_KEY_ESCAPE,
+	kKeyQuote = 0x60,
+	kKeyTab = GLFW_KEY_TAB,
+	kKeyEnter = GLFW_KEY_ENTER,
+	kKeySpace = GLFW_KEY_SPACE
 };
 
-#endif // DG_PLATFORM_H
+#endif // DAGON_PLATFORM_H_

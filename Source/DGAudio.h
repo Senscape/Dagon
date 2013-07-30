@@ -20,7 +20,7 @@
 
 #include "Config.h"
 #include "Log.h"
-#include "DGPlatform.h"
+#include "Platform.h"
 
 #include <AL/al.h>
 #include <AL/alc.h>

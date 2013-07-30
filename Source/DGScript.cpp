@@ -171,7 +171,7 @@ void DGScript::init() {
     else {
         // Not found!
         log.error(kModScript, "%s: %s", kString14006, script);
-        DGControl::instance().processKey(DGKeyTab, false); // Simulate tab key to open the console
+        DGControl::instance().processKey(kKeyTab, false); // Simulate tab key to open the console
     }
 }
 
@@ -505,7 +505,7 @@ int DGScript::_globalStopTimer(lua_State *L) {
 }
 
 int DGScript::_globalVersion(lua_State *L) {
-    lua_pushstring(L, DGVersionString);
+    lua_pushstring(L, DAGON_VERSION);
 	
 	return 1;
 }
@@ -581,18 +581,18 @@ void DGScript::_registerEnums() {
 	DGLuaEnum(_L, YELLOW, kColorYellow);
 	DGLuaEnum(_L, WHITE, kColorWhite);
     
-    DGLuaEnum(_L, F1, DGKeyF1);
-	DGLuaEnum(_L, F2, DGKeyF2);
-	DGLuaEnum(_L, F3, DGKeyF3);
-	DGLuaEnum(_L, F4, DGKeyF4);
-    DGLuaEnum(_L, F5, DGKeyF5);
-	DGLuaEnum(_L, F6, DGKeyF6);
-	DGLuaEnum(_L, F7, DGKeyF7);
-	DGLuaEnum(_L, F8, DGKeyF8);
-	DGLuaEnum(_L, F9, DGKeyF9);
-	DGLuaEnum(_L, F10, DGKeyF10);
-	DGLuaEnum(_L, F11, DGKeyF11);
-	DGLuaEnum(_L, F12, DGKeyF12);
+    DGLuaEnum(_L, F1, kKeyF1);
+	DGLuaEnum(_L, F2, kKeyF2);
+	DGLuaEnum(_L, F3, kKeyF3);
+	DGLuaEnum(_L, F4, kKeyF4);
+    DGLuaEnum(_L, F5, kKeyF5);
+	DGLuaEnum(_L, F6, kKeyF6);
+	DGLuaEnum(_L, F7, kKeyF7);
+	DGLuaEnum(_L, F8, kKeyF8);
+	DGLuaEnum(_L, F9, kKeyF9);
+	DGLuaEnum(_L, F10, kKeyF10);
+	DGLuaEnum(_L, F11, kKeyF11);
+	DGLuaEnum(_L, F12, kKeyF12);
 
     DGLuaEnum(_L, SLOW, DGFadeSlow);
     DGLuaEnum(_L, SLOWEST, DGFadeSlowest);

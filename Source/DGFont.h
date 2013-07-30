@@ -22,7 +22,7 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-#include "DGPlatform.h"
+#include "Platform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions

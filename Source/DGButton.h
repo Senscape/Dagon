@@ -20,7 +20,7 @@
 
 #include "DGAction.h"
 #include "DGImage.h"
-#include "DGPlatform.h"
+#include "Platform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions

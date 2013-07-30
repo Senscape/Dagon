@@ -113,8 +113,8 @@ DGControl::~DGControl() {
 
 void DGControl::init() {
     log.trace(kModControl, "========================================");
-    log.info(kModControl, "%s: %s", kString12001, DGVersionString);
-    log.info(kModControl, "%s: %d", kString12004, DGVersionBuild);
+    log.info(kModControl, "%s: %s", kString12001, DAGON_VERSION);
+    log.info(kModControl, "%s: %d", kString12004, DAGON_BUILD);
     
     system.init();
     
@@ -223,18 +223,18 @@ void DGControl::processFunctionKey(int aKey) {
     int idx = 0;
     
     switch (aKey) {
-		case DGKeyF1: idx = 1; break;
-		case DGKeyF2: idx = 2; break;
-		case DGKeyF3: idx = 3; break;
-		case DGKeyF4: idx = 4; break;
-		case DGKeyF5: idx = 5; break;
-		case DGKeyF6: idx = 6; break;
-		case DGKeyF7: idx = 7; break;
-		case DGKeyF8: idx = 8; break;
-		case DGKeyF9: idx = 9; break;
-		case DGKeyF10: idx = 10; break;
-		case DGKeyF11: idx = 11; break;
-		case DGKeyF12: idx = 12; break;         
+		case kKeyF1: idx = 1; break;
+		case kKeyF2: idx = 2; break;
+		case kKeyF3: idx = 3; break;
+		case kKeyF4: idx = 4; break;
+		case kKeyF5: idx = 5; break;
+		case kKeyF6: idx = 6; break;
+		case kKeyF7: idx = 7; break;
+		case kKeyF8: idx = 8; break;
+		case kKeyF9: idx = 9; break;
+		case kKeyF10: idx = 10; break;
+		case kKeyF11: idx = 11; break;
+		case kKeyF12: idx = 12; break;         
 	}
 	
     if (idx) {
@@ -247,7 +247,7 @@ void DGControl::processKey(int aKey, int eventFlags) {
     switch (eventFlags) {
         case DGEventKeyDown:
             switch (aKey) {
-                case DGKeyEsc:
+                case kKeyEscape:
                     if (_state->current() == DGStateSplash) {
                         _cancelSplash = true;
                     }
@@ -263,11 +263,11 @@ void DGControl::processKey(int aKey, int eventFlags) {
                         }
                     }
                     break;
-                case DGKeyQuote:
-                case DGKeyTab:
+                case kKeyQuote:
+                case kKeyTab:
                     _console->toggle();
                     break;
-                case DGKeySpacebar:
+                case kKeySpace:
                     if (_console->isHidden())
                         config.showHelpers = !config.showHelpers;
                     break;
@@ -300,15 +300,15 @@ void DGControl::processKey(int aKey, int eventFlags) {
             // Process these keys only when the console is visible
             if (!_console->isHidden()) {
                 switch (aKey) {
-                    case DGKeyEsc:
-                    case DGKeyQuote:
-                    case DGKeyTab:
+                    case kKeyEscape:
+                    case kKeyQuote:
+                    case kKeyTab:
                         // Ignore these
                         break;
-                    case DGKeyBackspace:
+                    case kKeyBackspace:
                         _console->deleteChar();
                         break;
-                    case DGKeyEnter:
+                    case kKeyEnter:
                         _console->execute();
                         break;
                     default:
@@ -507,18 +507,18 @@ void DGControl::registerHotkey(int aKey, const char* luaCommandToExecute) {
     int idx = 0;
     
     switch (aKey) {
-		case DGKeyF1: idx = 1; break;
-		case DGKeyF2: idx = 2; break;
-		case DGKeyF3: idx = 3; break;
-		case DGKeyF4: idx = 4; break;
-		case DGKeyF5: idx = 5; break;
-		case DGKeyF6: idx = 6; break;
-		case DGKeyF7: idx = 7; break;
-		case DGKeyF8: idx = 8; break;
-		case DGKeyF9: idx = 9; break;
-		case DGKeyF10: idx = 10; break;
-		case DGKeyF11: idx = 11; break;
-		case DGKeyF12: idx = 12; break;
+		case kKeyF1: idx = 1; break;
+		case kKeyF2: idx = 2; break;
+		case kKeyF3: idx = 3; break;
+		case kKeyF4: idx = 4; break;
+		case kKeyF5: idx = 5; break;
+		case kKeyF6: idx = 6; break;
+		case kKeyF7: idx = 7; break;
+		case kKeyF8: idx = 8; break;
+		case kKeyF9: idx = 9; break;
+		case kKeyF10: idx = 10; break;
+		case kKeyF11: idx = 11; break;
+		case kKeyF12: idx = 12; break;
     }
     
     if (idx) {

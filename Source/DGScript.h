@@ -20,7 +20,7 @@
 
 #include "DGAction.h"
 #include "DGEvent.h"
-#include "DGPlatform.h"
+#include "Platform.h"
 
 #include "Lua.hpp"
 

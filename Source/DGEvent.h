@@ -24,7 +24,7 @@ enum DGGlobalEvents { // For Lua
 	DGEventResize = 0x107
 };
 
-enum DGKeyEvents {
+enum kKeyEvents {
     DGEventKeyDown = 0x201,
     DGEventKeyModified = 0x202,
     DGEventKeyUp = 0x203
