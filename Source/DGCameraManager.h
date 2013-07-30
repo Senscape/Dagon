@@ -122,8 +122,8 @@ class DGCameraManager {
     int _dragNeutralZone;
     int _freeNeutralZone;
     
-    DGSize _viewport;
-    DGRect _panRegion;
+    Size _viewport;
+    Rect _panRegion;
     
     float _inertia;
     bool _inOrthoView;

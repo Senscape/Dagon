@@ -73,11 +73,11 @@ bool DGImage::hasTexture() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-DGPoint DGImage::position() {
+Point DGImage::position() {
     return _rect.origin;    
 }
 
-DGSize DGImage::size() {
+Size DGImage::size() {
     return _rect.size;
 }
 

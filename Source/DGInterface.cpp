@@ -68,7 +68,7 @@ void DGInterface::drawCursor() {
             renderManager.drawSlide(cursorManager.arrayOfCoords());
         }
         else {
-            DGPoint position = cursorManager.position();
+            Point position = cursorManager.position();
             
             renderManager.disableTextures(); // Default cursor doesn't require textures
             if (cursorManager.onButton() || cursorManager.hasAction())
@@ -88,7 +88,7 @@ void DGInterface::drawHelpers() {
     if (config.showHelpers) {
         if (renderManager.beginIteratingHelpers()) { // Check if we have any
             do {
-                DGPoint point = renderManager.currentHelper();
+                Point point = renderManager.currentHelper();
                 renderManager.setColor(kColorBrightCyan);
                 renderManager.drawHelper(point.x, point.y, true);
                 
@@ -124,7 +124,7 @@ void DGInterface::drawOverlays() {
                             }
                             
                             if (button->hasText()) {
-                                DGPoint position = button->position();
+                                Point position = button->position();
                                // int color = button->textColor();
                                 if (button->isFading())
                                     renderManager.setColor(button->textColor(), button->fadeLevel());
@@ -178,7 +178,7 @@ bool DGInterface::scanOverlays() {
                     do {
                         DGButton* button = (*itOverlay)->currentButton();
                         if (button->isEnabled()) {
-                            DGPoint position = cursorManager.position();
+                            Point position = cursorManager.position();
                             int* arrayOfCoordinates = button->arrayOfCoordinates();
                             if (position.x >= arrayOfCoordinates[0] && position.y >= arrayOfCoordinates[1] &&
                                 position.x <= arrayOfCoordinates[4] && position.y <= arrayOfCoordinates[5]) {

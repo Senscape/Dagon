@@ -153,8 +153,8 @@ void DGRenderManager::resetFade() {
 // Implementation - Conversion of coordinates
 ////////////////////////////////////////////////////////////
 
-DGVector DGRenderManager::project(float x, float y, float z) {
-    DGVector vector;
+Vector DGRenderManager::project(float x, float y, float z) {
+    Vector vector;
     GLdouble winX, winY, winZ;
     
     // Arrays to hold matrix information
@@ -181,8 +181,8 @@ DGVector DGRenderManager::project(float x, float y, float z) {
     return vector;
 }
 
-DGVector DGRenderManager::unProject(int x, int y) {
-    DGVector vector;
+Vector DGRenderManager::unProject(int x, int y) {
+    Vector vector;
     GLdouble objX, objY, objZ;
     
     // Arrays to hold matrix information
@@ -362,7 +362,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
     else {
         // We can safely assume this spot has a color and therefore can use
         // a "helper". Not the most elegant way to do this but, hey, it works.
-        DGPoint center = _centerOfPolygon(withArrayOfCoordinates);
+        Point center = _centerOfPolygon(withArrayOfCoordinates);
         
         // This code is a bit redundant but optimal: the center is only calculated in
         // the required cases. Basically, this projects the calculated point onto the
@@ -402,10 +402,10 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
                 break;                
         }
         
-        DGVector vector = this->project(x, y, z);
+        Vector vector = this->project(x, y, z);
         
         if (vector.z < 1.0f) { // Only store coordinates on screen
-            DGPoint point;
+            Point point;
             
             point.x = (int)vector.x;
             point.y = (int)vector.y;  
@@ -515,7 +515,7 @@ bool DGRenderManager::beginIteratingHelpers() {
     return false;
 }
 
-DGPoint DGRenderManager::currentHelper() {
+Point DGRenderManager::currentHelper() {
     return *_itHelper;
 }
 
@@ -620,8 +620,8 @@ void DGRenderManager::fadeView() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-DGPoint DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
-    DGPoint center;    
+Point DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
+    Point center;    
     int vertex = arrayOfCoordinates.size() / 2.0f;
     
     double area = 0.0;

@@ -40,7 +40,7 @@ class DGOverlay : public DGObject {
     std::vector<DGImage*>::iterator _itImage;
     
     bool _isIteratingBackwards;
-    DGPoint _position;
+    Point _position;
     
 public:
     DGOverlay();
@@ -50,7 +50,7 @@ public:
     
     bool hasButtons();
     bool hasImages();
-    DGPoint position();
+    Point position();
     
     // Gets
     

@@ -104,8 +104,8 @@ bool DGCursorManager::onButton() {
     return _onButton;
 }
 
-DGPoint DGCursorManager::position() {
-    DGPoint position;
+Point DGCursorManager::position() {
+    Point position;
     
     position.x = _x;
     position.y = _y;

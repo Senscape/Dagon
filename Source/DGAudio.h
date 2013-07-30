@@ -121,7 +121,7 @@ public:
     // Sets
     
     void setLoopable(bool loopable);
-    void setPosition(unsigned int onFace, DGPoint origin);
+    void setPosition(unsigned int onFace, Point origin);
     void setResource(const char* fromFileName);
     
     // State changes

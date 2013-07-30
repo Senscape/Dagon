@@ -118,8 +118,8 @@ unsigned int DGSpot::face() {
     return _onFace;
 }
 
-DGPoint DGSpot::origin() {
-    DGPoint _origin;
+Point DGSpot::origin() {
+    Point _origin;
     
     _origin.x = _arrayOfCoordinates[0];
     _origin.y = _arrayOfCoordinates[1];
@@ -148,7 +148,7 @@ float DGSpot::volume() {
 ////////////////////////////////////////////////////////////
 
 void DGSpot::resize(int width, int height) {
-    DGPoint origin;
+    Point origin;
     
     origin.x = _arrayOfCoordinates[0];
     origin.y = _arrayOfCoordinates[1];

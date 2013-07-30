@@ -88,7 +88,7 @@ void DGAudio::setLoopable(bool loopable) {
     _isLoopable = loopable;
 }
 
-void DGAudio::setPosition(unsigned int onFace, DGPoint origin) {
+void DGAudio::setPosition(unsigned int onFace, Point origin) {
     float x = (float)origin.x / (float)kDefTexSize;
     float y = (float)origin.y / (float)kDefTexSize;
     

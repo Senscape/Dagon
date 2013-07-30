@@ -54,7 +54,7 @@ bool DGOverlay::hasImages() {
     return !_arrayOfImages.empty();
 }
 
-DGPoint DGOverlay::position() {
+Point DGOverlay::position() {
     return _position;
 }
 

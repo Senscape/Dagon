@@ -88,7 +88,7 @@ public:
     int color();
     std::vector<int> arrayOfCoordinates();
     unsigned int face();
-    DGPoint origin();
+    Point origin();
     DGTexture* texture();
     int vertexCount();
     DGVideo* video();

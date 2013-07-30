@@ -106,7 +106,7 @@ public:
     
     // Return the position
     int position(lua_State *L) {
-        DGPoint position = o->position();
+        Point position = o->position();
         lua_pushnumber(L, position.x);
         lua_pushnumber(L, position.y);        
         return 2;

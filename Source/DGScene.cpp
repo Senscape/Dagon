@@ -176,7 +176,7 @@ bool DGScene::scanSpots() {
             
             // FIXME: Should unify the checks here a bit more...
             if (!cursorManager.isDragging() && !cursorManager.onButton()) {
-                DGPoint position = cursorManager.position();
+                Point position = cursorManager.position();
                 int color = renderManager.testColor(position.x, position.y);
                 if (color) {
                     currentNode->beginIteratingSpots();

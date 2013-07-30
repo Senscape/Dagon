@@ -126,7 +126,7 @@ void DGConsole::toggle() {
 
 void DGConsole::update() {
     if (_isEnabled) {
-        DGPoint position = cursorManager.position();
+        Point position = cursorManager.position();
         
         switch (_state) {
             case DGConsoleHidden:

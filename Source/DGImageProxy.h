@@ -54,7 +54,7 @@ public:
     
     // Return the position
     int position(lua_State *L) {
-        DGPoint position = i->position();
+        Point position = i->position();
         lua_pushnumber(L, position.x);
         lua_pushnumber(L, position.y);        
         return 2;
@@ -80,7 +80,7 @@ public:
     
     // Return the size
     int size(lua_State *L) {
-        DGSize size = i->size();
+        Size size = i->size();
         lua_pushnumber(L, size.width);
         lua_pushnumber(L, size.height);        
         return 2;

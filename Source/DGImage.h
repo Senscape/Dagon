@@ -37,7 +37,7 @@ class DGImage : public DGObject {
     DGTexture* _attachedTexture;
     int _arrayOfCoordinates[8];
     bool _hasTexture;
-    DGRect _rect;
+    Rect _rect;
     
     void _calculateCoordinates();
     
@@ -53,8 +53,8 @@ public:
     // Gets
     
     int* arrayOfCoordinates();
-    DGPoint position();
-    DGSize size();
+    Point position();
+    Size size();
     DGTexture* texture();
 
     // Sets

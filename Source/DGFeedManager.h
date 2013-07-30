@@ -41,7 +41,7 @@ enum DGFeedStates {
 };
 
 typedef struct {
-	DGPoint location;
+	Point location;
 	uint32_t color;
     int state;
 	char text[kMaxFeedLength];

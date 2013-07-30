@@ -61,13 +61,13 @@ class DGRenderManager {
     DGTexture* _blendTexture;
     DGTexture* _fadeTexture;   
     
-    DGPoint _centerOfPolygon(std::vector<int> arrayOfCoordinates); // Used for the helpers feature
+    Point _centerOfPolygon(std::vector<int> arrayOfCoordinates); // Used for the helpers feature
     void _initFrameBuffer();
     void _initFrameBufferDepthBuffer();
     void _initFrameBufferTexture();
     
-    std::vector<DGPoint> _arrayOfHelpers;
-    std::vector<DGPoint>::iterator _itHelper;
+    std::vector<Point> _arrayOfHelpers;
+    std::vector<Point>::iterator _itHelper;
     
     DGRenderManager();
     DGRenderManager(DGRenderManager const&);
@@ -91,8 +91,8 @@ public:
     
     // Conversion of coordinates (note this requires glu)
     
-    DGVector project(float x, float y, float z); // If more than three coordinates, attempts to calculate center
-    DGVector unProject(int x, int y);
+    Vector project(float x, float y, float z); // If more than three coordinates, attempts to calculate center
+    Vector unProject(int x, int y);
 
     // Drawing operations
     
@@ -113,7 +113,7 @@ public:
     // Helpers processing (indicates clickable spots)
     
     bool beginIteratingHelpers();
-    DGPoint currentHelper();
+    Point currentHelper();
     bool iterateHelpers();
     
     // View operations, always used in the main loop

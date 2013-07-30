@@ -35,7 +35,7 @@ class DGTexture;
 typedef struct {
     int type;
     DGTexture* image;
-    DGPoint origin;
+    Point origin;
 } DGCursorData;
 
 ////////////////////////////////////////////////////////////
@@ -80,7 +80,7 @@ public:
     bool isDragging();
     void load(int type, const char* imageFromFile, int offsetX = 0, int offsetY = 0);
     bool onButton();
-    DGPoint position();
+    Point position();
     void removeAction();
     void setDragging(bool flag);
     void setOnButton(bool flag);    

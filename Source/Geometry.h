@@ -11,30 +11,30 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_GEOMETRY_H
-#define	DG_GEOMETRY_H
+#ifndef DAGON_GEOMETRY_H_
+#define	DAGON_GEOMETRY_H_
 
 typedef struct {
 	double x;
 	double y;
-} DGPoint;
+} Point;
 
 typedef struct {
 	double width;
 	double height;
-} DGSize;
+} Size;
 
 typedef struct {
-	DGPoint origin;
-	DGSize size;
-} DGRect;
+	Point origin;
+	Size size;
+} Rect;
 
 typedef struct {
 	double x;
 	double y;
-    double z;
-} DGVector;
+  double z;
+} Vector;
 
 // Add functions to make point, size, etc.
 
-#endif // DG_GEOMETRY_H
+#endif // DAGON_GEOMETRY_H_
