@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DAGON_DEFINES_H
-#define	DAGON_DEFINES_H
+#ifndef DAGON_DEFINES_H_
+#define	DAGON_DEFINES_H_
 
 // Defaults
 
@@ -90,4 +90,4 @@ enum Directions {
   kCurrent = 0xFF // Maintain current direction
 };
 
-#endif // DAGON_DEFINES_H
+#endif // DAGON_DEFINES_H_

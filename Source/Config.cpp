@@ -48,46 +48,53 @@ std::string Config::path(int ofType, const std::string &forFile,
   std::string fullPath;
 	
   switch (ofType) {
-    case kPathApp:
+    case kPathApp: {
       fullPath = _appPath;
       if (autopaths) {
         if (andObject == DGObjectRoom)
           fullPath += kDefRoomPath;
       }
       break;
-      
-    case kPathResources:
+    }
+    case kPathResources: {
       fullPath = _resPath;
       if (autopaths) {
         switch (andObject) {
-          case DGObjectAudio:
+          case DGObjectAudio: {
             fullPath += kDefAudioPath;
             break;
-          case DGObjectCursor:
+          }
+          case DGObjectCursor: {
             fullPath += kDefCursorPath;
             break;
-          case DGObjectFont:
+          }
+          case DGObjectFont: {
             fullPath += kDefFontPath;
             break;
-          case DGObjectImage:
+          }
+          case DGObjectImage: {
             fullPath += kDefImagePath;
             break;
-          case DGObjectNode:
+          }
+          case DGObjectNode: {
             fullPath += kDefNodePath;
             break;
-          case DGObjectVideo:
+          }
+          case DGObjectVideo: {
             fullPath += kDefVideoPath;
             break;
+          }
           default: {
             assert(false);
           }
         }
       }
       break;
-  
-    case kPathUserData:
+    }
+    case kPathUserData: {
       fullPath = _userPath;
       break;
+    }
   }
 
   fullPath += forFile;
@@ -97,20 +104,21 @@ std::string Config::path(int ofType, const std::string &forFile,
 
 void Config::setPath(int forType, const std::string &path) {
   switch (forType) {
-    case kPathApp:
+    case kPathApp: {
       _appPath = path;
       break;
-
-    case kPathResources:
+    }
+    case kPathResources: {
       _resPath = path;
       break;
-
-    case kPathUserData:
+    }
+    case kPathUserData: {
       _userPath = path;
       break;
-
-    default:
+    }
+    default: {
       assert(false);
+    }
   }
 }
 
