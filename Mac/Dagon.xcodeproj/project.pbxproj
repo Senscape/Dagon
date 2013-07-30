@@ -94,7 +94,7 @@
 		FB0F422014896D3C00BE880D /* English */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
 		FB2416CB14E9A7D4005311D1 /* DGSpotProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSpotProxy.h; sourceTree = "<group>"; };
 		FB247286148C061F00F7D1B6 /* Dagon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Dagon.icns; sourceTree = "<group>"; };
-		FB2472AC148C0EC500F7D1B6 /* DGColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGColors.h; sourceTree = "<group>"; };
+		FB2472AC148C0EC500F7D1B6 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		FB2472B5148C0EC500F7D1B6 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
 		FB26300414D33B3200EAD41A /* DGLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGLog.cpp; sourceTree = "<group>"; };
 		FB26300714D33B3D00EAD41A /* DGLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGLog.h; sourceTree = "<group>"; };
@@ -304,7 +304,7 @@
 		FB24731A148C67A200F7D1B6 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				FB2472AC148C0EC500F7D1B6 /* DGColors.h */,
+				FB2472AC148C0EC500F7D1B6 /* Colors.h */,
 				FB26303814D713D100EAD41A /* Config.h */,
 				FB26303914D713DB00EAD41A /* Config.cpp */,
 				FB2472B5148C0EC500F7D1B6 /* Defines.h */,

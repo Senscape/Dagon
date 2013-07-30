@@ -77,7 +77,7 @@
 // Include common Dagon headers
 ////////////////////////////////////////////////////////////
 
-#include "DGColors.h"
+#include "Colors.h"
 #include "Defines.h"
 #include "DGGeometry.h"
 #include "DGLanguage.h"
