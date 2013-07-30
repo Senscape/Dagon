@@ -79,8 +79,8 @@
 
 #include "Colors.h"
 #include "Defines.h"
-#include "DGGeometry.h"
-#include "DGLanguage.h"
+#include "Geometry.h"
+#include "Language.h"
 #include "DGObject.h"
 #include "DGVersion.h"
 
@@ -90,11 +90,11 @@
 
 enum DGKeys {
 	DGKeyBackspace = GLFW_KEY_BACKSPACE,
-    DGKeyF1 = GLFW_KEY_F1,
+  DGKeyF1 = GLFW_KEY_F1,
 	DGKeyF2 = GLFW_KEY_F2,
 	DGKeyF3 = GLFW_KEY_F3,
 	DGKeyF4 = GLFW_KEY_F4,
-    DGKeyF5 = GLFW_KEY_F5,
+  DGKeyF5 = GLFW_KEY_F5,
 	DGKeyF6 = GLFW_KEY_F6,
 	DGKeyF7 = GLFW_KEY_F7,
 	DGKeyF8 = GLFW_KEY_F8,

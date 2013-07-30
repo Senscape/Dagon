@@ -35,7 +35,7 @@ void DGSystem::findPaths() {
 
 bool DGSystem::init() {
     if (!_isInitialized) {
-        log.trace(DGModSystem, "%s", DGMsg040000);
+        log.trace(DGModSystem, "%s", kString13001);
         
         glfwSetErrorCallback(_errorCallback);
         
@@ -45,7 +45,7 @@ bool DGSystem::init() {
         int major, minor, rev;
         glfwGetVersion(&major, &minor, &rev);
         
-        log.info(DGModSystem, "%s: %d.%d.%d", DGMsg040002, major, minor, rev);
+        log.info(DGModSystem, "%s: %d.%d.%d", kString13003, major, minor, rev);
         
         // Have to make sure these are all set to 8 bits (GFW 3.0.0 defaults to 5,5,5)
         glfwWindowHint(GLFW_RED_BITS, 8);
@@ -105,7 +105,7 @@ bool DGSystem::init() {
         
         _isInitialized = true;
     }
-    else log.warning(DGModSystem, "%s", DGMsg140002);
+    else log.warning(DGModSystem, "%s", kString13004);
     
     return true;
 }

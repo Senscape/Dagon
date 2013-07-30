@@ -102,7 +102,7 @@ public:
     // Function to link in several directions
     int link(lua_State *L) {
         if (!lua_istable(L, 1)) {
-            luaL_error(L, DGMsg250002);
+            luaL_error(L, kString14005);
             
             return 0;
         }

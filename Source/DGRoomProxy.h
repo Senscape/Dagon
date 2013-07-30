@@ -107,7 +107,7 @@ public:
     
     int startTimer(lua_State *L) {
         if (!lua_isfunction(L, -1)) {
-            DGLog::instance().trace(DGModScript, "%s", DGMsg250006);
+            DGLog::instance().trace(DGModScript, "%s", kString14009);
             
             return 0;
         }

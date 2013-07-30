@@ -63,19 +63,19 @@ void DGRenderManager::init() {
     
     const GLubyte* version = glewGetString(GLEW_VERSION);
     
-    log.info(DGModRender, "%s: %s", DGMsg020004, version);
+    log.info(DGModRender, "%s: %s", kString11005, version);
     
     version = glGetString(GL_VERSION);
     
-	log.trace(DGModRender, "%s", DGMsg020000);
-	log.info(DGModRender, "%s: %s", DGMsg020001, version);
+	log.trace(DGModRender, "%s", kString11001);
+	log.info(DGModRender, "%s: %s", kString11002, version);
     
 	if (glewIsSupported("GL_VERSION_2_0")) {
 		_effectsEnabled = true;
         effectsManager.init();
 	}
 	else {
-		log.warning(DGModRender, "%s", DGMsg020002);
+		log.warning(DGModRender, "%s", kString11003);
 		_effectsEnabled = false;
 	}
     
@@ -588,7 +588,7 @@ void DGRenderManager::resetView() {
         
         if ((errCode = glGetError()) != GL_NO_ERROR) {
             errString = gluErrorString(errCode);
-            log.error(DGModRender, "%s: %s", DGMsg220001, errString);
+            log.error(DGModRender, "%s: %s", kString11006, errString);
         }
     }
     
@@ -686,7 +686,7 @@ void DGRenderManager::_initFrameBuffer() {
     GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT); // Check that status of our generated frame buffer  
     
     if (status != GL_FRAMEBUFFER_COMPLETE_EXT) { // If the frame buffer does not report back as complete
-        log.warning(DGModRender, "%s", DGMsg020003);
+        log.warning(DGModRender, "%s", kString11004);
         _framebufferEnabled = false;
     }
     else _framebufferEnabled = true;

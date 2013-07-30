@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Config.h"
-#include "DGLanguage.h"
+#include "Language.h"
 #include "DGLog.h"
 #include "DGTexture.h"
 #include "stb_image.h"
@@ -190,7 +190,7 @@ void DGTexture::load() {
         return;
     
     if (!_hasResource) {
-        log.error(DGModTexture, "%s: %s", DGMsg210004, this->name());
+        log.error(DGModTexture, "%s: %s", kString10005, this->name());
         
         return;
     }
@@ -200,7 +200,7 @@ void DGTexture::load() {
     if (fh != NULL) {
         if (fread(&magic, sizeof(magic), 1, fh) == 0) {
             // Couldn't read magic number
-            log.error(DGModTexture, "%s: %s", DGMsg210002, _resource);
+            log.error(DGModTexture, "%s: %s", kString10003, _resource);
         }
         
         if (memcmp(TEXIdent, &magic, 7) == 0) {
@@ -250,7 +250,7 @@ void DGTexture::load() {
                 if (compressed == GL_TRUE)
                     _isLoaded = true;
                 else
-                    log.error(DGModTexture, "%s: %s", DGMsg210002, fh);
+                    log.error(DGModTexture, "%s: %s", kString10003, fh);
             }
             else {
                 glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, _width, _height, 0, GL_RGB, GL_UNSIGNED_BYTE, _bitmap); // Only RGB is supported
@@ -309,7 +309,7 @@ void DGTexture::load() {
                             internalFormat = GL_RGBA;
                         break;
                     default:
-                        log.warning(DGModTexture, "%s: (%s) %d", DGMsg210003, _resource, _depth);
+                        log.warning(DGModTexture, "%s: (%s) %d", kString10004, _resource, _depth);
                         break;
                 }
                 
@@ -329,7 +329,7 @@ void DGTexture::load() {
             }
             else {
                 // Nothing loaded
-                log.error(DGModTexture, "%s: (%s) %s", DGMsg210001, _resource, stbi_failure_reason());
+                log.error(DGModTexture, "%s: (%s) %s", kString10002, _resource, stbi_failure_reason());
             }
         }
         
@@ -337,7 +337,7 @@ void DGTexture::load() {
     }
     else {
         // File not found
-        log.error(DGModTexture, "%s: %s", DGMsg210000, _resource);
+        log.error(DGModTexture, "%s: %s", kString10001, _resource);
     }    
 }
 
@@ -402,7 +402,7 @@ void DGTexture::loadFromMemory(const unsigned char* dataToLoad, long size) {
                     internalFormat = GL_RGBA;
                 break;
             default:
-                log.warning(DGModTexture, "%s: %d", DGMsg210003, comp);
+                log.warning(DGModTexture, "%s: %d", kString10004, comp);
                 break;
         }
         
@@ -422,7 +422,7 @@ void DGTexture::loadFromMemory(const unsigned char* dataToLoad, long size) {
     }
     else {
         // Nothing loaded
-        log.error(DGModTexture, "%s: %s", DGMsg210001, stbi_failure_reason());
+        log.error(DGModTexture, "%s: %s", kString10002, stbi_failure_reason());
     }
 }
 

@@ -92,10 +92,10 @@ void DGScript::init() {
 		}
 	}
     else
-		log.error(DGModScript, "%s", DGMsg250012);
+		log.error(DGModScript, "%s", kString14015);
     
-    log.trace(DGModScript, "%s", DGMsg050000);
-    log.info(DGModScript, "%s: %s", DGMsg050001, LUA_RELEASE);
+    log.trace(DGModScript, "%s", kString14001);
+    log.info(DGModScript, "%s: %s", kString14002, LUA_RELEASE);
     
     lua_getglobal(_L, "_G");
     _registerEnums();
@@ -170,7 +170,7 @@ void DGScript::init() {
         _isInitialized = true;
     else {
         // Not found!
-        log.error(DGModScript, "%s: %s", DGMsg250003, script);
+        log.error(DGModScript, "%s: %s", kString14006, script);
         DGControl::instance().processKey(DGKeyTab, false); // Simulate tab key to open the console
     }
 }
@@ -250,16 +250,16 @@ void DGScript::_error(int result) {
     if (result != LUA_YIELD) {
         switch (result) {
             case LUA_ERRRUN:
-                log.error(DGModScript, "%s", DGMsg250007);
+                log.error(DGModScript, "%s", kString14010);
                 break;
             case LUA_ERRMEM:
-                log.error(DGModScript, "%s", DGMsg250008);
+                log.error(DGModScript, "%s", kString14011);
                 break;
             case LUA_ERRERR:
-                log.error(DGModScript, "%s", DGMsg250009);
+                log.error(DGModScript, "%s", kString14012);
                 break;
             case LUA_ERRSYNTAX:
-                log.error(DGModScript, "%s", DGMsg250010);
+                log.error(DGModScript, "%s", kString14013);
                 break;            
         }
         
@@ -389,7 +389,7 @@ int DGScript::_globalPrint (lua_State *L) {
 
 int DGScript::_globalRegister(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
-        DGLog::instance().error(DGModScript, DGMsg250011);
+        DGLog::instance().error(DGModScript, kString14014);
 		
 		return 0;
 	}
@@ -471,11 +471,11 @@ int DGScript::_globalSwitch(lua_State *L) {
             DGControl::instance().switchTo(DGProxyToSlide(L, 1), lua_toboolean(L, 2));
             break;
         case DGObjectGeneric:
-            DGLog::instance().error(DGModScript, "%s", DGMsg250000);
+            DGLog::instance().error(DGModScript, "%s", kString14003);
             break;
             
         case DGObjectNone:
-            DGLog::instance().error(DGModScript, "%s", DGMsg250001);
+            DGLog::instance().error(DGModScript, "%s", kString14004);
             break;
     }
     
@@ -484,7 +484,7 @@ int DGScript::_globalSwitch(lua_State *L) {
 
 int DGScript::_globalStartTimer(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
-		DGLog::instance().trace(DGModScript, "%s", DGMsg250006);
+		DGLog::instance().trace(DGModScript, "%s", kString14009);
         
 		return 0;
 	}

@@ -113,7 +113,7 @@
 		FB279DB614ADF3BF002D48FC /* DGRoom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRoom.h; sourceTree = "<group>"; };
 		FB279DB714AE14AF002D48FC /* DGAudio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGAudio.cpp; sourceTree = "<group>"; };
 		FB279DB914AE1555002D48FC /* DGAudio.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGAudio.h; sourceTree = "<group>"; };
-		FB2AA4C614D9918400B508E5 /* DGLanguage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGLanguage.h; sourceTree = "<group>"; };
+		FB2AA4C614D9918400B508E5 /* Language.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Language.h; sourceTree = "<group>"; };
 		FB34FB1214DB126F007D2EE1 /* DGSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSystem.h; sourceTree = "<group>"; };
 		FB3B4DC515CD7EC6000B69C6 /* DGDustData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGDustData.c; sourceTree = "<group>"; };
 		FB40B9761795E26600788AF1 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../Source/main.cpp; sourceTree = "<group>"; };
@@ -161,7 +161,7 @@
 		FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSystemLib.h; sourceTree = "<group>"; };
 		FBD2F64815064FD000AB6C31 /* DGAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGAudioManager.h; sourceTree = "<group>"; };
 		FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGAudioManager.cpp; sourceTree = "<group>"; };
-		FBD3A58614DF27C600CA2756 /* DGGeometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGGeometry.h; sourceTree = "<group>"; };
+		FBD3A58614DF27C600CA2756 /* Geometry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Geometry.h; sourceTree = "<group>"; };
 		FBE208DF1589745B002F7D46 /* DGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGScene.cpp; sourceTree = "<group>"; };
 		FBE208E21589746E002F7D46 /* DGScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGScene.h; sourceTree = "<group>"; };
 		FBE7EDE0153F602F00F43EDA /* DGConsole.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGConsole.h; sourceTree = "<group>"; };
@@ -308,8 +308,8 @@
 				FB26303814D713D100EAD41A /* Config.h */,
 				FB26303914D713DB00EAD41A /* Config.cpp */,
 				FB2472B5148C0EC500F7D1B6 /* Defines.h */,
-				FBD3A58614DF27C600CA2756 /* DGGeometry.h */,
-				FB2AA4C614D9918400B508E5 /* DGLanguage.h */,
+				FBD3A58614DF27C600CA2756 /* Geometry.h */,
+				FB2AA4C614D9918400B508E5 /* Language.h */,
 				FB26300714D33B3D00EAD41A /* DGLog.h */,
 				FB26300414D33B3200EAD41A /* DGLog.cpp */,
 				FBA2C78514DC91200098E334 /* DGPlatform.h */,

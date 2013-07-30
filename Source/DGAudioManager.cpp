@@ -105,7 +105,7 @@ void DGAudioManager::flush() {
 }
 
 void DGAudioManager::init() {
-    log.trace(DGModAudio, "%s", DGMsg070000);
+    log.trace(DGModAudio, "%s", kString16001);
     
     char deviceName[256];
 	char *defaultDevice;
@@ -139,7 +139,7 @@ void DGAudioManager::init() {
                 
                 numDevices++;
                 if (config.debugMode) {
-                    log.trace(DGModAudio, "%s", DGMsg080002);
+                    log.trace(DGModAudio, "%s", kString17003);
                     log.trace(DGModAudio, "0. NULL");
                     for (i = 0; i < numDevices; i++) {
                         log.trace(DGModAudio, "%d. %s", i + 1, devices[i]);
@@ -155,22 +155,22 @@ void DGAudioManager::init() {
 	}
     
     if (strlen(deviceName) == 0) {
-		log.trace(DGModAudio, "%s", DGMsg080003);
+		log.trace(DGModAudio, "%s", kString17004);
 		_alDevice = alcOpenDevice(NULL); // Select the preferred device
 	} else {
-		log.trace(DGModAudio, "%s: %s", DGMsg080004, deviceName);
+		log.trace(DGModAudio, "%s: %s", kString17005, deviceName);
 		_alDevice = alcOpenDevice((ALCchar*)deviceName); // Use the name from the enumeration process
 	}
     
     if (!_alDevice) {
-        log.error(DGModAudio, "%s", DGMsg270001);
+        log.error(DGModAudio, "%s", kString16004);
         return;
     }
     
 	_alContext = alcCreateContext(_alDevice, NULL);
     
     if (!_alContext) {
-        log.error(DGModAudio, "%s", DGMsg270002);
+        log.error(DGModAudio, "%s", kString16005);
         
         return;
     }
@@ -189,12 +189,12 @@ void DGAudioManager::init() {
     ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
-		log.error(DGModAudio, "%s: init (%d)", DGMsg270003, error);
+		log.error(DGModAudio, "%s: init (%d)", kString16006, error);
 		return;
 	}
     
-    log.info(DGModAudio, "%s: %s", DGMsg070001, alGetString(AL_VERSION));
-    log.info(DGModAudio, "%s: %s", DGMsg070002, vorbis_version_string());
+    log.info(DGModAudio, "%s: %s", kString16002, alGetString(AL_VERSION));
+    log.info(DGModAudio, "%s: %s", kString16003, vorbis_version_string());
     
     _isInitialized = true;
 	_isRunning = true;

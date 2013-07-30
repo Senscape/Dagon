@@ -61,7 +61,7 @@ DGConsole::~DGConsole() {
 ////////////////////////////////////////////////////////////
 
 void DGConsole::init() {
-    log.trace(DGModNone, "%s", DGMsg030002);
+    log.trace(DGModNone, "%s", kString12003);
     _font = fontManager.loadDefault();
     _isInitialized = true;
 }

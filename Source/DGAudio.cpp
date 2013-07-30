@@ -143,7 +143,7 @@ void DGAudio::load() {
             _resource.dataRead = 0;
             
             if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
-                log.error(DGModAudio, "%s", DGMsg270007);
+                log.error(DGModAudio, "%s", kString16010);
                 return;
             }
             
@@ -157,7 +157,7 @@ void DGAudio::load() {
             else if (_channels == 2 ) _alFormat = AL_FORMAT_STEREO16;
             else {
                 // Invalid number of channels
-                log.error(DGModAudio, "%s: %s", DGMsg270006, fileToLoad);
+                log.error(DGModAudio, "%s: %s", kString16009, fileToLoad);
                 return;
             }
             
@@ -192,7 +192,7 @@ void DGAudio::load() {
             
             _isLoaded = true;
         }
-        else log.error(DGModAudio, "%s: %s", DGMsg270005, fileToLoad);
+        else log.error(DGModAudio, "%s: %s", kString16008, fileToLoad);
     }
 }
 
@@ -370,7 +370,7 @@ bool DGAudio::_stream(ALuint* buffer) {
             }
             else if (result < 0) {
                 // Error
-                log.error(DGModAudio, "%s: %s", DGMsg270004, _resource.name);
+                log.error(DGModAudio, "%s: %s", kString16007, _resource.name);
                 _hasStreamingError = true;
                 
                 return false;
@@ -388,7 +388,7 @@ ALboolean DGAudio::_verifyError(const char* operation) {
    	ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
-		log.error(DGModAudio, "%s: %s: %s (%d)", DGMsg270003, _resource.name, operation, error);
+		log.error(DGModAudio, "%s: %s: %s (%d)", kString16006, _resource.name, operation, error);
         
 		return AL_FALSE;
 	}
