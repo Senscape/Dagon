@@ -21,7 +21,7 @@
 	<key>CFBundleSignature</key>
 	<string>Dagn</string>
 	<key>CFBundleVersion</key>
-	<string>1001</string>
+	<string>1003</string>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.developer-tools</string>
 	<key>LSMinimumSystemVersion</key>
