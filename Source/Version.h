@@ -11,16 +11,16 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_VERSION_H
-#define DG_VERSION_H
+#ifndef DAGON_VERSION_H_
+#define DAGON_VERSION_H_
 
-#define DGVersionMajor "0"
-#define DGVersionMinor "9"
-#define DGVersionRelease "5"
-#define DGVersionBuild 1001
-#define DGVersionNum 100
-#define DGVersionType "a"
+#define DAGON_VERSION_MAJOR "0"
+#define DAGON_VERSION_MINOR "9"
+#define DAGON_VERSION_RELEASE "5"
+#define DAGON_VERSION_NUM 100
+#define DAGON_VERSION_TYPE "a"
+#define DAGON_BUILD 1001
 
-#define DGVersionString DGVersionMajor "." DGVersionMinor "." DGVersionRelease DGVersionType
+#define DAGON_VERSION DAGON_VERSION_MAJOR "." DAGON_VERSION_MINOR "." DAGON_VERSION_RELEASE DAGON_VERSION_TYPE
 
-#endif // DG_VERSION_H
+#endif // DAGON_VERSION_H_
