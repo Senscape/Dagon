@@ -75,7 +75,7 @@ bool DGButton::hasText() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-DGAction* DGButton::action() {
+Action* DGButton::action() {
     return _actionData;
 }
 
@@ -99,9 +99,9 @@ int DGButton::textColor() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void DGButton::setAction(DGAction* anAction) {
-    _actionData = new DGAction;
-    memcpy(_actionData, anAction, sizeof(DGAction));
+void DGButton::setAction(Action* anAction) {
+    _actionData = new Action;
+    memcpy(_actionData, anAction, sizeof(Action));
     _hasAction = true;   
 }
 

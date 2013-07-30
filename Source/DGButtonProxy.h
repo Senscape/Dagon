@@ -71,19 +71,19 @@ public:
     
     // Set an action
     int setAction(lua_State *L) {
-        DGAction action;
+        Action action;
         
         int type = (int)luaL_checknumber(L, 1);
         
         switch (type) {
             case FEED:
-                action.type = DGActionFeed;
+                action.type = kActionFeed;
                 action.cursor = kCursorLook;                
-                strncpy(action.feed, luaL_checkstring(L, 2), kMaxFeedLength);
-                
+                action.feed = luaL_checkstring(L, 2);
+            
                 if (lua_isstring(L, 3)) {
-                    strncpy(action.feedAudio, lua_tostring(L, 3), kMaxFileLength);
-                    action.hasFeedAudio = true;
+                  action.feedAudio = lua_tostring(L, 3);
+                  action.hasFeedAudio = true;
                 }
                 else action.hasFeedAudio = false;
                 
@@ -96,7 +96,7 @@ public:
                     return 0;
                 }
                 
-                action.type = DGActionFunction;
+                action.type = kActionFunction;
                 action.cursor = kCursorUse;
                 action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
                 b->setAction(&action);
@@ -113,7 +113,7 @@ public:
                     return 0;
                 }
                 
-                action.type = DGActionSwitch;
+                action.type = kActionSwitch;
                 action.cursor = kCursorForward;                
                 b->setAction(&action);
                 
@@ -126,7 +126,7 @@ public:
     // Set a cursor for the action
     int setCursor(lua_State *L) {
         if (b->hasAction()) {
-            DGAction* action = b->action();
+            Action* action = b->action();
             
             action->cursor = luaL_checknumber(L, 1);
         }

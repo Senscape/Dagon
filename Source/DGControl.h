@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAction.h"
+#include "Action.h"
 #include "DGEvent.h"
 #include "Platform.h"
 #include "DGSystem.h"

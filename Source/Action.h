@@ -11,37 +11,36 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_ACTION_H
-#define DG_ACTION_H
+#ifndef DAGON_ACTION_H_
+#define DAGON_ACTION_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "Platform.h"
+#include <string>
+
+#include "DGObject.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
-class DGObject;
-
-// Enum here begins at 100 to avoid conflicts with objects IDs
-enum DGActionTypes {
-	DGActionFunction = 100,
-	DGActionFeed,
-	DGActionSwitch
+enum ActionTypes {
+	kActionFunction = 100,
+	kActionFeed,
+	kActionSwitch
 };
 
-typedef struct {
-    unsigned int cursor;
-    char feed[kMaxFeedLength];
-    char feedAudio[kMaxFileLength];
-    bool hasFeedAudio;
-    int luaHandler;
-    int luaObject;
+struct Action {
+  unsigned int cursor;
+  std::string feed;
+  std::string feedAudio;
+  bool hasFeedAudio;
+  int luaHandler;
+  int luaObject;
 	DGObject* target;
 	unsigned int type;    
-} DGAction;
+};
 
-#endif // DG_ACTION_H
+#endif // DAGON_ACTION_H_

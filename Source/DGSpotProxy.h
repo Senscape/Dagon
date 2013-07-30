@@ -118,7 +118,7 @@ public:
     
     // TODO: In the future we should return a pointer to an attached object
     int attach(lua_State *L) {
-        DGAction action;
+        Action action;
         DGAudio* audio;
         DGTexture* texture;
         DGVideo* video;
@@ -156,13 +156,13 @@ public:
                 
                 break;
             case FEED:
-                action.type = DGActionFeed;
+                action.type = kActionFeed;
                 action.cursor = kCursorLook;
                 action.luaObject = s->luaObject();                
-                strncpy(action.feed, luaL_checkstring(L, 2), kMaxFeedLength);
-                
+                action.feed = luaL_checkstring(L, 2);
+            
                 if (lua_isstring(L, 3)) {
-                    strncpy(action.feedAudio, lua_tostring(L, 3), kMaxFileLength);
+                    action.feedAudio = lua_tostring(L, 3);
                     action.hasFeedAudio = true;
                 }
                 else action.hasFeedAudio = false;
@@ -178,7 +178,7 @@ public:
                     return 0;
                 }
                 
-                action.type = DGActionFunction;
+                action.type = kActionFunction;
                 action.cursor = kCursorUse;
                 action.luaObject = s->luaObject();
                 action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
@@ -206,7 +206,7 @@ public:
                 s->setTexture(texture);
                 break;
             case SWITCH:
-                action.type = DGActionSwitch;
+                action.type = kActionSwitch;
                 action.cursor = kCursorForward;
                 action.luaObject = s->luaObject();
                 
@@ -255,7 +255,7 @@ public:
     // Set a cursor for the attached action
     int setCursor(lua_State *L) {
         if (s->hasAction()) {
-            DGAction* action = s->action();
+            Action* action = s->action();
             
             action->cursor = luaL_checknumber(L, 1);
         }

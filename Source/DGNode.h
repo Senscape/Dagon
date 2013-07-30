@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAction.h"
+#include "Action.h"
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ class DGNode : public DGObject {
     std::vector<DGSpot*>::iterator _it;
     std::string _description;    
     
-    void _link(unsigned int direction, DGAction* action);
+    void _link(unsigned int direction, Action* action);
     
 public:
     DGNode();

@@ -918,19 +918,19 @@ void DGControl::update() {
 ////////////////////////////////////////////////////////////
 
 void DGControl::_processAction(){
-    DGAction* action = cursorManager.action();
+    Action* action = cursorManager.action();
     
     switch (action->type) {
-        case DGActionFunction:
+        case kActionFunction:
             script.processCallback(action->luaHandler, action->luaObject);
             break;
-        case DGActionFeed:
+        case kActionFeed:
             if (action->hasFeedAudio) {
-                feedManager.showAndPlay(action->feed, action->feedAudio);             
+                feedManager.showAndPlay(action->feed.c_str(), action->feedAudio.c_str());
             }
-            else feedManager.show(action->feed);
+            else feedManager.show(action->feed.c_str());
             break;
-        case DGActionSwitch:
+        case kActionSwitch:
             cursorManager.removeAction();
             switchTo(action->target);
             break;

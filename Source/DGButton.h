@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAction.h"
+#include "Action.h"
 #include "DGImage.h"
 #include "Platform.h"
 
@@ -41,7 +41,7 @@ class DGButton : public DGImage {
     
     int _textColor;
     
-    DGAction* _actionData;
+    Action* _actionData;
     DGFont* _font;
     DGTexture* _attachedOnHoverTexture;
     std::string _text;
@@ -64,7 +64,7 @@ public:
     
     // Gets
     
-    DGAction* action();
+    Action* action();
     DGFont* font();
     DGTexture* onHoverTexture();
     const char* text();
@@ -72,7 +72,7 @@ public:
     
     // Sets
     
-    void setAction(DGAction* anAction);
+    void setAction(Action* anAction);
     void setFont(const char* fromFileName, unsigned int heightOfFont);
     void setOnHoverTexture(const char* fromFileName);
     void setText(const char* text);

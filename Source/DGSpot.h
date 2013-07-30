@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAction.h"
+#include "Action.h"
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -45,7 +45,7 @@ class DGSpot : public DGObject {
     int _color;
 	int _flags;
     
-	DGAction* _actionData;
+	Action* _actionData;
     DGAudio* _attachedAudio;
     DGTexture* _attachedTexture;
 	DGVideo* _attachedVideo;
@@ -83,7 +83,7 @@ public:
     
     // Gets
     
-    DGAction* action();
+    Action* action();
     DGAudio* audio();
     int color();
     std::vector<int> arrayOfCoordinates();
@@ -96,7 +96,7 @@ public:
     
     // Sets
     
-    void setAction(DGAction* anAction);
+    void setAction(Action* anAction);
     void setAudio(DGAudio* anAudio);
     void setColor(int aColor);
     void setOrigin(int x, int y);

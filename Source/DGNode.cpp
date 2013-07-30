@@ -138,9 +138,9 @@ void DGNode::setSlideReturn(int luaHandler) {
 ////////////////////////////////////////////////////////////
 
 void DGNode::addCustomLink(unsigned withDirection, int luaHandler) {
-    DGAction action;
+    Action action;
     
-    action.type = DGActionFunction;
+    action.type = kActionFunction;
     action.cursor = kCursorForward;
     action.luaHandler = luaHandler;
     
@@ -148,9 +148,9 @@ void DGNode::addCustomLink(unsigned withDirection, int luaHandler) {
 }
 
 void DGNode::addLink(unsigned int withDirection, DGObject* theTarget) {
-    DGAction action;
+    Action action;
     
-    action.type = DGActionSwitch;
+    action.type = kActionSwitch;
     action.cursor = kCursorForward;    
     action.target = theTarget;
     
@@ -179,7 +179,7 @@ bool DGNode::iterateSpots() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-void DGNode::_link(unsigned int direction, DGAction* action) {
+void DGNode::_link(unsigned int direction, Action* action) {
     // We ensure the texture is properly stretched, so we take the default cube size
     // TODO: This setting should be obtained directly from the Config class
     int minorBound = (int)(kDefTexSize / 3);

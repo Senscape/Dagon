@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAction.h"
+#include "Action.h"
 #include "DGEvent.h"
 #include "Platform.h"
 
@@ -30,10 +30,10 @@
 
 enum DGAttachTypes {
     AUDIO = DGObjectAudio,
-    FUNCTION = DGActionFunction,
+    FUNCTION = kActionFunction,
     IMAGE = DGObjectTexture,
-    FEED = DGActionFeed,
-    SWITCH = DGActionSwitch,
+    FEED = kActionFeed,
+    SWITCH = kActionSwitch,
     VIDEO = DGObjectVideo
 };
 

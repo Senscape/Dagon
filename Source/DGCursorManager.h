@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAction.h"
+#include "Action.h"
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ class DGCursorManager : public DGObject {
     bool _hasImage;
     bool _isDragging;
     bool _onButton; // Decide in Control?
-    DGAction* _pointerToAction;    
+    Action* _pointerToAction;    
     int _size;
     int _x;
     int _y;
@@ -72,7 +72,7 @@ public:
         return cursorManager;
     }
 
-    DGAction* action();
+    Action* action();
     void bindImage();
     int* arrayOfCoords();
     bool hasAction();
@@ -84,7 +84,7 @@ public:
     void removeAction();
     void setDragging(bool flag);
     void setOnButton(bool flag);    
-    void setAction(DGAction* action);
+    void setAction(Action* action);
     void setCursor(int type);
     void setSize(int size);
     void updateCoords(int x, int y);

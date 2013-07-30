@@ -59,7 +59,7 @@ DGCursorManager::~DGCursorManager() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-DGAction* DGCursorManager::action() {
+Action* DGCursorManager::action() {
     return _pointerToAction;
 }
 
@@ -130,7 +130,7 @@ void DGCursorManager::setOnButton(bool flag) {
     _onButton = flag;
 }
 
-void DGCursorManager::setAction(DGAction* action) {
+void DGCursorManager::setAction(Action* action) {
     _pointerToAction = action;
     _hasAction = true;
     

@@ -68,8 +68,8 @@ public:
             arrayOfCoordinates.assign(coordsBack, coordsBack + 8);
             spot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
             
-            DGAction action;
-            action.type = DGActionSwitch;
+            Action action;
+            action.type = kActionSwitch;
             action.cursor = kCursorBackward;
             action.target = NULL; // Current node
             

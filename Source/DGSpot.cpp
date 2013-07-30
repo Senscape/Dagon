@@ -98,7 +98,7 @@ bool DGSpot::isPlaying() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-DGAction* DGSpot::action() {
+Action* DGSpot::action() {
     return _actionData;
 }
 
@@ -168,9 +168,16 @@ void DGSpot::resize(int width, int height) {
     _arrayOfCoordinates[7] = origin.y + height;
 }
 
-void DGSpot::setAction(DGAction* anAction) {
-    _actionData = new DGAction;
-    memcpy(_actionData, anAction, sizeof(DGAction));
+void DGSpot::setAction(Action* anAction) {
+    _actionData = new Action;
+    _actionData->cursor = anAction->cursor;
+    _actionData->feed = anAction->feed;
+    _actionData->feedAudio = anAction->feedAudio;
+    _actionData->hasFeedAudio = anAction->hasFeedAudio;
+    _actionData->luaHandler = anAction->luaHandler;
+    _actionData->luaObject = anAction->luaObject;
+    _actionData->target = anAction->target;
+    _actionData->type = anAction->type;
     _hasAction = true;
 }
 

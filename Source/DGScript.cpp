@@ -513,10 +513,10 @@ int DGScript::_globalVersion(lua_State *L) {
 void DGScript::_registerEnums() {
     // Push all enum values
     DGLuaEnum(_L, AUDIO, DGObjectAudio);
-    DGLuaEnum(_L, FUNCTION, DGActionFunction);
+    DGLuaEnum(_L, FUNCTION, kActionFunction);
     DGLuaEnum(_L, IMAGE, DGObjectTexture);
-    DGLuaEnum(_L, FEED, DGActionFeed);
-    DGLuaEnum(_L, SWITCH, DGActionSwitch);
+    DGLuaEnum(_L, FEED, kActionFeed);
+    DGLuaEnum(_L, SWITCH, kActionSwitch);
     DGLuaEnum(_L, VIDEO, DGObjectVideo);
     
     DGLuaEnum(_L, NORMAL, kCursorNormal);
