@@ -30,7 +30,7 @@
 #include "DGFeedManager.h"
 #include "DGFontManager.h"
 #include "DGInterface.h"
-#include "DGLog.h"
+#include "Log.h"
 #include "DGNode.h"
 #include "DGRenderManager.h"
 #include "DGRoom.h"
@@ -57,10 +57,10 @@ DGControl::DGControl() :
     cursorManager(DGCursorManager::instance()),
     feedManager(DGFeedManager::instance()),
     fontManager(DGFontManager::instance()),
-    log(DGLog::instance()),
+    log(Log::instance()),
     renderManager(DGRenderManager::instance()),
     script(DGScript::instance()),
-    system(Config::instance(), DGLog::instance()),
+    system(Config::instance(), Log::instance()),
     timerManager(DGTimerManager::instance()),
     videoManager(DGVideoManager::instance())
 {
@@ -112,9 +112,9 @@ DGControl::~DGControl() {
 ////////////////////////////////////////////////////////////
 
 void DGControl::init() {
-    log.trace(DGModControl, "========================================");
-    log.info(DGModControl, "%s: %s", kString12001, DGVersionString);
-    log.info(DGModControl, "%s: %d", kString12004, DGVersionBuild);
+    log.trace(kModControl, "========================================");
+    log.info(kModControl, "%s: %s", kString12001, DGVersionString);
+    log.info(kModControl, "%s: %d", kString12004, DGVersionBuild);
     
     system.init();
     
@@ -176,7 +176,7 @@ void DGControl::init() {
     else
         _isShowingSplash = true;
     
-    log.trace(DGModControl, "%s", kString13002);
+    log.trace(kModControl, "%s", kString13002);
 }
 
 DGNode* DGControl::currentNode() {
@@ -548,7 +548,7 @@ void DGControl::registerObject(DGObject* theTarget) {
     }
     
     if (_isRunning && !_isShowingSplash)
-        log.warning(DGModControl, "%s: %s", kString12007, theTarget->name());
+        log.warning(kModControl, "%s: %s", kString12007, theTarget->name());
 }
 
 void DGControl::requestObject(DGObject* theTarget) {
@@ -630,7 +630,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 timerManager.setLuaObject(_currentRoom->luaObject());
                 
                 if (!_currentRoom->hasNodes()) {
-                    log.warning(DGModControl, "%s: %s", kString12005, _currentRoom->name());
+                    log.warning(kModControl, "%s: %s", kString12005, _currentRoom->name());
                     return;
                 }
                 
@@ -647,7 +647,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                     node->setPreviousNode(this->currentNode());
                     
                     if (!_currentRoom->switchTo(node)) {
-                        log.error(DGModControl, "%s: %s (%s)", kString12010, node->name(), _currentRoom->name()); // Bad slide
+                        log.error(kModControl, "%s: %s (%s)", kString12010, node->name(), _currentRoom->name()); // Bad slide
                         return;
                     }
                     
@@ -658,7 +658,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                     performWalk = false;
                 }
                 else {
-                    log.error(DGModControl, "%s", kString12009);
+                    log.error(kModControl, "%s", kString12009);
                     return;
                 }
 
@@ -671,13 +671,13 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 if (_currentRoom) {
                     DGNode* node = (DGNode*)theTarget;
                     if (!_currentRoom->switchTo(node)) {
-                        log.error(DGModControl, "%s: %s (%s)", kString12008, node->name(), _currentRoom->name()); // Bad node
+                        log.error(kModControl, "%s: %s (%s)", kString12008, node->name(), _currentRoom->name()); // Bad node
                         return;
                     }
                     performWalk = true;
                 }
                 else {
-                    log.error(DGModControl, "%s", kString12009);
+                    log.error(kModControl, "%s", kString12009);
                     return;
                 }
                 
@@ -760,7 +760,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 } while (currentNode->iterateSpots());
             }
             else {
-                log.warning(DGModControl, "%s", kString12006);
+                log.warning(kModControl, "%s", kString12006);
             }
             
             // Prepare the name for the window
@@ -860,10 +860,10 @@ void DGControl::terminate() {
      
     switch (r) {
         default:
-        case 0: log.trace(DGModControl, "%s", kString12100); break;
-        case 1: log.trace(DGModControl, "%s", kString12101); break;
-        case 2: log.trace(DGModControl, "%s", kString12102); break;
-        case 3: log.trace(DGModControl, "%s", kString12103); break;
+        case 0: log.trace(kModControl, "%s", kString12100); break;
+        case 1: log.trace(kModControl, "%s", kString12101); break;
+        case 2: log.trace(kModControl, "%s", kString12102); break;
+        case 3: log.trace(kModControl, "%s", kString12103); break;
     }
     
     system.terminate();

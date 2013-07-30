@@ -43,7 +43,7 @@ typedef struct {
 } TEXSubHeader;
 
 class Config;
-class DGLog;
+class Log;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -51,7 +51,7 @@ class DGLog;
 
 class DGTexture : public DGObject {
     Config& config;
-    DGLog& log;
+    Log& log;
     
     GLubyte* _bitmap;
     unsigned int _compressionLevel;

@@ -38,7 +38,7 @@ class DGFont;
 class DGFeedManager;
 class DGFontManager;
 class DGInterface;
-class DGLog;
+class Log;
 class DGNode;
 class DGOverlay;
 class DGRoom;
@@ -91,7 +91,7 @@ class DGControl {
     DGCursorManager& cursorManager;
     DGFeedManager& feedManager;
     DGFontManager& fontManager;
-    DGLog& log;
+    Log& log;
     DGRenderManager& renderManager;
     DGScript& script;
     DGTextureManager& textureManager;    

@@ -32,14 +32,14 @@
 #define kDefFontSize 10
 
 class DGFont;
-class DGLog;
+class Log;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
 class DGFontManager {
-    DGLog& log;
+    Log& log;
     
     std::vector<DGFont*> _arrayOfFonts;
     

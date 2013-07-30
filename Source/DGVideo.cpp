@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGLog.h"
+#include "Log.h"
 #include "DGSystem.h"
 #include "DGVideo.h"
 
@@ -42,7 +42,7 @@ static struct DGLookUpTable _lookUpTable;
 ////////////////////////////////////////////////////////////
 
 DGVideo::DGVideo() :
-    log(DGLog::instance())
+    log(Log::instance())
 {
     this->setType(DGObjectVideo);
     
@@ -61,7 +61,7 @@ DGVideo::DGVideo() :
 }
 
 DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced)  :
-    log(DGLog::instance())
+    log(Log::instance())
 {
     this->setType(DGObjectVideo);
     
@@ -173,16 +173,16 @@ void DGVideo::load() {
     int stateFlag = 0;
     
     if (!_hasResource) {
-        log.error(DGModVideo, "%s", kString17010);
+        log.error(kModVideo, "%s", kString17010);
         return;
     }
     
-    //log.trace(DGModVideo, "%s %s", kString17002, _resource);
+    //log.trace(kModVideo, "%s %s", kString17002, _resource);
     
     _handle = fopen(_resource, "rb");
     
     if (_handle == NULL) {
-        log.error(DGModVideo, "%s: %s", kString17007, _resource);
+        log.error(kModVideo, "%s: %s", kString17007, _resource);
         return;
     }
     
@@ -226,12 +226,12 @@ void DGVideo::load() {
         while (_theoraInfo->theora_p && (_theoraInfo->theora_p < 3) && 
                (ret = ogg_stream_packetout(&_theoraInfo->to, &_theoraInfo->op))) {
             if (ret < 0) {
-                log.error(DGModVideo, "%s", kString17008);
+                log.error(kModVideo, "%s", kString17008);
                 return;
             }
             
             if (theora_decode_header(&_theoraInfo->ti, &_theoraInfo->tc, &_theoraInfo->op)) {
-                log.error(DGModVideo, "%s", kString17008);
+                log.error(kModVideo, "%s", kString17008);
                 return;
             }
             
@@ -245,7 +245,7 @@ void DGVideo::load() {
         else {
             size_t ret = _bufferData(&_theoraInfo->oy);
             if (ret == 0) {
-                log.error(DGModVideo, "%s", kString17009);
+                log.error(kModVideo, "%s", kString17009);
                 return;
             }
         }

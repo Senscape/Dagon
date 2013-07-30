@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Config.h"
-#include "DGLog.h"
+#include "Log.h"
 #include "DGNode.h"
 #include "DGRoom.h"
 #include "DGSpot.h"
@@ -36,7 +36,7 @@ bool DGTextureSort(DGTexture* t1, DGTexture* t2);
 
 DGTextureManager::DGTextureManager() :
     config(Config::instance()),
-    log(DGLog::instance())
+    log(Log::instance())
 {
     _roomToPreload = NULL;
 }

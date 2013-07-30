@@ -28,7 +28,7 @@
 
 class Config;
 class DGEffectsManager;
-class DGLog;
+class Log;
 class DGTexture;
 
 // Reference to embedded splash screen
@@ -41,7 +41,7 @@ extern "C" const unsigned char kDefSplashBinary[];
 class DGRenderManager {
     Config& config;
     DGEffectsManager& effectsManager;
-    DGLog& log;
+    Log& log;
     
     GLuint _fbo; // The frame buffer object  
     GLuint _fboDepth; // The depth buffer for the frame buffer object  

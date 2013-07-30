@@ -33,7 +33,7 @@
 #define kMaxActiveTextures 18
 
 class Config;
-class DGLog;
+class Log;
 class DGNode;
 class DGRoom;
 
@@ -43,7 +43,7 @@ class DGRoom;
 
 class DGTextureManager {
     Config& config;
-    DGLog& log;
+    Log& log;
     
     std::thread _preloaderThread;
     

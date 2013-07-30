@@ -19,7 +19,7 @@
 #include "Config.h"
 #include "DGConsole.h"
 #include "DGCursorManager.h"
-#include "DGLog.h"
+#include "Log.h"
 #include "DGFontManager.h"
 #include "DGRenderManager.h"
 
@@ -34,7 +34,7 @@ DGConsole::DGConsole() :
     config(Config::instance()),
     cursorManager(DGCursorManager::instance()),
     fontManager(DGFontManager::instance()),
-    log(DGLog::instance()),
+    log(Log::instance()),
     renderManager(DGRenderManager::instance())
 {
     _command = "";
@@ -61,7 +61,7 @@ DGConsole::~DGConsole() {
 ////////////////////////////////////////////////////////////
 
 void DGConsole::init() {
-    log.trace(DGModNone, "%s", kString12003);
+    log.trace(kModNone, "%s", kString12003);
     _font = fontManager.loadDefault();
     _isInitialized = true;
 }
@@ -81,7 +81,7 @@ void DGConsole::enable() {
 }
 
 void DGConsole::execute() {
-    log.command(DGModScript, _command.c_str());    
+    log.command(kModScript, _command.c_str());    
     _isReadyToProcess = true;
 }
 
@@ -157,7 +157,7 @@ void DGConsole::update() {
         }
         
         if (_state != DGConsoleHidden) {
-            DGLogData logData;
+            LogData logData;
             int row = (DGConsoleRows - 2); // Extra row saved for prompt
             
             int coords[] = { 0, -_offset,
@@ -177,7 +177,7 @@ void DGConsole::update() {
                     
                     // Draw the current line
                     renderManager.setColor(logData.color);
-                    _font->print(DGConsoleMargin, ((DGConsoleSpacing + kDefFontSize) * row) - _offset, logData.line);
+                    _font->print(DGConsoleMargin, ((DGConsoleSpacing + kDefFontSize) * row) - _offset, logData.line.c_str());
                     
                     row--;
                 } while (log.iterateHistory());

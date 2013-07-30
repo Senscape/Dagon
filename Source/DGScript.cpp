@@ -19,7 +19,7 @@
 #include "DGAudioManager.h"
 #include "DGCursorManager.h"
 #include "DGFeedManager.h"
-#include "DGLog.h"
+#include "Log.h"
 #include "DGProxy.h"
 #include "DGScript.h"
 #include "DGTimerManager.h"
@@ -41,7 +41,7 @@ using namespace std;
 
 DGScript::DGScript() :
     config(Config::instance()),
-    log(DGLog::instance())
+    log(Log::instance())
 {
     _isInitialized = false;
     _isSuspended = false;
@@ -92,10 +92,10 @@ void DGScript::init() {
 		}
 	}
     else
-		log.error(DGModScript, "%s", kString14015);
+		log.error(kModScript, "%s", kString14015);
     
-    log.trace(DGModScript, "%s", kString14001);
-    log.info(DGModScript, "%s: %s", kString14002, LUA_RELEASE);
+    log.trace(kModScript, "%s", kString14001);
+    log.info(kModScript, "%s: %s", kString14002, LUA_RELEASE);
     
     lua_getglobal(_L, "_G");
     _registerEnums();
@@ -170,7 +170,7 @@ void DGScript::init() {
         _isInitialized = true;
     else {
         // Not found!
-        log.error(DGModScript, "%s: %s", kString14006, script);
+        log.error(kModScript, "%s: %s", kString14006, script);
         DGControl::instance().processKey(DGKeyTab, false); // Simulate tab key to open the console
     }
 }
@@ -250,21 +250,21 @@ void DGScript::_error(int result) {
     if (result != LUA_YIELD) {
         switch (result) {
             case LUA_ERRRUN:
-                log.error(DGModScript, "%s", kString14010);
+                log.error(kModScript, "%s", kString14010);
                 break;
             case LUA_ERRMEM:
-                log.error(DGModScript, "%s", kString14011);
+                log.error(kModScript, "%s", kString14011);
                 break;
             case LUA_ERRERR:
-                log.error(DGModScript, "%s", kString14012);
+                log.error(kModScript, "%s", kString14012);
                 break;
             case LUA_ERRSYNTAX:
-                log.error(DGModScript, "%s", kString14013);
+                log.error(kModScript, "%s", kString14013);
                 break;            
         }
         
         // Now print the last Lua string in the stack, which should indicate the error
-        log.error(DGModScript, "%s", lua_tostring(_L, -1));
+        log.error(kModScript, "%s", lua_tostring(_L, -1));
     }
 }
 
@@ -381,7 +381,7 @@ int DGScript::_globalPrint (lua_State *L) {
 			return luaL_error(L, LUA_QL("tostring") " must return a string to "
 							  LUA_QL("print"));
 		if (i > 1) fputs("\t", stdout);
-        DGLog::instance().trace(DGModNone, "%s", s);
+        Log::instance().trace(kModScript, "%s", s);
 		lua_pop(L, 1);  /* pop result */
 	}
 	return 0;
@@ -389,7 +389,7 @@ int DGScript::_globalPrint (lua_State *L) {
 
 int DGScript::_globalRegister(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
-        DGLog::instance().error(DGModScript, kString14014);
+        Log::instance().error(kModScript, kString14014);
 		
 		return 0;
 	}
@@ -471,11 +471,11 @@ int DGScript::_globalSwitch(lua_State *L) {
             DGControl::instance().switchTo(DGProxyToSlide(L, 1), lua_toboolean(L, 2));
             break;
         case DGObjectGeneric:
-            DGLog::instance().error(DGModScript, "%s", kString14003);
+            Log::instance().error(kModScript, "%s", kString14003);
             break;
             
         case DGObjectNone:
-            DGLog::instance().error(DGModScript, "%s", kString14004);
+            Log::instance().error(kModScript, "%s", kString14004);
             break;
     }
     
@@ -484,7 +484,7 @@ int DGScript::_globalSwitch(lua_State *L) {
 
 int DGScript::_globalStartTimer(lua_State *L) {
 	if (!lua_isfunction(L, -1)) {
-		DGLog::instance().trace(DGModScript, "%s", kString14009);
+		Log::instance().trace(kModScript, "%s", kString14009);
         
 		return 0;
 	}

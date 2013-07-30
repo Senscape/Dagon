@@ -17,7 +17,7 @@
 
 #include "Config.h"
 #include "DGEffectsManager.h"
-#include "DGLog.h"
+#include "Log.h"
 #include "DGRenderManager.h"
 #include "DGTexture.h"
 
@@ -30,7 +30,7 @@ using namespace std;
 DGRenderManager::DGRenderManager() :
     config(Config::instance()),
     effectsManager(DGEffectsManager::instance()),
-    log(DGLog::instance())
+    log(Log::instance())
 {
     _blendTexture = NULL;
     _fadeTexture = NULL;
@@ -63,19 +63,19 @@ void DGRenderManager::init() {
     
     const GLubyte* version = glewGetString(GLEW_VERSION);
     
-    log.info(DGModRender, "%s: %s", kString11005, version);
+    log.info(kModRender, "%s: %s", kString11005, version);
     
     version = glGetString(GL_VERSION);
     
-	log.trace(DGModRender, "%s", kString11001);
-	log.info(DGModRender, "%s: %s", kString11002, version);
+	log.trace(kModRender, "%s", kString11001);
+	log.info(kModRender, "%s: %s", kString11002, version);
     
 	if (glewIsSupported("GL_VERSION_2_0")) {
 		_effectsEnabled = true;
         effectsManager.init();
 	}
 	else {
-		log.warning(DGModRender, "%s", kString11003);
+		log.warning(kModRender, "%s", kString11003);
 		_effectsEnabled = false;
 	}
     
@@ -588,7 +588,7 @@ void DGRenderManager::resetView() {
         
         if ((errCode = glGetError()) != GL_NO_ERROR) {
             errString = gluErrorString(errCode);
-            log.error(DGModRender, "%s: %s", kString11006, errString);
+            log.error(kModRender, "%s: %s", kString11006, errString);
         }
     }
     
@@ -686,7 +686,7 @@ void DGRenderManager::_initFrameBuffer() {
     GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT); // Check that status of our generated frame buffer  
     
     if (status != GL_FRAMEBUFFER_COMPLETE_EXT) { // If the frame buffer does not report back as complete
-        log.warning(DGModRender, "%s", kString11004);
+        log.warning(kModRender, "%s", kString11004);
         _framebufferEnabled = false;
     }
     else _framebufferEnabled = true;

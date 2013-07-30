@@ -19,7 +19,7 @@
 		FB0F421E14896D3600BE880D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421C14896D3600BE880D /* MainMenu.xib */; };
 		FB0F422114896D3C00BE880D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FB0F421F14896D3C00BE880D /* InfoPlist.strings */; };
 		FB247287148C061F00F7D1B6 /* Dagon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FB247286148C061F00F7D1B6 /* Dagon.icns */; };
-		FB26300514D33B3200EAD41A /* DGLog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300414D33B3200EAD41A /* DGLog.cpp */; };
+		FB26300514D33B3200EAD41A /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300414D33B3200EAD41A /* Log.cpp */; };
 		FB26300914D3490300EAD41A /* DGState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300814D3490300EAD41A /* DGState.cpp */; };
 		FB26303A14D713DB00EAD41A /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26303914D713DB00EAD41A /* Config.cpp */; };
 		FB279DA914AA8AA0002D48FC /* DGObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DA814AA8AA0002D48FC /* DGObject.cpp */; };
@@ -96,8 +96,8 @@
 		FB247286148C061F00F7D1B6 /* Dagon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Dagon.icns; sourceTree = "<group>"; };
 		FB2472AC148C0EC500F7D1B6 /* Colors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Colors.h; sourceTree = "<group>"; };
 		FB2472B5148C0EC500F7D1B6 /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
-		FB26300414D33B3200EAD41A /* DGLog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGLog.cpp; sourceTree = "<group>"; };
-		FB26300714D33B3D00EAD41A /* DGLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGLog.h; sourceTree = "<group>"; };
+		FB26300414D33B3200EAD41A /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
+		FB26300714D33B3D00EAD41A /* Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Log.h; sourceTree = "<group>"; };
 		FB26300814D3490300EAD41A /* DGState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGState.cpp; sourceTree = "<group>"; };
 		FB26300A14D3491000EAD41A /* DGState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGState.h; sourceTree = "<group>"; };
 		FB26303814D713D100EAD41A /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
@@ -310,8 +310,8 @@
 				FB2472B5148C0EC500F7D1B6 /* Defines.h */,
 				FBD3A58614DF27C600CA2756 /* Geometry.h */,
 				FB2AA4C614D9918400B508E5 /* Language.h */,
-				FB26300714D33B3D00EAD41A /* DGLog.h */,
-				FB26300414D33B3200EAD41A /* DGLog.cpp */,
+				FB26300714D33B3D00EAD41A /* Log.h */,
+				FB26300414D33B3200EAD41A /* Log.cpp */,
 				FBA2C78514DC91200098E334 /* DGPlatform.h */,
 				FBA2C78414DC74840098E334 /* DGVersion.h */,
 			);
@@ -505,7 +505,7 @@
 				FB279DBA14AE1736002D48FC /* DGAudio.cpp in Sources */,
 				FBFCC9F114BB3624003211AD /* DGTexture.cpp in Sources */,
 				FBFD855914C4CCE9000E82B2 /* DGTextureManager.cpp in Sources */,
-				FB26300514D33B3200EAD41A /* DGLog.cpp in Sources */,
+				FB26300514D33B3200EAD41A /* Log.cpp in Sources */,
 				FB26300914D3490300EAD41A /* DGState.cpp in Sources */,
 				FB26303A14D713DB00EAD41A /* Config.cpp in Sources */,
 				FBA2C77E14DC13B40098E334 /* DGRenderManager.cpp in Sources */,

@@ -44,7 +44,7 @@ typedef struct {
 extern "C" const unsigned char kDefFontBinary[];
 
 class Config;
-class DGLog;
+class Log;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -52,7 +52,7 @@ class DGLog;
 
 class DGFont : public DGObject {
     Config& config;
-    DGLog& log;
+    Log& log;
     
     FT_Face _face;
     DGGlyph _glyph[128];

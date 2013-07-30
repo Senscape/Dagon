@@ -26,7 +26,7 @@
 ////////////////////////////////////////////////////////////
 
 class Config;
-class DGLog;
+class Log;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
@@ -34,7 +34,7 @@ class DGLog;
 
 class DGVideoManager {
     Config& config;
-    DGLog& log;
+    Log& log;
     
     std::thread _videoThread;
     

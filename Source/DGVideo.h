@@ -69,14 +69,14 @@ p[i] = tmp >> 8; \
 else \
 p[i] = (tmp >> 24) ^ 0xff; 
 
-class DGLog;
+class Log;
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
 class DGVideo : public DGObject {
-    DGLog& log;
+    Log& log;
     DGSystem* system;
     
     DGFrame _currentFrame;

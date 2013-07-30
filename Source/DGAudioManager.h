@@ -29,7 +29,7 @@
 ////////////////////////////////////////////////////////////
 
 class Config;
-class DGLog;
+class Log;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
@@ -37,7 +37,7 @@ class DGLog;
 
 class DGAudioManager {
     Config& config;
-    DGLog& log;
+    Log& log;
     
     ALCdevice* _alDevice;
     ALCcontext* _alContext;

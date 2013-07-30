@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGFontManager.h"
-#include "DGLog.h"
+#include "Log.h"
 
 using namespace std;
 
@@ -25,7 +25,7 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGFontManager::DGFontManager() :
-    log(DGLog::instance())
+    log(Log::instance())
 {
     _isInitialized = false;
 }
@@ -48,17 +48,17 @@ DGFontManager::~DGFontManager() {
 ////////////////////////////////////////////////////////////
 
 void DGFontManager::init(){
-    log.trace(DGModFont, "%s", kString15001);
+    log.trace(kModFont, "%s", kString15001);
 	
 	if (FT_Init_FreeType(&_library)) {
-		log.error(DGModFont, "%s", kString15003);
+		log.error(kModFont, "%s", kString15003);
         return;
     }
     
     int major, minor, patch;
     
     FT_Library_Version(_library, &major, &minor, &patch);
-    log.info(DGModFont, "%s: %d.%d.%d", kString15002, major, minor, patch);
+    log.info(kModFont, "%s: %d.%d.%d", kString15002, major, minor, patch);
     
     _isInitialized = true;
 }

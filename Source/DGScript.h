@@ -43,7 +43,7 @@ lua_pushnumber(L, val); \
 lua_setfield(L, -2, #name);
 
 class Config;
-class DGLog;
+class Log;
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
@@ -51,7 +51,7 @@ class DGLog;
 
 class DGScript {
     Config& config;
-    DGLog& log;
+    Log& log;
     
     std::vector<std::string> _arrayOfModuleNames;
     bool _isInitialized;

@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Config.h"
-#include "DGLog.h"
+#include "Log.h"
 #include "DGPlatform.h"
 
 #include <AL/al.h>
@@ -57,7 +57,7 @@ typedef struct {
 } DGResource;
 
 class Config;
-class DGLog;
+class Log;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -65,7 +65,7 @@ class DGLog;
 
 class DGAudio : public DGObject {
     Config& config;
-    DGLog& log;
+    Log& log;
     
     DGAudio* _matchedAudio;
     

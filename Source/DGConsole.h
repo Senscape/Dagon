@@ -42,7 +42,7 @@ class Config;
 class DGCursorManager;
 class DGFont;
 class DGFontManager;
-class DGLog;
+class Log;
 class DGRenderManager;
 
 ////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ class DGConsole {
     Config& config;
     DGCursorManager& cursorManager;
     DGFontManager& fontManager;
-    DGLog& log;
+    Log& log;
     DGRenderManager& renderManager;
     
     DGFont* _font;

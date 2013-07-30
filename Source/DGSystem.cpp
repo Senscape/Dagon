@@ -17,7 +17,7 @@
 
 #include "Config.h"
 #include "DGControl.h"
-#include "DGLog.h"
+#include "Log.h"
 #include "DGSystem.h"
 
 ////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@
 
 void DGSystem::browse(const char* url) {
     // TODO: Re-implement
-    log.warning(DGModSystem, "Browsing is currently disabled");
+    log.warning(kModSystem, "Browsing is currently disabled");
 }
 
 void DGSystem::findPaths() {
@@ -35,7 +35,7 @@ void DGSystem::findPaths() {
 
 bool DGSystem::init() {
     if (!_isInitialized) {
-        log.trace(DGModSystem, "%s", kString13001);
+        log.trace(kModSystem, "%s", kString13001);
         
         glfwSetErrorCallback(_errorCallback);
         
@@ -45,7 +45,7 @@ bool DGSystem::init() {
         int major, minor, rev;
         glfwGetVersion(&major, &minor, &rev);
         
-        log.info(DGModSystem, "%s: %d.%d.%d", kString13003, major, minor, rev);
+        log.info(kModSystem, "%s: %d.%d.%d", kString13003, major, minor, rev);
         
         // Have to make sure these are all set to 8 bits (GFW 3.0.0 defaults to 5,5,5)
         glfwWindowHint(GLFW_RED_BITS, 8);
@@ -105,7 +105,7 @@ bool DGSystem::init() {
         
         _isInitialized = true;
     }
-    else log.warning(DGModSystem, "%s", kString13004);
+    else log.warning(kModSystem, "%s", kString13004);
     
     return true;
 }
@@ -129,7 +129,7 @@ void DGSystem::terminate() {
 
 void DGSystem::toggleFullscreen() {
     // TODO: Re-implement when GLFW 3.1 is ready
-    log.warning(DGModSystem, "Toggling fullscreen currently disabled");
+    log.warning(kModSystem, "Toggling fullscreen currently disabled");
 }
 
 double DGSystem::time() {
@@ -194,7 +194,7 @@ void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) 
 }
 
 void DGSystem::_errorCallback(int error, const char* description) {
-    DGLog::instance().error(DGModSystem, "%s", description);
+    Log::instance().error(kModSystem, "%s", description);
 }
 
 void DGSystem::_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {

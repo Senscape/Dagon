@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Config.h"
-#include "DGLog.h"
+#include "Log.h"
 #include "DGVideoManager.h"
 
 using namespace std;
@@ -27,7 +27,7 @@ using namespace std;
 
 DGVideoManager::DGVideoManager() :
     config(Config::instance()),
-    log(DGLog::instance())
+    log(Log::instance())
 {
     _isInitialized = false;
 	_isRunning = false;
@@ -71,8 +71,8 @@ void DGVideoManager::flush() {
 }
 
 void DGVideoManager::init() {
-    log.trace(DGModVideo, "%s", kString17001);
-    //log.info(DGModVideo, "%s: %s", kString17006, theora_version_string());
+    log.trace(kModVideo, "%s", kString17001);
+    //log.info(kModVideo, "%s: %s", kString17006, theora_version_string());
     
     // Eventually lots of Theora initialization process will be moved here
     
