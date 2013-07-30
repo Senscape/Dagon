@@ -30,7 +30,7 @@
 // This is temporary until we actually test how much memory is available.
 // NOT accurate! It's only a reference value since textures are flushed
 // before the next switch.
-#define DGMaxActiveTextures 18
+#define kMaxActiveTextures 18
 
 class Config;
 class DGLog;

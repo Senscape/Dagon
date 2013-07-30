@@ -96,7 +96,7 @@ class DGVideo : public DGObject {
     std::mutex _mutex;
     
     // Eventually all file management will be handled by a DGResourceManager object
-    char _resource[DGMaxFileLength];
+    char _resource[kMaxFileLength];
     
     // Private methods
     size_t _bufferData(ogg_sync_state* oy);

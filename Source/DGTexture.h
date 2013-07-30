@@ -27,7 +27,7 @@
 // TODO: We should convert all short vars to int for better speed here, also read new defines
 
 typedef struct {
-	//char	name[DGMaxFileLength];
+	//char	name[kMaxFileLength];
     char	name[80];
 	short	width;
 	short	height;
@@ -70,7 +70,7 @@ class DGTexture : public DGObject {
     unsigned int _usageCount;
     
     // Eventually all file management will be handled by a DGResourceManager object
-    char _resource[DGMaxFileLength];
+    char _resource[kMaxFileLength];
     
 public:
     DGTexture();

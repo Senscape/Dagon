@@ -52,7 +52,7 @@ std::string Config::path(int ofType, const std::string &forFile,
       fullPath = _appPath;
       if (autopaths) {
         if (andObject == DGObjectRoom)
-          fullPath += DGDefRoomPath;
+          fullPath += kDefRoomPath;
       }
       break;
       
@@ -61,22 +61,22 @@ std::string Config::path(int ofType, const std::string &forFile,
       if (autopaths) {
         switch (andObject) {
           case DGObjectAudio:
-            fullPath += DGDefAudioPath;
+            fullPath += kDefAudioPath;
             break;
           case DGObjectCursor:
-            fullPath += DGDefCursorPath;
+            fullPath += kDefCursorPath;
             break;
           case DGObjectFont:
-            fullPath += DGDefFontPath;
+            fullPath += kDefFontPath;
             break;
           case DGObjectImage:
-            fullPath += DGDefImagePath;
+            fullPath += kDefImagePath;
             break;
           case DGObjectNode:
-            fullPath += DGDefNodePath;
+            fullPath += kDefNodePath;
             break;
           case DGObjectVideo:
-            fullPath += DGDefVideoPath;
+            fullPath += kDefVideoPath;
             break;
           default: {
             assert(false);

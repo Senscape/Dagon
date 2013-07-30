@@ -114,9 +114,9 @@ void DGRenderManager::init() {
     _fadeTexture->setFadeSpeed(DGFadeFastest);
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
-	for (int i = 0; i < (DGDefCursorDetail + 1) * 2; i += 2) {
-		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 1.87f * M_PI / DGDefCursorDetail)) * config.displayWidth);
-		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 1.87f * M_PI / DGDefCursorDetail)) * config.displayHeight);
+	for (int i = 0; i < (kDefCursorDetail + 1) * 2; i += 2) {
+		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 1.87f * M_PI / kDefCursorDetail)) * config.displayWidth);
+		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 1.87f * M_PI / kDefCursorDetail)) * config.displayHeight);
 	}    
     
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -272,11 +272,11 @@ void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
     
 	glVertexPointer(2, GL_FLOAT, 0, _defCursor);
 	
-	glDrawArrays(GL_LINE_LOOP, 0, (DGDefCursorDetail / 2) + 2);
+	glDrawArrays(GL_LINE_LOOP, 0, (kDefCursorDetail / 2) + 2);
     
 	if (animate) glScalef(0.85f * _helperLoop, 0.85f * _helperLoop, 0);
     else glScalef(0.835f, 0.85f, 0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, (DGDefCursorDetail / 2) + 2);
+	glDrawArrays(GL_TRIANGLE_FAN, 0, (kDefCursorDetail / 2) + 2);
 	glPopMatrix();
     
 	glEnable(GL_LINE_SMOOTH);
@@ -292,7 +292,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 	const float y = 1.0f;
     
     int i, j;
-    int cubeTextureSize = DGDefTexSize;
+    int cubeTextureSize = kDefTexSize;
     int sizeOfArray = (int)withArrayOfCoordinates.size();
 	int numCoords = sizeOfArray + (sizeOfArray / 2);
 	GLfloat* spotVertCoords = new GLfloat[numCoords];
@@ -300,7 +300,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 	glPushMatrix();
     
 	switch (onFace) {
-		case DGNorth:
+		case kNorth:
 			glTranslatef(-x, y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
                 // Size is divided in half because of the way we draw the cube
@@ -310,7 +310,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 				spotVertCoords[j + 2] = 0.0f;
 			}
 			break;
-		case DGEast:
+		case kEast:
 			glTranslatef(x, y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = 0.0f;
@@ -318,7 +318,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);               
 			}
 			break;
-		case DGSouth:
+		case kSouth:
 			glTranslatef(x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;
@@ -326,7 +326,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 				spotVertCoords[j + 2] = 0.0f;
 			}			
 			break;
-		case DGWest:
+		case kWest:
 			glTranslatef(-x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = 0.0f;
@@ -334,7 +334,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;             
 			}
 			break;
-		case DGUp:
+		case kUp:
 			glTranslatef(-x, y, x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
@@ -342,7 +342,7 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
 				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
 			}
 			break;
-		case DGDown:
+		case kDown:
 			glTranslatef(-x, -y, -x);
 			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
 				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
@@ -370,32 +370,32 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
         float x, y, z;
         
         switch (onFace) {
-            case DGNorth:
+            case kNorth:
                 x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
                 y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
                 z = 0.0f;
                 break;
-            case DGEast:
+            case kEast:
                 x = 0.0f;
                 y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;                
                 z = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);                  
                 break;
-            case DGSouth:
+            case kSouth:
                 x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;
 				y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
 				z = 0.0f;
                 break;
-            case DGWest:
+            case kWest:
                 x = 0.0f;
                 y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;                
                 z = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;  
                 break;
-            case DGUp:
+            case kUp:
                 x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
                 y = 0.0f;                
                 z = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
                 break;                 
-            case DGDown:
+            case kDown:
                 x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
                 y = 0.0f;
                 z = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2);                

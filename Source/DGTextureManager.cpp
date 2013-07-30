@@ -79,7 +79,7 @@ void DGTextureManager::flush() {
     // This function is called every time a switch is performed
     // and unloads the least used textures when necessary
     
-    long texturesToUnload = _arrayOfActiveTextures.size() - DGMaxActiveTextures;
+    long texturesToUnload = _arrayOfActiveTextures.size() - kMaxActiveTextures;
 
     while (texturesToUnload > 0) {
         _arrayOfActiveTextures.front()->unload();
@@ -104,17 +104,17 @@ void DGTextureManager::registerTexture(DGTexture* target) {
     
     if (!target->hasResource()) {
         // We attempt loading the resource with automatically generated filenames
-        char fileToLoad[DGMaxFileLength];
+        char fileToLoad[kMaxFileLength];
         
         if (config.bundleEnabled) {
             // Attempt loading the bundle
-            snprintf(fileToLoad, DGMaxFileLength, "%s.%s", target->name(), config.texExtension().c_str());
+            snprintf(fileToLoad, kMaxFileLength, "%s.%s", target->name(), config.texExtension().c_str());
             
         }
         else {
             // Attempt loading individual file with generated index and default extension
-            snprintf(fileToLoad, DGMaxFileLength, "%s%0" in_between(DGFileSeqDigits) "d.%s", target->name(),
-                     target->indexInBundle() + DGFileSeqStart, config.texExtension().c_str());
+            snprintf(fileToLoad, kMaxFileLength, "%s%0" in_between(kFileSeqDigits) "d.%s", target->name(),
+                     target->indexInBundle() + kFileSeqStart, config.texExtension().c_str());
         }
         
         target->setResource(config.path(kPathResources, fileToLoad, DGObjectNode).c_str());
@@ -132,7 +132,7 @@ void DGTextureManager::requestBundle(DGNode* forNode) {
             std::vector<int> arrayOfCoordinates;
             // We ensure the texture is properly stretched, so we take the default cube size
             // TODO: This setting should be obtained from the Config class
-            int coords[] = {0, 0, DGDefTexSize, 0, DGDefTexSize, DGDefTexSize, 0, DGDefTexSize};
+            int coords[] = {0, 0, kDefTexSize, 0, kDefTexSize, kDefTexSize, 0, kDefTexSize};
             unsigned arraySize = sizeof(coords) / sizeof(int);
             
             arrayOfCoordinates.assign(coords, coords + arraySize);

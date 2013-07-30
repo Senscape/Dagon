@@ -155,7 +155,7 @@ void DGVideo::setLoopable(bool loopable) {
 }
 
 void DGVideo::setResource(const char* fromFileName) {
-    strncpy(_resource, fromFileName, DGMaxFileLength);
+    strncpy(_resource, fromFileName, kMaxFileLength);
     _hasResource = true;
 }
 

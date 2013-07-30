@@ -33,7 +33,7 @@ DGFeedManager::DGFeedManager() :
     fontManager(DGFontManager::instance()),
     timerManager(DGTimerManager::instance())
 {
-    _feedHeight = DGDefFeedSize;
+    _feedHeight = kDefFeedSize;
 }
 
 ////////////////////////////////////////////////////////////
@@ -82,8 +82,8 @@ void DGFeedManager::queue(const char* text, const char* audio) {
     else {
         DGFeed feed;
         
-        strncpy(feed.text, text, DGMaxFeedLength);
-        strncpy(feed.audio, audio, DGMaxFileLength);
+        strncpy(feed.text, text, kMaxFeedLength);
+        strncpy(feed.audio, audio, kMaxFileLength);
         
         _arrayOfFeeds.push_back(feed);
     }
@@ -122,7 +122,7 @@ void DGFeedManager::show(const char* text) {
             
             DGFeed feed;
             
-            strncpy(feed.text, substr.c_str(), DGMaxFeedLength);
+            strncpy(feed.text, substr.c_str(), kMaxFeedLength);
             _calculatePosition(&feed);
             feed.color = kColorWhite - 0xFF000000;
             feed.state = DGFeedFadeIn;

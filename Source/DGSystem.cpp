@@ -115,7 +115,7 @@ void DGSystem::setTitle(const char* title) {
 }
 
 void DGSystem::update() {
-    config.setFramesPerSecond(_calculateFrames(DGFrameratePrecision));
+    config.setFramesPerSecond(_calculateFrames( kFrameratePrecision));
     glfwSwapBuffers(window);
     glfwPollEvents();
 }

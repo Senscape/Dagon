@@ -43,7 +43,7 @@ public:
         float volume = 1.0f;
         
         int params = lua_gettop(L);
-        int direction = DGNorth;
+        int direction = kNorth;
         int coordsIndex;
         int flagsIndex;
         
@@ -157,12 +157,12 @@ public:
                 break;
             case FEED:
                 action.type = DGActionFeed;
-                action.cursor = DGCursorLook;
+                action.cursor = kCursorLook;
                 action.luaObject = s->luaObject();                
-                strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
+                strncpy(action.feed, luaL_checkstring(L, 2), kMaxFeedLength);
                 
                 if (lua_isstring(L, 3)) {
-                    strncpy(action.feedAudio, lua_tostring(L, 3), DGMaxFileLength);
+                    strncpy(action.feedAudio, lua_tostring(L, 3), kMaxFileLength);
                     action.hasFeedAudio = true;
                 }
                 else action.hasFeedAudio = false;
@@ -179,7 +179,7 @@ public:
                 }
                 
                 action.type = DGActionFunction;
-                action.cursor = DGCursorUse;
+                action.cursor = kCursorUse;
                 action.luaObject = s->luaObject();
                 action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
                 
@@ -207,14 +207,14 @@ public:
                 break;
             case SWITCH:
                 action.type = DGActionSwitch;
-                action.cursor = DGCursorForward;
+                action.cursor = kCursorForward;
                 action.luaObject = s->luaObject();
                 
                 type = DGCheckProxy(L, 2);
                 if (type == DGObjectNode)
                     action.target = DGProxyToNode(L, 2);
                 else if (type == DGObjectSlide) {
-                    action.cursor = DGCursorLook;
+                    action.cursor = kCursorLook;
                     action.target = DGProxyToSlide(L, 2);
                 }
                 else if (type == DGObjectRoom)

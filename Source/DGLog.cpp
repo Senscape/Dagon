@@ -45,7 +45,7 @@ DGLog::~DGLog() {
 void DGLog::_log(DGLogData* data) {
 	if (config.log) {
         if (!_filestr.is_open())
-            _filestr.open(config.path(kPathUserData, DGDefLogFile, DGObjectGeneric).c_str(), fstream::app);
+            _filestr.open(config.path(kPathUserData, kDefLogFile, DGObjectGeneric).c_str(), fstream::app);
         
         time_t now = time(0);
         struct tm* tm = localtime(&now);
@@ -144,7 +144,7 @@ void DGLog::_log(DGLogData* data) {
 	
     _filestr.flush();
     
-    if (_history.size() == DGMaxLogHistory)
+    if (_history.size() == kMaxLogHistory)
         _history.erase(_history.begin());
     
     _history.push_back(*data);

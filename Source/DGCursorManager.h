@@ -25,8 +25,8 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDefCursorSize 128
-#define DGMaxCursorSize 128
+#define kDefCursorSize 128
+#define kMaxCursorSize 128
 #define DGMinCursorSize 32
 
 class Config;

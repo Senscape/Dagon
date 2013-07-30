@@ -42,7 +42,7 @@ DGConsole::DGConsole() :
     _isEnabled = false;
     _isInitialized = false;
     _isReadyToProcess = false;
-    _size = DGConsoleRows * (DGDefFontSize + DGConsoleSpacing);
+    _size = DGConsoleRows * (kDefFontSize + DGConsoleSpacing);
     _offset = _size;
     
     _state = DGConsoleHidden;
@@ -86,13 +86,13 @@ void DGConsole::execute() {
 }
 
 void DGConsole::getCommand(char* pointerToBuffer) {
-    strncpy(pointerToBuffer, _command.c_str(), DGMaxLogLength);
+    strncpy(pointerToBuffer, _command.c_str(), kMaxLogLength);
     _command.clear();
     _isReadyToProcess = false;
 }
 
 void DGConsole::inputChar(char aKey) {
-    if (_command.size() < DGMaxLogLength)
+    if (_command.size() < kMaxLogLength)
         _command.insert(_command.end(), aKey);
 }
 
@@ -134,11 +134,11 @@ void DGConsole::update() {
                 renderManager.setColor(kColorBrightCyan);
                 _font->print(DGInfoMargin, DGInfoMargin, 
                              "Viewport size: %d x %d", config.displayWidth, config.displayHeight);                
-                _font->print(DGInfoMargin, (DGInfoMargin * 2) + DGDefFontSize, 
+                _font->print(DGInfoMargin, (DGInfoMargin * 2) + kDefFontSize, 
                              "Coordinates: (%d, %d)", (int)position.x, (int)position.y);
-                _font->print(DGInfoMargin, (DGInfoMargin * 3) + (DGDefFontSize * 2), 
+                _font->print(DGInfoMargin, (DGInfoMargin * 3) + (kDefFontSize * 2), 
                              "Viewing angle: %2.0f", cameraManager.fieldOfView());
-                _font->print(DGInfoMargin, (DGInfoMargin * 4) + (DGDefFontSize * 3), 
+                _font->print(DGInfoMargin, (DGInfoMargin * 4) + (kDefFontSize * 3), 
                              "FPS: %2.0f", config.framesPerSecond()); 
                 
                 break;            
@@ -177,14 +177,14 @@ void DGConsole::update() {
                     
                     // Draw the current line
                     renderManager.setColor(logData.color);
-                    _font->print(DGConsoleMargin, ((DGConsoleSpacing + DGDefFontSize) * row) - _offset, logData.line);
+                    _font->print(DGConsoleMargin, ((DGConsoleSpacing + kDefFontSize) * row) - _offset, logData.line);
                     
                     row--;
                 } while (log.iterateHistory());
             }
             
             renderManager.setColor(kColorBrightGreen);
-            _font->print(DGConsoleMargin, (_size - (DGConsoleSpacing + DGDefFontSize)) - _offset, ">%s_", _command.c_str());
+            _font->print(DGConsoleMargin, (_size - (DGConsoleSpacing + kDefFontSize)) - _offset, ">%s_", _command.c_str());
         }
     }
 }

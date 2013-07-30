@@ -78,11 +78,11 @@ public:
         switch (type) {
             case FEED:
                 action.type = DGActionFeed;
-                action.cursor = DGCursorLook;                
-                strncpy(action.feed, luaL_checkstring(L, 2), DGMaxFeedLength);
+                action.cursor = kCursorLook;                
+                strncpy(action.feed, luaL_checkstring(L, 2), kMaxFeedLength);
                 
                 if (lua_isstring(L, 3)) {
-                    strncpy(action.feedAudio, lua_tostring(L, 3), DGMaxFileLength);
+                    strncpy(action.feedAudio, lua_tostring(L, 3), kMaxFileLength);
                     action.hasFeedAudio = true;
                 }
                 else action.hasFeedAudio = false;
@@ -97,7 +97,7 @@ public:
                 }
                 
                 action.type = DGActionFunction;
-                action.cursor = DGCursorUse;
+                action.cursor = kCursorUse;
                 action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
                 b->setAction(&action);
                 
@@ -114,7 +114,7 @@ public:
                 }
                 
                 action.type = DGActionSwitch;
-                action.cursor = DGCursorForward;                
+                action.cursor = kCursorForward;                
                 b->setAction(&action);
                 
                 break;

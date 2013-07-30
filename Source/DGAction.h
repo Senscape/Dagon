@@ -35,8 +35,8 @@ enum DGActionTypes {
 
 typedef struct {
     unsigned int cursor;
-    char feed[DGMaxFeedLength];
-    char feedAudio[DGMaxFileLength];
+    char feed[kMaxFeedLength];
+    char feedAudio[kMaxFileLength];
     bool hasFeedAudio;
     int luaHandler;
     int luaObject;

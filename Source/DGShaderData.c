@@ -15,7 +15,7 @@
 // Embedded GL shader data
 ////////////////////////////////////////////////////////////
 
-const char DGDefShaderData[] =
+const char kDefShaderData[] =
     "\n // Base texture and coordinates shared by all functions"
     "\n "
     "\n uniform sampler2D tex;"

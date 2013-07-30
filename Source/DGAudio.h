@@ -49,7 +49,7 @@ enum DGAudioStates {
 };
 
 typedef struct {
-    char name[DGMaxFileLength];
+    char name[kMaxFileLength];
     char* data;
     size_t dataRead;
     size_t dataSize;  

@@ -29,7 +29,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDefFontSize 10
+#define kDefFontSize 10
 
 class DGFont;
 class DGLog;

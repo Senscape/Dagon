@@ -78,7 +78,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGColors.h"
-#include "DGDefines.h"
+#include "Defines.h"
 #include "DGGeometry.h"
 #include "DGLanguage.h"
 #include "DGObject.h"

@@ -196,7 +196,7 @@ bool DGScene::scanSpots() {
                     
                     if (cameraManager.isPanning())
                         cursorManager.setCursor(cameraManager.cursorWhenPanning());
-                    else cursorManager.setCursor(DGCursorNormal);
+                    else cursorManager.setCursor(kCursorNormal);
                 }
             }
             
@@ -303,7 +303,7 @@ void DGScene::drawSplash() {
 
 void DGScene::loadSplash() {
     _splashTexture = new DGTexture;
-    _splashTexture->loadFromMemory(DGDefSplashBinary, 179608);
+    _splashTexture->loadFromMemory(kDefSplashBinary, 179608);
     _isSplashLoaded = true;
 }
 

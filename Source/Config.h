@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include "DGDefines.h"
+#include "Defines.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -122,14 +122,14 @@ class Config {
   
  private:
   std::string _appPath;
-  std::string _resPath = DGDefResourcePath;
+  std::string _resPath = kDefResourcePath;
   std::string _scriptName;
   std::string _userPath;
-  std::string _texExtension = DGDefTexExtension;
+  std::string _texExtension = kDefTexExtension;
   
   double _fps = kDefFramerate;
   double _globalSpeed = 1.0;
-  double _globalSpeedPrecision = DGFrameratePrecision / 10.0;
+  double _globalSpeedPrecision =  kFrameratePrecision / 10.0;
   double _targetGlobalSpeed = 1.0;
   
   Config() {};

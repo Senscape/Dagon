@@ -36,7 +36,7 @@ DGCursorManager::DGCursorManager() :
     _y = config.displayHeight / 2;
     
     this->setFadeSpeed(DGFadeFastest); // Cursor always fades with fastest speed
-    this->setSize(DGDefCursorSize);
+    this->setSize(kDefCursorSize);
     this->updateCoords(_x, _y);
 }
 
@@ -120,7 +120,7 @@ void DGCursorManager::removeAction() {
 
 void DGCursorManager::setDragging(bool flag) {
     if (flag) {
-        this->_set(DGCursorDrag);
+        this->_set(kCursorDrag);
     }
     
     _isDragging = flag;

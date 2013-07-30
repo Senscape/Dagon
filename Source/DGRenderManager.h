@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDefCursorDetail 30
+#define kDefCursorDetail 30
 
 class Config;
 class DGEffectsManager;
@@ -32,7 +32,7 @@ class DGLog;
 class DGTexture;
 
 // Reference to embedded splash screen
-extern "C" const unsigned char DGDefSplashBinary[];
+extern "C" const unsigned char kDefSplashBinary[];
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
@@ -49,7 +49,7 @@ class DGRenderManager {
     
     bool _blendNextUpdate;
     float _blendOpacity;
-    GLfloat _defCursor[(DGDefCursorDetail * 2) + 2];
+    GLfloat _defCursor[(kDefCursorDetail * 2) + 2];
     bool _alphaEnabled;
     float _helperLoop;
     

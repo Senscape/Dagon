@@ -89,26 +89,26 @@ void DGAudio::setLoopable(bool loopable) {
 }
 
 void DGAudio::setPosition(unsigned int onFace, DGPoint origin) {
-    float x = (float)origin.x / (float)DGDefTexSize;
-    float y = (float)origin.y / (float)DGDefTexSize;
+    float x = (float)origin.x / (float)kDefTexSize;
+    float y = (float)origin.y / (float)kDefTexSize;
     
     switch (onFace) {
-        case DGNorth:
+        case kNorth:
             alSource3f(_alSource, AL_POSITION, x, y, -1.0);
             break;
-        case DGEast:
+        case kEast:
             alSource3f(_alSource, AL_POSITION, 1.0, y, x);
             break;
-        case DGSouth:
+        case kSouth:
             alSource3f(_alSource, AL_POSITION, -x, y, 1.0);
             break;
-        case DGWest:
+        case kWest:
             alSource3f(_alSource, AL_POSITION, -1.0, y, -x);
             break;
-        case DGUp:
+        case kUp:
             alSource3f(_alSource, AL_POSITION, 0.0, 1.0, 0.0);
             break;
-        case DGDown:
+        case kDown:
             alSource3f(_alSource, AL_POSITION, 0.0, -1.0, 0.0);
             break;            
     }
@@ -117,7 +117,7 @@ void DGAudio::setPosition(unsigned int onFace, DGPoint origin) {
 }
 
 void DGAudio::setResource(const char* fromFileName) {
-    strncpy(_resource.name, fromFileName, DGMaxFileLength);
+    strncpy(_resource.name, fromFileName, kMaxFileLength);
 }
 
 ////////////////////////////////////////////////////////////
@@ -326,11 +326,11 @@ const char* DGAudio::_randomizeFile(const char* fileName) {
         return fileName; // Then return as-is
     }
     else { // Randomize
-        static char fileToLoad[DGMaxFileLength];
+        static char fileToLoad[kMaxFileLength];
         int index = (rand() % 6); // TODO: Allow to configure this value
         
-        snprintf(fileToLoad, DGMaxFileLength, "%s%0" in_between(DGFileSeqDigits) "d.%s", fileName,
-                 index + DGFileSeqStart, "ogg");
+        snprintf(fileToLoad, kMaxFileLength, "%s%0" in_between(kFileSeqDigits) "d.%s", fileName,
+                 index + kFileSeqStart, "ogg");
         
         return fileToLoad;
     }

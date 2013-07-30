@@ -56,8 +56,8 @@ DGTexture::DGTexture(int width, int height, int depth) :
     
     this->setType(DGObjectTexture);
     
-    if (!width) width = DGDefTexSize;
-    if (!height) height = DGDefTexSize;
+    if (!width) width = kDefTexSize;
+    if (!height) height = kDefTexSize;
     if (!depth) comp = 3;
     else comp = depth / 8;
     
@@ -152,7 +152,7 @@ void DGTexture::setIndexInBundle(int index) {
 }
 
 void DGTexture::setResource(const char* fromFileName) {
-    strncpy(_resource, fromFileName, DGMaxFileLength);
+    strncpy(_resource, fromFileName, kMaxFileLength);
     _hasResource = true;
 }
 
@@ -456,9 +456,9 @@ void DGTexture::loadRawData(const unsigned char* dataToLoad, int width, int heig
 void DGTexture::saveToFile(const char* fileName){
     if (_isLoaded) {
         FILE* fh;
-        char fullFileName[DGMaxFileLength - 4];
+        char fullFileName[kMaxFileLength - 4];
         
-        strncpy(fullFileName, fileName, DGMaxFileLength - 4);
+        strncpy(fullFileName, fileName, kMaxFileLength - 4);
         
         if (_compressionLevel) {
             TEXMainHeader header;

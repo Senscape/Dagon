@@ -66,7 +66,7 @@ static int DGCursorLibLoad(lua_State *L) {
 // Static definitions
 ////////////////////////////////////////////////////////////
 
-static const struct luaL_reg DGCursorLib [] = {
+static const struct luaL_reg kCursorLib [] = {
 	{"disable", DGCursorLibDisable},
 	{"enable", DGCursorLibEnable},   
     {"fadeIn", DGCursorLibFadeIn}, 

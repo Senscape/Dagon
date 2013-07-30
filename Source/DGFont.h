@@ -41,7 +41,7 @@ typedef struct {
  
 // When default font is selected, we use data embedded in the
 // executable and declared in DGFontData.c
-extern "C" const unsigned char DGDefFontBinary[];
+extern "C" const unsigned char kDefFontBinary[];
 
 class Config;
 class DGLog;

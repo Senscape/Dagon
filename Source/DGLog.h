@@ -48,7 +48,7 @@ enum DGLogTypes {
 };
 
 typedef struct {
-	char line[DGMaxLogLength];
+	char line[kMaxLogLength];
     int color;
     int module;
     int type;

@@ -54,7 +54,7 @@ public:
         int coordsImage[] = {64, 424};
         arrayOfCoordinates.assign(coordsImage, coordsImage + 2);
         
-        DGSpot* spot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
+        DGSpot* spot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
         
         DGTexture* texture = new DGTexture;
         texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 1), DGObjectImage).c_str());
@@ -66,11 +66,11 @@ public:
         if (lua_toboolean(L, 3) != true) {
             int coordsBack[] = {0, 1280, 2048, 1280, 2048, 1624, 0, 1624};
             arrayOfCoordinates.assign(coordsBack, coordsBack + 8);
-            spot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
+            spot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
             
             DGAction action;
             action.type = DGActionSwitch;
-            action.cursor = DGCursorBackward;
+            action.cursor = kCursorBackward;
             action.target = NULL; // Current node
             
             spot->setAction(&action);

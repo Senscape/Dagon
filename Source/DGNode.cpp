@@ -108,7 +108,7 @@ DGNode* DGNode::previousNode() {
 ////////////////////////////////////////////////////////////
 
 void DGNode::setBundleName(const char* name) {
-    strncpy(_bundleName, name, DGMaxObjectName);
+    strncpy(_bundleName, name, kMaxObjectName);
     _hasBundleName = true;
 }
 
@@ -141,7 +141,7 @@ void DGNode::addCustomLink(unsigned withDirection, int luaHandler) {
     DGAction action;
     
     action.type = DGActionFunction;
-    action.cursor = DGCursorForward;
+    action.cursor = kCursorForward;
     action.luaHandler = luaHandler;
     
     _link(withDirection, &action);
@@ -151,7 +151,7 @@ void DGNode::addLink(unsigned int withDirection, DGObject* theTarget) {
     DGAction action;
     
     action.type = DGActionSwitch;
-    action.cursor = DGCursorForward;    
+    action.cursor = kCursorForward;    
     action.target = theTarget;
     
     _link(withDirection, &action);
@@ -182,9 +182,9 @@ bool DGNode::iterateSpots() {
 void DGNode::_link(unsigned int direction, DGAction* action) {
     // We ensure the texture is properly stretched, so we take the default cube size
     // TODO: This setting should be obtained directly from the Config class
-    int minorBound = (int)(DGDefTexSize / 3);
-    int majorBound = (int)(DGDefTexSize / 1.5f);
-    int offset = (int)(DGDefTexSize/3);
+    int minorBound = (int)(kDefTexSize / 3);
+    int majorBound = (int)(kDefTexSize / 1.5f);
+    int offset = (int)(kDefTexSize/3);
     
     // We always have four corners here, hence eight elements since they are squared spots
     
@@ -199,36 +199,36 @@ void DGNode::_link(unsigned int direction, DGAction* action) {
     DGSpot* auxSpot = NULL;
     
     switch (direction) {
-        case DGNorth:		
-        case DGEast:		
-        case DGSouth:	
-        case DGWest:
+        case kNorth:		
+        case kEast:		
+        case kSouth:	
+        case kWest:
             arrayOfCoordinates.assign(coordsNormal, coordsNormal + 8);
             newSpot = new DGSpot(arrayOfCoordinates, direction, DGSpotClass);
             break;
-        case DGNorthEast:
+        case kNorthEast:
             arrayOfCoordinates.assign(coordsShiftRight, coordsShiftRight + 8);
-            newSpot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
+            newSpot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
             arrayOfCoordinates.assign(coordsShiftLeft, coordsShiftLeft + 8);
-            auxSpot = new DGSpot(arrayOfCoordinates, DGEast, DGSpotClass);
+            auxSpot = new DGSpot(arrayOfCoordinates, kEast, DGSpotClass);
             break;
-        case DGSouthEast:
+        case kSouthEast:
             arrayOfCoordinates.assign(coordsShiftRight, coordsShiftRight + 8);
-            newSpot = new DGSpot(arrayOfCoordinates, DGEast, DGSpotClass);
+            newSpot = new DGSpot(arrayOfCoordinates, kEast, DGSpotClass);
             arrayOfCoordinates.assign(coordsShiftLeft, coordsShiftLeft + 8);
-            auxSpot = new DGSpot(arrayOfCoordinates, DGSouth, DGSpotClass);
+            auxSpot = new DGSpot(arrayOfCoordinates, kSouth, DGSpotClass);
             break;
-        case DGSouthWest:
+        case kSouthWest:
             arrayOfCoordinates.assign(coordsShiftRight, coordsShiftRight + 8);
-            newSpot = new DGSpot(arrayOfCoordinates, DGSouth, DGSpotClass);
+            newSpot = new DGSpot(arrayOfCoordinates, kSouth, DGSpotClass);
             arrayOfCoordinates.assign(coordsShiftLeft, coordsShiftLeft + 8);
-            auxSpot = new DGSpot(arrayOfCoordinates, DGWest, DGSpotClass);
+            auxSpot = new DGSpot(arrayOfCoordinates, kWest, DGSpotClass);
             break;
-        case DGNorthWest:
+        case kNorthWest:
             arrayOfCoordinates.assign(coordsShiftRight, coordsShiftRight + 8);
-            newSpot = new DGSpot(arrayOfCoordinates, DGWest, DGSpotClass);
+            newSpot = new DGSpot(arrayOfCoordinates, kWest, DGSpotClass);
             arrayOfCoordinates.assign(coordsShiftLeft, coordsShiftLeft + 8);
-            auxSpot = new DGSpot(arrayOfCoordinates, DGNorth, DGSpotClass);
+            auxSpot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
             break;	
     }
     

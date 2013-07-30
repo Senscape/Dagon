@@ -77,7 +77,7 @@ DGFont* DGFontManager::load(const char* fromFileName, unsigned int heightOfFont)
 DGFont* DGFontManager::loadDefault() {
     if (!_defaultFont.isLoaded()) {
         _defaultFont.setLibrary(&_library);
-        _defaultFont.setDefault(DGDefFontSize);
+        _defaultFont.setDefault(kDefFontSize);
     }
         
     return &_defaultFont;

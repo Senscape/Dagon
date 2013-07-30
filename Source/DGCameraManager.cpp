@@ -66,24 +66,24 @@ int DGCameraManager::angleVertical() {
 
 int DGCameraManager::cursorWhenPanning() {
     if (_motionLeft > 0.0f) {
-        if (_motionUp > 0.0f) return DGCursorDownLeft;
-        else if (_motionDown > 0.0f) return DGCursorUpLeft;
+        if (_motionUp > 0.0f) return kCursorDownLeft;
+        else if (_motionDown > 0.0f) return kCursorUpLeft;
         
-        return DGCursorLeft;
+        return kCursorLeft;
     }
     else if (_motionRight > 0.0f) {
-        if (_motionUp > 0.0f) return DGCursorDownRight;
-        else if (_motionDown > 0.0f) return DGCursorUpRight;
+        if (_motionUp > 0.0f) return kCursorDownRight;
+        else if (_motionDown > 0.0f) return kCursorUpRight;
         
-        return DGCursorRight;
+        return kCursorRight;
     }
-    else if (_motionUp > 0.0f) return DGCursorDown;
-    else if (_motionDown > 0.0f) return DGCursorUp;
+    else if (_motionUp > 0.0f) return kCursorDown;
+    else if (_motionDown > 0.0f) return kCursorUp;
     
     if (config.controlMode == kControlDrag)
-        return DGCursorDrag;
+        return kCursorDrag;
     else
-        return DGCursorNormal;
+        return kCursorNormal;
 }
 
 float DGCameraManager::fieldOfView() {
@@ -141,14 +141,14 @@ int DGCameraManager::verticalLimit() {
 ////////////////////////////////////////////////////////////
 
 void DGCameraManager::setAngleHorizontal(float horizontal) {
-    if (horizontal != DGCurrent) {
+    if (horizontal != kCurrent) {
         // Extrapolate the coordinates
         _angleH = _toRadians(horizontal, _angleHLimit);
     }
 }
 
 void DGCameraManager::setAngleVertical(float vertical) {
-    if (vertical != DGCurrent) {
+    if (vertical != kCurrent) {
         // Extrapolate the coordinates
         _angleV = _toRadians(vertical, _angleVLimit);
     }
@@ -210,7 +210,7 @@ void DGCameraManager::setSpeedFactor(int speed) {
 }
 
 void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
-    if (horizontal != DGCurrent) {
+    if (horizontal != kCurrent) {
         // Substract n times pi (fix probable double turn)
         float pi, pos;
         pi = _angleH / (M_PI * 2);
@@ -239,7 +239,7 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         _angleHTarget = _angleH;
     }
     
-    if (vertical != DGCurrent) {
+    if (vertical != kCurrent) {
         // Extrapolate the coordinates
         _angleVTarget = _toRadians(vertical, _angleVLimit);;
         
@@ -428,7 +428,7 @@ void DGCameraManager::init() {
 
 void DGCameraManager::pan(int xPosition, int yPosition) {
     if (!_isLocked) {
-        if (xPosition != DGCurrent) {
+        if (xPosition != kCurrent) {
             if (xPosition > _panRegion.size.width)
                 _deltaX = xPosition - _panRegion.size.width;
             else if (xPosition < _panRegion.origin.x)
@@ -436,7 +436,7 @@ void DGCameraManager::pan(int xPosition, int yPosition) {
             else _deltaX = 0.0f;
         }
             
-        if (yPosition != DGCurrent) {
+        if (yPosition != kCurrent) {
             if (yPosition > _panRegion.size.height)
                 _deltaY = _panRegion.size.height - yPosition;
             else if (yPosition < _panRegion.origin.y)

@@ -60,7 +60,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
     if (!_isLoaded)
         return;
     
-	char line[DGMaxFeedLength];
+	char line[kMaxFeedLength];
 	int length;
 	va_list	ap;
 	
@@ -71,7 +71,7 @@ void DGFont::print(int x, int y, const char* text, ...) {
 		va_start(ap, text);
 		// TODO: Test if vsnprintf() works as expected on VS 2012,
         // otherwise use fix from main branch
-        length = vsnprintf(line, DGMaxFeedLength, text, ap);
+        length = vsnprintf(line, kMaxFeedLength, text, ap);
 		va_end(ap);
 	}
 	
@@ -130,7 +130,7 @@ void DGFont::setDefault(unsigned int heightOfFont) {
     _height = (float)heightOfFont;
     
 	// WARNING: That 49052 size may not be exact... Careful!
-	if (FT_New_Memory_Face(*_library, DGDefFontBinary, 49052, 0, &_face)) {
+	if (FT_New_Memory_Face(*_library, kDefFontBinary, 49052, 0, &_face)) {
         log.error(DGModFont, "%s", DGMsg260004);
         return;
     }

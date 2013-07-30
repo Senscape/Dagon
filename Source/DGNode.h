@@ -37,7 +37,7 @@ class DGNode : public DGObject {
     // the Texture Manager uses it later to generate the corresponding
     // filenames. This would be the name of the Lua object.
     
-    char _bundleName[DGMaxObjectName];
+    char _bundleName[kMaxObjectName];
     bool _hasBundleName;
     DGNode* _previousNode;
     bool _isSlide;

@@ -132,7 +132,7 @@ void DGEffectsManager::init() {
         }
         else return;
     }
-    else pointerToData = DGDefShaderData;
+    else pointerToData = kDefShaderData;
     
     _fragment = glCreateShader(GL_FRAGMENT_SHADER);	
 
@@ -162,7 +162,7 @@ void DGEffectsManager::init() {
     }
     
     _dustTexture = new DGTexture;
-    _dustTexture->loadFromMemory(DGDefDustBinary, 3666);
+    _dustTexture->loadFromMemory(kDefDustBinary, 3666);
 }
 
 bool DGEffectsManager::isEnabled(int effectID) {

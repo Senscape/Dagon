@@ -27,7 +27,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGMaxHotKeys 13
+#define kMaxHotKeys 13
 
 class DGAudioManager;
 class DGCameraManager;
@@ -77,7 +77,7 @@ typedef struct {
 typedef struct {
 	bool enabled;
 	int value;
-	char line[DGMaxLogLength];
+	char line[kMaxLogLength];
 } DGHotkeyData;
 
 ////////////////////////////////////////////////////////////
@@ -110,7 +110,7 @@ class DGControl {
     DGState* _state;
     
     DGEventHandlers _eventHandlers;
-    DGHotkeyData _hotkeyData[DGMaxHotKeys];
+    DGHotkeyData _hotkeyData[kMaxHotKeys];
     
     bool _cancelSplash;
     bool _directControlActive;

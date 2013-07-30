@@ -90,7 +90,7 @@ DGControl::DGControl() :
     _eventHandlers.hasMouseMove = false;
     _eventHandlers.hasResize = false;
     
-    for (int i = 0; i < DGMaxHotKeys; i++)
+    for (int i = 0; i < kMaxHotKeys; i++)
 		_hotkeyData[i].enabled = false;
 }
 
@@ -274,25 +274,25 @@ void DGControl::processKey(int aKey, int eventFlags) {
                 case 'w':
                 case 'W':
                     if (_console->isHidden()) {
-                        cameraManager.pan(DGCurrent, 0);
+                        cameraManager.pan(kCurrent, 0);
                     }
                     break;
                 case 'a':
                 case 'A':
                     if (_console->isHidden()) {
-                        cameraManager.pan(0, DGCurrent);
+                        cameraManager.pan(0, kCurrent);
                     }
                     break;
                 case 's':
                 case 'S':
                     if (_console->isHidden()) {
-                        cameraManager.pan(DGCurrent, config.displayHeight);
+                        cameraManager.pan(kCurrent, config.displayHeight);
                     }
                     break;
                 case 'd':
                 case 'D':
                     if (_console->isHidden()) {
-                        cameraManager.pan(config.displayWidth, DGCurrent);
+                        cameraManager.pan(config.displayWidth, kCurrent);
                     }
                     break;
             }
@@ -333,19 +333,19 @@ void DGControl::processKey(int aKey, int eventFlags) {
                 switch (aKey) {
                     case 'w':
                     case 'W':
-                        cameraManager.pan(DGCurrent, config.displayHeight / 2);
+                        cameraManager.pan(kCurrent, config.displayHeight / 2);
                         break;
                     case 'a':
                     case 'A':
-                        cameraManager.pan(config.displayWidth / 2, DGCurrent);
+                        cameraManager.pan(config.displayWidth / 2, kCurrent);
                         break;
                     case 's':
                     case 'S':
-                        cameraManager.pan(DGCurrent, config.displayHeight / 2);
+                        cameraManager.pan(kCurrent, config.displayHeight / 2);
                         break;
                     case 'd':
                     case 'D':
-                        cameraManager.pan(config.displayWidth / 2, DGCurrent);
+                        cameraManager.pan(config.displayWidth / 2, kCurrent);
                         break;
                 }
             }
@@ -365,7 +365,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
         
     if (!cursorManager.isEnabled() || cursorManager.isFading()) {
         // Ignore all the rest
-        cursorManager.setCursor(DGCursorNormal);
+        cursorManager.setCursor(kCursorNormal);
         cameraManager.stopPanning();
         return;
     }
@@ -428,7 +428,7 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
                     if (cameraManager.isPanning() && !cursorManager.hasAction()) {
                         cursorManager.setCursor(cameraManager.cursorWhenPanning());
                     }
-                    else cursorManager.setCursor(DGCursorNormal);
+                    else cursorManager.setCursor(kCursorNormal);
 
                 }
                 else cameraManager.stopPanning();
@@ -524,7 +524,7 @@ void DGControl::registerHotkey(int aKey, const char* luaCommandToExecute) {
     if (idx) {
         _hotkeyData[idx].enabled = true;
         _hotkeyData[idx].value = aKey;
-        strncpy(_hotkeyData[idx].line, luaCommandToExecute, DGMaxLogLength);
+        strncpy(_hotkeyData[idx].line, luaCommandToExecute, kMaxLogLength);
     }
 }
 
@@ -564,10 +564,10 @@ void DGControl::requestObject(DGObject* theTarget) {
 
 void DGControl::reshape(int width, int height) {
     // TODO: Must store the initial width value
-    int size = (width * DGDefCursorSize) / 1920;
+    int size = (width * kDefCursorSize) / 1920;
     
-    if (size > DGMaxCursorSize)
-        size = DGMaxCursorSize;
+    if (size > kMaxCursorSize)
+        size = kMaxCursorSize;
     else if (size < DGMinCursorSize)
         size = DGMinCursorSize;
     
@@ -764,8 +764,8 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             }
             
             // Prepare the name for the window
-            char title[DGMaxObjectName];
-            snprintf(title, DGMaxObjectName, "%s (%s, %s)", config.script().c_str(),
+            char title[kMaxObjectName];
+            snprintf(title, kMaxObjectName, "%s (%s, %s)", config.script().c_str(),
                      _currentRoom->name(), currentNode->description());
             system.setTitle(title);
         }
@@ -830,13 +830,13 @@ void DGControl::takeSnapshot() {
     
     time_t rawtime;
 	struct tm* timeinfo;
-	char buffer[DGMaxFileLength];
+	char buffer[kMaxFileLength];
     DGTexture texture(0, 0, 0);
     
 	time(&rawtime);
 	timeinfo = localtime (&rawtime);
     
-	strftime(buffer, DGMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
+	strftime(buffer, kMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
     
     cameraManager.beginOrthoView();
     renderManager.drawPostprocessedView();
@@ -1011,7 +1011,7 @@ void DGControl::_updateView(int state, bool inBackground) {
         cameraManager.endOrthoView();
         
         if (_console->isReadyToProcess()) {
-            char command[DGMaxLogLength];
+            char command[kMaxLogLength];
             _console->getCommand(command);
             script.processCommand(command);
         }

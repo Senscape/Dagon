@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGDefFeedSize 10
+#define kDefFeedSize 10
 #define DGFeedMargin 25
 #define DGFeedMaxLines 5
 #define DGFeedSpeed 0.25f
@@ -44,8 +44,8 @@ typedef struct {
 	DGPoint location;
 	uint32_t color;
     int state;
-	char text[DGMaxFeedLength];
-    char audio[DGMaxFileLength];
+	char text[kMaxFeedLength];
+    char audio[kMaxFileLength];
 	int timerHandle;    
 } DGFeed;
 

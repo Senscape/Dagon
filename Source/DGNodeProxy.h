@@ -114,16 +114,16 @@ public:
             
             // We can only read the key as a string, so we have no choice but
             // do an ugly nesting of strcmps()
-			if (strcmp(key, N) == 0) dir = DGNorth;
-			else if (strcmp(key, W) == 0) dir = DGWest;
-			else if (strcmp(key, S) == 0) dir = DGSouth;
-			else if (strcmp(key, E) == 0) dir = DGEast;
-            else if (strcmp(key, U) == 0) dir = DGUp;
-            else if (strcmp(key, D) == 0) dir = DGDown;
-			else if (strcmp(key, NW) == 0) dir = DGNorthWest;
-			else if (strcmp(key, SW) == 0) dir = DGSouthWest;
-			else if (strcmp(key, SE) == 0) dir = DGSouthEast;
-			else if (strcmp(key, NE) == 0) dir = DGNorthEast;
+			if (strcmp(key, N) == 0) dir = kNorth;
+			else if (strcmp(key, W) == 0) dir = kWest;
+			else if (strcmp(key, S) == 0) dir = kSouth;
+			else if (strcmp(key, E) == 0) dir = kEast;
+            else if (strcmp(key, U) == 0) dir = kUp;
+            else if (strcmp(key, D) == 0) dir = kDown;
+			else if (strcmp(key, NW) == 0) dir = kNorthWest;
+			else if (strcmp(key, SW) == 0) dir = kSouthWest;
+			else if (strcmp(key, SE) == 0) dir = kSouthEast;
+			else if (strcmp(key, NE) == 0) dir = kNorthEast;
             
             if (lua_isfunction(L, -1)) {
                 int ref = luaL_ref(L, LUA_REGISTRYINDEX);

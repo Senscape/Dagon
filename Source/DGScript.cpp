@@ -68,14 +68,14 @@ DGScript::~DGScript() {
 // TODO: Support loading script from parameters
 // TODO: Consider seeking paths again if debug mode was enabled
 void DGScript::init() {
-    char script[DGMaxFileLength];
+    char script[kMaxFileLength];
     
     _L = lua_open();
     luaL_openlibs(_L);
     
     // The following code attempts to load a config file, and if it does exist
     // copies the created table to the Config metatable
-    if (luaL_loadfile(_L, config.path(kPathApp, DGDefConfigFile, DGObjectGeneric).c_str()) == 0) {
+    if (luaL_loadfile(_L, config.path(kPathApp, kDefConfigFile, DGObjectGeneric).c_str()) == 0) {
 		lua_newtable(_L);
 		lua_pushvalue(_L, -1);
 		int ref = lua_ref(_L, LUA_REGISTRYINDEX);
@@ -114,7 +114,7 @@ void DGScript::init() {
     Luna<DGSpotProxy>::Register(_L);
     
     // Register all libs
-    luaL_register(_L, "cursor", DGCursorLib);
+    luaL_register(_L, "cursor", kCursorLib);
     luaL_register(_L, "system", DGSystemLib);
     
     // The config lib requires a special treatment because
@@ -165,7 +165,7 @@ void DGScript::init() {
     
     // We're ready to roll, let's attempt to load the script in a Lua thread
     _thread = lua_newthread(_L);
-    snprintf(script, DGMaxFileLength, "%s.lua", config.script().c_str());
+    snprintf(script, kMaxFileLength, "%s.lua", config.script().c_str());
     if (luaL_loadfile(_thread, config.path(kPathApp, script, DGObjectGeneric).c_str()) == 0)
         _isInitialized = true;
     else {
@@ -323,18 +323,18 @@ int DGScript::_globalLookAt(lua_State *L) {
     bool instant = false;
     
     switch (horizontal) {
-        case DGNorth:   horizontal = 0;     break;
-        case DGEast:    horizontal = 90;    break;
-        case DGSouth:   horizontal = 180;   break;
-        case DGWest:    horizontal = 270;   break;
+        case kNorth:   horizontal = 0;     break;
+        case kEast:    horizontal = 90;    break;
+        case kSouth:   horizontal = 180;   break;
+        case kWest:    horizontal = 270;   break;
     }
     
     if (lua_gettop(L) > 1) {
         vertical = luaL_checknumber(L, 2);
         
         switch (vertical) {
-            case DGUp:      vertical = 360;     break;
-            case DGDown:    vertical = -360;    break;
+            case kUp:      vertical = 360;     break;
+            case kDown:    vertical = -360;    break;
         }    
     }
     
@@ -409,21 +409,21 @@ int DGScript::_globalRoom(lua_State *L) {
     // UPDATE: So far it has worked great. Our motto is: "if it works, it stays".
     // PS: Not really.
     
-    char module[DGMaxObjectName];
-    strncpy(module, luaL_checkstring(L, 1), DGMaxObjectName);
+    char module[kMaxObjectName];
+    strncpy(module, luaL_checkstring(L, 1), kMaxObjectName);
     
     // We first check if the object already exists
     lua_getglobal(L, module);
     if (!lua_isuserdata(L, -1)) {
-        char line[DGMaxLogLength], script[DGMaxFileLength];
+        char line[kMaxLogLength], script[kMaxFileLength];
         
         // Parse line to automatically create the room
-        snprintf(line, DGMaxLogLength, "%s = Room(\"%s\")", module, module);
+        snprintf(line, kMaxLogLength, "%s = Room(\"%s\")", module, module);
         luaL_dostring(L, line);
         
         // Load the corresponding Lua file
         // TODO: Read rooms from path
-        snprintf(script, DGMaxFileLength, "%s.lua", module);
+        snprintf(script, kMaxFileLength, "%s.lua", module);
         
         if (luaL_loadfile(L, Config::instance().path(kPathApp, script, DGObjectRoom).c_str()) == 0) {
             DGScript::instance().setModule(module);
@@ -519,35 +519,35 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, SWITCH, DGActionSwitch);
     DGLuaEnum(_L, VIDEO, DGObjectVideo);
     
-    DGLuaEnum(_L, NORMAL, DGCursorNormal);
-    DGLuaEnum(_L, DRAGGING, DGCursorDrag);
-    DGLuaEnum(_L, LEFT, DGCursorLeft);
-    DGLuaEnum(_L, RIGHT, DGCursorRight);
-    DGLuaEnum(_L, UP, DGCursorUp);
-    DGLuaEnum(_L, DOWN, DGCursorDown);
-    DGLuaEnum(_L, UP_LEFT, DGCursorUpLeft);
-    DGLuaEnum(_L, UP_RIGHT, DGCursorUpRight);
-    DGLuaEnum(_L, DOWN_LEFT, DGCursorDownLeft);
-    DGLuaEnum(_L, DOWN_RIGHT, DGCursorDownRight);
-    DGLuaEnum(_L, FORWARD, DGCursorForward);
-    DGLuaEnum(_L, BACKWARD, DGCursorBackward);
-    DGLuaEnum(_L, USE, DGCursorUse);
-    DGLuaEnum(_L, LOOK, DGCursorLook);
-    DGLuaEnum(_L, TALK, DGCursorTalk);
-    DGLuaEnum(_L, CUSTOM, DGCursorCustom);
+    DGLuaEnum(_L, NORMAL, kCursorNormal);
+    DGLuaEnum(_L, DRAGGING, kCursorDrag);
+    DGLuaEnum(_L, LEFT, kCursorLeft);
+    DGLuaEnum(_L, RIGHT, kCursorRight);
+    DGLuaEnum(_L, UP, kCursorUp);
+    DGLuaEnum(_L, DOWN, kCursorDown);
+    DGLuaEnum(_L, UP_LEFT, kCursorUpLeft);
+    DGLuaEnum(_L, UP_RIGHT, kCursorUpRight);
+    DGLuaEnum(_L, DOWN_LEFT, kCursorDownLeft);
+    DGLuaEnum(_L, DOWN_RIGHT, kCursorDownRight);
+    DGLuaEnum(_L, FORWARD, kCursorForward);
+    DGLuaEnum(_L, BACKWARD, kCursorBackward);
+    DGLuaEnum(_L, USE, kCursorUse);
+    DGLuaEnum(_L, LOOK, kCursorLook);
+    DGLuaEnum(_L, TALK, kCursorTalk);
+    DGLuaEnum(_L, CUSTOM, kCursorCustom);
     
-    DGLuaEnum(_L, SLIDE, DGNorth);
-    DGLuaEnum(_L, NORTH, DGNorth);
-    DGLuaEnum(_L, EAST, DGEast);
-    DGLuaEnum(_L, WEST, DGWest);
-    DGLuaEnum(_L, SOUTH, DGSouth);
-    DGLuaEnum(_L, UP, DGUp);
-    DGLuaEnum(_L, DOWN, DGDown);
-    DGLuaEnum(_L, NORTHEAST, DGNorthEast);
-    DGLuaEnum(_L, SOUTHEAST, DGSouthEast);
-    DGLuaEnum(_L, NORTHWEST, DGNorthWest);
-    DGLuaEnum(_L, SOUTHWEST, DGSouthWest);
-    DGLuaEnum(_L, CURRENT, DGCurrent);
+    DGLuaEnum(_L, SLIDE, kNorth);
+    DGLuaEnum(_L, NORTH, kNorth);
+    DGLuaEnum(_L, EAST, kEast);
+    DGLuaEnum(_L, WEST, kWest);
+    DGLuaEnum(_L, SOUTH, kSouth);
+    DGLuaEnum(_L, UP, kUp);
+    DGLuaEnum(_L, DOWN, kDown);
+    DGLuaEnum(_L, NORTHEAST, kNorthEast);
+    DGLuaEnum(_L, SOUTHEAST, kSouthEast);
+    DGLuaEnum(_L, NORTHWEST, kNorthWest);
+    DGLuaEnum(_L, SOUTHWEST, kSouthWest);
+    DGLuaEnum(_L, CURRENT, kCurrent);
     
     DGLuaEnum(_L, DRAG, kControlDrag);
     DGLuaEnum(_L, FIXED, kControlFixed);
