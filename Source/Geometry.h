@@ -35,6 +35,6 @@ typedef struct {
   double z;
 } Vector;
 
-// Add functions to make point, size, etc.
+// TODO: Add functions to make point, size, etc.
 
 #endif // DAGON_GEOMETRY_H_
