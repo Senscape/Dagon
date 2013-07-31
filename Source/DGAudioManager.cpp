@@ -75,7 +75,7 @@ void DGAudioManager::flush() {
 				done = true;
 				while ((it != _arrayOfActiveAudios.end())) {
 					if ((*it)->retainCount() == 0) {
-						if ((*it)->state() == DGAudioStopped) { // Had to move this outside the switch
+						if ((*it)->state() == kAudioStopped) { // Had to move this outside the switch
 							// TODO: Automatically flush stopped and non-retained audios after
 							// n update cycles
 							(*it)->unload();
@@ -85,11 +85,11 @@ void DGAudioManager::flush() {
 						}
 						else {
 							switch ((*it)->state()) {
-								case DGAudioPlaying:
+								case kAudioPlaying:
 									(*it)->fadeOut();
 									it++;
 									break;
-								case DGAudioPaused:
+								case kAudioPaused:
 								default:
 									it++;
 									break;
@@ -242,7 +242,7 @@ void DGAudioManager::requestAudio(DGAudio* target) {
     
     // FIXME: Not very elegant. Must implement a state condition for
     // each audio object. Perhaps use AL_STATE even.
-    if (target->state() == DGAudioPaused) {
+    if (target->state() == kAudioPaused) {
         target->play();
     }
 }

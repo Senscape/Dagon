@@ -15,31 +15,26 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudio.h"
+#include <fstream>
 
-using namespace std;
+#include "Config.h"
+#include "DGAudio.h"
+#include "Log.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
 DGAudio::DGAudio() :
-    config(Config::instance()),
-    log(Log::instance())
+  config(Config::instance()),
+  log(Log::instance())
 {
-    _oggCallbacks.read_func = _oggRead;
+  _oggCallbacks.read_func = _oggRead;
 	_oggCallbacks.seek_func = _oggSeek;
 	_oggCallbacks.close_func = _oggClose;
 	_oggCallbacks.tell_func = _oggTell;
     
-    _isLoaded = false;
-    
-    // For convenience, this always defaults to false
-    _isLoopable = false;
-    _isMatched = false;
-    _state = DGAudioInitial;
-    
-    this->setType(DGObjectAudio);
+  this->setType(DGObjectAudio);
 }
 
 ////////////////////////////////////////////////////////////
@@ -47,7 +42,7 @@ DGAudio::DGAudio() :
 ////////////////////////////////////////////////////////////
 
 DGAudio::~DGAudio() {
-    // Let the manager perform the unload
+  // TODO: Unload if required
 }
 
 ////////////////////////////////////////////////////////////
@@ -55,17 +50,17 @@ DGAudio::~DGAudio() {
 ////////////////////////////////////////////////////////////
 
 bool DGAudio::isLoaded() {
-    return _isLoaded;
+  std::lock_guard<std::mutex> guard(_mutex);
+  return _isLoaded;
 }
 
 bool DGAudio::isLoopable() {
-    return _isLoopable;
+  return _isLoopable;
 }
 
 bool DGAudio::isPlaying() {
-    lock_guard<mutex> guard(_mutex);
-    
-    return (_state == DGAudioPlaying);
+  std::lock_guard<std::mutex> guard(_mutex);
+  return (_state == kAudioPlaying);
 }
 
 ////////////////////////////////////////////////////////////
@@ -73,11 +68,11 @@ bool DGAudio::isPlaying() {
 ////////////////////////////////////////////////////////////
 
 double DGAudio::cursor() {
-    return ov_time_tell(&_oggStream);
+  return ov_time_tell(&_oggStream);
 }
 
 int DGAudio::state() {
-    return _state;
+  return _state;
 }
 
 ////////////////////////////////////////////////////////////
@@ -85,39 +80,45 @@ int DGAudio::state() {
 ////////////////////////////////////////////////////////////
 
 void DGAudio::setLoopable(bool loopable) {
-    _isLoopable = loopable;
+  _isLoopable = loopable;
 }
 
-void DGAudio::setPosition(unsigned int onFace, Point origin) {
-    float x = (float)origin.x / (float)kDefTexSize;
-    float y = (float)origin.y / (float)kDefTexSize;
+void DGAudio::setPosition(unsigned int face, Point origin) {
+  float x = (float)origin.x / (float)kDefTexSize;
+  float y = (float)origin.y / (float)kDefTexSize;
     
-    switch (onFace) {
-        case kNorth:
-            alSource3f(_alSource, AL_POSITION, x, y, -1.0);
-            break;
-        case kEast:
-            alSource3f(_alSource, AL_POSITION, 1.0, y, x);
-            break;
-        case kSouth:
-            alSource3f(_alSource, AL_POSITION, -x, y, 1.0);
-            break;
-        case kWest:
-            alSource3f(_alSource, AL_POSITION, -1.0, y, -x);
-            break;
-        case kUp:
-            alSource3f(_alSource, AL_POSITION, 0.0, 1.0, 0.0);
-            break;
-        case kDown:
-            alSource3f(_alSource, AL_POSITION, 0.0, -1.0, 0.0);
-            break;            
+  switch (face) {
+    case kNorth: {
+      alSource3f(_alSource, AL_POSITION, x, y, -1.0);
+      break;
     }
+    case kEast: {
+      alSource3f(_alSource, AL_POSITION, 1.0, y, x);
+      break;
+    }
+    case kSouth: {
+      alSource3f(_alSource, AL_POSITION, -x, y, 1.0);
+      break;
+    }
+    case kWest: {
+      alSource3f(_alSource, AL_POSITION, -1.0, y, -x);
+      break;
+    }
+    case kUp: {
+      alSource3f(_alSource, AL_POSITION, 0.0, 1.0, 0.0);
+      break;
+    }
+    case kDown: {
+      alSource3f(_alSource, AL_POSITION, 0.0, -1.0, 0.0);
+      break;
+    }
+  }
     
-    _verifyError("position");
+  _verifyError("position");
 }
 
-void DGAudio::setResource(const char* fromFileName) {
-    strncpy(_resource.name, fromFileName, kMaxFileLength);
+void DGAudio::setResource(std::string fileName) {
+  _resource.name = fileName;
 }
 
 ////////////////////////////////////////////////////////////
@@ -125,179 +126,168 @@ void DGAudio::setResource(const char* fromFileName) {
 ////////////////////////////////////////////////////////////
 
 void DGAudio::load() {
-    lock_guard<mutex> guard(_mutex);
+  std::lock_guard<std::mutex> guard(_mutex);
     
-    if (!_isLoaded) { 
-        FILE* fh;
-        
-        // FIXME: This object shouldn't reference Config, let the Audio Manager do this
-        const char* fileToLoad = _randomizeFile(_resource.name);
-        fh = fopen(config.path(kPathResources, fileToLoad, DGObjectAudio).c_str(), "rb");
-        
-        if (fh != NULL) {
-            fseek(fh, 0, SEEK_END);
-            _resource.dataSize = ftell(fh);
-            fseek(fh, 0, SEEK_SET);
-            _resource.data = (char*)malloc(_resource.dataSize);
-            fread(_resource.data, _resource.dataSize, 1, fh);
-            _resource.dataRead = 0;
+  if (!_isLoaded) { 
+    std::string fileToLoad = _randomizeFile(_resource.name);
+    std::ifstream file(config.path(kPathResources, fileToLoad, DGObjectAudio),
+                       std::ifstream::binary | std::ifstream::ate);
+    
+    if (file.good()) {
+      _resource.dataSize = file.tellg();
+      _resource.data = new char[_resource.dataSize];
+      file.seekg(file.beg);
+      file.read(_resource.data, _resource.dataSize);
+      _resource.dataRead = 0;
+      
+      if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
+        log.error(kModAudio, "%s", kString16010);
+        return;
+      }
+      
+      // We no longer require the file handle
+      file.close();
+      
+      // Get file info
+      vorbis_info* info = ov_info(&_oggStream, -1);
+      _channels = info->channels;
+      _rate = (ALsizei)info->rate;
             
-            if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
-                log.error(kModAudio, "%s", kString16010);
-                return;
-            }
-            
-            // Get file info
-            vorbis_info* info = ov_info(&_oggStream, -1);
-            
-            _channels = info->channels;
-            _rate = (ALsizei)info->rate;
-            
-            if (_channels == 1) _alFormat = AL_FORMAT_MONO16;
-            else if (_channels == 2 ) _alFormat = AL_FORMAT_STEREO16;
-            else {
-                // Invalid number of channels
-                log.error(kModAudio, "%s: %s", kString16009, fileToLoad);
-                return;
-            }
-            
-            // We no longer require the file handle
-            fclose(fh);
-            
-            alGenBuffers(DGAudioNumberOfBuffers, _alBuffers);
-            alGenSources(1, &_alSource);
+      if (_channels == 1) {
+        _alFormat = AL_FORMAT_MONO16;
 
-			for (int i = 0; i < DGAudioNumberOfBuffers; i++) {
-				if (!_stream(&_alBuffers[i])) {
+      } else if (_channels == 2 ) {
+        _alFormat = AL_FORMAT_STEREO16;
+      } else {
+        // Invalid number of channels
+        log.error(kModAudio, "%s: %s", kString16009, fileToLoad.c_str());
+        return;
+      }
+      
+      alGenBuffers(kAudioBuffers, _alBuffers);
+      alGenSources(1, &_alSource);
+      alSource3f(_alSource, AL_POSITION, 0.0, 0.0, 0.0);
+      alSource3f(_alSource, AL_VELOCITY, 0.0, 0.0, 0.0);
+      alSource3f(_alSource, AL_DIRECTION, 0.0, 0.0, 0.0);
+
+			for (int i = 0; i < kAudioBuffers; i++) {
+        if (!_fillBuffer(&_alBuffers[i])) {
 					_verifyError("prebuffer");
-                
 					return;
 				}
 			}
         
-			alSourceQueueBuffers(_alSource, DGAudioNumberOfBuffers, _alBuffers);
-    
-            if (config.mute || this->fadeLevel() < 0.0f) {
-                alSourcef(_alSource, AL_GAIN, 0.0f);
-            }
-            else {
-                alSourcef(_alSource, AL_GAIN, this->fadeLevel());
-            }
-            
-            alSource3f(_alSource, AL_POSITION,        0.0, 0.0, 0.0);
-            alSource3f(_alSource, AL_VELOCITY,        0.0, 0.0, 0.0);
-            alSource3f(_alSource, AL_DIRECTION,       0.0, 0.0, 0.0);
-            
-            _verifyError("load");
-            
-            _isLoaded = true;
-        }
-        else log.error(kModAudio, "%s: %s", kString16008, fileToLoad);
+			alSourceQueueBuffers(_alSource, kAudioBuffers, _alBuffers);
+  
+      if (config.mute || this->fadeLevel() < 0.0) {
+        alSourcef(_alSource, AL_GAIN, 0.0);
+      } else {
+        alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+      }
+      
+      _isLoaded = true;      
+      _verifyError("load");
+    } else {
+      log.error(kModAudio, "%s: %s", kString16008, fileToLoad.c_str());
     }
+  }
 }
 
-void DGAudio::match(DGAudio* matchedAudio) {
-    _matchedAudio = matchedAudio;
-    _isMatched = true;
+void DGAudio::match(DGAudio* audioToMatch) {
+  _matchedAudio = audioToMatch;
+  _isMatched = true;
 }
 
 void DGAudio::play() {
-    lock_guard<mutex> guard(_mutex);
+  std::lock_guard<std::mutex> guard(_mutex);
     
-    if (_isLoaded && (_state != DGAudioPlaying)) {
-        if (_isMatched)
-            ov_time_seek(&_oggStream, _matchedAudio->cursor());
+  if (_isLoaded && (_state != kAudioPlaying)) {
+    if (_isMatched)
+      ov_time_seek(&_oggStream, _matchedAudio->cursor());
         
-        alSourcePlay(_alSource);
-        _state = DGAudioPlaying;
-        
-        _verifyError("play");
-    }
+    alSourcePlay(_alSource);
+    _state = kAudioPlaying;
+    _verifyError("play");
+  }
 }
 
 void DGAudio::pause() {
-    lock_guard<mutex> guard(_mutex);
+  std::lock_guard<std::mutex> guard(_mutex);
     
-    if (_state == DGAudioPlaying) {
-        alSourceStop(_alSource);
-
-        _state = DGAudioPaused;
-        
-        _verifyError("pause");
-    }
+  if (_state == kAudioPlaying) {
+    alSourceStop(_alSource);
+    _state = kAudioPaused;
+    _verifyError("pause");
+  }
 }
 
 void DGAudio::stop() {
-    lock_guard<mutex> guard(_mutex);
+  std::lock_guard<std::mutex> guard(_mutex);
     
-    if ((_state == DGAudioPlaying) || (_state == DGAudioPaused)) {
-        alSourceStop(_alSource);
-
-        ov_raw_seek(&_oggStream, 0);
-        _state = DGAudioStopped;
-        
-        _verifyError("stop");
-    }
+  if ((_state == kAudioPlaying) || (_state == kAudioPaused)) {
+    alSourceStop(_alSource);
+    ov_raw_seek(&_oggStream, 0);
+    _state = kAudioStopped;
+    _verifyError("stop");
+  }
 }
 
 void DGAudio::unload() {
-    lock_guard<mutex> guard(_mutex);
+  std::lock_guard<std::mutex> guard(_mutex);
     
-    if (_isLoaded) {
-        if (_state == DGAudioPlaying) {
-            alSourceStop(_alSource);
-            ov_raw_seek(&_oggStream, 0);
-            _state = DGAudioStopped;
-        }
+  if (_isLoaded) {
+    if (_state == kAudioPlaying) {
+      alSourceStop(_alSource);
+      ov_raw_seek(&_oggStream, 0);
+      _state = kAudioStopped;
+    }
 
 		_emptyBuffers();
-		
 		alDeleteSources(1, &_alSource);
-		alDeleteBuffers(DGAudioNumberOfBuffers, _alBuffers);
-        ov_clear(&_oggStream);
-        free(_resource.data);
-        
-        _isLoaded = false;
-        
-        _verifyError("unload");
-    }
+		alDeleteBuffers(kAudioBuffers, _alBuffers);
+    ov_clear(&_oggStream);
+    delete[] _resource.data;
+    
+    _isLoaded = false;
+    _verifyError("unload");
+  }
 }
 
 void DGAudio::update() {
-    lock_guard<mutex> guard(_mutex);
+  std::lock_guard<std::mutex> guard(_mutex);
     
-    if (_state == DGAudioPlaying) {
-        int processed;
+  if (_state == kAudioPlaying) {
+    int processed;
         
-        alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &processed);
+    alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &processed);
         
-        while (processed--) {
-            ALuint buffer;
+    while (processed--) {
+      ALuint buffer;
             
-            alSourceUnqueueBuffers(_alSource, 1, &buffer);
-            _stream(&buffer);
-            alSourceQueueBuffers(_alSource, 1, &buffer);
-        }
-        
-        // Run fade operations
-        // TODO: Better change the name of the DGObject "updateFade" function, it's somewhat confusing
-        this->updateFade();
-        
-        // FIXME: Not very elegant as we're doing this check every time
-        if (config.mute) {
-            alSourcef(_alSource, AL_GAIN, 0.0f);
-        }
-        else {
-            // Finally check the current volume. If it's zero, let the manager know
-            // that we're done with this audio
-            if (this->fadeLevel() > 0.0f)
-                alSourcef(_alSource, AL_GAIN, this->fadeLevel());
-            else {
-                alSourceStop(_alSource);
-                _state = DGAudioPaused;
-            }
-        }
+      alSourceUnqueueBuffers(_alSource, 1, &buffer);
+      _fillBuffer(&buffer);
+      alSourceQueueBuffers(_alSource, 1, &buffer);
     }
+        
+    // Run fade operations
+    // TODO: Better change the name of the DGObject "updateFade" function,
+    // it's somewhat confusing.
+    this->updateFade();
+        
+    // FIXME: Not very elegant as we're doing this check every time
+    if (config.mute) {
+      alSourcef(_alSource, AL_GAIN, 0.0f);
+    } else {
+      // Finally check the current volume. If it's zero, let the manager know
+      // that we're done with this audio.
+      if (this->fadeLevel() > 0.0f) {
+        alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+      } else {
+        alSourceStop(_alSource);
+        _state = kAudioPaused;
+      }
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////
@@ -321,22 +311,21 @@ void DGAudio::_emptyBuffers() {
     }
 }
 
-const char* DGAudio::_randomizeFile(const char* fileName) {
-    if (strstr(fileName, ".ogg")) { // Was extension specified?
-        return fileName; // Then return as-is
-    }
-    else { // Randomize
-        static char fileToLoad[kMaxFileLength];
-        int index = (rand() % 6); // TODO: Allow to configure this value
+std::string DGAudio::_randomizeFile(std::string &fileName) {
+  if (fileName.find(".ogg") != std::string::npos ) { // Was extension specified?
+    return fileName; // Then return as-is
+  } else { // If not, randomize
+    int index = (rand() % 6) + 1; // TODO: Allow to configure this value
+
+    std::string fileToLoad(fileName);
+    fileToLoad.append(2, '0'); // TODO: Also configure this
+    fileToLoad += std::to_string(index) + ".ogg";
         
-        snprintf(fileToLoad, kMaxFileLength, "%s%0" in_between(kFileSeqDigits) "d.%s", fileName,
-                 index + kFileSeqStart, "ogg");
-        
-        return fileToLoad;
-    }
+    return fileToLoad;
+  }
 }
 
-bool DGAudio::_stream(ALuint* buffer) {
+bool DGAudio::_fillBuffer(ALuint* buffer) {
     // This is a failsafe; if this is true, we won't attempt to stream anymore
     static bool _hasStreamingError = false;         
     
@@ -359,7 +348,7 @@ bool DGAudio::_stream(ALuint* buffer) {
                 else {
                     alSourceStop(_alSource);
                     ov_raw_seek(&_oggStream, 0);
-                    _state = DGAudioStopped;
+                    _state = kAudioStopped;
                 }
                 
                 return false;
@@ -370,7 +359,7 @@ bool DGAudio::_stream(ALuint* buffer) {
             }
             else if (result < 0) {
                 // Error
-                log.error(kModAudio, "%s: %s", kString16007, _resource.name);
+                log.error(kModAudio, "%s: %s", kString16007, _resource.name.c_str());
                 _hasStreamingError = true;
                 
                 return false;
@@ -388,7 +377,7 @@ ALboolean DGAudio::_verifyError(const char* operation) {
    	ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
-		log.error(kModAudio, "%s: %s: %s (%d)", kString16006, _resource.name, operation, error);
+		log.error(kModAudio, "%s: %s: %s (%d)", kString16006, _resource.name.c_str(), operation, error);
         
 		return AL_FALSE;
 	}

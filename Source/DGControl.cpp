@@ -778,7 +778,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             it = arrayOfAudios.begin();
             
             while (it != arrayOfAudios.end()) {
-                if ((*it)->state() != DGAudioPlaying)
+                if ((*it)->state() != kAudioPlaying)
                     (*it)->fadeIn();
                 
                 audioManager.requestAudio((*it));

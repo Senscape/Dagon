@@ -76,7 +76,7 @@ bool DGFeedManager::isPlaying() {
 }
 
 void DGFeedManager::queue(const char* text, const char* audio) {
-    if (_feedAudio->state() != DGAudioPlaying) {
+    if (_feedAudio->state() != kAudioPlaying) {
         this->showAndPlay(text, audio);
     }
     else {
@@ -203,7 +203,7 @@ void DGFeedManager::update() {
     }
     
     // Check for queued feeds
-    if (_feedAudio->state() != DGAudioPlaying) {
+    if (_feedAudio->state() != kAudioPlaying) {
         if (!_arrayOfFeeds.empty()) {
             DGFeed feed = _arrayOfFeeds.front();
             
