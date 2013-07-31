@@ -44,11 +44,11 @@ Log::~Log() {
 ////////////////////////////////////////////////////////////
 
 void Log::command(int forModule, const char* theString, ...) {
-  char buffer[256];
+  char buffer[kMaxLogLength];
   va_list args;
   
   va_start(args, theString);
-  vsprintf(buffer, theString, args);
+  vsnprintf(buffer, kMaxLogLength, theString, args);
   va_end(args);
 	
   LogData data;
@@ -62,11 +62,11 @@ void Log::command(int forModule, const char* theString, ...) {
 }
 
 void Log::error(int forModule, const char* theString, ...) {
-  char buffer[256];
+  char buffer[kMaxLogLength];
   va_list args;
   
   va_start(args, theString);
-  vsprintf(buffer, theString, args);
+  vsnprintf(buffer, kMaxLogLength, theString, args);
   va_end(args);
 	
   LogData data;
@@ -80,11 +80,11 @@ void Log::error(int forModule, const char* theString, ...) {
 }
 
 void Log::info(int forModule, const char* theString, ...) {
-  char buffer[256];
+  char buffer[kMaxLogLength];
   va_list args;
   
   va_start(args, theString);
-  vsprintf(buffer, theString, args);
+  vsnprintf(buffer, kMaxLogLength, theString, args);
   va_end(args);
 	
   LogData data;
@@ -98,11 +98,11 @@ void Log::info(int forModule, const char* theString, ...) {
 }
 
 void Log::trace(int forModule, const char* theString, ...) {
-  char buffer[256];
+  char buffer[kMaxLogLength];
   va_list args;
   
   va_start(args, theString);
-  vsprintf(buffer, theString, args);
+  vsnprintf(buffer, kMaxLogLength, theString, args);
   va_end(args);
 	
   LogData data;
@@ -116,11 +116,11 @@ void Log::trace(int forModule, const char* theString, ...) {
 }
 
 void Log::warning(int forModule, const char* theString, ...) {
-  char buffer[256];
+  char buffer[kMaxLogLength];
   va_list args;
   
   va_start(args, theString);
-  vsprintf(buffer, theString, args);
+  vsnprintf(buffer, kMaxLogLength, theString, args);
   va_end(args);
 	
   LogData data;
