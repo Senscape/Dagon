@@ -26,6 +26,8 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
+// FIXME: Potential conflict of enums in Script class
+
 enum ActionTypes {
 	kActionFunction = 100,
 	kActionFeed,

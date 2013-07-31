@@ -54,7 +54,7 @@ enum MaxValues {
 #define in_between(a) mkstr(a)
 
 enum CursorTypes {
-  kCursorNormal = 0,
+  kCursorNormal,
   kCursorDrag,
   kCursorLeft,
   kCursorRight,
