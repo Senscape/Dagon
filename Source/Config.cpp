@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <assert.h>
+#include <cassert>
 
 #include "Config.h"
 #include "DGObject.h"
@@ -89,6 +89,9 @@ std::string Config::path(int ofType, const std::string &forFile,
     case kPathUserData: {
       fullPath = _userPath;
       break;
+    }
+    default: {
+      assert(false);
     }
   }
   

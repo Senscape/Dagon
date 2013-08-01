@@ -16,6 +16,8 @@
 ////////////////////////////////////////////////////////////
 
 #include <fstream>
+#include <cassert>
+#include <cstring>
 
 #include "Config.h"
 #include "DGAudio.h"
@@ -84,8 +86,8 @@ void DGAudio::setLoopable(bool loopable) {
 }
 
 void DGAudio::setPosition(unsigned int face, Point origin) {
-  float x = (float)origin.x / (float)kDefTexSize;
-  float y = (float)origin.y / (float)kDefTexSize;
+  float x = origin.x / kDefTexSize;
+  float y = origin.y / kDefTexSize;
     
   switch (face) {
     case kNorth: {
@@ -112,8 +114,11 @@ void DGAudio::setPosition(unsigned int face, Point origin) {
       alSource3f(_alSource, AL_POSITION, 0.0, -1.0, 0.0);
       break;
     }
+    default: {
+      assert(false);
+    }
   }
-    
+  
   _verifyError("position");
 }
 
@@ -294,143 +299,141 @@ void DGAudio::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
+bool DGAudio::_fillBuffer(ALuint* buffer) {
+  // This is a failsafe; if this is true, we won't attempt to stream anymore
+  static bool _hasStreamingError = false;
+  
+  if (!_hasStreamingError) {
+    char data[config.audioBuffer];
+    int size = 0;
+    
+    while (size < config.audioBuffer) {
+      int section;
+      long result = ov_read(&_oggStream, data + size, config.audioBuffer - size,
+                            0, 2, 1, &section);
+      
+      if (result > 0) {
+        size += result;
+      } else if (result == 0) {
+        // EOF
+        if (_isLoopable) {
+          ov_raw_seek(&_oggStream, 0);
+        } else {
+          alSourceStop(_alSource);
+          ov_raw_seek(&_oggStream, 0);
+          _state = kAudioStopped;
+        }
+        return false;
+      } else if (result == OV_HOLE) {
+        // May return OV_HOLE after we rewind the stream, so we just re-loop.
+        continue;
+      } else if (result < 0) {
+        // Error
+        log.error(kModAudio, "%s: %s", kString16007, _resource.name.c_str());
+        _hasStreamingError = true;
+        return false;
+      }
+    }
+    alBufferData(*buffer, _alFormat, data, size, _rate);
+    return true;
+  } else {
+    return false; 
+  }
+}
+
 void DGAudio::_emptyBuffers() {
-    ALint state;
-    alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
+  ALint state;
+  alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
 
 	if (state != AL_PLAYING) {
-        int queued;
-        
-        alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &queued);
-        
-        while (queued--) {
-            ALuint buffer;
-            alSourceUnqueueBuffers(_alSource, 1, &buffer);
+    int queued;
+    alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &queued);
+
+    while (queued--) {
+      ALuint buffer;
+      alSourceUnqueueBuffers(_alSource, 1, &buffer);
 			_verifyError("unqueue");
-        }   
     }
+  }
 }
 
 std::string DGAudio::_randomizeFile(std::string &fileName) {
-  if (fileName.find(".ogg") != std::string::npos ) { // Was extension specified?
-    return fileName; // Then return as-is
-  } else { // If not, randomize
+  // Was extension specified?
+  if (fileName.find(".ogg") != std::string::npos ) {
+    // Then return as-is
+    return fileName;
+  } else {
+    // If not, randomize
     int index = (rand() % 6) + 1; // TODO: Allow to configure this value
 
     std::string fileToLoad(fileName);
     fileToLoad.append(2, '0'); // TODO: Also configure this
     fileToLoad += std::to_string(index) + ".ogg";
-        
     return fileToLoad;
   }
 }
 
-bool DGAudio::_fillBuffer(ALuint* buffer) {
-    // This is a failsafe; if this is true, we won't attempt to stream anymore
-    static bool _hasStreamingError = false;         
-    
-    if (!_hasStreamingError) {
-        char* data;
-        int size = 0;
-        int section;
-        long result;
-        
-		data = (char*)malloc(config.audioBuffer);
-        while (size < config.audioBuffer) {
-            result = ov_read(&_oggStream, data + size, config.audioBuffer - size, 0, 2, 1, &section);
-            
-            if (result > 0)
-                size += result;
-            else if (result == 0) {
-                // EOF
-                if (_isLoopable)
-                    ov_raw_seek(&_oggStream, 0);
-                else {
-                    alSourceStop(_alSource);
-                    ov_raw_seek(&_oggStream, 0);
-                    _state = kAudioStopped;
-                }
-                
-                return false;
-            }
-            else if (result == OV_HOLE) {
-                // May return OV_HOLE after we rewind the stream, so we just re-loop
-                continue;
-            }
-            else if (result < 0) {
-                // Error
-                log.error(kModAudio, "%s: %s", kString16007, _resource.name.c_str());
-                _hasStreamingError = true;
-                
-                return false;
-            }
-        }
-        
-        alBufferData(*buffer, _alFormat, data, size, _rate);
-        delete(data);
-        return true;
-    }
-    else return false;
-}
-
 ALboolean DGAudio::_verifyError(const char* operation) {
-   	ALint error = alGetError();
-    
-	if (error != AL_NO_ERROR) {
-		log.error(kModAudio, "%s: %s: %s (%d)", kString16006, _resource.name.c_str(), operation, error);
-        
-		return AL_FALSE;
+  ALint error = alGetError();
+  
+  if (error != AL_NO_ERROR) {
+    log.error(kModAudio, "%s: %s: %s (%d)", kString16006,
+              _resource.name.c_str(), operation, error);
+    return AL_FALSE;
 	}
-    
 	return AL_TRUE; 
 }
 
 // And now... The Vorbisfile callbacks
 
 size_t DGAudio::_oggRead(void* ptr, size_t size, size_t nmemb, void* datasource) {
-    DGAudio* audio = (DGAudio*)datasource;
-    size_t nSize = size * nmemb;
+  DGAudio* audio = static_cast<DGAudio*>(datasource);
+  size_t nSize = size * nmemb;
+  
+  if ((audio->_resource.dataRead + nSize) > audio->_resource.dataSize)
+    nSize = audio->_resource.dataSize - audio->_resource.dataRead;
     
-    if ((audio->_resource.dataRead + nSize) > audio->_resource.dataSize)
-        nSize = audio->_resource.dataSize - audio->_resource.dataRead;
-    
-    memcpy(ptr, audio->_resource.data + audio->_resource.dataRead, nSize);
-    audio->_resource.dataRead += nSize;
-    
+  std::memcpy(ptr, audio->_resource.data + audio->_resource.dataRead, nSize);
+  audio->_resource.dataRead += nSize;    
 	return nSize;
 }
 
 int DGAudio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
-    DGAudio* audio = (DGAudio*)datasource;
+  DGAudio* audio = static_cast<DGAudio*>(datasource);
     
 	switch (whence) {
-        case SEEK_SET: 
-            audio->_resource.dataRead = (size_t)offset; 
-            break;
-        case SEEK_CUR: 
-            audio->_resource.dataRead += (size_t)offset;
-            break;
-        case SEEK_END: 
-            audio->_resource.dataRead = (size_t)(audio->_resource.dataSize - offset); 
-            break;
+    case SEEK_SET: {
+      audio->_resource.dataRead = offset;
+      break;
+    }
+    case SEEK_CUR: {
+      audio->_resource.dataRead += offset;
+      break;
+    }
+    case SEEK_END: {
+      audio->_resource.dataRead = audio->_resource.dataSize - offset;
+      break;
+    }
+    default: {
+      assert(false);
+    }
 	}
     
 	if (audio->_resource.dataRead > audio->_resource.dataSize) {
 		audio->_resource.dataRead = 0;
 		return -1;
 	}
-    
+  
 	return 0;
 }
 
 int DGAudio::_oggClose(void* datasource) {
-    DGAudio* audio = (DGAudio*)datasource;
-	audio->_resource.dataRead = 0;
-    
-	return 0;
+  DGAudio* audio = static_cast<DGAudio*>(datasource);
+  audio->_resource.dataRead = 0;
+  return 0;
 }
 
 long DGAudio::_oggTell(void* datasource) {
-    DGAudio* audio = (DGAudio*)datasource;
-	return (long)audio->_resource.dataRead;
+  DGAudio* audio = static_cast<DGAudio*>(datasource);
+  return audio->_resource.dataRead;
 }

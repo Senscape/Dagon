@@ -15,6 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <cassert>
 #include <cstdarg>
 #include <iostream>
 
@@ -191,6 +192,9 @@ void Log::_log(LogData* data) {
       case 10:  _filestr << "Oct "; break;
       case 11:  _filestr << "Nov "; break;
       case 12:  _filestr << "Dec "; break;
+      default: {
+        assert(false);
+      }
     }
     
     if (tm->tm_mday < 10)
@@ -239,6 +243,9 @@ void Log::_log(LogData* data) {
       case kLogWarning: {
         _filestr << "WARNING: ";
         break;
+      }
+      default: {
+        // We don't add any prefix
       }
     }
     
