@@ -130,7 +130,7 @@ void DGInterface::drawOverlays() {
                                     renderManager.setColor(button->textColor(), button->fadeLevel());
                                 else
                                     renderManager.setColor(button->textColor());
-                                button->font()->print(position.x, position.y, button->text());
+                                button->font()->print(position.x, position.y, button->text().c_str());
                                 renderManager.setColor(kColorWhite); // Reset the color
                             }
                         }

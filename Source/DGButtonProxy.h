@@ -181,7 +181,7 @@ public:
     
     // Return the text
     int text(lua_State *L) {
-        lua_pushstring(L, b->text());     
+        lua_pushstring(L, b->text().c_str());
         return 1;
     }
     
