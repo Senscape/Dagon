@@ -357,7 +357,7 @@ void Audio::_emptyBuffers() {
   }
 }
 
-std::string Audio::_randomizeFile(std::string &fileName) {
+std::string Audio::_randomizeFile(const std::string &fileName) {
   // Was extension specified?
   if (fileName.find(".ogg") != std::string::npos ) {
     // Then return as-is
@@ -373,7 +373,7 @@ std::string Audio::_randomizeFile(std::string &fileName) {
   }
 }
 
-ALboolean Audio::_verifyError(std::string operation) {
+ALboolean Audio::_verifyError(const std::string &operation) {
   ALint error = alGetError();
   
   if (error != AL_NO_ERROR) {

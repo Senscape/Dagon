@@ -113,7 +113,7 @@ void Config::setFramesPerSecond(double fps) {
   _fps = fps;
 }
 
-void Config::setPath(int forType, const std::string &path) {
+void Config::setPath(int forType, std::string path) {
   switch (forType) {
     case kPathApp: {
       _appPath = path;
@@ -133,11 +133,11 @@ void Config::setPath(int forType, const std::string &path) {
   }
 }
 
-void Config::setScript(const std::string &name) {
+void Config::setScript(std::string name) {
   _scriptName = name;
 }
 
-void Config::setTexExtension(const std::string &ext) {
+void Config::setTexExtension(std::string ext) {
   _texExtension = ext;
   
   if (_texExtension == "tex") {

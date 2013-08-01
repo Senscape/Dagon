@@ -72,24 +72,20 @@ class Audio : public DGObject {
   ~Audio();
   
   // Checks
-  
   bool isLoaded();
   bool isLoopable();
   bool isPlaying();
   
   // Gets
-  
   double cursor(); // For match function
   int state();
   
   // Sets
-
   void setLoopable(bool loopable);
   void setPosition(unsigned int face, Point origin);
   void setResource(std::string fileName);
     
   // State changes
-
   void load();
   void match(Audio* audioToMatch);
   void play();
@@ -125,8 +121,8 @@ class Audio : public DGObject {
   // Private methods
   bool _fillBuffer(ALuint* buffer);
   void _emptyBuffers();
-  std::string _randomizeFile(std::string &fileName);
-  ALboolean _verifyError(std::string operation);
+  std::string _randomizeFile(const std::string &fileName);
+  ALboolean _verifyError(const std::string &operation);
   
   // Callbacks for Vorbisfile library
   static size_t _oggRead(void* ptr, size_t size,

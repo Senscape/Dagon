@@ -110,9 +110,9 @@ class Config {
   std::string texExtension();
 
   void setFramesPerSecond(double fps);
-  void setPath(int forType, const std::string &path);
-  void setScript(const std::string &name);
-  void setTexExtension(const std::string &ext);
+  void setPath(int forType, std::string path);
+  void setScript(std::string name);
+  void setTexExtension(std::string ext);
   
   // TODO: Provide members to save/load configurations
   // (also used by system to save them in the user's folder)
