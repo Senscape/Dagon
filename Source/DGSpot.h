@@ -33,7 +33,7 @@ enum DGSpotFlags {
 	DGSpotUser = 0x10
 };
 
-class DGAudio;
+class Audio;
 class DGTexture;
 class DGVideo;
 
@@ -46,7 +46,7 @@ class DGSpot : public DGObject {
 	int _flags;
     
 	Action* _actionData;
-    DGAudio* _attachedAudio;
+  Audio* _attachedAudio;
     DGTexture* _attachedTexture;
 	DGVideo* _attachedVideo;
 	
@@ -84,7 +84,7 @@ public:
     // Gets
     
     Action* action();
-    DGAudio* audio();
+    Audio* audio();
     int color();
     std::vector<int> arrayOfCoordinates();
     unsigned int face();
@@ -97,7 +97,7 @@ public:
     // Sets
     
     void setAction(Action* anAction);
-    void setAudio(DGAudio* anAudio);
+    void setAudio(Audio* anAudio);
     void setColor(int aColor);
     void setOrigin(int x, int y);
     void setTexture(DGTexture* aTexture);

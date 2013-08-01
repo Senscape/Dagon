@@ -47,7 +47,7 @@ DGAudioManager::~DGAudioManager() {
 void DGAudioManager::clear() {
     if (_isInitialized) {
         if (!_arrayOfActiveAudios.empty()) {
-            vector<DGAudio*>::iterator it;
+            vector<Audio*>::iterator it;
             
             _mutexForArray.lock();
             it = _arrayOfActiveAudios.begin();
@@ -67,7 +67,7 @@ void DGAudioManager::flush() {
 
     if (_isInitialized) {
         if (!_arrayOfActiveAudios.empty()) {
-            vector<DGAudio*>::iterator it;
+            vector<Audio*>::iterator it;
             
 			while (!done) {
                 _mutexForArray.lock();
@@ -207,11 +207,11 @@ void DGAudioManager::init() {
     });
 }
 
-void DGAudioManager::registerAudio(DGAudio* target) {
+void DGAudioManager::registerAudio(Audio* target) {
     _arrayOfAudios.push_back(target);
 }
 
-void DGAudioManager::requestAudio(DGAudio* target) {
+void DGAudioManager::requestAudio(Audio* target) {
     if (!target->isLoaded()) {
         target->load();
     }
@@ -222,7 +222,7 @@ void DGAudioManager::requestAudio(DGAudio* target) {
     // that vector
     
     bool isActive = false;
-    std::vector<DGAudio*>::iterator it;
+    std::vector<Audio*>::iterator it;
     it = _arrayOfActiveAudios.begin();
     
     while (it != _arrayOfActiveAudios.end()) {
@@ -264,7 +264,7 @@ void DGAudioManager::terminate() {
     _audioThread.join();
     
     if (!_arrayOfAudios.empty()) {
-        vector<DGAudio*>::iterator it;
+        vector<Audio*>::iterator it;
         
         _mutexForArray.lock();
         
@@ -289,7 +289,7 @@ void DGAudioManager::terminate() {
 bool DGAudioManager::update() {
     if (_isRunning) {
         if (!_arrayOfActiveAudios.empty()) {
-            vector<DGAudio*>::iterator it;
+            vector<Audio*>::iterator it;
             
             _mutexForArray.lock();
             it = _arrayOfActiveAudios.begin();

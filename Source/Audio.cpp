@@ -19,15 +19,15 @@
 #include <cassert>
 #include <cstring>
 
+#include "Audio.h"
 #include "Config.h"
-#include "DGAudio.h"
 #include "Log.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGAudio::DGAudio() :
+Audio::Audio() :
   config(Config::instance()),
   log(Log::instance())
 {
@@ -43,7 +43,7 @@ DGAudio::DGAudio() :
 // Implementation - Destructor
 ////////////////////////////////////////////////////////////
 
-DGAudio::~DGAudio() {
+Audio::~Audio() {
   // TODO: Unload if required
 }
 
@@ -51,16 +51,16 @@ DGAudio::~DGAudio() {
 // Implementation - Checks
 ////////////////////////////////////////////////////////////
 
-bool DGAudio::isLoaded() {
+bool Audio::isLoaded() {
   std::lock_guard<std::mutex> guard(_mutex);
   return _isLoaded;
 }
 
-bool DGAudio::isLoopable() {
+bool Audio::isLoopable() {
   return _isLoopable;
 }
 
-bool DGAudio::isPlaying() {
+bool Audio::isPlaying() {
   std::lock_guard<std::mutex> guard(_mutex);
   return (_state == kAudioPlaying);
 }
@@ -69,11 +69,11 @@ bool DGAudio::isPlaying() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-double DGAudio::cursor() {
+double Audio::cursor() {
   return ov_time_tell(&_oggStream);
 }
 
-int DGAudio::state() {
+int Audio::state() {
   return _state;
 }
 
@@ -81,11 +81,11 @@ int DGAudio::state() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void DGAudio::setLoopable(bool loopable) {
+void Audio::setLoopable(bool loopable) {
   _isLoopable = loopable;
 }
 
-void DGAudio::setPosition(unsigned int face, Point origin) {
+void Audio::setPosition(unsigned int face, Point origin) {
   float x = origin.x / kDefTexSize;
   float y = origin.y / kDefTexSize;
     
@@ -122,7 +122,7 @@ void DGAudio::setPosition(unsigned int face, Point origin) {
   _verifyError("position");
 }
 
-void DGAudio::setResource(std::string fileName) {
+void Audio::setResource(std::string fileName) {
   _resource.name = fileName;
 }
 
@@ -130,7 +130,7 @@ void DGAudio::setResource(std::string fileName) {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-void DGAudio::load() {
+void Audio::load() {
   std::lock_guard<std::mutex> guard(_mutex);
     
   if (!_isLoaded) { 
@@ -198,12 +198,12 @@ void DGAudio::load() {
   }
 }
 
-void DGAudio::match(DGAudio* audioToMatch) {
+void Audio::match(Audio* audioToMatch) {
   _matchedAudio = audioToMatch;
   _isMatched = true;
 }
 
-void DGAudio::play() {
+void Audio::play() {
   std::lock_guard<std::mutex> guard(_mutex);
     
   if (_isLoaded && (_state != kAudioPlaying)) {
@@ -216,7 +216,7 @@ void DGAudio::play() {
   }
 }
 
-void DGAudio::pause() {
+void Audio::pause() {
   std::lock_guard<std::mutex> guard(_mutex);
     
   if (_state == kAudioPlaying) {
@@ -226,7 +226,7 @@ void DGAudio::pause() {
   }
 }
 
-void DGAudio::stop() {
+void Audio::stop() {
   std::lock_guard<std::mutex> guard(_mutex);
     
   if ((_state == kAudioPlaying) || (_state == kAudioPaused)) {
@@ -237,7 +237,7 @@ void DGAudio::stop() {
   }
 }
 
-void DGAudio::unload() {
+void Audio::unload() {
   std::lock_guard<std::mutex> guard(_mutex);
     
   if (_isLoaded) {
@@ -258,7 +258,7 @@ void DGAudio::unload() {
   }
 }
 
-void DGAudio::update() {
+void Audio::update() {
   std::lock_guard<std::mutex> guard(_mutex);
     
   if (_state == kAudioPlaying) {
@@ -299,7 +299,7 @@ void DGAudio::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-bool DGAudio::_fillBuffer(ALuint* buffer) {
+bool Audio::_fillBuffer(ALuint* buffer) {
   // This is a failsafe; if this is true, we won't attempt to stream anymore
   static bool _hasStreamingError = false;
   
@@ -341,7 +341,7 @@ bool DGAudio::_fillBuffer(ALuint* buffer) {
   }
 }
 
-void DGAudio::_emptyBuffers() {
+void Audio::_emptyBuffers() {
   ALint state;
   alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
 
@@ -357,7 +357,7 @@ void DGAudio::_emptyBuffers() {
   }
 }
 
-std::string DGAudio::_randomizeFile(std::string &fileName) {
+std::string Audio::_randomizeFile(std::string &fileName) {
   // Was extension specified?
   if (fileName.find(".ogg") != std::string::npos ) {
     // Then return as-is
@@ -373,12 +373,12 @@ std::string DGAudio::_randomizeFile(std::string &fileName) {
   }
 }
 
-ALboolean DGAudio::_verifyError(const char* operation) {
+ALboolean Audio::_verifyError(std::string operation) {
   ALint error = alGetError();
   
   if (error != AL_NO_ERROR) {
     log.error(kModAudio, "%s: %s: %s (%d)", kString16006,
-              _resource.name.c_str(), operation, error);
+              _resource.name.c_str(), operation.c_str(), error);
     return AL_FALSE;
 	}
 	return AL_TRUE; 
@@ -386,8 +386,8 @@ ALboolean DGAudio::_verifyError(const char* operation) {
 
 // And now... The Vorbisfile callbacks
 
-size_t DGAudio::_oggRead(void* ptr, size_t size, size_t nmemb, void* datasource) {
-  DGAudio* audio = static_cast<DGAudio*>(datasource);
+size_t Audio::_oggRead(void* ptr, size_t size, size_t nmemb, void* datasource) {
+  Audio* audio = static_cast<Audio*>(datasource);
   size_t nSize = size * nmemb;
   
   if ((audio->_resource.dataRead + nSize) > audio->_resource.dataSize)
@@ -398,8 +398,8 @@ size_t DGAudio::_oggRead(void* ptr, size_t size, size_t nmemb, void* datasource)
 	return nSize;
 }
 
-int DGAudio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
-  DGAudio* audio = static_cast<DGAudio*>(datasource);
+int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
+  Audio* audio = static_cast<Audio*>(datasource);
     
 	switch (whence) {
     case SEEK_SET: {
@@ -427,13 +427,13 @@ int DGAudio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
 	return 0;
 }
 
-int DGAudio::_oggClose(void* datasource) {
-  DGAudio* audio = static_cast<DGAudio*>(datasource);
+int Audio::_oggClose(void* datasource) {
+  Audio* audio = static_cast<Audio*>(datasource);
   audio->_resource.dataRead = 0;
   return 0;
 }
 
-long DGAudio::_oggTell(void* datasource) {
-  DGAudio* audio = static_cast<DGAudio*>(datasource);
+long Audio::_oggTell(void* datasource) {
+  Audio* audio = static_cast<Audio*>(datasource);
   return audio->_resource.dataRead;
 }

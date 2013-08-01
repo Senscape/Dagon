@@ -60,7 +60,7 @@ void DGFeedManager::clear() {
 }
 
 void DGFeedManager::init() {
-    _feedAudio = new DGAudio;
+    _feedAudio = new Audio;
     _feedAudio->setStatic();
     audioManager.registerAudio(_feedAudio);
     

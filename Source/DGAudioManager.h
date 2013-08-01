@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudio.h"
+#include "Audio.h"
 #include "Platform.h"
 
 #include <AL/al.h>
@@ -45,8 +45,8 @@ class DGAudioManager {
     std::thread _audioThread;
     
     std::mutex _mutexForArray;
-    std::vector<DGAudio*> _arrayOfAudios;
-    std::vector<DGAudio*> _arrayOfActiveAudios;
+    std::vector<Audio*> _arrayOfAudios;
+    std::vector<Audio*> _arrayOfActiveAudios;
     
     bool _isInitialized;
 	bool _isRunning;
@@ -70,8 +70,8 @@ public:
     void flush();
     
     void init();
-    void registerAudio(DGAudio* target);
-    void requestAudio(DGAudio* target);
+    void registerAudio(Audio* target);
+    void requestAudio(Audio* target);
     void setOrientation(float* orientation);
 	void terminate();
     bool update();

@@ -119,7 +119,7 @@ public:
     // TODO: In the future we should return a pointer to an attached object
     int attach(lua_State *L) {
         Action action;
-        DGAudio* audio;
+        Audio* audio;
         DGTexture* texture;
         DGVideo* video;
         
@@ -136,21 +136,21 @@ public:
                     
                     // Now we get the metatable of the added audio and set it
                     // as a return value
-                    lua_getfield(L, LUA_REGISTRYINDEX, DGAudioProxyName);
+                    lua_getfield(L, LUA_REGISTRYINDEX, AudioProxyName);
                     lua_setmetatable(L, -2);
                     
                     return 1;
                 }
                 else {
                     // If not, create and set (deleted by the Audio Manager)
-                    audio = new DGAudio;
+                    audio = new Audio;
                     audio->setResource(luaL_checkstring(L, 2));
                     
                     DGAudioManager::instance().registerAudio(audio);
                     
                     if (s->hasFlag(DGSpotLoop))
                         audio->setLoopable(true);
-                    
+                  
                     s->setAudio(audio);
                 }
                 

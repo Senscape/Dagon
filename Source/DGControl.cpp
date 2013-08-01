@@ -531,7 +531,7 @@ void DGControl::registerHotkey(int aKey, const char* luaCommandToExecute) {
 void DGControl::registerObject(DGObject* theTarget) {
     switch (theTarget->type()) {
         case DGObjectAudio:
-            audioManager.registerAudio((DGAudio*)theTarget);
+            audioManager.registerAudio((Audio*)theTarget);
             break;
         case DGObjectNode:
              textureManager.requestBundle((DGNode*)theTarget);
@@ -554,7 +554,7 @@ void DGControl::registerObject(DGObject* theTarget) {
 void DGControl::requestObject(DGObject* theTarget) {
     switch (theTarget->type()) {
         case DGObjectAudio:
-            audioManager.requestAudio((DGAudio*)theTarget);
+            audioManager.requestAudio((Audio*)theTarget);
             break;
         case DGObjectVideo:
             videoManager.requestVideo((DGVideo*)theTarget);
@@ -718,7 +718,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                     DGSpot* spot = currentNode->currentSpot();
                     
                     if (spot->hasAudio()) {
-                        DGAudio* audio = spot->audio();
+                        Audio* audio = spot->audio();
                         
                         // Request the audio
                         audioManager.requestAudio(audio);
@@ -772,8 +772,8 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
         
         // This has to be done every time so that room audios keep playing
         if (_currentRoom->hasAudios() && (!_currentRoom->currentNode()->isSlide() && theTarget != NULL)) {
-            vector<DGAudio*>::iterator it;
-            vector<DGAudio*> arrayOfAudios = _currentRoom->arrayOfAudios();
+            vector<Audio*>::iterator it;
+            vector<Audio*> arrayOfAudios = _currentRoom->arrayOfAudios();
             
             it = arrayOfAudios.begin();
             

@@ -25,7 +25,7 @@ extern "C" {
 #include "Luna.h"
 
 #include "Platform.h"
-#include "DGAudio.h"
+#include "Audio.h"
 #include "DGButton.h"
 #include "DGImage.h"
 #include "DGNode.h"
@@ -37,7 +37,7 @@ extern "C" {
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGAudioProxyName "Audio"
+#define AudioProxyName "Audio"
 #define DGButtonProxyName "Button"
 #define DGImageProxyName "Image"
 #define DGNodeProxyName "Node"
@@ -49,7 +49,7 @@ extern "C" {
 #define method(class, name) {#name, &class::name}
 
 static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
-static DGAudio* DGProxyToAudio(lua_State *L, int idx);
+static Audio* DGProxyToAudio(lua_State *L, int idx);
 static DGButton* DGProxyToButton(lua_State *L, int idx);
 static DGImage* DGProxyToImage(lua_State *L, int idx);
 static DGNode* DGProxyToNode(lua_State *L, int idx);
@@ -63,7 +63,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 
 #include "DGObjectProxy.h"
 
-#include "DGAudioProxy.h"
+#include "AudioProxy.h"
 #include "DGButtonProxy.h"
 #include "DGImageProxy.h"
 #include "DGNodeProxy.h"
@@ -113,7 +113,7 @@ int DGCheckProxy(lua_State *L, int idx) {
     if (lua_isuserdata(L, idx)) {                
         // Good, now check against each user type
 
-        if (_checkutype(L, idx, DGAudioProxy::className))
+        if (_checkutype(L, idx, AudioProxy::className))
             return DGObjectAudio; // It's an audio
         
         if (_checkutype(L, idx, DGButtonProxy::className))
@@ -145,8 +145,8 @@ int DGCheckProxy(lua_State *L, int idx) {
     return DGObjectNone;
 }
 
-DGAudio* DGProxyToAudio(lua_State *L, int idx) {
-    DGAudioProxy* a = Luna<DGAudioProxy>::check(L, idx);
+Audio* DGProxyToAudio(lua_State *L, int idx) {
+    AudioProxy* a = Luna<AudioProxy>::check(L, idx);
     return a->ptr();
 }
 

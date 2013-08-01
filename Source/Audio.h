@@ -66,10 +66,10 @@ struct Resource {
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGAudio : public DGObject {
+class Audio : public DGObject {
  public:
-  DGAudio();
-  ~DGAudio();
+  Audio();
+  ~Audio();
   
   // Checks
   
@@ -91,7 +91,7 @@ class DGAudio : public DGObject {
   // State changes
 
   void load();
-  void match(DGAudio* audioToMatch);
+  void match(Audio* audioToMatch);
   void play();
   void pause();
   void stop();
@@ -102,7 +102,7 @@ class DGAudio : public DGObject {
   Config& config;
   Log& log;
   
-  DGAudio* _matchedAudio;
+  Audio* _matchedAudio;
   std::mutex _mutex;
  
   // Eventually all file management will be handled by a separate class
@@ -126,7 +126,7 @@ class DGAudio : public DGObject {
   bool _fillBuffer(ALuint* buffer);
   void _emptyBuffers();
   std::string _randomizeFile(std::string &fileName);
-  ALboolean _verifyError(const char* operation);
+  ALboolean _verifyError(std::string operation);
   
   // Callbacks for Vorbisfile library
   static size_t _oggRead(void* ptr, size_t size,
@@ -135,8 +135,8 @@ class DGAudio : public DGObject {
   static int _oggClose(void* datasource);
   static long _oggTell(void* datasource);
   
-  DGAudio(const DGAudio&);
-  void operator=(const DGAudio&);
+  Audio(const Audio&);
+  void operator=(const Audio&);
 };
 
 #endif // DAGON_AUDIO_H_

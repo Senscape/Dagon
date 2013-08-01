@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudio.h"
+#include "Audio.h"
 #include "DGNode.h"
 #include "DGSpot.h"
 #include "DGTexture.h"
@@ -91,7 +91,7 @@ char* DGNode::bundleName() {
     return _bundleName;
 }
 
-DGAudio* DGNode::footstep() {
+Audio* DGNode::footstep() {
     return _footstep;
 }
 
@@ -116,7 +116,7 @@ void DGNode::setDescription(const char* description) {
     _description = description;
 }
 
-void DGNode::setFootstep(DGAudio* theFootstep) {
+void DGNode::setFootstep(Audio* theFootstep) {
     _footstep = theFootstep;
     _hasFootstep = true;
 }

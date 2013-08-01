@@ -49,7 +49,7 @@ typedef struct {
 	int timerHandle;    
 } DGFeed;
 
-class DGAudio;
+class Audio;
 class DGAudioManager;
 class Config;
 class DGFont;
@@ -66,7 +66,7 @@ class DGFeedManager {
     DGFontManager& fontManager;
     DGTimerManager& timerManager;
     
-    DGAudio* _feedAudio;
+    Audio* _feedAudio;
     std::vector<DGFeed> _arrayOfActiveFeeds;
     std::vector<DGFeed> _arrayOfFeeds;    
     DGFont* _feedFont;

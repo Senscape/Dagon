@@ -61,7 +61,7 @@ public:
             
             // Now we get the metatable of the added audio and set it
             // as a return value
-            lua_getfield(L, LUA_REGISTRYINDEX, DGAudioProxyName);
+            lua_getfield(L, LUA_REGISTRYINDEX, AudioProxyName);
             lua_setmetatable(L, -2);
             
             return 1;
@@ -90,13 +90,13 @@ public:
     int setDefaultFootstep(lua_State *L) {
         if (DGCheckProxy(L, 1) == DGObjectAudio) {
             // Just set the audio object
-             r->setDefaultFootstep((DGAudio*)DGProxyToAudio(L, 1));
+             r->setDefaultFootstep((Audio*)DGProxyToAudio(L, 1));
         }
         else {
             // If not, create and set (this is later deleted by the Audio Manager)
-            DGAudio* audio = new DGAudio;
+            Audio* audio = new Audio;
             audio->setResource(luaL_checkstring(L, 1));
-            
+          
             DGAudioManager::instance().registerAudio(audio);
             
             r->setDefaultFootstep(audio);

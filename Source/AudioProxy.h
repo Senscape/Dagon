@@ -29,14 +29,14 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGAudioProxy : public DGObjectProxy {
+class AudioProxy : public DGObjectProxy {
 public:
     static const char className[];
-    static Luna<DGAudioProxy>::RegType methods[];
+    static Luna<AudioProxy>::RegType methods[];
     
     // Constructor
-    DGAudioProxy(lua_State *L) {
-        a = new DGAudio;
+    AudioProxy(lua_State *L) {
+        a = new Audio;
         
         a->setResource(luaL_checkstring(L, 1));
 
@@ -60,11 +60,11 @@ public:
     }
     
     // Destructor
-    ~DGAudioProxy() { delete a; }
+    ~AudioProxy() { delete a; }
     
     // Match with another audio
     int match(lua_State *L) {
-        a->match((DGAudio*)DGProxyToAudio(L, 1));
+        a->match((Audio*)DGProxyToAudio(L, 1));
         
         return 0;
     } 
@@ -92,10 +92,10 @@ public:
         return 0;
     } 
     
-    DGAudio* ptr() { return a; }
+    Audio* ptr() { return a; }
     
 private:
-    DGAudio* a;
+    Audio* a;
     
 };
 
@@ -103,14 +103,14 @@ private:
 // Static definitions
 ////////////////////////////////////////////////////////////
 
-const char DGAudioProxy::className[] = DGAudioProxyName;
+const char AudioProxy::className[] = AudioProxyName;
 
-Luna<DGAudioProxy>::RegType DGAudioProxy::methods[] = {
-    DGObjectMethods(DGAudioProxy),
-    method(DGAudioProxy, match),
-    method(DGAudioProxy, play),
-    method(DGAudioProxy, pause),    
-    method(DGAudioProxy, stop),
+Luna<AudioProxy>::RegType AudioProxy::methods[] = {
+    DGObjectMethods(AudioProxy),
+    method(AudioProxy, match),
+    method(AudioProxy, play),
+    method(AudioProxy, pause),    
+    method(AudioProxy, stop),
     {0,0}
 };
 

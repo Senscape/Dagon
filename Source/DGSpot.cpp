@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudio.h"
+#include "Audio.h"
 #include "DGSpot.h"
 #include "DGVideo.h"
 
@@ -102,7 +102,7 @@ Action* DGSpot::action() {
     return _actionData;
 }
 
-DGAudio* DGSpot::audio() {
+Audio* DGSpot::audio() {
     return _attachedAudio;
 }
 
@@ -181,7 +181,7 @@ void DGSpot::setAction(Action* anAction) {
     _hasAction = true;
 }
 
-void DGSpot::setAudio(DGAudio* anAudio) {
+void DGSpot::setAudio(Audio* anAudio) {
     _attachedAudio = anAudio;
     _hasAudio = true;
 }

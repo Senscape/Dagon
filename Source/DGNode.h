@@ -25,7 +25,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-class DGAudio;
+class Audio;
 class DGSpot;
 
 ////////////////////////////////////////////////////////////
@@ -43,7 +43,7 @@ class DGNode : public DGObject {
     bool _isSlide;
     int _slideReturn;
     
-    DGAudio* _footstep;
+    Audio* _footstep;
     bool _hasFootstep;
     
     std::vector<DGSpot*> _arrayOfSpots;
@@ -68,7 +68,7 @@ public:
     char* bundleName();
     const char* description();
     DGSpot* currentSpot();
-    DGAudio* footstep();
+    Audio* footstep();
     DGNode* previousNode();
     int slideReturn();
     
@@ -76,7 +76,7 @@ public:
     
     void setBundleName(const char* name);
     void setDescription(const char* description);
-    void setFootstep(DGAudio* theFootstep);
+    void setFootstep(Audio* theFootstep);
     void setPreviousNode(DGNode* node);
     void setSlide(bool enabled);
     void setSlideReturn(int luaHandler);

@@ -72,7 +72,7 @@ void DGVideoManager::flush() {
 
 void DGVideoManager::init() {
     log.trace(kModVideo, "%s", kString17001);
-    //log.info(kModVideo, "%s: %s", kString17006, theora_version_string());
+    log.info(kModVideo, "%s: %s", kString17006, theora_version_string());
     
     // Eventually lots of Theora initialization process will be moved here
     

@@ -104,7 +104,7 @@ void DGScript::init() {
     luaL_dostring(_L, "package.path = package.path .. \";Modules/?.lua\"");
     
     // Register all proxys
-    Luna<DGAudioProxy>::Register(_L);
+    Luna<AudioProxy>::Register(_L);
     Luna<DGButtonProxy>::Register(_L);       
     Luna<DGImageProxy>::Register(_L);    
     Luna<DGNodeProxy>::Register(_L);
@@ -350,7 +350,7 @@ int DGScript::_globalLookAt(lua_State *L) {
 }
 
 int DGScript::_globalPlay(lua_State *L) {
-    DGAudio* audio = new DGAudio;
+    Audio* audio = new Audio;
     
     audio->setResource(luaL_checkstring(L, 1));
     DGAudioManager::instance().registerAudio(audio);

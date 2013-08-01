@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudio.h"
+#include "Audio.h"
 #include "DGNode.h"
 #include "DGRoom.h"
 
@@ -59,7 +59,7 @@ bool DGRoom::hasNodes() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-vector<DGAudio*> DGRoom::arrayOfAudios() {
+vector<Audio*> DGRoom::arrayOfAudios() {
     return _arrayOfAudios;
 }
 
@@ -67,7 +67,7 @@ DGNode* DGRoom::currentNode() {
     return _currentNode;
 }
 
-DGAudio* DGRoom::defaultFootstep() {
+Audio* DGRoom::defaultFootstep() {
     return _defaultFootstep;
 }
 
@@ -83,7 +83,7 @@ DGNode* DGRoom::iterator() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void DGRoom::setDefaultFootstep(DGAudio* theFootstep) {
+void DGRoom::setDefaultFootstep(Audio* theFootstep) {
     _defaultFootstep = theFootstep;
     _hasDefaultFootstep = true;
 }
@@ -96,7 +96,7 @@ void DGRoom::setEffects(int theEffectFlags) {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-DGAudio* DGRoom::addAudio(DGAudio* anAudio) {
+Audio* DGRoom::addAudio(Audio* anAudio) {
     _arrayOfAudios.push_back(anAudio);
     return anAudio; 
 }
