@@ -26,7 +26,7 @@ extern "C" {
 
 #include "Platform.h"
 #include "Audio.h"
-#include "DGButton.h"
+#include "Button.h"
 #include "DGImage.h"
 #include "DGNode.h"
 #include "DGOverlay.h"
@@ -38,7 +38,7 @@ extern "C" {
 ////////////////////////////////////////////////////////////
 
 #define AudioProxyName "Audio"
-#define DGButtonProxyName "Button"
+#define ButtonProxyName "Button"
 #define DGImageProxyName "Image"
 #define DGNodeProxyName "Node"
 #define DGOverlayProxyName "Overlay"
@@ -50,7 +50,7 @@ extern "C" {
 
 static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
 static Audio* DGProxyToAudio(lua_State *L, int idx);
-static DGButton* DGProxyToButton(lua_State *L, int idx);
+static Button* DGProxyToButton(lua_State *L, int idx);
 static DGImage* DGProxyToImage(lua_State *L, int idx);
 static DGNode* DGProxyToNode(lua_State *L, int idx);
 static DGOverlay* DGProxyToOverlay(lua_State *L, int idx);
@@ -64,7 +64,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 #include "DGObjectProxy.h"
 
 #include "AudioProxy.h"
-#include "DGButtonProxy.h"
+#include "ButtonProxy.h"
 #include "DGImageProxy.h"
 #include "DGNodeProxy.h"
 #include "DGOverlayProxy.h"
@@ -116,7 +116,7 @@ int DGCheckProxy(lua_State *L, int idx) {
         if (_checkutype(L, idx, AudioProxy::className))
             return DGObjectAudio; // It's an audio
         
-        if (_checkutype(L, idx, DGButtonProxy::className))
+        if (_checkutype(L, idx, ButtonProxy::className))
             return DGObjectButton; // It's a button          
         
         if (_checkutype(L, idx, DGImageProxy::className))
@@ -150,8 +150,8 @@ Audio* DGProxyToAudio(lua_State *L, int idx) {
     return a->ptr();
 }
 
-DGButton* DGProxyToButton(lua_State *L, int idx) {
-    DGButtonProxy* b = Luna<DGButtonProxy>::check(L, idx);
+Button* DGProxyToButton(lua_State *L, int idx) {
+    ButtonProxy* b = Luna<ButtonProxy>::check(L, idx);
     return b->ptr();
 }
 

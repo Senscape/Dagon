@@ -35,14 +35,14 @@ enum ActionTypes {
 };
 
 struct Action {
-  unsigned int cursor;
+  int cursor;
   std::string feed;
   std::string feedAudio;
   bool hasFeedAudio;
   int luaHandler;
   int luaObject;
 	DGObject* target;
-	unsigned int type;    
+  int type;    
 };
 
 #endif // DAGON_ACTION_H_

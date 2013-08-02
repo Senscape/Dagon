@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGButton.h"
+#include "Button.h"
 #include "DGImage.h"
 #include "DGOverlay.h"
 
@@ -62,7 +62,7 @@ Point DGOverlay::position() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-DGButton* DGOverlay::currentButton() {
+Button* DGOverlay::currentButton() {
     if (_isIteratingBackwards)
         return *_ritButton;
     
@@ -94,7 +94,7 @@ void DGOverlay::setPosition(int x, int y) {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-DGButton* DGOverlay::addButton(DGButton* aButton) {
+Button* DGOverlay::addButton(Button* aButton) {
     _arrayOfButtons.push_back(aButton);
     return aButton;
 }
@@ -122,7 +122,7 @@ void DGOverlay::fadeIn() {
     
     // Buttons
     if (!_arrayOfButtons.empty()) {
-        vector<DGButton*>::iterator itButton;
+        vector<Button*>::iterator itButton;
         
         itButton = _arrayOfButtons.begin();
         
@@ -148,7 +148,7 @@ void DGOverlay::fadeIn() {
 void DGOverlay::fadeOut() {
     // Buttons
     if (!_arrayOfButtons.empty()) {
-        vector<DGButton*>::iterator itButton;
+        vector<Button*>::iterator itButton;
         
         itButton = _arrayOfButtons.begin();
         
@@ -198,7 +198,7 @@ bool DGOverlay::iterateImages() {
 void DGOverlay::move(int offsetX, int offsetY) {
     // Buttons
     if (!_arrayOfButtons.empty()) {
-        vector<DGButton*>::iterator itButton;
+        vector<Button*>::iterator itButton;
         
         itButton = _arrayOfButtons.begin();
         

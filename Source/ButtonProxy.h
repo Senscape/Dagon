@@ -23,21 +23,21 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGButton.h"
+#include "Button.h"
 #include "DGScript.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGButtonProxy : public DGObjectProxy {
+class ButtonProxy : public DGObjectProxy {
 public:
     static const char className[];
-    static Luna<DGButtonProxy>::RegType methods[];
+    static Luna<ButtonProxy>::RegType methods[];
     
     // Constructor
-    DGButtonProxy(lua_State *L) {
-        b = new DGButton();
+    ButtonProxy(lua_State *L) {
+        b = new Button();
         
         b->setPosition(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
         b->setSize(luaL_checknumber(L, 3), luaL_checknumber(L, 4));
@@ -47,7 +47,7 @@ public:
     }
     
     // Destructor
-    ~DGButtonProxy() { delete b; }
+    ~ButtonProxy() { delete b; }
     
     // Move the button
     int move(lua_State *L) {
@@ -87,7 +87,7 @@ public:
                 }
                 else action.hasFeedAudio = false;
                 
-                b->setAction(&action);
+                b->setAction(action);
                 
                 break;
             case FUNCTION:
@@ -99,7 +99,7 @@ public:
                 action.type = kActionFunction;
                 action.cursor = kCursorUse;
                 action.luaHandler = luaL_ref(L, LUA_REGISTRYINDEX); // Pop and return a reference to the table
-                b->setAction(&action);
+                b->setAction(action);
                 
                 break;                
             case SWITCH:
@@ -115,7 +115,7 @@ public:
                 
                 action.type = kActionSwitch;
                 action.cursor = kCursorForward;                
-                b->setAction(&action);
+                b->setAction(action);
                 
                 break;
         }
@@ -125,11 +125,7 @@ public:
     
     // Set a cursor for the action
     int setCursor(lua_State *L) {
-        if (b->hasAction()) {
-            Action* action = b->action();
-            
-            action->cursor = luaL_checknumber(L, 1);
-        }
+      b->updateCursor(luaL_checknumber(L, 1));
         
         return 0;
     }
@@ -185,10 +181,10 @@ public:
         return 1;
     }
     
-    DGButton* ptr() { return b; }
+    Button* ptr() { return b; }
     
 private:
-    DGButton* b;
+    Button* b;
     
 };
 
@@ -196,23 +192,23 @@ private:
 // Static definitions
 ////////////////////////////////////////////////////////////
 
-const char DGButtonProxy::className[] = DGButtonProxyName;
+const char ButtonProxy::className[] = ButtonProxyName;
 
-Luna<DGButtonProxy>::RegType DGButtonProxy::methods[] = {
-    DGObjectMethods(DGButtonProxy),      
-    method(DGButtonProxy, move),
-    method(DGButtonProxy, position),
-    method(DGButtonProxy, scale),
-    method(DGButtonProxy, setAction),
-    method(DGButtonProxy, setCursor),
-    method(DGButtonProxy, setFont),     
-    method(DGButtonProxy, setImage),    
-    method(DGButtonProxy, setPosition),
-    method(DGButtonProxy, setSize),
-    method(DGButtonProxy, setText),    
-    method(DGButtonProxy, setTextColor),     
-    method(DGButtonProxy, size),
-    method(DGButtonProxy, text),       
+Luna<ButtonProxy>::RegType ButtonProxy::methods[] = {
+    DGObjectMethods(ButtonProxy),      
+    method(ButtonProxy, move),
+    method(ButtonProxy, position),
+    method(ButtonProxy, scale),
+    method(ButtonProxy, setAction),
+    method(ButtonProxy, setCursor),
+    method(ButtonProxy, setFont),     
+    method(ButtonProxy, setImage),    
+    method(ButtonProxy, setPosition),
+    method(ButtonProxy, setSize),
+    method(ButtonProxy, setText),    
+    method(ButtonProxy, setTextColor),     
+    method(ButtonProxy, size),
+    method(ButtonProxy, text),       
     {0,0}
 };
 

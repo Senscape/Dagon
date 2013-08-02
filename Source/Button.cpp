@@ -15,7 +15,9 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGButton.h"
+#include <cassert>
+
+#include "Button.h"
 #include "Config.h"
 #include "DGFontManager.h"
 #include "DGTexture.h"
@@ -24,7 +26,7 @@
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGButton::DGButton() :
+Button::Button() :
   config(Config::instance()),
   fontManager(DGFontManager::instance())
 {
@@ -37,9 +39,9 @@ DGButton::DGButton() :
 // Implementation - Destructor
 ////////////////////////////////////////////////////////////
 
-DGButton::~DGButton() {
+Button::~Button() {
   if (_hasAction)
-    delete _actionData;
+    delete _action;
   
   if (_hasOnHoverTexture)
     delete _onHoverTexture;
@@ -49,19 +51,19 @@ DGButton::~DGButton() {
 // Implementation - Checks
 ////////////////////////////////////////////////////////////
 
-bool DGButton::hasAction() {
+bool Button::hasAction() {
   return _hasAction;
 }
 
-bool DGButton::hasOnHoverTexture() {
+bool Button::hasOnHoverTexture() {
   return _hasOnHoverTexture;
 }
 
-bool DGButton::hasFont() {
+bool Button::hasFont() {
   return _hasFont;
 }
 
-bool DGButton::hasText() {
+bool Button::hasText() {
   return _hasText;
 }
 
@@ -69,23 +71,24 @@ bool DGButton::hasText() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-Action* DGButton::action() {
-  return _actionData;
+Action Button::action() {
+  assert(_hasAction == true);
+  return *_action;
 }
 
-DGFont* DGButton::font() {
+DGFont* Button::font() {
   return _font;
 }
 
-DGTexture* DGButton::onHoverTexture() {
+DGTexture* Button::onHoverTexture() {
   return _onHoverTexture;
 }
 
-std::string DGButton::text() {
+std::string Button::text() {
   return _text;
 }
 
-int DGButton::textColor() {
+int Button::textColor() {
   return _textColor;
 }
 
@@ -93,19 +96,19 @@ int DGButton::textColor() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void DGButton::setAction(Action* anAction) {
-  _actionData = new Action;
-  memcpy(_actionData, anAction, sizeof(Action));
-  _hasAction = true;   
+void Button::setAction(Action anAction) {
+  _action = new Action;
+  *_action = anAction;
+  _hasAction = true;
 }
 
-void DGButton::setFont(const std::string &fromFileName,
+void Button::setFont(const std::string &fromFileName,
                        unsigned int heightOfFont) {
   // FIXME: Wrong, this can load many repeated fonts!
   _font = fontManager.load(fromFileName.c_str(), heightOfFont);
 }
 
-void DGButton::setOnHoverTexture(const std::string &fromFileName) {
+void Button::setOnHoverTexture(const std::string &fromFileName) {
   // TODO: Important! We should determine first if the texture already exists,
   // to avoid repeating resources. Eventually, this would be done via the
   // resource manager.
@@ -119,12 +122,18 @@ void DGButton::setOnHoverTexture(const std::string &fromFileName) {
   _hasOnHoverTexture = true;
 }
 
-void DGButton::setText(std::string text){
+void Button::setText(std::string text){
   _text = text;
   _hasText = true;
 }
 
-void DGButton::setTextColor(int aColor) {
+void Button::setTextColor(int aColor) {
   // Note this expects one of our pre-generated colors
   _textColor = aColor;
+}
+
+void Button::updateCursor(int theCursor) {
+  if (_hasAction) {
+    _action->cursor = theCursor;
+  }
 }

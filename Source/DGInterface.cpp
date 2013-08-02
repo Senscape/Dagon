@@ -15,7 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGButton.h"
+#include "Button.h"
 #include "DGCameraManager.h"
 #include "Config.h"
 #include "DGCursorManager.h"
@@ -113,7 +113,7 @@ void DGInterface::drawOverlays() {
                     (*itOverlay)->beginIteratingButtons(false);
                     
                     do {
-                        DGButton* button = (*itOverlay)->currentButton();
+                        Button* button = (*itOverlay)->currentButton();
                         if (button->isEnabled()) {
                             button->updateFade();
                             
@@ -176,7 +176,7 @@ bool DGInterface::scanOverlays() {
                     (*itOverlay)->beginIteratingButtons(true);
                     
                     do {
-                        DGButton* button = (*itOverlay)->currentButton();
+                        Button* button = (*itOverlay)->currentButton();
                         if (button->isEnabled()) {
                             Point position = cursorManager.position();
                             int* arrayOfCoordinates = button->arrayOfCoordinates();
@@ -184,9 +184,11 @@ bool DGInterface::scanOverlays() {
                                 position.x <= arrayOfCoordinates[4] && position.y <= arrayOfCoordinates[5]) {
                                 
                                 cursorManager.setOnButton(true);
-                                if (button->hasAction())
-                                    cursorManager.setAction(button->action());
-                                
+                              if (button->hasAction()) {
+                                Action action = button->action();
+                                    cursorManager.setAction(&action);
+                              }
+                              
                                 return true;
                             }
                         }

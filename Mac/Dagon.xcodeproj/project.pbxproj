@@ -38,7 +38,7 @@
 		FBA2C78814DD801A0098E334 /* DGCameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C78714DD801A0098E334 /* DGCameraManager.cpp */; };
 		FBABA631156548E80009889F /* DGOverlay.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA630156548E80009889F /* DGOverlay.cpp */; };
 		FBABA6351565537D0009889F /* DGImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6341565537D0009889F /* DGImage.cpp */; };
-		FBABA6381565539B0009889F /* DGButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6371565539B0009889F /* DGButton.cpp */; };
+		FBABA6381565539B0009889F /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6371565539B0009889F /* Button.cpp */; };
 		FBB4763015D01D2E00514FE6 /* DGSplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBB4762F15D01D2E00514FE6 /* DGSplashData.c */; };
 		FBBC59AC15AF5E87005D173B /* DGShaderData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBBC59AB15AF5E87005D173B /* DGShaderData.c */; };
 		FBBE56DB17949ADF002CBF3C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
@@ -137,11 +137,11 @@
 		FBABA633156548F40009889F /* DGOverlay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGOverlay.h; sourceTree = "<group>"; };
 		FBABA6341565537D0009889F /* DGImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGImage.cpp; sourceTree = "<group>"; };
 		FBABA6361565538F0009889F /* DGImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGImage.h; sourceTree = "<group>"; };
-		FBABA6371565539B0009889F /* DGButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGButton.cpp; sourceTree = "<group>"; };
-		FBABA639156553A80009889F /* DGButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGButton.h; sourceTree = "<group>"; };
+		FBABA6371565539B0009889F /* Button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Button.cpp; sourceTree = "<group>"; };
+		FBABA639156553A80009889F /* Button.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Button.h; sourceTree = "<group>"; };
 		FBABA63A156583EC0009889F /* DGOverlayProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGOverlayProxy.h; sourceTree = "<group>"; };
 		FBABA63B156589030009889F /* DGImageProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGImageProxy.h; sourceTree = "<group>"; };
-		FBABA63C1565B5C00009889F /* DGButtonProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGButtonProxy.h; sourceTree = "<group>"; };
+		FBABA63C1565B5C00009889F /* ButtonProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ButtonProxy.h; sourceTree = "<group>"; };
 		FBB4762F15D01D2E00514FE6 /* DGSplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGSplashData.c; sourceTree = "<group>"; };
 		FBBC59A815AF41E9005D173B /* DGEffectsLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEffectsLib.h; sourceTree = "<group>"; };
 		FBBC59AB15AF5E87005D173B /* DGShaderData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGShaderData.c; sourceTree = "<group>"; };
@@ -221,8 +221,8 @@
 				FB279DB014AB81F8002D48FC /* Action.h */,
 				FB279DB914AE1555002D48FC /* Audio.h */,
 				FB279DB714AE14AF002D48FC /* Audio.cpp */,
-				FBABA639156553A80009889F /* DGButton.h */,
-				FBABA6371565539B0009889F /* DGButton.cpp */,
+				FBABA639156553A80009889F /* Button.h */,
+				FBABA6371565539B0009889F /* Button.cpp */,
 				E8CF666A14EFE7B100B4562B /* DGFont.h */,
 				E8CF666914EFE7B100B4562B /* DGFont.cpp */,
 				FBABA6361565538F0009889F /* DGImage.h */,
@@ -400,7 +400,7 @@
 			isa = PBXGroup;
 			children = (
 				FB0769D71508F228009EA1AF /* AudioProxy.h */,
-				FBABA63C1565B5C00009889F /* DGButtonProxy.h */,
+				FBABA63C1565B5C00009889F /* ButtonProxy.h */,
 				FBABA63B156589030009889F /* DGImageProxy.h */,
 				E8E0194714E366B800173A2D /* DGNodeProxy.h */,
 				FBA97543157B961900428561 /* DGObjectProxy.h */,
@@ -521,7 +521,7 @@
 				FBE7EDE3153F603D00F43EDA /* DGConsole.cpp in Sources */,
 				FBABA631156548E80009889F /* DGOverlay.cpp in Sources */,
 				FBABA6351565537D0009889F /* DGImage.cpp in Sources */,
-				FBABA6381565539B0009889F /* DGButton.cpp in Sources */,
+				FBABA6381565539B0009889F /* Button.cpp in Sources */,
 				E8707569157EF47600D2E916 /* DGCursorManager.cpp in Sources */,
 				FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */,
 				FB0602B4158BC6B800D26AB9 /* DGInterface.cpp in Sources */,

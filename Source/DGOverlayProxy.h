@@ -58,7 +58,7 @@ public:
             
             // Now we get the metatable of the added spot and set it
             // as a return value
-            lua_getfield(L, LUA_REGISTRYINDEX, DGButtonProxyName);
+            lua_getfield(L, LUA_REGISTRYINDEX, ButtonProxyName);
             lua_setmetatable(L, -2);
             
             return 1;

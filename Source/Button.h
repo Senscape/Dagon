@@ -37,10 +37,10 @@ class DGTexture;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGButton : public DGImage {    
+class Button : public DGImage {    
  public:
-  DGButton();
-  ~DGButton();
+  Button();
+  ~Button();
 
   // Checks
   bool hasAction();
@@ -49,24 +49,25 @@ class DGButton : public DGImage {
   bool hasText();
 
   // Gets
-  Action* action();
+  Action action();
   DGFont* font();
   DGTexture* onHoverTexture();
   std::string text();
   int textColor();
 
   // Sets
-  void setAction(Action* anAction);
+  void setAction(Action anAction);
   void setFont(const std::string &fromFileName, unsigned int heightOfFont);
   void setOnHoverTexture(const std::string &fromFileName);
   void setText(std::string text);
   void setTextColor(int aColor);
+  void updateCursor(int theCursor);
   
  private:
   Config& config;
   DGFontManager& fontManager;
   
-  Action* _actionData;
+  Action* _action;
   DGTexture* _onHoverTexture;
   DGFont* _font;
   bool _hasAction = false;
@@ -76,8 +77,8 @@ class DGButton : public DGImage {
   std::string _text;
   int _textColor = kColorWhite;
   
-  DGButton(const DGButton&);
-  void operator=(const DGButton&);
+  Button(const Button&);
+  void operator=(const Button&);
 };
 
 #endif // DAGON_BUTTON_H_

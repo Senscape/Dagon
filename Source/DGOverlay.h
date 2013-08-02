@@ -24,7 +24,7 @@
 // Definitions
 ////////////////////////////////////////////////////////////
 
-class DGButton;
+class Button;
 class DGImage;
 
 ////////////////////////////////////////////////////////////
@@ -32,11 +32,11 @@ class DGImage;
 ////////////////////////////////////////////////////////////
 
 class DGOverlay : public DGObject {
-    std::vector<DGButton*> _arrayOfButtons;
+    std::vector<Button*> _arrayOfButtons;
     std::vector<DGImage*> _arrayOfImages;
     
-    std::vector<DGButton*>::iterator _itButton;
-    std::vector<DGButton*>::reverse_iterator _ritButton;
+    std::vector<Button*>::iterator _itButton;
+    std::vector<Button*>::reverse_iterator _ritButton;
     std::vector<DGImage*>::iterator _itImage;
     
     bool _isIteratingBackwards;
@@ -54,7 +54,7 @@ public:
     
     // Gets
     
-    DGButton* currentButton();
+    Button* currentButton();
     DGImage* currentImage();
     
     // Sets
@@ -63,7 +63,7 @@ public:
     
     // State changes
     
-    DGButton* addButton(DGButton* aButton);
+    Button* addButton(Button* aButton);
     DGImage* addImage(DGImage* anImage);    
     void beginIteratingButtons(bool iterateBackwards);
     void beginIteratingImages();
