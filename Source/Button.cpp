@@ -112,13 +112,10 @@ void Button::setOnHoverTexture(const std::string &fromFileName) {
   // TODO: Important! We should determine first if the texture already exists,
   // to avoid repeating resources. Eventually, this would be done via the
   // resource manager.
-  DGTexture* texture;
-    
-  texture = new DGTexture;
-  texture->setResource(config.path(kPathResources, fromFileName,
+  _onHoverTexture = new DGTexture;
+  _onHoverTexture->setResource(config.path(kPathResources, fromFileName,
                                    DGObjectImage).c_str());
-  texture->load();
-  _onHoverTexture = texture;
+  _onHoverTexture->load();
   _hasOnHoverTexture = true;
 }
 
