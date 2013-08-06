@@ -22,7 +22,7 @@
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
 
-#include "DGFont.h"
+#include "Font.h"
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -31,7 +31,7 @@
 
 #define kDefFontSize 10
 
-class DGFont;
+class Font;
 class Log;
 
 ////////////////////////////////////////////////////////////
@@ -41,9 +41,9 @@ class Log;
 class DGFontManager {
     Log& log;
     
-    std::vector<DGFont*> _arrayOfFonts;
+    std::vector<Font*> _arrayOfFonts;
     
-    DGFont _defaultFont;
+    Font _defaultFont;
     bool _isInitialized;
     FT_Library _library;
     
@@ -59,8 +59,8 @@ public:
     }
     
     void init();
-    DGFont* load(const char* fromFileName, unsigned int heightOfFont);
-    DGFont* loadDefault();
+    Font* load(const char* fromFileName, unsigned int heightOfFont);
+    Font* loadDefault();
 };
 
 #endif // DG_FONTMANAGER_H

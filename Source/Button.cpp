@@ -76,7 +76,7 @@ Action Button::action() {
   return *_action;
 }
 
-DGFont* Button::font() {
+Font* Button::font() {
   return _font;
 }
 
@@ -114,7 +114,7 @@ void Button::setOnHoverTexture(const std::string &fromFileName) {
   // resource manager.
   _onHoverTexture = new DGTexture;
   _onHoverTexture->setResource(config.path(kPathResources, fromFileName,
-                                   DGObjectImage).c_str());
+                                           DGObjectImage).c_str());
   _onHoverTexture->load();
   _hasOnHoverTexture = true;
 }

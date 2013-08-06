@@ -11,8 +11,8 @@
 		E8362A6A14F1B1A1005B20EF /* DGFeedManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8362A6914F1B1A1005B20EF /* DGFeedManager.cpp */; };
 		E8362A6C14F2FBE1005B20EF /* DGFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8362A6B14F2FBE1005B20EF /* DGFontManager.cpp */; };
 		E8707569157EF47600D2E916 /* DGCursorManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8707568157EF47600D2E916 /* DGCursorManager.cpp */; };
-		E8CF666B14EFE7B100B4562B /* DGFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666914EFE7B100B4562B /* DGFont.cpp */; };
-		E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666D14EFE7F100B4562B /* DGFontData.c */; };
+		E8CF666B14EFE7B100B4562B /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666914EFE7B100B4562B /* Font.cpp */; };
+		E8CF666E14EFE7F100B4562B /* FontData.c in Sources */ = {isa = PBXBuildFile; fileRef = E8CF666D14EFE7F100B4562B /* FontData.c */; };
 		E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E8ECDFCB14E216B900A6BA8D /* DGScript.cpp */; };
 		FB0602B4158BC6B800D26AB9 /* DGInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0602B3158BC6B800D26AB9 /* DGInterface.cpp */; };
 		FB0602B8158FB18000D26AB9 /* DGVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0602B7158FB18000D26AB9 /* DGVideo.cpp */; };
@@ -76,9 +76,9 @@
 		E8362A6D14F2FBFB005B20EF /* DGFontManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGFontManager.h; sourceTree = "<group>"; };
 		E8707566157EF46800D2E916 /* DGCursorManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGCursorManager.h; sourceTree = "<group>"; };
 		E8707568157EF47600D2E916 /* DGCursorManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCursorManager.cpp; sourceTree = "<group>"; };
-		E8CF666914EFE7B100B4562B /* DGFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGFont.cpp; sourceTree = "<group>"; };
-		E8CF666A14EFE7B100B4562B /* DGFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGFont.h; sourceTree = "<group>"; };
-		E8CF666D14EFE7F100B4562B /* DGFontData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGFontData.c; sourceTree = "<group>"; };
+		E8CF666914EFE7B100B4562B /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Font.cpp; sourceTree = "<group>"; };
+		E8CF666A14EFE7B100B4562B /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Font.h; sourceTree = "<group>"; };
+		E8CF666D14EFE7F100B4562B /* FontData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FontData.c; sourceTree = "<group>"; };
 		E8E0194714E366B800173A2D /* DGNodeProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGNodeProxy.h; sourceTree = "<group>"; };
 		E8E0194814E366B800173A2D /* DGProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGProxy.h; sourceTree = "<group>"; };
 		E8E0194914E366B800173A2D /* DGRoomProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRoomProxy.h; sourceTree = "<group>"; };
@@ -223,8 +223,8 @@
 				FB279DB714AE14AF002D48FC /* Audio.cpp */,
 				FBABA639156553A80009889F /* Button.h */,
 				FBABA6371565539B0009889F /* Button.cpp */,
-				E8CF666A14EFE7B100B4562B /* DGFont.h */,
-				E8CF666914EFE7B100B4562B /* DGFont.cpp */,
+				E8CF666A14EFE7B100B4562B /* Font.h */,
+				E8CF666914EFE7B100B4562B /* Font.cpp */,
 				FBABA6361565538F0009889F /* DGImage.h */,
 				FBABA6341565537D0009889F /* DGImage.cpp */,
 				FB279DB314ACD230002D48FC /* DGNode.h */,
@@ -388,7 +388,7 @@
 			isa = PBXGroup;
 			children = (
 				FB3B4DC515CD7EC6000B69C6 /* DGDustData.c */,
-				E8CF666D14EFE7F100B4562B /* DGFontData.c */,
+				E8CF666D14EFE7F100B4562B /* FontData.c */,
 				FBBC59AB15AF5E87005D173B /* DGShaderData.c */,
 				FBB4762F15D01D2E00514FE6 /* DGSplashData.c */,
 			);
@@ -512,8 +512,8 @@
 				FBA2C78114DC654B0098E334 /* DGControl.cpp in Sources */,
 				FBA2C78814DD801A0098E334 /* DGCameraManager.cpp in Sources */,
 				E8ECDFCD14E216B900A6BA8D /* DGScript.cpp in Sources */,
-				E8CF666B14EFE7B100B4562B /* DGFont.cpp in Sources */,
-				E8CF666E14EFE7F100B4562B /* DGFontData.c in Sources */,
+				E8CF666B14EFE7B100B4562B /* Font.cpp in Sources */,
+				E8CF666E14EFE7F100B4562B /* FontData.c in Sources */,
 				E8362A6714F099B3005B20EF /* DGTimerManager.cpp in Sources */,
 				E8362A6A14F1B1A1005B20EF /* DGFeedManager.cpp in Sources */,
 				E8362A6C14F2FBE1005B20EF /* DGFontManager.cpp in Sources */,

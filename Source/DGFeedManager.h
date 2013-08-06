@@ -52,7 +52,7 @@ typedef struct {
 class Audio;
 class DGAudioManager;
 class Config;
-class DGFont;
+class Font;
 class DGFontManager;
 class DGTimerManager;
 
@@ -69,7 +69,7 @@ class DGFeedManager {
     Audio* _feedAudio;
     std::vector<DGFeed> _arrayOfActiveFeeds;
     std::vector<DGFeed> _arrayOfFeeds;    
-    DGFont* _feedFont;
+    Font* _feedFont;
     int _feedHeight;
     
     void _calculatePosition(DGFeed* feed);

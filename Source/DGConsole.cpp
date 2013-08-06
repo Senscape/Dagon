@@ -132,7 +132,7 @@ void DGConsole::update() {
             case DGConsoleHidden:
                 // Set the color used for information
                 renderManager.setColor(kColorBrightCyan);
-                _font->print(DGInfoMargin, DGInfoMargin, 
+                _font->print(DGInfoMargin, DGInfoMargin,
                              "Viewport size: %d x %d", config.displayWidth, config.displayHeight);                
                 _font->print(DGInfoMargin, (DGInfoMargin * 2) + kDefFontSize, 
                              "Coordinates: (%d, %d)", (int)position.x, (int)position.y);

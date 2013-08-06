@@ -18,7 +18,7 @@
 #include "DGCameraManager.h"
 #include "Config.h"
 #include "DGCursorManager.h"
-#include "DGFont.h"
+#include "Font.h"
 #include "DGNode.h"
 #include "DGRenderManager.h"
 #include "DGRoom.h"

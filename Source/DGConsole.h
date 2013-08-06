@@ -40,7 +40,7 @@ enum DGConsoleStates {
 class DGCameraManager;
 class Config;
 class DGCursorManager;
-class DGFont;
+class Font;
 class DGFontManager;
 class Log;
 class DGRenderManager;
@@ -57,7 +57,7 @@ class DGConsole {
     Log& log;
     DGRenderManager& renderManager;
     
-    DGFont* _font;
+    Font* _font;
     
     std::string _command;
     bool _isEnabled;

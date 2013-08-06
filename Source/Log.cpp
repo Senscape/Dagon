@@ -17,6 +17,7 @@
 
 #include <cassert>
 #include <cstdarg>
+#include <cstdio>
 #include <iostream>
 
 #include "Config.h"
@@ -47,18 +48,16 @@ Log::~Log() {
 void Log::command(int forModule, const char* theString, ...) {
   char buffer[kMaxLogLength];
   va_list args;
-  
+
   va_start(args, theString);
   vsnprintf(buffer, kMaxLogLength, theString, args);
   va_end(args);
 	
   LogData data;
-  
   data.line = buffer;
 	data.color = kColorBrightMagenta;
 	data.module = forModule;
 	data.type = kLogTrace;
-	
 	_log(&data);
 }
 
@@ -71,12 +70,10 @@ void Log::error(int forModule, const char* theString, ...) {
   va_end(args);
 	
   LogData data;
-  
   data.line = buffer;
 	data.color = kColorBrightRed;
 	data.module = forModule;
 	data.type = kLogError;
-	
 	_log(&data); 
 }
 
@@ -89,12 +86,10 @@ void Log::info(int forModule, const char* theString, ...) {
   va_end(args);
 	
   LogData data;
-  
   data.line = buffer;
 	data.color = kColorBrightCyan;
 	data.module = forModule;
 	data.type = kLogTrace;
-	
 	_log(&data);
 }
 
@@ -107,12 +102,10 @@ void Log::trace(int forModule, const char* theString, ...) {
   va_end(args);
 	
   LogData data;
-  
   data.line = buffer;
 	data.color = kColorWhite;
 	data.module = forModule;
 	data.type = kLogTrace;
-	
 	_log(&data); 
 }
 
@@ -125,12 +118,10 @@ void Log::warning(int forModule, const char* theString, ...) {
   va_end(args);
 	
   LogData data;
-  
   data.line = buffer;
 	data.color = kColorYellow;
 	data.module = forModule;
 	data.type = kLogWarning;
-	
 	_log(&data);
 }
 

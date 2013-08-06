@@ -173,6 +173,7 @@ void DGSystem::_charCallback(GLFWwindow* window, unsigned int character) {
 
 void DGSystem::_closeCallback(GLFWwindow* window) {
     // Simulate an escape key event
+  // FIXME: This should terminate the app immediately
     DGControl::instance().processKey(kKeyEscape, DGEventKeyDown);
 }
 

@@ -30,8 +30,8 @@
 #define kDefTexExtension "tex"
 
 // TODO: We should be able to read this value from each texture bundle
-#define kDefTexSize 2048
-#define kFrameratePrecision 0.25
+unsigned const kDefTexSize = 2048;
+unsigned const kFrameratePrecision = 0.25;
 
 // Maximums
 

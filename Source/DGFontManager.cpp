@@ -63,8 +63,8 @@ void DGFontManager::init(){
     _isInitialized = true;
 }
 
-DGFont* DGFontManager::load(const char* fromFileName, unsigned int heightOfFont){
-    DGFont* font = new DGFont;
+Font* DGFontManager::load(const char* fromFileName, unsigned int heightOfFont){
+    Font* font = new Font;
     
     font->setLibrary(&_library);
     font->setResource(fromFileName, heightOfFont);
@@ -74,7 +74,7 @@ DGFont* DGFontManager::load(const char* fromFileName, unsigned int heightOfFont)
     return font;
 }
 
-DGFont* DGFontManager::loadDefault() {
+Font* DGFontManager::loadDefault() {
     if (!_defaultFont.isLoaded()) {
         _defaultFont.setLibrary(&_library);
         _defaultFont.setDefault(kDefFontSize);
