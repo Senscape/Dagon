@@ -199,7 +199,7 @@ void DGAudioManager::init() {
     _isInitialized = true;
 	_isRunning = true;
     
-    _audioThread = thread([](){
+    _audioThread = thread([&](){
         chrono::milliseconds dura(1);
         while (DGAudioManager::instance().update()) {
             this_thread::sleep_for(dura);

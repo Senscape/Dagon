@@ -90,7 +90,7 @@ void DGTextureManager::flush() {
 }
 
 void DGTextureManager::init() {
-    _preloaderThread = thread([](){
+    _preloaderThread = thread([&](){
         chrono::milliseconds dura(1);
         while (DGTextureManager::instance().updatePreloader()) {
             this_thread::sleep_for(dura);

@@ -32,7 +32,7 @@ DGTimerManager::DGTimerManager() {
 	_isRunning = true;
     
     // TODO: Move this to init()
-    _timerThread = thread([](){
+    _timerThread = thread([&](){
         chrono::milliseconds dura(1);
         while (DGTimerManager::instance().update()) {
             this_thread::sleep_for(dura);

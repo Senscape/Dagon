@@ -79,7 +79,7 @@ void DGVideoManager::init() {
     _isInitialized = true;
 	_isRunning = true;
     
-    _videoThread = thread([](){
+    _videoThread = thread([&](){
         chrono::milliseconds dura(1);
         while (DGVideoManager::instance().update()) {
             this_thread::sleep_for(dura);
