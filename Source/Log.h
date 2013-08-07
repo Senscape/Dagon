@@ -73,11 +73,11 @@ class Log {
     return log;
   }
     
-  void command(int forModule, const char* theString, ...);
-  void error(int forModule, const char* theString, ...);
-  void info(int forModule, const char* theString, ...);
-  void trace(int forModule, const char* theString, ...);
-  void warning(int forModule, const char* theString, ...);
+  void command(int forModule, const std::string &theString, ...);
+  void error(int forModule, const std::string &theString, ...);
+  void info(int forModule, const std::string &theString, ...);
+  void trace(int forModule, const std::string &theString, ...);
+  void warning(int forModule, const std::string &theString, ...);
     
   // Helpers for the console feature
     

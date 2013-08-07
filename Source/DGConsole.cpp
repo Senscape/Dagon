@@ -81,7 +81,7 @@ void DGConsole::enable() {
 }
 
 void DGConsole::execute() {
-    log.command(kModScript, _command.c_str());    
+    log.command(kModScript, _command);
     _isReadyToProcess = true;
 }
 
@@ -174,10 +174,10 @@ void DGConsole::update() {
             if (log.beginIteratingHistory()) {
                 do {
                     log.getCurrentLine(&logData);
-                    
+                  
                     // Draw the current line
                     renderManager.setColor(logData.color);
-                    _font->print(DGConsoleMargin, ((DGConsoleSpacing + kDefFontSize) * row) - _offset, logData.line.c_str());
+                    _font->print(DGConsoleMargin, ((DGConsoleSpacing + kDefFontSize) * row) - _offset, logData.line);
                     
                     row--;
                 } while (log.iterateHistory());
