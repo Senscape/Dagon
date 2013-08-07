@@ -156,9 +156,7 @@ void Font::_loadFont(FT_Face &face) {
 		
 		int width = _next(bitmap.width);
 		int height = _next(bitmap.rows);
-		
-    // FIXME: Is there a sizeof() missing here?
-		GLubyte* expandedData = (GLubyte*)malloc(2 * width * height);
+		GLubyte expandedData[2 * width * height];
     
 		for (int j = 0; j < height; j++) {
 			for (int i = 0; i < width; i++) {
@@ -178,12 +176,10 @@ void Font::_loadFont(FT_Face &face) {
 		_glyph[ch].advance = face->glyph->advance.x;
 		
 		glBindTexture(GL_TEXTURE_2D, _textures[ch]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-                 0, GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, expandedData);
-		
-		free(expandedData);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexImage2D(GL_TEXTURE_2D, 0, 2, width, height, 0,
+                 GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, expandedData);
 	}
   _isLoaded = true;
 }
