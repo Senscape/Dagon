@@ -11,17 +11,18 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_IMAGE_H
-#define DG_IMAGE_H
+#ifndef DAGON_IMAGE_H_
+#define DAGON_IMAGE_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "Platform.h"
+#include "Geometry.h"
+#include "DGObject.h"
 
 ////////////////////////////////////////////////////////////
-// Definitions
+// Forward declarations
 ////////////////////////////////////////////////////////////
 
 class Config;
@@ -32,41 +33,38 @@ class DGTexture;
 ////////////////////////////////////////////////////////////
 
 class DGImage : public DGObject {
-    Config& config;
-    
-    DGTexture* _attachedTexture;
-    int _arrayOfCoordinates[8];
-    bool _hasTexture;
-    Rect _rect;
-    
-    void _calculateCoordinates();
-    
-public:
-    DGImage();
-    DGImage(const char* fromFileName);
-    ~DGImage();
-    
-    // Checks
-    
-    bool hasTexture();
-      
-    // Gets
-    
-    int* arrayOfCoordinates();
-    Point position();
-    Size size();
-    DGTexture* texture();
+ public:
+  DGImage();
+  DGImage(const std::string &fromFileName);
+  ~DGImage() {};
+  
+  // Checks
+  bool hasTexture();
 
-    // Sets
-    
-    void setPosition(float x, float y);
-    void setSize(float width, float height);
-    void setTexture(const char* fromFileName);
+  // Gets
+  int* arrayOfCoordinates();
+  Point position();
+  Size size();
+  DGTexture* texture();
 
-    // State changes
-    
-    void move(float offsetX, float offsetY);
-    void scale(float factor);
+  // Sets
+  void setPosition(float x, float y);
+  void setSize(float width, float height);
+  void setTexture(const std::string &fromFileName);
+
+  // State changes
+  void move(float offsetX, float offsetY);
+  void scale(float factor);
+  
+ private:
+  Config& config;
+  
+  int _arrayOfCoordinates[8];
+  DGTexture* _attachedTexture;
+  bool _hasTexture = false;
+  Rect _rect;
+  
+  void _calculateCoordinates();
 };
 
-#endif // DG_IMAGE_H
+#endif // DAGON_IMAGE_H_

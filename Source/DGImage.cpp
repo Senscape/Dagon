@@ -24,41 +24,29 @@
 ////////////////////////////////////////////////////////////
 
 DGImage::DGImage() :
-    config(Config::instance())
+  config(Config::instance())
 {
+  _rect.origin.x = 0;
+  _rect.origin.y = 0; 
+  _rect.size.width = 0;
+  _rect.size.height = 0;
+    
+  this->setType(DGObjectImage);    
+}
+
+DGImage::DGImage(const std::string &fromFileName) :
+  config(Config::instance())
+{
+  this->setTexture(fromFileName);
+  if (_attachedTexture->isLoaded()) {
     _rect.origin.x = 0;
-    _rect.origin.y = 0; 
-    _rect.size.width = 0;
-    _rect.size.height = 0;
-    
-    _hasTexture = false;
-    
-    this->setType(DGObjectImage);    
-}
+    _rect.origin.y = 0;
+    _rect.size.width = _attachedTexture->width();
+    _rect.size.height = _attachedTexture->height();
+    _calculateCoordinates();
+  }
 
-DGImage::DGImage(const char* fromFileName) :
-    config(Config::instance())
-{
-    this->setTexture(fromFileName);
-    if (_attachedTexture->isLoaded()) {
-        _rect.origin.x = 0;
-        _rect.origin.y = 0; 
-        
-        _rect.size.width = _attachedTexture->width();
-        _rect.size.height = _attachedTexture->height();
-        
-        _calculateCoordinates();
-    }
-    
-    this->setType(DGObjectImage);    
-}
-
-////////////////////////////////////////////////////////////
-// Implementation - Destructor
-////////////////////////////////////////////////////////////
-
-DGImage::~DGImage() {
-    // Nothing to do here
+  this->setType(DGObjectImage);    
 }
 
 ////////////////////////////////////////////////////////////
@@ -125,10 +113,11 @@ void DGImage::setSize(float width, float height) {
     _calculateCoordinates(); 
 }
 
-void DGImage::setTexture(const char* fromFileName) {
+void DGImage::setTexture(const std::string &fromFileName) {
     // TODO: Important! Should determine first if the texture already exists,
     // to avoid repeating resources. Eventually, this would be done via the
     // resource manager.
+  // FIXME: These textures are immediately loaded which isn't very efficient.
     DGTexture* texture;
     
     texture = new DGTexture;
