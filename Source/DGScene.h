@@ -67,6 +67,7 @@ public:
     void setRoom(DGRoom* room);
     
     // Cutscene operations
+    void cancelCutscene();
     bool drawCutscene();
     void loadCutscene(const char* fileName);
     void unloadCutscene();

@@ -347,7 +347,7 @@ void DGVideo::update() {
             
             // TODO: Skip frames if required here?
             //int frames = (int)floor(duration / _frameDuration);
-            //for (int i = 1; i <= frames; i++)
+            //for (int i = 0; i < frames; i++)
                 _prepareFrame();
             
             theora_decode_YUVout(&_theoraInfo->td, &yuv);

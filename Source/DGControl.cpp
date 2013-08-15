@@ -115,11 +115,11 @@ void DGControl::init() {
     log.trace(kModControl, "========================================");
     log.info(kModControl, "%s: %s", kString12001, DAGON_VERSION);
     log.info(kModControl, "%s: %d", kString12004, DAGON_BUILD);
-    
+  
+  // FIXME: Solve problem when script not found (console isn't shown)
+  script.init();
+  
     system.init();
-    
-    // Do this before system
-    script.init();
     
     renderManager.init();
     renderManager.resetView(); // Test for errors
@@ -254,6 +254,9 @@ void DGControl::processKey(int aKey, int eventFlags) {
                     else {
                         if (feedManager.isPlaying())
                             feedManager.cancel();
+                        else if (_state->current() == DGStateCutscene) {
+                          _scene->cancelCutscene();
+                        }
                         else {
                             if (!_isShuttingDown) {
                                 _scene->fadeOut();
@@ -622,8 +625,9 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             case DGObjectRoom:
                 audioManager.clear();
                 feedManager.clear(); // Clear all pending feeds
-                
-                renderManager.blendNextUpdate(true);
+            
+            if (!firstSwitch)
+              renderManager.blendNextUpdate(true);
                 
                 _currentRoom = (DGRoom*)theTarget;
                 _scene->setRoom((DGRoom*)theTarget);

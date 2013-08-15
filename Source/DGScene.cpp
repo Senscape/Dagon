@@ -230,6 +230,10 @@ void DGScene::setRoom(DGRoom* room) {
 // Implementation - Cutscene operations
 ////////////////////////////////////////////////////////////
 
+void DGScene::cancelCutscene() {
+  _cutscene.stop();
+}
+
 bool DGScene::drawCutscene() {
     if (_cutscene.isPlaying()) {
         if (_cutscene.hasNewFrame()) {

@@ -24,6 +24,7 @@
 #define	kDefNodePath "Nodes/"
 #define	kDefRoomPath "Rooms/"
 #define	kDefVideoPath "Video/"
+// TODO: Maybe change to 'Assets'
 #define	kDefResourcePath "Resources/"
 #define	kDefConfigFile "Dagon.cfg"
 #define	kDefLogFile "Dagon.log"
