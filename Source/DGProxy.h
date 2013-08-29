@@ -30,7 +30,7 @@ extern "C" {
 #include "Image.h"
 #include "Node.h"
 #include "Overlay.h"
-#include "DGRoom.h"
+#include "Room.h"
 #include "DGSpot.h"
 
 ////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ extern "C" {
 #define ImageProxyName "Image"
 #define NodeProxyName "Node"
 #define OverlayProxyName "Overlay"
-#define DGRoomProxyName "Room"
+#define RoomProxyName "Room"
 #define DGSlideProxyName "Slide"
 #define DGSpotProxyName "Spot"
 
@@ -54,7 +54,7 @@ static Button* DGProxyToButton(lua_State *L, int idx);
 static Image* DGProxyToImage(lua_State *L, int idx);
 static Node* DGProxyToNode(lua_State *L, int idx);
 static Overlay* DGProxyToOverlay(lua_State *L, int idx);
-static DGRoom* DGProxyToRoom(lua_State *L, int idx);
+static Room* DGProxyToRoom(lua_State *L, int idx);
 static Node* DGProxyToSlide(lua_State *L, int idx);
 static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 
@@ -68,7 +68,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 #include "ImageProxy.h"
 #include "NodeProxy.h"
 #include "OverlayProxy.h"
-#include "DGRoomProxy.h"
+#include "RoomProxy.h"
 #include "DGSlideProxy.h"
 #include "DGSpotProxy.h"
 
@@ -128,7 +128,7 @@ int DGCheckProxy(lua_State *L, int idx) {
         if (_checkutype(L, idx, OverlayProxy::className))
             return kObjectOverlay; // It's an overlay        
         
-        if (_checkutype(L, idx, DGRoomProxy::className))
+        if (_checkutype(L, idx, RoomProxy::className))
             return kObjectRoom; // It's a room
         
         if (_checkutype(L, idx, DGSlideProxy::className))
@@ -170,8 +170,8 @@ Overlay* DGProxyToOverlay(lua_State *L, int idx) {
     return o->ptr();    
 }
 
-DGRoom* DGProxyToRoom(lua_State *L, int idx) {
-    DGRoomProxy* r = Luna<DGRoomProxy>::check(L, idx);
+Room* DGProxyToRoom(lua_State *L, int idx) {
+    RoomProxy* r = Luna<RoomProxy>::check(L, idx);
     return r->ptr();    
 }
 

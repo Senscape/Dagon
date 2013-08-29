@@ -28,7 +28,7 @@ class DGCameraManager;
 class Config;
 class DGCursorManager;
 class DGRenderManager;
-class DGRoom;
+class Room;
 class DGState;
 class DGTexture;
 class DGVideoManager;
@@ -47,7 +47,7 @@ class DGScene {
     DGVideoManager& videoManager;
     
     // Other classes
-    DGRoom* _currentRoom;
+    Room* _currentRoom;
     DGTexture* _cutsceneTexture;
     DGTexture* _splashTexture;
     
@@ -64,7 +64,7 @@ public:
     void fadeIn();    
     void fadeOut(); 
     bool scanSpots();
-    void setRoom(DGRoom* room);
+    void setRoom(Room* room);
     
     // Cutscene operations
     void cancelCutscene();

@@ -41,7 +41,7 @@ class DGInterface;
 class Log;
 class Node;
 class Overlay;
-class DGRoom;
+class Room;
 class DGRenderManager;
 class DGScene;
 class DGScript;
@@ -100,8 +100,8 @@ class DGControl {
     
     DGSystem system;
     
-    std::vector<DGRoom*> _arrayOfRooms;
-    DGRoom* _currentRoom;
+    std::vector<Room*> _arrayOfRooms;
+    Room* _currentRoom;
     
     DGConsole* _console;
     DGInterface* _interface;
@@ -137,7 +137,7 @@ public:
     
     void init();
     Node* currentNode();
-    DGRoom* currentRoom();
+    Room* currentRoom();
     void cutscene(const char* fileName);
 	bool isConsoleActive();    
 	bool isDirectControlActive();

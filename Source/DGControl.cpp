@@ -33,7 +33,7 @@
 #include "Log.h"
 #include "Node.h"
 #include "DGRenderManager.h"
-#include "DGRoom.h"
+#include "Room.h"
 #include "DGScene.h"
 #include "DGScript.h"
 #include "DGSpot.h"
@@ -186,7 +186,7 @@ Node* DGControl::currentNode() {
         return NULL;
 }
 
-DGRoom* DGControl::currentRoom() {
+Room* DGControl::currentRoom() {
   return _currentRoom;
 }
 
@@ -543,7 +543,7 @@ void DGControl::registerObject(Object* theTarget) {
             _interface->addOverlay((Overlay*)theTarget);
             break;
         case kObjectRoom: 
-            _arrayOfRooms.push_back((DGRoom*)theTarget);
+            _arrayOfRooms.push_back((Room*)theTarget);
             break;
         case kObjectVideo:
             videoManager.registerVideo((DGVideo*)theTarget);
@@ -629,8 +629,8 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
             if (!firstSwitch)
               renderManager.blendNextUpdate(true);
                 
-                _currentRoom = (DGRoom*)theTarget;
-                _scene->setRoom((DGRoom*)theTarget);
+                _currentRoom = (Room*)theTarget;
+                _scene->setRoom((Room*)theTarget);
                 timerManager.setLuaObject(_currentRoom->luaObject());
                 
                 if (!_currentRoom->hasNodes()) {

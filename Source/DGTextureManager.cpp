@@ -18,7 +18,7 @@
 #include "Config.h"
 #include "Log.h"
 #include "Node.h"
-#include "DGRoom.h"
+#include "Room.h"
 #include "DGSpot.h"
 #include "DGTextureManager.h"
 
@@ -167,7 +167,7 @@ void DGTextureManager::requestTexture(DGTexture* target) {
     sort(_arrayOfActiveTextures.begin(), _arrayOfActiveTextures.end(), DGTextureSort);
 }
 
-void DGTextureManager::setRoomToPreload(DGRoom* theRoom) {
+void DGTextureManager::setRoomToPreload(Room* theRoom) {
     _roomToPreload = theRoom;
 }
 

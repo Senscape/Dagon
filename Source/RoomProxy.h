@@ -25,23 +25,23 @@
 
 #include "DGAudioManager.h"
 #include "DGControl.h"
-#include "DGRoom.h"
+#include "Room.h"
 #include "DGTimerManager.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGRoomProxy : public ObjectProxy {
+class RoomProxy : public ObjectProxy {
 public:
     static const char className[];
-    static Luna<DGRoomProxy>::RegType methods[];
+    static Luna<RoomProxy>::RegType methods[];
     
     // Constructor
-    DGRoomProxy(lua_State *L) {
+    RoomProxy(lua_State *L) {
         // TODO: Support custom room names with a second parameter
         
-        r = new DGRoom;
+        r = new Room;
         r->setName(luaL_checkstring(L, 1));
         
         // Register the new room
@@ -52,7 +52,7 @@ public:
     }
     
     // Destructor
-    ~DGRoomProxy() { delete r; }
+    ~RoomProxy() { delete r; }
     
     // Add an audio to the room
     int addAudio(lua_State *L) {
@@ -121,10 +121,10 @@ public:
         return 1;
     }
     
-    DGRoom* ptr() { return r; }
+    Room* ptr() { return r; }
     
 private:
-    DGRoom* r;
+    Room* r;
 
 };
 
@@ -132,14 +132,14 @@ private:
 // Static definitions
 ////////////////////////////////////////////////////////////
 
-const char DGRoomProxy::className[] = DGRoomProxyName;
+const char RoomProxy::className[] = RoomProxyName;
 
-Luna<DGRoomProxy>::RegType DGRoomProxy::methods[] = {
-    ObjectMethods(DGRoomProxy),    
-    method(DGRoomProxy, addAudio),
-    method(DGRoomProxy, addNode),
-    method(DGRoomProxy, setDefaultFootstep),    
-    method(DGRoomProxy, startTimer),     
+Luna<RoomProxy>::RegType RoomProxy::methods[] = {
+    ObjectMethods(RoomProxy),    
+    method(RoomProxy, addAudio),
+    method(RoomProxy, addNode),
+    method(RoomProxy, setDefaultFootstep),    
+    method(RoomProxy, startTimer),     
     {0,0}
 };
 

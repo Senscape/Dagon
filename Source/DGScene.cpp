@@ -21,7 +21,7 @@
 #include "Font.h"
 #include "Node.h"
 #include "DGRenderManager.h"
-#include "DGRoom.h"
+#include "Room.h"
 #include "DGScene.h"
 #include "DGSpot.h"
 #include "DGTexture.h"
@@ -211,7 +211,7 @@ bool DGScene::scanSpots() {
     else return false;
 }
 
-void DGScene::setRoom(DGRoom* room) {
+void DGScene::setRoom(Room* room) {
     _currentRoom = room;
     
     // Determine if spots can be drawn

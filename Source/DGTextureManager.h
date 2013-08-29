@@ -35,7 +35,7 @@
 class Config;
 class Log;
 class Node;
-class DGRoom;
+class Room;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -50,7 +50,7 @@ class DGTextureManager {
     std::vector<DGTexture*> _arrayOfActiveTextures;
     std::vector<DGTexture*> _arrayOfTextures;
 
-    DGRoom* _roomToPreload;
+    Room* _roomToPreload;
     
     DGTextureManager();
     DGTextureManager(DGTextureManager const&);
@@ -71,7 +71,7 @@ public:
     void registerTexture(DGTexture* target);
     void requestBundle(Node* forNode);
     void requestTexture(DGTexture* target);
-    void setRoomToPreload(DGRoom* theRoom);
+    void setRoomToPreload(Room* theRoom);
     bool updatePreloader();
 };
 

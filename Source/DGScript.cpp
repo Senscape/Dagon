@@ -109,7 +109,7 @@ void DGScript::init() {
     Luna<ImageProxy>::Register(_L);    
     Luna<NodeProxy>::Register(_L);
     Luna<OverlayProxy>::Register(_L);    
-    Luna<DGRoomProxy>::Register(_L);
+    Luna<RoomProxy>::Register(_L);
     Luna<DGSlideProxy>::Register(_L);
     Luna<DGSpotProxy>::Register(_L);
     
@@ -282,7 +282,7 @@ int DGScript::_globalCurrentNode(lua_State *L) {
 }
 
 int DGScript::_globalCurrentRoom(lua_State *L) {
-    DGRoom* room = DGControl::instance().currentRoom();
+    Room* room = DGControl::instance().currentRoom();
     
     // Grab the reference to the Lua object and set it as 'self'
     if (room) {

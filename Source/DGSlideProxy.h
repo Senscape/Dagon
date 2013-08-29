@@ -87,7 +87,7 @@ public:
             // object of the same name exists
             
             lua_getglobal(L, DGScript::instance().module());
-            DGRoom* r = DGProxyToRoom(L, -1);
+            Room* r = DGProxyToRoom(L, -1);
             
             // We add the node automatically
             r->addNode(n);
