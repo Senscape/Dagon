@@ -28,7 +28,7 @@ extern "C" {
 #include "Audio.h"
 #include "Button.h"
 #include "Image.h"
-#include "DGNode.h"
+#include "Node.h"
 #include "DGOverlay.h"
 #include "DGRoom.h"
 #include "DGSpot.h"
@@ -40,7 +40,7 @@ extern "C" {
 #define AudioProxyName "Audio"
 #define ButtonProxyName "Button"
 #define ImageProxyName "Image"
-#define DGNodeProxyName "Node"
+#define NodeProxyName "Node"
 #define DGOverlayProxyName "Overlay"
 #define DGRoomProxyName "Room"
 #define DGSlideProxyName "Slide"
@@ -52,10 +52,10 @@ static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
 static Audio* DGProxyToAudio(lua_State *L, int idx);
 static Button* DGProxyToButton(lua_State *L, int idx);
 static Image* DGProxyToImage(lua_State *L, int idx);
-static DGNode* DGProxyToNode(lua_State *L, int idx);
+static Node* DGProxyToNode(lua_State *L, int idx);
 static DGOverlay* DGProxyToOverlay(lua_State *L, int idx);
 static DGRoom* DGProxyToRoom(lua_State *L, int idx);
-static DGNode* DGProxyToSlide(lua_State *L, int idx);
+static Node* DGProxyToSlide(lua_State *L, int idx);
 static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 
 // Now that the proxy functions has been declared, we
@@ -66,7 +66,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 #include "AudioProxy.h"
 #include "ButtonProxy.h"
 #include "ImageProxy.h"
-#include "DGNodeProxy.h"
+#include "NodeProxy.h"
 #include "DGOverlayProxy.h"
 #include "DGRoomProxy.h"
 #include "DGSlideProxy.h"
@@ -122,7 +122,7 @@ int DGCheckProxy(lua_State *L, int idx) {
         if (_checkutype(L, idx, ImageProxy::className))
             return DGObjectImage; // It's an image        
         
-        if (_checkutype(L, idx, DGNodeProxy::className))
+        if (_checkutype(L, idx, NodeProxy::className))
             return DGObjectNode; // It's a node
         
         if (_checkutype(L, idx, DGOverlayProxy::className))
@@ -160,8 +160,8 @@ Image* DGProxyToImage(lua_State *L, int idx) {
     return i->ptr();
 }
 
-DGNode* DGProxyToNode(lua_State *L, int idx) {
-    DGNodeProxy* n = Luna<DGNodeProxy>::check(L, idx);
+Node* DGProxyToNode(lua_State *L, int idx) {
+    NodeProxy* n = Luna<NodeProxy>::check(L, idx);
     return n->ptr();
 }
 
@@ -175,7 +175,7 @@ DGRoom* DGProxyToRoom(lua_State *L, int idx) {
     return r->ptr();    
 }
 
-DGNode* DGProxyToSlide(lua_State *L, int idx) {
+Node* DGProxyToSlide(lua_State *L, int idx) {
     DGSlideProxy* s = Luna<DGSlideProxy>::check(L, idx);
     return s->ptr();
 }

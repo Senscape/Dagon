@@ -31,7 +31,7 @@
 #include "DGFontManager.h"
 #include "DGInterface.h"
 #include "Log.h"
-#include "DGNode.h"
+#include "Node.h"
 #include "DGRenderManager.h"
 #include "DGRoom.h"
 #include "DGScene.h"
@@ -179,7 +179,7 @@ void DGControl::init() {
     log.trace(kModControl, "%s", kString13002);
 }
 
-DGNode* DGControl::currentNode() {
+Node* DGControl::currentNode() {
     if (_currentRoom)
         return _currentRoom->currentNode();
     else
@@ -537,7 +537,7 @@ void DGControl::registerObject(DGObject* theTarget) {
             audioManager.registerAudio((Audio*)theTarget);
             break;
         case DGObjectNode:
-             textureManager.requestBundle((DGNode*)theTarget);
+             textureManager.requestBundle((Node*)theTarget);
             break;
         case DGObjectOverlay:
             _interface->addOverlay((DGOverlay*)theTarget);
@@ -647,7 +647,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 renderManager.blendNextUpdate();
                 
                 if (_currentRoom) {
-                    DGNode* node = (DGNode*)theTarget;
+                    Node* node = (Node*)theTarget;
                     node->setPreviousNode(this->currentNode());
                     
                     if (!_currentRoom->switchTo(node)) {
@@ -673,7 +673,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 renderManager.blendNextUpdate(true);
                 
                 if (_currentRoom) {
-                    DGNode* node = (DGNode*)theTarget;
+                    Node* node = (Node*)theTarget;
                     if (!_currentRoom->switchTo(node)) {
                         log.error(kModControl, "%s: %s (%s)", kString12008, node->name(), _currentRoom->name()); // Bad node
                         return;
@@ -694,8 +694,8 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
         if (_currentRoom) {
             renderManager.blendNextUpdate();
             
-            DGNode* currentNode = this->currentNode();
-            DGNode* previousNode = currentNode->previousNode();
+            Node* currentNode = this->currentNode();
+            Node* previousNode = currentNode->previousNode();
             
             _currentRoom->switchTo(previousNode);
             
@@ -713,7 +713,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
     if (_currentRoom) {
         if (_currentRoom->hasNodes()) {
             // Now we proceed to load the textures of the current node
-            DGNode* currentNode = _currentRoom->currentNode();
+            Node* currentNode = _currentRoom->currentNode();
             textureManager.flush();
                 
             if (currentNode->hasSpots()) {                
@@ -770,7 +770,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             // Prepare the name for the window
             char title[kMaxObjectName];
             snprintf(title, kMaxObjectName, "%s (%s, %s)", config.script().c_str(),
-                     _currentRoom->name(), currentNode->description());
+                     _currentRoom->name(), currentNode->description().c_str());
             system.setTitle(title);
         }
         
@@ -794,7 +794,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
         
         if (!firstSwitch && performWalk && !instant) {
             cameraManager.simulateWalk();
-            DGNode* currentNode = this->currentNode();
+            Node* currentNode = this->currentNode();
             
             // Finally, check if must play a single footstep
             if (currentNode->hasFootstep()) {

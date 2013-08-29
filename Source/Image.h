@@ -65,6 +65,9 @@ class Image : public DGObject {
   Rect _rect;
   
   void _calculateCoordinates();
+  
+  Image(const Image&);
+  void operator=(const Image&);
 };
 
 #endif // DAGON_IMAGE_H_

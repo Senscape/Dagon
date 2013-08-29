@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGControl.h"
-#include "DGNode.h"
+#include "Node.h"
 #include "DGRoom.h"
 #include "DGScript.h"
 
@@ -47,14 +47,14 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGNodeProxy : public DGObjectProxy {
+class NodeProxy : public DGObjectProxy {
 public:
     static const char className[];
-    static Luna<DGNodeProxy>::RegType methods[];
+    static Luna<NodeProxy>::RegType methods[];
     
     // Constructor
-    DGNodeProxy(lua_State *L) {
-        n = new DGNode;
+    NodeProxy(lua_State *L) {
+        n = new Node;
         n->setBundleName(luaL_checkstring(L, 1));
         
         if (lua_gettop(L) == 2)
@@ -81,7 +81,7 @@ public:
     }
     
     // Destructor
-    ~DGNodeProxy() { delete n; }
+    ~NodeProxy() { delete n; }
     
     // Add a spot to the node
     int addSpot(lua_State *L) {
@@ -168,23 +168,23 @@ public:
         return 0;
     }
     
-    DGNode* ptr() { return n; }
+    Node* ptr() { return n; }
     
 private:
-    DGNode* n;
+    Node* n;
 };
 
 ////////////////////////////////////////////////////////////
 // Static definitions
 ////////////////////////////////////////////////////////////
 
-const char DGNodeProxy::className[] = DGNodeProxyName;
+const char NodeProxy::className[] = NodeProxyName;
 
-Luna<DGNodeProxy>::RegType DGNodeProxy::methods[] = {
-    DGObjectMethods(DGNodeProxy),    
-    method(DGNodeProxy, addSpot),
-    method(DGNodeProxy, link),
-    method(DGNodeProxy, setFootstep),
+Luna<NodeProxy>::RegType NodeProxy::methods[] = {
+    DGObjectMethods(NodeProxy),    
+    method(NodeProxy, addSpot),
+    method(NodeProxy, link),
+    method(NodeProxy, setFootstep),
     {0,0}
 };
 

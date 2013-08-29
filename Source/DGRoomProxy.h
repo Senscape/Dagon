@@ -77,7 +77,7 @@ public:
             
             // Now we get the metatable of the added node and set it
             // as a return value
-            lua_getfield(L, LUA_REGISTRYINDEX, DGNodeProxyName);
+            lua_getfield(L, LUA_REGISTRYINDEX, NodeProxyName);
             lua_setmetatable(L, -2);
             
             return 1;

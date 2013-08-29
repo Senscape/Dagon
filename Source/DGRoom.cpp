@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Audio.h"
-#include "DGNode.h"
+#include "Node.h"
 #include "DGRoom.h"
 
 using namespace std;
@@ -63,7 +63,7 @@ vector<Audio*> DGRoom::arrayOfAudios() {
     return _arrayOfAudios;
 }
 
-DGNode* DGRoom::currentNode() {
+Node* DGRoom::currentNode() {
     return _currentNode;
 }
 
@@ -75,7 +75,7 @@ int DGRoom::effectsFlags() {
     return _effectsFlags;
 }
 
-DGNode* DGRoom::iterator() {
+Node* DGRoom::iterator() {
     return *_it;
 }
 
@@ -101,7 +101,7 @@ Audio* DGRoom::addAudio(Audio* anAudio) {
     return anAudio; 
 }
 
-DGNode* DGRoom::addNode(DGNode* aNode) {
+Node* DGRoom::addNode(Node* aNode) {
     if (_arrayOfNodes.empty())
         _currentNode = aNode;
     
@@ -123,8 +123,8 @@ bool DGRoom::iterateNodes() {
         return true;
 }
 
-bool DGRoom::switchTo(DGNode* theNode) {
-    vector<DGNode*>::iterator it;
+bool DGRoom::switchTo(Node* theNode) {
+    vector<Node*>::iterator it;
 
     for (it = _arrayOfNodes.begin(); it != _arrayOfNodes.end(); it++) {
         if (*it == theNode) {

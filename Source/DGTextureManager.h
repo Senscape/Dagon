@@ -34,7 +34,7 @@
 
 class Config;
 class Log;
-class DGNode;
+class Node;
 class DGRoom;
 
 ////////////////////////////////////////////////////////////
@@ -69,7 +69,7 @@ public:
     void flush();
     void init();
     void registerTexture(DGTexture* target);
-    void requestBundle(DGNode* forNode);
+    void requestBundle(Node* forNode);
     void requestTexture(DGTexture* target);
     void setRoomToPreload(DGRoom* theRoom);
     bool updatePreloader();

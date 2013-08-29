@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGControl.h"
-#include "DGNode.h"
+#include "Node.h"
 #include "DGScript.h"
 #include "DGSpot.h"
 #include "DGTexture.h"
@@ -40,7 +40,7 @@ public:
     
     // Constructor
     DGSlideProxy(lua_State *L) {
-        n = new DGNode;
+        n = new Node;
         n->setName(luaL_checkstring(L, 1));
         
         n->setType(DGObjectSlide);
@@ -127,10 +127,10 @@ public:
         return 0;
     }
     
-    DGNode* ptr() { return n; }
+    Node* ptr() { return n; }
     
 private:
-    DGNode* n;
+    Node* n;
 };
 
 ////////////////////////////////////////////////////////////

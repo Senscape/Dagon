@@ -134,13 +134,11 @@ bool Log::beginIteratingHistory() {
     _it = _history.rbegin();
     return true;
   }
-    
   return false;
 }
 
 bool Log::iterateHistory() {
-  _it++;
-    
+  ++_it;
   if (_it == (_history.rend() - 1) || _history.empty()) {
     return false; // Bypass the first line
   } else {
@@ -149,6 +147,7 @@ bool Log::iterateHistory() {
 }
 
 void Log::getCurrentLine(LogData* pointerToLogData) {
+  assert(_it != _history.rend());
   pointerToLogData->line = _it->line;
   pointerToLogData->color = _it->color;
   pointerToLogData->module = _it->module;

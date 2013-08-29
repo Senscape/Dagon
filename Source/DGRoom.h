@@ -25,16 +25,16 @@
 ////////////////////////////////////////////////////////////
 
 class Audio;
-class DGNode;
+class Node;
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
 class DGRoom : public DGObject {
-    std::vector<DGNode*> _arrayOfNodes;
-    std::vector<DGNode*>::iterator _it;    
-    DGNode* _currentNode;
+    std::vector<Node*> _arrayOfNodes;
+    std::vector<Node*>::iterator _it;    
+    Node* _currentNode;
     
     // NOTE: When switching rooms, confirm if a given audio is already playing, so that no unnecessary fade ins/outs
     // are performed.
@@ -57,7 +57,7 @@ public:
     // Gets
     
     std::vector<Audio*> arrayOfAudios();
-    DGNode* currentNode();
+    Node* currentNode();
     Audio* defaultFootstep();
     int effectsFlags();
     
@@ -69,11 +69,11 @@ public:
     // State changes
     
     Audio* addAudio(Audio* anAudio);
-    DGNode* addNode(DGNode* aNode);
+    Node* addNode(Node* aNode);
     void beginIteratingNodes();
     bool iterateNodes();
-    DGNode* iterator();
-    bool switchTo(DGNode* theNode);
+    Node* iterator();
+    bool switchTo(Node* theNode);
 };
 
 #endif // DG_ROOM_H

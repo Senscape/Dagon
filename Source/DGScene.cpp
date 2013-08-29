@@ -19,7 +19,7 @@
 #include "Config.h"
 #include "DGCursorManager.h"
 #include "Font.h"
-#include "DGNode.h"
+#include "Node.h"
 #include "DGRenderManager.h"
 #include "DGRoom.h"
 #include "DGScene.h"
@@ -75,7 +75,7 @@ void DGScene::drawSpots() {
     bool processed = false;
     
     if (_canDrawSpots) {
-        DGNode* currentNode = _currentRoom->currentNode();
+        Node* currentNode = _currentRoom->currentNode();
         if (currentNode->isEnabled()) {
             renderManager.enablePostprocess();
             renderManager.clearView();
@@ -153,7 +153,7 @@ bool DGScene::scanSpots() {
     // Check if the current node has spots to draw, and also if
     // we aren't dragging the view
     if (_canDrawSpots) {
-        DGNode* currentNode = _currentRoom->currentNode();
+        Node* currentNode = _currentRoom->currentNode();
         
         // Check if the current node is enabled
         if (currentNode->isEnabled()) {
@@ -215,7 +215,7 @@ void DGScene::setRoom(DGRoom* room) {
     _currentRoom = room;
     
     // Determine if spots can be drawn
-    DGNode* node = _currentRoom->currentNode();
+    Node* node = _currentRoom->currentNode();
     
     if (node) {
         if (node->hasSpots())

@@ -107,7 +107,7 @@ void DGScript::init() {
     Luna<AudioProxy>::Register(_L);
     Luna<ButtonProxy>::Register(_L);       
     Luna<ImageProxy>::Register(_L);    
-    Luna<DGNodeProxy>::Register(_L);
+    Luna<NodeProxy>::Register(_L);
     Luna<DGOverlayProxy>::Register(_L);    
     Luna<DGRoomProxy>::Register(_L);
     Luna<DGSlideProxy>::Register(_L);
@@ -269,7 +269,7 @@ void DGScript::_error(int result) {
 }
 
 int DGScript::_globalCurrentNode(lua_State *L) {
-    DGNode* node = DGControl::instance().currentNode();
+    Node* node = DGControl::instance().currentNode();
     
     // Grab the reference to the Lua object and set it as 'self'
     if (node) {

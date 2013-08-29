@@ -39,7 +39,7 @@ class DGFeedManager;
 class DGFontManager;
 class DGInterface;
 class Log;
-class DGNode;
+class Node;
 class DGOverlay;
 class DGRoom;
 class DGRenderManager;
@@ -136,7 +136,7 @@ public:
     }
     
     void init();
-    DGNode* currentNode();
+    Node* currentNode();
     DGRoom* currentRoom();
     void cutscene(const char* fileName);
 	bool isConsoleActive();    

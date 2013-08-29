@@ -17,7 +17,7 @@
 
 #include "Config.h"
 #include "Log.h"
-#include "DGNode.h"
+#include "Node.h"
 #include "DGRoom.h"
 #include "DGSpot.h"
 #include "DGTextureManager.h"
@@ -126,7 +126,7 @@ void DGTextureManager::registerTexture(DGTexture* target) {
     // It's the responsibility of another module to generate the res path accordingly
 }
 
-void DGTextureManager::requestBundle(DGNode* forNode) {
+void DGTextureManager::requestBundle(Node* forNode) {
     if (forNode->hasBundleName()) {
         for (int i = 0; i < 6; i++) {
             std::vector<int> arrayOfCoordinates;
@@ -144,7 +144,7 @@ void DGTextureManager::requestBundle(DGNode* forNode) {
             
             // In this case, the filename is generated from the name
             // of the texture
-            spot->texture()->setName(forNode->bundleName());
+            spot->texture()->setName(forNode->bundleName().c_str());
             
             registerTexture(spot->texture());
             
@@ -176,7 +176,7 @@ bool DGTextureManager::updatePreloader() {
         if (_roomToPreload->hasNodes()) {
             _roomToPreload->beginIteratingNodes();
             do {
-                DGNode* node = _roomToPreload->iterator();
+                Node* node = _roomToPreload->iterator();
                 if (node->hasSpots()) {
                     node->beginIteratingSpots();
                     do {
