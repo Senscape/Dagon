@@ -41,7 +41,7 @@ class DGVideo;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGSpot : public DGObject {
+class DGSpot : public Object {
     int _color;
 	int _flags;
     

@@ -30,7 +30,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class ButtonProxy : public DGObjectProxy {
+class ButtonProxy : public ObjectProxy {
 public:
     static const char className[];
     static Luna<ButtonProxy>::RegType methods[];
@@ -104,9 +104,9 @@ public:
                 break;                
             case SWITCH:
                 int type = DGCheckProxy(L, 2);
-                if (type == DGObjectNode)
+                if (type == kObjectNode)
                     action.target = DGProxyToNode(L, 2);
-                else if (type == DGObjectRoom)
+                else if (type == kObjectRoom)
                     action.target = DGProxyToRoom(L, 2);
                 else {
                     Log::instance().error(kModScript, "%s", kString14008);
@@ -195,7 +195,7 @@ private:
 const char ButtonProxy::className[] = ButtonProxyName;
 
 Luna<ButtonProxy>::RegType ButtonProxy::methods[] = {
-    DGObjectMethods(ButtonProxy),      
+    ObjectMethods(ButtonProxy),      
     method(ButtonProxy, move),
     method(ButtonProxy, position),
     method(ButtonProxy, scale),

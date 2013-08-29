@@ -30,7 +30,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGOverlayProxy : public DGObjectProxy {
+class DGOverlayProxy : public ObjectProxy {
 public:
     static const char className[];
     static Luna<DGOverlayProxy>::RegType methods[];
@@ -53,7 +53,7 @@ public:
     
     // Add a button to the overlay
     int addButton(lua_State *L) {
-        if (DGCheckProxy(L, 1) == DGObjectButton) {
+        if (DGCheckProxy(L, 1) == kObjectButton) {
             o->addButton(DGProxyToButton(L, 1));
             
             // Now we get the metatable of the added spot and set it
@@ -69,7 +69,7 @@ public:
     
     // Add an image to the overlay
     int addImage(lua_State *L) {
-        if (DGCheckProxy(L, 1) == DGObjectImage) {
+        if (DGCheckProxy(L, 1) == kObjectImage) {
             o->addImage(DGProxyToImage(L, 1));
             
             // Now we get the metatable of the added spot and set it
@@ -133,7 +133,7 @@ private:
 const char DGOverlayProxy::className[] = DGOverlayProxyName;
 
 Luna<DGOverlayProxy>::RegType DGOverlayProxy::methods[] = {
-    DGObjectMethods(DGOverlayProxy),    
+    ObjectMethods(DGOverlayProxy),    
     method(DGOverlayProxy, addButton),      
     method(DGOverlayProxy, addImage),
     method(DGOverlayProxy, fadeIn),

@@ -25,7 +25,7 @@
 #include FT_GLYPH_H
 #include <GL/glew.h>
 
-#include "DGObject.h"
+#include "Object.h"
 
 ////////////////////////////////////////////////////////////
 // Forward declarations
@@ -60,7 +60,7 @@ extern "C" const long kSizeOfFontData;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class Font : public DGObject {
+class Font : public Object {
  public:
   Font();
   ~Font() {};

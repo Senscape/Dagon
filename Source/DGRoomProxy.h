@@ -32,7 +32,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGRoomProxy : public DGObjectProxy {
+class DGRoomProxy : public ObjectProxy {
 public:
     static const char className[];
     static Luna<DGRoomProxy>::RegType methods[];
@@ -56,7 +56,7 @@ public:
     
     // Add an audio to the room
     int addAudio(lua_State *L) {
-        if (DGCheckProxy(L, 1) == DGObjectAudio) {
+        if (DGCheckProxy(L, 1) == kObjectAudio) {
             r->addAudio(DGProxyToAudio(L, 1));
             
             // Now we get the metatable of the added audio and set it
@@ -72,7 +72,7 @@ public:
     
     // Add a node to the room
     int addNode(lua_State *L) {
-        if (DGCheckProxy(L, 1) == DGObjectNode) {
+        if (DGCheckProxy(L, 1) == kObjectNode) {
             r->addNode(DGProxyToNode(L, 1));
             
             // Now we get the metatable of the added node and set it
@@ -88,7 +88,7 @@ public:
     
     // Set the default footstep
     int setDefaultFootstep(lua_State *L) {
-        if (DGCheckProxy(L, 1) == DGObjectAudio) {
+        if (DGCheckProxy(L, 1) == kObjectAudio) {
             // Just set the audio object
              r->setDefaultFootstep((Audio*)DGProxyToAudio(L, 1));
         }
@@ -135,7 +135,7 @@ private:
 const char DGRoomProxy::className[] = DGRoomProxyName;
 
 Luna<DGRoomProxy>::RegType DGRoomProxy::methods[] = {
-    DGObjectMethods(DGRoomProxy),    
+    ObjectMethods(DGRoomProxy),    
     method(DGRoomProxy, addAudio),
     method(DGRoomProxy, addNode),
     method(DGRoomProxy, setDefaultFootstep),    

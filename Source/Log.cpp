@@ -20,9 +20,10 @@
 #include <cstdio>
 #include <iostream>
 
+#include "Colors.h"
 #include "Config.h"
 #include "Log.h"
-#include "DGObject.h"
+#include "Object.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -162,7 +163,7 @@ void Log::_log(LogData* data) {
   if (config.log) {
     if (!_filestr.is_open())
       _filestr.open(config.path(kPathUserData, kDefLogFile,
-                                DGObjectGeneric), std::fstream::app);
+                                kObjectGeneric), std::fstream::app);
       
     time_t now = time(0);
     struct tm* tm = localtime(&now);

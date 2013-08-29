@@ -38,7 +38,7 @@ DGTexture::DGTexture() :
     config(Config::instance()),
     log(Log::instance())
 {
-    this->setType(DGObjectTexture);
+    this->setType(kObjectTexture);
     
     _compressionLevel = config.texCompression;
     _hasResource = false;
@@ -54,7 +54,7 @@ DGTexture::DGTexture(int width, int height, int depth) :
 {
     int comp;
     
-    this->setType(DGObjectTexture);
+    this->setType(kObjectTexture);
     
     if (!width) width = kDefTexSize;
     if (!height) height = kDefTexSize;
@@ -190,7 +190,7 @@ void DGTexture::load() {
         return;
     
     if (!_hasResource) {
-        log.error(kModTexture, "%s: %s", kString10005, this->name());
+        log.error(kModTexture, "%s: %s", kString10005, this->name().c_str());
         
         return;
     }
@@ -475,7 +475,7 @@ void DGTexture::saveToFile(const char* fileName){
             glGetCompressedTexImage(GL_TEXTURE_2D, 0, _bitmap);
             header.compressionLevel = 1;
              
-            strcpy(header.name, this->name()); // This is the object name
+            strcpy(header.name, this->name().c_str()); // This is the object name
             header.width = (short)_width;
             header.height = (short)_height;
             header.numTextures = 0;

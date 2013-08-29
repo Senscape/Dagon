@@ -61,7 +61,7 @@ DGScript::~DGScript() {
 ////////////////////////////////////////////////////////////
 
 // TODO: Save system: in every operation, save to a file the
-// Lua object being modified (retrieve ID from DGOBject), then
+// Lua object being modified (retrieve ID from Object), then
 // create a string with the actual modification, ie: spot:enable()
 // Filter switch and other heavy duty operations.
 
@@ -75,7 +75,7 @@ void DGScript::init() {
     
     // The following code attempts to load a config file, and if it does exist
     // copies the created table to the Config metatable
-    if (luaL_loadfile(_L, config.path(kPathApp, kDefConfigFile, DGObjectGeneric).c_str()) == 0) {
+    if (luaL_loadfile(_L, config.path(kPathApp, kDefConfigFile, kObjectGeneric).c_str()) == 0) {
 		lua_newtable(_L);
 		lua_pushvalue(_L, -1);
 		int ref = lua_ref(_L, LUA_REGISTRYINDEX);
@@ -166,7 +166,7 @@ void DGScript::init() {
     // We're ready to roll, let's attempt to load the script in a Lua thread
     _thread = lua_newthread(_L);
     snprintf(script, kMaxFileLength, "%s.lua", config.script().c_str());
-    if (luaL_loadfile(_thread, config.path(kPathApp, script, DGObjectGeneric).c_str()) == 0)
+    if (luaL_loadfile(_thread, config.path(kPathApp, script, kObjectGeneric).c_str()) == 0)
         _isInitialized = true;
     else {
         // Not found!
@@ -425,7 +425,7 @@ int DGScript::_globalRoom(lua_State *L) {
         // TODO: Read rooms from path
         snprintf(script, kMaxFileLength, "%s.lua", module);
         
-        if (luaL_loadfile(L, Config::instance().path(kPathApp, script, DGObjectRoom).c_str()) == 0) {
+        if (luaL_loadfile(L, Config::instance().path(kPathApp, script, kObjectRoom).c_str()) == 0) {
             DGScript::instance().setModule(module);
             lua_pcall(L, 0, 0, 0);
             DGScript::instance().unsetModule();
@@ -461,20 +461,20 @@ int DGScript::_globalSnap(lua_State *L) {
 
 int DGScript::_globalSwitch(lua_State *L) {
     switch (DGCheckProxy(L, 1)) {
-        case DGObjectNode:
+        case kObjectNode:
             DGControl::instance().switchTo(DGProxyToNode(L, 1), lua_toboolean(L, 2));
             break;
-        case DGObjectRoom:
+        case kObjectRoom:
             DGControl::instance().switchTo(DGProxyToRoom(L, 1), lua_toboolean(L, 2));
             break;
-        case DGObjectSlide:
+        case kObjectSlide:
             DGControl::instance().switchTo(DGProxyToSlide(L, 1), lua_toboolean(L, 2));
             break;
-        case DGObjectGeneric:
+        case kObjectGeneric:
             Log::instance().error(kModScript, "%s", kString14003);
             break;
             
-        case DGObjectNone:
+        case kObjectNone:
             Log::instance().error(kModScript, "%s", kString14004);
             break;
     }
@@ -512,12 +512,12 @@ int DGScript::_globalVersion(lua_State *L) {
 
 void DGScript::_registerEnums() {
     // Push all enum values
-    DGLuaEnum(_L, AUDIO, DGObjectAudio);
+    DGLuaEnum(_L, AUDIO, kObjectAudio);
     DGLuaEnum(_L, FUNCTION, kActionFunction);
-    DGLuaEnum(_L, IMAGE, DGObjectTexture);
+    DGLuaEnum(_L, IMAGE, kObjectTexture);
     DGLuaEnum(_L, FEED, kActionFeed);
     DGLuaEnum(_L, SWITCH, kActionSwitch);
-    DGLuaEnum(_L, VIDEO, DGObjectVideo);
+    DGLuaEnum(_L, VIDEO, kObjectVideo);
     
     DGLuaEnum(_L, NORMAL, kCursorNormal);
     DGLuaEnum(_L, DRAGGING, kCursorDrag);
@@ -594,10 +594,10 @@ void DGScript::_registerEnums() {
 	DGLuaEnum(_L, F11, kKeyF11);
 	DGLuaEnum(_L, F12, kKeyF12);
 
-    DGLuaEnum(_L, SLOW, DGFadeSlow);
-    DGLuaEnum(_L, SLOWEST, DGFadeSlowest);
-    DGLuaEnum(_L, FAST, DGFadeFast);
-    DGLuaEnum(_L, FASTEST, DGFadeFastest);
+    DGLuaEnum(_L, SLOW, kFadeSlow);
+    DGLuaEnum(_L, SLOWEST, kFadeSlowest);
+    DGLuaEnum(_L, FAST, kFadeFast);
+    DGLuaEnum(_L, FASTEST, kFadeFastest);
 }
 
 void DGScript::_registerGlobals() {

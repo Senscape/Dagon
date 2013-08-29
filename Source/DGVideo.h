@@ -75,7 +75,7 @@ class Log;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGVideo : public DGObject {
+class DGVideo : public Object {
     Log& log;
     DGSystem* system;
     

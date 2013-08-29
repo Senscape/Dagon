@@ -21,6 +21,7 @@
 
 #include "Audio.h"
 #include "Config.h"
+#include "Language.h"
 #include "Log.h"
 
 ////////////////////////////////////////////////////////////
@@ -36,7 +37,7 @@ Audio::Audio() :
 	_oggCallbacks.close_func = _oggClose;
 	_oggCallbacks.tell_func = _oggTell;
     
-  this->setType(DGObjectAudio);
+  this->setType(kObjectAudio);
 }
 
 ////////////////////////////////////////////////////////////
@@ -135,7 +136,7 @@ void Audio::load() {
     
   if (!_isLoaded) { 
     std::string fileToLoad = _randomizeFile(_resource.name);
-    std::ifstream file(config.path(kPathResources, fileToLoad, DGObjectAudio),
+    std::ifstream file(config.path(kPathResources, fileToLoad, kObjectAudio),
                        std::ifstream::binary | std::ifstream::ate);
     
     if (file.good()) {
@@ -275,7 +276,7 @@ void Audio::update() {
     }
         
     // Run fade operations
-    // TODO: Better change the name of the DGObject "updateFade" function,
+    // TODO: Better change the name of the Object "updateFade" function,
     // it's somewhat confusing.
     this->updateFade();
         

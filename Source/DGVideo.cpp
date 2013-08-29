@@ -44,7 +44,7 @@ static struct DGLookUpTable _lookUpTable;
 DGVideo::DGVideo() :
     log(Log::instance())
 {
-    this->setType(DGObjectVideo);
+    this->setType(kObjectVideo);
     
     _hasNewFrame = false;
     _hasResource = false;
@@ -63,7 +63,7 @@ DGVideo::DGVideo() :
 DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced)  :
     log(Log::instance())
 {
-    this->setType(DGObjectVideo);
+    this->setType(kObjectVideo);
     
     _hasResource = false;
     _isLoaded = false;

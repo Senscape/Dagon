@@ -111,7 +111,7 @@ void DGRenderManager::init() {
     
 	_blendTexture = new DGTexture(0, 0, 0); // All default values
     _fadeTexture = new DGTexture(1, 1, 0); // Minimal black texture   
-    _fadeTexture->setFadeSpeed(DGFadeFastest);
+    _fadeTexture->setFadeSpeed(kFadeFastest);
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
 	for (int i = 0; i < (kDefCursorDetail + 1) * 2; i += 2) {

@@ -30,7 +30,7 @@
 #include <vorbis/vorbisfile.h>
 
 #include "Defines.h"
-#include "DGObject.h"
+#include "Object.h"
 #include "Geometry.h"
 
 ////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ struct Resource {
 // Interface
 ////////////////////////////////////////////////////////////
 
-class Audio : public DGObject {
+class Audio : public Object {
  public:
   Audio();
   ~Audio();

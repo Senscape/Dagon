@@ -61,7 +61,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 // Now that the proxy functions has been declared, we
 // proceed to include the remaining headers
 
-#include "DGObjectProxy.h"
+#include "ObjectProxy.h"
 
 #include "AudioProxy.h"
 #include "ButtonProxy.h"
@@ -114,35 +114,35 @@ int DGCheckProxy(lua_State *L, int idx) {
         // Good, now check against each user type
 
         if (_checkutype(L, idx, AudioProxy::className))
-            return DGObjectAudio; // It's an audio
+            return kObjectAudio; // It's an audio
         
         if (_checkutype(L, idx, ButtonProxy::className))
-            return DGObjectButton; // It's a button          
+            return kObjectButton; // It's a button          
         
         if (_checkutype(L, idx, ImageProxy::className))
-            return DGObjectImage; // It's an image        
+            return kObjectImage; // It's an image        
         
         if (_checkutype(L, idx, NodeProxy::className))
-            return DGObjectNode; // It's a node
+            return kObjectNode; // It's a node
         
         if (_checkutype(L, idx, DGOverlayProxy::className))
-            return DGObjectOverlay; // It's an overlay        
+            return kObjectOverlay; // It's an overlay        
         
         if (_checkutype(L, idx, DGRoomProxy::className))
-            return DGObjectRoom; // It's a room
+            return kObjectRoom; // It's a room
         
         if (_checkutype(L, idx, DGSlideProxy::className))
-            return DGObjectSlide; // It's a slide
+            return kObjectSlide; // It's a slide
         
         if (_checkutype(L, idx, DGSpotProxy::className))
-            return DGObjectSpot; // It's a spot
+            return kObjectSpot; // It's a spot
         
         // No, it's Superman!
         
-        return DGObjectGeneric; // None of the above, we return a generic type
+        return kObjectGeneric; // None of the above, we return a generic type
     }
     
-    return DGObjectNone;
+    return kObjectNone;
 }
 
 Audio* DGProxyToAudio(lua_State *L, int idx) {

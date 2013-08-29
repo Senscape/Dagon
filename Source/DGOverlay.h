@@ -31,7 +31,7 @@ class Image;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGOverlay : public DGObject {
+class DGOverlay : public Object {
     std::vector<Button*> _arrayOfButtons;
     std::vector<Image*> _arrayOfImages;
     

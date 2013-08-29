@@ -32,7 +32,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGSpotProxy : public DGObjectProxy {
+class DGSpotProxy : public ObjectProxy {
 public:
     static const char className[];
     static Luna<DGSpotProxy>::RegType methods[];
@@ -130,7 +130,7 @@ public:
         
         switch (type) {
             case AUDIO:
-                if (DGCheckProxy(L, 2) == DGObjectAudio) {
+                if (DGCheckProxy(L, 2) == kObjectAudio) {
                     // Just set the audio object
                     s->setAudio(DGProxyToAudio(L, 2));
                     
@@ -197,7 +197,7 @@ public:
                 // resource of the texture.
                 
                 texture = new DGTexture;
-                texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 2), DGObjectImage).c_str());
+                texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 2), kObjectImage).c_str());
                 
                 // If we have a third parameter, use it to set the index inside a bundle
                 if (lua_isnumber(L, 3))
@@ -211,13 +211,13 @@ public:
                 action.luaObject = s->luaObject();
                 
                 type = DGCheckProxy(L, 2);
-                if (type == DGObjectNode)
+                if (type == kObjectNode)
                     action.target = DGProxyToNode(L, 2);
-                else if (type == DGObjectSlide) {
+                else if (type == kObjectSlide) {
                     action.cursor = kCursorLook;
                     action.target = DGProxyToSlide(L, 2);
                 }
-                else if (type == DGObjectRoom)
+                else if (type == kObjectRoom)
                     action.target = DGProxyToRoom(L, 2);
                 else {
                     Log::instance().error(kModScript, "%s", kString14008);
@@ -242,7 +242,7 @@ public:
                 video = new DGVideo(autoplay, loop, sync);
                 
                 // TODO: Path is set by the video manager
-                video->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 2), DGObjectVideo).c_str());
+                video->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 2), kObjectVideo).c_str());
                 s->setVideo(video);
                 DGVideoManager::instance().registerVideo(video);
                 
@@ -309,7 +309,7 @@ private:
 const char DGSpotProxy::className[] = DGSpotProxyName;
 
 Luna<DGSpotProxy>::RegType DGSpotProxy::methods[] = {
-    DGObjectMethods(DGSpotProxy),    
+    ObjectMethods(DGSpotProxy),    
     method(DGSpotProxy, attach),
     method(DGSpotProxy, setCursor),    
     method(DGSpotProxy, isPlaying),    

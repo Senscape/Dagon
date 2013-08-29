@@ -49,7 +49,7 @@ class Log;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGTexture : public DGObject {
+class DGTexture : public Object {
     Config& config;
     Log& log;
     

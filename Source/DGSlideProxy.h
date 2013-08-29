@@ -33,7 +33,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGSlideProxy : public DGObjectProxy {
+class DGSlideProxy : public ObjectProxy {
 public:
     static const char className[];
     static Luna<DGSlideProxy>::RegType methods[];
@@ -43,7 +43,7 @@ public:
         n = new Node;
         n->setName(luaL_checkstring(L, 1));
         
-        n->setType(DGObjectSlide);
+        n->setType(kObjectSlide);
         n->setSlide(true);
         
         if (lua_gettop(L) == 2)
@@ -57,7 +57,7 @@ public:
         DGSpot* spot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
         
         DGTexture* texture = new DGTexture;
-        texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 1), DGObjectImage).c_str());
+        texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 1), kObjectImage).c_str());
         spot->setTexture(texture);
         
         n->addSpot(spot);
@@ -102,7 +102,7 @@ public:
     
     // Add a spot to the node
     int addSpot(lua_State *L) {
-        if (DGCheckProxy(L, 1) == DGObjectSpot) {
+        if (DGCheckProxy(L, 1) == kObjectSpot) {
             DGSpot* spot = DGProxyToSpot(L, 1);
             spot->setOrigin(64, 424);
             n->addSpot(spot);
@@ -140,7 +140,7 @@ private:
 const char DGSlideProxy::className[] = DGSlideProxyName;
 
 Luna<DGSlideProxy>::RegType DGSlideProxy::methods[] = {
-    DGObjectMethods(DGSlideProxy),
+    ObjectMethods(DGSlideProxy),
     method(DGSlideProxy, addSpot),
     method(DGSlideProxy, onReturn),
     {0,0}

@@ -1,0 +1,117 @@
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011-2013 Senscape s.r.l.
+// All rights reserved.
+//
+// This Source Code Form is subject to the terms of the
+// Mozilla Public License, v. 2.0. If a copy of the MPL was
+// not distributed with this file, You can obtain one at
+// http://mozilla.org/MPL/2.0/.
+//
+////////////////////////////////////////////////////////////
+
+#ifndef DAGON_OBJECT_H_
+#define DAGON_OBJECT_H_
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#include <string>
+
+////////////////////////////////////////////////////////////
+// Definitions
+////////////////////////////////////////////////////////////
+
+enum FadeSpeeds {
+  kFadeNormal = 200,
+  kFadeSlow = 350,
+  kFadeSlowest = 500,
+  kFadeFast = 100,
+  kFadeFastest = 50
+};
+
+enum FadeTypes {
+  kFadeNone,
+  kFadeIn,
+  kFadeOut
+};
+
+enum ObjectTypes {
+  // Note that 0 is used to return an invalid object in Lua
+  kObjectNone = 0,
+	kObjectGeneric,
+	kObjectAudio,
+  kObjectButton,
+  // Cursors are not really separate objects, but for convenience we include
+  // them here
+  kObjectCursor,
+	kObjectFont,
+  kObjectImage,
+	kObjectNode,
+  kObjectOverlay,
+	kObjectRoom,
+  kObjectSlide,
+	kObjectSpot,
+	kObjectTexture,
+	kObjectVideo
+};
+
+////////////////////////////////////////////////////////////
+// Interface
+////////////////////////////////////////////////////////////
+
+class Object {
+ public:
+  Object();
+  virtual ~Object() {};
+    
+  // Checks
+  bool isEnabled();
+  bool isFading();
+  bool isType(unsigned int typeToCheck);
+    
+  // Gets
+  float fadeLevel();
+  int luaObject();
+  std::string name();
+  int retainCount();
+  unsigned int type();
+    
+  // Sets
+  void setDefaultFadeLevel(float level);
+  void setFadeLevel(float level);
+  void setFadeSpeed(int speed);
+  void setLuaObject(int object);
+  void setName(std::string aName);
+  void setStatic();
+  void setType(unsigned int type);
+    
+  // State changes
+  void disable();
+  void enable();
+  void fadeIn();
+  void fadeOut();
+  void release();
+  void retain();
+  void toggle();
+  void updateFade();
+  
+ private:
+  unsigned int _id;
+  int _luaObject;
+  std::string _name;
+  int _retainCount = 0;
+  unsigned int _type;
+  
+  float _defaultFade = 1.0;
+  int _fadeDirection = kFadeNone;
+  float _fadeLevel = 1.0;
+  float _fadeSpeed;
+  float _fadeTarget = 1.0;
+  bool _isEnabled = true;
+  bool _isStatic = false;
+};
+
+#endif // DAGON_OBJECT_H_

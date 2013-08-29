@@ -18,8 +18,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <string>
+
 #include "Geometry.h"
-#include "DGObject.h"
+#include "Object.h"
 
 ////////////////////////////////////////////////////////////
 // Forward declarations
@@ -32,7 +34,7 @@ class DGTexture;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class Image : public DGObject {
+class Image : public Object {
  public:
   Image();
   Image(const std::string &fromFileName);

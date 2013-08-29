@@ -147,12 +147,12 @@ public:
     void processMouse(int x, int y, int eventFlags);
     void registerGlobalHandler(int forEvent, int handlerForLua);
     void registerHotkey(int aKey, const char* luaCommandToExecute);
-    void registerObject(DGObject* theTarget);
-    void requestObject(DGObject* theTarget);
+    void registerObject(Object* theTarget);
+    void requestObject(Object* theTarget);
     void reshape(int width, int height);
     void sleep(int forSeconds);
     void syncSpot(DGSpot* spot);
-    void switchTo(DGObject* theTarget, bool instant = false);
+    void switchTo(Object* theTarget, bool instant = false);
     void run();
     void takeSnapshot();
     void terminate();

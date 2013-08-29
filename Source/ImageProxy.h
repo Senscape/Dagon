@@ -29,7 +29,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class ImageProxy : public DGObjectProxy {
+class ImageProxy : public ObjectProxy {
 public:
     static const char className[];
     static Luna<ImageProxy>::RegType methods[];
@@ -100,7 +100,7 @@ private:
 const char ImageProxy::className[] = ImageProxyName;
 
 Luna<ImageProxy>::RegType ImageProxy::methods[] = {
-    DGObjectMethods(ImageProxy),   
+    ObjectMethods(ImageProxy),   
     method(ImageProxy, move),
     method(ImageProxy, position),
     method(ImageProxy, scale),

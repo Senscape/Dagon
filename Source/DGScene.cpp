@@ -265,7 +265,7 @@ bool DGScene::drawCutscene() {
 void DGScene::loadCutscene(const char* fileName) {
     _cutsceneTexture = new DGTexture;
     
-    _cutscene.setResource(config.path(kPathResources, fileName, DGObjectVideo).c_str());
+    _cutscene.setResource(config.path(kPathResources, fileName, kObjectVideo).c_str());
     videoManager.requestVideo(&_cutscene);
     
     if (_cutscene.isLoaded()) {

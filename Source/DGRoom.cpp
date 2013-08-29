@@ -27,7 +27,7 @@ using namespace std;
 
 DGRoom::DGRoom() {
     _hasDefaultFootstep = false;
-    this->setType(DGObjectRoom);
+    this->setType(kObjectRoom);
 }
 
 ////////////////////////////////////////////////////////////

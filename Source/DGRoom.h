@@ -31,7 +31,7 @@ class Node;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGRoom : public DGObject {
+class DGRoom : public Object {
     std::vector<Node*> _arrayOfNodes;
     std::vector<Node*>::iterator _it;    
     Node* _currentNode;

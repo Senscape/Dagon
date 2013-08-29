@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////////////////
 
 Node::Node() {
-  this->setType(DGObjectNode);
+  this->setType(kObjectNode);
 }
 
 ////////////////////////////////////////////////////////////
@@ -136,7 +136,7 @@ void Node::addCustomLink(unsigned withDirection, int luaHandler) {
   _link(withDirection, &action);
 }
 
-void Node::addLink(unsigned int withDirection, DGObject* theTarget) {
+void Node::addLink(unsigned int withDirection, Object* theTarget) {
   Action action;
   action.type = kActionSwitch;
   action.cursor = kCursorForward;    
@@ -170,9 +170,9 @@ void Node::_link(unsigned int direction, Action* action) {
   // We ensure the texture is properly stretched, so we take the default
   // cube size.
   // TODO: This setting should be obtained directly from the Config class
-  int minorBound = (int)(kDefTexSize / 3);
-  int majorBound = (int)(kDefTexSize / 1.5f);
-  int offset = (int)(kDefTexSize/3);
+  int minorBound = kDefTexSize / 3;
+  int majorBound = kDefTexSize / 1.5;
+  int offset = kDefTexSize / 3;
     
   // We always have four corners here, hence eight elements since they are
   // squared spots.

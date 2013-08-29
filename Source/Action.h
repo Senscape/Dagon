@@ -20,7 +20,7 @@
 
 #include <string>
 
-#include "DGObject.h"
+#include "Object.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -41,7 +41,7 @@ struct Action {
   bool hasFeedAudio;
   int luaHandler;
   int luaObject;
-	DGObject* target;
+	Object* target;
   int type;    
 };
 

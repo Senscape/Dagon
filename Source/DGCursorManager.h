@@ -43,7 +43,7 @@ typedef struct {
 ////////////////////////////////////////////////////////////
 
 // TODO: Define origin for cursors (for better placement)
-class DGCursorManager : public DGObject {
+class DGCursorManager : public Object {
     Config& config;
     
     std::vector<DGCursorData> _arrayOfCursors;

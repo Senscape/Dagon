@@ -18,7 +18,7 @@
 #include <cassert>
 
 #include "Config.h"
-#include "DGObject.h"
+#include "Object.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation
@@ -46,7 +46,7 @@ std::string Config::path(int ofType, const std::string &forFile,
     case kPathApp: {
       fullPath = _appPath;
       if (autopaths) {
-        if (andObject == DGObjectRoom)
+        if (andObject == kObjectRoom)
           fullPath += kDefRoomPath;
       }
       break;
@@ -55,27 +55,27 @@ std::string Config::path(int ofType, const std::string &forFile,
       fullPath = _resPath;
       if (autopaths) {
         switch (andObject) {
-          case DGObjectAudio: {
+          case kObjectAudio: {
             fullPath += kDefAudioPath;
             break;
           }
-          case DGObjectCursor: {
+          case kObjectCursor: {
             fullPath += kDefCursorPath;
             break;
           }
-          case DGObjectFont: {
+          case kObjectFont: {
             fullPath += kDefFontPath;
             break;
           }
-          case DGObjectImage: {
+          case kObjectImage: {
             fullPath += kDefImagePath;
             break;
           }
-          case DGObjectNode: {
+          case kObjectNode: {
             fullPath += kDefNodePath;
             break;
           }
-          case DGObjectVideo: {
+          case kObjectVideo: {
             fullPath += kDefVideoPath;
             break;
           }

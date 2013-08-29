@@ -47,7 +47,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class NodeProxy : public DGObjectProxy {
+class NodeProxy : public ObjectProxy {
 public:
     static const char className[];
     static Luna<NodeProxy>::RegType methods[];
@@ -85,7 +85,7 @@ public:
     
     // Add a spot to the node
     int addSpot(lua_State *L) {
-        if (DGCheckProxy(L, 1) == DGObjectSpot) {
+        if (DGCheckProxy(L, 1) == kObjectSpot) {
             n->addSpot(DGProxyToSpot(L, 1));
             
             // Now we get the metatable of the added spot and set it
@@ -133,11 +133,11 @@ public:
             }
             else {
                 switch (DGCheckProxy(L, 3)) {
-                    case DGObjectNode:
-                        n->addLink(dir, (DGObject*)DGProxyToNode(L, 3));
+                    case kObjectNode:
+                        n->addLink(dir, (Object*)DGProxyToNode(L, 3));
                         break;
-                    case DGObjectRoom:
-                        n->addLink(dir, (DGObject*)DGProxyToRoom(L, 3));
+                    case kObjectRoom:
+                        n->addLink(dir, (Object*)DGProxyToRoom(L, 3));
                         break;
                 }
                 
@@ -151,7 +151,7 @@ public:
   
     // Set a custom footstep
     int setFootstep(lua_State *L) {
-        if (DGCheckProxy(L, 1) == DGObjectAudio) {
+        if (DGCheckProxy(L, 1) == kObjectAudio) {
             // Just set the audio object
             n->setFootstep((Audio*)DGProxyToAudio(L, 1));
         }
@@ -181,7 +181,7 @@ private:
 const char NodeProxy::className[] = NodeProxyName;
 
 Luna<NodeProxy>::RegType NodeProxy::methods[] = {
-    DGObjectMethods(NodeProxy),    
+    ObjectMethods(NodeProxy),    
     method(NodeProxy, addSpot),
     method(NodeProxy, link),
     method(NodeProxy, setFootstep),

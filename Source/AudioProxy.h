@@ -29,7 +29,7 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class AudioProxy : public DGObjectProxy {
+class AudioProxy : public ObjectProxy {
 public:
     static const char className[];
     static Luna<AudioProxy>::RegType methods[];
@@ -106,7 +106,7 @@ private:
 const char AudioProxy::className[] = AudioProxyName;
 
 Luna<AudioProxy>::RegType AudioProxy::methods[] = {
-    DGObjectMethods(AudioProxy),
+    ObjectMethods(AudioProxy),
     method(AudioProxy, match),
     method(AudioProxy, play),
     method(AudioProxy, pause),    

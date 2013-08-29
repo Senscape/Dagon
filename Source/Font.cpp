@@ -20,6 +20,7 @@
 
 #include "Config.h"
 #include "Font.h"
+#include "Language.h"
 #include "Log.h"
 
 ////////////////////////////////////////////////////////////
@@ -30,7 +31,7 @@ Font::Font() :
   config(Config::instance()),
   log(Log::instance())
 {
-  this->setType(DGObjectFont);
+  this->setType(kObjectFont);
 }
 
 ////////////////////////////////////////////////////////////
@@ -119,7 +120,7 @@ void Font::setResource(const std::string &fromFileName,
   
   if (FT_New_Face(*_library,
                   config.path(kPathResources, fromFileName,
-                              DGObjectFont).c_str(),
+                              kObjectFont).c_str(),
                   0, &face)) {
     log.error(kModFont, "%s: %s", kString15004, fromFileName.c_str());
     return;

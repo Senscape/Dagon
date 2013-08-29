@@ -35,7 +35,7 @@ DGCursorManager::DGCursorManager() :
     _x = config.displayWidth / 2;
     _y = config.displayHeight / 2;
     
-    this->setFadeSpeed(DGFadeFastest); // Cursor always fades with fastest speed
+    this->setFadeSpeed(kFadeFastest); // Cursor always fades with fastest speed
     this->setSize(kDefCursorSize);
     this->updateCoords(_x, _y);
 }
@@ -89,7 +89,7 @@ void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int
     DGTexture* texture;
     
     texture = new DGTexture;
-    texture->setResource(config.path(kPathResources, imageFromFile, DGObjectCursor).c_str());
+    texture->setResource(config.path(kPathResources, imageFromFile, kObjectCursor).c_str());
     texture->load();
     
     cursor.type = type;

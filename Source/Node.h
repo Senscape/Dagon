@@ -18,8 +18,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <string>
+#include <vector>
+
 #include "Action.h"
-#include "Platform.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -32,7 +34,7 @@ class DGSpot;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class Node : public DGObject {
+class Node : public Object {
  public:
   Node();
   ~Node();
@@ -61,7 +63,7 @@ class Node : public DGObject {
   
   // State changes
   void addCustomLink(unsigned int withDirection, int luaHandler);
-  void addLink(unsigned int withDirection, DGObject* theTarget);
+  void addLink(unsigned int withDirection, Object* theTarget);
   DGSpot* addSpot(DGSpot* aSpot);
   void beginIteratingSpots();
   bool iterateSpots();

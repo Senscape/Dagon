@@ -531,35 +531,35 @@ void DGControl::registerHotkey(int aKey, const char* luaCommandToExecute) {
     }
 }
 
-void DGControl::registerObject(DGObject* theTarget) {
+void DGControl::registerObject(Object* theTarget) {
     switch (theTarget->type()) {
-        case DGObjectAudio:
+        case kObjectAudio:
             audioManager.registerAudio((Audio*)theTarget);
             break;
-        case DGObjectNode:
+        case kObjectNode:
              textureManager.requestBundle((Node*)theTarget);
             break;
-        case DGObjectOverlay:
+        case kObjectOverlay:
             _interface->addOverlay((DGOverlay*)theTarget);
             break;
-        case DGObjectRoom: 
+        case kObjectRoom: 
             _arrayOfRooms.push_back((DGRoom*)theTarget);
             break;
-        case DGObjectVideo:
+        case kObjectVideo:
             videoManager.registerVideo((DGVideo*)theTarget);
             break;
     }
     
     if (_isRunning && !_isShowingSplash)
-        log.warning(kModControl, "%s: %s", kString12007, theTarget->name());
+        log.warning(kModControl, "%s: %s", kString12007, theTarget->name().c_str());
 }
 
-void DGControl::requestObject(DGObject* theTarget) {
+void DGControl::requestObject(Object* theTarget) {
     switch (theTarget->type()) {
-        case DGObjectAudio:
+        case kObjectAudio:
             audioManager.requestAudio((Audio*)theTarget);
             break;
-        case DGObjectVideo:
+        case kObjectVideo:
             videoManager.requestVideo((DGVideo*)theTarget);
             break;
     }
@@ -612,7 +612,7 @@ void DGControl::sleep(int forSeconds) {
     cursorManager.fadeOut();
 }
 
-void DGControl::switchTo(DGObject* theTarget, bool instant) {
+void DGControl::switchTo(Object* theTarget, bool instant) {
     static bool firstSwitch = true;
     bool performWalk;
     
@@ -622,7 +622,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
     
     if (theTarget) {
         switch (theTarget->type()) {
-            case DGObjectRoom:
+            case kObjectRoom:
                 audioManager.clear();
                 feedManager.clear(); // Clear all pending feeds
             
@@ -634,7 +634,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 timerManager.setLuaObject(_currentRoom->luaObject());
                 
                 if (!_currentRoom->hasNodes()) {
-                    log.warning(kModControl, "%s: %s", kString12005, _currentRoom->name());
+                    log.warning(kModControl, "%s: %s", kString12005, _currentRoom->name().c_str());
                     return;
                 }
                 
@@ -643,7 +643,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 performWalk = true;
                 
                 break;
-            case DGObjectSlide:
+            case kObjectSlide:
                 renderManager.blendNextUpdate();
                 
                 if (_currentRoom) {
@@ -651,7 +651,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                     node->setPreviousNode(this->currentNode());
                     
                     if (!_currentRoom->switchTo(node)) {
-                        log.error(kModControl, "%s: %s (%s)", kString12010, node->name(), _currentRoom->name()); // Bad slide
+                        log.error(kModControl, "%s: %s (%s)", kString12010, node->name().c_str(), _currentRoom->name().c_str()); // Bad slide
                         return;
                     }
                     
@@ -667,7 +667,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 }
 
                 break;
-            case DGObjectNode:
+            case kObjectNode:
                 audioManager.clear();
                 
                 renderManager.blendNextUpdate(true);
@@ -675,7 +675,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
                 if (_currentRoom) {
                     Node* node = (Node*)theTarget;
                     if (!_currentRoom->switchTo(node)) {
-                        log.error(kModControl, "%s: %s (%s)", kString12008, node->name(), _currentRoom->name()); // Bad node
+                        log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
                         return;
                     }
                     performWalk = true;
@@ -770,7 +770,7 @@ void DGControl::switchTo(DGObject* theTarget, bool instant) {
             // Prepare the name for the window
             char title[kMaxObjectName];
             snprintf(title, kMaxObjectName, "%s (%s, %s)", config.script().c_str(),
-                     _currentRoom->name(), currentNode->description().c_str());
+                     _currentRoom->name().c_str(), currentNode->description().c_str());
             system.setTitle(title);
         }
         
@@ -943,7 +943,7 @@ void DGControl::_processAction(){
 
 void DGControl::_updateView(int state, bool inBackground) {
     // TODO: Suspend all operations when doing a switch
-    // FIXME: Add a render stack of DGObjects, especially for overlays
+    // FIXME: Add a render stack of Objects, especially for overlays
     // IMPORTANT: Ensure this function is thread-safe when switching rooms or nodes
     
     // Setup the scene

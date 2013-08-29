@@ -47,7 +47,7 @@ DGSpot::DGSpot(std::vector<int> withArrayOfCoordinates, unsigned int onFace, int
     
     _volume = 1.0f;
     
-    this->setType(DGObjectSpot);
+    this->setType(kObjectSpot);
 }
 
 ////////////////////////////////////////////////////////////

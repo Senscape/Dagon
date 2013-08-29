@@ -25,7 +25,7 @@
 
 #include "DGCursorManager.h"
 
-// FIXME: The cursor manager shouldn't inherit from DGObject...
+// FIXME: The cursor manager shouldn't inherit from Object...
 // In fact, it shouldn't be a singleton.
 
 ////////////////////////////////////////////////////////////
@@ -33,25 +33,25 @@
 ////////////////////////////////////////////////////////////
 
 static int DGCursorLibDisable(lua_State *L) {
-    DGCursorManager::instance().DGObject::disable();
+    DGCursorManager::instance().Object::disable();
 	
 	return 0;
 }
 
 static int DGCursorLibEnable(lua_State *L) {
-    DGCursorManager::instance().DGObject::enable();
+    DGCursorManager::instance().Object::enable();
 	
 	return 0;
 }
 
 static int DGCursorLibFadeIn(lua_State *L) {
-    DGCursorManager::instance().DGObject::fadeIn();
+    DGCursorManager::instance().Object::fadeIn();
 	
 	return 0;
 }
 
 static int DGCursorLibFadeOut(lua_State *L) {
-    DGCursorManager::instance().DGObject::fadeOut();
+    DGCursorManager::instance().Object::fadeOut();
 	
 	return 0;
 }

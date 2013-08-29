@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 // Helper to quickly add the default methods
-#define DGObjectMethods(proxy) \
+#define ObjectMethods(proxy) \
 method(proxy, disable), \
 method(proxy, enable), \
 method(proxy, fadeIn), \
@@ -39,21 +39,21 @@ method(proxy, toggle)
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGObject.h"
+#include "Object.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGObjectProxy {
+class ObjectProxy {
 public:
     // Constructor
-    DGObjectProxy() { /* Nothing to do here */ }
+    ObjectProxy() { /* Nothing to do here */ }
     
     // Destructor
-    ~DGObjectProxy() { /* Nothing to do here */ }
+    ~ObjectProxy() { /* Nothing to do here */ }
     
-    void setObject(DGObject* caller) {
+    void setObject(Object* caller) {
         o = caller;
     }
     
@@ -95,7 +95,7 @@ public:
     
     // Return the name
     int name(lua_State *L) {
-        lua_pushstring(L, o->name());
+        lua_pushstring(L, o->name().c_str());
         return 1;
     }
     
@@ -111,10 +111,10 @@ public:
         return 0;
     }
     
-    DGObject* ptr() { return o; }
+    Object* ptr() { return o; }
     
 private:
-    DGObject* o;
+    Object* o;
     
 };
 

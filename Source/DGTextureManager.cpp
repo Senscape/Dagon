@@ -108,16 +108,16 @@ void DGTextureManager::registerTexture(DGTexture* target) {
         
         if (config.bundleEnabled) {
             // Attempt loading the bundle
-            snprintf(fileToLoad, kMaxFileLength, "%s.%s", target->name(), config.texExtension().c_str());
+            snprintf(fileToLoad, kMaxFileLength, "%s.%s", target->name().c_str(), config.texExtension().c_str());
             
         }
         else {
             // Attempt loading individual file with generated index and default extension
-            snprintf(fileToLoad, kMaxFileLength, "%s%0" in_between(kFileSeqDigits) "d.%s", target->name(),
+            snprintf(fileToLoad, kMaxFileLength, "%s%0" in_between(kFileSeqDigits) "d.%s", target->name().c_str(),
                      target->indexInBundle() + kFileSeqStart, config.texExtension().c_str());
         }
         
-        target->setResource(config.path(kPathResources, fileToLoad, DGObjectNode).c_str());
+        target->setResource(config.path(kPathResources, fileToLoad, kObjectNode).c_str());
     }
     
     _arrayOfTextures.push_back(target);

@@ -30,7 +30,7 @@ Image::Image() :
   _rect.origin.y = 0; 
   _rect.size.width = 0;
   _rect.size.height = 0;
-  this->setType(DGObjectImage);    
+  this->setType(kObjectImage);    
 }
 
 Image::Image(const std::string &fromFileName) :
@@ -44,7 +44,7 @@ Image::Image(const std::string &fromFileName) :
     _rect.size.height = _attachedTexture->height();
     _calculateCoordinates();
   }
-  this->setType(DGObjectImage);    
+  this->setType(kObjectImage);    
 }
 
 ////////////////////////////////////////////////////////////
@@ -99,7 +99,7 @@ void Image::setTexture(const std::string &fromFileName) {
   
   _attachedTexture = new DGTexture;
   _attachedTexture->setResource(config.path(kPathResources, fromFileName,
-                                   DGObjectImage).c_str());
+                                   kObjectImage).c_str());
   _attachedTexture->load();
   _hasTexture = true;
 }

@@ -29,12 +29,12 @@
 ////////////////////////////////////////////////////////////
 
 enum DGAttachTypes {
-    AUDIO = DGObjectAudio,
+    AUDIO = kObjectAudio,
     FUNCTION = kActionFunction,
-    IMAGE = DGObjectTexture,
+    IMAGE = kObjectTexture,
     FEED = kActionFeed,
     SWITCH = kActionSwitch,
-    VIDEO = DGObjectVideo
+    VIDEO = kObjectVideo
 };
 
 // Helper to push values to Lua

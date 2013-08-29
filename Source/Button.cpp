@@ -31,8 +31,8 @@ Button::Button() :
   fontManager(DGFontManager::instance())
 {
   _font = fontManager.loadDefault();
-  this->setFadeSpeed(DGFadeNormal);
-  this->setType(DGObjectButton);
+  this->setFadeSpeed(kFadeNormal);
+  this->setType(kObjectButton);
 }
 
 ////////////////////////////////////////////////////////////
@@ -114,7 +114,7 @@ void Button::setOnHoverTexture(const std::string &fromFileName) {
   // resource manager.
   _onHoverTexture = new DGTexture;
   _onHoverTexture->setResource(config.path(kPathResources, fromFileName,
-                                           DGObjectImage).c_str());
+                                           kObjectImage).c_str());
   _onHoverTexture->load();
   _hasOnHoverTexture = true;
 }

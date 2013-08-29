@@ -22,7 +22,7 @@
 		FB26300514D33B3200EAD41A /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300414D33B3200EAD41A /* Log.cpp */; };
 		FB26300914D3490300EAD41A /* DGState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26300814D3490300EAD41A /* DGState.cpp */; };
 		FB26303A14D713DB00EAD41A /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB26303914D713DB00EAD41A /* Config.cpp */; };
-		FB279DA914AA8AA0002D48FC /* DGObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DA814AA8AA0002D48FC /* DGObject.cpp */; };
+		FB279DA914AA8AA0002D48FC /* Object.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DA814AA8AA0002D48FC /* Object.cpp */; };
 		FB279DAE14AB61A1002D48FC /* DGSpot.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DAD14AB61A0002D48FC /* DGSpot.cpp */; };
 		FB279DB214ACD224002D48FC /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB114ACD223002D48FC /* Node.cpp */; };
 		FB279DB514ADF3A5002D48FC /* DGRoom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB279DB414ADF3A5002D48FC /* DGRoom.cpp */; };
@@ -102,8 +102,8 @@
 		FB26300A14D3491000EAD41A /* DGState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGState.h; sourceTree = "<group>"; };
 		FB26303814D713D100EAD41A /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		FB26303914D713DB00EAD41A /* Config.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Config.cpp; sourceTree = "<group>"; };
-		FB279DA814AA8AA0002D48FC /* DGObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGObject.cpp; sourceTree = "<group>"; };
-		FB279DAA14AA8CF1002D48FC /* DGObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGObject.h; sourceTree = "<group>"; };
+		FB279DA814AA8AA0002D48FC /* Object.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Object.cpp; sourceTree = "<group>"; };
+		FB279DAA14AA8CF1002D48FC /* Object.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Object.h; sourceTree = "<group>"; };
 		FB279DAD14AB61A0002D48FC /* DGSpot.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGSpot.cpp; sourceTree = "<group>"; };
 		FB279DAF14AB61BD002D48FC /* DGSpot.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSpot.h; sourceTree = "<group>"; };
 		FB279DB014AB81F8002D48FC /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Action.h; sourceTree = "<group>"; };
@@ -132,7 +132,7 @@
 		FBA2C78514DC91200098E334 /* Platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Platform.h; sourceTree = "<group>"; };
 		FBA2C78614DD80100098E334 /* DGCameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCameraManager.h; sourceTree = "<group>"; };
 		FBA2C78714DD801A0098E334 /* DGCameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCameraManager.cpp; sourceTree = "<group>"; };
-		FBA97543157B961900428561 /* DGObjectProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGObjectProxy.h; sourceTree = "<group>"; };
+		FBA97543157B961900428561 /* ObjectProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectProxy.h; sourceTree = "<group>"; };
 		FBABA630156548E80009889F /* DGOverlay.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGOverlay.cpp; sourceTree = "<group>"; };
 		FBABA633156548F40009889F /* DGOverlay.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGOverlay.h; sourceTree = "<group>"; };
 		FBABA6341565537D0009889F /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
@@ -229,8 +229,8 @@
 				FBABA6341565537D0009889F /* Image.cpp */,
 				FB279DB314ACD230002D48FC /* Node.h */,
 				FB279DB114ACD223002D48FC /* Node.cpp */,
-				FB279DAA14AA8CF1002D48FC /* DGObject.h */,
-				FB279DA814AA8AA0002D48FC /* DGObject.cpp */,
+				FB279DAA14AA8CF1002D48FC /* Object.h */,
+				FB279DA814AA8AA0002D48FC /* Object.cpp */,
 				FBABA633156548F40009889F /* DGOverlay.h */,
 				FBABA630156548E80009889F /* DGOverlay.cpp */,
 				FB279DB614ADF3BF002D48FC /* DGRoom.h */,
@@ -403,7 +403,7 @@
 				FBABA63C1565B5C00009889F /* ButtonProxy.h */,
 				FBABA63B156589030009889F /* ImageProxy.h */,
 				E8E0194714E366B800173A2D /* NodeProxy.h */,
-				FBA97543157B961900428561 /* DGObjectProxy.h */,
+				FBA97543157B961900428561 /* ObjectProxy.h */,
 				FBABA63A156583EC0009889F /* DGOverlayProxy.h */,
 				E8E0194814E366B800173A2D /* DGProxy.h */,
 				E8E0194914E366B800173A2D /* DGRoomProxy.h */,
@@ -498,7 +498,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FB279DA914AA8AA0002D48FC /* DGObject.cpp in Sources */,
+				FB279DA914AA8AA0002D48FC /* Object.cpp in Sources */,
 				FB279DAE14AB61A1002D48FC /* DGSpot.cpp in Sources */,
 				FB279DB214ACD224002D48FC /* Node.cpp in Sources */,
 				FB279DB514ADF3A5002D48FC /* DGRoom.cpp in Sources */,

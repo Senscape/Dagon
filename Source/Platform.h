@@ -80,7 +80,7 @@
 #include "Defines.h"
 #include "Geometry.h"
 #include "Language.h"
-#include "DGObject.h"
+#include "Object.h"
 #include "Version.h"
 
 ////////////////////////////////////////////////////////////

@@ -31,7 +31,7 @@ DGOverlay::DGOverlay() {
     _position.y = 0;
     
     this->disable(); // Overlays are disabled by default
-    this->setType(DGObjectOverlay);
+    this->setType(kObjectOverlay);
 }
 
 ////////////////////////////////////////////////////////////
