@@ -23,20 +23,20 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGImage.h"
+#include "Image.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGImageProxy : public DGObjectProxy {
+class ImageProxy : public DGObjectProxy {
 public:
     static const char className[];
-    static Luna<DGImageProxy>::RegType methods[];
+    static Luna<ImageProxy>::RegType methods[];
     
     // Constructor
-    DGImageProxy(lua_State *L) {
-        i = new DGImage(luaL_checkstring(L, 1));
+    ImageProxy(lua_State *L) {
+        i = new Image(luaL_checkstring(L, 1));
         i->setName(luaL_checkstring(L, 1));
         
         // Init the base class
@@ -44,7 +44,7 @@ public:
     }
     
     // Destructor
-    ~DGImageProxy() { delete i; }
+    ~ImageProxy() { delete i; }
     
     // Move the image
     int move(lua_State *L) {
@@ -86,10 +86,10 @@ public:
         return 2;
     }
     
-    DGImage* ptr() { return i; }
+    Image* ptr() { return i; }
     
 private:
-    DGImage* i;
+    Image* i;
     
 };
 
@@ -97,16 +97,16 @@ private:
 // Static definitions
 ////////////////////////////////////////////////////////////
 
-const char DGImageProxy::className[] = DGImageProxyName;
+const char ImageProxy::className[] = ImageProxyName;
 
-Luna<DGImageProxy>::RegType DGImageProxy::methods[] = {
-    DGObjectMethods(DGImageProxy),   
-    method(DGImageProxy, move),
-    method(DGImageProxy, position),
-    method(DGImageProxy, scale),
-    method(DGImageProxy, setPosition),
-    method(DGImageProxy, setSize),      
-    method(DGImageProxy, size),
+Luna<ImageProxy>::RegType ImageProxy::methods[] = {
+    DGObjectMethods(ImageProxy),   
+    method(ImageProxy, move),
+    method(ImageProxy, position),
+    method(ImageProxy, scale),
+    method(ImageProxy, setPosition),
+    method(ImageProxy, setSize),      
+    method(ImageProxy, size),
     {0,0}
 };
 

@@ -16,25 +16,24 @@
 ////////////////////////////////////////////////////////////
 
 #include "Config.h"
-#include "DGImage.h"
+#include "Image.h"
 #include "DGTexture.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGImage::DGImage() :
+Image::Image() :
   config(Config::instance())
 {
   _rect.origin.x = 0;
   _rect.origin.y = 0; 
   _rect.size.width = 0;
   _rect.size.height = 0;
-    
   this->setType(DGObjectImage);    
 }
 
-DGImage::DGImage(const std::string &fromFileName) :
+Image::Image(const std::string &fromFileName) :
   config(Config::instance())
 {
   this->setTexture(fromFileName);
@@ -45,7 +44,6 @@ DGImage::DGImage(const std::string &fromFileName) :
     _rect.size.height = _attachedTexture->height();
     _calculateCoordinates();
   }
-
   this->setType(DGObjectImage);    
 }
 
@@ -53,95 +51,86 @@ DGImage::DGImage(const std::string &fromFileName) :
 // Implementation - Checks
 ////////////////////////////////////////////////////////////
 
-bool DGImage::hasTexture() {
-    return _hasTexture;
+bool Image::hasTexture() {
+  return _hasTexture;
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-Point DGImage::position() {
-    return _rect.origin;    
+int* Image::arrayOfCoordinates() {
+  return _arrayOfCoordinates;
 }
 
-Size DGImage::size() {
-    return _rect.size;
+Point Image::position() {
+  return _rect.origin;    
 }
 
-DGTexture* DGImage::texture() {
-    return _attachedTexture;
+Size Image::size() {
+  return _rect.size;
+}
+
+DGTexture* Image::texture() {
+  return _attachedTexture;
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-int* DGImage::arrayOfCoordinates() {
-    return _arrayOfCoordinates;
+void Image::setPosition(float x, float y) {
+  _rect.origin.x = x;
+  _rect.origin.y = y;
+  _calculateCoordinates();
 }
 
-void DGImage::move(float offsetX, float offsetY) {
-    _rect.origin.x += offsetX;
-    _rect.origin.y += offsetY;
-    
-    _calculateCoordinates();
+void Image::setSize(float width, float height) {
+  _rect.size.width = width;
+  _rect.size.height = height;
+  _calculateCoordinates();
 }
 
-void DGImage::scale(float factor) {
-    _rect.size.width *= factor;
-    _rect.size.height *= factor;
-    
-    _calculateCoordinates();    
+void Image::setTexture(const std::string &fromFileName) {
+  // TODO: Important! We should determine first if the texture already exists
+  // to avoid repeating resources. Eventually, this would be done via the
+  // resource manager.
+  // FIXME: These textures are immediately loaded which isn't very efficient.
+  
+  _attachedTexture = new DGTexture;
+  _attachedTexture->setResource(config.path(kPathResources, fromFileName,
+                                   DGObjectImage).c_str());
+  _attachedTexture->load();
+  _hasTexture = true;
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-void DGImage::setPosition(float x, float y) {
-    _rect.origin.x = x;
-    _rect.origin.y = y;
-    
-    _calculateCoordinates();    
+void Image::move(float offsetX, float offsetY) {
+  _rect.origin.x += offsetX;
+  _rect.origin.y += offsetY;
+  _calculateCoordinates();
 }
 
-void DGImage::setSize(float width, float height) {
-    _rect.size.width = width;
-    _rect.size.height = height;
-    
-    _calculateCoordinates(); 
-}
-
-void DGImage::setTexture(const std::string &fromFileName) {
-    // TODO: Important! Should determine first if the texture already exists,
-    // to avoid repeating resources. Eventually, this would be done via the
-    // resource manager.
-  // FIXME: These textures are immediately loaded which isn't very efficient.
-    DGTexture* texture;
-    
-    texture = new DGTexture;
-    texture->setResource(config.path(kPathResources, fromFileName, DGObjectImage).c_str());
-    texture->load();
-    
-    _attachedTexture = texture;
-    _hasTexture = true;
+void Image::scale(float factor) {
+  _rect.size.width *= factor;
+  _rect.size.height *= factor;
+  _calculateCoordinates();
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-void DGImage::_calculateCoordinates() {
-    _arrayOfCoordinates[0] = _rect.origin.x;
-    _arrayOfCoordinates[1] = _rect.origin.y;
-    
-    _arrayOfCoordinates[2] = _rect.origin.x + _rect.size.width;
-    _arrayOfCoordinates[3] = _rect.origin.y;
-    
-    _arrayOfCoordinates[4] = _rect.origin.x + _rect.size.width;
-    _arrayOfCoordinates[5] = _rect.origin.y + _rect.size.height;
-    
-    _arrayOfCoordinates[6] = _rect.origin.x;
-    _arrayOfCoordinates[7] = _rect.origin.y + _rect.size.height;    
+void Image::_calculateCoordinates() {
+  _arrayOfCoordinates[0] = _rect.origin.x;
+  _arrayOfCoordinates[1] = _rect.origin.y;
+  _arrayOfCoordinates[2] = _rect.origin.x + _rect.size.width;
+  _arrayOfCoordinates[3] = _rect.origin.y;
+  _arrayOfCoordinates[4] = _rect.origin.x + _rect.size.width;
+  _arrayOfCoordinates[5] = _rect.origin.y + _rect.size.height;
+  _arrayOfCoordinates[6] = _rect.origin.x;
+  _arrayOfCoordinates[7] = _rect.origin.y + _rect.size.height;
 }

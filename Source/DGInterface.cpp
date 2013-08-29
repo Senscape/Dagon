@@ -20,7 +20,7 @@
 #include "Config.h"
 #include "DGCursorManager.h"
 #include "Font.h"
-#include "DGImage.h"
+#include "Image.h"
 #include "DGInterface.h"
 #include "DGOverlay.h"
 #include "DGRenderManager.h"
@@ -144,7 +144,7 @@ void DGInterface::drawOverlays() {
                     (*itOverlay)->beginIteratingImages();
                     
                     do {
-                        DGImage* image = (*itOverlay)->currentImage();
+                        Image* image = (*itOverlay)->currentImage();
                         if (image->isEnabled()) {
                             image->updateFade(); // Perform any necessary updates
                             image->texture()->bind();

@@ -106,7 +106,7 @@ void DGScript::init() {
     // Register all proxys
     Luna<AudioProxy>::Register(_L);
     Luna<ButtonProxy>::Register(_L);       
-    Luna<DGImageProxy>::Register(_L);    
+    Luna<ImageProxy>::Register(_L);    
     Luna<DGNodeProxy>::Register(_L);
     Luna<DGOverlayProxy>::Register(_L);    
     Luna<DGRoomProxy>::Register(_L);

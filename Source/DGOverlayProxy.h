@@ -74,7 +74,7 @@ public:
             
             // Now we get the metatable of the added spot and set it
             // as a return value
-            lua_getfield(L, LUA_REGISTRYINDEX, DGImageProxyName);
+            lua_getfield(L, LUA_REGISTRYINDEX, ImageProxyName);
             lua_setmetatable(L, -2);
             
             return 1;

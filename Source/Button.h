@@ -22,7 +22,7 @@
 
 #include "Action.h"
 #include "Colors.h"
-#include "DGImage.h"
+#include "Image.h"
 
 ////////////////////////////////////////////////////////////
 // Forward declarations
@@ -37,7 +37,7 @@ class DGTexture;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class Button : public DGImage {    
+class Button : public Image {    
  public:
   Button();
   ~Button();

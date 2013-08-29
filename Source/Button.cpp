@@ -130,7 +130,6 @@ void Button::setTextColor(int aColor) {
 }
 
 void Button::updateCursor(int theCursor) {
-  if (_hasAction) {
+  if (_hasAction)
     _action->cursor = theCursor;
-  }
 }

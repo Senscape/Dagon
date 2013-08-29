@@ -32,11 +32,11 @@ class DGTexture;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGImage : public DGObject {
+class Image : public DGObject {
  public:
-  DGImage();
-  DGImage(const std::string &fromFileName);
-  ~DGImage() {};
+  Image();
+  Image(const std::string &fromFileName);
+  ~Image() {};
   
   // Checks
   bool hasTexture();

@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Button.h"
-#include "DGImage.h"
+#include "Image.h"
 #include "DGOverlay.h"
 
 using namespace std;
@@ -69,7 +69,7 @@ Button* DGOverlay::currentButton() {
     return *_itButton;
 }
 
-DGImage* DGOverlay::currentImage() {
+Image* DGOverlay::currentImage() {
     return *_itImage;  
 }
 
@@ -99,7 +99,7 @@ Button* DGOverlay::addButton(Button* aButton) {
     return aButton;
 }
 
-DGImage* DGOverlay::addImage(DGImage* anImage) {
+Image* DGOverlay::addImage(Image* anImage) {
     _arrayOfImages.push_back(anImage);
     return anImage;
 }
@@ -134,7 +134,7 @@ void DGOverlay::fadeIn() {
     
     // Images
     if (!_arrayOfImages.empty()) {
-        vector<DGImage*>::iterator itImage;
+        vector<Image*>::iterator itImage;
         
         itImage = _arrayOfImages.begin();
         
@@ -160,7 +160,7 @@ void DGOverlay::fadeOut() {
     
     // Images
     if (!_arrayOfImages.empty()) {
-        vector<DGImage*>::iterator itImage;
+        vector<Image*>::iterator itImage;
         
         itImage = _arrayOfImages.begin();
         
@@ -210,7 +210,7 @@ void DGOverlay::move(int offsetX, int offsetY) {
     
     // Images
     if (!_arrayOfImages.empty()) {
-        vector<DGImage*>::iterator itImage;
+        vector<Image*>::iterator itImage;
         
         itImage = _arrayOfImages.begin();
         
