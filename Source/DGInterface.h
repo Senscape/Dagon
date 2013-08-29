@@ -21,7 +21,7 @@
 class DGCameraManager;
 class Config;
 class DGCursorManager;
-class DGOverlay;
+class Overlay;
 class DGRenderManager;
 
 ////////////////////////////////////////////////////////////
@@ -35,14 +35,14 @@ class DGInterface {
     DGCursorManager& cursorManager;
     DGRenderManager& renderManager;
     
-    std::vector<DGOverlay*> _arrayOfOverlays;
-    std::vector<DGOverlay*> _arrayOfActiveOverlays; // Visible overlays go here
+    std::vector<Overlay*> _arrayOfOverlays;
+    std::vector<Overlay*> _arrayOfActiveOverlays; // Visible overlays go here
     
 public:
     DGInterface();
     ~DGInterface();
     
-    void addOverlay(DGOverlay* overlay);
+    void addOverlay(Overlay* overlay);
     void drawCursor();
     void drawHelpers();
     void drawOverlays();

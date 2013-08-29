@@ -29,7 +29,7 @@ extern "C" {
 #include "Button.h"
 #include "Image.h"
 #include "Node.h"
-#include "DGOverlay.h"
+#include "Overlay.h"
 #include "DGRoom.h"
 #include "DGSpot.h"
 
@@ -41,7 +41,7 @@ extern "C" {
 #define ButtonProxyName "Button"
 #define ImageProxyName "Image"
 #define NodeProxyName "Node"
-#define DGOverlayProxyName "Overlay"
+#define OverlayProxyName "Overlay"
 #define DGRoomProxyName "Room"
 #define DGSlideProxyName "Slide"
 #define DGSpotProxyName "Spot"
@@ -53,7 +53,7 @@ static Audio* DGProxyToAudio(lua_State *L, int idx);
 static Button* DGProxyToButton(lua_State *L, int idx);
 static Image* DGProxyToImage(lua_State *L, int idx);
 static Node* DGProxyToNode(lua_State *L, int idx);
-static DGOverlay* DGProxyToOverlay(lua_State *L, int idx);
+static Overlay* DGProxyToOverlay(lua_State *L, int idx);
 static DGRoom* DGProxyToRoom(lua_State *L, int idx);
 static Node* DGProxyToSlide(lua_State *L, int idx);
 static DGSpot* DGProxyToSpot(lua_State *L, int idx);
@@ -67,7 +67,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 #include "ButtonProxy.h"
 #include "ImageProxy.h"
 #include "NodeProxy.h"
-#include "DGOverlayProxy.h"
+#include "OverlayProxy.h"
 #include "DGRoomProxy.h"
 #include "DGSlideProxy.h"
 #include "DGSpotProxy.h"
@@ -125,7 +125,7 @@ int DGCheckProxy(lua_State *L, int idx) {
         if (_checkutype(L, idx, NodeProxy::className))
             return kObjectNode; // It's a node
         
-        if (_checkutype(L, idx, DGOverlayProxy::className))
+        if (_checkutype(L, idx, OverlayProxy::className))
             return kObjectOverlay; // It's an overlay        
         
         if (_checkutype(L, idx, DGRoomProxy::className))
@@ -165,8 +165,8 @@ Node* DGProxyToNode(lua_State *L, int idx) {
     return n->ptr();
 }
 
-DGOverlay* DGProxyToOverlay(lua_State *L, int idx) {
-    DGOverlayProxy* o = Luna<DGOverlayProxy>::check(L, idx);
+Overlay* DGProxyToOverlay(lua_State *L, int idx) {
+    OverlayProxy* o = Luna<OverlayProxy>::check(L, idx);
     return o->ptr();    
 }
 

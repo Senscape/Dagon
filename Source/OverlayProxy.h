@@ -24,20 +24,20 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGControl.h"
-#include "DGOverlay.h"
+#include "Overlay.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGOverlayProxy : public ObjectProxy {
+class OverlayProxy : public ObjectProxy {
 public:
     static const char className[];
-    static Luna<DGOverlayProxy>::RegType methods[];
+    static Luna<OverlayProxy>::RegType methods[];
     
     // Constructor
-    DGOverlayProxy(lua_State *L) {
-        o = new DGOverlay;
+    OverlayProxy(lua_State *L) {
+        o = new Overlay;
         
         o->setName(luaL_checkstring(L, 1));
         
@@ -49,7 +49,7 @@ public:
     }
     
     // Destructor
-    ~DGOverlayProxy() { delete o; }
+    ~OverlayProxy() { delete o; }
     
     // Add a button to the overlay
     int addButton(lua_State *L) {
@@ -119,10 +119,10 @@ public:
         return 0;
     } 
 
-    DGOverlay* ptr() { return o; }
+    Overlay* ptr() { return o; }
     
 private:
-    DGOverlay* o;
+    Overlay* o;
     
 };
 
@@ -130,17 +130,17 @@ private:
 // Static definitions
 ////////////////////////////////////////////////////////////
 
-const char DGOverlayProxy::className[] = DGOverlayProxyName;
+const char OverlayProxy::className[] = OverlayProxyName;
 
-Luna<DGOverlayProxy>::RegType DGOverlayProxy::methods[] = {
-    ObjectMethods(DGOverlayProxy),    
-    method(DGOverlayProxy, addButton),      
-    method(DGOverlayProxy, addImage),
-    method(DGOverlayProxy, fadeIn),
-    method(DGOverlayProxy, fadeOut),
-    method(DGOverlayProxy, move),
-    method(DGOverlayProxy, position),    
-    method(DGOverlayProxy, setPosition),
+Luna<OverlayProxy>::RegType OverlayProxy::methods[] = {
+    ObjectMethods(OverlayProxy),    
+    method(OverlayProxy, addButton),      
+    method(OverlayProxy, addImage),
+    method(OverlayProxy, fadeIn),
+    method(OverlayProxy, fadeOut),
+    method(OverlayProxy, move),
+    method(OverlayProxy, position),    
+    method(OverlayProxy, setPosition),
     {0,0}
 };
 

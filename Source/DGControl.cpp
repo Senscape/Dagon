@@ -540,7 +540,7 @@ void DGControl::registerObject(Object* theTarget) {
              textureManager.requestBundle((Node*)theTarget);
             break;
         case kObjectOverlay:
-            _interface->addOverlay((DGOverlay*)theTarget);
+            _interface->addOverlay((Overlay*)theTarget);
             break;
         case kObjectRoom: 
             _arrayOfRooms.push_back((DGRoom*)theTarget);

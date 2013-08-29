@@ -112,6 +112,9 @@ class Object {
   float _fadeTarget = 1.0;
   bool _isEnabled = true;
   bool _isStatic = false;
+  
+  Object(const Object&);
+  void operator=(const Object&);
 };
 
 #endif // DAGON_OBJECT_H_

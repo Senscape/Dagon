@@ -22,7 +22,7 @@
 #include "Font.h"
 #include "Image.h"
 #include "DGInterface.h"
-#include "DGOverlay.h"
+#include "Overlay.h"
 #include "DGRenderManager.h"
 #include "DGTexture.h"
 
@@ -52,7 +52,7 @@ DGInterface::~DGInterface() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-void DGInterface::addOverlay(DGOverlay* overlay) {
+void DGInterface::addOverlay(Overlay* overlay) {
     _arrayOfOverlays.push_back(overlay);
 }
 
@@ -101,7 +101,7 @@ void DGInterface::drawHelpers() {
 
 void DGInterface::drawOverlays() {
     if (!_arrayOfOverlays.empty()) {
-        vector<DGOverlay*>::iterator itOverlay;
+        vector<Overlay*>::iterator itOverlay;
         
         itOverlay = _arrayOfOverlays.begin();
         
@@ -165,7 +165,7 @@ bool DGInterface::scanOverlays() {
     cursorManager.setOnButton(false);
     
     if (!_arrayOfOverlays.empty()) {
-        vector<DGOverlay*>::reverse_iterator itOverlay;
+        vector<Overlay*>::reverse_iterator itOverlay;
         
         itOverlay = _arrayOfOverlays.rbegin();
         

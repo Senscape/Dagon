@@ -40,7 +40,7 @@ class DGFontManager;
 class DGInterface;
 class Log;
 class Node;
-class DGOverlay;
+class Overlay;
 class DGRoom;
 class DGRenderManager;
 class DGScene;

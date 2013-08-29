@@ -108,7 +108,7 @@ void DGScript::init() {
     Luna<ButtonProxy>::Register(_L);       
     Luna<ImageProxy>::Register(_L);    
     Luna<NodeProxy>::Register(_L);
-    Luna<DGOverlayProxy>::Register(_L);    
+    Luna<OverlayProxy>::Register(_L);    
     Luna<DGRoomProxy>::Register(_L);
     Luna<DGSlideProxy>::Register(_L);
     Luna<DGSpotProxy>::Register(_L);
