@@ -36,7 +36,7 @@
 #include "Room.h"
 #include "DGScene.h"
 #include "DGScript.h"
-#include "DGSpot.h"
+#include "Spot.h"
 #include "DGState.h"
 #include "DGSystem.h"
 #include "DGTextureManager.h"
@@ -719,7 +719,7 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
             if (currentNode->hasSpots()) {                
                 currentNode->beginIteratingSpots();
                 do {
-                    DGSpot* spot = currentNode->currentSpot();
+                    Spot* spot = currentNode->currentSpot();
                     
                     if (spot->hasAudio()) {
                         Audio* audio = spot->audio();
@@ -759,7 +759,7 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
                             spot->resize(spot->texture()->width(), spot->texture()->height());
                     }
                     
-                    if (spot->hasFlag(DGSpotAuto))
+                    if (spot->hasFlag(kSpotAuto))
                         spot->play();
                 } while (currentNode->iterateSpots());
             }
@@ -822,7 +822,7 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
         firstSwitch = false;
 }
 
-void DGControl::syncSpot(DGSpot* spot) {
+void DGControl::syncSpot(Spot* spot) {
     _syncedSpot = spot;
     _state->set(DGStateVideoSync);
     cursorManager.fadeOut(); 

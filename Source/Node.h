@@ -28,7 +28,7 @@
 ////////////////////////////////////////////////////////////
 
 class Audio;
-class DGSpot;
+class Spot;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -47,7 +47,7 @@ class Node : public Object {
   
   // Gets
   std::string bundleName();
-  DGSpot* currentSpot();  
+  Spot* currentSpot();  
   std::string description();
   Audio* footstep();
   Node* previousNode();
@@ -64,7 +64,7 @@ class Node : public Object {
   // State changes
   void addCustomLink(unsigned int withDirection, int luaHandler);
   void addLink(unsigned int withDirection, Object* theTarget);
-  DGSpot* addSpot(DGSpot* aSpot);
+  Spot* addSpot(Spot* aSpot);
   void beginIteratingSpots();
   bool iterateSpots();
   
@@ -73,8 +73,8 @@ class Node : public Object {
   // the Texture Manager uses it later to generate the corresponding
   // filenames. This would be the name of the Lua object.
   std::string _bundleName;
-  std::vector<DGSpot*> _arrayOfSpots;
-  std::vector<DGSpot*>::iterator _it;
+  std::vector<Spot*> _arrayOfSpots;
+  std::vector<Spot*>::iterator _it;
   std::string _description;
   
   Audio* _footstep;

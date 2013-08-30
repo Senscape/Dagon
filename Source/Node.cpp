@@ -19,7 +19,7 @@
 
 #include "Audio.h"
 #include "Node.h"
-#include "DGSpot.h"
+#include "Spot.h"
 #include "DGTexture.h"
 
 ////////////////////////////////////////////////////////////
@@ -39,8 +39,8 @@ Node::~Node() {
   // not ones by the user
 	_it = _arrayOfSpots.begin();
   while (_it != _arrayOfSpots.end()) {
-    DGSpot* spot = (*_it);
-    if (spot->hasFlag(DGSpotClass))
+    Spot* spot = (*_it);
+    if (spot->hasFlag(kSpotClass))
       delete spot;
 		++_it;
   }
@@ -78,7 +78,7 @@ std::string Node::bundleName() {
   return _bundleName;
 }
 
-DGSpot* Node::currentSpot() {
+Spot* Node::currentSpot() {
   assert(_it != _arrayOfSpots.end());
   return *_it;
 }
@@ -144,7 +144,7 @@ void Node::addLink(unsigned int withDirection, Object* theTarget) {
   _link(withDirection, &action);
 }
 
-DGSpot* Node::addSpot(DGSpot* aSpot) {
+Spot* Node::addSpot(Spot* aSpot) {
   _arrayOfSpots.push_back(aSpot);
   return aSpot;
 }
@@ -187,7 +187,7 @@ void Node::_link(unsigned int direction, Action* action) {
     minorBound, majorBound - offset, majorBound, minorBound - offset,
     majorBound};
     
-  DGSpot *newSpot = nullptr, *auxSpot = nullptr;
+  Spot *newSpot = nullptr, *auxSpot = nullptr;
     
   switch (direction) {
     case kNorth:
@@ -195,35 +195,35 @@ void Node::_link(unsigned int direction, Action* action) {
     case kSouth:
     case kWest: {
       arrayOfCoordinates.assign(coordsNormal, coordsNormal + 8);
-      newSpot = new DGSpot(arrayOfCoordinates, direction, DGSpotClass);
+      newSpot = new Spot(arrayOfCoordinates, direction, kSpotClass);
       break;
     }
     case kNorthEast: {
       arrayOfCoordinates.assign(coordsShiftRight, coordsShiftRight + 8);
-      newSpot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
+      newSpot = new Spot(arrayOfCoordinates, kNorth, kSpotClass);
       arrayOfCoordinates.assign(coordsShiftLeft, coordsShiftLeft + 8);
-      auxSpot = new DGSpot(arrayOfCoordinates, kEast, DGSpotClass);
+      auxSpot = new Spot(arrayOfCoordinates, kEast, kSpotClass);
       break;
     }
     case kSouthEast: {
       arrayOfCoordinates.assign(coordsShiftRight, coordsShiftRight + 8);
-      newSpot = new DGSpot(arrayOfCoordinates, kEast, DGSpotClass);
+      newSpot = new Spot(arrayOfCoordinates, kEast, kSpotClass);
       arrayOfCoordinates.assign(coordsShiftLeft, coordsShiftLeft + 8);
-      auxSpot = new DGSpot(arrayOfCoordinates, kSouth, DGSpotClass);
+      auxSpot = new Spot(arrayOfCoordinates, kSouth, kSpotClass);
       break;
     }
     case kSouthWest: {
       arrayOfCoordinates.assign(coordsShiftRight, coordsShiftRight + 8);
-      newSpot = new DGSpot(arrayOfCoordinates, kSouth, DGSpotClass);
+      newSpot = new Spot(arrayOfCoordinates, kSouth, kSpotClass);
       arrayOfCoordinates.assign(coordsShiftLeft, coordsShiftLeft + 8);
-      auxSpot = new DGSpot(arrayOfCoordinates, kWest, DGSpotClass);
+      auxSpot = new Spot(arrayOfCoordinates, kWest, kSpotClass);
       break;
     }
     case kNorthWest: {
       arrayOfCoordinates.assign(coordsShiftRight, coordsShiftRight + 8);
-      newSpot = new DGSpot(arrayOfCoordinates, kWest, DGSpotClass);
+      newSpot = new Spot(arrayOfCoordinates, kWest, kSpotClass);
       arrayOfCoordinates.assign(coordsShiftLeft, coordsShiftLeft + 8);
-      auxSpot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
+      auxSpot = new Spot(arrayOfCoordinates, kNorth, kSpotClass);
       break;
     }
     default: {

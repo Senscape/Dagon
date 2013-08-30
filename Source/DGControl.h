@@ -45,7 +45,7 @@ class Room;
 class DGRenderManager;
 class DGScene;
 class DGScript;
-class DGSpot;
+class Spot;
 class DGState;
 class DGTextureManager;
 class DGTimerManager;
@@ -106,7 +106,7 @@ class DGControl {
     DGConsole* _console;
     DGInterface* _interface;
     DGScene* _scene;   
-    DGSpot* _syncedSpot;
+    Spot* _syncedSpot;
     DGState* _state;
     
     DGEventHandlers _eventHandlers;
@@ -151,7 +151,7 @@ public:
     void requestObject(Object* theTarget);
     void reshape(int width, int height);
     void sleep(int forSeconds);
-    void syncSpot(DGSpot* spot);
+    void syncSpot(Spot* spot);
     void switchTo(Object* theTarget, bool instant = false);
     void run();
     void takeSnapshot();

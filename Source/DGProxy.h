@@ -31,7 +31,7 @@ extern "C" {
 #include "Node.h"
 #include "Overlay.h"
 #include "Room.h"
-#include "DGSpot.h"
+#include "Spot.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -44,7 +44,7 @@ extern "C" {
 #define OverlayProxyName "Overlay"
 #define RoomProxyName "Room"
 #define DGSlideProxyName "Slide"
-#define DGSpotProxyName "Spot"
+#define SpotProxyName "Spot"
 
 #define method(class, name) {#name, &class::name}
 
@@ -56,7 +56,7 @@ static Node* DGProxyToNode(lua_State *L, int idx);
 static Overlay* DGProxyToOverlay(lua_State *L, int idx);
 static Room* DGProxyToRoom(lua_State *L, int idx);
 static Node* DGProxyToSlide(lua_State *L, int idx);
-static DGSpot* DGProxyToSpot(lua_State *L, int idx);
+static Spot* DGProxyToSpot(lua_State *L, int idx);
 
 // Now that the proxy functions has been declared, we
 // proceed to include the remaining headers
@@ -70,7 +70,7 @@ static DGSpot* DGProxyToSpot(lua_State *L, int idx);
 #include "OverlayProxy.h"
 #include "RoomProxy.h"
 #include "DGSlideProxy.h"
-#include "DGSpotProxy.h"
+#include "SpotProxy.h"
 
 // We include non-proxy libraries here as well
 
@@ -134,7 +134,7 @@ int DGCheckProxy(lua_State *L, int idx) {
         if (_checkutype(L, idx, DGSlideProxy::className))
             return kObjectSlide; // It's a slide
         
-        if (_checkutype(L, idx, DGSpotProxy::className))
+        if (_checkutype(L, idx, SpotProxy::className))
             return kObjectSpot; // It's a spot
         
         // No, it's Superman!
@@ -180,8 +180,8 @@ Node* DGProxyToSlide(lua_State *L, int idx) {
     return s->ptr();
 }
 
-DGSpot* DGProxyToSpot(lua_State *L, int idx) {
-    DGSpotProxy* s = Luna<DGSpotProxy>::check(L, idx);
+Spot* DGProxyToSpot(lua_State *L, int idx) {
+    SpotProxy* s = Luna<SpotProxy>::check(L, idx);
     return s->ptr();    
 }
 

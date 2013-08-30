@@ -23,7 +23,7 @@
 #include "DGRenderManager.h"
 #include "Room.h"
 #include "DGScene.h"
-#include "DGSpot.h"
+#include "Spot.h"
 #include "DGTexture.h"
 #include "DGVideoManager.h"
 
@@ -85,7 +85,7 @@ void DGScene::drawSpots() {
             
             currentNode->beginIteratingSpots();
             do {
-                DGSpot* spot = currentNode->currentSpot();
+                Spot* spot = currentNode->currentSpot();
                 
                 if (spot->hasTexture() && spot->isEnabled()) {
                     
@@ -115,7 +115,7 @@ void DGScene::drawSpots() {
                 
                 currentNode->beginIteratingSpots();
                 do {
-                    DGSpot* spot = currentNode->currentSpot();
+                    Spot* spot = currentNode->currentSpot();
                     
                     if (spot->hasColor() && spot->isEnabled()) {
                         renderManager.setColor(0x2500AAAA);
@@ -163,7 +163,7 @@ bool DGScene::scanSpots() {
             // First pass: draw the colored spots
             currentNode->beginIteratingSpots();
             do {
-                DGSpot* spot = currentNode->currentSpot();
+                Spot* spot = currentNode->currentSpot();
                 
                 if (spot->hasColor() && spot->isEnabled()) {
                     renderManager.setColor(spot->color());
@@ -181,7 +181,7 @@ bool DGScene::scanSpots() {
                 if (color) {
                     currentNode->beginIteratingSpots();
                     do {
-                        DGSpot* spot = currentNode->currentSpot();
+                        Spot* spot = currentNode->currentSpot();
                         if (color == spot->color()) {
                             cursorManager.setAction(spot->action());
                             foundAction = true;

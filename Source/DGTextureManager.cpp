@@ -19,7 +19,7 @@
 #include "Log.h"
 #include "Node.h"
 #include "Room.h"
-#include "DGSpot.h"
+#include "Spot.h"
 #include "DGTextureManager.h"
 
 using namespace std;
@@ -136,7 +136,7 @@ void DGTextureManager::requestBundle(Node* forNode) {
             unsigned arraySize = sizeof(coords) / sizeof(int);
             
             arrayOfCoordinates.assign(coords, coords + arraySize);
-            DGSpot* spot = new DGSpot(arrayOfCoordinates, i, DGSpotClass);
+            Spot* spot = new Spot(arrayOfCoordinates, i, kSpotClass);
             DGTexture* texture = new DGTexture;
             
             spot->setTexture(texture);
@@ -180,7 +180,7 @@ bool DGTextureManager::updatePreloader() {
                 if (node->hasSpots()) {
                     node->beginIteratingSpots();
                     do {
-                        DGSpot* spot = node->currentSpot();
+                        Spot* spot = node->currentSpot();
                         
                         if (spot->hasTexture()) {
                             if (!spot->texture()->isLoaded()) {

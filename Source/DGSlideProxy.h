@@ -26,7 +26,7 @@
 #include "DGControl.h"
 #include "Node.h"
 #include "DGScript.h"
-#include "DGSpot.h"
+#include "Spot.h"
 #include "DGTexture.h"
 
 ////////////////////////////////////////////////////////////
@@ -54,7 +54,7 @@ public:
         int coordsImage[] = {64, 424};
         arrayOfCoordinates.assign(coordsImage, coordsImage + 2);
         
-        DGSpot* spot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
+        Spot* spot = new Spot(arrayOfCoordinates, kNorth, kSpotClass);
         
         DGTexture* texture = new DGTexture;
         texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 1), kObjectImage).c_str());
@@ -66,7 +66,7 @@ public:
         if (lua_toboolean(L, 3) != true) {
             int coordsBack[] = {0, 1280, 2048, 1280, 2048, 1624, 0, 1624};
             arrayOfCoordinates.assign(coordsBack, coordsBack + 8);
-            spot = new DGSpot(arrayOfCoordinates, kNorth, DGSpotClass);
+            spot = new Spot(arrayOfCoordinates, kNorth, kSpotClass);
             
             Action action;
             action.type = kActionSwitch;
@@ -103,13 +103,13 @@ public:
     // Add a spot to the node
     int addSpot(lua_State *L) {
         if (DGCheckProxy(L, 1) == kObjectSpot) {
-            DGSpot* spot = DGProxyToSpot(L, 1);
+            Spot* spot = DGProxyToSpot(L, 1);
             spot->setOrigin(64, 424);
             n->addSpot(spot);
             
             // Now we get the metatable of the added spot and set it
             // as a return value
-            lua_getfield(L, LUA_REGISTRYINDEX, DGSpotProxyName);
+            lua_getfield(L, LUA_REGISTRYINDEX, SpotProxyName);
             lua_setmetatable(L, -2);
             
             return 1;

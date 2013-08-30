@@ -70,6 +70,9 @@ class Room : public Object {
   Audio* _defaultFootstep;
   int _effectsFlags;
   bool _hasDefaultFootstep = false;
+  
+  Room(const Room&);
+  void operator=(const Room&);
 };
 
 #endif // DAGON_ROOM_H_

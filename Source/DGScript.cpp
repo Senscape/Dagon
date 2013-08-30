@@ -111,7 +111,7 @@ void DGScript::init() {
     Luna<OverlayProxy>::Register(_L);    
     Luna<RoomProxy>::Register(_L);
     Luna<DGSlideProxy>::Register(_L);
-    Luna<DGSpotProxy>::Register(_L);
+    Luna<SpotProxy>::Register(_L);
     
     // Register all libs
     luaL_register(_L, "cursor", kCursorLib);

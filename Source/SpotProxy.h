@@ -24,7 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "DGAudioManager.h"
-#include "DGSpot.h"
+#include "Spot.h"
 #include "DGTexture.h"
 #include "DGVideoManager.h"
 
@@ -32,14 +32,14 @@
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGSpotProxy : public ObjectProxy {
+class SpotProxy : public ObjectProxy {
 public:
     static const char className[];
-    static Luna<DGSpotProxy>::RegType methods[];
+    static Luna<SpotProxy>::RegType methods[];
     
     // Constructor
-    DGSpotProxy(lua_State *L) {
-        int flags = DGSpotUser;
+    SpotProxy(lua_State *L) {
+        int flags = kSpotUser;
         float volume = 1.0f;
         
         int params = lua_gettop(L);
@@ -77,18 +77,18 @@ public:
                 // We can only read the key as a string, so we have no choice but
                 // do an ugly nesting of strcmps()
                 if (strcmp(key, "auto") == 0) {
-                    if (lua_toboolean(L, -1) == 1) flags = flags | DGSpotAuto;
-                    else flags = flags & ~DGSpotAuto;
+                    if (lua_toboolean(L, -1) == 1) flags = flags | kSpotAuto;
+                    else flags = flags & ~kSpotAuto;
                 }
                 
                 if (strcmp(key, "loop") == 0) {
-                    if (lua_toboolean(L, -1) == 1) flags = flags | DGSpotLoop;
-                    else flags = flags & ~DGSpotLoop;
+                    if (lua_toboolean(L, -1) == 1) flags = flags | kSpotLoop;
+                    else flags = flags & ~kSpotLoop;
                 }
                 
                 if (strcmp(key, "sync") == 0) {
-                    if (lua_toboolean(L, -1) == 1) flags = flags | DGSpotSync;
-                    else flags = flags & DGSpotSync;
+                    if (lua_toboolean(L, -1) == 1) flags = flags | kSpotSync;
+                    else flags = flags & kSpotSync;
                 }
 
                 if (strcmp(key, "volume") == 0) volume = (float)(lua_tonumber(L, -1) / 100);
@@ -107,7 +107,7 @@ public:
                 lua_pop(L, 1);
             }
     
-            s = new DGSpot(arrayOfCoords, direction, flags);
+            s = new Spot(arrayOfCoords, direction, flags);
             s->setVolume(volume);
         }
         else luaL_error(L, kString14007);
@@ -148,7 +148,7 @@ public:
                     
                     DGAudioManager::instance().registerAudio(audio);
                     
-                    if (s->hasFlag(DGSpotLoop))
+                    if (s->hasFlag(kSpotLoop))
                         audio->setLoopable(true);
                   
                     s->setAudio(audio);
@@ -230,13 +230,13 @@ public:
                 
                 break;
             case VIDEO:
-                if (s->hasFlag(DGSpotAuto)) autoplay = true;
+                if (s->hasFlag(kSpotAuto)) autoplay = true;
                 else autoplay = false;
                 
-                if (s->hasFlag(DGSpotLoop)) loop = true;
+                if (s->hasFlag(kSpotLoop)) loop = true;
                 else loop = false;
                 
-                if (s->hasFlag(DGSpotSync)) sync = true;
+                if (s->hasFlag(kSpotSync)) sync = true;
                 else sync = false;                
                     
                 video = new DGVideo(autoplay, loop, sync);
@@ -294,27 +294,27 @@ public:
     }
     
     // Destructor
-    ~DGSpotProxy() { delete s; }
+    ~SpotProxy() { delete s; }
     
-    DGSpot* ptr() { return s; }
+    Spot* ptr() { return s; }
     
 private:
-    DGSpot* s;  
+    Spot* s;  
 };
 
 ////////////////////////////////////////////////////////////
 // Static definitions
 ////////////////////////////////////////////////////////////
 
-const char DGSpotProxy::className[] = DGSpotProxyName;
+const char SpotProxy::className[] = SpotProxyName;
 
-Luna<DGSpotProxy>::RegType DGSpotProxy::methods[] = {
-    ObjectMethods(DGSpotProxy),    
-    method(DGSpotProxy, attach),
-    method(DGSpotProxy, setCursor),    
-    method(DGSpotProxy, isPlaying),    
-    method(DGSpotProxy, play),
-    method(DGSpotProxy, stop),   
+Luna<SpotProxy>::RegType SpotProxy::methods[] = {
+    ObjectMethods(SpotProxy),    
+    method(SpotProxy, attach),
+    method(SpotProxy, setCursor),    
+    method(SpotProxy, isPlaying),    
+    method(SpotProxy, play),
+    method(SpotProxy, stop),   
     {0,0}
 };
 
