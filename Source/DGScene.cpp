@@ -24,7 +24,7 @@
 #include "Room.h"
 #include "DGScene.h"
 #include "Spot.h"
-#include "DGTexture.h"
+#include "Texture.h"
 #include "DGVideoManager.h"
 
 #include "DGState.h"
@@ -94,7 +94,7 @@ void DGScene::drawSpots() {
                         if (spot->isPlaying()) { // FIXME: Must stop the spot later!
                             if (spot->video()->hasNewFrame()) {
                                 DGFrame* frame = spot->video()->currentFrame();
-                                DGTexture* texture = spot->texture();
+                                Texture* texture = spot->texture();
                                 texture->loadRawData(frame->data, frame->width, frame->height);
                             }
                             
@@ -263,7 +263,7 @@ bool DGScene::drawCutscene() {
 }
 
 void DGScene::loadCutscene(const char* fileName) {
-    _cutsceneTexture = new DGTexture;
+    _cutsceneTexture = new Texture;
     
     _cutscene.setResource(config.path(kPathResources, fileName, kObjectVideo).c_str());
     videoManager.requestVideo(&_cutscene);
@@ -306,7 +306,7 @@ void DGScene::drawSplash() {
 }
 
 void DGScene::loadSplash() {
-    _splashTexture = new DGTexture;
+    _splashTexture = new Texture;
     _splashTexture->loadFromMemory(kDefSplashBinary, 179608);
     _isSplashLoaded = true;
 }

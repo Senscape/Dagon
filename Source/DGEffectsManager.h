@@ -66,7 +66,7 @@ typedef struct {
 
 class DGCameraManager;
 class Config;
-class DGTexture;
+class Texture;
 class DGTimerManager;
 
 // Reference to embedded dust data
@@ -89,7 +89,7 @@ class DGEffectsManager {
     
     DGParticle _particles[DGEffectsMaxDust];
     
-    DGTexture* _dustTexture;
+    Texture* _dustTexture;
     char* _shaderData;
 
     bool _adjustEnabled;

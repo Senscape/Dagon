@@ -28,7 +28,7 @@
 ////////////////////////////////////////////////////////////
 
 class Config;
-class DGTexture;
+class Texture;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -47,7 +47,7 @@ class Image : public Object {
   int* arrayOfCoordinates();
   Point position();
   Size size();
-  DGTexture* texture();
+  Texture* texture();
 
   // Sets
   void setPosition(float x, float y);
@@ -62,7 +62,7 @@ class Image : public Object {
   Config& config;
   
   int _arrayOfCoordinates[8];
-  DGTexture* _attachedTexture;
+  Texture* _attachedTexture;
   bool _hasTexture = false;
   Rect _rect;
   

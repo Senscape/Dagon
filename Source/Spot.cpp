@@ -17,7 +17,7 @@
 
 #include "Audio.h"
 #include "Spot.h"
-#include "DGTexture.h"
+#include "Texture.h"
 #include "DGVideo.h"
 
 ////////////////////////////////////////////////////////////
@@ -108,7 +108,7 @@ Point Spot::origin() {
   return _origin;
 }
 
-DGTexture* Spot::texture() {
+Texture* Spot::texture() {
   return _attachedTexture;
 }
 
@@ -168,7 +168,7 @@ void Spot::setOrigin(int x, int y) {
   _yOrigin = y;
 }
 
-void Spot::setTexture(DGTexture* aTexture) {
+void Spot::setTexture(Texture* aTexture) {
   _attachedTexture = aTexture;
   _hasTexture = true;
 }

@@ -20,7 +20,7 @@
 #include "Audio.h"
 #include "Node.h"
 #include "Spot.h"
-#include "DGTexture.h"
+#include "Texture.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor

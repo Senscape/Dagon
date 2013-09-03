@@ -27,7 +27,7 @@
 #include "Node.h"
 #include "DGScript.h"
 #include "Spot.h"
-#include "DGTexture.h"
+#include "Texture.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -56,7 +56,7 @@ public:
         
         Spot* spot = new Spot(arrayOfCoordinates, kNorth, kSpotClass);
         
-        DGTexture* texture = new DGTexture;
+        Texture* texture = new Texture;
         texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 1), kObjectImage).c_str());
         spot->setTexture(texture);
         

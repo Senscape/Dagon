@@ -19,7 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Platform.h"
-#include "DGTexture.h"
+#include "Texture.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -41,36 +41,36 @@ class Room;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class DGTextureManager {
+class TextureManager {
     Config& config;
     Log& log;
     
     std::thread _preloaderThread;
     
-    std::vector<DGTexture*> _arrayOfActiveTextures;
-    std::vector<DGTexture*> _arrayOfTextures;
+    std::vector<Texture*> _arrayOfActiveTextures;
+    std::vector<Texture*> _arrayOfTextures;
 
     Room* _roomToPreload;
     
-    DGTextureManager();
-    DGTextureManager(DGTextureManager const&);
-    DGTextureManager& operator=(DGTextureManager const&);
-    ~DGTextureManager();
+    TextureManager();
+    TextureManager(TextureManager const&);
+    TextureManager& operator=(TextureManager const&);
+    ~TextureManager();
     
 public:
-    static DGTextureManager& instance() {
-        static DGTextureManager textureManager;
+    static TextureManager& instance() {
+        static TextureManager textureManager;
         return textureManager;
     }
     
-    void appendTextureToBundle(const char* nameOfBundle, DGTexture* textureToAppend);
+    void appendTextureToBundle(const char* nameOfBundle, Texture* textureToAppend);
     void createBundle(const char* nameOfBundle);
     int itemsInBundle(const char* nameOfBundle);
     void flush();
     void init();
-    void registerTexture(DGTexture* target);
+    void registerTexture(Texture* target);
     void requestBundle(Node* forNode);
-    void requestTexture(DGTexture* target);
+    void requestTexture(Texture* target);
     void setRoomToPreload(Room* theRoom);
     bool updatePreloader();
 };

@@ -17,7 +17,7 @@
 
 #include "Config.h"
 #include "Image.h"
-#include "DGTexture.h"
+#include "Texture.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -71,7 +71,7 @@ Size Image::size() {
   return _rect.size;
 }
 
-DGTexture* Image::texture() {
+Texture* Image::texture() {
   return _attachedTexture;
 }
 
@@ -97,7 +97,7 @@ void Image::setTexture(const std::string &fromFileName) {
   // resource manager.
   // FIXME: These textures are immediately loaded which isn't very efficient.
   
-  _attachedTexture = new DGTexture;
+  _attachedTexture = new Texture;
   _attachedTexture->setResource(config.path(kPathResources, fromFileName,
                                    kObjectImage).c_str());
   _attachedTexture->load();

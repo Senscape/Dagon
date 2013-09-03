@@ -18,7 +18,7 @@
 #include "DGCameraManager.h"
 #include "Config.h"
 #include "DGEffectsManager.h"
-#include "DGTexture.h"
+#include "Texture.h"
 #include "DGTimerManager.h"
 
 ////////////////////////////////////////////////////////////
@@ -161,7 +161,7 @@ void DGEffectsManager::init() {
         _buildParticle(i);
     }
     
-    _dustTexture = new DGTexture;
+    _dustTexture = new Texture;
     _dustTexture->loadFromMemory(kDefDustBinary, 3666);
 }
 

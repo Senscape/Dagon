@@ -24,7 +24,7 @@
 #include "DGInterface.h"
 #include "Overlay.h"
 #include "DGRenderManager.h"
-#include "DGTexture.h"
+#include "Texture.h"
 
 using namespace std;
 

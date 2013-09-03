@@ -29,7 +29,7 @@
 class Config;
 class DGEffectsManager;
 class Log;
-class DGTexture;
+class Texture;
 
 // Reference to embedded splash screen
 extern "C" const unsigned char kDefSplashBinary[];
@@ -58,8 +58,8 @@ class DGRenderManager {
     bool _fadeWithZoom;
     bool _texturesEnabled;
     
-    DGTexture* _blendTexture;
-    DGTexture* _fadeTexture;   
+    Texture* _blendTexture;
+    Texture* _fadeTexture;   
     
     Point _centerOfPolygon(std::vector<int> arrayOfCoordinates); // Used for the helpers feature
     void _initFrameBuffer();

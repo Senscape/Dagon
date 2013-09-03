@@ -163,7 +163,7 @@ void Log::_log(LogData* data) {
   if (config.log) {
     if (!_filestr.is_open())
       _filestr.open(config.path(kPathUserData, kDefLogFile,
-                                kObjectGeneric), std::fstream::app);
+                                kObjectGeneric), std::ofstream::app);
       
     time_t now = time(0);
     struct tm* tm = localtime(&now);

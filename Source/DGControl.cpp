@@ -39,7 +39,7 @@
 #include "Spot.h"
 #include "DGState.h"
 #include "DGSystem.h"
-#include "DGTextureManager.h"
+#include "TextureManager.h"
 #include "DGTimerManager.h"
 #include "DGVideoManager.h"
 
@@ -51,7 +51,7 @@ using namespace std;
 
 DGControl::DGControl() :
     audioManager(DGAudioManager::instance()),
-    textureManager(DGTextureManager::instance()),
+    textureManager(TextureManager::instance()),
     cameraManager(DGCameraManager::instance()),
     config(Config::instance()),
     cursorManager(DGCursorManager::instance()),
@@ -738,7 +738,7 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
                         
                         if (video->isLoaded()) {
                             if (!spot->hasTexture()) {
-                                DGTexture* texture = new DGTexture;
+                                Texture* texture = new Texture;
                                 spot->setTexture(texture);
                             }
                             
@@ -835,7 +835,7 @@ void DGControl::takeSnapshot() {
     time_t rawtime;
 	struct tm* timeinfo;
 	char buffer[kMaxFileLength];
-    DGTexture texture(0, 0, 0);
+    Texture texture(0, 0, 0);
     
 	time(&rawtime);
 	timeinfo = localtime (&rawtime);

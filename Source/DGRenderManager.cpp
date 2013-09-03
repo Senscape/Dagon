@@ -19,7 +19,7 @@
 #include "DGEffectsManager.h"
 #include "Log.h"
 #include "DGRenderManager.h"
-#include "DGTexture.h"
+#include "Texture.h"
 
 using namespace std;
 
@@ -109,8 +109,8 @@ void DGRenderManager::init() {
     glClearDepth(1.0f);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
-	_blendTexture = new DGTexture(0, 0, 0); // All default values
-    _fadeTexture = new DGTexture(1, 1, 0); // Minimal black texture   
+	_blendTexture = new Texture(0, 0, 0); // All default values
+    _fadeTexture = new Texture(1, 1, 0); // Minimal black texture   
     _fadeTexture->setFadeSpeed(kFadeFastest);
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio

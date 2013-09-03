@@ -30,11 +30,11 @@
 #define DGMinCursorSize 32
 
 class Config;
-class DGTexture;
+class Texture;
 
 typedef struct {
     int type;
-    DGTexture* image;
+    Texture* image;
     Point origin;
 } DGCursorData;
 

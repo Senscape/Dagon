@@ -30,7 +30,7 @@ class DGCursorManager;
 class DGRenderManager;
 class Room;
 class DGState;
-class DGTexture;
+class Texture;
 class DGVideoManager;
 
 ////////////////////////////////////////////////////////////
@@ -48,8 +48,8 @@ class DGScene {
     
     // Other classes
     Room* _currentRoom;
-    DGTexture* _cutsceneTexture;
-    DGTexture* _splashTexture;
+    Texture* _cutsceneTexture;
+    Texture* _splashTexture;
     
     bool _canDrawSpots = false; // This bool is used to make checks faster
     bool _isCutsceneLoaded = false;

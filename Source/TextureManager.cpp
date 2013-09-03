@@ -20,7 +20,7 @@
 #include "Node.h"
 #include "Room.h"
 #include "Spot.h"
-#include "DGTextureManager.h"
+#include "TextureManager.h"
 
 using namespace std;
 
@@ -28,13 +28,13 @@ using namespace std;
 // Definitions
 ////////////////////////////////////////////////////////////
 
-bool DGTextureSort(DGTexture* t1, DGTexture* t2);
+bool TextureSort(Texture* t1, Texture* t2);
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-DGTextureManager::DGTextureManager() :
+TextureManager::TextureManager() :
     config(Config::instance()),
     log(Log::instance())
 {
@@ -45,9 +45,9 @@ DGTextureManager::DGTextureManager() :
 // Implementation - Destructor
 ////////////////////////////////////////////////////////////
 
-DGTextureManager::~DGTextureManager() {
+TextureManager::~TextureManager() {
     if (!_arrayOfTextures.empty()) {
-        vector<DGTexture*>::iterator it;
+        vector<Texture*>::iterator it;
         
         it = _arrayOfTextures.begin();
         
@@ -62,20 +62,20 @@ DGTextureManager::~DGTextureManager() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-void DGTextureManager::appendTextureToBundle(const char* nameOfBundle, DGTexture* textureToAppend) {
+void TextureManager::appendTextureToBundle(const char* nameOfBundle, Texture* textureToAppend) {
     // This function will store individual textures to a bundle
 }
 
-void DGTextureManager::createBundle(const char* nameOfBundle) {
+void TextureManager::createBundle(const char* nameOfBundle) {
     // This function will create bundles to store textures
 }
 
-int DGTextureManager::itemsInBundle(const char* nameOfBundle) {
+int TextureManager::itemsInBundle(const char* nameOfBundle) {
     // This one should return the number of textures in a bundle
     return 0;
 }
 
-void DGTextureManager::flush() {
+void TextureManager::flush() {
     // This function is called every time a switch is performed
     // and unloads the least used textures when necessary
     
@@ -89,16 +89,16 @@ void DGTextureManager::flush() {
     }
 }
 
-void DGTextureManager::init() {
+void TextureManager::init() {
     _preloaderThread = thread([&](){
         chrono::milliseconds dura(1);
-        while (DGTextureManager::instance().updatePreloader()) {
+        while (TextureManager::instance().updatePreloader()) {
             this_thread::sleep_for(dura);
         }
     });
 }
 
-void DGTextureManager::registerTexture(DGTexture* target) {
+void TextureManager::registerTexture(Texture* target) {
     // FIXME: If the script specifies a file with extension, we should
     // prioritize that and avoid doing any operations here.
     
@@ -126,7 +126,7 @@ void DGTextureManager::registerTexture(DGTexture* target) {
     // It's the responsibility of another module to generate the res path accordingly
 }
 
-void DGTextureManager::requestBundle(Node* forNode) {
+void TextureManager::requestBundle(Node* forNode) {
     if (forNode->hasBundleName()) {
         for (int i = 0; i < 6; i++) {
             std::vector<int> arrayOfCoordinates;
@@ -137,7 +137,7 @@ void DGTextureManager::requestBundle(Node* forNode) {
             
             arrayOfCoordinates.assign(coords, coords + arraySize);
             Spot* spot = new Spot(arrayOfCoordinates, i, kSpotClass);
-            DGTexture* texture = new DGTexture;
+            Texture* texture = new Texture;
             
             spot->setTexture(texture);
             spot->texture()->setIndexInBundle(i);
@@ -155,7 +155,7 @@ void DGTextureManager::requestBundle(Node* forNode) {
     // Possibly raise an error if this fails
 }
 
-void DGTextureManager::requestTexture(DGTexture* target) {
+void TextureManager::requestTexture(Texture* target) {
     if (!target->isLoaded()) {
         target->load();
         
@@ -164,14 +164,14 @@ void DGTextureManager::requestTexture(DGTexture* target) {
     
     target->increaseUsageCount();
     
-    sort(_arrayOfActiveTextures.begin(), _arrayOfActiveTextures.end(), DGTextureSort);
+    sort(_arrayOfActiveTextures.begin(), _arrayOfActiveTextures.end(), TextureSort);
 }
 
-void DGTextureManager::setRoomToPreload(Room* theRoom) {
+void TextureManager::setRoomToPreload(Room* theRoom) {
     _roomToPreload = theRoom;
 }
 
-bool DGTextureManager::updatePreloader() {
+bool TextureManager::updatePreloader() {
     if (_roomToPreload) {
         if (_roomToPreload->hasNodes()) {
             _roomToPreload->beginIteratingNodes();
@@ -202,6 +202,6 @@ bool DGTextureManager::updatePreloader() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-bool DGTextureSort(DGTexture* t1, DGTexture* t2) {
+bool TextureSort(Texture* t1, Texture* t2) {
     return t1->usageCount() < t2->usageCount();
 }

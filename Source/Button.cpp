@@ -20,7 +20,7 @@
 #include "Button.h"
 #include "Config.h"
 #include "DGFontManager.h"
-#include "DGTexture.h"
+#include "Texture.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -80,7 +80,7 @@ Font* Button::font() {
   return _font;
 }
 
-DGTexture* Button::onHoverTexture() {
+Texture* Button::onHoverTexture() {
   return _onHoverTexture;
 }
 
@@ -112,7 +112,7 @@ void Button::setOnHoverTexture(const std::string &fromFileName) {
   // TODO: Important! We should determine first if the texture already exists,
   // to avoid repeating resources. Eventually, this would be done via the
   // resource manager.
-  _onHoverTexture = new DGTexture;
+  _onHoverTexture = new Texture;
   _onHoverTexture->setResource(config.path(kPathResources, fromFileName,
                                            kObjectImage).c_str());
   _onHoverTexture->load();

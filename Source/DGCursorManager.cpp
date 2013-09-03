@@ -17,7 +17,7 @@
 
 #include "Config.h"
 #include "DGCursorManager.h"
-#include "DGTextureManager.h"
+#include "TextureManager.h"
 
 using namespace std;
 
@@ -86,9 +86,9 @@ bool DGCursorManager::isDragging() {
 // NOTE: These textures aren't managed
 void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int offsetY) {
     DGCursorData cursor;
-    DGTexture* texture;
+    Texture* texture;
     
-    texture = new DGTexture;
+    texture = new Texture;
     texture->setResource(config.path(kPathResources, imageFromFile, kObjectCursor).c_str());
     texture->load();
     

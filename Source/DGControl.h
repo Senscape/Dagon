@@ -47,7 +47,7 @@ class DGScene;
 class DGScript;
 class Spot;
 class DGState;
-class DGTextureManager;
+class TextureManager;
 class DGTimerManager;
 class DGVideoManager;
 
@@ -94,7 +94,7 @@ class DGControl {
     Log& log;
     DGRenderManager& renderManager;
     DGScript& script;
-    DGTextureManager& textureManager;    
+    TextureManager& textureManager;    
     DGTimerManager& timerManager;
     DGVideoManager& videoManager;
     

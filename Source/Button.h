@@ -31,7 +31,7 @@
 class Config;
 class Font;
 class DGFontManager;
-class DGTexture;
+class Texture;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -51,7 +51,7 @@ class Button : public Image {
   // Gets
   Action action();
   Font* font();
-  DGTexture* onHoverTexture();
+  Texture* onHoverTexture();
   std::string text();
   int textColor();
 
@@ -68,7 +68,7 @@ class Button : public Image {
   DGFontManager& fontManager;
   
   Action* _action;
-  DGTexture* _onHoverTexture;
+  Texture* _onHoverTexture;
   Font* _font;
   bool _hasAction = false;
   bool _hasFont = false;

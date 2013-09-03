@@ -25,7 +25,7 @@
 
 #include "DGAudioManager.h"
 #include "Spot.h"
-#include "DGTexture.h"
+#include "Texture.h"
 #include "DGVideoManager.h"
 
 ////////////////////////////////////////////////////////////
@@ -120,7 +120,7 @@ public:
     int attach(lua_State *L) {
         Action action;
         Audio* audio;
-        DGTexture* texture;
+        Texture* texture;
         DGVideo* video;
         
         // For the video attach, autoplay defaults to true
@@ -196,7 +196,7 @@ public:
                 // TODO: Decide here if we have an extension and therefore set the name or the
                 // resource of the texture.
                 
-                texture = new DGTexture;
+                texture = new Texture;
                 texture->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 2), kObjectImage).c_str());
                 
                 // If we have a third parameter, use it to set the index inside a bundle
