@@ -74,7 +74,7 @@
 // System module
 #define kString13001 "Initializing system..."
 #define kString13002 "System ready!"
-#define kString13003 "GLFW version"
+#define kString13003 "SFML version"
 #define kString13004 "System already initialized"
 #define kString13005 "System not initialized"
 #define kString13006 "Could not set vertical sync"

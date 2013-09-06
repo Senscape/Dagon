@@ -18,6 +18,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <SFML/Window.hpp>
+
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -37,17 +39,10 @@ class DGSystem {
 
     bool _isInitialized = false;
 
-    GLFWmonitor* monitor;
-    GLFWwindow* window;
+    sf::Clock _clock;
+    sf::Window _window;
     
     double _calculateFrames(double theInterval);
-    static void _charCallback(GLFWwindow* window, unsigned int character);
-    static void _closeCallback(GLFWwindow* window);    
-    static void _cursorPosCallback(GLFWwindow* window, double xpos, double ypos);
-    static void _errorCallback(int error, const char* description);
-    static void _keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
-    static void _mouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
-    static void _sizeCallback(GLFWwindow* window, int width, int height);
     
 public:
     DGSystem(Config& theConfig, Log& theLog) :
@@ -62,7 +57,6 @@ public:
     void terminate();
     void toggleFullscreen();
     void update();
-    double time();
 };
 
 #endif // DG_SYSTEM_H

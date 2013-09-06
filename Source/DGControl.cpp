@@ -584,14 +584,12 @@ void DGControl::reshape(int width, int height) {
     
     if (_eventHandlers.hasResize)
         script.processCallback(_eventHandlers.resize, 0);
-    
-    this->update();
 }
 
 void DGControl::run() {
     _isRunning = true;
     
-    double startTime = system.time();
+    /*double startTime = system.time();
     double updateInterval = 1.0 / (double)config.framerate;
     
     while (_isRunning) {
@@ -603,7 +601,10 @@ void DGControl::run() {
         }
         else
             this->update();
-    }
+    }*/
+  while (_isRunning) {
+    this->update();
+  }
 }
 
 void DGControl::sleep(int forSeconds) {

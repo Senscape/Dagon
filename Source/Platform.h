@@ -46,8 +46,8 @@
 // Include standard OpenGL headers
 ////////////////////////////////////////////////////////////
 
-#include <GL/glew.h>
-#include <GLFW/glfw3.h>
+#include <SFML/OpenGL.hpp>
+#include <SFML/Window.hpp>
 
 ////////////////////////////////////////////////////////////
 // Include standard C libraries
@@ -88,24 +88,24 @@
 ////////////////////////////////////////////////////////////
 
 enum InputKeys {
-	kKeyBackspace = GLFW_KEY_BACKSPACE,
-  kKeyF1 = GLFW_KEY_F1,
-	kKeyF2 = GLFW_KEY_F2,
-	kKeyF3 = GLFW_KEY_F3,
-	kKeyF4 = GLFW_KEY_F4,
-  kKeyF5 = GLFW_KEY_F5,
-	kKeyF6 = GLFW_KEY_F6,
-	kKeyF7 = GLFW_KEY_F7,
-	kKeyF8 = GLFW_KEY_F8,
-	kKeyF9 = GLFW_KEY_F9,
-	kKeyF10 = GLFW_KEY_F10,
-	kKeyF11 = GLFW_KEY_F11,
-	kKeyF12 = GLFW_KEY_F12,
-	kKeyEscape = GLFW_KEY_ESCAPE,
-	kKeyQuote = 0x60,
-	kKeyTab = GLFW_KEY_TAB,
-	kKeyEnter = GLFW_KEY_ENTER,
-	kKeySpace = GLFW_KEY_SPACE
+	kKeyBackspace = sf::Keyboard::BackSpace,
+  kKeyF1 = sf::Keyboard::F1,
+	kKeyF2 = sf::Keyboard::F2,
+	kKeyF3 = sf::Keyboard::F3,
+	kKeyF4 = sf::Keyboard::F4,
+  kKeyF5 = sf::Keyboard::F5,
+	kKeyF6 = sf::Keyboard::F6,
+	kKeyF7 = sf::Keyboard::F7,
+	kKeyF8 = sf::Keyboard::F8,
+	kKeyF9 = sf::Keyboard::F9,
+	kKeyF10 = sf::Keyboard::F10,
+	kKeyF11 = sf::Keyboard::F11,
+	kKeyF12 = sf::Keyboard::F12,
+	kKeyEscape = sf::Keyboard::Escape,
+	kKeyQuote = sf::Keyboard::Quote,
+	kKeyTab = sf::Keyboard::Tab,
+	kKeyEnter = sf::Keyboard::Return,
+	kKeySpace = sf::Keyboard::Space
 };
 
 #endif // DAGON_PLATFORM_H_

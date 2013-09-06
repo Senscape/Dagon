@@ -36,73 +36,38 @@ void DGSystem::findPaths() {
 bool DGSystem::init() {
     if (!_isInitialized) {
         log.trace(kModSystem, "%s", kString13001);
-        
-        glfwSetErrorCallback(_errorCallback);
-        
-        if (!glfwInit())
-            return false;
-        
-        int major, minor, rev;
-        glfwGetVersion(&major, &minor, &rev);
-        
-        log.info(kModSystem, "%s: %d.%d.%d", kString13003, major, minor, rev);
-        
-        // Have to make sure these are all set to 8 bits (GFW 3.0.0 defaults to 5,5,5)
-        glfwWindowHint(GLFW_RED_BITS, 8);
-        glfwWindowHint(GLFW_GREEN_BITS, 8);
-        glfwWindowHint(GLFW_BLUE_BITS, 8);
-        glfwWindowHint(GLFW_ALPHA_BITS, 8);
-        
-        monitor = glfwGetPrimaryMonitor();
-        const GLFWvidmode* videoMode = glfwGetVideoMode(monitor);
+        log.info(kModSystem, "%s: %d.%d", kString13003, SFML_VERSION_MAJOR, SFML_VERSION_MINOR);
         
         if (!config.displayWidth || !config.displayHeight) {
-            config.displayWidth = videoMode->width;
-            config.displayHeight = videoMode->height;
-            
             if (config.fullscreen) {
-                config.displayWidth = videoMode->width;
-                config.displayHeight = videoMode->height;
+              config.displayWidth = sf::VideoMode::getDesktopMode().width;
+              config.displayHeight = sf::VideoMode::getDesktopMode().height;
             }
             else {
-                // Use a third of the screen
-                config.displayWidth = videoMode->width / 1.5;
-                config.displayHeight = videoMode->height / 1.5;
+              // Use a third of the screen
+              config.displayWidth = sf::VideoMode::getDesktopMode().width / 1.5;
+              config.displayHeight = sf::VideoMode::getDesktopMode().height / 1.5;
             }
         }
-        
-        if (config.fullscreen)
-            window = glfwCreateWindow(config.displayWidth, config.displayHeight, "Dagon", monitor, NULL);
+      
+      if (config.fullscreen)
+        _window.create(sf::VideoMode(config.displayWidth, config.displayHeight), "Dagon", sf::Style::Fullscreen);
         else
-            window = glfwCreateWindow(config.displayWidth, config.displayHeight, "Dagon", NULL, NULL);
-        
-        if (!window) {
-            glfwTerminate();
-            return false;
-        }
-        
-        glfwMakeContextCurrent(window);
+            _window.create(sf::VideoMode(config.displayWidth, config.displayHeight), "Dagon");
         
         // Set vertical sync according to our configuration
         if (config.verticalSync) {
-            glfwSwapInterval(1);
+            _window.setVerticalSyncEnabled(true);
         }
         else {
             // Force our own frame limiter on
             config.frameLimiter = true;
-            glfwSwapInterval(0);
+            _window.setVerticalSyncEnabled(false);
         }
-        
-        // This doesn't seem to be working on windowed mode
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
-       
-        glfwSetCharCallback(window, _charCallback);
-        glfwSetCursorPosCallback(window, _cursorPosCallback);
-        glfwSetKeyCallback(window, _keyCallback);
-        glfwSetMouseButtonCallback(window, _mouseButtonCallback);
-        glfwSetWindowSizeCallback(window, _sizeCallback);
-        glfwSetWindowCloseCallback(window, _closeCallback);
-        
+      
+            sf::Mouse::setPosition(sf::Vector2i(config.displayWidth / 2, config.displayHeight / 2), _window);
+      _window.setMouseCursorVisible(false);
+      
         _isInitialized = true;
     }
     else log.warning(kModSystem, "%s", kString13004);
@@ -111,29 +76,127 @@ bool DGSystem::init() {
 }
 
 void DGSystem::setTitle(const char* title) {
-    glfwSetWindowTitle(window, title);
+  _window.setTitle(title);
 }
 
 void DGSystem::update() {
-    config.setFramesPerSecond(_calculateFrames(kFrameratePrecision));
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+  config.setFramesPerSecond(_calculateFrames(kFrameratePrecision));
+  if (_window.isOpen()) {
+    _window.display();
+    
+    sf::Event event;
+    while (_window.pollEvent(event)) {
+      switch (event.type) {
+        case sf::Event::Closed: {
+          _window.close();
+          break;
+        }
+        case sf::Event::Resized: {
+          DGControl::instance().reshape(event.size.width, event.size.height);
+          break;
+        }
+        case sf::Event::LostFocus: {
+
+          break;
+        }
+        case sf::Event::GainedFocus: {
+          break;
+        }
+        case sf::Event::TextEntered: {
+          if (DGControl::instance().isConsoleActive())
+            DGControl::instance().processKey(event.text.unicode, DGEventKeyDown);
+          break;
+        }
+        case sf::Event::KeyPressed: {
+          if (event.key.alt)
+            this->toggleFullscreen();
+          else
+            DGControl::instance().processKey(event.key.code, DGEventKeyDown);
+          break;
+        }
+        case sf::Event::KeyReleased: {
+          break;
+        }
+        case sf::Event::MouseWheelMoved: {
+          break;
+        }
+        case sf::Event::MouseButtonPressed: {
+          if (event.mouseButton.button == sf::Mouse::Left) {
+            DGControl::instance().processMouse(event.mouseButton.x,
+                                               event.mouseButton.y,
+                                               DGEventMouseDown);
+          } else if (event.mouseButton.button == sf::Mouse::Right) {
+            DGControl::instance().processMouse(event.mouseButton.x,
+                                               event.mouseButton.y,
+                                               DGEventMouseRightDown);
+          }
+          break;
+        }
+        case sf::Event::MouseButtonReleased: {
+          if (event.mouseButton.button == sf::Mouse::Left) {
+            DGControl::instance().processMouse(event.mouseButton.x,
+                                               event.mouseButton.y,
+                                               DGEventMouseUp);
+          } else if (event.mouseButton.button == sf::Mouse::Right) {
+            DGControl::instance().processMouse(event.mouseButton.x,
+                                               event.mouseButton.y,
+                                               DGEventMouseRightUp);
+          }
+          break;
+        }
+        case sf::Event::MouseMoved: {
+          DGControl::instance().processMouse(event.mouseMove.x,
+                                             event.mouseMove.y,
+                                             DGEventMouseMove);
+          break;
+        }
+        case sf::Event::MouseEntered: {
+          break;
+        }
+        case sf::Event::MouseLeft: {
+          DGControl::instance().processMouse(config.displayWidth / 2,
+                                            config.displayHeight / 2,
+                                             DGEventMouseMove);
+          break;
+        }
+        case sf::Event::JoystickButtonPressed: {
+          break;
+        }
+        case sf::Event::JoystickButtonReleased: {
+          break;
+        }
+        case sf::Event::JoystickMoved: {
+          break;
+        }
+        case sf::Event::JoystickConnected: {
+          break;
+        }
+        case sf::Event::JoystickDisconnected: {
+          break;
+        }
+        case sf::Event::Count: {
+          break;
+        }
+      }
+    }
+  }
 }
 
 void DGSystem::terminate() {
-    _isInitialized = false;
-    
-    glfwDestroyWindow(window);
-    glfwTerminate();
+  _isInitialized = false;
+  _window.close();
+  exit(EXIT_SUCCESS);
 }
 
 void DGSystem::toggleFullscreen() {
-    // TODO: Re-implement when GLFW 3.1 is ready
-    log.warning(kModSystem, "Toggling fullscreen currently disabled");
-}
-
-double DGSystem::time() {
-    return glfwGetTime();
+  config.fullscreen = !config.fullscreen;
+  
+  _window.close();
+  
+  if (config.fullscreen)
+    _window.create(sf::VideoMode(config.displayWidth, config.displayHeight), "Dagon", sf::Style::Fullscreen);
+  else
+    _window.create(sf::VideoMode(config.displayWidth, config.displayHeight), "Dagon");
 }
 
 ////////////////////////////////////////////////////////////
@@ -143,11 +206,12 @@ double DGSystem::time() {
 // TODO: For best precision, this should be suspended when
 // performing a switch (the most expensive operation)
 double DGSystem::_calculateFrames(double theInterval = 1.0) {
-	static double lastTime = glfwGetTime();
+  sf::Time time = _clock.getElapsedTime();
+	static double lastTime = time.asSeconds();
 	static int fpsFrameCount = 0;
 	static double fps = 0.0;
     
-	double currentTime = glfwGetTime();
+	double currentTime = time.asSeconds();
 
 	if (theInterval < 0.1)
 		theInterval = 0.1;
@@ -159,111 +223,9 @@ double DGSystem::_calculateFrames(double theInterval = 1.0) {
 		fps = (double)fpsFrameCount / (currentTime - lastTime);
 
 		fpsFrameCount = 0;
-		lastTime = glfwGetTime();
+		lastTime = time.asSeconds();
 	}
 	else fpsFrameCount++;
 
 	return fps;
-}
-
-void DGSystem::_charCallback(GLFWwindow* window, unsigned int character) {
-    if (DGControl::instance().isConsoleActive() || character == kKeyQuote)
-        DGControl::instance().processKey(character, DGEventKeyDown);
-}
-
-void DGSystem::_closeCallback(GLFWwindow* window) {
-    // Simulate an escape key event
-  // FIXME: This should terminate the app immediately
-    DGControl::instance().processKey(kKeyEscape, DGEventKeyDown);
-}
-
-void DGSystem::_cursorPosCallback(GLFWwindow* window, double xpos, double ypos) {
-    int width = Config::instance().displayWidth;
-	int height = Config::instance().displayHeight;
-    
-    if (DGControl::instance().isDirectControlActive()) {
-        if ((xpos <= 1) || ypos >= (width - 1)) {
-            glfwSetCursorPos(window, width / 2, height / 2);
-        }
-        
-        if ((xpos <= 1) || ypos >= (height - 1)) {
-            glfwSetCursorPos(window, width / 2, height / 2);
-        }
-    }
-    
-    DGControl::instance().processMouse(xpos, ypos, DGEventMouseMove);
-}
-
-void DGSystem::_errorCallback(int error, const char* description) {
-    Log::instance().error(kModSystem, "%s", description);
-}
-
-void DGSystem::_keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-    int event;
-    
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-        if (mods)
-            event = DGEventKeyModified;
-        else
-            event = DGEventKeyDown;
-    }
-    else if (action == GLFW_RELEASE) {
-        event = DGEventKeyUp;
-    }
-    
-    switch (key) {
-        // Function keys are processed by a different method
-        case GLFW_KEY_F1:
-        case GLFW_KEY_F2:
-        case GLFW_KEY_F3:
-        case GLFW_KEY_F4:
-        case GLFW_KEY_F5:
-        case GLFW_KEY_F6:
-        case GLFW_KEY_F7:
-        case GLFW_KEY_F8:
-        case GLFW_KEY_F9:
-        case GLFW_KEY_F10:
-        case GLFW_KEY_F11:
-        case GLFW_KEY_F12:
-            if (event == DGEventKeyDown)
-                DGControl::instance().processFunctionKey(key);
-            break;
-            
-        // We process these keys regardless of the console state
-        case GLFW_KEY_BACKSPACE:
-        case GLFW_KEY_ESCAPE:
-        case GLFW_KEY_TAB:
-        case GLFW_KEY_ENTER:
-            DGControl::instance().processKey(key, event);
-            break;
-        default:
-            if (!DGControl::instance().isConsoleActive())
-                DGControl::instance().processKey(key, event);
-            break;
-    }
-}
-
-void DGSystem::_mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) {
-    int event = DGEventMouseMove;
-    double xpos, ypos;
-    
-    if (action == GLFW_PRESS) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT)
-            event = DGEventMouseDown;
-        else if (button == GLFW_MOUSE_BUTTON_RIGHT)
-            event = DGEventMouseRightDown;
-    }
-    else if (action == GLFW_RELEASE) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT)
-            event = DGEventMouseUp;
-        else if (button == GLFW_MOUSE_BUTTON_RIGHT)
-            event = DGEventMouseRightUp;
-    }
-    
-    glfwGetCursorPos(window, &xpos, &ypos);
-    DGControl::instance().processMouse(xpos, ypos, event);
-}
-
-void DGSystem::_sizeCallback(GLFWwindow* window, int width, int height) {
-    DGControl::instance().reshape(width, height);
 }

@@ -18,15 +18,16 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "Platform.h"
+#include <mutex>
 
+#include <SFML/System.hpp>
 #include <theora/theora.h>
+
+#include "Object.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
-
-class DGSystem;
 
 enum DGVideoStates {
     DGVideoInitial,
@@ -77,8 +78,9 @@ class Log;
 
 class DGVideo : public Object {
     Log& log;
-    DGSystem* system;
-    
+  
+    sf::Clock _clock;
+  
     DGFrame _currentFrame;
     DGTheoraInfo* _theoraInfo;
     

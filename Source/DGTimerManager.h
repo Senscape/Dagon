@@ -18,6 +18,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <SFML/System.hpp>
+
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -51,7 +53,9 @@ typedef struct {
 
 class DGTimerManager {
     DGSystem* system;
-    
+  
+    sf::Clock _clock;
+  
     std::vector<DGTimer> _arrayOfTimers;
     int _handles; // Maintains a count of handles
     int _luaObject;

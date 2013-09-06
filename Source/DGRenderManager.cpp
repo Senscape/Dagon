@@ -58,26 +58,19 @@ DGRenderManager::~DGRenderManager() {
 ////////////////////////////////////////////////////////////
 
 void DGRenderManager::init() {
-    
-    glewInit();
-    
-    const GLubyte* version = glewGetString(GLEW_VERSION);
-    
-    log.info(kModRender, "%s: %s", kString11005, version);
-    
-    version = glGetString(GL_VERSION);
+  const GLubyte* version = glGetString(GL_VERSION);
     
 	log.trace(kModRender, "%s", kString11001);
 	log.info(kModRender, "%s: %s", kString11002, version);
     
-	if (glewIsSupported("GL_VERSION_2_0")) {
+	//if (glewIsSupported("GL_VERSION_2_0")) {
 		_effectsEnabled = true;
         effectsManager.init();
-	}
+	/*}
 	else {
 		log.warning(kModRender, "%s", kString11003);
 		_effectsEnabled = false;
-	}
+	}*/
     
     _alphaEnabled = true;
     

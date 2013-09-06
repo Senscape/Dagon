@@ -15,11 +15,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "Defines.h"
+#include "Language.h"
 #include "Log.h"
-#include "DGSystem.h"
 #include "DGVideo.h"
-
-using namespace std;
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -168,7 +167,7 @@ void DGVideo::setSynced(bool synced) {
 ////////////////////////////////////////////////////////////
 
 void DGVideo::load() {
-    lock_guard<mutex> guard(_mutex);
+  std::lock_guard<std::mutex> guard(_mutex);
     
     int stateFlag = 0;
     
@@ -272,7 +271,7 @@ void DGVideo::load() {
 }
 
 void DGVideo::play() {
-    lock_guard<mutex> guard(_mutex);
+    std::lock_guard<std::mutex> guard(_mutex);
     
     if (_state == DGVideoInitial) {
         _lastTime = _frameDuration; // Forces a first update
@@ -286,18 +285,18 @@ void DGVideo::play() {
 }
 
 void DGVideo::pause() {
-    lock_guard<mutex> guard(_mutex);
+    std::lock_guard<std::mutex> guard(_mutex);
     
     if (_state == DGVideoPlaying)
         _state = DGVideoPaused;
 }
 
 void DGVideo::stop() {
-    lock_guard<mutex> guard(_mutex);
+    std::lock_guard<std::mutex> guard(_mutex);
     
     if (_state == DGVideoPlaying) {
         _state = DGVideoStopped;
-        
+      
         // Rewind
         fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
         ogg_stream_reset(&_theoraInfo->to);
@@ -305,7 +304,7 @@ void DGVideo::stop() {
 }
 
 void DGVideo::unload() {
-    lock_guard<mutex> guard(_mutex);
+    std::lock_guard<std::mutex> guard(_mutex);
     
     if (_isLoaded) {
         _isLoaded = false;
@@ -335,13 +334,12 @@ void DGVideo::unload() {
 }
 
 void DGVideo::update() {
-    lock_guard<mutex> guard(_mutex);
-    
+    std::lock_guard<std::mutex> guard(_mutex);
+
     if (_state == DGVideoPlaying) {
-        // FIXME: This is seriously wrong as system() isn't initialized
-        double currentTime = system->time();
-        double duration = (currentTime - _lastTime);
-        
+      sf::Time time = _clock.getElapsedTime();
+      double currentTime = time.asSeconds();
+      double duration = (currentTime - _lastTime);
         if (duration >= _frameDuration) {
             yuv_buffer yuv;
             
@@ -354,7 +352,7 @@ void DGVideo::update() {
             _convertToRGB(yuv.y, yuv.y_stride,
                        yuv.u, yuv.v, yuv.uv_stride,
                        _currentFrame.data, _theoraInfo->ti.width, _theoraInfo->ti.height, _theoraInfo->ti.width);
-            
+          
             _lastTime = currentTime;
             
             _hasNewFrame = true;

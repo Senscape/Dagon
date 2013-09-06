@@ -21,7 +21,7 @@
 #include <mutex>
 #include <string>
 
-#include <GL/glew.h>
+#include <SFML/OpenGL.hpp>
 
 #include "Object.h"
 

@@ -55,7 +55,8 @@ bool DGTimerManager::checkManual(int handle) {
     DGTimer* timer = _lookUp(handle);
     
     if (timer->isEnabled) {
-        double currentTime = system->time();
+      sf::Time time = _clock.getElapsedTime();
+      double currentTime = time.asSeconds();
         double duration = currentTime - timer->lastTime;
         
         if (duration > timer->trigger) {
@@ -74,7 +75,8 @@ int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, i
     timer.hasTriggered = false;
     timer.isEnabled = true;
     timer.isLoopable = shouldLoop;
-    timer.lastTime = system->time();
+  sf::Time time = _clock.getElapsedTime();
+    timer.lastTime = time.asSeconds();
     timer.type = DGTimerNormal;    
     
     timer.trigger = trigger;
@@ -97,8 +99,9 @@ int DGTimerManager::createInternal(double trigger, void (*callback)()) {
     timer.hasTriggered = false;
     timer.handler = callback;
     timer.isEnabled = true;
-    timer.isLoopable = false;  
-    timer.lastTime = system->time();
+    timer.isLoopable = false;
+  sf::Time time = _clock.getElapsedTime();
+    timer.lastTime = time.asSeconds();
     timer.type = DGTimerInternal;
     
     timer.trigger = trigger;
@@ -118,8 +121,9 @@ int DGTimerManager::createManual(double trigger) {
     timer.handle = _handles;
     timer.hasTriggered = false;
     timer.isEnabled = true;
-    timer.isLoopable = false;   
-    timer.lastTime = system->time();
+    timer.isLoopable = false;
+  sf::Time time = _clock.getElapsedTime();
+    timer.lastTime = time.asSeconds();
     timer.type = DGTimerManual;
     
     timer.trigger = trigger;
@@ -145,7 +149,8 @@ void DGTimerManager::disable(int handle) {
 void DGTimerManager::enable(int handle) {
     DGTimer* timer = _lookUp(handle);
     timer->isEnabled = true;
-    timer->lastTime = system->time();
+  sf::Time time = _clock.getElapsedTime();
+    timer->lastTime = time.asSeconds();
 }
 
 void DGTimerManager::process() {
@@ -169,14 +174,16 @@ void DGTimerManager::process() {
                         if ((*it).luaObject) { // Belongs to a Lua object?
                             if ((*it).luaObject != _luaObject) {
                                 (*it).hasTriggered = false;
-                                (*it).lastTime = system->time(); // Reset timer
+                              sf::Time time = _clock.getElapsedTime();
+                                (*it).lastTime = time.asSeconds(); // Reset timer
                                 break; // Do not invoke the handler
                             }
                         }
                         
                         if ((*it).isLoopable) {
                             (*it).hasTriggered = false;
-                            (*it).lastTime = system->time();
+                          sf::Time time = _clock.getElapsedTime();
+                            (*it).lastTime = time.asSeconds();
                         }
                         else {
                             // Should destroy in reality
@@ -225,7 +232,8 @@ bool DGTimerManager::update() {
 		it = _arrayOfTimers.begin();
     
 		while (it != _arrayOfTimers.end()) {
-			double currentTime = system->time();
+      sf::Time time = _clock.getElapsedTime();
+			double currentTime = time.asSeconds();
 			double duration = currentTime - (*it).lastTime;
         
 			DGTimer* timer = &(*it);
