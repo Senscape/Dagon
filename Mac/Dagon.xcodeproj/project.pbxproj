@@ -30,7 +30,13 @@
 		FB3B4DC615CD7EC6000B69C6 /* DGDustData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB3B4DC515CD7EC6000B69C6 /* DGDustData.c */; };
 		FB40B9771795E26700788AF1 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB40B9761795E26600788AF1 /* main.cpp */; };
 		FB40B9791795E2A900788AF1 /* DGSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB40B9781795E2A600788AF1 /* DGSystem.cpp */; };
-		FB40B97C1795E4F200788AF1 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB40B97A1795E4BA00788AF1 /* IOKit.framework */; };
+		FB448E8517DA27D6004D4500 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB448E8317DA27B5004D4500 /* OpenGL.framework */; };
+		FB448E8717DA3E42004D4500 /* OpenAL-Soft.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB448E8617DA3E42004D4500 /* OpenAL-Soft.framework */; };
+		FB448E8A17DA3E4E004D4500 /* sfml-system.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB448E8817DA3E4E004D4500 /* sfml-system.framework */; };
+		FB448E8B17DA3E4E004D4500 /* sfml-window.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB448E8917DA3E4E004D4500 /* sfml-window.framework */; };
+		FB448E8C17DA3F93004D4500 /* OpenAL-Soft.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FB448E8617DA3E42004D4500 /* OpenAL-Soft.framework */; };
+		FB448E8D17DA40B9004D4500 /* sfml-system.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FB448E8817DA3E4E004D4500 /* sfml-system.framework */; };
+		FB448E8E17DA40BB004D4500 /* sfml-window.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = FB448E8917DA3E4E004D4500 /* sfml-window.framework */; };
 		FB6A1E9315AC7E5D000C0222 /* DGEffectsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */; };
 		FB9A5C9517A1C5C400D7234F /* DGLocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB9A5C9417A1C5C200D7234F /* DGLocator.cpp */; };
 		FBA2C77E14DC13B40098E334 /* DGRenderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA2C77D14DC13B40098E334 /* DGRenderManager.cpp */; };
@@ -41,10 +47,8 @@
 		FBABA6381565539B0009889F /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBABA6371565539B0009889F /* Button.cpp */; };
 		FBB4763015D01D2E00514FE6 /* DGSplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBB4762F15D01D2E00514FE6 /* DGSplashData.c */; };
 		FBBC59AC15AF5E87005D173B /* DGShaderData.c in Sources */ = {isa = PBXBuildFile; fileRef = FBBC59AB15AF5E87005D173B /* DGShaderData.c */; };
-		FBBE56DB17949ADF002CBF3C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBC8883214574F08008D548F /* Cocoa.framework */; };
 		FBBE56DD1795B4BA002CBF3C /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FBBE56DC1795B4BA002CBF3C /* Credits.rtf */; };
 		FBBE56E11795B526002CBF3C /* Dagon.entitlements in Resources */ = {isa = PBXBuildFile; fileRef = FBBE56E01795B526002CBF3C /* Dagon.entitlements */; };
-		FBBE56E31795B539002CBF3C /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBBE56E21795B539002CBF3C /* OpenGL.framework */; };
 		FBBE56E71795B5E1002CBF3C /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = FBBE56E51795B5E1002CBF3C /* stb_image.c */; };
 		FBD2F64B1506503C00AB6C31 /* DGAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBD2F64A1506503C00AB6C31 /* DGAudioManager.cpp */; };
 		FBE208E01589745B002F7D46 /* DGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBE208DF1589745B002F7D46 /* DGScene.cpp */; };
@@ -61,6 +65,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				FB448E8C17DA3F93004D4500 /* OpenAL-Soft.framework in CopyFiles */,
+				FB448E8D17DA40B9004D4500 /* sfml-system.framework in CopyFiles */,
+				FB448E8E17DA40BB004D4500 /* sfml-window.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -118,7 +125,10 @@
 		FB3B4DC515CD7EC6000B69C6 /* DGDustData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGDustData.c; sourceTree = "<group>"; };
 		FB40B9761795E26600788AF1 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../Source/main.cpp; sourceTree = "<group>"; };
 		FB40B9781795E2A600788AF1 /* DGSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGSystem.cpp; sourceTree = "<group>"; };
-		FB40B97A1795E4BA00788AF1 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		FB448E8317DA27B5004D4500 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
+		FB448E8617DA3E42004D4500 /* OpenAL-Soft.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "OpenAL-Soft.framework"; path = "../Frameworks/OpenAL-Soft.framework"; sourceTree = "<group>"; };
+		FB448E8817DA3E4E004D4500 /* sfml-system.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-system.framework"; path = "../Frameworks/sfml-system.framework"; sourceTree = "<group>"; };
+		FB448E8917DA3E4E004D4500 /* sfml-window.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "sfml-window.framework"; path = "../Frameworks/sfml-window.framework"; sourceTree = "<group>"; };
 		FB6A1E9015AC7E52000C0222 /* DGEffectsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEffectsManager.h; sourceTree = "<group>"; };
 		FB6A1E9215AC7E5D000C0222 /* DGEffectsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGEffectsManager.cpp; sourceTree = "<group>"; };
 		FB9A5C8B179DCFB600D7234F /* DGEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGEvent.h; sourceTree = "<group>"; };
@@ -148,15 +158,10 @@
 		FBBE56DC1795B4BA002CBF3C /* Credits.rtf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.rtf; name = Credits.rtf; path = ../../Documents/Credits.rtf; sourceTree = "<group>"; };
 		FBBE56DE1795B4C9002CBF3C /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = SOURCE_ROOT; };
 		FBBE56E01795B526002CBF3C /* Dagon.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Dagon.entitlements; sourceTree = "<group>"; };
-		FBBE56E21795B539002CBF3C /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		FBBE56E41795B5E1002CBF3C /* Luna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Luna.h; sourceTree = "<group>"; };
 		FBBE56E51795B5E1002CBF3C /* stb_image.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = stb_image.c; sourceTree = "<group>"; };
 		FBBE56E61795B5E1002CBF3C /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		FBC8882E14574F08008D548F /* Dagon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dagon.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		FBC8883214574F08008D548F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
-		FBC8883514574F08008D548F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
-		FBC8883614574F08008D548F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
-		FBC8883714574F08008D548F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		FBC942FE15C74E0700840D3E /* DGCamLib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DGCamLib.h; sourceTree = "<group>"; };
 		FBCD18A914E5D85F0039BC92 /* DGSystemLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSystemLib.h; sourceTree = "<group>"; };
 		FBD2F64815064FD000AB6C31 /* DGAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGAudioManager.h; sourceTree = "<group>"; };
@@ -180,9 +185,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FBBE56DB17949ADF002CBF3C /* Cocoa.framework in Frameworks */,
-				FB40B97C1795E4F200788AF1 /* IOKit.framework in Frameworks */,
-				FBBE56E31795B539002CBF3C /* OpenGL.framework in Frameworks */,
+				FB448E8717DA3E42004D4500 /* OpenAL-Soft.framework in Frameworks */,
+				FB448E8517DA27D6004D4500 /* OpenGL.framework in Frameworks */,
+				FB448E8A17DA3E4E004D4500 /* sfml-system.framework in Frameworks */,
+				FB448E8B17DA3E4E004D4500 /* sfml-window.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -340,22 +346,12 @@
 		FBC8883114574F08008D548F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				FBC8883214574F08008D548F /* Cocoa.framework */,
-				FB40B97A1795E4BA00788AF1 /* IOKit.framework */,
-				FBBE56E21795B539002CBF3C /* OpenGL.framework */,
-				FBC8883414574F08008D548F /* Other Frameworks */,
+				FB448E8617DA3E42004D4500 /* OpenAL-Soft.framework */,
+				FB448E8317DA27B5004D4500 /* OpenGL.framework */,
+				FB448E8817DA3E4E004D4500 /* sfml-system.framework */,
+				FB448E8917DA3E4E004D4500 /* sfml-window.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		FBC8883414574F08008D548F /* Other Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				FBC8883514574F08008D548F /* AppKit.framework */,
-				FBC8883614574F08008D548F /* CoreData.framework */,
-				FBC8883714574F08008D548F /* Foundation.framework */,
-			);
-			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
 		FBC8883814574F08008D548F /* Dagon */ = {
@@ -574,7 +570,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -617,7 +613,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = "";
+				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -645,20 +641,21 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../Libraries/Mac,
 				);
 				OTHER_LDFLAGS = (
-					"-lglew",
-					"-lglfw3",
 					"-lfreetype",
 					"-llua",
-					"-lopenal",
 					"-logg",
 					"-ltheoradec",
 					"-lvorbis",
@@ -675,20 +672,21 @@
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../Frameworks\"",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				INFOPLIST_FILE = Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					../Libraries/Mac,
 				);
 				OTHER_LDFLAGS = (
-					"-lglew",
-					"-lglfw3",
 					"-lfreetype",
 					"-llua",
-					"-lopenal",
 					"-logg",
 					"-ltheoradec",
 					"-lvorbis",
