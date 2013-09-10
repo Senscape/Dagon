@@ -7,7 +7,7 @@
 		<string>$(TeamIdentifierPrefix)net.senscape.Dagon</string>
 	</array>
 	<key>com.apple.developer.ubiquity-kvstore-identifier</key>
-	<string>$(TeamIdentifierPrefix)net.senscape.Dagon</string>
+	<string>$(TeamIdentifierPrefix)$(CFBundleIdentifier)</string>
 	<key>com.apple.security.app-sandbox</key>
 	<true/>
 </dict>
