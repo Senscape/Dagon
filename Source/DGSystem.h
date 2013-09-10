@@ -18,7 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <SFML/Window.hpp>
+#include <SDL2/SDL.h>
 
 #include "Platform.h"
 
@@ -36,12 +36,11 @@ class Log;
 class DGSystem {
     Config& config;
     Log& log;
+  
+    SDL_GLContext _context;
+    SDL_Window *_window;
 
     bool _isInitialized = false;
-
-    sf::Clock _clock;
-    sf::Window _window;
-    
     double _calculateFrames(double theInterval);
     
 public:

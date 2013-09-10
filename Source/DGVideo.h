@@ -20,7 +20,6 @@
 
 #include <mutex>
 
-#include <SFML/System.hpp>
 #include <theora/theora.h>
 
 #include "Object.h"
@@ -52,7 +51,7 @@ typedef struct {
 	theora_state td;
 	ogg_packet op;
 	
-    ogg_int64_t bos;
+  ogg_int64_t bos;
 	int long_option_index;
 	int c;
 	int theora_p;
@@ -78,8 +77,6 @@ class Log;
 
 class DGVideo : public Object {
     Log& log;
-  
-    sf::Clock _clock;
   
     DGFrame _currentFrame;
     DGTheoraInfo* _theoraInfo;

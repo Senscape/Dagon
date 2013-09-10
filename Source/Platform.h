@@ -46,8 +46,8 @@
 // Include standard OpenGL headers
 ////////////////////////////////////////////////////////////
 
-#include <SFML/OpenGL.hpp>
-#include <SFML/Window.hpp>
+#include <GL/glew.h>
+#include <SDL2/SDL_keycode.h>
 
 ////////////////////////////////////////////////////////////
 // Include standard C libraries
@@ -88,24 +88,24 @@
 ////////////////////////////////////////////////////////////
 
 enum InputKeys {
-	kKeyBackspace = sf::Keyboard::BackSpace,
-  kKeyF1 = sf::Keyboard::F1,
-	kKeyF2 = sf::Keyboard::F2,
-	kKeyF3 = sf::Keyboard::F3,
-	kKeyF4 = sf::Keyboard::F4,
-  kKeyF5 = sf::Keyboard::F5,
-	kKeyF6 = sf::Keyboard::F6,
-	kKeyF7 = sf::Keyboard::F7,
-	kKeyF8 = sf::Keyboard::F8,
-	kKeyF9 = sf::Keyboard::F9,
-	kKeyF10 = sf::Keyboard::F10,
-	kKeyF11 = sf::Keyboard::F11,
-	kKeyF12 = sf::Keyboard::F12,
-	kKeyEscape = sf::Keyboard::Escape,
-	kKeyQuote = sf::Keyboard::Quote,
-	kKeyTab = sf::Keyboard::Tab,
-	kKeyEnter = sf::Keyboard::Return,
-	kKeySpace = sf::Keyboard::Space
+	kKeyBackspace = SDLK_BACKSPACE,
+  kKeyF1 = SDLK_F1,
+	kKeyF2 = SDLK_F2,
+	kKeyF3 = SDLK_F3,
+	kKeyF4 = SDLK_F4,
+  kKeyF5 = SDLK_F5,
+	kKeyF6 = SDLK_F6,
+	kKeyF7 = SDLK_F7,
+	kKeyF8 = SDLK_F8,
+	kKeyF9 = SDLK_F9,
+	kKeyF10 = SDLK_F10,
+	kKeyF11 = SDLK_F11,
+	kKeyF12 = SDLK_F12,
+	kKeyEscape = SDLK_ESCAPE,
+	kKeyQuote = SDL_SCANCODE_GRAVE,
+	kKeyTab = SDLK_TAB,
+	kKeyEnter = SDLK_RETURN,
+	kKeySpace = SDLK_SPACE
 };
 
 #endif // DAGON_PLATFORM_H_

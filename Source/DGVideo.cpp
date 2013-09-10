@@ -15,10 +15,14 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <SDL2/SDL.h>
+
 #include "Defines.h"
 #include "Language.h"
 #include "Log.h"
 #include "DGVideo.h"
+
+// TODO: Use 1.1 API calls
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -266,27 +270,27 @@ void DGVideo::load() {
         _queuePage(_theoraInfo, &_theoraInfo->og);
     }
     
-    _frameDuration = (1.0/((double)_theoraInfo->ti.fps_numerator / _theoraInfo->ti.fps_denominator));
+    _frameDuration = (double)(1.0/((double)_theoraInfo->ti.fps_numerator / (double)_theoraInfo->ti.fps_denominator)) * 1000.0;
     _isLoaded = true;
 }
 
 void DGVideo::play() {
-    std::lock_guard<std::mutex> guard(_mutex);
-    
-    if (_state == DGVideoInitial) {
-        _lastTime = _frameDuration; // Forces a first update
-        _state = DGVideoPlaying;
-        // FIXME: Commenting this for now (should eliminate a black frame)
-        //this->update();
-    }
-    else { // If paused or stopped
-        _state = DGVideoPlaying;
-    }
+  std::lock_guard<std::mutex> guard(_mutex);
+  
+  _state = DGVideoPlaying;
+  yuv_buffer yuv;
+  _prepareFrame();
+  theora_decode_YUVout(&_theoraInfo->td, &yuv);
+  _convertToRGB(yuv.y, yuv.y_stride,
+                yuv.u, yuv.v, yuv.uv_stride,
+                _currentFrame.data, _theoraInfo->ti.width, _theoraInfo->ti.height, _theoraInfo->ti.width);
+
+  _lastTime = SDL_GetTicks();
 }
 
 void DGVideo::pause() {
     std::lock_guard<std::mutex> guard(_mutex);
-    
+  
     if (_state == DGVideoPlaying)
         _state = DGVideoPaused;
 }
@@ -337,15 +341,14 @@ void DGVideo::update() {
     std::lock_guard<std::mutex> guard(_mutex);
 
     if (_state == DGVideoPlaying) {
-      sf::Time time = _clock.getElapsedTime();
-      double currentTime = time.asSeconds();
-      double duration = (currentTime - _lastTime);
+      double currentTime = SDL_GetTicks();
+      double duration = currentTime - _lastTime;
         if (duration >= _frameDuration) {
             yuv_buffer yuv;
             
             // TODO: Skip frames if required here?
-            //int frames = (int)floor(duration / _frameDuration);
-            //for (int i = 0; i < frames; i++)
+            int frames = (int)floor(duration / _frameDuration);
+            for (int i = 0; i < frames; i++)
                 _prepareFrame();
             
             theora_decode_YUVout(&_theoraInfo->td, &yuv);
@@ -452,19 +455,19 @@ void DGVideo::_initConversionToRGB() {
 		
 		if ((i >= 16) && (i <= 240)) {
 			_lookUpTable.m_plRV[i] = 408 * (i - 128);
-			_lookUpTable.m_plGV[i] = -208 * (i - 128);	// Green tweaked to -2
+			_lookUpTable.m_plGV[i] = -208 * (i - 128);
 			_lookUpTable.m_plGU[i] = -100 * (i - 128);
 			_lookUpTable.m_plBU[i] = 517 * (i - 128);
 		}
 		else if (i < 16) {
 			_lookUpTable.m_plRV[i] = 408 * (16 - 128);
-			_lookUpTable.m_plGV[i] = -208 * (16 - 128);	// Green tweaked to -2
+			_lookUpTable.m_plGV[i] = -208 * (16 - 128);
 			_lookUpTable.m_plGU[i] = -100 * (16 - 128);
 			_lookUpTable.m_plBU[i] = 517 * (16 - 128);
 		}
 		else {
 			_lookUpTable.m_plRV[i] = _lookUpTable.m_plRV[240];
-			_lookUpTable.m_plGV[i] = _lookUpTable.m_plGV[240];	// Green tweaked to -2
+			_lookUpTable.m_plGV[i] = _lookUpTable.m_plGV[240];
 			_lookUpTable.m_plGU[i] = _lookUpTable.m_plGU[240];
 			_lookUpTable.m_plBU[i] = _lookUpTable.m_plBU[240];
 		}

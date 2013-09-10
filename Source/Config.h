@@ -126,7 +126,7 @@ class Config {
   
   double _fps = kDefFramerate;
   double _globalSpeed = 1.0;
-  double _globalSpeedPrecision = kFrameratePrecision / 10.0;
+  double _globalSpeedPrecision = kFrameratePrecision / kDefFramerate;
   double _targetGlobalSpeed = 1.0;
   
   Config() {};

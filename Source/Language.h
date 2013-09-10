@@ -74,13 +74,14 @@
 // System module
 #define kString13001 "Initializing system..."
 #define kString13002 "System ready!"
-#define kString13003 "SFML version"
+#define kString13003 "SDL version"
 #define kString13004 "System already initialized"
 #define kString13005 "System not initialized"
 #define kString13006 "Could not set vertical sync"
 #define kString13007 "Could not create controller thread"
 #define kString13008 "Could not enter fullscreen"
 #define kString13009 "Could not exit fullscreen"
+#define kString13010 "Could not create window"
 
 // Script module
 #define kString14001 "Initializing script..."

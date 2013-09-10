@@ -32,7 +32,7 @@
 
 // TODO: We should be able to read this value from each texture bundle
 unsigned const kDefTexSize = 2048;
-unsigned const kFrameratePrecision = 0.25;
+const float kFrameratePrecision = 0.2;
 
 // Maximums
 

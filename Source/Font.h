@@ -23,7 +23,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include FT_GLYPH_H
-#include <SFML/OpenGL.hpp>
+#include <GL/glew.h>
 
 #include "Object.h"
 

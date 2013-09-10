@@ -34,41 +34,64 @@ void DGSystem::findPaths() {
 }
 
 bool DGSystem::init() {
-    if (!_isInitialized) {
-        log.trace(kModSystem, "%s", kString13001);
-        log.info(kModSystem, "%s: %d.%d", kString13003, SFML_VERSION_MAJOR, SFML_VERSION_MINOR);
-        
-        if (!config.displayWidth || !config.displayHeight) {
-            if (config.fullscreen) {
-              config.displayWidth = sf::VideoMode::getDesktopMode().width;
-              config.displayHeight = sf::VideoMode::getDesktopMode().height;
-            }
-            else {
-              // Use a third of the screen
-              config.displayWidth = sf::VideoMode::getDesktopMode().width / 1.5;
-              config.displayHeight = sf::VideoMode::getDesktopMode().height / 1.5;
-            }
-        }
-      
-      if (config.fullscreen)
-        _window.create(sf::VideoMode(config.displayWidth, config.displayHeight), "Dagon", sf::Style::Fullscreen);
-        else
-            _window.create(sf::VideoMode(config.displayWidth, config.displayHeight), "Dagon");
-        
-        // Set vertical sync according to our configuration
-        if (config.verticalSync) {
-            _window.setVerticalSyncEnabled(true);
-        }
-        else {
-            // Force our own frame limiter on
-            config.frameLimiter = true;
-            _window.setVerticalSyncEnabled(false);
-        }
-      
-            sf::Mouse::setPosition(sf::Vector2i(config.displayWidth / 2, config.displayHeight / 2), _window);
-      _window.setMouseCursorVisible(false);
-      
-        _isInitialized = true;
+  if (!_isInitialized) {
+    log.trace(kModSystem, "%s", kString13001);
+    SDL_version version;
+    SDL_GetVersion(&version);
+    log.info(kModSystem, "%s: %d.%d", kString13003,
+              version.major, version.minor);
+    
+    SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_TIMER);
+    Uint32 videoFlags = SDL_WINDOW_OPENGL;
+
+    if (!config.displayWidth || !config.displayHeight) {
+      if (config.fullscreen) {
+        SDL_DisplayMode displayMode;
+        SDL_GetCurrentDisplayMode(0, &displayMode);
+        config.displayWidth = displayMode.w;
+        config.displayHeight = displayMode.h;
+        videoFlags = videoFlags | SDL_WINDOW_FULLSCREEN;
+      } else {
+        // Use a third of the screen
+        SDL_DisplayMode desktopMode;
+        SDL_GetDesktopDisplayMode(0, &desktopMode);
+        config.displayWidth = desktopMode.w / 1.5;
+        config.displayHeight = desktopMode.h / 1.5;
+        videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
+      }
+    } else {
+      if (config.fullscreen) {
+        videoFlags = videoFlags | SDL_WINDOW_FULLSCREEN;
+      } else {
+        videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
+      }
+    }
+    
+    _window = SDL_CreateWindow("Dagon", SDL_WINDOWPOS_CENTERED,
+                               SDL_WINDOWPOS_CENTERED,
+                               config.displayWidth, config.displayHeight,
+                               videoFlags);
+    _context = SDL_GL_CreateContext(_window);
+    
+    if (_window == nullptr) {
+      log.error(kModSystem, "%s", kString13010);
+      return false;
+    }
+    
+    // Set vertical sync according to our configuration
+    if (config.verticalSync) {
+      SDL_GL_SetSwapInterval(1);
+    }
+    else {
+      // Force our own frame limiter on
+      config.frameLimiter = true;
+      SDL_GL_SetSwapInterval(0);
+    }
+    
+    SDL_WarpMouseInWindow(_window, config.displayWidth / 2,
+                          config.displayHeight / 2);
+    SDL_ShowCursor(false);
+    _isInitialized = true;
     }
     else log.warning(kModSystem, "%s", kString13004);
     
@@ -76,127 +99,122 @@ bool DGSystem::init() {
 }
 
 void DGSystem::setTitle(const char* title) {
-  _window.setTitle(title);
+  SDL_SetWindowTitle(_window, title);
 }
 
 void DGSystem::update() {
   config.setFramesPerSecond(_calculateFrames(kFrameratePrecision));
-  if (_window.isOpen()) {
-    _window.display();
-    
-    sf::Event event;
-    while (_window.pollEvent(event)) {
-      switch (event.type) {
-        case sf::Event::Closed: {
-          _window.close();
-          break;
+  SDL_Event event;
+  while(SDL_PollEvent(&event)) {
+    switch (event.type) {
+      case SDL_KEYDOWN: {
+        switch (event.key.keysym.sym) {
+          case SDLK_F1:
+          case SDLK_F2:
+          case SDLK_F3:
+          case SDLK_F4:
+          case SDLK_F5:
+          case SDLK_F6:
+          case SDLK_F7:
+          case SDLK_F8:
+          case SDLK_F9:
+          case SDLK_F10:
+          case SDLK_F11:
+          case SDLK_F12:
+            DGControl::instance().processFunctionKey(event.key.keysym.sym);
+            break;
+          case SDLK_BACKSPACE:
+          case SDLK_ESCAPE:
+          case SDLK_TAB:
+          case SDLK_RETURN:
+            DGControl::instance().processKey(event.key.keysym.sym,
+                                             DGEventKeyDown);
+            break;
+          case SDLK_f:
+            SDL_Keymod modified = SDL_GetModState();
+            if (modified & (KMOD_LALT | KMOD_LCTRL | KMOD_LGUI))                this->toggleFullscreen();
+            break;
         }
-        case sf::Event::Resized: {
-          DGControl::instance().reshape(event.size.width, event.size.height);
-          break;
-        }
-        case sf::Event::LostFocus: {
-
-          break;
-        }
-        case sf::Event::GainedFocus: {
-          break;
-        }
-        case sf::Event::TextEntered: {
-          if (DGControl::instance().isConsoleActive())
-            DGControl::instance().processKey(event.text.unicode, DGEventKeyDown);
-          break;
-        }
-        case sf::Event::KeyPressed: {
-          if (event.key.alt)
-            this->toggleFullscreen();
-          else
-            DGControl::instance().processKey(event.key.code, DGEventKeyDown);
-          break;
-        }
-        case sf::Event::KeyReleased: {
-          break;
-        }
-        case sf::Event::MouseWheelMoved: {
-          break;
-        }
-        case sf::Event::MouseButtonPressed: {
-          if (event.mouseButton.button == sf::Mouse::Left) {
-            DGControl::instance().processMouse(event.mouseButton.x,
-                                               event.mouseButton.y,
-                                               DGEventMouseDown);
-          } else if (event.mouseButton.button == sf::Mouse::Right) {
-            DGControl::instance().processMouse(event.mouseButton.x,
-                                               event.mouseButton.y,
-                                               DGEventMouseRightDown);
-          }
-          break;
-        }
-        case sf::Event::MouseButtonReleased: {
-          if (event.mouseButton.button == sf::Mouse::Left) {
-            DGControl::instance().processMouse(event.mouseButton.x,
-                                               event.mouseButton.y,
-                                               DGEventMouseUp);
-          } else if (event.mouseButton.button == sf::Mouse::Right) {
-            DGControl::instance().processMouse(event.mouseButton.x,
-                                               event.mouseButton.y,
-                                               DGEventMouseRightUp);
-          }
-          break;
-        }
-        case sf::Event::MouseMoved: {
-          DGControl::instance().processMouse(event.mouseMove.x,
-                                             event.mouseMove.y,
-                                             DGEventMouseMove);
-          break;
-        }
-        case sf::Event::MouseEntered: {
-          break;
-        }
-        case sf::Event::MouseLeft: {
-          DGControl::instance().processMouse(config.displayWidth / 2,
-                                            config.displayHeight / 2,
-                                             DGEventMouseMove);
-          break;
-        }
-        case sf::Event::JoystickButtonPressed: {
-          break;
-        }
-        case sf::Event::JoystickButtonReleased: {
-          break;
-        }
-        case sf::Event::JoystickMoved: {
-          break;
-        }
-        case sf::Event::JoystickConnected: {
-          break;
-        }
-        case sf::Event::JoystickDisconnected: {
-          break;
-        }
-        case sf::Event::Count: {
-          break;
-        }
+        break;
       }
+      case SDL_MOUSEMOTION:
+        DGControl::instance().processMouse(event.motion.x,
+                                           event.motion.y,
+                                           DGEventMouseMove);
+        break;
+      case SDL_MOUSEBUTTONDOWN:
+        if (event.button.button == SDL_BUTTON_LEFT) {
+          DGControl::instance().processMouse(event.button.x,
+                                             event.button.y,
+                                             DGEventMouseDown);
+        } else if (event.button.button == SDL_BUTTON_RIGHT) {
+          DGControl::instance().processMouse(event.button.x,
+                                             event.button.y,
+                                             DGEventMouseRightDown);
+        }
+        break;
+      case SDL_MOUSEBUTTONUP:
+        if (event.button.button == SDL_BUTTON_LEFT) {
+          DGControl::instance().processMouse(event.button.x,
+                                             event.button.y,
+                                             DGEventMouseUp);
+        } else if (event.button.button == SDL_BUTTON_RIGHT) {
+          DGControl::instance().processMouse(event.button.x,
+                                             event.button.y,
+                                             DGEventMouseRightUp);
+        }
+        break;
+      case SDL_TEXTINPUT:
+          DGControl::instance().processKey(event.text.text[0],
+                                           DGEventKeyDown);
+        break;
+      case SDL_WINDOWEVENT:
+        switch (event.window.event) {
+          case SDL_WINDOWEVENT_CLOSE:
+            DGControl::instance().terminate();
+            break;
+          case SDL_WINDOWEVENT_LEAVE:
+            DGControl::instance().processMouse(config.displayWidth / 2,
+                                               config.displayHeight / 2,
+                                               DGEventMouseMove);
+            break;
+          case SDL_WINDOWEVENT_RESIZED:
+            DGControl::instance().reshape(event.window.data1,
+                                          event.window.data2);
+            break;
+          default:
+            break;
+        }
+        break;
+      default:
+        break;
     }
   }
+  
+  SDL_GL_SwapWindow(_window);
 }
 
 void DGSystem::terminate() {
+  SDL_GL_DeleteContext(_context);
+  if (config.fullscreen)
+    SDL_SetWindowFullscreen(_window, 0);
+  SDL_DestroyWindow(_window);
+  SDL_Quit();
+  
   _isInitialized = false;
-  _window.close();
-  exit(EXIT_SUCCESS);
 }
 
 void DGSystem::toggleFullscreen() {
   config.fullscreen = !config.fullscreen;
-  
-  _window.close();
-  
-  if (config.fullscreen)
-    _window.create(sf::VideoMode(config.displayWidth, config.displayHeight), "Dagon", sf::Style::Fullscreen);
-  else
-    _window.create(sf::VideoMode(config.displayWidth, config.displayHeight), "Dagon");
+  if (config.fullscreen) {
+    SDL_DisplayMode desktopMode;
+    SDL_GetDesktopDisplayMode(0, &desktopMode);
+    SDL_SetWindowPosition(_window, 0, 0);
+    SDL_SetWindowSize(_window, desktopMode.w, desktopMode.h);
+    SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
+  } else {
+    SDL_SetWindowFullscreen(_window, 0);
+  }
 }
 
 ////////////////////////////////////////////////////////////
@@ -206,12 +224,11 @@ void DGSystem::toggleFullscreen() {
 // TODO: For best precision, this should be suspended when
 // performing a switch (the most expensive operation)
 double DGSystem::_calculateFrames(double theInterval = 1.0) {
-  sf::Time time = _clock.getElapsedTime();
-	static double lastTime = time.asSeconds();
+	static double lastTime = SDL_GetTicks() / 1000;
 	static int fpsFrameCount = 0;
 	static double fps = 0.0;
     
-	double currentTime = time.asSeconds();
+	double currentTime = SDL_GetTicks() / 1000;
 
 	if (theInterval < 0.1)
 		theInterval = 0.1;
@@ -223,7 +240,7 @@ double DGSystem::_calculateFrames(double theInterval = 1.0) {
 		fps = (double)fpsFrameCount / (currentTime - lastTime);
 
 		fpsFrameCount = 0;
-		lastTime = time.asSeconds();
+		lastTime = SDL_GetTicks() / 1000;
 	}
 	else fpsFrameCount++;
 

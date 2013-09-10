@@ -15,6 +15,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <cstdlib>
+
 #include "Audio.h"
 #include "Spot.h"
 #include "Texture.h"
