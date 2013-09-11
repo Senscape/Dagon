@@ -18,6 +18,7 @@
 #include <fstream>
 #include <cassert>
 #include <cstring>
+#include <sstream>
 
 #include "Audio.h"
 #include "Config.h"
@@ -32,12 +33,18 @@ Audio::Audio() :
   config(Config::instance()),
   log(Log::instance())
 {
+  _isLoaded = false;
+  _isLoopable = false;
+  _isMatched = false;
+  _state = kAudioInitial;
   _oggCallbacks.read_func = _oggRead;
 	_oggCallbacks.seek_func = _oggSeek;
 	_oggCallbacks.close_func = _oggClose;
 	_oggCallbacks.tell_func = _oggTell;
-    
   this->setType(kObjectAudio);
+  _mutex = SDL_CreateMutex();
+  if (!_mutex)
+    log.error(kModAudio, "%s", kString18001);
 }
 
 ////////////////////////////////////////////////////////////
@@ -46,6 +53,7 @@ Audio::Audio() :
 
 Audio::~Audio() {
   // TODO: Unload if required
+  SDL_DestroyMutex(_mutex);
 }
 
 ////////////////////////////////////////////////////////////
@@ -53,8 +61,14 @@ Audio::~Audio() {
 ////////////////////////////////////////////////////////////
 
 bool Audio::isLoaded() {
-  std::lock_guard<std::mutex> guard(_mutex);
-  return _isLoaded;
+  bool value = false;
+  if (SDL_LockMutex(_mutex) == 0) {
+    value = _isLoaded;
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
+  }
+  return value;
 }
 
 bool Audio::isLoopable() {
@@ -62,8 +76,14 @@ bool Audio::isLoopable() {
 }
 
 bool Audio::isPlaying() {
-  std::lock_guard<std::mutex> guard(_mutex);
-  return (_state == kAudioPlaying);
+  bool value = (_state == kAudioPlaying);
+  if (SDL_LockMutex(_mutex) == 0) {
+    value = _isLoaded;
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
+  }
+  return value;
 }
 
 ////////////////////////////////////////////////////////////
@@ -132,70 +152,69 @@ void Audio::setResource(std::string fileName) {
 ////////////////////////////////////////////////////////////
 
 void Audio::load() {
-  std::lock_guard<std::mutex> guard(_mutex);
-    
-  if (!_isLoaded) { 
-    std::string fileToLoad = _randomizeFile(_resource.name);
-    std::ifstream file(config.path(kPathResources, fileToLoad, kObjectAudio),
-                       std::ifstream::binary | std::ifstream::ate);
-    
-    if (file.good()) {
-      _resource.dataSize = file.tellg();
-      _resource.data = new char[_resource.dataSize];
-      file.seekg(file.beg);
-      file.read(_resource.data, _resource.dataSize);
-      _resource.dataRead = 0;
-      
-      if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
-        log.error(kModAudio, "%s", kString16010);
-        return;
-      }
-      
-      // We no longer require the file handle
-      file.close();
-      
-      // Get file info
-      vorbis_info* info = ov_info(&_oggStream, -1);
-      _channels = info->channels;
-      _rate = (ALsizei)info->rate;
-            
-      if (_channels == 1) {
-        _alFormat = AL_FORMAT_MONO16;
-
-      } else if (_channels == 2 ) {
-        _alFormat = AL_FORMAT_STEREO16;
-      } else {
-        // Invalid number of channels
-        log.error(kModAudio, "%s: %s", kString16009, fileToLoad.c_str());
-        return;
-      }
-      
-      alGenBuffers(kAudioBuffers, _alBuffers);
-      alGenSources(1, &_alSource);
-      alSource3f(_alSource, AL_POSITION, 0.0, 0.0, 0.0);
-      alSource3f(_alSource, AL_VELOCITY, 0.0, 0.0, 0.0);
-      alSource3f(_alSource, AL_DIRECTION, 0.0, 0.0, 0.0);
-
-			for (int i = 0; i < kAudioBuffers; i++) {
-        if (!_fillBuffer(&_alBuffers[i])) {
-					_verifyError("prebuffer");
-					return;
-				}
-			}
+  if (SDL_LockMutex(_mutex) == 0) {
+    if (!_isLoaded) {
+      std::string fileToLoad = _randomizeFile(_resource.name);
+      std::ifstream file(config.path(kPathResources,
+                                     fileToLoad, kObjectAudio).c_str(),
+                         std::ifstream::binary | std::ifstream::ate);
+      if (file.good()) {
+        _resource.dataSize = file.tellg();
+        _resource.data = new char[_resource.dataSize];
+        file.seekg(file.beg);
+        file.read(_resource.data, _resource.dataSize);
+        _resource.dataRead = 0;
         
-			alSourceQueueBuffers(_alSource, kAudioBuffers, _alBuffers);
-  
-      if (config.mute || this->fadeLevel() < 0.0) {
-        alSourcef(_alSource, AL_GAIN, 0.0);
+        if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
+          log.error(kModAudio, "%s", kString16010);
+        }
+        
+        // We no longer require the file handle
+        file.close();
+        
+        // Get file info
+        vorbis_info* info = ov_info(&_oggStream, -1);
+        _channels = info->channels;
+        _rate = (ALsizei)info->rate;
+        
+        if (_channels == 1) {
+          _alFormat = AL_FORMAT_MONO16;
+          
+        } else if (_channels == 2 ) {
+          _alFormat = AL_FORMAT_STEREO16;
+        } else {
+          // Invalid number of channels
+          log.error(kModAudio, "%s: %s", kString16009, fileToLoad.c_str());
+        }
+        
+        alGenBuffers(kAudioBuffers, _alBuffers);
+        alGenSources(1, &_alSource);
+        alSource3f(_alSource, AL_POSITION, 0.0, 0.0, 0.0);
+        alSource3f(_alSource, AL_VELOCITY, 0.0, 0.0, 0.0);
+        alSource3f(_alSource, AL_DIRECTION, 0.0, 0.0, 0.0);
+        
+        for (int i = 0; i < kAudioBuffers; i++) {
+          if (!_fillBuffer(&_alBuffers[i])) {
+            _verifyError("prebuffer");
+          }
+        }
+        alSourceQueueBuffers(_alSource, kAudioBuffers, _alBuffers);
+        
+        if (config.mute || this->fadeLevel() < 0.0) {
+          alSourcef(_alSource, AL_GAIN, 0.0);
+        } else {
+          alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+        }
+        
+        _isLoaded = true;
+        _verifyError("load");
       } else {
-        alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+        log.error(kModAudio, "%s: %s", kString16008, fileToLoad.c_str());
       }
-      
-      _isLoaded = true;      
-      _verifyError("load");
-    } else {
-      log.error(kModAudio, "%s: %s", kString16008, fileToLoad.c_str());
     }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
   }
 }
 
@@ -205,94 +224,104 @@ void Audio::match(Audio* audioToMatch) {
 }
 
 void Audio::play() {
-  std::lock_guard<std::mutex> guard(_mutex);
-    
-  if (_isLoaded && (_state != kAudioPlaying)) {
-    if (_isMatched)
-      ov_time_seek(&_oggStream, _matchedAudio->cursor());
-        
-    alSourcePlay(_alSource);
-    _state = kAudioPlaying;
-    _verifyError("play");
+  if (SDL_LockMutex(_mutex) == 0) {
+    if (_isLoaded && (_state != kAudioPlaying)) {
+      if (_isMatched)
+        ov_time_seek(&_oggStream, _matchedAudio->cursor());
+      alSourcePlay(_alSource);
+      _state = kAudioPlaying;
+      _verifyError("play");
+    }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
   }
 }
 
 void Audio::pause() {
-  std::lock_guard<std::mutex> guard(_mutex);
-    
-  if (_state == kAudioPlaying) {
-    alSourceStop(_alSource);
-    _state = kAudioPaused;
-    _verifyError("pause");
+  if (SDL_LockMutex(_mutex) == 0) {
+    if (_state == kAudioPlaying) {
+      alSourceStop(_alSource);
+      _state = kAudioPaused;
+      _verifyError("pause");
+    }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
   }
 }
 
 void Audio::stop() {
-  std::lock_guard<std::mutex> guard(_mutex);
-    
-  if ((_state == kAudioPlaying) || (_state == kAudioPaused)) {
-    alSourceStop(_alSource);
-    ov_raw_seek(&_oggStream, 0);
-    _state = kAudioStopped;
-    _verifyError("stop");
+  if (SDL_LockMutex(_mutex) == 0) {
+    if ((_state == kAudioPlaying) || (_state == kAudioPaused)) {
+      alSourceStop(_alSource);
+      ov_raw_seek(&_oggStream, 0);
+      _state = kAudioStopped;
+      _verifyError("stop");
+    }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
   }
 }
 
 void Audio::unload() {
-  std::lock_guard<std::mutex> guard(_mutex);
-    
-  if (_isLoaded) {
-    if (_state == kAudioPlaying) {
-      alSourceStop(_alSource);
-      ov_raw_seek(&_oggStream, 0);
-      _state = kAudioStopped;
+  if (SDL_LockMutex(_mutex) == 0) {
+    if (_isLoaded) {
+      if (_state == kAudioPlaying) {
+        alSourceStop(_alSource);
+        ov_raw_seek(&_oggStream, 0);
+        _state = kAudioStopped;
+      }
+      _emptyBuffers();
+      alDeleteSources(1, &_alSource);
+      alDeleteBuffers(kAudioBuffers, _alBuffers);
+      ov_clear(&_oggStream);
+      delete[] _resource.data;
+      _isLoaded = false;
+      _verifyError("unload");
     }
-
-		_emptyBuffers();
-		alDeleteSources(1, &_alSource);
-		alDeleteBuffers(kAudioBuffers, _alBuffers);
-    ov_clear(&_oggStream);
-    delete[] _resource.data;
-    
-    _isLoaded = false;
-    _verifyError("unload");
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
   }
 }
 
 void Audio::update() {
-  std::lock_guard<std::mutex> guard(_mutex);
-    
-  if (_state == kAudioPlaying) {
-    int processed;
+  if (SDL_LockMutex(_mutex) == 0) {
+    if (_state == kAudioPlaying) {
+      int processed;
+      alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &processed);
+      while (processed--) {
+        ALuint buffer;
         
-    alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &processed);
-        
-    while (processed--) {
-      ALuint buffer;
-            
-      alSourceUnqueueBuffers(_alSource, 1, &buffer);
-      _fillBuffer(&buffer);
-      alSourceQueueBuffers(_alSource, 1, &buffer);
-    }
-        
-    // Run fade operations
-    // TODO: Better change the name of the Object "updateFade" function,
-    // it's somewhat confusing.
-    this->updateFade();
-        
-    // FIXME: Not very elegant as we're doing this check every time
-    if (config.mute) {
-      alSourcef(_alSource, AL_GAIN, 0.0f);
-    } else {
-      // Finally check the current volume. If it's zero, let the manager know
-      // that we're done with this audio.
-      if (this->fadeLevel() > 0.0f) {
-        alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+        alSourceUnqueueBuffers(_alSource, 1, &buffer);
+        _fillBuffer(&buffer);
+        alSourceQueueBuffers(_alSource, 1, &buffer);
+      }
+      
+      // Run fade operations
+      // TODO: Better change the name of the Object "updateFade" function,
+      // it's somewhat confusing.
+      this->updateFade();
+      
+      // FIXME: Not very elegant as we're doing this check every time
+      if (config.mute) {
+        alSourcef(_alSource, AL_GAIN, 0.0);
       } else {
-        alSourceStop(_alSource);
-        _state = kAudioPaused;
+        // Finally check the current volume. If it's zero, let the manager know
+        // that we're done with this audio.
+        if (this->fadeLevel() > 0.0) {
+          alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+        } else {
+          alSourceStop(_alSource);
+          _state = kAudioPaused;
+        }
       }
     }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
   }
 }
 
@@ -305,14 +334,13 @@ bool Audio::_fillBuffer(ALuint* buffer) {
   static bool _hasStreamingError = false;
   
   if (!_hasStreamingError) {
-    char data[config.audioBuffer];
+    char* data;
+    data = new char[config.audioBuffer];
     int size = 0;
-    
     while (size < config.audioBuffer) {
       int section;
       long result = ov_read(&_oggStream, data + size, config.audioBuffer - size,
                             0, 2, 1, &section);
-      
       if (result > 0) {
         size += result;
       } else if (result == 0) {
@@ -336,6 +364,7 @@ bool Audio::_fillBuffer(ALuint* buffer) {
       }
     }
     alBufferData(*buffer, _alFormat, data, size, _rate);
+    delete[] data;
     return true;
   } else {
     return false; 
@@ -367,10 +396,10 @@ std::string Audio::_randomizeFile(const std::string &fileName) {
     // If not, randomize
     int index = (rand() % 6) + 1; // TODO: Allow to configure this value
 
-    std::string fileToLoad(fileName);
-    fileToLoad.append(2, '0'); // TODO: Also configure this
-    fileToLoad += std::to_string(index) + ".ogg";
-    return fileToLoad;
+    std::stringstream fileToLoad;
+    // TODO: Also configure number of zeros
+    fileToLoad << fileName.c_str() << "00" << index << ".ogg";
+    return fileToLoad.str();
   }
 }
 

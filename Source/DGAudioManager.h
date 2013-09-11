@@ -23,6 +23,8 @@
 
 #include <AL/al.h>
 #include <AL/alc.h>
+#include <SDL2/SDL_mutex.h>
+#include <SDL2/SDL_thread.h>
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -41,16 +43,17 @@ class DGAudioManager {
     
     ALCdevice* _alDevice;
     ALCcontext* _alContext;
-    
-    std::thread _audioThread;
-    
-    std::mutex _mutexForArray;
+    SDL_mutex* _mutex;
+    SDL_Thread* _thread;
+  
     std::vector<Audio*> _arrayOfAudios;
     std::vector<Audio*> _arrayOfActiveAudios;
     
     bool _isInitialized;
 	bool _isRunning;
-    
+  
+  static int _runThread(void *ptr);
+  
     DGAudioManager();
     DGAudioManager(DGAudioManager const&);
     DGAudioManager& operator=(DGAudioManager const&);

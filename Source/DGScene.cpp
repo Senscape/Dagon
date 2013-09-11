@@ -45,6 +45,9 @@ DGScene::DGScene() :
     renderManager(DGRenderManager::instance()),
     videoManager(DGVideoManager::instance())
 {
+  _canDrawSpots = false;
+  _isCutsceneLoaded = false;
+  _isSplashLoaded = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -307,7 +310,7 @@ void DGScene::drawSplash() {
 
 void DGScene::loadSplash() {
     _splashTexture = new Texture;
-    _splashTexture->loadFromMemory(kDefSplashBinary, 179608);
+    _splashTexture->loadFromMemory(kSplashData, 179608);
     _isSplashLoaded = true;
 }
 

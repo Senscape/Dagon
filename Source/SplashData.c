@@ -1,21 +1,21 @@
-////////////////////////////////////////////////////////////
-//
-// DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
-// All rights reserved.
-//
-// This Source Code Form is subject to the terms of the
-// Mozilla Public License, v. 2.0. If a copy of the MPL was
-// not distributed with this file, You can obtain one at
-// http://mozilla.org/MPL/2.0/.
-//
-////////////////////////////////////////////////////////////
+/*
+ 
+ DAGON - An Adventure Game Engine
+ Copyright (c) 2011-2013 Senscape s.r.l.
+ All rights reserved.
+ 
+ This Source Code Form is subject to the terms of the
+ Mozilla Public License, v. 2.0. If a copy of the MPL was
+ not distributed with this file, You can obtain one at
+ http://mozilla.org/MPL/2.0/.
+ 
+ */
 
-////////////////////////////////////////////////////////////
-// Embedded splash graphic data (2012)
-////////////////////////////////////////////////////////////
+/*
+ * Embedded splash graphic data (2012)
+ */
 
-const unsigned char kDefSplashBinary[] = {
+const unsigned char kSplashData[] = {
  0x89, 0x50, 0x4e, 0x47,  0xd,  0xa, 0x1a,  0xa,  0x0,  0x0,  0x0,  0xd,
  0x49, 0x48, 0x44, 0x52,  0x0,  0x0,  0x7, 0x80,  0x0,  0x0,  0x4, 0xb0,
   0x8,  0x2,  0x0,  0x0,  0x0, 0x95, 0x52, 0xc0, 0xa1,  0x0,  0x0,  0x0,

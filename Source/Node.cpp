@@ -27,6 +27,9 @@
 ////////////////////////////////////////////////////////////
 
 Node::Node() {
+  _hasFootstep = false;
+  _isSlide = false;
+  _slideReturn = 0;
   this->setType(kObjectNode);
 }
 
@@ -187,7 +190,7 @@ void Node::_link(unsigned int direction, Action* action) {
     minorBound, majorBound - offset, majorBound, minorBound - offset,
     majorBound};
     
-  Spot *newSpot = nullptr, *auxSpot = nullptr;
+  Spot *newSpot = NULL, *auxSpot = NULL;
     
   switch (direction) {
     case kNorth:
@@ -235,7 +238,7 @@ void Node::_link(unsigned int direction, Action* action) {
   newSpot->setColor(0); // Color is set automatically
   _arrayOfSpots.push_back(newSpot);
     
-  if (auxSpot != nullptr) {
+  if (auxSpot) {
     auxSpot->setAction(action);
     auxSpot->setColor(0);
     _arrayOfSpots.push_back(auxSpot);

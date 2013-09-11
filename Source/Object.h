@@ -102,16 +102,16 @@ class Object {
   unsigned int _id;
   int _luaObject;
   std::string _name;
-  int _retainCount = 0;
+  int _retainCount;
   unsigned int _type;
   
-  float _defaultFade = 1.0;
-  int _fadeDirection = kFadeNone;
-  float _fadeLevel = 1.0;
+  float _defaultFade;
+  int _fadeDirection;
+  float _fadeLevel;
   float _fadeSpeed;
-  float _fadeTarget = 1.0;
-  bool _isEnabled = true;
-  bool _isStatic = false;
+  float _fadeTarget;
+  bool _isEnabled;
+  bool _isStatic;
   
   Object(const Object&);
   void operator=(const Object&);

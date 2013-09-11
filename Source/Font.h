@@ -52,7 +52,7 @@ typedef struct {
 } Glyph;
  
 // When default font is selected, we use data embedded in the
-// executable and declared in FontData.c
+// executable and declared in FontData.cpp
 extern "C" const unsigned char kFontData[];
 extern "C" const long kSizeOfFontData;
 
@@ -79,7 +79,7 @@ class Font : public Object {
   
   Glyph _glyph[kMaxChars];
   unsigned int _height;
-  bool _isLoaded = false;
+  bool _isLoaded;
   FT_Library* _library;
   GLuint _textures[kMaxChars];
   

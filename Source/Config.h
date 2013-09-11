@@ -77,31 +77,31 @@ class Config {
     return config;
   }
     
-  bool antialiasing = kDefAntialiasing;
-  int audioBuffer = kDefAudioBuffer;
-  int audioDevice = kDefAudioDevice;
-  bool autopaths = kDefAutopaths;
-  bool autorun = kDefAutorun;
-  bool bundleEnabled = kDefBundleEnabled;
-  int controlMode = kDefControlMode;
-  int displayWidth = kDefDisplayWidth;
-  int displayHeight = kDefDisplayHeight;
-  int displayDepth = kDefDisplayDepth;
-  bool debugMode = kDefDebugMode;
-  bool effects = kDefEffects;
-  bool framebuffer = kDefFramebuffer;
-  bool frameLimiter = kDefFrameLimiter;
-	int framerate = kDefFramerate;
-	bool fullscreen = kDefFullscreen;
-  bool log = kDefLog;
-  bool mute = kDefMute;
-  bool showHelpers = kDefShowHelpers;
-  bool showSplash = kDefShowSplash;
-	bool showSpots = kDefShowSpots;
-  bool silentFeeds = kDefSilentFeeds;
-  bool subtitles = kDefSubtitles;
-  bool texCompression = kDefTexCompression;
-	bool verticalSync = kDefVerticalSync;
+  bool antialiasing;
+  int audioBuffer;
+  int audioDevice;
+  bool autopaths;
+  bool autorun;
+  bool bundleEnabled;
+  int controlMode;
+  int displayWidth;
+  int displayHeight;
+  int displayDepth;
+  bool debugMode;
+  bool effects;
+  bool framebuffer;
+  bool frameLimiter;
+	int framerate;
+	bool fullscreen;
+  bool log;
+  bool mute;
+  bool showHelpers;
+  bool showSplash;
+	bool showSpots;
+  bool silentFeeds;
+  bool subtitles;
+  bool texCompression;
+	bool verticalSync;
   
   double framesPerSecond();
   double globalSpeed();
@@ -119,17 +119,17 @@ class Config {
   
  private:
   std::string _appPath;
-  std::string _resPath = kDefResourcePath;
+  std::string _resPath;
   std::string _scriptName;
   std::string _userPath;
-  std::string _texExtension = kDefTexExtension;
+  std::string _texExtension;
   
-  double _fps = kDefFramerate;
-  double _globalSpeed = 1.0;
-  double _globalSpeedPrecision = kFrameratePrecision / kDefFramerate;
-  double _targetGlobalSpeed = 1.0;
+  double _fps;
+  double _globalSpeed;
+  double _globalSpeedPrecision;
+  double _targetGlobalSpeed;
   
-  Config() {};
+  Config();
   ~Config() {};
   Config(const Config&);
   void operator=(const Config&);

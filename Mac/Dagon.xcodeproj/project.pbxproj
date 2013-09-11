@@ -31,7 +31,7 @@
 		FB94ABE117DE37350081574F /* DGConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9117DE37340081574F /* DGConsole.cpp */; };
 		FB94ABE217DE37350081574F /* DGControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9317DE37340081574F /* DGControl.cpp */; };
 		FB94ABE317DE37350081574F /* DGCursorManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9617DE37340081574F /* DGCursorManager.cpp */; };
-		FB94ABE417DE37350081574F /* DGDustData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9817DE37340081574F /* DGDustData.c */; };
+		FB94ABE417DE37350081574F /* DustData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9817DE37340081574F /* DustData.c */; };
 		FB94ABE517DE37350081574F /* DGEffectsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9A17DE37340081574F /* DGEffectsManager.cpp */; };
 		FB94ABE617DE37350081574F /* DGFeedManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9D17DE37340081574F /* DGFeedManager.cpp */; };
 		FB94ABE717DE37350081574F /* DGFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9F17DE37340081574F /* DGFontManager.cpp */; };
@@ -40,8 +40,8 @@
 		FB94ABEA17DE37350081574F /* DGRenderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA617DE37340081574F /* DGRenderManager.cpp */; };
 		FB94ABEB17DE37350081574F /* DGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA817DE37340081574F /* DGScene.cpp */; };
 		FB94ABEC17DE37350081574F /* DGScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAA17DE37340081574F /* DGScript.cpp */; };
-		FB94ABED17DE37350081574F /* DGShaderData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAC17DE37340081574F /* DGShaderData.c */; };
-		FB94ABEE17DE37350081574F /* DGSplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAE17DE37340081574F /* DGSplashData.c */; };
+		FB94ABED17DE37350081574F /* ShaderData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAC17DE37340081574F /* ShaderData.c */; };
+		FB94ABEE17DE37350081574F /* SplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAE17DE37340081574F /* SplashData.c */; };
 		FB94ABEF17DE37350081574F /* DGState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAF17DE37340081574F /* DGState.cpp */; };
 		FB94ABF017DE37350081574F /* DGSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB117DE37340081574F /* DGSystem.cpp */; };
 		FB94ABF117DE37350081574F /* DGTimerManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB417DE37340081574F /* DGTimerManager.cpp */; };
@@ -116,7 +116,7 @@
 		FB94AB9517DE37340081574F /* DGCursorLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCursorLib.h; sourceTree = "<group>"; };
 		FB94AB9617DE37340081574F /* DGCursorManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCursorManager.cpp; sourceTree = "<group>"; };
 		FB94AB9717DE37340081574F /* DGCursorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCursorManager.h; sourceTree = "<group>"; };
-		FB94AB9817DE37340081574F /* DGDustData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGDustData.c; sourceTree = "<group>"; };
+		FB94AB9817DE37340081574F /* DustData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DustData.c; sourceTree = "<group>"; };
 		FB94AB9917DE37340081574F /* DGEffectsLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGEffectsLib.h; sourceTree = "<group>"; };
 		FB94AB9A17DE37340081574F /* DGEffectsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGEffectsManager.cpp; sourceTree = "<group>"; };
 		FB94AB9B17DE37340081574F /* DGEffectsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGEffectsManager.h; sourceTree = "<group>"; };
@@ -136,9 +136,9 @@
 		FB94ABA917DE37340081574F /* DGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGScene.h; sourceTree = "<group>"; };
 		FB94ABAA17DE37340081574F /* DGScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGScript.cpp; sourceTree = "<group>"; };
 		FB94ABAB17DE37340081574F /* DGScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGScript.h; sourceTree = "<group>"; };
-		FB94ABAC17DE37340081574F /* DGShaderData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGShaderData.c; sourceTree = "<group>"; };
+		FB94ABAC17DE37340081574F /* ShaderData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ShaderData.c; sourceTree = "<group>"; };
 		FB94ABAD17DE37340081574F /* DGSlideProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSlideProxy.h; sourceTree = "<group>"; };
-		FB94ABAE17DE37340081574F /* DGSplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DGSplashData.c; sourceTree = "<group>"; };
+		FB94ABAE17DE37340081574F /* SplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SplashData.c; sourceTree = "<group>"; };
 		FB94ABAF17DE37340081574F /* DGState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGState.cpp; sourceTree = "<group>"; };
 		FB94ABB017DE37340081574F /* DGState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGState.h; sourceTree = "<group>"; };
 		FB94ABB117DE37340081574F /* DGSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGSystem.cpp; sourceTree = "<group>"; };
@@ -383,10 +383,10 @@
 		FB94AC0417DE3CE60081574F /* Data */ = {
 			isa = PBXGroup;
 			children = (
-				FB94AB9817DE37340081574F /* DGDustData.c */,
+				FB94AB9817DE37340081574F /* DustData.c */,
 				FB94ABBC17DE37350081574F /* FontData.c */,
-				FB94ABAC17DE37340081574F /* DGShaderData.c */,
-				FB94ABAE17DE37340081574F /* DGSplashData.c */,
+				FB94ABAC17DE37340081574F /* ShaderData.c */,
+				FB94ABAE17DE37340081574F /* SplashData.c */,
 			);
 			name = Data;
 			sourceTree = "<group>";
@@ -523,7 +523,7 @@
 				FB94ABE117DE37350081574F /* DGConsole.cpp in Sources */,
 				FB94ABE217DE37350081574F /* DGControl.cpp in Sources */,
 				FB94ABE317DE37350081574F /* DGCursorManager.cpp in Sources */,
-				FB94ABE417DE37350081574F /* DGDustData.c in Sources */,
+				FB94ABE417DE37350081574F /* DustData.c in Sources */,
 				FB94ABE517DE37350081574F /* DGEffectsManager.cpp in Sources */,
 				FB94ABE617DE37350081574F /* DGFeedManager.cpp in Sources */,
 				FB94ABE717DE37350081574F /* DGFontManager.cpp in Sources */,
@@ -532,8 +532,8 @@
 				FB94ABEA17DE37350081574F /* DGRenderManager.cpp in Sources */,
 				FB94ABEB17DE37350081574F /* DGScene.cpp in Sources */,
 				FB94ABEC17DE37350081574F /* DGScript.cpp in Sources */,
-				FB94ABED17DE37350081574F /* DGShaderData.c in Sources */,
-				FB94ABEE17DE37350081574F /* DGSplashData.c in Sources */,
+				FB94ABED17DE37350081574F /* ShaderData.c in Sources */,
+				FB94ABEE17DE37350081574F /* SplashData.c in Sources */,
 				FB94ABEF17DE37350081574F /* DGState.cpp in Sources */,
 				FB94ABF017DE37350081574F /* DGSystem.cpp in Sources */,
 				FB94ABF117DE37350081574F /* DGTimerManager.cpp in Sources */,
@@ -589,26 +589,31 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu89;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -616,7 +621,7 @@
 					../Libraries/Headers/freetype2,
 				);
 				LIBRARY_SEARCH_PATHS = ../Libraries/Mac;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -627,9 +632,11 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
+				CLANG_CXX_LIBRARY = "libstdc++";
+				CLANG_LINK_OBJC_RUNTIME = NO;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_CXX0X_EXTENSIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
@@ -637,10 +644,14 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu89;
+				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = YES;
+				GCC_WARN_PEDANTIC = YES;
+				GCC_WARN_SHADOW = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
@@ -648,7 +659,7 @@
 					../Libraries/Headers/freetype2,
 				);
 				LIBRARY_SEARCH_PATHS = ../Libraries/Mac;
-				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -658,10 +669,6 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../Frameworks\"",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
@@ -685,10 +692,6 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../Frameworks\"",
-				);
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";

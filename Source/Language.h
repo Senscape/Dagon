@@ -133,6 +133,11 @@
 #define kString17009 "End of file while searching for codec headers"
 #define kString17010 "Resource not set in video object"
 
+// SDL errors
+#define kString18001 "Could not create mutex"
+#define kString18002 "Could not lock mutex"
+#define kString18003 "Failed to create thread"
+
 #endif // English
 
 ///////////////////////////////

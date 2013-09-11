@@ -26,6 +26,8 @@
 ////////////////////////////////////////////////////////////
 
 Room::Room() {
+  _currentNode = NULL;
+  _hasDefaultFootstep = false;
   this->setType(kObjectRoom);
 }
 
@@ -55,7 +57,7 @@ std::vector<Audio*> Room::arrayOfAudios() {
 }
 
 Node* Room::currentNode() {
-  assert(_currentNode != nullptr);
+  assert(_currentNode != NULL);
   return _currentNode;
 }
 

@@ -15,6 +15,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <SDL2/SDL_timer.h>
+
 #include "Config.h"
 #include "Log.h"
 #include "DGVideoManager.h"
@@ -31,6 +33,9 @@ DGVideoManager::DGVideoManager() :
 {
     _isInitialized = false;
 	_isRunning = false;
+  _mutex = SDL_CreateMutex();
+  if (!_mutex)
+    log.error(kModVideo, "%s", kString18001);
 }
 
 ////////////////////////////////////////////////////////////
@@ -38,6 +43,7 @@ DGVideoManager::DGVideoManager() :
 ////////////////////////////////////////////////////////////
 
 DGVideoManager::~DGVideoManager() {
+  SDL_DestroyMutex(_mutex);
 }
 
 ////////////////////////////////////////////////////////////
@@ -46,28 +52,29 @@ DGVideoManager::~DGVideoManager() {
 
 void DGVideoManager::flush() {
 	bool done = false;
-
-    if (_isInitialized) {
-        if (!_arrayOfActiveVideos.empty()) {
-            vector<DGVideo*>::iterator it;
-            
+  if (_isInitialized) {
+    if (!_arrayOfActiveVideos.empty()) {
+      vector<DGVideo*>::iterator it;
 			while (!done) {
-                _mutexForArray.lock();
-				it = _arrayOfActiveVideos.begin();
-				done = true;
-				while (it != _arrayOfActiveVideos.end()) {
-					if ((*it)->retainCount() == 0) {
-						(*it)->unload();
-						_arrayOfActiveVideos.erase(it);
-						done = false;
-						break;
-					}
-					else it++;
-				}
-                _mutexForArray.unlock();
-			}
+        if (SDL_LockMutex(_mutex) == 0) {
+          it = _arrayOfActiveVideos.begin();
+          done = true;
+          while (it != _arrayOfActiveVideos.end()) {
+            if ((*it)->retainCount() == 0) {
+              (*it)->unload();
+              _arrayOfActiveVideos.erase(it);
+              done = false;
+              break;
+            }
+            else it++;
+          }
+          SDL_UnlockMutex(_mutex);
+        } else {
+          log.error(kModVideo, "%s", kString18002);
         }
+			}
     }
+  }
 }
 
 void DGVideoManager::init() {
@@ -79,12 +86,10 @@ void DGVideoManager::init() {
     _isInitialized = true;
 	_isRunning = true;
     
-    _videoThread = thread([&](){
-        chrono::milliseconds dura(1);
-        while (DGVideoManager::instance().update()) {
-            this_thread::sleep_for(dura);
-        }
-    });
+  _thread = SDL_CreateThread(_runThread, "VideoManager", (void*)NULL);
+  if (!_thread) {
+    log.error(kModVideo, "%s:%s", kString18003, SDL_GetError());
+  }
 }
 
 void DGVideoManager::registerVideo(DGVideo* target) {
@@ -113,51 +118,63 @@ void DGVideoManager::requestVideo(DGVideo* target) {
     }
     
     if (!isActive) {
-        _mutexForArray.lock();
+      if (SDL_LockMutex(_mutex) == 0) {
         _arrayOfActiveVideos.push_back(target);
-        _mutexForArray.unlock();
+        SDL_UnlockMutex(_mutex);
+      } else {
+        log.error(kModVideo, "%s", kString18002);
+      }
     }
 }
 
 void DGVideoManager::terminate() {
-    _isRunning = false;
-    
-    _videoThread.join();
-    
-    // WARNING: This code assumes videos are never created
-    // directly in the script
-    if (!_arrayOfVideos.empty()) {
-        vector<DGVideo*>::iterator it;
-        
-        _mutexForArray.lock();
-        it = _arrayOfVideos.begin();
-        
-        while (it != _arrayOfVideos.end()) {
-            delete *it;
-            it++;
-        }
-        _mutexForArray.unlock();
+  _isRunning = false;
+  
+  int threadReturnValue;
+  SDL_WaitThread(_thread, &threadReturnValue);
+  
+  // WARNING: This code assumes videos are never created
+  // directly in the script
+  if (!_arrayOfVideos.empty()) {
+    if (SDL_LockMutex(_mutex) == 0) {
+      vector<DGVideo*>::iterator it = _arrayOfVideos.begin();
+      while (it != _arrayOfVideos.end()) {
+        delete *it;
+        it++;
+      }
+      SDL_UnlockMutex(_mutex);
+    } else {
+      log.error(kModVideo, "%s", kString18002);
     }
+  }
 }
 
 bool DGVideoManager::update() {
-    if (_isRunning) {
-        if (!_arrayOfActiveVideos.empty()) {
-            vector<DGVideo*>::iterator it;
-            
-            _mutexForArray.lock();
-            it = _arrayOfActiveVideos.begin();
-            
-            while (it != _arrayOfActiveVideos.end()) {
-                (*it)->update();
-                it++;
-            }
-            
-            _mutexForArray.unlock();
+  if (_isRunning) {
+    if (!_arrayOfActiveVideos.empty()) {
+      if (SDL_LockMutex(_mutex) == 0) {
+        vector<DGVideo*>::iterator it = _arrayOfActiveVideos.begin();
+        while (it != _arrayOfActiveVideos.end()) {
+          (*it)->update();
+          it++;
         }
-
-		return true;
+        SDL_UnlockMutex(_mutex);
+      } else {
+        log.error(kModVideo, "%s", kString18002);
+      }
     }
-
+    return true;
+  }
 	return false;
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Private methods
+////////////////////////////////////////////////////////////
+
+int DGVideoManager::_runThread(void *ptr) {
+  while (DGVideoManager::instance().update()) {
+    SDL_Delay(1);
+  }
+  return 0;
 }

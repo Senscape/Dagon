@@ -18,6 +18,9 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <SDL2/SDL_mutex.h>
+#include <SDL2/SDL_thread.h>
+
 #include "Platform.h"
 #include "DGVideo.h"
 
@@ -36,14 +39,15 @@ class DGVideoManager {
     Config& config;
     Log& log;
     
-    std::thread _videoThread;
-    
-    std::mutex _mutexForArray;    
+    SDL_mutex* _mutex;
+    SDL_Thread* _thread;
     std::vector<DGVideo*> _arrayOfVideos;
     std::vector<DGVideo*> _arrayOfActiveVideos;
     
     bool _isInitialized;
 	bool _isRunning;
+  
+    static int _runThread(void *ptr);
     
     DGVideoManager();
     DGVideoManager(DGVideoManager const&);

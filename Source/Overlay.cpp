@@ -28,6 +28,7 @@
 Overlay::Overlay() {
   _position.x = 0;
   _position.y = 0;
+  _isIteratingBackwards = false;
   this->disable(); // Overlays are disabled by default
   this->setType(kObjectOverlay);
 }

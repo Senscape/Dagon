@@ -70,12 +70,12 @@ class Button : public Image {
   Action* _action;
   Texture* _onHoverTexture;
   Font* _font;
-  bool _hasAction = false;
-  bool _hasFont = false;
-  bool _hasOnHoverTexture = false;
-  bool _hasText = false;
+  bool _hasAction;
+  bool _hasFont;
+  bool _hasOnHoverTexture;
+  bool _hasText;
   std::string _text;
-  int _textColor = kColorWhite;
+  int _textColor;
   
   Button(const Button&);
   void operator=(const Button&);

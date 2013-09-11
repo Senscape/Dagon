@@ -34,67 +34,63 @@ void DGSystem::findPaths() {
 }
 
 bool DGSystem::init() {
-  if (!_isInitialized) {
-    log.trace(kModSystem, "%s", kString13001);
-    SDL_version version;
-    SDL_GetVersion(&version);
-    log.info(kModSystem, "%s: %d.%d", kString13003,
-              version.major, version.minor);
-    
-    SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_TIMER);
-    Uint32 videoFlags = SDL_WINDOW_OPENGL;
+  log.trace(kModSystem, "%s", kString13001);
+  SDL_version version;
+  SDL_GetVersion(&version);
+  log.info(kModSystem, "%s: %d.%d", kString13003,
+            version.major, version.minor);
+  
+  SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_TIMER);
+  Uint32 videoFlags = SDL_WINDOW_OPENGL;
 
-    if (!config.displayWidth || !config.displayHeight) {
-      if (config.fullscreen) {
-        SDL_DisplayMode displayMode;
-        SDL_GetCurrentDisplayMode(0, &displayMode);
-        config.displayWidth = displayMode.w;
-        config.displayHeight = displayMode.h;
-        videoFlags = videoFlags | SDL_WINDOW_FULLSCREEN;
-      } else {
-        // Use a third of the screen
-        SDL_DisplayMode desktopMode;
-        SDL_GetDesktopDisplayMode(0, &desktopMode);
-        config.displayWidth = desktopMode.w / 1.5;
-        config.displayHeight = desktopMode.h / 1.5;
-        videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
-      }
+  if (!config.displayWidth || !config.displayHeight) {
+    if (config.fullscreen) {
+      SDL_DisplayMode displayMode;
+      SDL_GetCurrentDisplayMode(0, &displayMode);
+      config.displayWidth = displayMode.w;
+      config.displayHeight = displayMode.h;
+      videoFlags = videoFlags | SDL_WINDOW_FULLSCREEN;
     } else {
-      if (config.fullscreen) {
-        videoFlags = videoFlags | SDL_WINDOW_FULLSCREEN;
-      } else {
-        videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
-      }
+      // Use a third of the screen
+      SDL_DisplayMode desktopMode;
+      SDL_GetDesktopDisplayMode(0, &desktopMode);
+      config.displayWidth = desktopMode.w / 1.5;
+      config.displayHeight = desktopMode.h / 1.5;
+      videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
     }
-    
-    _window = SDL_CreateWindow("Dagon", SDL_WINDOWPOS_CENTERED,
-                               SDL_WINDOWPOS_CENTERED,
-                               config.displayWidth, config.displayHeight,
-                               videoFlags);
-    _context = SDL_GL_CreateContext(_window);
-    
-    if (_window == nullptr) {
-      log.error(kModSystem, "%s", kString13010);
-      return false;
+  } else {
+    if (config.fullscreen) {
+      videoFlags = videoFlags | SDL_WINDOW_FULLSCREEN;
+    } else {
+      videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
     }
-    
-    // Set vertical sync according to our configuration
-    if (config.verticalSync) {
-      SDL_GL_SetSwapInterval(1);
-    }
-    else {
-      // Force our own frame limiter on
-      config.frameLimiter = true;
-      SDL_GL_SetSwapInterval(0);
-    }
-    
-    SDL_WarpMouseInWindow(_window, config.displayWidth / 2,
-                          config.displayHeight / 2);
-    SDL_ShowCursor(false);
-    _isInitialized = true;
-    }
-    else log.warning(kModSystem, "%s", kString13004);
-    
+  }
+  
+  _window = SDL_CreateWindow("Dagon", SDL_WINDOWPOS_CENTERED,
+                             SDL_WINDOWPOS_CENTERED,
+                             config.displayWidth, config.displayHeight,
+                             videoFlags);
+  _context = SDL_GL_CreateContext(_window);
+  
+  if (!_window) {
+    log.error(kModSystem, "%s", kString13010);
+    return false;
+  }
+  
+  // Set vertical sync according to our configuration
+  if (config.verticalSync) {
+    SDL_GL_SetSwapInterval(1);
+  }
+  else {
+    // Force our own frame limiter on
+    config.frameLimiter = true;
+    SDL_GL_SetSwapInterval(0);
+  }
+  
+  SDL_WarpMouseInWindow(_window, config.displayWidth / 2,
+                        config.displayHeight / 2);
+  SDL_ShowCursor(false);
+  
     return true;
 }
 
@@ -200,8 +196,6 @@ void DGSystem::terminate() {
     SDL_SetWindowFullscreen(_window, 0);
   SDL_DestroyWindow(_window);
   SDL_Quit();
-  
-  _isInitialized = false;
 }
 
 void DGSystem::toggleFullscreen() {

@@ -18,8 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <mutex>
-
+#include <SDL2/SDL_mutex.h>
 #include <theora/theora.h>
 
 #include "Object.h"
@@ -92,8 +91,8 @@ class DGVideo : public Object {
     double _lastTime;
     int _state;
     
-    std::mutex _mutex;
-    
+  SDL_mutex* _mutex;
+  
     // Eventually all file management will be handled by a DGResourceManager object
     char _resource[kMaxFileLength];
     

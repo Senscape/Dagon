@@ -15,6 +15,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <SDL2/SDL_timer.h>
+
 #include "DGAudioManager.h"
 #include "Config.h"
 #include "Log.h"
@@ -29,8 +31,11 @@ DGAudioManager::DGAudioManager()  :
     config(Config::instance()),
     log(Log::instance())
 {
-    _isInitialized = false;
+  _isInitialized = false;
 	_isRunning = false;
+  _mutex = SDL_CreateMutex();
+  if (!_mutex)
+    log.error(kModAudio, "%s", kString18001);
 }
 
 ////////////////////////////////////////////////////////////
@@ -38,6 +43,7 @@ DGAudioManager::DGAudioManager()  :
 ////////////////////////////////////////////////////////////
 
 DGAudioManager::~DGAudioManager() {
+  SDL_DestroyMutex(_mutex);
 }
 
 ////////////////////////////////////////////////////////////
@@ -47,67 +53,69 @@ DGAudioManager::~DGAudioManager() {
 void DGAudioManager::clear() {
     if (_isInitialized) {
         if (!_arrayOfActiveAudios.empty()) {
-            vector<Audio*>::iterator it;
-            
-            _mutexForArray.lock();
+          vector<Audio*>::iterator it;
+          if (SDL_LockMutex(_mutex) == 0) {
             it = _arrayOfActiveAudios.begin();
-            
             while (it != _arrayOfActiveAudios.end()) {
-                (*it)->release();
-                
-                it++;
+              (*it)->release();
+              
+              it++;
             }
-            _mutexForArray.unlock();
+            SDL_UnlockMutex(_mutex);
+          } else {
+            log.error(kModAudio, "%s", kString18002);
+          }
         }
     }
 }
 
 void DGAudioManager::flush() {
-	bool done = false;
-
-    if (_isInitialized) {
-        if (!_arrayOfActiveAudios.empty()) {
-            vector<Audio*>::iterator it;
-            
+  if (_isInitialized) {
+    if (!_arrayOfActiveAudios.empty()) {
+      vector<Audio*>::iterator it;
+      bool done = false;     
 			while (!done) {
-                _mutexForArray.lock();
-				it = _arrayOfActiveAudios.begin();
-				done = true;
-				while ((it != _arrayOfActiveAudios.end())) {
-					if ((*it)->retainCount() == 0) {
-						if ((*it)->state() == kAudioStopped) { // Had to move this outside the switch
-							// TODO: Automatically flush stopped and non-retained audios after
-							// n update cycles
-							(*it)->unload();
-							_arrayOfActiveAudios.erase(it);
-							done = false;
-							break;
-						}
-						else {
-							switch ((*it)->state()) {
-								case kAudioPlaying:
-									(*it)->fadeOut();
-									it++;
-									break;
-								case kAudioPaused:
-								default:
-									it++;
-									break;
-							}
-						}
-					}
-					else it++;
-				}
-                _mutexForArray.unlock();
-			}
+        if (SDL_LockMutex(_mutex) == 0) {
+          it = _arrayOfActiveAudios.begin();
+          done = true;
+          while ((it != _arrayOfActiveAudios.end())) {
+            if ((*it)->retainCount() == 0) {
+              if ((*it)->state() == kAudioStopped) { // Had to move this outside the switch
+                // TODO: Automatically flush stopped and non-retained audios after
+                // n update cycles
+                (*it)->unload();
+                _arrayOfActiveAudios.erase(it);
+                done = false;
+                break;
+              }
+              else {
+                switch ((*it)->state()) {
+                  case kAudioPlaying:
+                    (*it)->fadeOut();
+                    it++;
+                    break;
+                  case kAudioPaused:
+                  default:
+                    it++;
+                    break;
+                }
+              }
+            }
+            else it++;
+          }
+          SDL_UnlockMutex(_mutex);
+        } else {
+          log.error(kModAudio, "%s", kString18002);
         }
+			}
     }
+  }
 }
 
 void DGAudioManager::init() {
-    log.trace(kModAudio, "%s", kString16001);
+  log.trace(kModAudio, "%s", kString16001);
     
-    char deviceName[256];
+  char deviceName[256];
 	char *defaultDevice;
 	char *deviceList;
 	char *devices[12];
@@ -186,7 +194,7 @@ void DGAudioManager::init() {
 	alListenerfv(AL_VELOCITY, listenerVel);
 	alListenerfv(AL_ORIENTATION, listenerOri);
     
-    ALint error = alGetError();
+  ALint error = alGetError();
     
 	if (error != AL_NO_ERROR) {
 		log.error(kModAudio, "%s: init (%d)", kString16006, error);
@@ -198,13 +206,11 @@ void DGAudioManager::init() {
     
     _isInitialized = true;
 	_isRunning = true;
-    
-    _audioThread = thread([&](){
-        chrono::milliseconds dura(1);
-        while (DGAudioManager::instance().update()) {
-            this_thread::sleep_for(dura);
-        }
-    });
+  
+  _thread = SDL_CreateThread(_runThread, "AudioManager", (void*)NULL);
+  if (!_thread) {
+    log.error(kModAudio, "%s:%s", kString18003, SDL_GetError());
+  }
 }
 
 void DGAudioManager::registerAudio(Audio* target) {
@@ -230,14 +236,16 @@ void DGAudioManager::requestAudio(Audio* target) {
             isActive = true;
             break;
         }
-        
         it++;
     }
     
     if (!isActive) {
-        _mutexForArray.lock();
+      if (SDL_LockMutex(_mutex) == 0) {
         _arrayOfActiveAudios.push_back(target);
-        _mutexForArray.unlock();
+        SDL_UnlockMutex(_mutex);
+      } else {
+        log.error(kModAudio, "%s", kString18002);
+      }
     }
     
     // FIXME: Not very elegant. Must implement a state condition for
@@ -254,55 +262,65 @@ void DGAudioManager::setOrientation(float* orientation) {
 }
 
 void DGAudioManager::terminate() {
-    // FIXME: Here it's important to determine if the
-    // audio was created by Lua or by another class
-    
-    // Each audio object should unregister itself if
-    // destroyed
-    _isRunning = false;
-    
-    _audioThread.join();
-    
-    if (!_arrayOfAudios.empty()) {
-        vector<Audio*>::iterator it;
-        
-        _mutexForArray.lock();
-        
-        it = _arrayOfAudios.begin();
-        while (it != _arrayOfAudios.end()) {
-            // FIXME: Should delete here and let the audio object unload itself
-			(*it)->unload();
-            it++;
-        }
-        _mutexForArray.unlock();
+  // FIXME: Here it's important to determine if the
+  // audio was created by Lua or by another class
+  
+  // Each audio object should unregister itself if
+  // destroyed
+  _isRunning = false;
+  
+  int threadReturnValue;
+  SDL_WaitThread(_thread, &threadReturnValue);
+  
+  if (!_arrayOfAudios.empty()) {
+    if (SDL_LockMutex(_mutex) == 0) {
+      vector<Audio*>::iterator it = _arrayOfAudios.begin();
+      while (it != _arrayOfAudios.end()) {
+        // FIXME: Should delete here and let the audio object unload itself
+        (*it)->unload();
+        it++;
+      }
+      SDL_UnlockMutex(_mutex);
+    } else {
+      log.error(kModAudio, "%s", kString18002);
     }
-    
-    // Now we shut down OpenAL completely
-    if (_isInitialized) {
-        alcMakeContextCurrent(NULL);
-        alcDestroyContext(_alContext);
-        alcCloseDevice(_alDevice);
-    }
+  }
+
+  // Now we shut down OpenAL completely
+  if (_isInitialized) {
+      alcMakeContextCurrent(NULL);
+      alcDestroyContext(_alContext);
+      alcCloseDevice(_alDevice);
+  }
 }
 
 // Asynchronous method
 bool DGAudioManager::update() {
-    if (_isRunning) {
-        if (!_arrayOfActiveAudios.empty()) {
-            vector<Audio*>::iterator it;
-            
-            _mutexForArray.lock();
-            it = _arrayOfActiveAudios.begin();
-            
-            while (it != _arrayOfActiveAudios.end()) {
-                (*it)->update();
-                it++;
-            }
-            _mutexForArray.unlock();
+  if (_isRunning) {
+    if (!_arrayOfActiveAudios.empty()) {
+      if (SDL_LockMutex(_mutex) == 0) {
+        vector<Audio*>::iterator it = _arrayOfActiveAudios.begin();
+        while (it != _arrayOfActiveAudios.end()) {
+          (*it)->update();
+          it++;
         }
-
-		return true;
+        SDL_UnlockMutex(_mutex);
+      } else {
+        log.error(kModAudio, "%s", kString18002);
+      }
     }
-
+		return true;
+  }
 	return false;
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Private methods
+////////////////////////////////////////////////////////////
+
+int DGAudioManager::_runThread(void *ptr) {
+  while (DGAudioManager::instance().update()) {
+    SDL_Delay(1);
+  }
+  return 0;
 }

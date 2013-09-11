@@ -30,7 +30,18 @@ Spot::Spot(std::vector<int> withArrayOfCoordinates,
                unsigned int onFace, int withFlags) {
   _arrayOfCoordinates = withArrayOfCoordinates;
   _onFace = onFace;
+  _color = kColorBlack;
   _flags = withFlags;
+  _hasAction = false;
+  _hasAudio = false;
+  _hasColor = false;
+  _hasTexture = false;
+  _hasVideo = false;
+  _isPlaying = false;
+  _volume = 1.0;
+  _xOrigin = 0;
+  _yOrigin = 0;
+  _zOrder = 0; // For future use
   this->setType(kObjectSpot);
 }
 

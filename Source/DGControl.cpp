@@ -70,6 +70,7 @@ DGControl::DGControl() :
     _sleepTimer = 0;
     
     _isInitialized = false;
+  _isShowingSplash = false;
     _isShuttingDown = false;
 	_isRunning = false;
     

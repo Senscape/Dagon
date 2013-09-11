@@ -116,7 +116,7 @@ class DGControl {
     bool _directControlActive;
     bool _isInitialized;
 	bool _isRunning;
-    bool _isShowingSplash = false; // Move this to state manager
+    bool _isShowingSplash; // Move this to state manager
     bool _isShuttingDown;
 	int _shutdownTimer;
     int _sleepTimer;

@@ -79,9 +79,9 @@ class Node : public Object {
   
   Audio* _footstep;
   Node* _previousNode;
-  bool _hasFootstep = false;
-  bool _isSlide = false;
-  int _slideReturn = 0;
+  bool _hasFootstep;
+  bool _isSlide;
+  int _slideReturn;
     
   void _link(unsigned int direction, Action* action);
   

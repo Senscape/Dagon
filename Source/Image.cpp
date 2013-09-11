@@ -26,6 +26,7 @@
 Image::Image() :
   config(Config::instance())
 {
+  _hasTexture = false;
   _rect.origin.x = 0;
   _rect.origin.y = 0; 
   _rect.size.width = 0;

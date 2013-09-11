@@ -18,16 +18,15 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <mutex>
 #include <string>
 
 #include <AL/al.h>
 #include <AL/alc.h>
-
 #define OV_EXCLUDE_STATIC_CALLBACKS
 #include <ogg/ogg.h>
 #include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>
+#include <SDL2/SDL_mutex.h>
 
 #include "Defines.h"
 #include "Object.h"
@@ -99,15 +98,15 @@ class Audio : public Object {
   Log& log;
   
   Audio* _matchedAudio;
-  std::mutex _mutex;
+  SDL_mutex* _mutex;
  
   // Eventually all file management will be handled by a separate class
   Resource _resource;
   
-  bool _isLoaded = false;
-  bool _isLoopable = false;
-  bool _isMatched = false;
-  int _state = kAudioInitial;
+  bool _isLoaded;
+  bool _isLoopable;
+  bool _isMatched;
+  int _state;
   
   ALuint _alBuffers[kAudioBuffers];
 	ALenum _alFormat;

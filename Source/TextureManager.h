@@ -45,8 +45,6 @@ class TextureManager {
     Config& config;
     Log& log;
     
-    std::thread _preloaderThread;
-    
     std::vector<Texture*> _arrayOfActiveTextures;
     std::vector<Texture*> _arrayOfTextures;
 

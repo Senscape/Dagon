@@ -94,18 +94,18 @@ class Spot : public Object {
   std::vector<int> _arrayOfCoordinates;
   unsigned int _onFace;
   
-  int _color = kColorBlack;
+  int _color;
   int _flags;
-  bool _hasAction = false;
-  bool _hasAudio = false;
-  bool _hasColor = false;
-  bool _hasTexture = false;
-  bool _hasVideo = false;
-  bool _isPlaying = false;
-  float _volume = 1.0;
-  int _xOrigin = 0;
-  int _yOrigin = 0;
-  int _zOrder = 0; // For future use
+  bool _hasAction;
+  bool _hasAudio;
+  bool _hasColor;
+  bool _hasTexture;
+  bool _hasVideo;
+  bool _isPlaying;
+  float _volume;
+  int _xOrigin;
+  int _yOrigin;
+  int _zOrder; // For future use
   
   Spot(const Spot&);
   void operator=(const Spot&);

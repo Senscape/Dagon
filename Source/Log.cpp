@@ -18,6 +18,7 @@
 #include <cassert>
 #include <cstdarg>
 #include <cstdio>
+#include <ctime>
 #include <iostream>
 
 #include "Colors.h"
@@ -163,7 +164,8 @@ void Log::_log(LogData* data) {
   if (config.log) {
     if (!_filestr.is_open())
       _filestr.open(config.path(kPathUserData, kDefLogFile,
-                                kObjectGeneric), std::ofstream::app);
+                    kObjectGeneric).c_str(),
+                    std::ofstream::app);
       
     time_t now = time(0);
     struct tm* tm = localtime(&now);
@@ -240,7 +242,7 @@ void Log::_log(LogData* data) {
       }
     }
     
-    _filestr << data->line << std::endl;
+    _filestr << data->line.c_str() << std::endl;
   }
   
   if (_history.size() == kMaxLogHistory)
@@ -249,5 +251,5 @@ void Log::_log(LogData* data) {
   _history.push_back(*data);
   
   if (config.debugMode)
-    std::cout << data->line << std::endl; // Echo to console
+    std::cout << data->line.c_str() << std::endl; // Echo to console
 }

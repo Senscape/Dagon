@@ -40,7 +40,6 @@ class DGSystem {
     SDL_GLContext _context;
     SDL_Window *_window;
 
-    bool _isInitialized = false;
     double _calculateFrames(double theInterval);
     
 public:

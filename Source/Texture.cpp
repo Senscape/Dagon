@@ -37,8 +37,15 @@ Texture::Texture() :
   config(Config::instance()),
   log(Log::instance())
 {
+  _hasResource = false;
+	_isBitmapLoaded = false;
+	_isLoaded = false;
+  _usageCount = 0;
   _compressionLevel = config.texCompression;
-  this->setType(kObjectTexture);  
+  this->setType(kObjectTexture);
+  _mutex = SDL_CreateMutex();
+  if (!_mutex)
+    log.error(kModTexture, "%s", kString18001);
 }
 
 Texture::Texture(int width, int height, int depth) :
@@ -78,6 +85,9 @@ Texture::Texture(int width, int height, int depth) :
   _usageCount = 1;
   _compressionLevel = config.texCompression;
   this->setType(kObjectTexture);
+  _mutex = SDL_CreateMutex();
+  if (!_mutex)
+    log.error(kModTexture, "%s", kString18001);
 }
 
 ////////////////////////////////////////////////////////////
@@ -86,6 +96,7 @@ Texture::Texture(int width, int height, int depth) :
 
 Texture::~Texture() {
   this->unload();
+  SDL_DestroyMutex(_mutex);
 }
 
 ////////////////////////////////////////////////////////////
@@ -152,173 +163,180 @@ void Texture::setResource(std::string fromFileName) {
 ////////////////////////////////////////////////////////////
 
 void Texture::bind() {
-  std::lock_guard<std::mutex> guard(_mutex);
-  
-  if (_isLoaded)
-    glBindTexture(GL_TEXTURE_2D, _ident);
+  if (SDL_LockMutex(_mutex) == 0) {
+    if (_isLoaded)
+      glBindTexture(GL_TEXTURE_2D, _ident);
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModTexture, "%s", kString18002);
+  }
 }
 
 void Texture::clear() {
-  std::lock_guard<std::mutex> guard(_mutex);
-  
-  _bitmap = new GLubyte[_width * _height * _depth];
-  glBindTexture(GL_TEXTURE_2D, _ident);
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height,
-                  GL_RGB, GL_UNSIGNED_BYTE, _bitmap);
-  delete[] _bitmap;
+  if (SDL_LockMutex(_mutex) == 0) {
+    _bitmap = new GLubyte[_width * _height * _depth];
+    glBindTexture(GL_TEXTURE_2D, _ident);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, _width, _height,
+                    GL_RGB, GL_UNSIGNED_BYTE, _bitmap);
+    delete[] _bitmap;
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModTexture, "%s", kString18002);
+  }
 }
 
 void Texture::load() {
-  std::lock_guard<std::mutex> guard(_mutex);
-    
-  if (_isLoaded)
-    return;
-    
-  if (!_hasResource) {
-    log.error(kModTexture, "%s: %s", kString10005, this->name().c_str());
-    return;
-  }
-    
-  FILE* fh = fopen(_resource.c_str(), "rb");
-  if (fh != NULL) {
-    char magic[10]; // Used to identity file types
-    if (fread(&magic, sizeof(magic), 1, fh) == 0) {
-    // Couldn't read magic number
-    log.error(kModTexture, "%s: %s", kString10003, _resource.c_str());
-    }
+  if (SDL_LockMutex(_mutex) == 0) {
+    if (!_isLoaded) {
+      if (!_hasResource) {
+        log.error(kModTexture, "%s: %s", kString10005, this->name().c_str());
+      }
+      
+      FILE* fh = fopen(_resource.c_str(), "rb");
+      if (fh != NULL) {
+        char magic[10]; // Used to identity file types
+        if (fread(&magic, sizeof(magic), 1, fh) == 0) {
+          // Couldn't read magic number
+          log.error(kModTexture, "%s: %s", kString10003, _resource.c_str());
+        }
         
-    if (memcmp(TEXIdent, &magic, 7) == 0) { // Handle our own TEX format
-      TEXMainHeader header;
-      TEXSubHeader subheader;
-      
-      // Read the main header
-      fseek(fh, 8, SEEK_SET); // Skip identifier
-      fread(&header, 1, sizeof(header), fh);
-      _width = static_cast<GLuint>(header.width);
-      _height = static_cast<GLuint>(header.height);
-            
-      // Skip subheaders based on the index
-      if (_indexInBundle) {
-        for (int i = 0; i < _indexInBundle; i++) {
+        if (memcmp(TEXIdent, &magic, 7) == 0) { // Handle our own TEX format
+          TEXMainHeader header;
+          TEXSubHeader subheader;
+          
+          // Read the main header
+          fseek(fh, 8, SEEK_SET); // Skip identifier
+          fread(&header, 1, sizeof(header), fh);
+          _width = static_cast<GLuint>(header.width);
+          _height = static_cast<GLuint>(header.height);
+          
+          // Skip subheaders based on the index
+          if (_indexInBundle) {
+            for (int i = 0; i < _indexInBundle; i++) {
+              fread(&subheader, 1, sizeof(subheader), fh);
+              fseek(fh, sizeof(char) * subheader.size, SEEK_CUR);
+            }
+          }
+          
+          // Read the subheader
           fread(&subheader, 1, sizeof(subheader), fh);
-          fseek(fh, sizeof(char) * subheader.size, SEEK_CUR);
+          _depth = static_cast<GLuint>(subheader.depth);
+          GLint size = static_cast<GLint>(subheader.size);
+          GLint internalFormat = static_cast<GLint>(subheader.format);
+          
+          // Get the bitmap
+          _bitmap = new GLubyte[size];
+          fread(_bitmap, 1, sizeof(GLubyte) * size, fh);
+          
+          glGenTextures(1, &_ident);
+          glBindTexture(GL_TEXTURE_2D, _ident);
+          
+          // Detect the compression level
+          if (header.compressionLevel) {
+            GLint compressed;
+            glCompressedTexImage2D(GL_TEXTURE_2D, 0, internalFormat,
+                                   _width, _height, 0, size, _bitmap);
+            glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED,
+                                     &compressed);
+            if (compressed == GL_TRUE) {
+              _isLoaded = true;
+            } else {
+              log.error(kModTexture, "%s: %s", kString10003, fh);
+            }
+          } else {
+            // Note that we only support RGB textures
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, _width, _height,
+                         0, GL_RGB, GL_UNSIGNED_BYTE, _bitmap);
+            _isLoaded = true;
+          }
+          
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+          glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+          delete[] _bitmap;
+        } else { // Let stb_image load the texture
+          if (!_isBitmapLoaded) {
+            fseek(fh, 0, SEEK_SET);
+            int x, y, comp;
+            _bitmap = static_cast<GLubyte*>(stbi_load_from_file(fh, &x, &y,
+                                                                &comp,
+                                                                STBI_default));
+            _width = x;
+            _height = y;
+            _depth = comp;
+          }
+          if (_bitmap) {
+            GLint format = 0, internalFormat = 0;
+            switch (_depth) {
+              case STBI_grey: {
+                format = GL_LUMINANCE;
+                if (_compressionLevel) {
+                  internalFormat = GL_COMPRESSED_LUMINANCE;
+                } else {
+                  internalFormat = GL_LUMINANCE;
+                }
+                break;
+              }
+              case STBI_grey_alpha: {
+                format = GL_LUMINANCE_ALPHA;
+                if (_compressionLevel) {
+                  internalFormat = GL_COMPRESSED_LUMINANCE_ALPHA;
+                } else {
+                  internalFormat = GL_LUMINANCE_ALPHA;
+                }
+                break;
+              }
+              case STBI_rgb: {
+                format = GL_RGB;
+                if (_compressionLevel) {
+                  internalFormat = GL_COMPRESSED_RGB;
+                } else {
+                  internalFormat = GL_RGB;
+                }
+                break;
+              }
+              case STBI_rgb_alpha: {
+                format = GL_RGBA;
+                if (_compressionLevel) {
+                  internalFormat = GL_COMPRESSED_RGBA;
+                } else {
+                  internalFormat = GL_RGBA;
+                }
+                break;
+              }
+              default: {
+                log.warning(kModTexture, "%s: (%s) %d", kString10004,
+                            _resource.c_str(), _depth);
+                break;
+              }
+            }
+            glGenTextures(1, &_ident);
+            glBindTexture(GL_TEXTURE_2D, _ident);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, _width, _height,
+                         0, format, GL_UNSIGNED_BYTE, _bitmap);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            free(_bitmap);
+            _isBitmapLoaded = false;
+            _isLoaded = true;
+          } else {
+            // Nothing loaded
+            log.error(kModTexture, "%s: (%s) %s", kString10002,
+                      _resource.c_str(), stbi_failure_reason());
+          }
         }
-      }
-      
-      // Read the subheader
-      fread(&subheader, 1, sizeof(subheader), fh);
-      _depth = static_cast<GLuint>(subheader.depth);
-      GLint size = static_cast<GLint>(subheader.size);
-      GLint internalFormat = static_cast<GLint>(subheader.format);
-      
-      // Get the bitmap
-      _bitmap = new GLubyte[size];
-      fread(_bitmap, 1, sizeof(GLubyte) * size, fh);
-            
-      glGenTextures(1, &_ident);
-      glBindTexture(GL_TEXTURE_2D, _ident);
-      
-      // Detect the compression level
-      if (header.compressionLevel) {
-        GLint compressed;
-        glCompressedTexImage2D(GL_TEXTURE_2D, 0, internalFormat,
-                               _width, _height, 0, size, _bitmap);
-        glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_COMPRESSED,
-                                 &compressed);
-        if (compressed == GL_TRUE) {
-          _isLoaded = true;
-        } else {
-          log.error(kModTexture, "%s: %s", kString10003, fh);
-        }
+        fclose(fh);
       } else {
-        // Note that we only support RGB textures
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, _width, _height,
-                     0, GL_RGB, GL_UNSIGNED_BYTE, _bitmap);
-        _isLoaded = true;
-      }
-      
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-      delete[] _bitmap;
-    } else { // Let stb_image load the texture
-      if (!_isBitmapLoaded) {
-        fseek(fh, 0, SEEK_SET);
-        int x, y, comp;
-        _bitmap = static_cast<GLubyte*>(stbi_load_from_file(fh, &x, &y,
-                                                            &comp,
-                                                            STBI_default));
-        _width = x;
-        _height = y;
-        _depth = comp;
-      }
-      if (_bitmap) {
-        GLint format = 0, internalFormat = 0;
-        switch (_depth) {
-          case STBI_grey: {
-            format = GL_LUMINANCE;				
-            if (_compressionLevel) {
-              internalFormat = GL_COMPRESSED_LUMINANCE;
-            } else {
-              internalFormat = GL_LUMINANCE;
-            }
-            break;
-          }
-          case STBI_grey_alpha: {
-            format = GL_LUMINANCE_ALPHA;					
-            if (_compressionLevel) {
-              internalFormat = GL_COMPRESSED_LUMINANCE_ALPHA;
-            } else {
-              internalFormat = GL_LUMINANCE_ALPHA;
-            }
-            break;
-          }
-          case STBI_rgb: {
-            format = GL_RGB;					
-            if (_compressionLevel) {
-              internalFormat = GL_COMPRESSED_RGB;
-            } else {
-              internalFormat = GL_RGB;
-            }
-            break;
-          }
-          case STBI_rgb_alpha: {
-            format = GL_RGBA;
-            if (_compressionLevel) {
-              internalFormat = GL_COMPRESSED_RGBA;
-            } else {
-              internalFormat = GL_RGBA;
-            }
-            break;
-          }
-          default: {
-            log.warning(kModTexture, "%s: (%s) %d", kString10004,
-                        _resource.c_str(), _depth);
-            break;
-          }
-        }
-        glGenTextures(1, &_ident);
-        glBindTexture(GL_TEXTURE_2D, _ident);
-        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, _width, _height,
-                     0, format, GL_UNSIGNED_BYTE, _bitmap);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        free(_bitmap);
-        _isBitmapLoaded = false;
-        _isLoaded = true;
-      } else {
-        // Nothing loaded
-        log.error(kModTexture, "%s: (%s) %s", kString10002,
-                  _resource.c_str(), stbi_failure_reason());
+        // File not found
+        log.error(kModTexture, "%s: %s", kString10001, _resource.c_str());
       }
     }
-    fclose(fh);
+    SDL_UnlockMutex(_mutex);
   } else {
-    // File not found
-    log.error(kModTexture, "%s: %s", kString10001, _resource.c_str());
+    log.error(kModTexture, "%s", kString18002);
   }
 }
 
@@ -336,74 +354,73 @@ void Texture::loadBitmap() {
 }
 
 void Texture::loadFromMemory(const unsigned char* dataToLoad, long size) {
-  if (_isLoaded)
-    return;
-  
-  int x, y, comp;
-  _bitmap = static_cast<GLubyte*>(stbi_load_from_memory(dataToLoad, (int)size,
-                                                        &x, &y, &comp,
-                                                        STBI_default));
-  if (_bitmap) {
-    _width = x;
-    _height = y;
-    _depth = comp;
-    
-    GLint format = 0, internalFormat = 0;
-    switch (comp) {
-      case STBI_grey: {
-        format = GL_LUMINANCE;
-        if (_compressionLevel) {
-          internalFormat = GL_COMPRESSED_LUMINANCE;
-        } else {
-          internalFormat = GL_LUMINANCE;
+  if (!_isLoaded) {
+    int x, y, comp;
+    _bitmap = static_cast<GLubyte*>(stbi_load_from_memory(dataToLoad, (int)size,
+                                                          &x, &y, &comp,
+                                                          STBI_default));
+    if (_bitmap) {
+      _width = x;
+      _height = y;
+      _depth = comp;
+      
+      GLint format = 0, internalFormat = 0;
+      switch (comp) {
+        case STBI_grey: {
+          format = GL_LUMINANCE;
+          if (_compressionLevel) {
+            internalFormat = GL_COMPRESSED_LUMINANCE;
+          } else {
+            internalFormat = GL_LUMINANCE;
+          }
+          break;
         }
-        break;
-      }
-      case STBI_grey_alpha: {
-        format = GL_LUMINANCE_ALPHA;
-        if (_compressionLevel) {
-          internalFormat = GL_COMPRESSED_LUMINANCE_ALPHA;
-        } else {
-          internalFormat = GL_LUMINANCE_ALPHA;
+        case STBI_grey_alpha: {
+          format = GL_LUMINANCE_ALPHA;
+          if (_compressionLevel) {
+            internalFormat = GL_COMPRESSED_LUMINANCE_ALPHA;
+          } else {
+            internalFormat = GL_LUMINANCE_ALPHA;
+          }
+          break;
         }
-        break;
-      }
-      case STBI_rgb: {
-        format = GL_RGB;
-        if (_compressionLevel) {
-          internalFormat = GL_COMPRESSED_RGB;
-        } else {
-          internalFormat = GL_RGB;
+        case STBI_rgb: {
+          format = GL_RGB;
+          if (_compressionLevel) {
+            internalFormat = GL_COMPRESSED_RGB;
+          } else {
+            internalFormat = GL_RGB;
+          }
+          break;
         }
-        break;
-      }
-      case STBI_rgb_alpha: {
-        format = GL_RGBA;
-        if (_compressionLevel) {
-          internalFormat = GL_COMPRESSED_RGBA;
-        } else {
-          internalFormat = GL_RGBA;
+        case STBI_rgb_alpha: {
+          format = GL_RGBA;
+          if (_compressionLevel) {
+            internalFormat = GL_COMPRESSED_RGBA;
+          } else {
+            internalFormat = GL_RGBA;
+          }
+          break;
         }
-        break;
+        default: {
+          log.warning(kModTexture, "%s: %d", kString10004, comp);
+          break;
+        }
       }
-      default: {
-        log.warning(kModTexture, "%s: %d", kString10004, comp);
-        break;
-      }
+      glGenTextures(1, &_ident);
+      glBindTexture(GL_TEXTURE_2D, _ident);
+      glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, _width, _height,
+                   0, format, GL_UNSIGNED_BYTE, _bitmap);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+      _isLoaded = true;
+      free(_bitmap);
+    } else {
+      // Nothing loaded
+      log.error(kModTexture, "%s: %s", kString10002, stbi_failure_reason());
     }
-    glGenTextures(1, &_ident);
-    glBindTexture(GL_TEXTURE_2D, _ident);
-    glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, _width, _height,
-                 0, format, GL_UNSIGNED_BYTE, _bitmap);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    _isLoaded = true;
-    free(_bitmap);
-  } else {
-    // Nothing loaded
-    log.error(kModTexture, "%s: %s", kString10002, stbi_failure_reason());
   }
 }
 

@@ -51,9 +51,9 @@ class DGScene {
     Texture* _cutsceneTexture;
     Texture* _splashTexture;
     
-    bool _canDrawSpots = false; // This bool is used to make checks faster
-    bool _isCutsceneLoaded = false;
-    bool _isSplashLoaded = false;
+    bool _canDrawSpots; // This bool is used to make checks faster
+    bool _isCutsceneLoaded;
+    bool _isSplashLoaded;
     
 public:
     DGScene();

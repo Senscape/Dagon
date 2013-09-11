@@ -24,6 +24,13 @@ static int globalID = 0;
 ////////////////////////////////////////////////////////////
 
 Object::Object() {
+  _retainCount = 0;
+  _defaultFade = 1.0;
+  _fadeDirection = kFadeNone;
+  _fadeLevel = 1.0;
+  _fadeTarget = 1.0;
+  _isEnabled = true;
+  _isStatic = false;
   _id = ++globalID;
   this->setFadeSpeed(kFadeNormal);
 }

@@ -18,6 +18,9 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <SDL2/SDL_mutex.h>
+#include <SDL2/SDL_thread.h>
+
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -57,10 +60,12 @@ class DGTimerManager {
     int _luaObject;
 
 	bool _isRunning;
-    
-    std::mutex _mutexForArray;
-    std::thread _timerThread;
+  
+    SDL_mutex* _mutex;
+    SDL_Thread* _thread;
     DGTimer* _lookUp(int handle);
+  
+  static int _runThread(void *ptr);
     
     DGTimerManager();
     DGTimerManager(DGTimerManager const&);

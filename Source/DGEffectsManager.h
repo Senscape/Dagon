@@ -70,10 +70,10 @@ class Texture;
 class DGTimerManager;
 
 // Reference to embedded dust data
-extern "C" const unsigned char kDefDustBinary[];
+extern "C" const unsigned char kDustData[];
 
 // Reference to embedded shader data
-extern "C" const char kDefShaderData[];
+extern "C" const char kShaderData[];
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class

@@ -68,7 +68,7 @@ class Overlay : public Object {
   std::vector<Button*>::reverse_iterator _ritButton;
   std::vector<Image*>::iterator _itImage;
   
-  bool _isIteratingBackwards = false;
+  bool _isIteratingBackwards;
   Point _position;
   
   Overlay(const Overlay&);

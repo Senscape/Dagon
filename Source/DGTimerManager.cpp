@@ -15,11 +15,12 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <SDL2/SDL.h>
+#include <SDL2/SDL_timer.h>
 
 #include "DGScript.h"
 #include "DGSystem.h"
 #include "DGTimerManager.h"
+#include "Language.h"
 
 using namespace std;
 
@@ -28,18 +29,17 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGTimerManager::DGTimerManager() {
-    _handles = 0;
-    _luaObject = 0;
-
-	_isRunning = true;
-    
-    // TODO: Move this to init()
-    _timerThread = thread([&](){
-        chrono::milliseconds dura(1);
-        while (DGTimerManager::instance().update()) {
-            this_thread::sleep_for(dura);
-        }
-    });
+  _handles = 0;
+  _luaObject = 0;
+  _mutex = SDL_CreateMutex();
+  if (!_mutex)
+    return;
+  _isRunning = true;
+  
+  _thread = SDL_CreateThread(_runThread, "TimerManager", (void*)NULL);
+  if (!_thread) {
+    _isRunning = false;
+  }
 }
 
 ////////////////////////////////////////////////////////////
@@ -47,6 +47,7 @@ DGTimerManager::DGTimerManager() {
 ////////////////////////////////////////////////////////////
 
 DGTimerManager::~DGTimerManager() {
+  SDL_DestroyMutex(_mutex);
 }
 
 ////////////////////////////////////////////////////////////
@@ -82,10 +83,11 @@ int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, i
     timer.trigger = trigger;
     timer.luaHandler = handlerForLua;
     timer.luaObject = luaObject;
-
-    _mutexForArray.lock();
+  
+  if (SDL_LockMutex(_mutex) == 0) {
     _arrayOfTimers.push_back(timer);
-    _mutexForArray.unlock();
+    SDL_UnlockMutex(_mutex);
+  }
     
     _handles++;
 
@@ -105,9 +107,10 @@ int DGTimerManager::createInternal(double trigger, void (*callback)()) {
     
     timer.trigger = trigger;
     
-    _mutexForArray.lock();
+  if (SDL_LockMutex(_mutex) == 0) {
     _arrayOfTimers.push_back(timer);
-    _mutexForArray.unlock();
+    SDL_UnlockMutex(_mutex);
+  }
     
     _handles++;
     
@@ -126,9 +129,10 @@ int DGTimerManager::createManual(double trigger) {
     
     timer.trigger = trigger;
 
-    _mutexForArray.lock();
+  if (SDL_LockMutex(_mutex) == 0) {
     _arrayOfTimers.push_back(timer);
-    _mutexForArray.unlock();
+    SDL_UnlockMutex(_mutex);
+  }
     
     _handles++;
     
@@ -151,56 +155,51 @@ void DGTimerManager::enable(int handle) {
 }
 
 void DGTimerManager::process() {
-    bool keepProcessing = true;
-    
-    std::vector<DGTimer>::iterator it;
-    
-    _mutexForArray.lock();    
-    it = _arrayOfTimers.begin();
-    
+  if (SDL_LockMutex(_mutex) == 0) {
+    std::vector<DGTimer>::iterator it = _arrayOfTimers.begin();
     while (it != _arrayOfTimers.end()) {
-        if ((*it).isEnabled && ((*it).type != DGTimerManual)) {
-            if ((*it).hasTriggered) {                
-                switch ((*it).type) {
-                    case DGTimerInternal:
-                        (*it).handler();
-                        keepProcessing = false;
-                        break;
-                        
-                    case DGTimerNormal:
-                        if ((*it).luaObject) { // Belongs to a Lua object?
-                            if ((*it).luaObject != _luaObject) {
-                                (*it).hasTriggered = false;
-                                (*it).lastTime = SDL_GetTicks() / 1000; // Reset timer
-                                break; // Do not invoke the handler
-                            }
-                        }
-                        
-                        if ((*it).isLoopable) {
-                            (*it).hasTriggered = false;
-                            (*it).lastTime = SDL_GetTicks() / 1000;
-                        }
-                        else {
-                            // Should destroy in reality
-                            (*it).isEnabled = false;
-                        }
-                        
-                        // Must unlock here for precaution
-                        _mutexForArray.unlock();
-                        DGScript::instance().processCallback((*it).luaHandler, 0);
-                        keepProcessing = false;
-                        break;
+      if ((*it).isEnabled && ((*it).type != DGTimerManual)) {
+        if ((*it).hasTriggered) {
+          bool keepProcessing = true;
+          switch ((*it).type) {
+            case DGTimerInternal:
+              (*it).handler();
+              keepProcessing = false;
+              break;
+              
+            case DGTimerNormal:
+              if ((*it).luaObject) { // Belongs to a Lua object?
+                if ((*it).luaObject != _luaObject) {
+                  (*it).hasTriggered = false;
+                  (*it).lastTime = SDL_GetTicks() / 1000; // Reset timer
+                  break; // Do not invoke the handler
                 }
-                
-                if (!keepProcessing)
-                    break; // In case the vector has changed, break the loop
-            }
+              }
+              
+              if ((*it).isLoopable) {
+                (*it).hasTriggered = false;
+                (*it).lastTime = SDL_GetTicks() / 1000;
+              }
+              else {
+                // Should destroy in reality
+                (*it).isEnabled = false;
+              }
+              
+              // Must unlock here for precaution
+              SDL_UnlockMutex(_mutex);
+              DGScript::instance().processCallback((*it).luaHandler, 0);
+              keepProcessing = false;
+              break;
+          }
+          
+          if (!keepProcessing)
+            break; // In case the vector has changed, break the loop
         }
-        
-        it++;
+      }
+      it++;
     }
-    
-    _mutexForArray.unlock();
+    SDL_UnlockMutex(_mutex);
+  }
 }
 
 void DGTimerManager::setLuaObject(int luaObject) {
@@ -212,39 +211,33 @@ void DGTimerManager::setSystem(DGSystem* theSystem) {
 }
 
 void DGTimerManager::terminate() {
-    _isRunning = false;
-    
-    _timerThread.join();
+  _isRunning = false;
+  
+  int threadReturnValue;
+  SDL_WaitThread(_thread, &threadReturnValue);
 }
 
 // FIXME: This is quite sucky. Timers keep looping and being checked even if they
 // were already triggered. Should have different arrays here per each kind of timer.
 bool DGTimerManager::update() {
 	if (_isRunning) {
-		std::vector<DGTimer>::iterator it;
-    
-        _mutexForArray.lock();
-		it = _arrayOfTimers.begin();
-    
-		while (it != _arrayOfTimers.end()) {
-			double currentTime = SDL_GetTicks() / 1000;
-			double duration = currentTime - (*it).lastTime;
-        
-			DGTimer* timer = &(*it);
-        
-			if (timer->isEnabled && (timer->type != DGTimerManual)) {
-				if ((duration > timer->trigger) && !timer->hasTriggered) {
-					timer->hasTriggered = true;
-				}
-			}
-        
-			it++;
-		}
-        _mutexForArray.unlock();
-        
+    if (SDL_LockMutex(_mutex) == 0) {
+      std::vector<DGTimer>::iterator it = _arrayOfTimers.begin();
+      while (it != _arrayOfTimers.end()) {
+        double currentTime = SDL_GetTicks() / 1000;
+        double duration = currentTime - (*it).lastTime;
+        DGTimer* timer = &(*it);
+        if (timer->isEnabled && (timer->type != DGTimerManual)) {
+          if ((duration > timer->trigger) && !timer->hasTriggered) {
+            timer->hasTriggered = true;
+          }
+        }
+        it++;
+      }
+      SDL_UnlockMutex(_mutex);
+    }
 		return true;
 	}
-
 	return false;
 }
 
@@ -253,20 +246,24 @@ bool DGTimerManager::update() {
 ////////////////////////////////////////////////////////////
 
 DGTimer* DGTimerManager::_lookUp(int handle) {
-    std::vector<DGTimer>::iterator it;
-    
-    _mutexForArray.lock();
-    it = _arrayOfTimers.begin();
-    
+  if (SDL_LockMutex(_mutex) == 0) {
+    std::vector<DGTimer>::iterator it = _arrayOfTimers.begin();
     while (it != _arrayOfTimers.end()) {
-        if ((*it).handle == handle) {            
-            _mutexForArray.unlock();
-            return &(*it);
-        }
-        
-        it++;
+      if ((*it).handle == handle) {
+        SDL_UnlockMutex(_mutex);
+        return &(*it);
+      }
+      it++;
     }
-    
-    _mutexForArray.unlock();
-    return NULL;
+    SDL_UnlockMutex(_mutex);
+  }
+  return NULL;
 }
+
+int DGTimerManager::_runThread(void *ptr) {
+  while (DGTimerManager::instance().update()) {
+    SDL_Delay(1);
+  }
+  return 0;
+}
+

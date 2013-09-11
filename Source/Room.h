@@ -62,14 +62,14 @@ class Room : public Object {
  private:
   std::vector<Node*> _arrayOfNodes;
   std::vector<Node*>::iterator _it;
-  Node* _currentNode = nullptr;
+  Node* _currentNode;
   
   // TODO: When switching rooms, confirm if a given audio is already playing,
   // so that no unnecessary fade ins/outs are performed.
   std::vector<Audio*> _arrayOfAudios;
   Audio* _defaultFootstep;
   int _effectsFlags;
-  bool _hasDefaultFootstep = false;
+  bool _hasDefaultFootstep;
   
   Room(const Room&);
   void operator=(const Room&);

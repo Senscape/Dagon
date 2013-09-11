@@ -61,6 +61,9 @@ DGVideo::DGVideo() :
     _theoraInfo = new DGTheoraInfo;
     
     _initConversionToRGB();
+  _mutex = SDL_CreateMutex();
+  if (!_mutex)
+    log.error(kModVideo, "%s", kString18001);
 }
 
 DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced)  :
@@ -85,6 +88,9 @@ DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced)  :
 	_theoraInfo->videobuf_time = 0;
     
     _initConversionToRGB();
+  _mutex = SDL_CreateMutex();
+  if (!_mutex)
+    log.error(kModVideo, "%s", kString18001);
 }
 
 ////////////////////////////////////////////////////////////
@@ -92,8 +98,9 @@ DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced)  :
 ////////////////////////////////////////////////////////////
 
 DGVideo::~DGVideo() {
-    this->unload();
-    delete _theoraInfo;
+  this->unload();
+  delete _theoraInfo;
+  SDL_DestroyMutex(_mutex);
 }
 
 ////////////////////////////////////////////////////////////
@@ -171,13 +178,12 @@ void DGVideo::setSynced(bool synced) {
 ////////////////////////////////////////////////////////////
 
 void DGVideo::load() {
-  std::lock_guard<std::mutex> guard(_mutex);
-    
+  if (SDL_LockMutex(_mutex) == 0) {
     int stateFlag = 0;
     
     if (!_hasResource) {
-        log.error(kModVideo, "%s", kString17010);
-        return;
+      log.error(kModVideo, "%s", kString17010);
+      //return;
     }
     
     //log.trace(kModVideo, "%s %s", kString17002, _resource);
@@ -185,8 +191,8 @@ void DGVideo::load() {
     _handle = fopen(_resource, "rb");
     
     if (_handle == NULL) {
-        log.error(kModVideo, "%s: %s", kString17007, _resource);
-        return;
+      log.error(kModVideo, "%s: %s", kString17007, _resource);
+      //return;
     }
     
     ogg_sync_init(&_theoraInfo->oy);
@@ -195,70 +201,70 @@ void DGVideo::load() {
     theora_info_init(&_theoraInfo->ti);
     
     while (!stateFlag) {
-        size_t ret = _bufferData(&_theoraInfo->oy);
+      size_t ret = _bufferData(&_theoraInfo->oy);
+      
+      if (ret == 0)
+        break;
+      
+      while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og) > 0) {
+        ogg_stream_state test;
         
-        if (ret == 0)
-            break;
-        
-        while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og) > 0) {
-            ogg_stream_state test;
-            
-            if (!ogg_page_bos(&_theoraInfo->og)) {
-                _queuePage(_theoraInfo, &_theoraInfo->og);
-                stateFlag = 1;
-                break;
-            }
-            
-            ogg_stream_init(&test, ogg_page_serialno(&_theoraInfo->og));
-            ogg_stream_pagein(&test, &_theoraInfo->og);
-            ogg_stream_packetout(&test, &_theoraInfo->op);
-            
-            if (!_theoraInfo->theora_p && 
-                theora_decode_header(&_theoraInfo->ti, &_theoraInfo->tc, &_theoraInfo->op) >= 0) {
-                memcpy(&_theoraInfo->to, &test, sizeof(test));
-                _theoraInfo->theora_p = 1;
-            } else {
-                ogg_stream_clear(&test);
-            }
+        if (!ogg_page_bos(&_theoraInfo->og)) {
+          _queuePage(_theoraInfo, &_theoraInfo->og);
+          stateFlag = 1;
+          break;
         }
+        
+        ogg_stream_init(&test, ogg_page_serialno(&_theoraInfo->og));
+        ogg_stream_pagein(&test, &_theoraInfo->og);
+        ogg_stream_packetout(&test, &_theoraInfo->op);
+        
+        if (!_theoraInfo->theora_p &&
+            theora_decode_header(&_theoraInfo->ti, &_theoraInfo->tc, &_theoraInfo->op) >= 0) {
+          memcpy(&_theoraInfo->to, &test, sizeof(test));
+          _theoraInfo->theora_p = 1;
+        } else {
+          ogg_stream_clear(&test);
+        }
+      }
     }
     
     while (_theoraInfo->theora_p && _theoraInfo->theora_p < 3) {
-        int ret;
-        
-        while (_theoraInfo->theora_p && (_theoraInfo->theora_p < 3) && 
-               (ret = ogg_stream_packetout(&_theoraInfo->to, &_theoraInfo->op))) {
-            if (ret < 0) {
-                log.error(kModVideo, "%s", kString17008);
-                return;
-            }
-            
-            if (theora_decode_header(&_theoraInfo->ti, &_theoraInfo->tc, &_theoraInfo->op)) {
-                log.error(kModVideo, "%s", kString17008);
-                return;
-            }
-            
-            _theoraInfo->theora_p++;
-            if (_theoraInfo->theora_p == 3)
-                break;
+      int ret;
+      
+      while (_theoraInfo->theora_p && (_theoraInfo->theora_p < 3) &&
+             (ret = ogg_stream_packetout(&_theoraInfo->to, &_theoraInfo->op))) {
+        if (ret < 0) {
+          log.error(kModVideo, "%s", kString17008);
+          //return;
         }
         
-        if (ogg_sync_pageout(& _theoraInfo->oy, & _theoraInfo->og) > 0)
-            _queuePage(_theoraInfo, &_theoraInfo->og);
-        else {
-            size_t ret = _bufferData(&_theoraInfo->oy);
-            if (ret == 0) {
-                log.error(kModVideo, "%s", kString17009);
-                return;
-            }
+        if (theora_decode_header(&_theoraInfo->ti, &_theoraInfo->tc, &_theoraInfo->op)) {
+          log.error(kModVideo, "%s", kString17008);
+          //return;
         }
+        
+        _theoraInfo->theora_p++;
+        if (_theoraInfo->theora_p == 3)
+          break;
+      }
+      
+      if (ogg_sync_pageout(& _theoraInfo->oy, & _theoraInfo->og) > 0)
+        _queuePage(_theoraInfo, &_theoraInfo->og);
+      else {
+        size_t ret = _bufferData(&_theoraInfo->oy);
+        if (ret == 0) {
+          log.error(kModVideo, "%s", kString17009);
+          //return;
+        }
+      }
     }
     
     if (_theoraInfo->theora_p) {
-        theora_decode_init(&_theoraInfo->td, &_theoraInfo->ti);
+      theora_decode_init(&_theoraInfo->td, &_theoraInfo->ti);
     } else {
-        theora_info_clear(&_theoraInfo->ti);
-        theora_comment_clear(&_theoraInfo->tc);
+      theora_info_clear(&_theoraInfo->ti);
+      theora_comment_clear(&_theoraInfo->tc);
     }
     
     _currentFrame.width = _theoraInfo->ti.width;
@@ -267,100 +273,118 @@ void DGVideo::load() {
     _currentFrame.data = (unsigned char*)malloc((_theoraInfo->ti.width * _theoraInfo->ti.height) * 3);
     
     while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og) > 0) {
-        _queuePage(_theoraInfo, &_theoraInfo->og);
+      _queuePage(_theoraInfo, &_theoraInfo->og);
     }
     
     _frameDuration = (double)(1.0/((double)_theoraInfo->ti.fps_numerator / (double)_theoraInfo->ti.fps_denominator)) * 1000.0;
     _isLoaded = true;
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModVideo, "%s", kString18002);
+  }
 }
 
 void DGVideo::play() {
-  std::lock_guard<std::mutex> guard(_mutex);
-  
-  _state = DGVideoPlaying;
-  yuv_buffer yuv;
-  _prepareFrame();
-  theora_decode_YUVout(&_theoraInfo->td, &yuv);
-  _convertToRGB(yuv.y, yuv.y_stride,
-                yuv.u, yuv.v, yuv.uv_stride,
-                _currentFrame.data, _theoraInfo->ti.width, _theoraInfo->ti.height, _theoraInfo->ti.width);
-
-  _lastTime = SDL_GetTicks();
+  if (SDL_LockMutex(_mutex) == 0) {
+    _state = DGVideoPlaying;
+    yuv_buffer yuv;
+    _prepareFrame();
+    theora_decode_YUVout(&_theoraInfo->td, &yuv);
+    _convertToRGB(yuv.y, yuv.y_stride,
+                  yuv.u, yuv.v, yuv.uv_stride,
+                  _currentFrame.data, _theoraInfo->ti.width, _theoraInfo->ti.height, _theoraInfo->ti.width);
+    
+    _lastTime = SDL_GetTicks();
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModVideo, "%s", kString18002);
+  }
 }
 
 void DGVideo::pause() {
-    std::lock_guard<std::mutex> guard(_mutex);
-  
+  if (SDL_LockMutex(_mutex) == 0) {
     if (_state == DGVideoPlaying)
-        _state = DGVideoPaused;
+      _state = DGVideoPaused;
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModVideo, "%s", kString18002);
+  }
 }
 
 void DGVideo::stop() {
-    std::lock_guard<std::mutex> guard(_mutex);
-    
+  if (SDL_LockMutex(_mutex) == 0) {
     if (_state == DGVideoPlaying) {
-        _state = DGVideoStopped;
-      
-        // Rewind
-        fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
-        ogg_stream_reset(&_theoraInfo->to);
+      _state = DGVideoStopped;
+      // Rewind
+      fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
+      ogg_stream_reset(&_theoraInfo->to);
     }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModVideo, "%s", kString18002);
+  }
 }
 
 void DGVideo::unload() {
-    std::lock_guard<std::mutex> guard(_mutex);
-    
+  if (SDL_LockMutex(_mutex) == 0) {
     if (_isLoaded) {
-        _isLoaded = false;
-        _state = DGVideoInitial;
-        
-        _theoraInfo->videobuf_ready = 0;
-        _theoraInfo->videobuf_granulepos -= 1;
-        _theoraInfo->videobuf_time = 0;
-        
-        if (_theoraInfo->theora_p) {
-            // Rewind and reset
-            fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
-            ogg_stream_reset(&_theoraInfo->to);
-            ogg_stream_clear(&_theoraInfo->to);
-            theora_clear(&_theoraInfo->td);
-            theora_comment_clear(&_theoraInfo->tc);
-            theora_info_clear(&_theoraInfo->ti);
-        }
-        
-        ogg_sync_clear(&_theoraInfo->oy);
-        
-        _theoraInfo->theora_p = 0;
-        
-        free(_currentFrame.data);
-        fclose(_handle);
+      _isLoaded = false;
+      _state = DGVideoInitial;
+      
+      _theoraInfo->videobuf_ready = 0;
+      _theoraInfo->videobuf_granulepos -= 1;
+      _theoraInfo->videobuf_time = 0;
+      
+      if (_theoraInfo->theora_p) {
+        // Rewind and reset
+        fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
+        ogg_stream_reset(&_theoraInfo->to);
+        ogg_stream_clear(&_theoraInfo->to);
+        theora_clear(&_theoraInfo->td);
+        theora_comment_clear(&_theoraInfo->tc);
+        theora_info_clear(&_theoraInfo->ti);
+      }
+      
+      ogg_sync_clear(&_theoraInfo->oy);
+      
+      _theoraInfo->theora_p = 0;
+      
+      free(_currentFrame.data);
+      fclose(_handle);
     }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModVideo, "%s", kString18002);
+  }
 }
 
 void DGVideo::update() {
-    std::lock_guard<std::mutex> guard(_mutex);
-
+  if (SDL_LockMutex(_mutex) == 0) {
     if (_state == DGVideoPlaying) {
       double currentTime = SDL_GetTicks();
       double duration = currentTime - _lastTime;
-        if (duration >= _frameDuration) {
-            yuv_buffer yuv;
-            
-            // TODO: Skip frames if required here?
-            int frames = (int)floor(duration / _frameDuration);
-            for (int i = 0; i < frames; i++)
-                _prepareFrame();
-            
-            theora_decode_YUVout(&_theoraInfo->td, &yuv);
-            _convertToRGB(yuv.y, yuv.y_stride,
-                       yuv.u, yuv.v, yuv.uv_stride,
-                       _currentFrame.data, _theoraInfo->ti.width, _theoraInfo->ti.height, _theoraInfo->ti.width);
-          
-            _lastTime = currentTime;
-            
-            _hasNewFrame = true;
-        }
-	}
+      if (duration >= _frameDuration) {
+        yuv_buffer yuv;
+        
+        // TODO: Skip frames if required here?
+        int frames = (int)floor(duration / _frameDuration);
+        for (int i = 0; i < frames; i++)
+          _prepareFrame();
+        
+        theora_decode_YUVout(&_theoraInfo->td, &yuv);
+        _convertToRGB(yuv.y, yuv.y_stride,
+                      yuv.u, yuv.v, yuv.uv_stride,
+                      _currentFrame.data, _theoraInfo->ti.width, _theoraInfo->ti.height, _theoraInfo->ti.width);
+        
+        _lastTime = currentTime;
+        
+        _hasNewFrame = true;
+      }
+    }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModVideo, "%s", kString18002);
+  }
 }
 
 ////////////////////////////////////////////////////////////

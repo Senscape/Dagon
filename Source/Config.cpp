@@ -21,6 +21,45 @@
 #include "Object.h"
 
 ////////////////////////////////////////////////////////////
+// Implementation - Constructor
+////////////////////////////////////////////////////////////
+
+Config::Config() {
+  antialiasing = kDefAntialiasing;
+  audioBuffer = kDefAudioBuffer;
+  audioDevice = kDefAudioDevice;
+  autopaths = kDefAutopaths;
+  autorun = kDefAutorun;
+  bundleEnabled = kDefBundleEnabled;
+  controlMode = kDefControlMode;
+  displayWidth = kDefDisplayWidth;
+  displayHeight = kDefDisplayHeight;
+  displayDepth = kDefDisplayDepth;
+  debugMode = kDefDebugMode;
+  effects = kDefEffects;
+  framebuffer = kDefFramebuffer;
+  frameLimiter = kDefFrameLimiter;
+	framerate = kDefFramerate;
+	fullscreen = kDefFullscreen;
+  log = kDefLog;
+  mute = kDefMute;
+  showHelpers = kDefShowHelpers;
+  showSplash = kDefShowSplash;
+	showSpots = kDefShowSpots;
+  silentFeeds = kDefSilentFeeds;
+  subtitles = kDefSubtitles;
+  texCompression = kDefTexCompression;
+	verticalSync = kDefVerticalSync;
+  _resPath = kDefResourcePath;
+  _texExtension = kDefTexExtension;
+  
+  _fps = kDefFramerate;
+  _globalSpeed = 1.0;
+  _globalSpeedPrecision = kFrameratePrecision / kDefFramerate;
+  _targetGlobalSpeed = 1.0;
+}
+
+////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
 

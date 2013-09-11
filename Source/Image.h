@@ -63,7 +63,7 @@ class Image : public Object {
   
   int _arrayOfCoordinates[8];
   Texture* _attachedTexture;
-  bool _hasTexture = false;
+  bool _hasTexture;
   Rect _rect;
   
   void _calculateCoordinates();

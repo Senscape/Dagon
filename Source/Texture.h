@@ -18,10 +18,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <mutex>
 #include <string>
 
 #include <GL/glew.h>
+#include <SDL2/SDL_mutex.h>
 
 #include "Object.h"
 
@@ -96,16 +96,16 @@ class Texture : public Object {
   GLubyte* _bitmap;
   unsigned int _compressionLevel;
 	GLint _depth;
-  bool _hasResource = false;
+  bool _hasResource;
 	GLint _height;
 	GLuint _ident;
   int _indexInBundle;
-	bool _isBitmapLoaded = false;
-	bool _isLoaded = false;
-  unsigned int _usageCount = 0; // Used to keep track of the most used textures
+	bool _isBitmapLoaded;
+	bool _isLoaded;
+  unsigned int _usageCount; // Used to keep track of the most used textures
   GLint _width;
   
-  std::mutex _mutex;
+  SDL_mutex* _mutex;
   // Eventually all file management will be handled by a ResourceManager object
   std::string _resource;
   

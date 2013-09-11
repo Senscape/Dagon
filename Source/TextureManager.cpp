@@ -90,12 +90,12 @@ void TextureManager::flush() {
 }
 
 void TextureManager::init() {
-    _preloaderThread = thread([&](){
+    /*_preloaderThread = thread([&](){
         chrono::milliseconds dura(1);
         while (TextureManager::instance().updatePreloader()) {
             this_thread::sleep_for(dura);
         }
-    });
+    });*/
 }
 
 void TextureManager::registerTexture(Texture* target) {

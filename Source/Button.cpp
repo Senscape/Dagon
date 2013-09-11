@@ -30,6 +30,11 @@ Button::Button() :
   config(Config::instance()),
   fontManager(DGFontManager::instance())
 {
+  _hasAction = false;
+  _hasFont = false;
+  _hasOnHoverTexture = false;
+  _hasText = false;
+  _textColor = kColorWhite;
   _font = fontManager.loadDefault();
   this->setFadeSpeed(kFadeNormal);
   this->setType(kObjectButton);

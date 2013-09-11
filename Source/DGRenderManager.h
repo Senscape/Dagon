@@ -32,7 +32,7 @@ class Log;
 class Texture;
 
 // Reference to embedded splash screen
-extern "C" const unsigned char kDefSplashBinary[];
+extern "C" const unsigned char kSplashData[];
 
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
