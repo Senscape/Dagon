@@ -1,0 +1,176 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0D02863F-A3E0-441C-BA2C-53A4492FC884}</ProjectGuid>
+    <RootNamespace>Dagon</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>$(ProjectDir)/../Libraries/Headers;$(ProjectDir)/../Libraries/Headers/freetype2;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)/../Libraries/Windows/x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <IncludePath>$(ProjectDir)/../Libraries/Headers;$(ProjectDir)/../Libraries/Headers/freetype2;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)/../Libraries/Windows/x86;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Source\Action.h" />
+    <ClInclude Include="..\Source\Audio.h" />
+    <ClInclude Include="..\Source\AudioProxy.h" />
+    <ClInclude Include="..\Source\Button.h" />
+    <ClInclude Include="..\Source\ButtonProxy.h" />
+    <ClInclude Include="..\Source\Colors.h" />
+    <ClInclude Include="..\Source\Config.h" />
+    <ClInclude Include="..\Source\ConfigLib.h" />
+    <ClInclude Include="..\Source\Defines.h" />
+    <ClInclude Include="..\Source\DGAudioManager.h" />
+    <ClInclude Include="..\Source\DGCameraManager.h" />
+    <ClInclude Include="..\Source\DGCamLib.h" />
+    <ClInclude Include="..\Source\DGConsole.h" />
+    <ClInclude Include="..\Source\DGControl.h" />
+    <ClInclude Include="..\Source\DGCursorLib.h" />
+    <ClInclude Include="..\Source\DGCursorManager.h" />
+    <ClInclude Include="..\Source\DGEffectsLib.h" />
+    <ClInclude Include="..\Source\DGEffectsManager.h" />
+    <ClInclude Include="..\Source\DGEvent.h" />
+    <ClInclude Include="..\Source\DGFeedManager.h" />
+    <ClInclude Include="..\Source\DGFontManager.h" />
+    <ClInclude Include="..\Source\DGInterface.h" />
+    <ClInclude Include="..\Source\DGLocator.h" />
+    <ClInclude Include="..\Source\DGProxy.h" />
+    <ClInclude Include="..\Source\DGRenderManager.h" />
+    <ClInclude Include="..\Source\DGScene.h" />
+    <ClInclude Include="..\Source\DGScript.h" />
+    <ClInclude Include="..\Source\DGSlideProxy.h" />
+    <ClInclude Include="..\Source\DGState.h" />
+    <ClInclude Include="..\Source\DGSystem.h" />
+    <ClInclude Include="..\Source\DGSystemLib.h" />
+    <ClInclude Include="..\Source\DGTimerManager.h" />
+    <ClInclude Include="..\Source\DGVideo.h" />
+    <ClInclude Include="..\Source\DGVideoManager.h" />
+    <ClInclude Include="..\Source\Font.h" />
+    <ClInclude Include="..\Source\Geometry.h" />
+    <ClInclude Include="..\Source\Image.h" />
+    <ClInclude Include="..\Source\ImageProxy.h" />
+    <ClInclude Include="..\Source\Language.h" />
+    <ClInclude Include="..\Source\Log.h" />
+    <ClInclude Include="..\Source\Luna.h" />
+    <ClInclude Include="..\Source\Node.h" />
+    <ClInclude Include="..\Source\NodeProxy.h" />
+    <ClInclude Include="..\Source\Object.h" />
+    <ClInclude Include="..\Source\ObjectProxy.h" />
+    <ClInclude Include="..\Source\Overlay.h" />
+    <ClInclude Include="..\Source\OverlayProxy.h" />
+    <ClInclude Include="..\Source\Platform.h" />
+    <ClInclude Include="..\Source\Room.h" />
+    <ClInclude Include="..\Source\RoomProxy.h" />
+    <ClInclude Include="..\Source\Spot.h" />
+    <ClInclude Include="..\Source\SpotProxy.h" />
+    <ClInclude Include="..\Source\stb_image.h" />
+    <ClInclude Include="..\Source\Texture.h" />
+    <ClInclude Include="..\Source\TextureManager.h" />
+    <ClInclude Include="..\Source\Version.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Source\Audio.cpp" />
+    <ClCompile Include="..\Source\Button.cpp" />
+    <ClCompile Include="..\Source\Config.cpp" />
+    <ClCompile Include="..\Source\DGAudioManager.cpp" />
+    <ClCompile Include="..\Source\DGCameraManager.cpp" />
+    <ClCompile Include="..\Source\DGConsole.cpp" />
+    <ClCompile Include="..\Source\DGControl.cpp" />
+    <ClCompile Include="..\Source\DGCursorManager.cpp" />
+    <ClCompile Include="..\Source\DGDustData.c" />
+    <ClCompile Include="..\Source\DGEffectsManager.cpp" />
+    <ClCompile Include="..\Source\DGFeedManager.cpp" />
+    <ClCompile Include="..\Source\DGFontManager.cpp" />
+    <ClCompile Include="..\Source\DGInterface.cpp" />
+    <ClCompile Include="..\Source\DGLocator.cpp" />
+    <ClCompile Include="..\Source\DGRenderManager.cpp" />
+    <ClCompile Include="..\Source\DGScene.cpp" />
+    <ClCompile Include="..\Source\DGScript.cpp" />
+    <ClCompile Include="..\Source\DGShaderData.c" />
+    <ClCompile Include="..\Source\DGSplashData.c" />
+    <ClCompile Include="..\Source\DGState.cpp" />
+    <ClCompile Include="..\Source\DGSystem.cpp" />
+    <ClCompile Include="..\Source\DGTimerManager.cpp" />
+    <ClCompile Include="..\Source\DGVideo.cpp" />
+    <ClCompile Include="..\Source\DGVideoManager.cpp" />
+    <ClCompile Include="..\Source\Font.cpp" />
+    <ClCompile Include="..\Source\FontData.c" />
+    <ClCompile Include="..\Source\Image.cpp" />
+    <ClCompile Include="..\Source\Log.cpp" />
+    <ClCompile Include="..\Source\main.cpp" />
+    <ClCompile Include="..\Source\Node.cpp" />
+    <ClCompile Include="..\Source\Object.cpp" />
+    <ClCompile Include="..\Source\Overlay.cpp" />
+    <ClCompile Include="..\Source\Room.cpp" />
+    <ClCompile Include="..\Source\Spot.cpp" />
+    <ClCompile Include="..\Source\stb_image.c" />
+    <ClCompile Include="..\Source\Texture.cpp" />
+    <ClCompile Include="..\Source\TextureManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\dagon.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
