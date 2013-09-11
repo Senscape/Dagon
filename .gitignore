@@ -3,6 +3,8 @@
 build/
 bin/
 obj/
+release/
+debug/
 
 # Mac OS X
 *.DS_store
@@ -20,7 +22,6 @@ obj/
 *.xcuserstate
 project.xcworkspace/
 xcuserdata/
-
 
 # Linux
 ~*
