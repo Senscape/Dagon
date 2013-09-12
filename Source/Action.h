@@ -29,9 +29,9 @@
 // FIXME: Potential conflict of enums in Script class
 
 enum ActionTypes {
-	kActionFunction = 100,
-	kActionFeed,
-	kActionSwitch
+  kActionFunction = 100,
+  kActionFeed,
+  kActionSwitch
 };
 
 struct Action {
@@ -41,7 +41,7 @@ struct Action {
   bool hasFeedAudio;
   int luaHandler;
   int luaObject;
-	Object* target;
+  Object* target;
   int type;    
 };
 

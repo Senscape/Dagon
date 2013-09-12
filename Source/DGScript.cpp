@@ -76,23 +76,23 @@ void DGScript::init() {
     // The following code attempts to load a config file, and if it does exist
     // copies the created table to the Config metatable
     if (luaL_loadfile(_L, config.path(kPathApp, kDefConfigFile, kObjectGeneric).c_str()) == 0) {
-		lua_newtable(_L);
-		lua_pushvalue(_L, -1);
-		int ref = lua_ref(_L, LUA_REGISTRYINDEX);
-		lua_setfenv(_L, -2);
+        lua_newtable(_L);
+        lua_pushvalue(_L, -1);
+        int ref = lua_ref(_L, LUA_REGISTRYINDEX);
+        lua_setfenv(_L, -2);
 
-		lua_pcall(_L, 0, 0, 0);
-		
-		lua_rawgeti(_L, LUA_REGISTRYINDEX, ref);
-		lua_pushnil(_L);
-		while (lua_next(_L, 1) != 0) {
-			ConfigLibSet(_L);
-			
-			lua_pop(_L, 1);
-		}
-	}
+        lua_pcall(_L, 0, 0, 0);
+        
+        lua_rawgeti(_L, LUA_REGISTRYINDEX, ref);
+        lua_pushnil(_L);
+        while (lua_next(_L, 1) != 0) {
+            ConfigLibSet(_L);
+            
+            lua_pop(_L, 1);
+        }
+    }
     else
-		log.error(kModScript, "%s", kString14015);
+        log.error(kModScript, "%s", kString14015);
     
     log.trace(kModScript, "%s", kString14001);
     log.info(kModScript, "%s: %s", kString14002, LUA_RELEASE);
@@ -122,43 +122,43 @@ void DGScript::init() {
     lua_newuserdata(_L, sizeof(void*));
     
     lua_pushvalue(_L, -1);
-	
-	luaL_newmetatable(_L, "ConfigLib");
-	luaL_register(_L, NULL, ConfigLib);
-	lua_setmetatable(_L, -2);
-	
-	lua_newtable(_L);
+    
+    luaL_newmetatable(_L, "ConfigLib");
+    luaL_register(_L, NULL, ConfigLib);
+    lua_setmetatable(_L, -2);
+    
+    lua_newtable(_L);
     lua_setfenv(_L, -2);
-	
-	lua_setglobal(_L, "config");
+    
+    lua_setglobal(_L, "config");
     
     // Same with the camera settings
     lua_newuserdata(_L, sizeof(void*));
     
     lua_pushvalue(_L, -1);
-	
-	luaL_newmetatable(_L, "DGCamLib");
-	luaL_register(_L, NULL, DGCamLib);
-	lua_setmetatable(_L, -2);
-	
-	lua_newtable(_L);
+    
+    luaL_newmetatable(_L, "DGCamLib");
+    luaL_register(_L, NULL, DGCamLib);
+    lua_setmetatable(_L, -2);
+    
+    lua_newtable(_L);
     lua_setfenv(_L, -2);
-	
-	lua_setglobal(_L, "camera");
+    
+    lua_setglobal(_L, "camera");
     
     // Same with the effects properties
     lua_newuserdata(_L, sizeof(void*));
     
     lua_pushvalue(_L, -1);
-	
-	luaL_newmetatable(_L, "DGEffectsLib");
-	luaL_register(_L, NULL, DGEffectsLib);
-	lua_setmetatable(_L, -2);
-	
-	lua_newtable(_L);
+    
+    luaL_newmetatable(_L, "DGEffectsLib");
+    luaL_register(_L, NULL, DGEffectsLib);
+    lua_setmetatable(_L, -2);
+    
+    lua_newtable(_L);
     lua_setfenv(_L, -2);
-	
-	lua_setglobal(_L, "effects");
+    
+    lua_setglobal(_L, "effects");
     
     // Now we register the global functions that don't belong to any library
     _registerGlobals();
@@ -305,14 +305,14 @@ int DGScript::_globalFeed(lua_State *L) {
         DGFeedManager::instance().showAndPlay(luaL_checkstring(L, 1), lua_tostring(L, 2));
     }
     else DGFeedManager::instance().show(luaL_checkstring(L, 1));
-	
-	return 0;
+    
+    return 0;
 }
 
 int DGScript::_globalHotkey(lua_State *L) {
     DGControl::instance().registerHotkey((int)luaL_checknumber(L, 1), luaL_checkstring(L, 2));
-	
-	return 0;
+    
+    return 0;
 }
 
 int DGScript::_globalLookAt(lua_State *L) {
@@ -357,48 +357,48 @@ int DGScript::_globalPlay(lua_State *L) {
     DGAudioManager::instance().requestAudio(audio);
     audio->play();
     
-	return 0;
+    return 0;
 }
 
 int DGScript::_globalQueue(lua_State *L) {
     DGFeedManager::instance().queue(luaL_checkstring(L, 1), lua_tostring(L, 2));
-	
-	return 0;
+    
+    return 0;
 }
 
 int DGScript::_globalPrint (lua_State *L) {
-	int n = lua_gettop(L);  /* number of arguments */
-	int i;
+    int n = lua_gettop(L);  /* number of arguments */
+    int i;
     
-	lua_getglobal(L, "tostring");
-	for (i = 1; i <= n; i++) {
-		const char *s;
-		lua_pushvalue(L, -1);  /* function to be called */
-		lua_pushvalue(L, i);   /* value to print */
-		lua_call(L, 1, 1);
-		s = lua_tostring(L, -1);  /* get result */
-		if (s == NULL)
-			return luaL_error(L, LUA_QL("tostring") " must return a string to "
-							  LUA_QL("print"));
-		if (i > 1) fputs("\t", stdout);
+    lua_getglobal(L, "tostring");
+    for (i = 1; i <= n; i++) {
+        const char *s;
+        lua_pushvalue(L, -1);  /* function to be called */
+        lua_pushvalue(L, i);   /* value to print */
+        lua_call(L, 1, 1);
+        s = lua_tostring(L, -1);  /* get result */
+        if (s == NULL)
+            return luaL_error(L, LUA_QL("tostring") " must return a string to "
+                              LUA_QL("print"));
+        if (i > 1) fputs("\t", stdout);
         Log::instance().trace(kModScript, "%s", s);
-		lua_pop(L, 1);  /* pop result */
-	}
-	return 0;
+        lua_pop(L, 1);  /* pop result */
+    }
+    return 0;
 }
 
 int DGScript::_globalRegister(lua_State *L) {
-	if (!lua_isfunction(L, -1)) {
+    if (!lua_isfunction(L, -1)) {
         Log::instance().error(kModScript, kString14014);
-		
-		return 0;
-	}
-	
-	int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // pop and return a reference to the table.
-	
+        
+        return 0;
+    }
+    
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // pop and return a reference to the table.
+    
     DGControl::instance().registerGlobalHandler((unsigned int)luaL_checknumber(L, 1), ref);
-	
-	return 0;
+    
+    return 0;
 }
 
 int DGScript::_globalRoom(lua_State *L) {
@@ -456,8 +456,8 @@ int DGScript::_globalSetFont(lua_State *L) {
 
 int DGScript::_globalSnap(lua_State *L) {
     DGControl::instance().takeSnapshot();
-	
-	return 0;
+    
+    return 0;
 }
 
 int DGScript::_globalSwitch(lua_State *L) {
@@ -480,35 +480,35 @@ int DGScript::_globalSwitch(lua_State *L) {
             break;
     }
     
-	return 0;
+    return 0;
 }
 
 int DGScript::_globalStartTimer(lua_State *L) {
-	if (!lua_isfunction(L, -1)) {
-		Log::instance().trace(kModScript, "%s", kString14009);
+    if (!lua_isfunction(L, -1)) {
+        Log::instance().trace(kModScript, "%s", kString14009);
         
-		return 0;
-	}
-	
-	int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
+        return 0;
+    }
+    
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
     bool shouldLoop = lua_toboolean(L, 2);
-	int handle = DGTimerManager::instance().create(luaL_checknumber(L, 1), shouldLoop, ref);
+    int handle = DGTimerManager::instance().create(luaL_checknumber(L, 1), shouldLoop, ref);
     
     lua_pushnumber(L, handle);
-	
-	return 1;
+    
+    return 1;
 }
 
 int DGScript::_globalStopTimer(lua_State *L) {
     DGTimerManager::instance().disable(static_cast<int>(luaL_checknumber(L, 1)));
-	
-	return 0;
+    
+    return 0;
 }
 
 int DGScript::_globalVersion(lua_State *L) {
     lua_pushstring(L, DAGON_VERSION);
-	
-	return 1;
+    
+    return 1;
 }
 
 void DGScript::_registerEnums() {
@@ -565,35 +565,35 @@ void DGScript::_registerEnums() {
     DGLuaEnum(_L, MOUSE_MOVE, DGEventMouseMove);
     DGLuaEnum(_L, RESIZE, DGEventResize);
 
-	DGLuaEnum(_L, BLACK, kColorBlack);
-	DGLuaEnum(_L, BLUE, kColorBlue);
-	DGLuaEnum(_L, GREEN, kColorGreen);
-	DGLuaEnum(_L, CYAN, kColorCyan);
-	DGLuaEnum(_L, RED, kColorRed);
-	DGLuaEnum(_L, MAGENTA, kColorMagenta);
-	DGLuaEnum(_L, BROWN, kColorBrown);
-	DGLuaEnum(_L, LIGHTGRAY, kColorLightGray);
-	DGLuaEnum(_L, DARKGRAY, kColorDarkGray);
-	DGLuaEnum(_L, BRIGHTBLUE, kColorBrightBlue);
-	DGLuaEnum(_L, BRIGHTGREEN, kColorBrightGreen);
-	DGLuaEnum(_L, BRIGHTCYAN, kColorBrightCyan);
-	DGLuaEnum(_L, BRIGHTRED, kColorBrightRed);
-	DGLuaEnum(_L, BRIGHTMAGENTA, kColorBrightMagenta);
-	DGLuaEnum(_L, YELLOW, kColorYellow);
-	DGLuaEnum(_L, WHITE, kColorWhite);
+    DGLuaEnum(_L, BLACK, kColorBlack);
+    DGLuaEnum(_L, BLUE, kColorBlue);
+    DGLuaEnum(_L, GREEN, kColorGreen);
+    DGLuaEnum(_L, CYAN, kColorCyan);
+    DGLuaEnum(_L, RED, kColorRed);
+    DGLuaEnum(_L, MAGENTA, kColorMagenta);
+    DGLuaEnum(_L, BROWN, kColorBrown);
+    DGLuaEnum(_L, LIGHTGRAY, kColorLightGray);
+    DGLuaEnum(_L, DARKGRAY, kColorDarkGray);
+    DGLuaEnum(_L, BRIGHTBLUE, kColorBrightBlue);
+    DGLuaEnum(_L, BRIGHTGREEN, kColorBrightGreen);
+    DGLuaEnum(_L, BRIGHTCYAN, kColorBrightCyan);
+    DGLuaEnum(_L, BRIGHTRED, kColorBrightRed);
+    DGLuaEnum(_L, BRIGHTMAGENTA, kColorBrightMagenta);
+    DGLuaEnum(_L, YELLOW, kColorYellow);
+    DGLuaEnum(_L, WHITE, kColorWhite);
     
     DGLuaEnum(_L, F1, kKeyF1);
-	DGLuaEnum(_L, F2, kKeyF2);
-	DGLuaEnum(_L, F3, kKeyF3);
-	DGLuaEnum(_L, F4, kKeyF4);
+    DGLuaEnum(_L, F2, kKeyF2);
+    DGLuaEnum(_L, F3, kKeyF3);
+    DGLuaEnum(_L, F4, kKeyF4);
     DGLuaEnum(_L, F5, kKeyF5);
-	DGLuaEnum(_L, F6, kKeyF6);
-	DGLuaEnum(_L, F7, kKeyF7);
-	DGLuaEnum(_L, F8, kKeyF8);
-	DGLuaEnum(_L, F9, kKeyF9);
-	DGLuaEnum(_L, F10, kKeyF10);
-	DGLuaEnum(_L, F11, kKeyF11);
-	DGLuaEnum(_L, F12, kKeyF12);
+    DGLuaEnum(_L, F6, kKeyF6);
+    DGLuaEnum(_L, F7, kKeyF7);
+    DGLuaEnum(_L, F8, kKeyF8);
+    DGLuaEnum(_L, F9, kKeyF9);
+    DGLuaEnum(_L, F10, kKeyF10);
+    DGLuaEnum(_L, F11, kKeyF11);
+    DGLuaEnum(_L, F12, kKeyF12);
 
     DGLuaEnum(_L, SLOW, kFadeSlow);
     DGLuaEnum(_L, SLOWEST, kFadeSlowest);
@@ -625,6 +625,6 @@ void DGScript::_registerGlobals() {
     };
     
     lua_getglobal(_L, "_G");
-	luaL_register(_L, NULL, globalLibs);
-	lua_pop(_L, 1);
+    luaL_register(_L, NULL, globalLibs);
+    lua_pop(_L, 1);
 }

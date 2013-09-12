@@ -49,9 +49,9 @@ DGFontManager::~DGFontManager() {
 
 void DGFontManager::init(){
     log.trace(kModFont, "%s", kString15001);
-	
-	if (FT_Init_FreeType(&_library)) {
-		log.error(kModFont, "%s", kString15003);
+    
+    if (FT_Init_FreeType(&_library)) {
+        log.error(kModFont, "%s", kString15003);
         return;
     }
     

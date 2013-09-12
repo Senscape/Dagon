@@ -41,12 +41,12 @@ enum DGFeedStates {
 };
 
 typedef struct {
-	Point location;
-	uint32_t color;
+    Point location;
+    uint32_t color;
   int state;
-	char text[kMaxFeedLength];
+    char text[kMaxFeedLength];
   char audio[kMaxFileLength];
-	int timerHandle;    
+    int timerHandle;    
 } DGFeed;
 
 class Audio;

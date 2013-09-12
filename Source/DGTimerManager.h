@@ -59,7 +59,7 @@ class DGTimerManager {
     int _handles; // Maintains a count of handles
     int _luaObject;
 
-	bool _isRunning;
+    bool _isRunning;
   
     SDL_mutex* _mutex;
     SDL_Thread* _thread;
@@ -88,7 +88,7 @@ public:
     void process();
     void setLuaObject(int luaObject);
     void setSystem(DGSystem* theSystem);
-	void terminate();
+    void terminate();
     bool update();
 };
 

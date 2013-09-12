@@ -64,7 +64,7 @@ public:
             }
         }
         else if (params == 1) {
-			flagsIndex = 3; // Won't pass the check
+            flagsIndex = 3; // Won't pass the check
             coordsIndex = 1;
         }
         else return; // Everything is wrong! Do panic!

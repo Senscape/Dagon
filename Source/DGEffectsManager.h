@@ -60,10 +60,10 @@ enum DGEffectsValues {
 };
 
 typedef struct {
-	GLfloat x,y,z;
-	GLfloat r,g,b;
-	GLfloat xd,yd,zd;
-	GLfloat cs;
+    GLfloat x,y,z;
+    GLfloat r,g,b;
+    GLfloat xd,yd,zd;
+    GLfloat cs;
 } DGParticle;
 
 class DGCameraManager;

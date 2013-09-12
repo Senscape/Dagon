@@ -38,8 +38,8 @@ Texture::Texture() :
   log(Log::instance())
 {
   _hasResource = false;
-	_isBitmapLoaded = false;
-	_isLoaded = false;
+  _isBitmapLoaded = false;
+  _isLoaded = false;
   _usageCount = 0;
   _compressionLevel = config.texCompression;
   this->setType(kObjectTexture);

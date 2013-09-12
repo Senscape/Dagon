@@ -38,9 +38,9 @@ Audio::Audio() :
   _isMatched = false;
   _state = kAudioInitial;
   _oggCallbacks.read_func = _oggRead;
-	_oggCallbacks.seek_func = _oggSeek;
-	_oggCallbacks.close_func = _oggClose;
-	_oggCallbacks.tell_func = _oggTell;
+  _oggCallbacks.seek_func = _oggSeek;
+  _oggCallbacks.close_func = _oggClose;
+  _oggCallbacks.tell_func = _oggTell;
   this->setType(kObjectAudio);
   _mutex = SDL_CreateMutex();
   if (!_mutex)
@@ -375,14 +375,14 @@ void Audio::_emptyBuffers() {
   ALint alState;
   alGetSourcei(_alSource, AL_SOURCE_STATE, &alState);
 
-	if (alState != AL_PLAYING) {
+  if (alState != AL_PLAYING) {
     int queued;
     alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &queued);
 
     while (queued--) {
       ALuint buffer;
       alSourceUnqueueBuffers(_alSource, 1, &buffer);
-			_verifyError("unqueue");
+      _verifyError("unqueue");
     }
   }
 }
@@ -410,8 +410,8 @@ ALboolean Audio::_verifyError(const std::string &operation) {
     log.error(kModAudio, "%s: %s: %s (%d)", kString16006,
               _resource.name.c_str(), operation.c_str(), error);
     return AL_FALSE;
-	}
-	return AL_TRUE; 
+  }
+  return AL_TRUE; 
 }
 
 // And now... The Vorbisfile callbacks
@@ -425,13 +425,13 @@ size_t Audio::_oggRead(void* ptr, size_t size, size_t nmemb, void* datasource) {
     
   std::memcpy(ptr, audio->_resource.data + audio->_resource.dataRead, nSize);
   audio->_resource.dataRead += nSize;    
-	return nSize;
+  return nSize;
 }
 
 int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
   Audio* audio = static_cast<Audio*>(datasource);
     
-	switch (whence) {
+  switch (whence) {
     case SEEK_SET: {
       audio->_resource.dataRead = offset;
       break;
@@ -447,14 +447,14 @@ int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
     default: {
       assert(false);
     }
-	}
+  }
     
-	if (audio->_resource.dataRead > audio->_resource.dataSize) {
-		audio->_resource.dataRead = 0;
-		return -1;
-	}
+  if (audio->_resource.dataRead > audio->_resource.dataSize) {
+    audio->_resource.dataRead = 0;
+    return -1;
+  }
   
-	return 0;
+  return 0;
 }
 
 int Audio::_oggClose(void* datasource) {

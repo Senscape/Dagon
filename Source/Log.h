@@ -51,9 +51,9 @@ enum LogModules {
 };
 
 enum LogTypes {
-	kLogTrace,
-	kLogError,
-	kLogWarning
+  kLogTrace,
+  kLogError,
+  kLogWarning
 };
 
 struct LogData {

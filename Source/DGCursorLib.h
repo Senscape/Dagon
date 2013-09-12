@@ -34,26 +34,26 @@
 
 static int DGCursorLibDisable(lua_State *L) {
     DGCursorManager::instance().Object::disable();
-	
-	return 0;
+    
+    return 0;
 }
 
 static int DGCursorLibEnable(lua_State *L) {
     DGCursorManager::instance().Object::enable();
-	
-	return 0;
+    
+    return 0;
 }
 
 static int DGCursorLibFadeIn(lua_State *L) {
     DGCursorManager::instance().Object::fadeIn();
-	
-	return 0;
+    
+    return 0;
 }
 
 static int DGCursorLibFadeOut(lua_State *L) {
     DGCursorManager::instance().Object::fadeOut();
-	
-	return 0;
+    
+    return 0;
 }
 
 static int DGCursorLibLoad(lua_State *L) {
@@ -70,12 +70,12 @@ static int DGCursorLibLoad(lua_State *L) {
 ////////////////////////////////////////////////////////////
 
 static const struct luaL_reg kCursorLib [] = {
-	{"disable", DGCursorLibDisable},
-	{"enable", DGCursorLibEnable},   
+    {"disable", DGCursorLibDisable},
+    {"enable", DGCursorLibEnable},   
     {"fadeIn", DGCursorLibFadeIn}, 
     {"fadeOut", DGCursorLibFadeOut},
     {"load", DGCursorLibLoad},
-	{NULL, NULL}
+    {NULL, NULL}
 };
 
 #endif // DG_CURSORLIB_H

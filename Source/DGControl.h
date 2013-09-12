@@ -52,32 +52,32 @@ class DGTimerManager;
 class DGVideoManager;
 
 typedef struct {
-	bool hasEnterNode;
-    int	enterNode;
-	bool hasLeaveNode;
-	int	leaveNode;
-	bool hasEnterRoom;
-    int	enterRoom;
-	bool hasLeaveRoom;
-	int	leaveRoom;
-	bool hasPreRender;
-    int	preRender;
-	bool hasPostRender;
-	int	postRender;
-	bool hasMouseMove;
-    int	mouseMove;
-	bool hasMouseButton;
-	int	mouseButton;
-	bool hasMouseRightButton;
-	int	mouseRightButton;
-	bool hasResize;
-	int	resize;
+    bool hasEnterNode;
+    int enterNode;
+    bool hasLeaveNode;
+    int leaveNode;
+    bool hasEnterRoom;
+    int enterRoom;
+    bool hasLeaveRoom;
+    int leaveRoom;
+    bool hasPreRender;
+    int preRender;
+    bool hasPostRender;
+    int postRender;
+    bool hasMouseMove;
+    int mouseMove;
+    bool hasMouseButton;
+    int mouseButton;
+    bool hasMouseRightButton;
+    int mouseRightButton;
+    bool hasResize;
+    int resize;
 } DGEventHandlers;
 
 typedef struct {
-	bool enabled;
-	int value;
-	char line[kMaxLogLength];
+    bool enabled;
+    int value;
+    char line[kMaxLogLength];
 } DGHotkeyData;
 
 ////////////////////////////////////////////////////////////
@@ -115,10 +115,10 @@ class DGControl {
     bool _cancelSplash;
     bool _directControlActive;
     bool _isInitialized;
-	bool _isRunning;
+    bool _isRunning;
     bool _isShowingSplash; // Move this to state manager
     bool _isShuttingDown;
-	int _shutdownTimer;
+    int _shutdownTimer;
     int _sleepTimer;
 
     void _processAction();
@@ -139,8 +139,8 @@ public:
     Node* currentNode();
     Room* currentRoom();
     void cutscene(const char* fileName);
-	bool isConsoleActive();    
-	bool isDirectControlActive();
+    bool isConsoleActive();    
+    bool isDirectControlActive();
     void lookAt(float horizontal, float vertical, bool instant);
     void processFunctionKey(int aKey);
     void processKey(int aKey, int eventFlags);

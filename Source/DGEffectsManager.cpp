@@ -65,16 +65,16 @@ DGEffectsManager::DGEffectsManager() :
 DGEffectsManager::~DGEffectsManager() {
     this->pause();
     
-	if (_isInitialized) {
-		glDetachShader(_program, _fragment);
-		glDeleteShader(_fragment);
-		glDeleteProgram(_program);
+    if (_isInitialized) {
+        glDetachShader(_program, _fragment);
+        glDeleteShader(_fragment);
+        glDeleteProgram(_program);
         
         delete _dustTexture;
         
-		_isActive = false;
+        _isActive = false;
         _isInitialized = false;
-	}    
+    }    
 }
 
 ////////////////////////////////////////////////////////////
@@ -134,7 +134,7 @@ void DGEffectsManager::init() {
     }
     else pointerToData = kShaderData;
     
-    _fragment = glCreateShader(GL_FRAGMENT_SHADER);	
+    _fragment = glCreateShader(GL_FRAGMENT_SHADER); 
 
     glShaderSource(_fragment, 1, &pointerToData, NULL);
     glCompileShader(_fragment);
@@ -487,9 +487,9 @@ void DGEffectsManager::_buildParticle(int idx) {
 
 // Modified example from Lighthouse 3D: http://www.lighthouse3d.com
 bool DGEffectsManager::_textFileRead() {
-	FILE* fh;
-	long size = 0;
-	
+    FILE* fh;
+    long size = 0;
+    
     fh = fopen(DGEffectsFileName, "rt");
     if (fh != NULL) {
         
@@ -507,6 +507,6 @@ bool DGEffectsManager::_textFileRead() {
         
         return true;
     }
-	
+    
     return false;
 }

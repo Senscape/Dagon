@@ -110,7 +110,7 @@ public:
     void drawSlide(int* withArrayOfCoordinates);
     void setAlpha(float alpha);
     void setColor(uint32_t color, float alpha = 0);
-    uint32_t	testColor(int xPosition, int yPosition);
+    uint32_t    testColor(int xPosition, int yPosition);
     
     // Helpers processing (indicates clickable spots)
     

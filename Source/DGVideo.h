@@ -35,28 +35,28 @@ enum DGVideoStates {
 };
 
 typedef struct {
-	int width;
-	int	height;
-	int depth;
-	unsigned char* data;
+    int width;
+    int height;
+    int depth;
+    unsigned char* data;
 } DGFrame;
 
 typedef struct {
-	ogg_sync_state oy;
-	ogg_page og;
-	ogg_stream_state to;
-	theora_info ti;
-	theora_comment tc;
-	theora_state td;
-	ogg_packet op;
-	
+    ogg_sync_state oy;
+    ogg_page og;
+    ogg_stream_state to;
+    theora_info ti;
+    theora_comment tc;
+    theora_state td;
+    ogg_packet op;
+    
   ogg_int64_t bos;
-	int long_option_index;
-	int c;
-	int theora_p;
-	int videobuf_ready;
-	ogg_int64_t videobuf_granulepos;
-	double videobuf_time;
+    int long_option_index;
+    int c;
+    int theora_p;
+    int videobuf_ready;
+    ogg_int64_t videobuf_granulepos;
+    double videobuf_time;
 } DGTheoraInfo;
 
 #define DGVideoBuffer 4096

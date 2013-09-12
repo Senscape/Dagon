@@ -51,12 +51,12 @@ bool Font::isLoaded() {
 void Font::print(int x, int y, const std::string &text, ...) {
   if (!text.empty() && _isLoaded) {
     char buffer[kMaxFeedLength];
-    va_list	ap;
+    va_list ap;
 
-		va_start(ap, text);
+    va_start(ap, text);
     int length = vsnprintf(buffer, kMaxFeedLength, text.c_str(), ap);
-		va_end(ap);
-	
+    va_end(ap);
+  
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPushMatrix();
@@ -65,7 +65,7 @@ void Font::print(int x, int y, const std::string &text, ...) {
     for (const char* c = buffer; length > 0; c++, length--) {
       int ch = *c;
         
-      GLfloat texCoords[] = {	0, 0, 0, _glyph[ch].y,
+      GLfloat texCoords[] = { 0, 0, 0, _glyph[ch].y,
         _glyph[ch].x, _glyph[ch].y, _glyph[ch].x, 0 };
       
       GLshort coords[] = { 0, 0, 0, _glyph[ch].rows,
@@ -89,12 +89,12 @@ void Font::print(int x, int y, const std::string &text, ...) {
 // FIXME: This is a repeated method from RenderManager --
 //  it would be best to avoid this.
 void Font::setColor(uint32_t color) {
-	uint8_t b = (color & 0x000000ff);
-	uint8_t g = (color & 0x0000ff00) >> 8;
-	uint8_t r = (color & 0x00ff0000) >> 16;
-	uint8_t a = (color & 0xff000000) >> 24;
+  uint8_t b = (color & 0x000000ff);
+  uint8_t g = (color & 0x0000ff00) >> 8;
+  uint8_t r = (color & 0x00ff0000) >> 16;
+  uint8_t a = (color & 0xff000000) >> 24;
   
-	glColor4f(r/255.0f, g/255.0f, b/255.0f, a/255.0f);
+  glColor4f(r/255.0f, g/255.0f, b/255.0f, a/255.0f);
 }
 
 void Font::setDefault(unsigned int heightOfFont) {
@@ -104,7 +104,7 @@ void Font::setDefault(unsigned int heightOfFont) {
     log.error(kModFont, "%s", kString15005);
     return;
   }
-	
+  
   _height = heightOfFont;
   _loadFont(face);
   FT_Done_Face(face);
@@ -125,7 +125,7 @@ void Font::setResource(const std::string &fromFileName,
     log.error(kModFont, "%s: %s", kString15004, fromFileName.c_str());
     return;
   }
-	
+  
   _height = heightOfFont;
   _loadFont(face);
   FT_Done_Face(face);
@@ -137,53 +137,53 @@ void Font::setResource(const std::string &fromFileName,
 
 void Font::_loadFont(FT_Face &face) {
   FT_Set_Char_Size(face, _height << 6, _height << 6, 96, 96);
-	glGenTextures(kMaxChars, _textures);
-	
-	for (unsigned char ch = 0; ch < kMaxChars; ch++) {
+  glGenTextures(kMaxChars, _textures);
+  
+  for (unsigned char ch = 0; ch < kMaxChars; ch++) {
     if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT)) {
       log.error(kModFont, "%s: %c", kString15006, ch);
       return;
     }
-		
+    
     FT_Glyph glyph;
     if (FT_Get_Glyph(face->glyph, &glyph)) {
       log.error(kModFont, "%s: %c", kString15007, ch);
       return;
     }
         
-		FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);
-		FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
-		FT_Bitmap bitmap = bitmapGlyph->bitmap;
-		
-		int width = _next(bitmap.width);
-		int height = _next(bitmap.rows);
-		GLubyte* expandedData;
+    FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);
+    FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
+    FT_Bitmap bitmap = bitmapGlyph->bitmap;
+    
+    int width = _next(bitmap.width);
+    int height = _next(bitmap.rows);
+    GLubyte* expandedData;
     expandedData = new GLubyte[2 * width * height];
     
-		for (int j = 0; j < height; j++) {
-			for (int i = 0; i < width; i++) {
-				expandedData[2 * (i + j * width)] =
+    for (int j = 0; j < height; j++) {
+      for (int i = 0; i < width; i++) {
+        expandedData[2 * (i + j * width)] =
           expandedData[2 * (i + j * width) + 1] =
           (i >= bitmap.width || j >= bitmap.rows) ?
           0 : bitmap.buffer[i + bitmap.width * j];
-			}
-		}
+      }
+    }
 
-		_glyph[ch].x = static_cast<float>(bitmap.width) / static_cast<float>(width);
-		_glyph[ch].y = static_cast<float>(bitmap.rows) / static_cast<float>(height);
-		_glyph[ch].width = bitmap.width;
-		_glyph[ch].rows = bitmap.rows;
-		_glyph[ch].left = bitmapGlyph->left;
-		_glyph[ch].top = bitmapGlyph->top;
-		_glyph[ch].advance = face->glyph->advance.x;
-		
-		glBindTexture(GL_TEXTURE_2D, _textures[ch]);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, 2, width, height, 0,
+    _glyph[ch].x = static_cast<float>(bitmap.width) / static_cast<float>(width);
+    _glyph[ch].y = static_cast<float>(bitmap.rows) / static_cast<float>(height);
+    _glyph[ch].width = bitmap.width;
+    _glyph[ch].rows = bitmap.rows;
+    _glyph[ch].left = bitmapGlyph->left;
+    _glyph[ch].top = bitmapGlyph->top;
+    _glyph[ch].advance = face->glyph->advance.x;
+    
+    glBindTexture(GL_TEXTURE_2D, _textures[ch]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, 2, width, height, 0,
                  GL_LUMINANCE_ALPHA, GL_UNSIGNED_BYTE, expandedData);
     delete[] expandedData;
-	}
+  }
   _isLoaded = true;
 }
 

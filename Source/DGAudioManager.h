@@ -50,7 +50,7 @@ class DGAudioManager {
     std::vector<Audio*> _arrayOfActiveAudios;
     
     bool _isInitialized;
-	bool _isRunning;
+    bool _isRunning;
   
   static int _runThread(void *ptr);
   
@@ -76,7 +76,7 @@ public:
     void registerAudio(Audio* target);
     void requestAudio(Audio* target);
     void setOrientation(float* orientation);
-	void terminate();
+    void terminate();
     bool update();
 };
 

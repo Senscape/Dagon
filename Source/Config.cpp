@@ -39,17 +39,17 @@ Config::Config() {
   effects = kDefEffects;
   framebuffer = kDefFramebuffer;
   frameLimiter = kDefFrameLimiter;
-	framerate = kDefFramerate;
-	fullscreen = kDefFullscreen;
+  framerate = kDefFramerate;
+  fullscreen = kDefFullscreen;
   log = kDefLog;
   mute = kDefMute;
   showHelpers = kDefShowHelpers;
   showSplash = kDefShowSplash;
-	showSpots = kDefShowSpots;
+  showSpots = kDefShowSpots;
   silentFeeds = kDefSilentFeeds;
   subtitles = kDefSubtitles;
   texCompression = kDefTexCompression;
-	verticalSync = kDefVerticalSync;
+  verticalSync = kDefVerticalSync;
   _resPath = kDefResourcePath;
   _texExtension = kDefTexExtension;
   
@@ -80,7 +80,7 @@ float Config::globalSpeed() {
 std::string Config::path(int ofType, const std::string &forFile,
                          int andObject) {
   std::string fullPath;
-	
+  
   switch (ofType) {
     case kPathApp: {
       fullPath = _appPath;
@@ -135,15 +135,15 @@ std::string Config::path(int ofType, const std::string &forFile,
   }
   
   fullPath += forFile;
-	
-	return fullPath;
+  
+  return fullPath;
 }
 
 std::string Config::script() {
   return _scriptName;
 }
 
-std::string	Config::texExtension() {
+std::string Config::texExtension() {
   return _texExtension;
 }
 

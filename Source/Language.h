@@ -12,14 +12,14 @@
 ////////////////////////////////////////////////////////////
 
 /*
- *	Messages structure: kStringMMNNN
- *	where MM = Module and NNN = Number
+ *  Messages structure: kStringMMNNN
+ *  where MM = Module and NNN = Number
  *
- *	Module:
+ *  Module:
  *
- *	00 - Generic
- *	10 - Texture
- *	11 - Render
+ *  00 - Generic
+ *  10 - Texture
+ *  11 - Render
  *  12 - Control
  *  13 - System
  *  14 - Script
@@ -30,7 +30,7 @@
  */
 
 #ifndef DAGON_LANGUAGE_H_
-#define	DAGON_LANGUAGE_H_
+#define DAGON_LANGUAGE_H_
 
 #define English
 

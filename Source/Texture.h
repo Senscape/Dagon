@@ -34,17 +34,17 @@
 
 typedef struct {
   char name[80];
-  short	width;
-	short	height;
-	short	compressionLevel; // 0: None, 1: GL only, 2: GL & zlib
-	short	numTextures;
+  short width;
+  short height;
+  short compressionLevel; // 0: None, 1: GL only, 2: GL & zlib
+  short numTextures;
 } TEXMainHeader;
 
 typedef struct {
-	short	cubePosition;
-	short	depth;
-	int size;
-	int	format;
+  short cubePosition;
+  short depth;
+  int size;
+  int format;
 } TEXSubHeader;
 
 class Config;
@@ -96,13 +96,13 @@ class Texture : public Object {
   
   GLubyte* _bitmap;
   unsigned int _compressionLevel;
-	GLint _depth;
+  GLint _depth;
   bool _hasResource;
-	GLint _height;
-	GLuint _ident;
+  GLint _height;
+  GLuint _ident;
   int _indexInBundle;
-	bool _isBitmapLoaded;
-	bool _isLoaded;
+  bool _isBitmapLoaded;
+  bool _isLoaded;
   unsigned int _usageCount; // Used to keep track of the most used textures
   GLint _width;
   

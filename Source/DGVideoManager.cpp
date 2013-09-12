@@ -32,7 +32,7 @@ DGVideoManager::DGVideoManager() :
     log(Log::instance())
 {
     _isInitialized = false;
-	_isRunning = false;
+  _isRunning = false;
   _mutex = SDL_CreateMutex();
   if (!_mutex)
     log.error(kModVideo, "%s", kString18001);
@@ -51,11 +51,11 @@ DGVideoManager::~DGVideoManager() {
 ////////////////////////////////////////////////////////////
 
 void DGVideoManager::flush() {
-	bool done = false;
+  bool done = false;
   if (_isInitialized) {
     if (!_arrayOfActiveVideos.empty()) {
       vector<DGVideo*>::iterator it;
-			while (!done) {
+      while (!done) {
         if (SDL_LockMutex(_mutex) == 0) {
           it = _arrayOfActiveVideos.begin();
           done = true;
@@ -72,7 +72,7 @@ void DGVideoManager::flush() {
         } else {
           log.error(kModVideo, "%s", kString18002);
         }
-			}
+      }
     }
   }
 }
@@ -84,7 +84,7 @@ void DGVideoManager::init() {
     // Eventually lots of Theora initialization process will be moved here
     
     _isInitialized = true;
-	_isRunning = true;
+  _isRunning = true;
     
   _thread = SDL_CreateThread(_runThread, "VideoManager", (void*)NULL);
   if (!_thread) {
@@ -165,7 +165,7 @@ bool DGVideoManager::update() {
     }
     return true;
   }
-	return false;
+  return false;
 }
 
 ////////////////////////////////////////////////////////////

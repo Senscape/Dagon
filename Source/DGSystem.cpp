@@ -218,25 +218,25 @@ void DGSystem::toggleFullscreen() {
 // TODO: For best precision, this should be suspended when
 // performing a switch (the most expensive operation)
 double DGSystem::_calculateFrames(double theInterval = 1.0) {
-	static double lastTime = SDL_GetTicks() / 1000;
-	static int fpsFrameCount = 0;
-	static double fps = 0.0;
+  static double lastTime = SDL_GetTicks() / 1000;
+  static int fpsFrameCount = 0;
+  static double fps = 0.0;
     
-	double currentTime = SDL_GetTicks() / 1000;
+  double currentTime = SDL_GetTicks() / 1000;
 
-	if (theInterval < 0.1)
-		theInterval = 0.1;
+  if (theInterval < 0.1)
+    theInterval = 0.1;
     
-	if (theInterval > 10.0)
-		theInterval = 10.0;
+  if (theInterval > 10.0)
+    theInterval = 10.0;
     
-	if ((currentTime - lastTime) > theInterval) {
-		fps = (double)fpsFrameCount / (currentTime - lastTime);
+  if ((currentTime - lastTime) > theInterval) {
+    fps = (double)fpsFrameCount / (currentTime - lastTime);
 
-		fpsFrameCount = 0;
-		lastTime = SDL_GetTicks() / 1000;
-	}
-	else fpsFrameCount++;
+    fpsFrameCount = 0;
+    lastTime = SDL_GetTicks() / 1000;
+  }
+  else fpsFrameCount++;
 
-	return fps;
+  return fps;
 }

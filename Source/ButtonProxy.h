@@ -164,7 +164,7 @@ public:
     
     // Set the color of text
     int setTextColor(lua_State *L) {
-		uint32_t color = static_cast<uint32_t>(lua_tonumber(L, 1));
+        uint32_t color = static_cast<uint32_t>(lua_tonumber(L, 1));
         b->setTextColor(color);
         return 0;
     }

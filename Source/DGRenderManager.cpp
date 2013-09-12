@@ -38,7 +38,7 @@ DGRenderManager::DGRenderManager() :
     _helperLoop = 0.0f;
     
     _blendNextUpdate = false;
-	_texturesEnabled = false;
+    _texturesEnabled = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -64,17 +64,17 @@ void DGRenderManager::init() {
   log.info(kModRender, "%s: %s", kString11005, version);
   
   version = glGetString(GL_VERSION);
-	log.trace(kModRender, "%s", kString11001);
-	log.info(kModRender, "%s: %s", kString11002, version);
+    log.trace(kModRender, "%s", kString11001);
+    log.info(kModRender, "%s: %s", kString11002, version);
     
-	if (glewIsSupported("GL_VERSION_2_0")) {
-		_effectsEnabled = true;
+    if (glewIsSupported("GL_VERSION_2_0")) {
+        _effectsEnabled = true;
         effectsManager.init();
-	}
-	else {
-		log.warning(kModRender, "%s", kString11003);
-		_effectsEnabled = false;
-	}
+    }
+    else {
+        log.warning(kModRender, "%s", kString11003);
+        _effectsEnabled = false;
+    }
     
     _alphaEnabled = true;
     
@@ -87,34 +87,34 @@ void DGRenderManager::init() {
     glEnable(GL_BLEND);
     glDisable(GL_DITHER);
     
-	glDisable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
     //glDepthFunc(GL_ALWAYS);
-	//glDepthMask(GL_TRUE);
+    //glDepthMask(GL_TRUE);
     
-	if (config.antialiasing) {
-		// FIXME: Some of these options may be introducing black lines
-		glEnable(GL_POINT_SMOOTH);
-		glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
-		glEnable(GL_LINE_SMOOTH);
-		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
-		glEnable(GL_POLYGON_SMOOTH);
-		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+    if (config.antialiasing) {
+        // FIXME: Some of these options may be introducing black lines
+        glEnable(GL_POINT_SMOOTH);
+        glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+        glEnable(GL_LINE_SMOOTH);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glEnable(GL_POLYGON_SMOOTH);
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
         
         glEnable(GL_MULTISAMPLE); // Not sure if this one goes here
-	}
+    }
     
     glClearDepth(1.0f);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     
-	_blendTexture = new Texture(0, 0, 0); // All default values
+    _blendTexture = new Texture(0, 0, 0); // All default values
     _fadeTexture = new Texture(1, 1, 0); // Minimal black texture   
     _fadeTexture->setFadeSpeed(kFadeFastest);
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
-	for (int i = 0; i < (kDefCursorDetail + 1) * 2; i += 2) {
-		_defCursor[i] = static_cast<GLfloat>((.0075 * cos(i * 1.87 * M_PI / kDefCursorDetail)) * config.displayWidth);
-		_defCursor[i + 1] = static_cast<GLfloat>((.01 * sin(i * 1.87 * M_PI / kDefCursorDetail)) * config.displayHeight);
-	}    
+    for (int i = 0; i < (kDefCursorDetail + 1) * 2; i += 2) {
+        _defCursor[i] = static_cast<GLfloat>((.0075 * cos(i * 1.87 * M_PI / kDefCursorDetail)) * config.displayWidth);
+        _defCursor[i + 1] = static_cast<GLfloat>((.01 * sin(i * 1.87 * M_PI / kDefCursorDetail)) * config.displayHeight);
+    }    
     
     glEnableClientState(GL_VERTEX_ARRAY);
   
@@ -164,7 +164,7 @@ Vector DGRenderManager::project(GLdouble x, GLdouble y, GLdouble z) {
     
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-	
+    
     // Get window coordinates based on the 3D object
     
     gluProject(x, y, z,
@@ -192,7 +192,7 @@ Vector DGRenderManager::unProject(int x, int y) {
     
     GLint viewport[4];
     glGetIntegerv(GL_VIEWPORT, viewport);
-	
+    
     // Get window coordinates based on the 3D object
     
     gluUnProject((GLdouble)x, GLdouble(y), 0.0f,
@@ -252,8 +252,8 @@ void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
     glDisable(GL_LINE_SMOOTH);
     
     // TODO: Test later if push & pop is necessary at this point
-	glPushMatrix();
-	glTranslatef(xPosition, yPosition, 0);
+    glPushMatrix();
+    glTranslatef(xPosition, yPosition, 0);
     
     if (animate) {
         GLfloat currColor[4];
@@ -267,16 +267,16 @@ void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
         glBlendFunc(GL_ONE, GL_ONE);
     }
     
-	glVertexPointer(2, GL_FLOAT, 0, _defCursor);
-	
-	glDrawArrays(GL_LINE_LOOP, 0, (kDefCursorDetail / 2) + 2);
+    glVertexPointer(2, GL_FLOAT, 0, _defCursor);
     
-	if (animate) glScalef(0.85f * _helperLoop, 0.85f * _helperLoop, 0);
+    glDrawArrays(GL_LINE_LOOP, 0, (kDefCursorDetail / 2) + 2);
+    
+    if (animate) glScalef(0.85f * _helperLoop, 0.85f * _helperLoop, 0);
     else glScalef(0.835f, 0.85f, 0);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, (kDefCursorDetail / 2) + 2);
-	glPopMatrix();
+    glDrawArrays(GL_TRIANGLE_FAN, 0, (kDefCursorDetail / 2) + 2);
+    glPopMatrix();
     
-	glEnable(GL_LINE_SMOOTH);
+    glEnable(GL_LINE_SMOOTH);
     
     if (_alphaEnabled)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -286,76 +286,76 @@ void DGRenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
 
 void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned int onFace) {
     const float x = 1.0f;
-	const float y = 1.0f;
+    const float y = 1.0f;
     
     int i, j;
     int cubeTextureSize = kDefTexSize;
     int sizeOfArray = (int)withArrayOfCoordinates.size();
-	int numCoords = sizeOfArray + (sizeOfArray / 2);
-	GLfloat* spotVertCoords = new GLfloat[numCoords];
+    int numCoords = sizeOfArray + (sizeOfArray / 2);
+    GLfloat* spotVertCoords = new GLfloat[numCoords];
     
-	glPushMatrix();
+    glPushMatrix();
     
-	switch (onFace) {
-		case kNorth:
-			glTranslatef(-x, y, -x);
-			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
+    switch (onFace) {
+        case kNorth:
+            glTranslatef(-x, y, -x);
+            for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
                 // Size is divided in half because of the way we draw the cube
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+                spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
                 // We must invert the coordinates in some cases
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
-				spotVertCoords[j + 2] = 0.0f;
-			}
-			break;
-		case kEast:
-			glTranslatef(x, y, -x);
-			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = 0.0f;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);               
-			}
-			break;
-		case kSouth:
-			glTranslatef(x, y, x);
-			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
-				spotVertCoords[j + 2] = 0.0f;
-			}			
-			break;
-		case kWest:
-			glTranslatef(-x, y, x);
-			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = 0.0f;
-				spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize/ 2 ) * -1;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;             
-			}
-			break;
-		case kUp:
-			glTranslatef(-x, y, x);
-			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
-				spotVertCoords[j + 1] = 0.0f;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
-			}
-			break;
-		case kDown:
-			glTranslatef(-x, -y, -x);
-			for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
-				spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
-				spotVertCoords[j + 1] = 0.0f;
-				spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2);
-			}
-			break;				
-	}
+                spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+                spotVertCoords[j + 2] = 0.0f;
+            }
+            break;
+        case kEast:
+            glTranslatef(x, y, -x);
+            for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
+                spotVertCoords[j] = 0.0f;
+                spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+                spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);               
+            }
+            break;
+        case kSouth:
+            glTranslatef(x, y, x);
+            for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
+                spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;
+                spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+                spotVertCoords[j + 2] = 0.0f;
+            }           
+            break;
+        case kWest:
+            glTranslatef(-x, y, x);
+            for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
+                spotVertCoords[j] = 0.0f;
+                spotVertCoords[j + 1] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize/ 2 ) * -1;
+                spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2) * -1;             
+            }
+            break;
+        case kUp:
+            glTranslatef(-x, y, x);
+            for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
+                spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+                spotVertCoords[j + 1] = 0.0f;
+                spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2) * -1;
+            }
+            break;
+        case kDown:
+            glTranslatef(-x, -y, -x);
+            for (i = 0, j = 0; i < sizeOfArray; i += 2, j += 3) {
+                spotVertCoords[j] = (GLfloat)withArrayOfCoordinates[i] / (GLfloat)(cubeTextureSize / 2);
+                spotVertCoords[j + 1] = 0.0f;
+                spotVertCoords[j + 2] = (GLfloat)withArrayOfCoordinates[i + 1] / (GLfloat)(cubeTextureSize / 2);
+            }
+            break;              
+    }
     
-	if (_texturesEnabled) {
-		float texU = (float)1 / (cubeTextureSize * 2);
-		float texV = (float)((cubeTextureSize * 2) - 1) / (cubeTextureSize * 2);
+    if (_texturesEnabled) {
+        float texU = (float)1 / (cubeTextureSize * 2);
+        float texV = (float)((cubeTextureSize * 2) - 1) / (cubeTextureSize * 2);
         
-		GLfloat texCoords[] = {texU, texU, texV, texU, texV, texV, texU, texV};
-		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-	}
+        GLfloat texCoords[] = {texU, texU, texV, texU, texV, texV, texU, texV};
+        glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+    }
     else {
         // We can safely assume this spot has a color and therefore can use
         // a "helper". Not the most elegant way to do this but, hey, it works.
@@ -379,8 +379,8 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
                 break;
             case kSouth:
                 cx = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;
-				cy = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
-				cz = 0.0f;
+                cy = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                cz = 0.0f;
                 break;
             case kWest:
                 cx = 0.0f;
@@ -411,12 +411,12 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
         }
     }
     
-	glVertexPointer(3, GL_FLOAT, 0, spotVertCoords);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray / 2);
+    glVertexPointer(3, GL_FLOAT, 0, spotVertCoords);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray / 2);
     
     delete spotVertCoords;
     
-	glPopMatrix();
+    glPopMatrix();
 }
 
 void DGRenderManager::drawPostprocessedView() {
@@ -444,15 +444,15 @@ void DGRenderManager::drawPostprocessedView() {
 void DGRenderManager::drawSlide(int* withArrayOfCoordinates) {
     glPushMatrix();
     
-	if (_texturesEnabled) {
-		GLfloat texCoords[] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f};
-		glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-	}
+    if (_texturesEnabled) {
+        GLfloat texCoords[] = {0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f};
+        glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+    }
     
-	glVertexPointer(2, GL_INT, 0, withArrayOfCoordinates);
-	glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    glVertexPointer(2, GL_INT, 0, withArrayOfCoordinates);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     
-	glPopMatrix();
+    glPopMatrix();
 }
 
 void DGRenderManager::setAlpha(float alpha) {
@@ -461,10 +461,10 @@ void DGRenderManager::setAlpha(float alpha) {
 }
 
 void DGRenderManager::setColor(uint32_t color, float alpha) {
-	uint8_t b = (color & 0x000000ff);
-	uint8_t g = (color & 0x0000ff00) >> 8;
-	uint8_t r = (color & 0x00ff0000) >> 16;
-	uint8_t a = (color & 0xff000000) >> 24;
+    uint8_t b = (color & 0x000000ff);
+    uint8_t g = (color & 0x0000ff00) >> 8;
+    uint8_t r = (color & 0x00ff0000) >> 16;
+    uint8_t a = (color & 0xff000000) >> 24;
     
   if (alpha)
     glColor4f(r/255.0f, g/255.0f, b/255.0f, alpha); // Force specified alpha
@@ -473,22 +473,22 @@ void DGRenderManager::setColor(uint32_t color, float alpha) {
 }
 
 // FIXME: glReadPixels has an important performace hit on older computers. Improve.
-uint32_t	DGRenderManager::testColor(int xPosition, int yPosition) {
-	// This is static because it sometimes throws a stack corruption error
+uint32_t    DGRenderManager::testColor(int xPosition, int yPosition) {
+    // This is static because it sometimes throws a stack corruption error
     static GLubyte pixel[3];
-	GLint r, g, b;
-	uint32_t aux;
+    GLint r, g, b;
+    uint32_t aux;
     
     // Note we flip the Y coordinate here because only the orthogonal projection is flipped
-	glReadPixels(xPosition, config.displayHeight - yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
+    glReadPixels(xPosition, config.displayHeight - yPosition, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, pixel);
     
     r = (GLint)pixel[0];
-	g = (GLint)pixel[1];
-	b = (GLint)pixel[2];
+    g = (GLint)pixel[1];
+    b = (GLint)pixel[2];
     
-	aux = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+    aux = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
     
-	return aux;
+    return aux;
 }
 
 ////////////////////////////////////////////////////////////
@@ -532,13 +532,13 @@ void DGRenderManager::clearView() {
 }
 
 void DGRenderManager::copyView() {
-   	glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config.displayWidth, config.displayHeight, 0); 
+    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, config.displayWidth, config.displayHeight, 0); 
 }
 
 void DGRenderManager::blendView() {
-	if (_blendNextUpdate) {
-		int xStretch;
-		int yStretch;
+    if (_blendNextUpdate) {
+        int xStretch;
+        int yStretch;
         
         if (_fadeWithZoom) {
             xStretch = static_cast<int>(_blendOpacity) * (config.displayWidth / 4);
@@ -561,8 +561,8 @@ void DGRenderManager::blendView() {
         
         glColor4f(1.0f, 1.0f, 1.0f, 1.0f - _blendOpacity);
         
-		_blendTexture->bind();
-		this->drawSlide(coords);
+        _blendTexture->bind();
+        this->drawSlide(coords);
         
         if (_blendNextUpdate) {
             if (_blendOpacity >= 1.0f) {
@@ -570,7 +570,7 @@ void DGRenderManager::blendView() {
                 _blendNextUpdate = false;
             }
         }
-	}
+    }
 }
 
 void DGRenderManager::resetView() {

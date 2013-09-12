@@ -91,17 +91,17 @@ class Config {
   bool effects;
   bool framebuffer;
   bool frameLimiter;
-	int framerate;
-	bool fullscreen;
+  int framerate;
+  bool fullscreen;
   bool log;
   bool mute;
   bool showHelpers;
   bool showSplash;
-	bool showSpots;
+  bool showSpots;
   bool silentFeeds;
   bool subtitles;
   bool texCompression;
-	bool verticalSync;
+  bool verticalSync;
   
   double framesPerSecond();
   float globalSpeed();

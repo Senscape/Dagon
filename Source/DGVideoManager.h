@@ -45,7 +45,7 @@ class DGVideoManager {
     std::vector<DGVideo*> _arrayOfActiveVideos;
     
     bool _isInitialized;
-	bool _isRunning;
+    bool _isRunning;
   
     static int _runThread(void *ptr);
     
@@ -64,7 +64,7 @@ public:
     void flush();    
     void registerVideo(DGVideo* target);
     void requestVideo(DGVideo* target);
-	void terminate();
+    void terminate();
     bool update();
 };
 

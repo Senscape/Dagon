@@ -32,7 +32,7 @@ DGAudioManager::DGAudioManager()  :
     log(Log::instance())
 {
   _isInitialized = false;
-	_isRunning = false;
+  _isRunning = false;
   _mutex = SDL_CreateMutex();
   if (!_mutex)
     log.error(kModAudio, "%s", kString18001);
@@ -74,7 +74,7 @@ void DGAudioManager::flush() {
     if (!_arrayOfActiveAudios.empty()) {
       vector<Audio*>::iterator it;
       bool done = false;     
-			while (!done) {
+      while (!done) {
         if (SDL_LockMutex(_mutex) == 0) {
           it = _arrayOfActiveAudios.begin();
           done = true;
@@ -107,7 +107,7 @@ void DGAudioManager::flush() {
         } else {
           log.error(kModAudio, "%s", kString18002);
         }
-			}
+      }
     }
   }
 }
@@ -116,13 +116,13 @@ void DGAudioManager::init() {
   log.trace(kModAudio, "%s", kString16001);
     
   char deviceName[256];
-	char *defaultDevice;
-	char *deviceList;
-	char *devices[12];
-	int	numDevices, numDefaultDevice;
+  char *defaultDevice;
+  char *deviceList;
+  char *devices[12];
+  int numDevices, numDefaultDevice;
     
-	strcpy(deviceName, "");
-	if (config.debugMode) {
+  strcpy(deviceName, "");
+  if (config.debugMode) {
         if (alcIsExtensionPresent(NULL, (ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
             defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
             deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
@@ -160,22 +160,22 @@ void DGAudioManager::init() {
                 }
             }
         }
-	}
+  }
     
     if (strlen(deviceName) == 0) {
-		log.trace(kModAudio, "%s", kString17004);
-		_alDevice = alcOpenDevice(NULL); // Select the preferred device
-	} else {
-		log.trace(kModAudio, "%s: %s", kString17005, deviceName);
-		_alDevice = alcOpenDevice((ALCchar*)deviceName); // Use the name from the enumeration process
-	}
+    log.trace(kModAudio, "%s", kString17004);
+    _alDevice = alcOpenDevice(NULL); // Select the preferred device
+  } else {
+    log.trace(kModAudio, "%s: %s", kString17005, deviceName);
+    _alDevice = alcOpenDevice((ALCchar*)deviceName); // Use the name from the enumeration process
+  }
     
     if (!_alDevice) {
         log.error(kModAudio, "%s", kString16004);
         return;
     }
     
-	_alContext = alcCreateContext(_alDevice, NULL);
+  _alContext = alcCreateContext(_alDevice, NULL);
     
     if (!_alContext) {
         log.error(kModAudio, "%s", kString16005);
@@ -183,29 +183,29 @@ void DGAudioManager::init() {
         return;
     }
     
-	alcMakeContextCurrent(_alContext);
+  alcMakeContextCurrent(_alContext);
     
     ALfloat listenerPos[] = {0.0f, 0.0f, 0.0f};
-	ALfloat listenerVel[] = {0.0f, 0.0f, 0.0f};
-	ALfloat listenerOri[] = {0.0f, 0.0f, -1.0f,
+  ALfloat listenerVel[] = {0.0f, 0.0f, 0.0f};
+  ALfloat listenerOri[] = {0.0f, 0.0f, -1.0f,
                           0.0f, 1.0f, 0.0f}; // Listener facing into the screen
     
-	alListenerfv(AL_POSITION, listenerPos);
-	alListenerfv(AL_VELOCITY, listenerVel);
-	alListenerfv(AL_ORIENTATION, listenerOri);
+  alListenerfv(AL_POSITION, listenerPos);
+  alListenerfv(AL_VELOCITY, listenerVel);
+  alListenerfv(AL_ORIENTATION, listenerOri);
     
   ALint error = alGetError();
     
-	if (error != AL_NO_ERROR) {
-		log.error(kModAudio, "%s: init (%d)", kString16006, error);
-		return;
-	}
+  if (error != AL_NO_ERROR) {
+    log.error(kModAudio, "%s: init (%d)", kString16006, error);
+    return;
+  }
     
     log.info(kModAudio, "%s: %s", kString16002, alGetString(AL_VERSION));
     log.info(kModAudio, "%s: %s", kString16003, vorbis_version_string());
     
     _isInitialized = true;
-	_isRunning = true;
+  _isRunning = true;
   
   _thread = SDL_CreateThread(_runThread, "AudioManager", (void*)NULL);
   if (!_thread) {
@@ -309,9 +309,9 @@ bool DGAudioManager::update() {
         log.error(kModAudio, "%s", kString18002);
       }
     }
-		return true;
+    return true;
   }
-	return false;
+  return false;
 }
 
 ////////////////////////////////////////////////////////////

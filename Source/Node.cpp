@@ -40,12 +40,12 @@ Node::Node() {
 Node::~Node() {
   // Note that we only delete spots automatically created by this class,
   // not ones by the user
-	_it = _arrayOfSpots.begin();
+  _it = _arrayOfSpots.begin();
   while (_it != _arrayOfSpots.end()) {
     Spot* spot = (*_it);
     if (spot->hasFlag(kSpotClass))
       delete spot;
-		++_it;
+    ++_it;
   }
 }
 

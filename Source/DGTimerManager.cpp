@@ -220,7 +220,7 @@ void DGTimerManager::terminate() {
 // FIXME: This is quite sucky. Timers keep looping and being checked even if they
 // were already triggered. Should have different arrays here per each kind of timer.
 bool DGTimerManager::update() {
-	if (_isRunning) {
+  if (_isRunning) {
     if (SDL_LockMutex(_mutex) == 0) {
       std::vector<DGTimer>::iterator it = _arrayOfTimers.begin();
       while (it != _arrayOfTimers.end()) {
@@ -236,9 +236,9 @@ bool DGTimerManager::update() {
       }
       SDL_UnlockMutex(_mutex);
     }
-		return true;
-	}
-	return false;
+    return true;
+  }
+  return false;
 }
 
 ////////////////////////////////////////////////////////////

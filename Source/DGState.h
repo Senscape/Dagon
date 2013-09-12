@@ -21,15 +21,15 @@
 // Default state is node unless a menu is specified
 
 enum DGGlobalStates {
-	DGStateCutscene,
-	DGStateInventory,
+    DGStateCutscene,
+    DGStateInventory,
     DGStateLookAt,
-	DGStateMenu,
-	DGStateNode,
+    DGStateMenu,
+    DGStateNode,
     DGStateSleep,
     DGStateSplash,
-	DGStateVideoSync,
-	DGStateZoom
+    DGStateVideoSync,
+    DGStateZoom
 };
 
 ////////////////////////////////////////////////////////////

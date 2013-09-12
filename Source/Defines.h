@@ -12,22 +12,22 @@
 ////////////////////////////////////////////////////////////
 
 #ifndef DAGON_DEFINES_H_
-#define	DAGON_DEFINES_H_
+#define DAGON_DEFINES_H_
 
 // Defaults
 
-#define	kDefScriptFile "Main" // Also name of the window
-#define	kDefAudioPath "Audio/"
-#define	kDefCursorPath "Cursors/"
-#define	kDefFontPath "Fonts/"
-#define	kDefImagePath "Images/"
-#define	kDefNodePath "Nodes/"
-#define	kDefRoomPath "Rooms/"
-#define	kDefVideoPath "Video/"
+#define kDefScriptFile "Main" // Also name of the window
+#define kDefAudioPath "Audio/"
+#define kDefCursorPath "Cursors/"
+#define kDefFontPath "Fonts/"
+#define kDefImagePath "Images/"
+#define kDefNodePath "Nodes/"
+#define kDefRoomPath "Rooms/"
+#define kDefVideoPath "Video/"
 // TODO: Maybe change to 'Assets'
-#define	kDefResourcePath "Resources/"
-#define	kDefConfigFile "Dagon.cfg"
-#define	kDefLogFile "Dagon.log"
+#define kDefResourcePath "Resources/"
+#define kDefConfigFile "Dagon.cfg"
+#define kDefLogFile "Dagon.log"
 #define kDefTexExtension "tex"
 
 // TODO: We should be able to read this value from each texture bundle
@@ -49,7 +49,7 @@ enum MaxValues {
 // We use this macro to load files sequentially
 
 #define kFileSeqStart 1
-#define	kFileSeqDigits 3
+#define kFileSeqDigits 3
 
 #define mkstr(a) # a
 #define in_between(a) mkstr(a)
@@ -78,16 +78,16 @@ enum CursorTypes {
 // extra-careful about their values.
 
 enum Directions {
-	kNorth = 0,
-	kEast,
-	kSouth,
-	kWest,
+  kNorth = 0,
+  kEast,
+  kSouth,
+  kWest,
   kUp,
   kDown,
-	kNorthEast,
-	kSouthEast,
-	kSouthWest,
-	kNorthWest,
+  kNorthEast,
+  kSouthEast,
+  kSouthWest,
+  kNorthWest,
   kCurrent = 0xFF // Maintain current direction
 };
 

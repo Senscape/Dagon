@@ -12,7 +12,7 @@
 ////////////////////////////////////////////////////////////
 
 #ifndef DAGON_COLORS_H_
-#define	DAGON_COLORS_H_
+#define DAGON_COLORS_H_
 
 // All these colors have full opacity
 

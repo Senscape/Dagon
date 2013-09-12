@@ -41,21 +41,21 @@ enum FadeTypes {
 enum ObjectTypes {
   // Note that 0 is used to return an invalid object in Lua
   kObjectNone = 0,
-	kObjectGeneric,
-	kObjectAudio,
+  kObjectGeneric,
+  kObjectAudio,
   kObjectButton,
   // Cursors are not really separate objects, but for convenience we include
   // them here
   kObjectCursor,
-	kObjectFont,
+  kObjectFont,
   kObjectImage,
-	kObjectNode,
+  kObjectNode,
   kObjectOverlay,
-	kObjectRoom,
+  kObjectRoom,
   kObjectSlide,
-	kObjectSpot,
-	kObjectTexture,
-	kObjectVideo
+  kObjectSpot,
+  kObjectTexture,
+  kObjectVideo
 };
 
 ////////////////////////////////////////////////////////////

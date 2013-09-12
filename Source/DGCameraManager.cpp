@@ -214,8 +214,8 @@ void DGCameraManager::setTargetAngle(float horizontal, float vertical) {
         // Substract n times pi (fix probable double turn)
         GLdouble pi, pos;
         pi = _angleH / (M_PI * 2);
-		pos = pi - floor (pi);
-		_angleH = pos * 2 * M_PI;
+        pos = pi - floor (pi);
+        _angleH = pos * 2 * M_PI;
         
         // Extrapolate the coordinates
         _angleHTarget = _toRadians(horizontal, _angleHLimit);
@@ -549,7 +549,7 @@ void DGCameraManager::update() {
         
         _isPanning = true;
     }
-	else if (_deltaX < 0) {
+    else if (_deltaX < 0) {
         if (_motionLeft < _maxSpeed)
             _motionLeft += _speedH;
         
@@ -584,7 +584,7 @@ void DGCameraManager::update() {
         
         _isPanning = true;
     }
-	else if (_deltaY < 0) {
+    else if (_deltaY < 0) {
         if (_motionUp < _maxSpeed)
             _motionUp += _speedV;
         

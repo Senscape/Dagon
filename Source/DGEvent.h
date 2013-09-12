@@ -12,16 +12,16 @@
 ////////////////////////////////////////////////////////////
 
 #ifndef DG_EVENT_H
-#define	DG_EVENT_H
+#define DG_EVENT_H
 
 enum DGGlobalEvents { // For Lua
-	DGEventEnterNode = 0x101, // Must implement
-	DGEventLeaveNode = 0x102, // Must implement
-	DGEventEnterRoom = 0x103, // Must implement
-	DGEventLeaveRoom = 0x104, // Must implement
-	DGEventPreRender = 0x105, // Must implement
-	DGEventPostRender = 0x106,
-	DGEventResize = 0x107
+    DGEventEnterNode = 0x101, // Must implement
+    DGEventLeaveNode = 0x102, // Must implement
+    DGEventEnterRoom = 0x103, // Must implement
+    DGEventLeaveRoom = 0x104, // Must implement
+    DGEventPreRender = 0x105, // Must implement
+    DGEventPostRender = 0x106,
+    DGEventResize = 0x107
 };
 
 enum kKeyEvents {

@@ -40,7 +40,7 @@ enum DGCamBobStates {
 enum DGCamDefaults {
     DGCamAccelerationFactor = 150,
     DGCamDragNeutralZone = 20,
-	DGCamFieldOfView = 55,
+    DGCamFieldOfView = 55,
     DGCamFreeNeutralZone = 40, // Now percentage of screen size
     DGCamInertia = 350, // Maintain motion after panning stops
     DGCamMaxSpeed = 25,

@@ -72,7 +72,7 @@ DGControl::DGControl() :
     _isInitialized = false;
   _isShowingSplash = false;
     _isShuttingDown = false;
-	_isRunning = false;
+    _isRunning = false;
     
     // This is used to randomize the color of certain spots,
     // should be called once during initialization.
@@ -92,7 +92,7 @@ DGControl::DGControl() :
     _eventHandlers.hasResize = false;
     
     for (int i = 0; i < kMaxHotKeys; i++)
-		_hotkeyData[i].enabled = false;
+        _hotkeyData[i].enabled = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -202,10 +202,10 @@ bool DGControl::isConsoleActive() {
 }
 
 bool DGControl::isDirectControlActive() {
-	if (config.controlMode == kControlFixed)
-		return _directControlActive;
-	else
-		return false;
+    if (config.controlMode == kControlFixed)
+        return _directControlActive;
+    else
+        return false;
 }
     
 void DGControl::lookAt(float horizontal, float vertical, bool instant) {
@@ -224,20 +224,20 @@ void DGControl::processFunctionKey(int aKey) {
     int idx = 0;
     
     switch (aKey) {
-		case kKeyF1: idx = 1; break;
-		case kKeyF2: idx = 2; break;
-		case kKeyF3: idx = 3; break;
-		case kKeyF4: idx = 4; break;
-		case kKeyF5: idx = 5; break;
-		case kKeyF6: idx = 6; break;
-		case kKeyF7: idx = 7; break;
-		case kKeyF8: idx = 8; break;
-		case kKeyF9: idx = 9; break;
-		case kKeyF10: idx = 10; break;
-		case kKeyF11: idx = 11; break;
-		case kKeyF12: idx = 12; break;         
-	}
-	
+        case kKeyF1: idx = 1; break;
+        case kKeyF2: idx = 2; break;
+        case kKeyF3: idx = 3; break;
+        case kKeyF4: idx = 4; break;
+        case kKeyF5: idx = 5; break;
+        case kKeyF6: idx = 6; break;
+        case kKeyF7: idx = 7; break;
+        case kKeyF8: idx = 8; break;
+        case kKeyF9: idx = 9; break;
+        case kKeyF10: idx = 10; break;
+        case kKeyF11: idx = 11; break;
+        case kKeyF12: idx = 12; break;         
+    }
+    
     if (idx) {
         if (_hotkeyData[idx].enabled)
            script.processCommand(_hotkeyData[idx].line);
@@ -464,65 +464,65 @@ void DGControl::processMouse(int x, int y, int eventFlags) {
 
 void DGControl::registerGlobalHandler(int forEvent, int handlerForLua) {
     switch (forEvent) {
-		case DGEventEnterNode:
-			_eventHandlers.enterNode = handlerForLua;
-			_eventHandlers.hasEnterNode = true;
-			break;
-		case DGEventLeaveNode:
-			_eventHandlers.leaveNode = handlerForLua;
-			_eventHandlers.hasLeaveNode = true;
-			break;
-		case DGEventEnterRoom:
-			_eventHandlers.enterRoom = handlerForLua;
-			_eventHandlers.hasEnterRoom = true;
-			break;
-		case DGEventLeaveRoom:
-			_eventHandlers.leaveRoom = handlerForLua;
-			_eventHandlers.hasLeaveRoom = true;
-			break;
-		case DGEventPreRender:
-			_eventHandlers.preRender = handlerForLua;
-			_eventHandlers.hasPreRender = true;
-			break;
-		case DGEventPostRender:
-			_eventHandlers.postRender = handlerForLua;
-			_eventHandlers.hasPostRender = true;
-			break;
-		case DGEventMouseDown:
-			_eventHandlers.mouseButton = handlerForLua;
-			_eventHandlers.hasMouseButton = true;
-			break;
-		case DGEventMouseRightDown:
-			_eventHandlers.mouseRightButton = handlerForLua;
-			_eventHandlers.hasMouseRightButton = true;
-			break;
-		case DGEventMouseMove:
-			_eventHandlers.mouseMove = handlerForLua;
-			_eventHandlers.hasMouseMove = true;
-			break;	
-		case DGEventResize:
-			_eventHandlers.resize = handlerForLua;
-			_eventHandlers.hasResize = true;
-			break;	            
-	}
+        case DGEventEnterNode:
+            _eventHandlers.enterNode = handlerForLua;
+            _eventHandlers.hasEnterNode = true;
+            break;
+        case DGEventLeaveNode:
+            _eventHandlers.leaveNode = handlerForLua;
+            _eventHandlers.hasLeaveNode = true;
+            break;
+        case DGEventEnterRoom:
+            _eventHandlers.enterRoom = handlerForLua;
+            _eventHandlers.hasEnterRoom = true;
+            break;
+        case DGEventLeaveRoom:
+            _eventHandlers.leaveRoom = handlerForLua;
+            _eventHandlers.hasLeaveRoom = true;
+            break;
+        case DGEventPreRender:
+            _eventHandlers.preRender = handlerForLua;
+            _eventHandlers.hasPreRender = true;
+            break;
+        case DGEventPostRender:
+            _eventHandlers.postRender = handlerForLua;
+            _eventHandlers.hasPostRender = true;
+            break;
+        case DGEventMouseDown:
+            _eventHandlers.mouseButton = handlerForLua;
+            _eventHandlers.hasMouseButton = true;
+            break;
+        case DGEventMouseRightDown:
+            _eventHandlers.mouseRightButton = handlerForLua;
+            _eventHandlers.hasMouseRightButton = true;
+            break;
+        case DGEventMouseMove:
+            _eventHandlers.mouseMove = handlerForLua;
+            _eventHandlers.hasMouseMove = true;
+            break;  
+        case DGEventResize:
+            _eventHandlers.resize = handlerForLua;
+            _eventHandlers.hasResize = true;
+            break;              
+    }
 }
 
 void DGControl::registerHotkey(int aKey, const char* luaCommandToExecute) {
     int idx = 0;
     
     switch (aKey) {
-		case kKeyF1: idx = 1; break;
-		case kKeyF2: idx = 2; break;
-		case kKeyF3: idx = 3; break;
-		case kKeyF4: idx = 4; break;
-		case kKeyF5: idx = 5; break;
-		case kKeyF6: idx = 6; break;
-		case kKeyF7: idx = 7; break;
-		case kKeyF8: idx = 8; break;
-		case kKeyF9: idx = 9; break;
-		case kKeyF10: idx = 10; break;
-		case kKeyF11: idx = 11; break;
-		case kKeyF12: idx = 12; break;
+        case kKeyF1: idx = 1; break;
+        case kKeyF2: idx = 2; break;
+        case kKeyF3: idx = 3; break;
+        case kKeyF4: idx = 4; break;
+        case kKeyF5: idx = 5; break;
+        case kKeyF6: idx = 6; break;
+        case kKeyF7: idx = 7; break;
+        case kKeyF8: idx = 8; break;
+        case kKeyF9: idx = 9; break;
+        case kKeyF10: idx = 10; break;
+        case kKeyF11: idx = 11; break;
+        case kKeyF12: idx = 12; break;
     }
     
     if (idx) {
@@ -835,14 +835,14 @@ void DGControl::takeSnapshot() {
     config.texCompression = false;
     
     time_t rawtime;
-	struct tm* timeinfo;
-	char buffer[kMaxFileLength];
+    struct tm* timeinfo;
+    char buffer[kMaxFileLength];
     Texture texture(0, 0, 0);
     
-	time(&rawtime);
-	timeinfo = localtime (&rawtime);
+    time(&rawtime);
+    timeinfo = localtime (&rawtime);
     
-	strftime(buffer, kMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
+    strftime(buffer, kMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
     
     cameraManager.beginOrthoView();
     renderManager.drawPostprocessedView();
@@ -856,7 +856,7 @@ void DGControl::takeSnapshot() {
 }
 
 void DGControl::terminate() {
-	_isRunning = false;
+    _isRunning = false;
     
     audioManager.terminate();
     timerManager.terminate();
