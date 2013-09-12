@@ -39,28 +39,28 @@ class Log;
 ////////////////////////////////////////////////////////////
 
 class DGFontManager {
-    Log& log;
-    
-    std::vector<Font*> _arrayOfFonts;
-    
-    Font _defaultFont;
-    bool _isInitialized;
-    FT_Library _library;
-    
-    DGFontManager();
-    DGFontManager(DGFontManager const&);
-    DGFontManager& operator=(DGFontManager const&);
-    ~DGFontManager();
-    
+  Log& log;
+  
+  std::vector<Font*> _arrayOfFonts;
+  
+  Font _defaultFont;
+  bool _isInitialized;
+  FT_Library _library;
+  
+  DGFontManager();
+  DGFontManager(DGFontManager const&);
+  DGFontManager& operator=(DGFontManager const&);
+  ~DGFontManager();
+  
 public:
-    static DGFontManager& instance() {
-        static DGFontManager fontManager;
-        return fontManager;
-    }
-    
-    void init();
-    Font* load(const char* fromFileName, unsigned int heightOfFont);
-    Font* loadDefault();
+  static DGFontManager& instance() {
+    static DGFontManager fontManager;
+    return fontManager;
+  }
+  
+  void init();
+  Font* load(const char* fromFileName, unsigned int heightOfFont);
+  Font* loadDefault();
 };
 
 #endif // DG_FONTMANAGER_H

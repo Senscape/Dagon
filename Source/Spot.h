@@ -32,8 +32,8 @@
 enum SpotFlags {
   kSpotAuto = 0x1,
   kSpotClass = 0x2,
-  kSpotLoop = 0x4,    
-  kSpotSync = 0x8,    
+  kSpotLoop = 0x4,
+  kSpotSync = 0x8,
   kSpotUser = 0x10
 };
 
@@ -48,9 +48,9 @@ class DGVideo;
 class Spot : public Object {
  public:
   Spot(std::vector<int> withArrayOfCoordinates,
-         unsigned int onFace, int withFlags);
+       unsigned int onFace, int withFlags);
   ~Spot();
-    
+  
   // Checks
   bool hasAction();
   bool hasAudio();
@@ -59,7 +59,7 @@ class Spot : public Object {
   bool hasTexture();
   bool hasVideo();
   bool isPlaying();
-    
+  
   // Gets
   Action* action();
   Audio* audio();
@@ -71,7 +71,7 @@ class Spot : public Object {
   int vertexCount();
   DGVideo* video();
   float volume();
-    
+  
   // Sets
   void setAction(Action* anAction);
   void setAudio(Audio* anAudio);
@@ -80,7 +80,7 @@ class Spot : public Object {
   void setTexture(Texture* aTexture);
   void setVideo(DGVideo* aVideo);
   void setVolume(float theVolume);
-    
+  
   // State changes
   void play();
   void resize(int width, int height);
@@ -91,7 +91,7 @@ class Spot : public Object {
   Audio* _attachedAudio;
   Texture* _attachedTexture;
   DGVideo* _attachedVideo;
-
+  
   std::vector<int> _arrayOfCoordinates;
   unsigned int _onFace;
   

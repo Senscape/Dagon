@@ -28,8 +28,8 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGAudioManager::DGAudioManager()  :
-    config(Config::instance()),
-    log(Log::instance())
+config(Config::instance()),
+log(Log::instance())
 {
   _isInitialized = false;
   _isRunning = false;
@@ -51,29 +51,29 @@ DGAudioManager::~DGAudioManager() {
 ////////////////////////////////////////////////////////////
 
 void DGAudioManager::clear() {
-    if (_isInitialized) {
-        if (!_arrayOfActiveAudios.empty()) {
-          vector<Audio*>::iterator it;
-          if (SDL_LockMutex(_mutex) == 0) {
-            it = _arrayOfActiveAudios.begin();
-            while (it != _arrayOfActiveAudios.end()) {
-              (*it)->release();
-              
-              it++;
-            }
-            SDL_UnlockMutex(_mutex);
-          } else {
-            log.error(kModAudio, "%s", kString18002);
-          }
+  if (_isInitialized) {
+    if (!_arrayOfActiveAudios.empty()) {
+      vector<Audio*>::iterator it;
+      if (SDL_LockMutex(_mutex) == 0) {
+        it = _arrayOfActiveAudios.begin();
+        while (it != _arrayOfActiveAudios.end()) {
+          (*it)->release();
+          
+          it++;
         }
+        SDL_UnlockMutex(_mutex);
+      } else {
+        log.error(kModAudio, "%s", kString18002);
+      }
     }
+  }
 }
 
 void DGAudioManager::flush() {
   if (_isInitialized) {
     if (!_arrayOfActiveAudios.empty()) {
       vector<Audio*>::iterator it;
-      bool done = false;     
+      bool done = false;
       while (!done) {
         if (SDL_LockMutex(_mutex) == 0) {
           it = _arrayOfActiveAudios.begin();
@@ -114,97 +114,97 @@ void DGAudioManager::flush() {
 
 void DGAudioManager::init() {
   log.trace(kModAudio, "%s", kString16001);
-    
+  
   char deviceName[256];
   char *defaultDevice;
   char *deviceList;
   char *devices[12];
   int numDevices, numDefaultDevice;
-    
+  
   strcpy(deviceName, "");
   if (config.debugMode) {
-        if (alcIsExtensionPresent(NULL, (ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
-            defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
-            deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
-            for (numDevices = 0; numDevices < 12; numDevices++) {devices[numDevices] = NULL;}
-            for (numDevices = 0; numDevices < 12; numDevices++) {
-                devices[numDevices] = deviceList;
-                if (strcmp(devices[numDevices], defaultDevice) == 0) {
-                    numDefaultDevice = numDevices;
-                }
-                deviceList += strlen(deviceList);
-                if (deviceList[0] == 0) {
-                    if (deviceList[1] == 0) {
-                        break;
-                    } else {
-                        deviceList += 1;
-                    }
-                }
-            }
-            
-            if (devices[numDevices] != NULL) {
-                int i;
-                
-                numDevices++;
-                if (config.debugMode) {
-                    log.trace(kModAudio, "%s", kString17003);
-                    log.trace(kModAudio, "0. NULL");
-                    for (i = 0; i < numDevices; i++) {
-                        log.trace(kModAudio, "%d. %s", i + 1, devices[i]);
-                    }
-                }
-                
-                i = config.audioDevice;
-                if ((i != 0) && (strlen(devices[i - 1]) < 256)) {
-                    strcpy(deviceName, devices[i - 1]);
-                }
-            }
+    if (alcIsExtensionPresent(NULL, (ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
+      defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+      deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
+      for (numDevices = 0; numDevices < 12; numDevices++) {devices[numDevices] = NULL;}
+      for (numDevices = 0; numDevices < 12; numDevices++) {
+        devices[numDevices] = deviceList;
+        if (strcmp(devices[numDevices], defaultDevice) == 0) {
+          numDefaultDevice = numDevices;
         }
+        deviceList += strlen(deviceList);
+        if (deviceList[0] == 0) {
+          if (deviceList[1] == 0) {
+            break;
+          } else {
+            deviceList += 1;
+          }
+        }
+      }
+      
+      if (devices[numDevices] != NULL) {
+        int i;
+        
+        numDevices++;
+        if (config.debugMode) {
+          log.trace(kModAudio, "%s", kString17003);
+          log.trace(kModAudio, "0. NULL");
+          for (i = 0; i < numDevices; i++) {
+            log.trace(kModAudio, "%d. %s", i + 1, devices[i]);
+          }
+        }
+        
+        i = config.audioDevice;
+        if ((i != 0) && (strlen(devices[i - 1]) < 256)) {
+          strcpy(deviceName, devices[i - 1]);
+        }
+      }
+    }
   }
-    
-    if (strlen(deviceName) == 0) {
+  
+  if (strlen(deviceName) == 0) {
     log.trace(kModAudio, "%s", kString17004);
     _alDevice = alcOpenDevice(NULL); // Select the preferred device
   } else {
     log.trace(kModAudio, "%s: %s", kString17005, deviceName);
     _alDevice = alcOpenDevice((ALCchar*)deviceName); // Use the name from the enumeration process
   }
-    
-    if (!_alDevice) {
-        log.error(kModAudio, "%s", kString16004);
-        return;
-    }
-    
+  
+  if (!_alDevice) {
+    log.error(kModAudio, "%s", kString16004);
+    return;
+  }
+  
   _alContext = alcCreateContext(_alDevice, NULL);
+  
+  if (!_alContext) {
+    log.error(kModAudio, "%s", kString16005);
     
-    if (!_alContext) {
-        log.error(kModAudio, "%s", kString16005);
-        
-        return;
-    }
-    
+    return;
+  }
+  
   alcMakeContextCurrent(_alContext);
-    
-    ALfloat listenerPos[] = {0.0f, 0.0f, 0.0f};
+  
+  ALfloat listenerPos[] = {0.0f, 0.0f, 0.0f};
   ALfloat listenerVel[] = {0.0f, 0.0f, 0.0f};
   ALfloat listenerOri[] = {0.0f, 0.0f, -1.0f,
-                          0.0f, 1.0f, 0.0f}; // Listener facing into the screen
-    
+    0.0f, 1.0f, 0.0f}; // Listener facing into the screen
+  
   alListenerfv(AL_POSITION, listenerPos);
   alListenerfv(AL_VELOCITY, listenerVel);
   alListenerfv(AL_ORIENTATION, listenerOri);
-    
+  
   ALint error = alGetError();
-    
+  
   if (error != AL_NO_ERROR) {
     log.error(kModAudio, "%s: init (%d)", kString16006, error);
     return;
   }
-    
-    log.info(kModAudio, "%s: %s", kString16002, alGetString(AL_VERSION));
-    log.info(kModAudio, "%s: %s", kString16003, vorbis_version_string());
-    
-    _isInitialized = true;
+  
+  log.info(kModAudio, "%s: %s", kString16002, alGetString(AL_VERSION));
+  log.info(kModAudio, "%s: %s", kString16003, vorbis_version_string());
+  
+  _isInitialized = true;
   _isRunning = true;
   
   _thread = SDL_CreateThread(_runThread, "AudioManager", (void*)NULL);
@@ -214,51 +214,51 @@ void DGAudioManager::init() {
 }
 
 void DGAudioManager::registerAudio(Audio* target) {
-    _arrayOfAudios.push_back(target);
+  _arrayOfAudios.push_back(target);
 }
 
 void DGAudioManager::requestAudio(Audio* target) {
-    if (!target->isLoaded()) {
-        target->load();
+  if (!target->isLoaded()) {
+    target->load();
+  }
+  
+  target->retain();
+  
+  // If the audio is not active, then it's added to
+  // that vector
+  
+  bool isActive = false;
+  std::vector<Audio*>::iterator it;
+  it = _arrayOfActiveAudios.begin();
+  
+  while (it != _arrayOfActiveAudios.end()) {
+    if ((*it) == target) {
+      isActive = true;
+      break;
     }
-
-    target->retain();
-    
-    // If the audio is not active, then it's added to
-    // that vector
-    
-    bool isActive = false;
-    std::vector<Audio*>::iterator it;
-    it = _arrayOfActiveAudios.begin();
-    
-    while (it != _arrayOfActiveAudios.end()) {
-        if ((*it) == target) {
-            isActive = true;
-            break;
-        }
-        it++;
+    it++;
+  }
+  
+  if (!isActive) {
+    if (SDL_LockMutex(_mutex) == 0) {
+      _arrayOfActiveAudios.push_back(target);
+      SDL_UnlockMutex(_mutex);
+    } else {
+      log.error(kModAudio, "%s", kString18002);
     }
-    
-    if (!isActive) {
-      if (SDL_LockMutex(_mutex) == 0) {
-        _arrayOfActiveAudios.push_back(target);
-        SDL_UnlockMutex(_mutex);
-      } else {
-        log.error(kModAudio, "%s", kString18002);
-      }
-    }
-    
-    // FIXME: Not very elegant. Must implement a state condition for
-    // each audio object. Perhaps use AL_STATE even.
-    if (target->state() == kAudioPaused) {
-        target->play();
-    }
+  }
+  
+  // FIXME: Not very elegant. Must implement a state condition for
+  // each audio object. Perhaps use AL_STATE even.
+  if (target->state() == kAudioPaused) {
+    target->play();
+  }
 }
 
 void DGAudioManager::setOrientation(float* orientation) {
-    if (_isInitialized) {
-        alListenerfv(AL_ORIENTATION, orientation);
-    }
+  if (_isInitialized) {
+    alListenerfv(AL_ORIENTATION, orientation);
+  }
 }
 
 void DGAudioManager::terminate() {
@@ -285,12 +285,12 @@ void DGAudioManager::terminate() {
       log.error(kModAudio, "%s", kString18002);
     }
   }
-
+  
   // Now we shut down OpenAL completely
   if (_isInitialized) {
-      alcMakeContextCurrent(NULL);
-      alcDestroyContext(_alContext);
-      alcCloseDevice(_alDevice);
+    alcMakeContextCurrent(NULL);
+    alcDestroyContext(_alContext);
+    alcCloseDevice(_alDevice);
   }
 }
 

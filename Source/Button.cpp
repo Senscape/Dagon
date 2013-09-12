@@ -27,8 +27,8 @@
 ////////////////////////////////////////////////////////////
 
 Button::Button() :
-  config(Config::instance()),
-  fontManager(DGFontManager::instance())
+config(Config::instance()),
+fontManager(DGFontManager::instance())
 {
   _hasAction = false;
   _hasFont = false;
@@ -108,7 +108,7 @@ void Button::setAction(Action anAction) {
 }
 
 void Button::setFont(const std::string &fromFileName,
-                       unsigned int heightOfFont) {
+                     unsigned int heightOfFont) {
   // FIXME: Wrong, this can load many repeated fonts!
   _font = fontManager.load(fromFileName.c_str(), heightOfFont);
 }

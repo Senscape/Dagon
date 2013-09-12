@@ -52,32 +52,32 @@ class DGTimerManager;
 class DGVideoManager;
 
 typedef struct {
-    bool hasEnterNode;
-    int enterNode;
-    bool hasLeaveNode;
-    int leaveNode;
-    bool hasEnterRoom;
-    int enterRoom;
-    bool hasLeaveRoom;
-    int leaveRoom;
-    bool hasPreRender;
-    int preRender;
-    bool hasPostRender;
-    int postRender;
-    bool hasMouseMove;
-    int mouseMove;
-    bool hasMouseButton;
-    int mouseButton;
-    bool hasMouseRightButton;
-    int mouseRightButton;
-    bool hasResize;
-    int resize;
+  bool hasEnterNode;
+  int enterNode;
+  bool hasLeaveNode;
+  int leaveNode;
+  bool hasEnterRoom;
+  int enterRoom;
+  bool hasLeaveRoom;
+  int leaveRoom;
+  bool hasPreRender;
+  int preRender;
+  bool hasPostRender;
+  int postRender;
+  bool hasMouseMove;
+  int mouseMove;
+  bool hasMouseButton;
+  int mouseButton;
+  bool hasMouseRightButton;
+  int mouseRightButton;
+  bool hasResize;
+  int resize;
 } DGEventHandlers;
 
 typedef struct {
-    bool enabled;
-    int value;
-    char line[kMaxLogLength];
+  bool enabled;
+  int value;
+  char line[kMaxLogLength];
 } DGHotkeyData;
 
 ////////////////////////////////////////////////////////////
@@ -85,78 +85,78 @@ typedef struct {
 ////////////////////////////////////////////////////////////
 
 class DGControl {
-    DGAudioManager& audioManager;
-    DGCameraManager& cameraManager;
-    Config& config;
-    DGCursorManager& cursorManager;
-    DGFeedManager& feedManager;
-    DGFontManager& fontManager;
-    Log& log;
-    DGRenderManager& renderManager;
-    DGScript& script;
-    TextureManager& textureManager;    
-    DGTimerManager& timerManager;
-    DGVideoManager& videoManager;
-    
-    DGSystem system;
-    
-    std::vector<Room*> _arrayOfRooms;
-    Room* _currentRoom;
-    
-    DGConsole* _console;
-    DGInterface* _interface;
-    DGScene* _scene;   
-    Spot* _syncedSpot;
-    DGState* _state;
-    
-    DGEventHandlers _eventHandlers;
-    DGHotkeyData _hotkeyData[kMaxHotKeys];
-    
-    bool _cancelSplash;
-    bool _directControlActive;
-    bool _isInitialized;
-    bool _isRunning;
-    bool _isShowingSplash; // Move this to state manager
-    bool _isShuttingDown;
-    int _shutdownTimer;
-    int _sleepTimer;
-
-    void _processAction();
-    void _updateView(int state, bool inBackground);
-    
-    DGControl();
-    DGControl(DGControl const&);
-    DGControl& operator=(DGControl const&);
-    ~DGControl();
-    
+  DGAudioManager& audioManager;
+  DGCameraManager& cameraManager;
+  Config& config;
+  DGCursorManager& cursorManager;
+  DGFeedManager& feedManager;
+  DGFontManager& fontManager;
+  Log& log;
+  DGRenderManager& renderManager;
+  DGScript& script;
+  TextureManager& textureManager;
+  DGTimerManager& timerManager;
+  DGVideoManager& videoManager;
+  
+  DGSystem system;
+  
+  std::vector<Room*> _arrayOfRooms;
+  Room* _currentRoom;
+  
+  DGConsole* _console;
+  DGInterface* _interface;
+  DGScene* _scene;
+  Spot* _syncedSpot;
+  DGState* _state;
+  
+  DGEventHandlers _eventHandlers;
+  DGHotkeyData _hotkeyData[kMaxHotKeys];
+  
+  bool _cancelSplash;
+  bool _directControlActive;
+  bool _isInitialized;
+  bool _isRunning;
+  bool _isShowingSplash; // Move this to state manager
+  bool _isShuttingDown;
+  int _shutdownTimer;
+  int _sleepTimer;
+  
+  void _processAction();
+  void _updateView(int state, bool inBackground);
+  
+  DGControl();
+  DGControl(DGControl const&);
+  DGControl& operator=(DGControl const&);
+  ~DGControl();
+  
 public:
-    static DGControl& instance() {
-        static DGControl control;
-        return control;
-    }
-    
-    void init();
-    Node* currentNode();
-    Room* currentRoom();
-    void cutscene(const char* fileName);
-    bool isConsoleActive();    
-    bool isDirectControlActive();
-    void lookAt(float horizontal, float vertical, bool instant);
-    void processFunctionKey(int aKey);
-    void processKey(int aKey, int eventFlags);
-    void processMouse(int x, int y, int eventFlags);
-    void registerGlobalHandler(int forEvent, int handlerForLua);
-    void registerHotkey(int aKey, const char* luaCommandToExecute);
-    void registerObject(Object* theTarget);
-    void requestObject(Object* theTarget);
-    void reshape(int width, int height);
-    void sleep(int forSeconds);
-    void syncSpot(Spot* spot);
-    void switchTo(Object* theTarget, bool instant = false);
-    void run();
-    void takeSnapshot();
-    void terminate();
-    void update();
+  static DGControl& instance() {
+    static DGControl control;
+    return control;
+  }
+  
+  void init();
+  Node* currentNode();
+  Room* currentRoom();
+  void cutscene(const char* fileName);
+  bool isConsoleActive();
+  bool isDirectControlActive();
+  void lookAt(float horizontal, float vertical, bool instant);
+  void processFunctionKey(int aKey);
+  void processKey(int aKey, int eventFlags);
+  void processMouse(int x, int y, int eventFlags);
+  void registerGlobalHandler(int forEvent, int handlerForLua);
+  void registerHotkey(int aKey, const char* luaCommandToExecute);
+  void registerObject(Object* theTarget);
+  void requestObject(Object* theTarget);
+  void reshape(int width, int height);
+  void sleep(int forSeconds);
+  void syncSpot(Spot* spot);
+  void switchTo(Object* theTarget, bool instant = false);
+  void run();
+  void takeSnapshot();
+  void terminate();
+  void update();
 };
 
 #endif // DG_CONTROL_H

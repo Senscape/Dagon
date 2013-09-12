@@ -38,24 +38,24 @@ class Texture;
 // Interface
 ////////////////////////////////////////////////////////////
 
-class Button : public Image {    
+class Button : public Image {
  public:
   Button();
   ~Button();
-
+  
   // Checks
   bool hasAction();
   bool hasFont();
   bool hasOnHoverTexture();
   bool hasText();
-
+  
   // Gets
   Action action();
   Font* font();
   Texture* onHoverTexture();
   std::string text();
   uint32_t textColor();
-
+  
   // Sets
   void setAction(Action anAction);
   void setFont(const std::string &fromFileName, unsigned int heightOfFont);

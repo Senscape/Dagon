@@ -55,103 +55,103 @@ DGTimerManager::~DGTimerManager() {
 ////////////////////////////////////////////////////////////
 
 bool DGTimerManager::checkManual(int handle) {
-    DGTimer* timer = _lookUp(handle);
+  DGTimer* timer = _lookUp(handle);
+  
+  if (timer->isEnabled) {
+    double currentTime = SDL_GetTicks() / 1000;
+    double duration = currentTime - timer->lastTime;
     
-    if (timer->isEnabled) {
-      double currentTime = SDL_GetTicks() / 1000;
-        double duration = currentTime - timer->lastTime;
-        
-        if (duration > timer->trigger) {
-            timer->lastTime = currentTime;
-            return true;
-        }
+    if (duration > timer->trigger) {
+      timer->lastTime = currentTime;
+      return true;
     }
-    
-    return false;
+  }
+  
+  return false;
 }
 
 int DGTimerManager::create(double trigger, bool shouldLoop, int handlerForLua, int luaObject) {
-    DGTimer timer;
-    
-    timer.handle = _handles;
-    timer.hasTriggered = false;
-    timer.isEnabled = true;
-    timer.isLoopable = shouldLoop;
-    timer.lastTime = SDL_GetTicks() / 1000;
-    timer.type = DGTimerNormal;    
-    
-    timer.trigger = trigger;
-    timer.luaHandler = handlerForLua;
-    timer.luaObject = luaObject;
+  DGTimer timer;
+  
+  timer.handle = _handles;
+  timer.hasTriggered = false;
+  timer.isEnabled = true;
+  timer.isLoopable = shouldLoop;
+  timer.lastTime = SDL_GetTicks() / 1000;
+  timer.type = DGTimerNormal;
+  
+  timer.trigger = trigger;
+  timer.luaHandler = handlerForLua;
+  timer.luaObject = luaObject;
   
   if (SDL_LockMutex(_mutex) == 0) {
     _arrayOfTimers.push_back(timer);
     SDL_UnlockMutex(_mutex);
   }
-    
-    _handles++;
-
-    return timer.handle;
+  
+  _handles++;
+  
+  return timer.handle;
 }
 
 int DGTimerManager::createInternal(double trigger, void (*callback)()) {
-    DGTimer timer;
-    
-    timer.handle = _handles;
-    timer.hasTriggered = false;
-    timer.handler = callback;
-    timer.isEnabled = true;
-    timer.isLoopable = false;
-    timer.lastTime = SDL_GetTicks() / 1000;
-    timer.type = DGTimerInternal;
-    
-    timer.trigger = trigger;
-    
+  DGTimer timer;
+  
+  timer.handle = _handles;
+  timer.hasTriggered = false;
+  timer.handler = callback;
+  timer.isEnabled = true;
+  timer.isLoopable = false;
+  timer.lastTime = SDL_GetTicks() / 1000;
+  timer.type = DGTimerInternal;
+  
+  timer.trigger = trigger;
+  
   if (SDL_LockMutex(_mutex) == 0) {
     _arrayOfTimers.push_back(timer);
     SDL_UnlockMutex(_mutex);
   }
-    
-    _handles++;
-    
-    return timer.handle;
+  
+  _handles++;
+  
+  return timer.handle;
 }
 
 int DGTimerManager::createManual(double trigger) {
-    DGTimer timer;
-    
-    timer.handle = _handles;
-    timer.hasTriggered = false;
-    timer.isEnabled = true;
-    timer.isLoopable = false;
-    timer.lastTime = SDL_GetTicks() / 1000;
-    timer.type = DGTimerManual;
-    
-    timer.trigger = trigger;
-
+  DGTimer timer;
+  
+  timer.handle = _handles;
+  timer.hasTriggered = false;
+  timer.isEnabled = true;
+  timer.isLoopable = false;
+  timer.lastTime = SDL_GetTicks() / 1000;
+  timer.type = DGTimerManual;
+  
+  timer.trigger = trigger;
+  
   if (SDL_LockMutex(_mutex) == 0) {
     _arrayOfTimers.push_back(timer);
     SDL_UnlockMutex(_mutex);
   }
-    
-    _handles++;
-    
-    return timer.handle;
+  
+  _handles++;
+  
+  return timer.handle;
 }
 
 void DGTimerManager::destroy(int handle) {
-    // Must implement
+  // Must implement
 }
 
 void DGTimerManager::disable(int handle) {
-    DGTimer* timer = _lookUp(handle);
-    timer->isEnabled = false;
+  DGTimer* timer = _lookUp(handle);
+  timer->isEnabled = false;
 }
 
 void DGTimerManager::enable(int handle) {
-    DGTimer* timer = _lookUp(handle);
-    timer->isEnabled = true;
-    timer->lastTime = SDL_GetTicks() / 1000;
+  DGTimer* timer = _lookUp(handle);
+  timer->isEnabled = true;
+  timer->lastTime = SDL_GetTicks() / 1000;
 }
 
 void DGTimerManager::process() {
@@ -203,11 +203,11 @@ void DGTimerManager::process() {
 }
 
 void DGTimerManager::setLuaObject(int luaObject) {
-    _luaObject = luaObject;
+  _luaObject = luaObject;
 }
 
 void DGTimerManager::setSystem(DGSystem* theSystem) {
-    system = theSystem;
+  system = theSystem;
 }
 
 void DGTimerManager::terminate() {

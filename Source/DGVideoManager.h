@@ -36,36 +36,36 @@ class Log;
 ////////////////////////////////////////////////////////////
 
 class DGVideoManager {
-    Config& config;
-    Log& log;
-    
-    SDL_mutex* _mutex;
-    SDL_Thread* _thread;
-    std::vector<DGVideo*> _arrayOfVideos;
-    std::vector<DGVideo*> _arrayOfActiveVideos;
-    
-    bool _isInitialized;
-    bool _isRunning;
+  Config& config;
+  Log& log;
   
-    static int _runThread(void *ptr);
-    
-    DGVideoManager();
-    DGVideoManager(DGVideoManager const&);
-    DGVideoManager& operator=(DGVideoManager const&);
-    ~DGVideoManager();
-    
+  SDL_mutex* _mutex;
+  SDL_Thread* _thread;
+  std::vector<DGVideo*> _arrayOfVideos;
+  std::vector<DGVideo*> _arrayOfActiveVideos;
+  
+  bool _isInitialized;
+  bool _isRunning;
+  
+  static int _runThread(void *ptr);
+  
+  DGVideoManager();
+  DGVideoManager(DGVideoManager const&);
+  DGVideoManager& operator=(DGVideoManager const&);
+  ~DGVideoManager();
+  
 public:
-    static DGVideoManager& instance() {
-        static DGVideoManager videoManager;
-        return videoManager;
-    }
-    
-    void init();
-    void flush();    
-    void registerVideo(DGVideo* target);
-    void requestVideo(DGVideo* target);
-    void terminate();
-    bool update();
+  static DGVideoManager& instance() {
+    static DGVideoManager videoManager;
+    return videoManager;
+  }
+  
+  void init();
+  void flush();
+  void registerVideo(DGVideo* target);
+  void requestVideo(DGVideo* target);
+  void terminate();
+  bool update();
 };
 
 #endif // DG_VIDEOMANAGER_H

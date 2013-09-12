@@ -47,7 +47,7 @@ class Node : public Object {
   
   // Gets
   std::string bundleName();
-  Spot* currentSpot();  
+  Spot* currentSpot();
   std::string description();
   Audio* footstep();
   Node* previousNode();
@@ -82,7 +82,7 @@ class Node : public Object {
   bool _hasFootstep;
   bool _isSlide;
   int _slideReturn;
-    
+  
   void _link(unsigned int direction, Action* action);
   
   Node(const Node&);

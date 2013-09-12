@@ -33,20 +33,20 @@
 #define DGFeedShadowDistance    2
 
 enum DGFeedStates {
-    DGFeedFadeIn,
-    DGFeedIdle,
-    DGFeedFadeOut,
-    DGFeedFadeOutSlow,
-    DGFeedDiscard
+  DGFeedFadeIn,
+  DGFeedIdle,
+  DGFeedFadeOut,
+  DGFeedFadeOutSlow,
+  DGFeedDiscard
 };
 
 typedef struct {
-    Point location;
-    uint32_t color;
+  Point location;
+  uint32_t color;
   int state;
-    char text[kMaxFeedLength];
+  char text[kMaxFeedLength];
   char audio[kMaxFileLength];
-    int timerHandle;    
+  int timerHandle;
 } DGFeed;
 
 class Audio;
@@ -61,43 +61,43 @@ class DGTimerManager;
 ////////////////////////////////////////////////////////////
 
 class DGFeedManager {
-    DGAudioManager& audioManager;
-    Config& config;
-    DGFontManager& fontManager;
-    DGTimerManager& timerManager;
-    
-    Audio* _feedAudio;
-    std::vector<DGFeed> _arrayOfActiveFeeds;
-    std::vector<DGFeed> _arrayOfFeeds;    
-    Font* _feedFont;
-    unsigned int _feedHeight;
-    
-    void _calculatePosition(DGFeed* feed);
-    void _dim();
-    void _flush();
-    
-    DGFeedManager();
-    DGFeedManager(DGFeedManager const&);
-    DGFeedManager& operator=(DGFeedManager const&);
-    ~DGFeedManager();
-    
+  DGAudioManager& audioManager;
+  Config& config;
+  DGFontManager& fontManager;
+  DGTimerManager& timerManager;
+  
+  Audio* _feedAudio;
+  std::vector<DGFeed> _arrayOfActiveFeeds;
+  std::vector<DGFeed> _arrayOfFeeds;
+  Font* _feedFont;
+  unsigned int _feedHeight;
+  
+  void _calculatePosition(DGFeed* feed);
+  void _dim();
+  void _flush();
+  
+  DGFeedManager();
+  DGFeedManager(DGFeedManager const&);
+  DGFeedManager& operator=(DGFeedManager const&);
+  ~DGFeedManager();
+  
 public:
-    static DGFeedManager& instance() {
-        static DGFeedManager feedManager;
-        return feedManager;
-    }
-
-    void cancel();
-    void clear(); // For clearing pending feeds
-    void init();
-    bool isPlaying();
-    bool hasQueued();
-    void queue(const char* text, const char* audio);
-    void reshape();
-    void setFont(const char* fromFileName, unsigned int heightOfFont);    
-    void show(const char* text);
-    void showAndPlay(const char* text, const char* audio);
-    void update();
+  static DGFeedManager& instance() {
+    static DGFeedManager feedManager;
+    return feedManager;
+  }
+  
+  void cancel();
+  void clear(); // For clearing pending feeds
+  void init();
+  bool isPlaying();
+  bool hasQueued();
+  void queue(const char* text, const char* audio);
+  void reshape();
+  void setFont(const char* fromFileName, unsigned int heightOfFont);
+  void show(const char* text);
+  void showAndPlay(const char* text, const char* audio);
+  void update();
 };
 
 #endif // DG_FEEDMANAGER_H

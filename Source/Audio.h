@@ -83,7 +83,7 @@ class Audio : public Object {
   void setLoopable(bool loopable);
   void setPosition(unsigned int face, Point origin);
   void setResource(std::string fileName);
-    
+  
   // State changes
   void load();
   void match(Audio* audioToMatch);
@@ -99,7 +99,7 @@ class Audio : public Object {
   
   Audio* _matchedAudio;
   SDL_mutex* _mutex;
- 
+  
   // Eventually all file management will be handled by a separate class
   Resource _resource;
   

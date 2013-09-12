@@ -42,18 +42,18 @@ class Image : public Object {
   
   // Checks
   bool hasTexture();
-
+  
   // Gets
   int* arrayOfCoordinates();
   Point position();
   Size size();
   Texture* texture();
-
+  
   // Sets
   void setPosition(int x, int y);
   void setSize(int width, int height);
   void setTexture(const std::string &fromFileName);
-
+  
   // State changes
   void move(int offsetX, int offsetY);
   void scale(float factor);

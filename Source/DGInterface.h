@@ -29,26 +29,26 @@ class DGRenderManager;
 ////////////////////////////////////////////////////////////
 
 class DGInterface {
-    // References to singletons
-    DGCameraManager& cameraManager;
-    Config& config;
-    DGCursorManager& cursorManager;
-    DGRenderManager& renderManager;
-    
-    std::vector<Overlay*> _arrayOfOverlays;
-    std::vector<Overlay*> _arrayOfActiveOverlays; // Visible overlays go here
-    
+  // References to singletons
+  DGCameraManager& cameraManager;
+  Config& config;
+  DGCursorManager& cursorManager;
+  DGRenderManager& renderManager;
+  
+  std::vector<Overlay*> _arrayOfOverlays;
+  std::vector<Overlay*> _arrayOfActiveOverlays; // Visible overlays go here
+  
 public:
-    DGInterface();
-    ~DGInterface();
-    
-    void addOverlay(Overlay* overlay);
-    void drawCursor();
-    void drawHelpers();
-    void drawOverlays();
-    void fadeIn();    
-    void fadeOut();
-    bool scanOverlays();
+  DGInterface();
+  ~DGInterface();
+  
+  void addOverlay(Overlay* overlay);
+  void drawCursor();
+  void drawHelpers();
+  void drawOverlays();
+  void fadeIn();
+  void fadeOut();
+  bool scanOverlays();
 };
 
 #endif // DG_INTERFACE_H

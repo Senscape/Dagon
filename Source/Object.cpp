@@ -173,7 +173,7 @@ void Object::updateFade() {
       if (_fadeLevel <= 0)
         _isEnabled = false;
     } else {
-      _fadeLevel -= _fadeSpeed; 
+      _fadeLevel -= _fadeSpeed;
     }
   }
 }

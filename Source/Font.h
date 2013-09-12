@@ -51,7 +51,7 @@ typedef struct {
   int top;
   long advance;
 } Glyph;
- 
+
 // When default font is selected, we use data embedded in the
 // executable and declared in FontData.cpp
 extern "C" const unsigned char kFontData[];

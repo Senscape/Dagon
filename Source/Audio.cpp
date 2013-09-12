@@ -30,8 +30,8 @@
 ////////////////////////////////////////////////////////////
 
 Audio::Audio() :
-  config(Config::instance()),
-  log(Log::instance())
+config(Config::instance()),
+log(Log::instance())
 {
   _isLoaded = false;
   _isLoopable = false;
@@ -109,7 +109,7 @@ void Audio::setLoopable(bool loopable) {
 void Audio::setPosition(unsigned int face, Point origin) {
   float x = origin.x / kDefTexSize;
   float y = origin.y / kDefTexSize;
-    
+  
   switch (face) {
     case kNorth: {
       alSource3f(_alSource, AL_POSITION, x, y, -1.0f);
@@ -367,18 +367,18 @@ bool Audio::_fillBuffer(ALuint* buffer) {
     delete[] data;
     return true;
   } else {
-    return false; 
+    return false;
   }
 }
 
 void Audio::_emptyBuffers() {
   ALint alState;
   alGetSourcei(_alSource, AL_SOURCE_STATE, &alState);
-
+  
   if (alState != AL_PLAYING) {
     int queued;
     alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &queued);
-
+    
     while (queued--) {
       ALuint buffer;
       alSourceUnqueueBuffers(_alSource, 1, &buffer);
@@ -395,7 +395,7 @@ std::string Audio::_randomizeFile(const std::string &fileName) {
   } else {
     // If not, randomize
     int index = (rand() % 6) + 1; // TODO: Allow to configure this value
-
+    
     std::stringstream fileToLoad;
     // TODO: Also configure number of zeros
     fileToLoad << fileName.c_str() << "00" << index << ".ogg";
@@ -411,7 +411,7 @@ ALboolean Audio::_verifyError(const std::string &operation) {
               _resource.name.c_str(), operation.c_str(), error);
     return AL_FALSE;
   }
-  return AL_TRUE; 
+  return AL_TRUE;
 }
 
 // And now... The Vorbisfile callbacks
@@ -422,15 +422,15 @@ size_t Audio::_oggRead(void* ptr, size_t size, size_t nmemb, void* datasource) {
   
   if ((audio->_resource.dataRead + nSize) > audio->_resource.dataSize)
     nSize = audio->_resource.dataSize - audio->_resource.dataRead;
-    
+  
   std::memcpy(ptr, audio->_resource.data + audio->_resource.dataRead, nSize);
-  audio->_resource.dataRead += nSize;    
+  audio->_resource.dataRead += nSize;
   return nSize;
 }
 
 int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
   Audio* audio = static_cast<Audio*>(datasource);
-    
+  
   switch (whence) {
     case SEEK_SET: {
       audio->_resource.dataRead = offset;
@@ -448,7 +448,7 @@ int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
       assert(false);
     }
   }
-    
+  
   if (audio->_resource.dataRead > audio->_resource.dataSize) {
     audio->_resource.dataRead = 0;
     return -1;

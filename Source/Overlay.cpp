@@ -65,7 +65,7 @@ Button* Overlay::currentButton() {
 
 Image* Overlay::currentImage() {
   assert(_itImage != _arrayOfImages.end());
-  return *_itImage;  
+  return *_itImage;
 }
 
 ////////////////////////////////////////////////////////////
@@ -76,13 +76,13 @@ void Overlay::setPosition(int x, int y) {
   // Calculate the offsets for the new position
   int offsetX = x - _position.x;
   int offsetY = y - _position.y;
-
+  
   // Automatically reposition all elements contained
   this->move(offsetX, offsetY);
-    
+  
   // Store the new position
   _position.x = x;
-  _position.y = y;    
+  _position.y = y;
 }
 
 ////////////////////////////////////////////////////////////
@@ -115,7 +115,7 @@ void Overlay::beginIteratingImages() {
 void Overlay::fadeIn() {
   // Force enabling the overlay
   this->enable();
-    
+  
   // Buttons
   if (!_arrayOfButtons.empty()) {
     std::vector<Button*>::iterator itButton;
@@ -125,7 +125,7 @@ void Overlay::fadeIn() {
       ++itButton;
     }
   }
-    
+  
   // Images
   if (!_arrayOfImages.empty()) {
     std::vector<Image*>::iterator itImage;
@@ -147,7 +147,7 @@ void Overlay::fadeOut() {
       ++itButton;
     }
   }
-    
+  
   // Images
   if (!_arrayOfImages.empty()) {
     std::vector<Image*>::iterator itImage;
@@ -196,7 +196,7 @@ void Overlay::move(int offsetX, int offsetY) {
       ++itButton;
     }
   }
-    
+  
   // Images
   if (!_arrayOfImages.empty()) {
     std::vector<Image*>::iterator itImage;
@@ -206,7 +206,7 @@ void Overlay::move(int offsetX, int offsetY) {
       ++itImage;
     }
   }
-    
+  
   // Store the new position
   _position.x += offsetX;
   _position.y += offsetY;

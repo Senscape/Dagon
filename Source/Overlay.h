@@ -42,14 +42,14 @@ class Overlay : public Object {
   bool hasButtons();
   bool hasImages();
   Point position();
-    
+  
   // Gets
   Button* currentButton();
   Image* currentImage();
-    
+  
   // Sets
   void setPosition(int x, int y);
-    
+  
   // State changes
   Button* addButton(Button* aButton);
   Image* addImage(Image* anImage);

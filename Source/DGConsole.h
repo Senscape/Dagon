@@ -31,10 +31,10 @@
 #define DGInfoMargin        10
 
 enum DGConsoleStates {
-    DGConsoleHidden,
-    DGConsoleHiding,
-    DGConsoleShowing,
-    DGConsoleVisible
+  DGConsoleHidden,
+  DGConsoleHiding,
+  DGConsoleShowing,
+  DGConsoleVisible
 };
 
 class DGCameraManager;
@@ -50,41 +50,41 @@ class DGRenderManager;
 ////////////////////////////////////////////////////////////
 
 class DGConsole {
-    DGCameraManager& cameraManager;
-    Config& config;
-    DGCursorManager& cursorManager;
-    DGFontManager& fontManager;
-    Log& log;
-    DGRenderManager& renderManager;
-    
-    Font* _font;
-    
-    std::string _command;
-    bool _isEnabled;
-    bool _isInitialized;
-    bool _isReadyToProcess;
-    int _offset; // Used for sliding effect
-    int _size;
-    int _state;
-    
+  DGCameraManager& cameraManager;
+  Config& config;
+  DGCursorManager& cursorManager;
+  DGFontManager& fontManager;
+  Log& log;
+  DGRenderManager& renderManager;
+  
+  Font* _font;
+  
+  std::string _command;
+  bool _isEnabled;
+  bool _isInitialized;
+  bool _isReadyToProcess;
+  int _offset; // Used for sliding effect
+  int _size;
+  int _state;
+  
 public:
-    DGConsole();
-    ~DGConsole();
-    
-    void init();
-    
-    void disable();
-    void enable();
-    bool isHidden();
-    bool isEnabled();
-    void toggle();
-    void update();
-    
-    void deleteChar();
-    void execute();
-    void getCommand(char* pointerToBuffer);
-    void inputChar(char aKey);
-    bool isReadyToProcess();
+  DGConsole();
+  ~DGConsole();
+  
+  void init();
+  
+  void disable();
+  void enable();
+  bool isHidden();
+  bool isEnabled();
+  void toggle();
+  void update();
+  
+  void deleteChar();
+  void execute();
+  void getCommand(char* pointerToBuffer);
+  void inputChar(char aKey);
+  bool isReadyToProcess();
 };
 
 #endif // DG_CONSOLE_H

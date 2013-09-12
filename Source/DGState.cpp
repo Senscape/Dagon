@@ -25,8 +25,8 @@
 ////////////////////////////////////////////////////////////
 
 DGState::DGState() {
-    _current = DGStateNode;
-    _previous = _current;
+  _current = DGStateNode;
+  _previous = _current;
 }
 
 ////////////////////////////////////////////////////////////
@@ -34,7 +34,7 @@ DGState::DGState() {
 ////////////////////////////////////////////////////////////
 
 DGState::~DGState() {
-    // Nothing to do here
+  // Nothing to do here
 }
 
 ////////////////////////////////////////////////////////////
@@ -42,21 +42,21 @@ DGState::~DGState() {
 ////////////////////////////////////////////////////////////
 
 int DGState::current() {
-    return _current;
+  return _current;
 }
 
 int DGState::previous() {
-    return _previous;
+  return _previous;
 }
 
 void DGState::set(int theState) {
-    _previous = _current;
-    _current = theState;
+  _previous = _current;
+  _current = theState;
 }
 
 void DGState::setPrevious() {
-    int auxState = _current;
-    
-    _current = _previous;
-    _previous = auxState;
+  int auxState = _current;
+  
+  _current = _previous;
+  _previous = auxState;
 }

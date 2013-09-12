@@ -25,12 +25,12 @@
 ////////////////////////////////////////////////////////////
 
 void DGSystem::browse(const char* url) {
-    // TODO: Re-implement
-    log.warning(kModSystem, "Browsing is currently disabled");
+  // TODO: Re-implement
+  log.warning(kModSystem, "Browsing is currently disabled");
 }
 
 void DGSystem::findPaths() {
-    // TODO: Re-implement
+  // TODO: Re-implement
 }
 
 bool DGSystem::init() {
@@ -38,11 +38,11 @@ bool DGSystem::init() {
   SDL_version version;
   SDL_GetVersion(&version);
   log.info(kModSystem, "%s: %d.%d", kString13003,
-            version.major, version.minor);
+           version.major, version.minor);
   
   SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_TIMER);
   Uint32 videoFlags = SDL_WINDOW_OPENGL;
-
+  
   if (!config.displayWidth || !config.displayHeight) {
     if (config.fullscreen) {
       SDL_DisplayMode displayMode;
@@ -91,7 +91,7 @@ bool DGSystem::init() {
                         config.displayHeight / 2);
   SDL_ShowCursor(false);
   
-    return true;
+  return true;
 }
 
 void DGSystem::setTitle(const char* title) {
@@ -128,7 +128,8 @@ void DGSystem::update() {
             break;
           case SDLK_f:
             SDL_Keymod modified = SDL_GetModState();
-            if (modified & (KMOD_LALT | KMOD_LCTRL | KMOD_LGUI))                this->toggleFullscreen();
+            if (modified & (KMOD_LALT | KMOD_LCTRL | KMOD_LGUI))
+              this->toggleFullscreen();
             break;
         }
         break;
@@ -161,8 +162,8 @@ void DGSystem::update() {
         }
         break;
       case SDL_TEXTINPUT:
-          DGControl::instance().processKey(event.text.text[0],
-                                           DGEventKeyDown);
+        DGControl::instance().processKey(event.text.text[0],
+                                         DGEventKeyDown);
         break;
       case SDL_WINDOWEVENT:
         switch (event.window.event) {
@@ -221,22 +222,22 @@ double DGSystem::_calculateFrames(double theInterval = 1.0) {
   static double lastTime = SDL_GetTicks() / 1000;
   static int fpsFrameCount = 0;
   static double fps = 0.0;
-    
+  
   double currentTime = SDL_GetTicks() / 1000;
-
+  
   if (theInterval < 0.1)
     theInterval = 0.1;
-    
+  
   if (theInterval > 10.0)
     theInterval = 10.0;
-    
+  
   if ((currentTime - lastTime) > theInterval) {
     fps = (double)fpsFrameCount / (currentTime - lastTime);
-
+    
     fpsFrameCount = 0;
     lastTime = SDL_GetTicks() / 1000;
   }
   else fpsFrameCount++;
-
+  
   return fps;
 }

@@ -39,43 +39,43 @@ class DGVideoManager;
 
 // TODO: Unify splash and cutscene codes
 class DGScene {
-    // References to singletons
-    DGCameraManager& cameraManager;
-    Config& config;
-    DGCursorManager& cursorManager;
-    DGRenderManager& renderManager;
-    DGVideoManager& videoManager;
-    
-    // Other classes
-    Room* _currentRoom;
-    Texture* _cutsceneTexture;
-    Texture* _splashTexture;
-    
-    bool _canDrawSpots; // This bool is used to make checks faster
-    bool _isCutsceneLoaded;
-    bool _isSplashLoaded;
-    
+  // References to singletons
+  DGCameraManager& cameraManager;
+  Config& config;
+  DGCursorManager& cursorManager;
+  DGRenderManager& renderManager;
+  DGVideoManager& videoManager;
+  
+  // Other classes
+  Room* _currentRoom;
+  Texture* _cutsceneTexture;
+  Texture* _splashTexture;
+  
+  bool _canDrawSpots; // This bool is used to make checks faster
+  bool _isCutsceneLoaded;
+  bool _isSplashLoaded;
+  
 public:
-    DGScene();
-    ~DGScene();
-    
-    void clear();
-    void drawSpots();
-    void fadeIn();    
-    void fadeOut(); 
-    bool scanSpots();
-    void setRoom(Room* room);
-    
-    // Cutscene operations
-    void cancelCutscene();
-    bool drawCutscene();
-    void loadCutscene(const char* fileName);
-    void unloadCutscene();
-    
-    // Splash screen operations
-    void drawSplash();
-    void loadSplash();
-    void unloadSplash();
+  DGScene();
+  ~DGScene();
+  
+  void clear();
+  void drawSpots();
+  void fadeIn();
+  void fadeOut();
+  bool scanSpots();
+  void setRoom(Room* room);
+  
+  // Cutscene operations
+  void cancelCutscene();
+  bool drawCutscene();
+  void loadCutscene(const char* fileName);
+  void unloadCutscene();
+  
+  // Splash screen operations
+  void drawSplash();
+  void loadSplash();
+  void unloadSplash();
 };
 
 #endif // DG_SCENE_H

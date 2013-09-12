@@ -142,7 +142,7 @@ void Node::addCustomLink(unsigned withDirection, int luaHandler) {
 void Node::addLink(unsigned int withDirection, Object* theTarget) {
   Action action;
   action.type = kActionSwitch;
-  action.cursor = kCursorForward;    
+  action.cursor = kCursorForward;
   action.target = theTarget;
   _link(withDirection, &action);
 }
@@ -176,10 +176,10 @@ void Node::_link(unsigned int direction, Action* action) {
   int minorBound = kDefTexSize / 3;
   int majorBound = static_cast<int>(kDefTexSize / 1.5f);
   int offset = kDefTexSize / 3;
-    
+  
   // We always have four corners here, hence eight elements since they are
   // squared spots.
-    
+  
   std::vector<int> arrayOfCoordinates;
   int coordsNormal[] = {minorBound, minorBound, majorBound, minorBound,
     majorBound, majorBound, minorBound, majorBound};
@@ -189,9 +189,9 @@ void Node::_link(unsigned int direction, Action* action) {
   int coordsShiftLeft[] = {minorBound - offset, minorBound, majorBound - offset,
     minorBound, majorBound - offset, majorBound, minorBound - offset,
     majorBound};
-    
+  
   Spot *newSpot = NULL, *auxSpot = NULL;
-    
+  
   switch (direction) {
     case kNorth:
     case kEast:
@@ -237,7 +237,7 @@ void Node::_link(unsigned int direction, Action* action) {
   newSpot->setAction(action);
   newSpot->setColor(0); // Color is set automatically
   _arrayOfSpots.push_back(newSpot);
-    
+  
   if (auxSpot) {
     auxSpot->setAction(action);
     auxSpot->setColor(0);

@@ -34,27 +34,27 @@ class Log;
 ////////////////////////////////////////////////////////////
 
 class DGSystem {
-    Config& config;
-    Log& log;
+  Config& config;
+  Log& log;
   
-    SDL_GLContext _context;
-    SDL_Window *_window;
-
-    double _calculateFrames(double theInterval);
-    
+  SDL_GLContext _context;
+  SDL_Window *_window;
+  
+  double _calculateFrames(double theInterval);
+  
 public:
-    DGSystem(Config& theConfig, Log& theLog) :
-        config(theConfig),
-        log(theLog) {};
-    ~DGSystem() {};
-    
-    void browse(const char* url);
-    void findPaths();
-    bool init();
-    void setTitle(const char* title);
-    void terminate();
-    void toggleFullscreen();
-    void update();
+  DGSystem(Config& theConfig, Log& theLog) :
+  config(theConfig),
+  log(theLog) {};
+  ~DGSystem() {};
+  
+  void browse(const char* url);
+  void findPaths();
+  bool init();
+  void setTitle(const char* title);
+  void terminate();
+  void toggleFullscreen();
+  void update();
 };
 
 #endif // DG_SYSTEM_H

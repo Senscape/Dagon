@@ -95,94 +95,94 @@ static Spot* DGProxyToSpot(lua_State *L, int idx);
 // Custom check user type function that simply returns true if the
 // object in the given index is the desired one
 static bool _checkutype(lua_State *L, int idx, const char* name) {
-    int v1, v2;
-    
-    lua_getfield(L, LUA_REGISTRYINDEX, name);  // Get correct metatable
-    v1 = lua_getmetatable(L, idx);
-    v2 = lua_rawequal(L, -1, -2);
-    lua_pop(L, 2);  // Remove both metatables
-    
-    if (!v1 || !v2) 
-        return false; // Not the type
-    else 
-        return true; // Correct type
+  int v1, v2;
+  
+  lua_getfield(L, LUA_REGISTRYINDEX, name);  // Get correct metatable
+  v1 = lua_getmetatable(L, idx);
+  v2 = lua_rawequal(L, -1, -2);
+  lua_pop(L, 2);  // Remove both metatables
+  
+  if (!v1 || !v2)
+    return false; // Not the type
+  else
+    return true; // Correct type
 }
 
 int DGCheckProxy(lua_State *L, int idx) {
-    // Let's make sure this is a userdata first
-    if (lua_isuserdata(L, idx)) {                
-        // Good, now check against each user type
-
-        if (_checkutype(L, idx, AudioProxy::className))
-            return kObjectAudio; // It's an audio
-        
-        if (_checkutype(L, idx, ButtonProxy::className))
-            return kObjectButton; // It's a button          
-        
-        if (_checkutype(L, idx, ImageProxy::className))
-            return kObjectImage; // It's an image        
-        
-        if (_checkutype(L, idx, NodeProxy::className))
-            return kObjectNode; // It's a node
-        
-        if (_checkutype(L, idx, OverlayProxy::className))
-            return kObjectOverlay; // It's an overlay        
-        
-        if (_checkutype(L, idx, RoomProxy::className))
-            return kObjectRoom; // It's a room
-        
-        if (_checkutype(L, idx, DGSlideProxy::className))
-            return kObjectSlide; // It's a slide
-        
-        if (_checkutype(L, idx, SpotProxy::className))
-            return kObjectSpot; // It's a spot
-        
-        // No, it's Superman!
-        
-        return kObjectGeneric; // None of the above, we return a generic type
-    }
+  // Let's make sure this is a userdata first
+  if (lua_isuserdata(L, idx)) {
+    // Good, now check against each user type
     
-    return kObjectNone;
+    if (_checkutype(L, idx, AudioProxy::className))
+      return kObjectAudio; // It's an audio
+    
+    if (_checkutype(L, idx, ButtonProxy::className))
+      return kObjectButton; // It's a button
+    
+    if (_checkutype(L, idx, ImageProxy::className))
+      return kObjectImage; // It's an image
+    
+    if (_checkutype(L, idx, NodeProxy::className))
+      return kObjectNode; // It's a node
+    
+    if (_checkutype(L, idx, OverlayProxy::className))
+      return kObjectOverlay; // It's an overlay
+    
+    if (_checkutype(L, idx, RoomProxy::className))
+      return kObjectRoom; // It's a room
+    
+    if (_checkutype(L, idx, DGSlideProxy::className))
+      return kObjectSlide; // It's a slide
+    
+    if (_checkutype(L, idx, SpotProxy::className))
+      return kObjectSpot; // It's a spot
+    
+    // No, it's Superman!
+    
+    return kObjectGeneric; // None of the above, we return a generic type
+  }
+  
+  return kObjectNone;
 }
 
 Audio* DGProxyToAudio(lua_State *L, int idx) {
-    AudioProxy* a = Luna<AudioProxy>::check(L, idx);
-    return a->ptr();
+  AudioProxy* a = Luna<AudioProxy>::check(L, idx);
+  return a->ptr();
 }
 
 Button* DGProxyToButton(lua_State *L, int idx) {
-    ButtonProxy* b = Luna<ButtonProxy>::check(L, idx);
-    return b->ptr();
+  ButtonProxy* b = Luna<ButtonProxy>::check(L, idx);
+  return b->ptr();
 }
 
 Image* DGProxyToImage(lua_State *L, int idx) {
-    ImageProxy* i = Luna<ImageProxy>::check(L, idx);
-    return i->ptr();
+  ImageProxy* i = Luna<ImageProxy>::check(L, idx);
+  return i->ptr();
 }
 
 Node* DGProxyToNode(lua_State *L, int idx) {
-    NodeProxy* n = Luna<NodeProxy>::check(L, idx);
-    return n->ptr();
+  NodeProxy* n = Luna<NodeProxy>::check(L, idx);
+  return n->ptr();
 }
 
 Overlay* DGProxyToOverlay(lua_State *L, int idx) {
-    OverlayProxy* o = Luna<OverlayProxy>::check(L, idx);
-    return o->ptr();    
+  OverlayProxy* o = Luna<OverlayProxy>::check(L, idx);
+  return o->ptr();
 }
 
 Room* DGProxyToRoom(lua_State *L, int idx) {
-    RoomProxy* r = Luna<RoomProxy>::check(L, idx);
-    return r->ptr();    
+  RoomProxy* r = Luna<RoomProxy>::check(L, idx);
+  return r->ptr();
 }
 
 Node* DGProxyToSlide(lua_State *L, int idx) {
-    DGSlideProxy* s = Luna<DGSlideProxy>::check(L, idx);
-    return s->ptr();
+  DGSlideProxy* s = Luna<DGSlideProxy>::check(L, idx);
+  return s->ptr();
 }
 
 Spot* DGProxyToSpot(lua_State *L, int idx) {
-    SpotProxy* s = Luna<SpotProxy>::check(L, idx);
-    return s->ptr();    
+  SpotProxy* s = Luna<SpotProxy>::check(L, idx);
+  return s->ptr();
 }
 
 #endif // DG_PROXY_H

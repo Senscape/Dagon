@@ -28,10 +28,10 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGVideoManager::DGVideoManager() :
-    config(Config::instance()),
-    log(Log::instance())
+config(Config::instance()),
+log(Log::instance())
 {
-    _isInitialized = false;
+  _isInitialized = false;
   _isRunning = false;
   _mutex = SDL_CreateMutex();
   if (!_mutex)
@@ -78,14 +78,14 @@ void DGVideoManager::flush() {
 }
 
 void DGVideoManager::init() {
-    log.trace(kModVideo, "%s", kString17001);
-    log.info(kModVideo, "%s: %s", kString17006, theora_version_string());
-    
-    // Eventually lots of Theora initialization process will be moved here
-    
-    _isInitialized = true;
+  log.trace(kModVideo, "%s", kString17001);
+  log.info(kModVideo, "%s: %s", kString17006, theora_version_string());
+  
+  // Eventually lots of Theora initialization process will be moved here
+  
+  _isInitialized = true;
   _isRunning = true;
-    
+  
   _thread = SDL_CreateThread(_runThread, "VideoManager", (void*)NULL);
   if (!_thread) {
     log.error(kModVideo, "%s:%s", kString18003, SDL_GetError());
@@ -93,38 +93,38 @@ void DGVideoManager::init() {
 }
 
 void DGVideoManager::registerVideo(DGVideo* target) {
-    _arrayOfVideos.push_back(target);
+  _arrayOfVideos.push_back(target);
 }
 
 void DGVideoManager::requestVideo(DGVideo* target) {
-    if (!target->isLoaded()) {
-        target->load();
+  if (!target->isLoaded()) {
+    target->load();
+  }
+  
+  // If the audio is not active, then it's added to
+  // that vector
+  
+  bool isActive = false;
+  std::vector<DGVideo*>::iterator it;
+  it = _arrayOfActiveVideos.begin();
+  
+  while (it != _arrayOfActiveVideos.end()) {
+    if ((*it) == target) {
+      isActive = true;
+      break;
     }
     
-    // If the audio is not active, then it's added to
-    // that vector
-    
-    bool isActive = false;
-    std::vector<DGVideo*>::iterator it;
-    it = _arrayOfActiveVideos.begin();
-    
-    while (it != _arrayOfActiveVideos.end()) {
-        if ((*it) == target) {
-            isActive = true;
-            break;
-        }
-        
-        it++;
+    it++;
+  }
+  
+  if (!isActive) {
+    if (SDL_LockMutex(_mutex) == 0) {
+      _arrayOfActiveVideos.push_back(target);
+      SDL_UnlockMutex(_mutex);
+    } else {
+      log.error(kModVideo, "%s", kString18002);
     }
-    
-    if (!isActive) {
-      if (SDL_LockMutex(_mutex) == 0) {
-        _arrayOfActiveVideos.push_back(target);
-        SDL_UnlockMutex(_mutex);
-      } else {
-        log.error(kModVideo, "%s", kString18002);
-      }
-    }
+  }
 }
 
 void DGVideoManager::terminate() {

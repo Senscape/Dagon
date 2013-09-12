@@ -25,9 +25,9 @@ using namespace std;
 ////////////////////////////////////////////////////////////
 
 DGFontManager::DGFontManager() :
-    log(Log::instance())
+log(Log::instance())
 {
-    _isInitialized = false;
+  _isInitialized = false;
 }
 
 ////////////////////////////////////////////////////////////
@@ -35,12 +35,12 @@ DGFontManager::DGFontManager() :
 ////////////////////////////////////////////////////////////
 
 DGFontManager::~DGFontManager() {
-    // TODO: Must destroy all the fonts here
-    
-    if (_isInitialized) {
-        _defaultFont.clear();
-        FT_Done_FreeType(_library); 
-    }
+  // TODO: Must destroy all the fonts here
+  
+  if (_isInitialized) {
+    _defaultFont.clear();
+    FT_Done_FreeType(_library);
+  }
 }
 
 ////////////////////////////////////////////////////////////
@@ -48,37 +48,37 @@ DGFontManager::~DGFontManager() {
 ////////////////////////////////////////////////////////////
 
 void DGFontManager::init(){
-    log.trace(kModFont, "%s", kString15001);
-    
-    if (FT_Init_FreeType(&_library)) {
-        log.error(kModFont, "%s", kString15003);
-        return;
-    }
-    
-    int major, minor, patch;
-    
-    FT_Library_Version(_library, &major, &minor, &patch);
-    log.info(kModFont, "%s: %d.%d.%d", kString15002, major, minor, patch);
-    
-    _isInitialized = true;
+  log.trace(kModFont, "%s", kString15001);
+  
+  if (FT_Init_FreeType(&_library)) {
+    log.error(kModFont, "%s", kString15003);
+    return;
+  }
+  
+  int major, minor, patch;
+  
+  FT_Library_Version(_library, &major, &minor, &patch);
+  log.info(kModFont, "%s: %d.%d.%d", kString15002, major, minor, patch);
+  
+  _isInitialized = true;
 }
 
 Font* DGFontManager::load(const char* fromFileName, unsigned int heightOfFont){
-    Font* font = new Font;
-    
-    font->setLibrary(&_library);
-    font->setResource(fromFileName, heightOfFont);
-    
-    _arrayOfFonts.push_back(font);
-    
-    return font;
+  Font* font = new Font;
+  
+  font->setLibrary(&_library);
+  font->setResource(fromFileName, heightOfFont);
+  
+  _arrayOfFonts.push_back(font);
+  
+  return font;
 }
 
 Font* DGFontManager::loadDefault() {
-    if (!_defaultFont.isLoaded()) {
-        _defaultFont.setLibrary(&_library);
-        _defaultFont.setDefault(kDefFontSize);
-    }
-        
-    return &_defaultFont;
+  if (!_defaultFont.isLoaded()) {
+    _defaultFont.setLibrary(&_library);
+    _defaultFont.setDefault(kDefFontSize);
+  }
+  
+  return &_defaultFont;
 }

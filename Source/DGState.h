@@ -21,15 +21,15 @@
 // Default state is node unless a menu is specified
 
 enum DGGlobalStates {
-    DGStateCutscene,
-    DGStateInventory,
-    DGStateLookAt,
-    DGStateMenu,
-    DGStateNode,
-    DGStateSleep,
-    DGStateSplash,
-    DGStateVideoSync,
-    DGStateZoom
+  DGStateCutscene,
+  DGStateInventory,
+  DGStateLookAt,
+  DGStateMenu,
+  DGStateNode,
+  DGStateSleep,
+  DGStateSplash,
+  DGStateVideoSync,
+  DGStateZoom
 };
 
 ////////////////////////////////////////////////////////////
@@ -37,17 +37,17 @@ enum DGGlobalStates {
 ////////////////////////////////////////////////////////////
 
 class DGState {
-    int _current;
-    int _previous;
-    
+  int _current;
+  int _previous;
+  
 public:
-    DGState();
-    ~DGState();
-    
-    int current();
-    int previous();
-    void set(int theState);    
-    void setPrevious();
+  DGState();
+  ~DGState();
+  
+  int current();
+  int previous();
+  void set(int theState);
+  void setPrevious();
 };
 
 #endif // DG_STATE_H

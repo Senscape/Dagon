@@ -46,11 +46,11 @@ class Room : public Object {
   Node* currentNode();
   Audio* defaultFootstep();
   int effectsFlags();
-
+  
   // Sets
   void setDefaultFootstep(Audio* theFootstep);
   void setEffects(int theEffectFlags);
-    
+  
   // State changes
   Audio* addAudio(Audio* anAudio);
   Node* addNode(Node* aNode);

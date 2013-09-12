@@ -28,8 +28,8 @@
 ////////////////////////////////////////////////////////////
 
 Font::Font() :
-  config(Config::instance()),
-  log(Log::instance())
+config(Config::instance()),
+log(Log::instance())
 {
   _isLoaded = false;
   this->setType(kObjectFont);
@@ -52,11 +52,11 @@ void Font::print(int x, int y, const std::string &text, ...) {
   if (!text.empty() && _isLoaded) {
     char buffer[kMaxFeedLength];
     va_list ap;
-
+    
     va_start(ap, text);
     int length = vsnprintf(buffer, kMaxFeedLength, text.c_str(), ap);
     va_end(ap);
-  
+    
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glPushMatrix();
@@ -64,20 +64,20 @@ void Font::print(int x, int y, const std::string &text, ...) {
     
     for (const char* c = buffer; length > 0; c++, length--) {
       int ch = *c;
-        
+      
       GLfloat texCoords[] = { 0, 0, 0, _glyph[ch].y,
         _glyph[ch].x, _glyph[ch].y, _glyph[ch].x, 0 };
       
       GLshort coords[] = { 0, 0, 0, _glyph[ch].rows,
         _glyph[ch].width, _glyph[ch].rows, _glyph[ch].width, 0 };
-        
+      
       glBindTexture(GL_TEXTURE_2D, _textures[ch]);
       glTranslatef(static_cast<GLfloat>(_glyph[ch].left), 0, 0);
       glPushMatrix();
-        glTranslatef(0, -static_cast<GLfloat>(_glyph[ch].top) + _height, 0);
-        glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
-        glVertexPointer(2, GL_SHORT, 0, coords);
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+      glTranslatef(0, -static_cast<GLfloat>(_glyph[ch].top) + _height, 0);
+      glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+      glVertexPointer(2, GL_SHORT, 0, coords);
+      glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
       glPopMatrix();
       glTranslatef(static_cast<GLfloat>(_glyph[ch].advance >> 6), 0, 0);
     }
@@ -115,7 +115,7 @@ void Font::setLibrary(FT_Library* library) {
 }
 
 void Font::setResource(const std::string &fromFileName,
-                         unsigned int heightOfFont) {
+                       unsigned int heightOfFont) {
   FT_Face face;
   
   if (FT_New_Face(*_library,
@@ -150,7 +150,7 @@ void Font::_loadFont(FT_Face &face) {
       log.error(kModFont, "%s: %c", kString15007, ch);
       return;
     }
-        
+    
     FT_Glyph_To_Bitmap(&glyph, ft_render_mode_normal, 0, 1);
     FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
     FT_Bitmap bitmap = bitmapGlyph->bitmap;
@@ -163,12 +163,12 @@ void Font::_loadFont(FT_Face &face) {
     for (int j = 0; j < height; j++) {
       for (int i = 0; i < width; i++) {
         expandedData[2 * (i + j * width)] =
-          expandedData[2 * (i + j * width) + 1] =
-          (i >= bitmap.width || j >= bitmap.rows) ?
-          0 : bitmap.buffer[i + bitmap.width * j];
+        expandedData[2 * (i + j * width) + 1] =
+        (i >= bitmap.width || j >= bitmap.rows) ?
+        0 : bitmap.buffer[i + bitmap.width * j];
       }
     }
-
+    
     _glyph[ch].x = static_cast<float>(bitmap.width) / static_cast<float>(width);
     _glyph[ch].y = static_cast<float>(bitmap.rows) / static_cast<float>(height);
     _glyph[ch].width = bitmap.width;

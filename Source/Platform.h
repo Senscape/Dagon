@@ -85,24 +85,24 @@
 ////////////////////////////////////////////////////////////
 
 enum InputKeys {
-    kKeyBackspace = SDLK_BACKSPACE,
+  kKeyBackspace = SDLK_BACKSPACE,
   kKeyF1 = SDLK_F1,
-    kKeyF2 = SDLK_F2,
-    kKeyF3 = SDLK_F3,
-    kKeyF4 = SDLK_F4,
+  kKeyF2 = SDLK_F2,
+  kKeyF3 = SDLK_F3,
+  kKeyF4 = SDLK_F4,
   kKeyF5 = SDLK_F5,
-    kKeyF6 = SDLK_F6,
-    kKeyF7 = SDLK_F7,
-    kKeyF8 = SDLK_F8,
-    kKeyF9 = SDLK_F9,
-    kKeyF10 = SDLK_F10,
-    kKeyF11 = SDLK_F11,
-    kKeyF12 = SDLK_F12,
-    kKeyEscape = SDLK_ESCAPE,
-    kKeyQuote = SDL_SCANCODE_GRAVE,
-    kKeyTab = SDLK_TAB,
-    kKeyEnter = SDLK_RETURN,
-    kKeySpace = SDLK_SPACE
+  kKeyF6 = SDLK_F6,
+  kKeyF7 = SDLK_F7,
+  kKeyF8 = SDLK_F8,
+  kKeyF9 = SDLK_F9,
+  kKeyF10 = SDLK_F10,
+  kKeyF11 = SDLK_F11,
+  kKeyF12 = SDLK_F12,
+  kKeyEscape = SDLK_ESCAPE,
+  kKeyQuote = SDL_SCANCODE_GRAVE,
+  kKeyTab = SDLK_TAB,
+  kKeyEnter = SDLK_RETURN,
+  kKeySpace = SDLK_SPACE
 };
 
 #endif // DAGON_PLATFORM_H_

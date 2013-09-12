@@ -30,35 +30,35 @@
 ////////////////////////////////////////////////////////////
 
 static int DGSystemLibBrowse(lua_State *L) {
-    //DGSystem::instance().browse(lua_tostring(L, 1));
-    
-    return 0;
+  //DGSystem::instance().browse(lua_tostring(L, 1));
+  
+  return 0;
 }
 
 static int DGSystemLibInit(lua_State *L) {
-    DGControl::instance().init();
-    
-    return 0;
+  DGControl::instance().init();
+  
+  return 0;
 }
 
 static int DGSystemLibRun(lua_State *L) {
-    DGControl::instance().run();
-    
-    return 0;
+  DGControl::instance().run();
+  
+  return 0;
 }
 
 static int DGSystemLibUpdate(lua_State *L) {
-    // We allow this in case the user wants to implement a loop of some kind.
-    // FIXME: Currently has a conflict if there's an event hook registered.
-    DGControl::instance().update();
-    
-    return 0;
+  // We allow this in case the user wants to implement a loop of some kind.
+  // FIXME: Currently has a conflict if there's an event hook registered.
+  DGControl::instance().update();
+  
+  return 0;
 }
 
 static int DGSystemLibTerminate(lua_State *L) {
-    DGControl::instance().terminate();
-    
-    return 0;
+  DGControl::instance().terminate();
+  
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////
@@ -66,12 +66,12 @@ static int DGSystemLibTerminate(lua_State *L) {
 ////////////////////////////////////////////////////////////
 
 static const struct luaL_reg DGSystemLib [] = {
-    {"browse", DGSystemLibBrowse},
-    {"init", DGSystemLibInit},
-    {"run", DGSystemLibRun},
-    {"update", DGSystemLibUpdate},
-    {"terminate", DGSystemLibTerminate},
-    {NULL, NULL}
+  {"browse", DGSystemLibBrowse},
+  {"init", DGSystemLibInit},
+  {"run", DGSystemLibRun},
+  {"update", DGSystemLibUpdate},
+  {"terminate", DGSystemLibTerminate},
+  {NULL, NULL}
 };
 
 #endif // DG_SYSTEMLIB_H

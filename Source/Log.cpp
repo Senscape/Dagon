@@ -31,7 +31,7 @@
 ////////////////////////////////////////////////////////////
 
 Log::Log() :
-  config(Config::instance()) {
+config(Config::instance()) {
 }
 
 ////////////////////////////////////////////////////////////
@@ -50,7 +50,7 @@ Log::~Log() {
 void Log::command(int forModule, const std::string &theString, ...) {
   char buffer[kMaxLogLength];
   va_list args;
-
+  
   va_start(args, theString);
   vsnprintf(buffer, kMaxLogLength, theString.c_str(), args);
   va_end(args);
@@ -76,7 +76,7 @@ void Log::error(int forModule, const std::string &theString, ...) {
   data.color = kColorBrightRed;
   data.module = forModule;
   data.type = kLogError;
-  _log(&data); 
+  _log(&data);
 }
 
 void Log::info(int forModule, const std::string &theString, ...) {
@@ -108,7 +108,7 @@ void Log::trace(int forModule, const std::string &theString, ...) {
   data.color = kColorWhite;
   data.module = forModule;
   data.type = kLogTrace;
-  _log(&data); 
+  _log(&data);
 }
 
 void Log::warning(int forModule, const std::string &theString, ...) {
@@ -164,9 +164,9 @@ void Log::_log(LogData* data) {
   if (config.log) {
     if (!_filestr.is_open())
       _filestr.open(config.path(kPathUserData, kDefLogFile,
-                    kObjectGeneric).c_str(),
+                                kObjectGeneric).c_str(),
                     std::ofstream::app);
-      
+    
     time_t now = time(0);
     struct tm* tm = localtime(&now);
     

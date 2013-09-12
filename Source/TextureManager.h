@@ -42,35 +42,35 @@ class Room;
 ////////////////////////////////////////////////////////////
 
 class TextureManager {
-    Config& config;
-    Log& log;
-    
-    std::vector<Texture*> _arrayOfActiveTextures;
-    std::vector<Texture*> _arrayOfTextures;
-
-    Room* _roomToPreload;
-    
-    TextureManager();
-    TextureManager(TextureManager const&);
-    TextureManager& operator=(TextureManager const&);
-    ~TextureManager();
-    
+  Config& config;
+  Log& log;
+  
+  std::vector<Texture*> _arrayOfActiveTextures;
+  std::vector<Texture*> _arrayOfTextures;
+  
+  Room* _roomToPreload;
+  
+  TextureManager();
+  TextureManager(TextureManager const&);
+  TextureManager& operator=(TextureManager const&);
+  ~TextureManager();
+  
 public:
-    static TextureManager& instance() {
-        static TextureManager textureManager;
-        return textureManager;
-    }
-    
-    void appendTextureToBundle(const char* nameOfBundle, Texture* textureToAppend);
-    void createBundle(const char* nameOfBundle);
-    int itemsInBundle(const char* nameOfBundle);
-    void flush();
-    void init();
-    void registerTexture(Texture* target);
-    void requestBundle(Node* forNode);
-    void requestTexture(Texture* target);
-    void setRoomToPreload(Room* theRoom);
-    bool updatePreloader();
+  static TextureManager& instance() {
+    static TextureManager textureManager;
+    return textureManager;
+  }
+  
+  void appendTextureToBundle(const char* nameOfBundle, Texture* textureToAppend);
+  void createBundle(const char* nameOfBundle);
+  int itemsInBundle(const char* nameOfBundle);
+  void flush();
+  void init();
+  void registerTexture(Texture* target);
+  void requestBundle(Node* forNode);
+  void requestTexture(Texture* target);
+  void setRoomToPreload(Room* theRoom);
+  bool updatePreloader();
 };
 
 #endif // DG_TEXTUREMANAGER_H

@@ -14,10 +14,10 @@
 #include "DGControl.h"
 
 int main(int argc, char *argv[]) {
-    DGControl& control = DGControl::instance();
-
-    control.init();
-    control.run();
-    
-    return 0;
+  DGControl& control = DGControl::instance();
+  
+  control.init();
+  control.run();
+  
+  return 0;
 }

@@ -24,18 +24,18 @@
 ////////////////////////////////////////////////////////////
 
 Image::Image() :
-  config(Config::instance())
+config(Config::instance())
 {
   _hasTexture = false;
   _rect.origin.x = 0;
-  _rect.origin.y = 0; 
+  _rect.origin.y = 0;
   _rect.size.width = 0;
   _rect.size.height = 0;
-  this->setType(kObjectImage);    
+  this->setType(kObjectImage);
 }
 
 Image::Image(const std::string &fromFileName) :
-  config(Config::instance())
+config(Config::instance())
 {
   this->setTexture(fromFileName);
   if (_attachedTexture->isLoaded()) {
@@ -45,7 +45,7 @@ Image::Image(const std::string &fromFileName) :
     _rect.size.height = _attachedTexture->height();
     _calculateCoordinates();
   }
-  this->setType(kObjectImage);    
+  this->setType(kObjectImage);
 }
 
 ////////////////////////////////////////////////////////////
@@ -65,7 +65,7 @@ int* Image::arrayOfCoordinates() {
 }
 
 Point Image::position() {
-  return _rect.origin;    
+  return _rect.origin;
 }
 
 Size Image::size() {
@@ -100,7 +100,7 @@ void Image::setTexture(const std::string &fromFileName) {
   
   _attachedTexture = new Texture;
   _attachedTexture->setResource(config.path(kPathResources, fromFileName,
-                                   kObjectImage).c_str());
+                                            kObjectImage).c_str());
   _attachedTexture->load();
   _hasTexture = true;
 }

@@ -27,7 +27,7 @@
 ////////////////////////////////////////////////////////////
 
 Spot::Spot(std::vector<int> withArrayOfCoordinates,
-               unsigned int onFace, int withFlags) {
+           unsigned int onFace, int withFlags) {
   _arrayOfCoordinates = withArrayOfCoordinates;
   _onFace = onFace;
   _color = kColorBlack;
@@ -201,14 +201,14 @@ void Spot::setVolume(float theVolume) {
 
 void Spot::play() {
   _isPlaying = true;
-    
+  
   // FIXME: Should start playing only if in the current room
   if (_hasAudio && _attachedAudio->isLoaded())
     _attachedAudio->play();
-    
+  
   if (_hasVideo && _attachedVideo->isLoaded())
     _attachedVideo->play();
-    
+  
   // Hack of sorts but works OK
   if (this->hasFlag(kSpotLoop))
     _flags = _flags | kSpotAuto;
@@ -232,5 +232,5 @@ void Spot::resize(int width, int height) {
 void Spot::stop() {
   _isPlaying = false;
   if (_hasAudio)
-    _attachedAudio->stop();    
+    _attachedAudio->stop();
 }

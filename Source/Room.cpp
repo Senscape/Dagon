@@ -93,7 +93,7 @@ void Room::setEffects(int theEffectFlags) {
 
 Audio* Room::addAudio(Audio* anAudio) {
   _arrayOfAudios.push_back(anAudio);
-  return anAudio; 
+  return anAudio;
 }
 
 Node* Room::addNode(Node* aNode) {

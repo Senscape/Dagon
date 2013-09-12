@@ -34,98 +34,98 @@
 
 class RoomProxy : public ObjectProxy {
 public:
-    static const char className[];
-    static Luna<RoomProxy>::RegType methods[];
+  static const char className[];
+  static Luna<RoomProxy>::RegType methods[];
+  
+  // Constructor
+  RoomProxy(lua_State *L) {
+    // TODO: Support custom room names with a second parameter
     
-    // Constructor
-    RoomProxy(lua_State *L) {
-        // TODO: Support custom room names with a second parameter
-        
-        r = new Room;
-        r->setName(luaL_checkstring(L, 1));
-        
-        // Register the new room
-        DGControl::instance().registerObject(r);
-        
-        // Init the base class
-        this->setObject(r);
+    r = new Room;
+    r->setName(luaL_checkstring(L, 1));
+    
+    // Register the new room
+    DGControl::instance().registerObject(r);
+    
+    // Init the base class
+    this->setObject(r);
+  }
+  
+  // Destructor
+  ~RoomProxy() { delete r; }
+  
+  // Add an audio to the room
+  int addAudio(lua_State *L) {
+    if (DGCheckProxy(L, 1) == kObjectAudio) {
+      r->addAudio(DGProxyToAudio(L, 1));
+      
+      // Now we get the metatable of the added audio and set it
+      // as a return value
+      lua_getfield(L, LUA_REGISTRYINDEX, AudioProxyName);
+      lua_setmetatable(L, -2);
+      
+      return 1;
     }
     
-    // Destructor
-    ~RoomProxy() { delete r; }
-    
-    // Add an audio to the room
-    int addAudio(lua_State *L) {
-        if (DGCheckProxy(L, 1) == kObjectAudio) {
-            r->addAudio(DGProxyToAudio(L, 1));
-            
-            // Now we get the metatable of the added audio and set it
-            // as a return value
-            lua_getfield(L, LUA_REGISTRYINDEX, AudioProxyName);
-            lua_setmetatable(L, -2);
-            
-            return 1;
-        }
-        
-        return 0;
+    return 0;
+  }
+  
+  // Add a node to the room
+  int addNode(lua_State *L) {
+    if (DGCheckProxy(L, 1) == kObjectNode) {
+      r->addNode(DGProxyToNode(L, 1));
+      
+      // Now we get the metatable of the added node and set it
+      // as a return value
+      lua_getfield(L, LUA_REGISTRYINDEX, NodeProxyName);
+      lua_setmetatable(L, -2);
+      
+      return 1;
     }
     
-    // Add a node to the room
-    int addNode(lua_State *L) {
-        if (DGCheckProxy(L, 1) == kObjectNode) {
-            r->addNode(DGProxyToNode(L, 1));
-            
-            // Now we get the metatable of the added node and set it
-            // as a return value
-            lua_getfield(L, LUA_REGISTRYINDEX, NodeProxyName);
-            lua_setmetatable(L, -2);
-            
-            return 1;
-        }
-        
-        return 0;
+    return 0;
+  }
+  
+  // Set the default footstep
+  int setDefaultFootstep(lua_State *L) {
+    if (DGCheckProxy(L, 1) == kObjectAudio) {
+      // Just set the audio object
+      r->setDefaultFootstep((Audio*)DGProxyToAudio(L, 1));
+    }
+    else {
+      // If not, create and set (this is later deleted by the Audio Manager)
+      Audio* audio = new Audio;
+      audio->setResource(luaL_checkstring(L, 1));
+      
+      DGAudioManager::instance().registerAudio(audio);
+      
+      r->setDefaultFootstep(audio);
     }
     
-    // Set the default footstep
-    int setDefaultFootstep(lua_State *L) {
-        if (DGCheckProxy(L, 1) == kObjectAudio) {
-            // Just set the audio object
-             r->setDefaultFootstep((Audio*)DGProxyToAudio(L, 1));
-        }
-        else {
-            // If not, create and set (this is later deleted by the Audio Manager)
-            Audio* audio = new Audio;
-            audio->setResource(luaL_checkstring(L, 1));
-          
-            DGAudioManager::instance().registerAudio(audio);
-            
-            r->setDefaultFootstep(audio);
-        }
-        
-        return 0;
+    return 0;
+  }
+  
+  int startTimer(lua_State *L) {
+    if (!lua_isfunction(L, -1)) {
+      Log::instance().trace(kModScript, "%s", kString14009);
+      
+      return 0;
     }
     
-    int startTimer(lua_State *L) {
-        if (!lua_isfunction(L, -1)) {
-            Log::instance().trace(kModScript, "%s", kString14009);
-            
-            return 0;
-        }
-        
-        int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
-        bool shouldLoop = lua_toboolean(L, 2);
-        int handle = DGTimerManager::instance().create(luaL_checknumber(L, 1), shouldLoop, ref, r->luaObject());
-        
-        lua_pushnumber(L, handle);
-        
-        return 1;
-    }
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
+    bool shouldLoop = lua_toboolean(L, 2);
+    int handle = DGTimerManager::instance().create(luaL_checknumber(L, 1), shouldLoop, ref, r->luaObject());
     
-    Room* ptr() { return r; }
+    lua_pushnumber(L, handle);
     
+    return 1;
+  }
+  
+  Room* ptr() { return r; }
+  
 private:
-    Room* r;
-
+  Room* r;
+  
 };
 
 ////////////////////////////////////////////////////////////
@@ -135,12 +135,12 @@ private:
 const char RoomProxy::className[] = RoomProxyName;
 
 Luna<RoomProxy>::RegType RoomProxy::methods[] = {
-    ObjectMethods(RoomProxy),    
-    method(RoomProxy, addAudio),
-    method(RoomProxy, addNode),
-    method(RoomProxy, setDefaultFootstep),    
-    method(RoomProxy, startTimer),     
-    {0,0}
+  ObjectMethods(RoomProxy),
+  method(RoomProxy, addAudio),
+  method(RoomProxy, addNode),
+  method(RoomProxy, setDefaultFootstep),
+  method(RoomProxy, startTimer),
+  {0,0}
 };
 
 #endif // DG_ROOMPROXY_H

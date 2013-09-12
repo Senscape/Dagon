@@ -42,7 +42,7 @@ struct Action {
   int luaHandler;
   int luaObject;
   Object* target;
-  int type;    
+  int type;
 };
 
 #endif // DAGON_ACTION_H_

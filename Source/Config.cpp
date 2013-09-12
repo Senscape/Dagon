@@ -73,7 +73,7 @@ float Config::globalSpeed() {
   } else if (_globalSpeed > _targetGlobalSpeed) {
     _globalSpeed -= _globalSpeedPrecision;
   }
-
+  
   return static_cast<float>(_globalSpeed);
 }
 

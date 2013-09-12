@@ -31,11 +31,11 @@
 // FIXME: No need to include this lookup table here, should go in the manager
 
 struct DGLookUpTable{
-    int32_t m_plY[256];
-    int32_t m_plRV[256];
-    int32_t m_plGV[256];
-    int32_t m_plGU[256];
-    int32_t m_plBU[256];
+  int32_t m_plY[256];
+  int32_t m_plRV[256];
+  int32_t m_plGV[256];
+  int32_t m_plGU[256];
+  int32_t m_plBU[256];
 };
 
 static struct DGLookUpTable _lookUpTable;
@@ -45,49 +45,49 @@ static struct DGLookUpTable _lookUpTable;
 ////////////////////////////////////////////////////////////
 
 DGVideo::DGVideo() :
-    log(Log::instance())
+log(Log::instance())
 {
-    this->setType(kObjectVideo);
-    
-    _hasNewFrame = false;
-    _hasResource = false;
-    _isLoaded = false;
-    _state = DGVideoInitial;
-    
-    _doesAutoplay = true;
-    _isLoopable = false;
-    _isSynced = false;
-    
-    _theoraInfo = new DGTheoraInfo;
-    
-    _initConversionToRGB();
+  this->setType(kObjectVideo);
+  
+  _hasNewFrame = false;
+  _hasResource = false;
+  _isLoaded = false;
+  _state = DGVideoInitial;
+  
+  _doesAutoplay = true;
+  _isLoopable = false;
+  _isSynced = false;
+  
+  _theoraInfo = new DGTheoraInfo;
+  
+  _initConversionToRGB();
   _mutex = SDL_CreateMutex();
   if (!_mutex)
     log.error(kModVideo, "%s", kString18001);
 }
 
 DGVideo::DGVideo(bool autoplay, bool loopable, bool synced)  :
-    log(Log::instance())
+log(Log::instance())
 {
-    this->setType(kObjectVideo);
-    
-    _hasResource = false;
-    _isLoaded = false;
-    _state = DGVideoInitial;
-    
-    _doesAutoplay = autoplay;
-    _isLoopable = loopable;
-    _isSynced = synced;
-    
-    _theoraInfo = new DGTheoraInfo;
-    
-    _theoraInfo->bos = 0;
+  this->setType(kObjectVideo);
+  
+  _hasResource = false;
+  _isLoaded = false;
+  _state = DGVideoInitial;
+  
+  _doesAutoplay = autoplay;
+  _isLoopable = loopable;
+  _isSynced = synced;
+  
+  _theoraInfo = new DGTheoraInfo;
+  
+  _theoraInfo->bos = 0;
   _theoraInfo->theora_p = 0;
   _theoraInfo->videobuf_ready = 0;
   _theoraInfo->videobuf_granulepos -= 1;
   _theoraInfo->videobuf_time = 0;
-    
-    _initConversionToRGB();
+  
+  _initConversionToRGB();
   _mutex = SDL_CreateMutex();
   if (!_mutex)
     log.error(kModVideo, "%s", kString18001);
@@ -108,36 +108,36 @@ DGVideo::~DGVideo() {
 ////////////////////////////////////////////////////////////
 
 bool DGVideo::doesAutoplay() {
-    return _doesAutoplay;
+  return _doesAutoplay;
 }
 
 bool DGVideo::hasNewFrame() {
-    if (_hasNewFrame) {
-        _hasNewFrame = false;
-        return true;
-    }
-    
-    return false;
+  if (_hasNewFrame) {
+    _hasNewFrame = false;
+    return true;
+  }
+  
+  return false;
 }
 
 bool DGVideo::hasResource() {
-    return _hasResource;
+  return _hasResource;
 }
 
 bool DGVideo::isLoaded() {
-    return _isLoaded;
+  return _isLoaded;
 }
 
 bool DGVideo::isLoopable() {
-    return _isLoopable;
+  return _isLoopable;
 }
 
 bool DGVideo::isPlaying() {
-    return (_state == DGVideoPlaying);
+  return (_state == DGVideoPlaying);
 }
 
 bool DGVideo::isSynced() {
-    return _isSynced;
+  return _isSynced;
 }
 
 ////////////////////////////////////////////////////////////
@@ -145,11 +145,11 @@ bool DGVideo::isSynced() {
 ////////////////////////////////////////////////////////////
 
 DGFrame* DGVideo::currentFrame() {
-    return &_currentFrame;
+  return &_currentFrame;
 }
 
 const char* DGVideo::resource() {
-    return _resource;
+  return _resource;
 }
 
 ////////////////////////////////////////////////////////////
@@ -157,20 +157,20 @@ const char* DGVideo::resource() {
 ////////////////////////////////////////////////////////////
 
 void DGVideo::setAutoplay(bool autoplay) {
-    _doesAutoplay = autoplay;
+  _doesAutoplay = autoplay;
 }
 
 void DGVideo::setLoopable(bool loopable) {
-    _isLoopable = loopable;
+  _isLoopable = loopable;
 }
 
 void DGVideo::setResource(const char* fromFileName) {
-    strncpy(_resource, fromFileName, kMaxFileLength);
-    _hasResource = true;
+  strncpy(_resource, fromFileName, kMaxFileLength);
+  _hasResource = true;
 }
 
 void DGVideo::setSynced(bool synced) {
-    _isSynced = synced;
+  _isSynced = synced;
 }
 
 ////////////////////////////////////////////////////////////
@@ -392,7 +392,7 @@ void DGVideo::update() {
 ////////////////////////////////////////////////////////////
 
 size_t DGVideo::_bufferData(ogg_sync_state* oy) {
-    char *buffer = ogg_sync_buffer(oy, DGVideoBuffer);
+  char *buffer = ogg_sync_buffer(oy, DGVideoBuffer);
   size_t bytes = fread(buffer, 1, DGVideoBuffer, _handle);
   
   ogg_sync_wrote(oy, bytes);
@@ -402,10 +402,10 @@ size_t DGVideo::_bufferData(ogg_sync_state* oy) {
 
 // TODO: This method needs a massive overhaul. It's slow and colors aren't accurate.
 void DGVideo::_convertToRGB(uint8_t* puc_y, int stride_y,
-                   uint8_t* puc_u, uint8_t* puc_v, int stride_uv,
-                   uint8_t* puc_out, int width_y, int height_y,
-                   unsigned int _stride_out) {
-    int x, y;
+                            uint8_t* puc_u, uint8_t* puc_v, int stride_uv,
+                            uint8_t* puc_out, int width_y, int height_y,
+                            unsigned int _stride_out) {
+  int x, y;
   int stride_diff = 6 * _stride_out - 3 * width_y;
   
   if (height_y < 0) {
@@ -499,35 +499,35 @@ void DGVideo::_initConversionToRGB() {
 }
 
 int DGVideo::_prepareFrame() {
-    while (_state == DGVideoPlaying) {
+  while (_state == DGVideoPlaying) {
     while (_theoraInfo->theora_p && !_theoraInfo->videobuf_ready) {
       if (ogg_stream_packetout(&_theoraInfo->to, &_theoraInfo->op) > 0) {
         theora_decode_packetin(&_theoraInfo->td, &_theoraInfo->op);
         _theoraInfo->videobuf_granulepos = _theoraInfo->td.granulepos;
         _theoraInfo->videobuf_time = theora_granule_time(&_theoraInfo->td, _theoraInfo->videobuf_granulepos);
         _theoraInfo->videobuf_ready = 1;
-                
-                if (!_theoraInfo->bos) {
-                    _theoraInfo->bos = _theoraInfo->td.granulepos;
-                }
+        
+        if (!_theoraInfo->bos) {
+          _theoraInfo->bos = _theoraInfo->td.granulepos;
+        }
       } else
         break;
     }
     
     if (!_theoraInfo->videobuf_ready && feof(_handle)) {
       if (_isLoopable) {
-                // This is the begin of stream (granule position) * 8 bits (in bytes) 
+        // This is the begin of stream (granule position) * 8 bits (in bytes)
         fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
         ogg_stream_reset(&_theoraInfo->to);
       }
       else {
-                _state = DGVideoStopped;
-                
-                // Rewind
-                fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
-                ogg_stream_reset(&_theoraInfo->to);
+        _state = DGVideoStopped;
+        
+        // Rewind
+        fseek(_handle, (long)_theoraInfo->bos * 8, SEEK_SET);
+        ogg_stream_reset(&_theoraInfo->to);
       }
-            
+      
       break;
     }
     
@@ -536,7 +536,7 @@ int DGVideo::_prepareFrame() {
       while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og) > 0) {
         _queuePage(_theoraInfo, &_theoraInfo->og);
       }
-            
+      
     } else {
       _theoraInfo->videobuf_ready = 0;
       

@@ -24,10 +24,10 @@ class DGState;
 ////////////////////////////////////////////////////////////
 
 namespace dg {
-    class Locator {
-        static DGState* _state;
-        
-    public:
-        static DGState* getState() { return _state; }
-    };
+  class Locator {
+    static DGState* _state;
+    
+  public:
+    static DGState* getState() { return _state; }
+  };
 }

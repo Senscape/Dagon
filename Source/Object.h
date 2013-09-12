@@ -66,19 +66,19 @@ class Object {
  public:
   Object();
   virtual ~Object() {};
-    
+  
   // Checks
   bool isEnabled();
   bool isFading();
   bool isType(unsigned int typeToCheck);
-    
+  
   // Gets
   float fadeLevel();
   int luaObject();
   std::string name();
   int retainCount();
   unsigned int type();
-    
+  
   // Sets
   void setDefaultFadeLevel(float level);
   void setFadeLevel(float level);
@@ -87,7 +87,7 @@ class Object {
   void setName(std::string aName);
   void setStatic();
   void setType(unsigned int theType);
-    
+  
   // State changes
   void disable();
   void enable();

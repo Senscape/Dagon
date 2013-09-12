@@ -34,8 +34,8 @@ char TEXIdent[] = "KS_TEX"; // We keep this one for backward compatibility
 ////////////////////////////////////////////////////////////
 
 Texture::Texture() :
-  config(Config::instance()),
-  log(Log::instance())
+config(Config::instance()),
+log(Log::instance())
 {
   _hasResource = false;
   _isBitmapLoaded = false;
@@ -49,8 +49,8 @@ Texture::Texture() :
 }
 
 Texture::Texture(int withWidth, int andHeight, int andDepth) :
-  config(Config::instance()),
-  log(Log::instance())
+config(Config::instance()),
+log(Log::instance())
 {
   if (!withWidth)
     withWidth = kDefTexSize;
@@ -456,7 +456,7 @@ void Texture::saveToFile(std::string fileName){
     FILE* fh = fopen(fileName.c_str(), "wb");
     if (fh == NULL)
       return;
-
+    
     glBindTexture(GL_TEXTURE_2D, _ident);
     // We do this in case the texture wasn't loaded
     glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, &_width);

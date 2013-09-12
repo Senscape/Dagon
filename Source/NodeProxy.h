@@ -49,129 +49,129 @@
 
 class NodeProxy : public ObjectProxy {
 public:
-    static const char className[];
-    static Luna<NodeProxy>::RegType methods[];
-    
-    // Constructor
-    NodeProxy(lua_State *L) {
-        n = new Node;
-        n->setBundleName(luaL_checkstring(L, 1));
-        
-        if (lua_gettop(L) == 2)
-            n->setDescription(luaL_checkstring(L, 2));
-
-        n->setName(luaL_checkstring(L, 1));
-        
-        // Register the node in the controller (generates the bundle)
-        DGControl::instance().registerObject(n);
-        
-        if (DGScript::instance().isExecutingModule()) {
-            // A module is being executed, so we know a room
-            // object of the same name exists
-            
-            lua_getglobal(L, DGScript::instance().module());
-            Room* r = DGProxyToRoom(L, -1);
-            
-            // We add the node automatically
-            r->addNode(n);
-        }
-        
-        // Init the base class
-        this->setObject(n);
-    }
-    
-    // Destructor
-    ~NodeProxy() { delete n; }
-    
-    // Add a spot to the node
-    int addSpot(lua_State *L) {
-        if (DGCheckProxy(L, 1) == kObjectSpot) {
-            n->addSpot(DGProxyToSpot(L, 1));
-            
-            // Now we get the metatable of the added spot and set it
-            // as a return value
-            lua_getfield(L, LUA_REGISTRYINDEX, SpotProxyName);
-            lua_setmetatable(L, -2);
-            
-            return 1;
-        }
-        
-        return 0;
-    }
-    
-    // Function to link in several directions
-    int link(lua_State *L) {
-        if (!lua_istable(L, 1)) {
-            luaL_error(L, kString14005);
-            
-            return 0;
-        }
-        
-        lua_pushnil(L);
-        while (lua_next(L, 1) != 0) {
-            const char* key = lua_tostring(L, -2);
-            int dir;
-            
-            // We can only read the key as a string, so we have no choice but
-            // do an ugly nesting of strcmps()
-            if (strcmp(key, N) == 0) dir = kNorth;
-            else if (strcmp(key, W) == 0) dir = kWest;
-            else if (strcmp(key, S) == 0) dir = kSouth;
-            else if (strcmp(key, E) == 0) dir = kEast;
-            else if (strcmp(key, U) == 0) dir = kUp;
-            else if (strcmp(key, D) == 0) dir = kDown;
-            else if (strcmp(key, NW) == 0) dir = kNorthWest;
-            else if (strcmp(key, SW) == 0) dir = kSouthWest;
-            else if (strcmp(key, SE) == 0) dir = kSouthEast;
-            else if (strcmp(key, NE) == 0) dir = kNorthEast;
-            
-            if (lua_isfunction(L, -1)) {
-                int ref = luaL_ref(L, LUA_REGISTRYINDEX);
-                n->addCustomLink(dir, ref);
-                
-                // No need to pop the value in this case
-            }
-            else {
-                switch (DGCheckProxy(L, 3)) {
-                    case kObjectNode:
-                        n->addLink(dir, (Object*)DGProxyToNode(L, 3));
-                        break;
-                    case kObjectRoom:
-                        n->addLink(dir, (Object*)DGProxyToRoom(L, 3));
-                        break;
-                }
-                
-                lua_pop(L, 1);
-            }
-        }
-        
-        return 0;
-        
-    }
+  static const char className[];
+  static Luna<NodeProxy>::RegType methods[];
   
-    // Set a custom footstep
-    int setFootstep(lua_State *L) {
-        if (DGCheckProxy(L, 1) == kObjectAudio) {
-            // Just set the audio object
-            n->setFootstep((Audio*)DGProxyToAudio(L, 1));
-        }
-        else {
-            // If not, create and set (this is later deleted by the Audio Manager)
-            Audio* audio = new Audio;
-            audio->setResource(luaL_checkstring(L, 1));
-            
-            DGAudioManager::instance().registerAudio(audio);
-            
-            n->setFootstep(audio);
-        }
-        
-        return 0;
+  // Constructor
+  NodeProxy(lua_State *L) {
+    n = new Node;
+    n->setBundleName(luaL_checkstring(L, 1));
+    
+    if (lua_gettop(L) == 2)
+      n->setDescription(luaL_checkstring(L, 2));
+    
+    n->setName(luaL_checkstring(L, 1));
+    
+    // Register the node in the controller (generates the bundle)
+    DGControl::instance().registerObject(n);
+    
+    if (DGScript::instance().isExecutingModule()) {
+      // A module is being executed, so we know a room
+      // object of the same name exists
+      
+      lua_getglobal(L, DGScript::instance().module());
+      Room* r = DGProxyToRoom(L, -1);
+      
+      // We add the node automatically
+      r->addNode(n);
     }
     
-    Node* ptr() { return n; }
+    // Init the base class
+    this->setObject(n);
+  }
+  
+  // Destructor
+  ~NodeProxy() { delete n; }
+  
+  // Add a spot to the node
+  int addSpot(lua_State *L) {
+    if (DGCheckProxy(L, 1) == kObjectSpot) {
+      n->addSpot(DGProxyToSpot(L, 1));
+      
+      // Now we get the metatable of the added spot and set it
+      // as a return value
+      lua_getfield(L, LUA_REGISTRYINDEX, SpotProxyName);
+      lua_setmetatable(L, -2);
+      
+      return 1;
+    }
     
+    return 0;
+  }
+  
+  // Function to link in several directions
+  int link(lua_State *L) {
+    if (!lua_istable(L, 1)) {
+      luaL_error(L, kString14005);
+      
+      return 0;
+    }
+    
+    lua_pushnil(L);
+    while (lua_next(L, 1) != 0) {
+      const char* key = lua_tostring(L, -2);
+      int dir;
+      
+      // We can only read the key as a string, so we have no choice but
+      // do an ugly nesting of strcmps()
+      if (strcmp(key, N) == 0) dir = kNorth;
+      else if (strcmp(key, W) == 0) dir = kWest;
+      else if (strcmp(key, S) == 0) dir = kSouth;
+      else if (strcmp(key, E) == 0) dir = kEast;
+      else if (strcmp(key, U) == 0) dir = kUp;
+      else if (strcmp(key, D) == 0) dir = kDown;
+      else if (strcmp(key, NW) == 0) dir = kNorthWest;
+      else if (strcmp(key, SW) == 0) dir = kSouthWest;
+      else if (strcmp(key, SE) == 0) dir = kSouthEast;
+      else if (strcmp(key, NE) == 0) dir = kNorthEast;
+      
+      if (lua_isfunction(L, -1)) {
+        int ref = luaL_ref(L, LUA_REGISTRYINDEX);
+        n->addCustomLink(dir, ref);
+        
+        // No need to pop the value in this case
+      }
+      else {
+        switch (DGCheckProxy(L, 3)) {
+          case kObjectNode:
+            n->addLink(dir, (Object*)DGProxyToNode(L, 3));
+            break;
+          case kObjectRoom:
+            n->addLink(dir, (Object*)DGProxyToRoom(L, 3));
+            break;
+        }
+        
+        lua_pop(L, 1);
+      }
+    }
+    
+    return 0;
+    
+  }
+  
+  // Set a custom footstep
+  int setFootstep(lua_State *L) {
+    if (DGCheckProxy(L, 1) == kObjectAudio) {
+      // Just set the audio object
+      n->setFootstep((Audio*)DGProxyToAudio(L, 1));
+    }
+    else {
+      // If not, create and set (this is later deleted by the Audio Manager)
+      Audio* audio = new Audio;
+      audio->setResource(luaL_checkstring(L, 1));
+      
+      DGAudioManager::instance().registerAudio(audio);
+      
+      n->setFootstep(audio);
+    }
+    
+    return 0;
+  }
+  
+  Node* ptr() { return n; }
+  
 private:
-    Node* n;
+  Node* n;
 };
 
 ////////////////////////////////////////////////////////////
@@ -181,11 +181,11 @@ private:
 const char NodeProxy::className[] = NodeProxyName;
 
 Luna<NodeProxy>::RegType NodeProxy::methods[] = {
-    ObjectMethods(NodeProxy),    
-    method(NodeProxy, addSpot),
-    method(NodeProxy, link),
-    method(NodeProxy, setFootstep),
-    {0,0}
+  ObjectMethods(NodeProxy),
+  method(NodeProxy, addSpot),
+  method(NodeProxy, link),
+  method(NodeProxy, setFootstep),
+  {0,0}
 };
 
 #endif // DG_NODEPROXY_H

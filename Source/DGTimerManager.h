@@ -30,22 +30,22 @@
 class DGSystem;
 
 enum DGTimerTypes {
-    DGTimerInternal,
-    DGTimerManual,
-    DGTimerNormal
+  DGTimerInternal,
+  DGTimerManual,
+  DGTimerNormal
 };
 
 typedef struct {
-    int handle;  
-    bool isEnabled;
-    bool isLoopable;
-    bool hasTriggered;
-    double lastTime;
-    int luaHandler;
-    void (*handler)();
-    int luaObject;
-    double trigger;
-    int type;    
+  int handle;
+  bool isEnabled;
+  bool isLoopable;
+  bool hasTriggered;
+  double lastTime;
+  int luaHandler;
+  void (*handler)();
+  int luaObject;
+  double trigger;
+  int type;
 } DGTimer;
 
 ////////////////////////////////////////////////////////////
@@ -53,43 +53,43 @@ typedef struct {
 ////////////////////////////////////////////////////////////
 
 class DGTimerManager {
-    DGSystem* system;
+  DGSystem* system;
   
-    std::vector<DGTimer> _arrayOfTimers;
-    int _handles; // Maintains a count of handles
-    int _luaObject;
-
-    bool _isRunning;
+  std::vector<DGTimer> _arrayOfTimers;
+  int _handles; // Maintains a count of handles
+  int _luaObject;
   
-    SDL_mutex* _mutex;
-    SDL_Thread* _thread;
-    DGTimer* _lookUp(int handle);
+  bool _isRunning;
+  
+  SDL_mutex* _mutex;
+  SDL_Thread* _thread;
+  DGTimer* _lookUp(int handle);
   
   static int _runThread(void *ptr);
-    
-    DGTimerManager();
-    DGTimerManager(DGTimerManager const&);
-    DGTimerManager& operator=(DGTimerManager const&);
-    ~DGTimerManager();
-    
+  
+  DGTimerManager();
+  DGTimerManager(DGTimerManager const&);
+  DGTimerManager& operator=(DGTimerManager const&);
+  ~DGTimerManager();
+  
 public:
-    static DGTimerManager& instance() {
-        static DGTimerManager timerManager;
-        return timerManager;
-    }
-    
-    bool checkManual(int handle);
-    int create(double trigger, bool shouldLoop, int handlerForLua, int luaObject = 0); // Returns a handle
-    int createInternal(double trigger, void (*callback)()); // For timers created by the engine (not Lua)
-    int createManual(double trigger); // For timers that are manually checked by the user
-    void destroy(int handle);    
-    void disable(int handle);
-    void enable(int handle);
-    void process();
-    void setLuaObject(int luaObject);
-    void setSystem(DGSystem* theSystem);
-    void terminate();
-    bool update();
+  static DGTimerManager& instance() {
+    static DGTimerManager timerManager;
+    return timerManager;
+  }
+  
+  bool checkManual(int handle);
+  int create(double trigger, bool shouldLoop, int handlerForLua, int luaObject = 0); // Returns a handle
+  int createInternal(double trigger, void (*callback)()); // For timers created by the engine (not Lua)
+  int createManual(double trigger); // For timers that are manually checked by the user
+  void destroy(int handle);
+  void disable(int handle);
+  void enable(int handle);
+  void process();
+  void setLuaObject(int luaObject);
+  void setSystem(DGSystem* theSystem);
+  void terminate();
+  bool update();
 };
 
 #endif // DG_TIMERMANAGER_H

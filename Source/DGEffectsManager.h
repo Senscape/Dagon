@@ -32,38 +32,38 @@
 #define DGEffectsDustFactor     32767.0f
 
 enum DGEffects {
-    DGEffectAdjust,
-    DGEffectDust,
-    DGEffectMotionBlur,
-    DGEffectNoise,
-    DGEffectSepia,
-    DGEffectSharpen,
-    DGEffectThrob
+  DGEffectAdjust,
+  DGEffectDust,
+  DGEffectMotionBlur,
+  DGEffectNoise,
+  DGEffectSepia,
+  DGEffectSharpen,
+  DGEffectThrob
 };
 
 enum DGEffectsValues {
-    DGEffectAdjustBrightness,
-    DGEffectAdjustSaturation,
-    DGEffectAdjustContrast,
-    DGEffectDustColor,
-    DGEffectDustIntensity,
-    DGEffectDustSize,
-    DGEffectDustSpeed,
-    DGEffectDustSpread,
-    DGEffectMotionBlurIntensity,
-    DGEffectNoiseIntensity,
-    DGEffectSepiaIntensity,    
-    DGEffectSharpenRatio,
-    DGEffectSharpenIntensity,
-    DGEffectThrobStyle,
-    DGEffectThrobIntensity
+  DGEffectAdjustBrightness,
+  DGEffectAdjustSaturation,
+  DGEffectAdjustContrast,
+  DGEffectDustColor,
+  DGEffectDustIntensity,
+  DGEffectDustSize,
+  DGEffectDustSpeed,
+  DGEffectDustSpread,
+  DGEffectMotionBlurIntensity,
+  DGEffectNoiseIntensity,
+  DGEffectSepiaIntensity,
+  DGEffectSharpenRatio,
+  DGEffectSharpenIntensity,
+  DGEffectThrobStyle,
+  DGEffectThrobIntensity
 };
 
 typedef struct {
-    GLfloat x,y,z;
-    GLfloat r,g,b;
-    GLfloat xd,yd,zd;
-    GLfloat cs;
+  GLfloat x,y,z;
+  GLfloat r,g,b;
+  GLfloat xd,yd,zd;
+  GLfloat cs;
 } DGParticle;
 
 class DGCameraManager;
@@ -82,75 +82,75 @@ extern "C" const char kShaderData[];
 ////////////////////////////////////////////////////////////
 
 class DGEffectsManager {
-    Config& config;
-    DGCameraManager& cameraManager;
-    DGTimerManager& timerManager;
-    
-    GLuint _fragment;
-    GLuint _program;
-    
-    DGParticle _particles[DGEffectsMaxDust];
-    
-    Texture* _dustTexture;
-    char* _shaderData;
-
-    bool _adjustEnabled;
-    float _adjustBrightness;
-    float _adjustSaturation;
-    float _adjustContrast;
-    
-    bool _dustEnabled;
-    uint32_t _dustColor;
-    float _dustIntensity;
-    float _dustSize;    
-    float _dustSpeed;
-    float _dustSpread;
-    
-    bool _motionBlurEnabled;
-    float _motionBlurIntensity;
-    
-    bool _noiseEnabled;
-    float _noiseIntensity;
-    
-    bool _sepiaEnabled;
-    float _sepiaIntensity;
-    
-    bool _sharpenEnabled;
-    float _sharpenRatio;
-    float _sharpenIntensity;
-    
-    bool _throbEnabled;
-    int _throbStyle;
-    float _throbIntensity;
-    
-    bool _isActive;
-    bool _isInitialized;
-    
-    bool _textFileRead();
-    
-    void _buildParticle(int idx); // For dust
-    
-    DGEffectsManager();
-    DGEffectsManager(DGEffectsManager const&);
-    DGEffectsManager& operator=(DGEffectsManager const&);
-    ~DGEffectsManager();
-    
+  Config& config;
+  DGCameraManager& cameraManager;
+  DGTimerManager& timerManager;
+  
+  GLuint _fragment;
+  GLuint _program;
+  
+  DGParticle _particles[DGEffectsMaxDust];
+  
+  Texture* _dustTexture;
+  char* _shaderData;
+  
+  bool _adjustEnabled;
+  float _adjustBrightness;
+  float _adjustSaturation;
+  float _adjustContrast;
+  
+  bool _dustEnabled;
+  uint32_t _dustColor;
+  float _dustIntensity;
+  float _dustSize;
+  float _dustSpeed;
+  float _dustSpread;
+  
+  bool _motionBlurEnabled;
+  float _motionBlurIntensity;
+  
+  bool _noiseEnabled;
+  float _noiseIntensity;
+  
+  bool _sepiaEnabled;
+  float _sepiaIntensity;
+  
+  bool _sharpenEnabled;
+  float _sharpenRatio;
+  float _sharpenIntensity;
+  
+  bool _throbEnabled;
+  int _throbStyle;
+  float _throbIntensity;
+  
+  bool _isActive;
+  bool _isInitialized;
+  
+  bool _textFileRead();
+  
+  void _buildParticle(int idx); // For dust
+  
+  DGEffectsManager();
+  DGEffectsManager(DGEffectsManager const&);
+  DGEffectsManager& operator=(DGEffectsManager const&);
+  ~DGEffectsManager();
+  
 public:
-    static DGEffectsManager& instance() {
-        static DGEffectsManager effectsManager;
-        return effectsManager;
-}
-    
-    void drawDust();
-    void init();
-    bool isEnabled(int effectID);
-    void pause();
-    void play();
-    void setEnabled(int effectID, bool enabled);
-    void setValuef(int valueID, float theValue);
-    void setValuei(int valueID, int theValue);
-    void update();
-    float value(int valueID);
+  static DGEffectsManager& instance() {
+    static DGEffectsManager effectsManager;
+    return effectsManager;
+  }
+  
+  void drawDust();
+  void init();
+  bool isEnabled(int effectID);
+  void pause();
+  void play();
+  void setEnabled(int effectID, bool enabled);
+  void setValuef(int valueID, float theValue);
+  void setValuei(int valueID, int theValue);
+  void update();
+  float value(int valueID);
 };
 
 #endif // DG_EFFECTSMANAGER_H

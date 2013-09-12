@@ -71,12 +71,12 @@ enum SystemPaths {
 ////////////////////////////////////////////////////////////
 
 class Config {
- public:
+public:
   static Config& instance() {
     static Config config;
     return config;
   }
-    
+  
   bool antialiasing;
   int audioBuffer;
   int audioDevice;
@@ -108,7 +108,7 @@ class Config {
   std::string path(int ofType, const std::string &forFile, int andObject);
   std::string script();
   std::string texExtension();
-
+  
   void setFramesPerSecond(double fps);
   void setPath(int forType, std::string thePath);
   void setScript(std::string name);
@@ -117,7 +117,7 @@ class Config {
   // TODO: Provide members to save/load configurations
   // (also used by system to save them in the user's folder)
   
- private:
+private:
   std::string _appPath;
   std::string _resPath;
   std::string _scriptName;
