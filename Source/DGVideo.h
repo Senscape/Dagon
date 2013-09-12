@@ -108,7 +108,7 @@ class DGVideo : public Object {
     
 public:
     DGVideo();
-    DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced);    
+    DGVideo(bool autoplay, bool loopable, bool synced);
     ~DGVideo();
     
     // Checks

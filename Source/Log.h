@@ -20,6 +20,7 @@
 
 #include <fstream>
 #include <string>
+#include <stdint.h>
 #include <vector>
 
 ////////////////////////////////////////////////////////////
@@ -57,7 +58,7 @@ enum LogTypes {
 
 struct LogData {
   std::string line;
-  int color;
+  uint32_t color;
   int module;
   int type;
 };

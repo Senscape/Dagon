@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <string>
+#include <stdint.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -68,7 +69,7 @@ class Font : public Object {
   void clear();
   bool isLoaded();
   void print(int x, int y, const std::string &text, ...);
-  void setColor(int color);
+  void setColor(uint32_t color);
   void setDefault(unsigned int heightOfFont);
   void setLibrary(FT_Library* library);
   void setResource(const std::string &fromFileName, unsigned int heightOfFont);

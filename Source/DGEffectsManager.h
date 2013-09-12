@@ -18,6 +18,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <stdint.h>
+
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -98,7 +100,7 @@ class DGEffectsManager {
     float _adjustContrast;
     
     bool _dustEnabled;
-    int _dustColor;
+    uint32_t _dustColor;
     float _dustIntensity;
     float _dustSize;    
     float _dustSpeed;
@@ -145,8 +147,8 @@ public:
     void pause();
     void play();
     void setEnabled(int effectID, bool enabled);
-    void setValuef(int valueID, float value);
-    void setValuei(int valueID, int value);
+    void setValuef(int valueID, float theValue);
+    void setValuei(int valueID, int theValue);
     void update();
     float value(int valueID);
 };

@@ -27,7 +27,7 @@
 #define kDefFeedSize 10
 #define DGFeedMargin 25
 #define DGFeedMaxLines 5
-#define DGFeedSpeed 0.25f
+#define DGFeedSpeed 0.25
 
 #define DGFeedShadowEnabled     1
 #define DGFeedShadowDistance    2
@@ -43,9 +43,9 @@ enum DGFeedStates {
 typedef struct {
 	Point location;
 	uint32_t color;
-    int state;
+  int state;
 	char text[kMaxFeedLength];
-    char audio[kMaxFileLength];
+  char audio[kMaxFileLength];
 	int timerHandle;    
 } DGFeed;
 
@@ -70,7 +70,7 @@ class DGFeedManager {
     std::vector<DGFeed> _arrayOfActiveFeeds;
     std::vector<DGFeed> _arrayOfFeeds;    
     Font* _feedFont;
-    int _feedHeight;
+    unsigned int _feedHeight;
     
     void _calculatePosition(DGFeed* feed);
     void _dim();

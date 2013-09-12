@@ -267,7 +267,7 @@ void DGEffectsManager::setEnabled(int effectID, bool enabled) {
     }
 }
 
-void DGEffectsManager::setValuef(int valueID, float value) {
+void DGEffectsManager::setValuef(int valueID, float theValue) {
     if (_isInitialized) {
         GLint parameter;
         
@@ -276,77 +276,77 @@ void DGEffectsManager::setValuef(int valueID, float value) {
         switch (valueID) {
             case DGEffectAdjustBrightness:
                 parameter = glGetUniformLocation(_program, "AdjustBrightness");
-                _adjustBrightness = value;
+                _adjustBrightness = theValue;
                 break;
                 
             case DGEffectAdjustSaturation:
                 parameter = glGetUniformLocation(_program, "AdjustSaturation");
-                _adjustSaturation = value;
+                _adjustSaturation = theValue;
                 break;
                 
             case DGEffectAdjustContrast:
                 parameter = glGetUniformLocation(_program, "AdjustContrast");
-                _adjustContrast = value;
+                _adjustContrast = theValue;
                 break;
                 
             case DGEffectDustColor:
-                _dustColor = (int)value;
+                _dustColor = (int)theValue;
                 this->pause();
                 return;
                 
             case DGEffectDustIntensity:
-                if (value < DGEffectsMaxDust)
-                    _dustIntensity = value;
+                if (theValue < DGEffectsMaxDust)
+                    _dustIntensity = theValue;
                 this->pause();
                 return;
                 
             case DGEffectDustSize:
-                _dustSize = value;
+                _dustSize = theValue;
                 this->pause();
                 return;
                 
             case DGEffectDustSpeed:
-                _dustSpeed = value;
+                _dustSpeed = theValue;
                 this->pause();
                 return;
                 
             case DGEffectDustSpread:
-                _dustSpread = value;
+                _dustSpread = theValue;
                 this->pause();
                 return;
                 
             case DGEffectMotionBlurIntensity:
                 parameter = glGetUniformLocation(_program, "MotionBlurIntensity");
-                _motionBlurIntensity = value;
+                _motionBlurIntensity = theValue;
                 break;
                 
             case DGEffectNoiseIntensity:
                 parameter = glGetUniformLocation(_program, "NoiseIntensity");
-                _noiseIntensity = value;
+                _noiseIntensity = theValue;
                 break;
                 
             case DGEffectSepiaIntensity:
                 parameter = glGetUniformLocation(_program, "SepiaIntensity");
-                _sepiaIntensity = value;
+                _sepiaIntensity = theValue;
                 break;
                 
             case DGEffectSharpenRatio:
                 parameter = glGetUniformLocation(_program, "SharpenRatio");
-                _sharpenRatio = value;
+                _sharpenRatio = theValue;
                 break;
                 
             case DGEffectSharpenIntensity:
                 parameter = glGetUniformLocation(_program, "SharpenIntensity");
-                _sharpenIntensity = value;
+                _sharpenIntensity = theValue;
                 break;
                 
             case DGEffectThrobStyle:
-                _throbStyle = (int)value;
+                _throbStyle = (int)theValue;
                 this->pause();
                 return;
                 
             case DGEffectThrobIntensity:
-                _throbIntensity = value;
+                _throbIntensity = theValue;
                 this->pause();
                 return;
                 
@@ -355,17 +355,17 @@ void DGEffectsManager::setValuef(int valueID, float value) {
                 return;
         }
         
-        glUniform1f(parameter, value);
+        glUniform1f(parameter, theValue);
         
         this->pause();
     }
 }
 
-void DGEffectsManager::setValuei(int valueID, int value) {
+void DGEffectsManager::setValuei(int valueID, int theValue) {
     if (_isInitialized) {
         switch (valueID) {
             case DGEffectDustColor:
-                _dustColor = value;
+                _dustColor = theValue;
                 break;
                 
             default:
@@ -378,7 +378,7 @@ void DGEffectsManager::update() {
     static float noise = 0.0f;
     
     if (_isActive) {
-        GLfloat parameter;
+        GLint parameter;
         
         if (_motionBlurEnabled) {
             parameter = glGetUniformLocation(_program, "MotionBlurOffsetX");

@@ -66,7 +66,7 @@ DGVideo::DGVideo() :
     log.error(kModVideo, "%s", kString18001);
 }
 
-DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced)  :
+DGVideo::DGVideo(bool autoplay, bool loopable, bool synced)  :
     log(Log::instance())
 {
     this->setType(kObjectVideo);
@@ -75,9 +75,9 @@ DGVideo::DGVideo(bool doesAutoplay, bool isLoopable, bool isSynced)  :
     _isLoaded = false;
     _state = DGVideoInitial;
     
-    _doesAutoplay = doesAutoplay;
-    _isLoopable = isLoopable;
-    _isSynced = isSynced;
+    _doesAutoplay = autoplay;
+    _isLoopable = loopable;
+    _isSynced = synced;
     
     _theoraInfo = new DGTheoraInfo;
     
@@ -230,11 +230,11 @@ void DGVideo::load() {
     }
     
     while (_theoraInfo->theora_p && _theoraInfo->theora_p < 3) {
-      int ret;
+      int result;
       
       while (_theoraInfo->theora_p && (_theoraInfo->theora_p < 3) &&
-             (ret = ogg_stream_packetout(&_theoraInfo->to, &_theoraInfo->op))) {
-        if (ret < 0) {
+             (result = ogg_stream_packetout(&_theoraInfo->to, &_theoraInfo->op))) {
+        if (result < 0) {
           log.error(kModVideo, "%s", kString17008);
           //return;
         }

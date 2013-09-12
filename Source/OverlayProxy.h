@@ -99,22 +99,24 @@ public:
     
     // Move the overlay
     int move(lua_State *L) {
-        o->move(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        o->move(static_cast<int>(luaL_checknumber(L, 1)),
+                static_cast<int>(luaL_checknumber(L, 2)));
         
         return 0;
     } 
     
     // Return the position
     int position(lua_State *L) {
-        Point position = o->position();
-        lua_pushnumber(L, position.x);
-        lua_pushnumber(L, position.y);        
+        Point newPosition = o->position();
+        lua_pushnumber(L, newPosition.x);
+        lua_pushnumber(L, newPosition.y);
         return 2;
     }
     
     // Set a new position
     int setPosition(lua_State *L) {
-        o->setPosition(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        o->setPosition(static_cast<int>(luaL_checknumber(L, 1)),
+                       static_cast<int>(luaL_checknumber(L, 2)));
         
         return 0;
     } 

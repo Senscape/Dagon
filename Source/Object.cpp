@@ -25,10 +25,10 @@ static int globalID = 0;
 
 Object::Object() {
   _retainCount = 0;
-  _defaultFade = 1.0;
+  _defaultFade = 1.0f;
   _fadeDirection = kFadeNone;
-  _fadeLevel = 1.0;
-  _fadeTarget = 1.0;
+  _fadeLevel = 1.0f;
+  _fadeTarget = 1.0f;
   _isEnabled = true;
   _isStatic = false;
   _id = ++globalID;
@@ -100,7 +100,7 @@ void Object::setFadeLevel(float level) {
 }
 
 void Object::setFadeSpeed(int speed) {
-  _fadeSpeed = 1.0 / static_cast<float>(speed);
+  _fadeSpeed = 1.0f / static_cast<float>(speed);
 }
 
 void Object::setLuaObject(int object) {
@@ -111,8 +111,8 @@ void Object::setName(std::string aName) {
   _name = aName;
 }
 
-void Object::setType(unsigned int type) {
-  _type = type;
+void Object::setType(unsigned int theType) {
+  _type = theType;
 }
 
 void Object::setStatic() {

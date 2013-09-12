@@ -93,7 +93,7 @@ std::string Button::text() {
   return _text;
 }
 
-int Button::textColor() {
+uint32_t Button::textColor() {
   return _textColor;
 }
 
@@ -124,12 +124,12 @@ void Button::setOnHoverTexture(const std::string &fromFileName) {
   _hasOnHoverTexture = true;
 }
 
-void Button::setText(std::string text){
-  _text = text;
+void Button::setText(std::string theText){
+  _text = theText;
   _hasText = true;
 }
 
-void Button::setTextColor(int aColor) {
+void Button::setTextColor(uint32_t aColor) {
   // Note this expects one of our pre-generated colors
   _textColor = aColor;
 }

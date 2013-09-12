@@ -225,8 +225,8 @@ void DGScript::run() {
     }
 }
 
-void DGScript::setModule(const char* module) {
-    _arrayOfModuleNames.push_back(module);
+void DGScript::setModule(const char* theModule) {
+    _arrayOfModuleNames.push_back(theModule);
 }
 
 int DGScript::suspend() {
@@ -318,7 +318,7 @@ int DGScript::_globalHotkey(lua_State *L) {
 int DGScript::_globalLookAt(lua_State *L) {
     // NOTE: The user cannot use a custom angle between 0 and 5
     
-    int horizontal = luaL_checknumber(L, 1);
+    int horizontal = static_cast<int>(luaL_checknumber(L, 1));
     int vertical = 0; // Always assumes a 'flat' vertical angle
     bool instant = false;
     
@@ -330,7 +330,7 @@ int DGScript::_globalLookAt(lua_State *L) {
     }
     
     if (lua_gettop(L) > 1) {
-        vertical = luaL_checknumber(L, 2);
+        vertical = static_cast<int>(luaL_checknumber(L, 2));
         
         switch (vertical) {
             case kUp:      vertical = 360;     break;
@@ -446,7 +446,8 @@ int DGScript::_globalSleep(lua_State *L) {
 int DGScript::_globalSetFont(lua_State *L) {
     switch ((int)luaL_checknumber(L, 1)) {
         case FEED:
-            DGFeedManager::instance().setFont(luaL_checkstring(L, 2), luaL_checknumber(L, 3));
+            DGFeedManager::instance().setFont(luaL_checkstring(L, 2),
+                                              static_cast<unsigned int>(luaL_checknumber(L, 3)));
             break;
     }
     
@@ -499,7 +500,7 @@ int DGScript::_globalStartTimer(lua_State *L) {
 }
 
 int DGScript::_globalStopTimer(lua_State *L) {
-    DGTimerManager::instance().disable(luaL_checknumber(L, 1));
+    DGTimerManager::instance().disable(static_cast<int>(luaL_checknumber(L, 1)));
 	
 	return 0;
 }

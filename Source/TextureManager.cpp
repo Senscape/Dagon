@@ -79,7 +79,7 @@ void TextureManager::flush() {
     // This function is called every time a switch is performed
     // and unloads the least used textures when necessary
     
-    long texturesToUnload = _arrayOfActiveTextures.size() - kMaxActiveTextures;
+    unsigned long texturesToUnload = _arrayOfActiveTextures.size() - kMaxActiveTextures;
 
     while (texturesToUnload > 0) {
         _arrayOfActiveTextures.front()->unload();

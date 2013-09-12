@@ -23,6 +23,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <stdint.h>
+
 #include "Button.h"
 #include "DGScript.h"
 
@@ -38,9 +40,9 @@ public:
     // Constructor
     ButtonProxy(lua_State *L) {
         b = new Button();
-        
-        b->setPosition(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
-        b->setSize(luaL_checknumber(L, 3), luaL_checknumber(L, 4));
+      
+        b->setPosition(static_cast<int>(luaL_checknumber(L, 1)), static_cast<int>(luaL_checknumber(L, 2)));
+        b->setSize(static_cast<int>(luaL_checknumber(L, 3)), static_cast<int>(luaL_checknumber(L, 4)));
         
         // Init the base class
         this->setObject(b);
@@ -51,21 +53,21 @@ public:
     
     // Move the button
     int move(lua_State *L) {
-        b->move(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        b->move(static_cast<int>(luaL_checknumber(L, 1)), static_cast<int>(luaL_checknumber(L, 2)));
         return 0;
     }
     
     // Return the position
     int position(lua_State *L) {
-        Point position = b->position();
-        lua_pushnumber(L, position.x);
-        lua_pushnumber(L, position.y);        
+        Point pos = b->position();
+        lua_pushnumber(L, pos.x);
+        lua_pushnumber(L, pos.y);
         return 2;
     }
     
     // Scale the button
     int scale(lua_State *L) {
-        b->scale(luaL_checknumber(L, 1));
+        b->scale(static_cast<float>(luaL_checknumber(L, 1)));
         return 0;
     }
     
@@ -103,10 +105,10 @@ public:
                 
                 break;                
             case SWITCH:
-                int type = DGCheckProxy(L, 2);
-                if (type == kObjectNode)
+                int typeOfTarget = DGCheckProxy(L, 2);
+                if (typeOfTarget == kObjectNode)
                     action.target = DGProxyToNode(L, 2);
-                else if (type == kObjectRoom)
+                else if (typeOfTarget == kObjectRoom)
                     action.target = DGProxyToRoom(L, 2);
                 else {
                     Log::instance().error(kModScript, "%s", kString14008);
@@ -125,14 +127,14 @@ public:
     
     // Set a cursor for the action
     int setCursor(lua_State *L) {
-      b->updateCursor(luaL_checknumber(L, 1));
+      b->updateCursor(static_cast<int>(luaL_checknumber(L, 1)));
         
         return 0;
     }
     
     // Set the font for text
     int setFont(lua_State *L) {
-        b->setFont(luaL_checkstring(L, 1), luaL_checknumber(L, 2));
+        b->setFont(luaL_checkstring(L, 1), static_cast<unsigned int>(luaL_checknumber(L, 2)));
         return 0;
     }  
     
@@ -144,13 +146,13 @@ public:
     
     // Set a new position
     int setPosition(lua_State *L) {
-        b->setPosition(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        b->setPosition(static_cast<int>(luaL_checknumber(L, 1)), static_cast<int>(luaL_checknumber(L, 2)));
         return 0;
     }
     
     // Set a new size
     int setSize(lua_State *L) {
-        b->setSize(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        b->setSize(static_cast<int>(luaL_checknumber(L, 1)), static_cast<int>(luaL_checknumber(L, 2)));
         return 0;
     }
     
@@ -162,16 +164,16 @@ public:
     
     // Set the color of text
     int setTextColor(lua_State *L) {
-		unsigned int color = lua_tonumber(L, 1);
+		uint32_t color = static_cast<uint32_t>(lua_tonumber(L, 1));
         b->setTextColor(color);
         return 0;
     }
     
     // Return the size
     int size(lua_State *L) {
-        Size size = b->size();
-        lua_pushnumber(L, size.width);
-        lua_pushnumber(L, size.height);        
+        Size newSize = b->size();
+        lua_pushnumber(L, newSize.width);
+        lua_pushnumber(L, newSize.height);        
         return 2;
     }
     

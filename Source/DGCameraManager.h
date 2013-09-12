@@ -93,19 +93,19 @@ class DGCameraManager {
     float _accelH;
     float _accelV;
     
-    GLfloat _angleH;
-    GLfloat _angleV;
+    GLdouble _angleH;
+    GLdouble _angleV;
     
-    GLfloat _angleHPrevious;
-    GLfloat _angleVPrevious;
+    GLdouble _angleHPrevious;
+    GLdouble _angleVPrevious;
     
-    GLfloat _angleHTarget;
-    GLfloat _angleVTarget;
-    float _targetHError;
-    float _targetVError;
+    GLdouble _angleHTarget;
+    GLdouble _angleVTarget;
+    GLdouble _targetHError;
+    GLdouble _targetVError;
     
-    GLfloat _angleHLimit;
-    GLfloat _angleVLimit;
+    GLdouble _angleHLimit;
+    GLdouble _angleVLimit;
     
     DGCameraBob _bob;
     
@@ -140,8 +140,8 @@ class DGCameraManager {
     int _speedFactor;
     
     void _calculateBob();
-    int _toDegrees(float angle, float limit);
-    float _toRadians(float angle, float limit);
+    GLint _toDegrees(GLdouble angle, GLdouble limit);
+    GLdouble _toRadians(GLdouble angle, GLdouble limit);
     
     DGCameraManager();
     DGCameraManager(DGCameraManager const&);
@@ -182,8 +182,8 @@ public:
     void setAngleVertical(float vertical);
     void setBreathe(bool enabled);
     void setFieldOfView(float fov);
-    void setInertia(int inertia);
-    void setMaxSpeed(int speed);
+    void setInertia(int theInertia);
+    void setMaxSpeed(int theSpeed);
     void setNeutralZone(int zone);
     void setSpeedFactor(int speed);
     void setTargetAngle(float horizontal, float vertical);    

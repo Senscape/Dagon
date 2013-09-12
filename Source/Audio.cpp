@@ -76,9 +76,9 @@ bool Audio::isLoopable() {
 }
 
 bool Audio::isPlaying() {
-  bool value = (_state == kAudioPlaying);
+  bool value = false;
   if (SDL_LockMutex(_mutex) == 0) {
-    value = _isLoaded;
+    value = (_state == kAudioPlaying);
     SDL_UnlockMutex(_mutex);
   } else {
     log.error(kModAudio, "%s", kString18002);
@@ -112,27 +112,27 @@ void Audio::setPosition(unsigned int face, Point origin) {
     
   switch (face) {
     case kNorth: {
-      alSource3f(_alSource, AL_POSITION, x, y, -1.0);
+      alSource3f(_alSource, AL_POSITION, x, y, -1.0f);
       break;
     }
     case kEast: {
-      alSource3f(_alSource, AL_POSITION, 1.0, y, x);
+      alSource3f(_alSource, AL_POSITION, 1.0f, y, x);
       break;
     }
     case kSouth: {
-      alSource3f(_alSource, AL_POSITION, -x, y, 1.0);
+      alSource3f(_alSource, AL_POSITION, -x, y, 1.0f);
       break;
     }
     case kWest: {
-      alSource3f(_alSource, AL_POSITION, -1.0, y, -x);
+      alSource3f(_alSource, AL_POSITION, -1.0f, y, -x);
       break;
     }
     case kUp: {
-      alSource3f(_alSource, AL_POSITION, 0.0, 1.0, 0.0);
+      alSource3f(_alSource, AL_POSITION, 0.0f, 1.0f, 0.0f);
       break;
     }
     case kDown: {
-      alSource3f(_alSource, AL_POSITION, 0.0, -1.0, 0.0);
+      alSource3f(_alSource, AL_POSITION, 0.0f, -1.0f, 0.0f);
       break;
     }
     default: {
@@ -189,9 +189,9 @@ void Audio::load() {
         
         alGenBuffers(kAudioBuffers, _alBuffers);
         alGenSources(1, &_alSource);
-        alSource3f(_alSource, AL_POSITION, 0.0, 0.0, 0.0);
-        alSource3f(_alSource, AL_VELOCITY, 0.0, 0.0, 0.0);
-        alSource3f(_alSource, AL_DIRECTION, 0.0, 0.0, 0.0);
+        alSource3f(_alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
+        alSource3f(_alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+        alSource3f(_alSource, AL_DIRECTION, 0.0f, 0.0f, 0.0f);
         
         for (int i = 0; i < kAudioBuffers; i++) {
           if (!_fillBuffer(&_alBuffers[i])) {
@@ -201,7 +201,7 @@ void Audio::load() {
         alSourceQueueBuffers(_alSource, kAudioBuffers, _alBuffers);
         
         if (config.mute || this->fadeLevel() < 0.0) {
-          alSourcef(_alSource, AL_GAIN, 0.0);
+          alSourcef(_alSource, AL_GAIN, 0.0f);
         } else {
           alSourcef(_alSource, AL_GAIN, this->fadeLevel());
         }
@@ -307,7 +307,7 @@ void Audio::update() {
       
       // FIXME: Not very elegant as we're doing this check every time
       if (config.mute) {
-        alSourcef(_alSource, AL_GAIN, 0.0);
+        alSourcef(_alSource, AL_GAIN, 0.0f);
       } else {
         // Finally check the current volume. If it's zero, let the manager know
         // that we're done with this audio.
@@ -342,7 +342,7 @@ bool Audio::_fillBuffer(ALuint* buffer) {
       long result = ov_read(&_oggStream, data + size, config.audioBuffer - size,
                             0, 2, 1, &section);
       if (result > 0) {
-        size += result;
+        size += static_cast<int>(result);
       } else if (result == 0) {
         // EOF
         if (_isLoopable) {
@@ -372,10 +372,10 @@ bool Audio::_fillBuffer(ALuint* buffer) {
 }
 
 void Audio::_emptyBuffers() {
-  ALint state;
-  alGetSourcei(_alSource, AL_SOURCE_STATE, &state);
+  ALint alState;
+  alGetSourcei(_alSource, AL_SOURCE_STATE, &alState);
 
-	if (state != AL_PLAYING) {
+	if (alState != AL_PLAYING) {
     int queued;
     alGetSourcei(_alSource, AL_BUFFERS_PROCESSED, &queued);
 

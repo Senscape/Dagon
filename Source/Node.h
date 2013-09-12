@@ -54,8 +54,8 @@ class Node : public Object {
   int slideReturn();
   
   // Sets
-  void setBundleName(std::string name);
-  void setDescription(std::string description);
+  void setBundleName(std::string theName);
+  void setDescription(std::string theDescription);
   void setFootstep(Audio* theFootstep);
   void setPreviousNode(Node* node);
   void setSlide(bool enabled);

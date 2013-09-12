@@ -48,41 +48,44 @@ public:
     
     // Move the image
     int move(lua_State *L) {
-        i->move(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        i->move(static_cast<int>(luaL_checknumber(L, 1)),
+                static_cast<int>(luaL_checknumber(L, 2)));
         return 0;
     }
     
     // Return the position
     int position(lua_State *L) {
-        Point position = i->position();
-        lua_pushnumber(L, position.x);
-        lua_pushnumber(L, position.y);        
+        Point pos = i->position();
+        lua_pushnumber(L, pos.x);
+        lua_pushnumber(L, pos.y);
         return 2;
     }
     
     // Scale the image
     int scale(lua_State *L) {
-        i->scale(luaL_checknumber(L, 1));
+        i->scale(static_cast<float>(luaL_checknumber(L, 1)));
         return 0;
     }
     
     // Set a new position
     int setPosition(lua_State *L) {
-        i->setPosition(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        i->setPosition(static_cast<int>(luaL_checknumber(L, 1)),
+                       static_cast<int>(luaL_checknumber(L, 2)));
         return 0;
     }
     
     // Set a new size
     int setSize(lua_State *L) {
-        i->setSize(luaL_checknumber(L, 1), luaL_checknumber(L, 2));
+        i->setSize(static_cast<int>(luaL_checknumber(L, 1)),
+                   static_cast<int>(luaL_checknumber(L, 2)));
         return 0;
     }
     
     // Return the size
     int size(lua_State *L) {
-        Size size = i->size();
-        lua_pushnumber(L, size.width);
-        lua_pushnumber(L, size.height);        
+        Size newSize = i->size();
+        lua_pushnumber(L, newSize.width);
+        lua_pushnumber(L, newSize.height);        
         return 2;
     }
     

@@ -57,7 +57,10 @@ static int DGCursorLibFadeOut(lua_State *L) {
 }
 
 static int DGCursorLibLoad(lua_State *L) {
-    DGCursorManager::instance().load(luaL_checknumber(L, 1), luaL_checkstring(L, 2), lua_tonumber(L, 3), lua_tonumber(L, 4));
+    DGCursorManager::instance().load(static_cast<int>(luaL_checknumber(L, 1)),
+                                     luaL_checkstring(L, 2),
+                                     static_cast<int>(lua_tonumber(L, 3)),
+                                     static_cast<int>(lua_tonumber(L, 4)));
     
     return 0;
 }

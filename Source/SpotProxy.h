@@ -48,13 +48,13 @@ public:
         int flagsIndex;
         
         if (params == 3) {
-            direction = luaL_checknumber(L, 1);
+            direction = static_cast<int>(luaL_checknumber(L, 1));
             coordsIndex = 2;
             flagsIndex = 3;
         }
         else if (params == 2) {
             if (lua_isnumber(L, 1)) {
-                direction = lua_tonumber(L, 1);
+                direction = static_cast<int>(lua_tonumber(L, 1));
                 coordsIndex = 2;
                 flagsIndex = 3; // Won't pass the check
             }
@@ -103,7 +103,7 @@ public:
             lua_pushnil(L);  // First key
             while (lua_next(L, coordsIndex) != 0) {
                 // Uses key at index -2 and value at index -1
-                arrayOfCoords.push_back(lua_tonumber(L, -1));
+                arrayOfCoords.push_back(static_cast<int>(lua_tonumber(L, -1)));
                 lua_pop(L, 1);
             }
     
@@ -201,7 +201,7 @@ public:
                 
                 // If we have a third parameter, use it to set the index inside a bundle
                 if (lua_isnumber(L, 3))
-                    texture->setIndexInBundle(lua_tonumber(L, 3));
+                    texture->setIndexInBundle(static_cast<int>(lua_tonumber(L, 3)));
                 
                 s->setTexture(texture);
                 break;
@@ -257,7 +257,7 @@ public:
         if (s->hasAction()) {
             Action* action = s->action();
             
-            action->cursor = luaL_checknumber(L, 1);
+            action->cursor = static_cast<int>(luaL_checknumber(L, 1));
         }
         
         return 0;

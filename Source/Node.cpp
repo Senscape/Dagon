@@ -102,12 +102,12 @@ Node* Node::previousNode() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void Node::setBundleName(std::string name) {
-  _bundleName = name;
+void Node::setBundleName(std::string theName) {
+  _bundleName = theName;
 }
 
-void Node::setDescription(std::string description) {
-  _description = description;
+void Node::setDescription(std::string theDescription) {
+  _description = theDescription;
 }
 
 void Node::setFootstep(Audio* theFootstep) {
@@ -174,7 +174,7 @@ void Node::_link(unsigned int direction, Action* action) {
   // cube size.
   // TODO: This setting should be obtained directly from the Config class
   int minorBound = kDefTexSize / 3;
-  int majorBound = kDefTexSize / 1.5;
+  int majorBound = static_cast<int>(kDefTexSize / 1.5f);
   int offset = kDefTexSize / 3;
     
   // We always have four corners here, hence eight elements since they are

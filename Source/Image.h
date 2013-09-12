@@ -50,12 +50,12 @@ class Image : public Object {
   Texture* texture();
 
   // Sets
-  void setPosition(float x, float y);
-  void setSize(float width, float height);
+  void setPosition(int x, int y);
+  void setSize(int width, int height);
   void setTexture(const std::string &fromFileName);
 
   // State changes
-  void move(float offsetX, float offsetY);
+  void move(int offsetX, int offsetY);
   void scale(float factor);
   
  private:

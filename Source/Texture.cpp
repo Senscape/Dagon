@@ -48,25 +48,25 @@ Texture::Texture() :
     log.error(kModTexture, "%s", kString18001);
 }
 
-Texture::Texture(int width, int height, int depth) :
+Texture::Texture(int withWidth, int andHeight, int andDepth) :
   config(Config::instance()),
   log(Log::instance())
 {
-  if (!width)
-    width = kDefTexSize;
-  if (!height)
-    height = kDefTexSize;
+  if (!withWidth)
+    withWidth = kDefTexSize;
+  if (!andHeight)
+    andHeight = kDefTexSize;
   
   int comp;
-  if (!depth) {
+  if (!andDepth) {
     comp = 3; // RGB
   } else {
-    comp = depth / 8; // Whatever was requested
+    comp = andDepth / 8; // Whatever was requested
   }
   
-  _width = width;
-  _height = height;
-  _depth = depth;
+  _width = withWidth;
+  _height = andHeight;
+  _depth = andDepth;
   _bitmap = new GLubyte[_width * _height * comp];
   glGenTextures(1, &_ident);
   glBindTexture(GL_TEXTURE_2D, _ident);
@@ -207,8 +207,8 @@ void Texture::load() {
           // Read the main header
           fseek(fh, 8, SEEK_SET); // Skip identifier
           fread(&header, 1, sizeof(header), fh);
-          _width = static_cast<GLuint>(header.width);
-          _height = static_cast<GLuint>(header.height);
+          _width = static_cast<GLint>(header.width);
+          _height = static_cast<GLint>(header.height);
           
           // Skip subheaders based on the index
           if (_indexInBundle) {
@@ -425,25 +425,25 @@ void Texture::loadFromMemory(const unsigned char* dataToLoad, long size) {
 }
 
 void Texture::loadRawData(const unsigned char* dataToLoad,
-                            int width, int height) {
+                          int withWidth, int andHeight) {
   // Mostly useful to load frames from DGVideo.
   // Note it defaults to inverted RGB.
   if (!_isLoaded) {
     glGenTextures(1, &_ident);
     glBindTexture(GL_TEXTURE_2D, _ident);
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, width, height,
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, withWidth, andHeight,
                  0, GL_BGR, GL_UNSIGNED_BYTE, dataToLoad);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    _width = width;
-    _height = height;
+    _width = withWidth;
+    _height = andHeight;
     _depth = 24;
     _isLoaded = true;
   } else {
     glBindTexture(GL_TEXTURE_2D, _ident);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height,
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, withWidth, andHeight,
                     GL_BGR, GL_UNSIGNED_BYTE, dataToLoad);
   }
 }

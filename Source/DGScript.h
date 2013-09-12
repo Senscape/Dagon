@@ -100,7 +100,7 @@ public:
     void processCommand(const char* command);
     void resume();
     void run();
-    void setModule(const char* module);
+    void setModule(const char* theModule);
     int suspend();
     void unsetModule();
 };

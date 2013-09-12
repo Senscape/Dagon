@@ -84,7 +84,7 @@ bool DGCursorManager::isDragging() {
 }
 
 // NOTE: These textures aren't managed
-void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int offsetY) {
+void DGCursorManager::load(int typeOfCursor, const char* imageFromFile, int offsetX, int offsetY) {
     DGCursorData cursor;
     Texture* texture;
     
@@ -92,7 +92,7 @@ void DGCursorManager::load(int type, const char* imageFromFile, int offsetX, int
     texture->setResource(config.path(kPathResources, imageFromFile, kObjectCursor).c_str());
     texture->load();
     
-    cursor.type = type;
+    cursor.type = typeOfCursor;
     cursor.image = texture;
     cursor.origin.x = _half - offsetX;
     cursor.origin.y = _half - offsetY;
@@ -105,12 +105,12 @@ bool DGCursorManager::onButton() {
 }
 
 Point DGCursorManager::position() {
-    Point position;
+    Point pos;
     
-    position.x = _x;
-    position.y = _y;
+    pos.x = _x;
+    pos.y = _y;
     
-    return position;
+    return pos;
 }
 
 void DGCursorManager::removeAction() {
@@ -130,16 +130,16 @@ void DGCursorManager::setOnButton(bool flag) {
     _onButton = flag;
 }
 
-void DGCursorManager::setAction(Action* action) {
-    _pointerToAction = action;
+void DGCursorManager::setAction(Action* theAction) {
+    _pointerToAction = theAction;
     _hasAction = true;
     
     // Set the image, if available
-    this->_set(action->cursor);
+    this->_set(theAction->cursor);
 }
 
-void DGCursorManager::setCursor(int type) {
-    this->_set(type);
+void DGCursorManager::setCursor(int typeOfCursor) {
+    this->_set(typeOfCursor);
 }
 
 void DGCursorManager::setSize(int size) {
@@ -181,12 +181,12 @@ void DGCursorManager::updateCoords(int x, int y) {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-void DGCursorManager::_set(int type) {
+void DGCursorManager::_set(int typeOfCursor) {
     if (!_arrayOfCursors.empty()) {
         _current = _arrayOfCursors.begin();
         
         while (_current != _arrayOfCursors.end()) {
-            if ((*_current).type == type) {
+            if ((*_current).type == typeOfCursor) {
                 _hasImage = true;
                 return;
             }

@@ -57,7 +57,7 @@ class Log;
 class Texture : public Object {
  public:
   Texture();
-  Texture(int width, int height, int depth);
+  Texture(int withWidth, int andHeight, int andDepth);
   ~Texture();
   
   // Checks
@@ -85,7 +85,8 @@ class Texture : public Object {
   
   // Textures loaded from memory are not managed
   void loadFromMemory(const unsigned char* dataToLoad, long size);
-  void loadRawData(const unsigned char* dataToLoad, int width, int height);
+  void loadRawData(const unsigned char* dataToLoad,
+                   int withWidth, int andHeight);
   void saveToFile(std::string fileName);
   void unload();
   

@@ -185,10 +185,10 @@ void DGAudioManager::init() {
     
 	alcMakeContextCurrent(_alContext);
     
-    ALfloat listenerPos[] = {0.0, 0.0, 0.0};
-	ALfloat listenerVel[] = {0.0, 0.0, 0.0};
-	ALfloat listenerOri[] = {0.0, 0.0, -1.0, 
-                             0.0, 1.0, 0.0}; // Listener facing into the screen
+    ALfloat listenerPos[] = {0.0f, 0.0f, 0.0f};
+	ALfloat listenerVel[] = {0.0f, 0.0f, 0.0f};
+	ALfloat listenerOri[] = {0.0f, 0.0f, -1.0f,
+                          0.0f, 1.0f, 0.0f}; // Listener facing into the screen
     
 	alListenerfv(AL_POSITION, listenerPos);
 	alListenerfv(AL_VELOCITY, listenerVel);

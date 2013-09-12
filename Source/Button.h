@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <string>
+#include <stdint.h>
 
 #include "Action.h"
 #include "Colors.h"
@@ -53,14 +54,14 @@ class Button : public Image {
   Font* font();
   Texture* onHoverTexture();
   std::string text();
-  int textColor();
+  uint32_t textColor();
 
   // Sets
   void setAction(Action anAction);
   void setFont(const std::string &fromFileName, unsigned int heightOfFont);
   void setOnHoverTexture(const std::string &fromFileName);
-  void setText(std::string text);
-  void setTextColor(int aColor);
+  void setText(std::string theText);
+  void setTextColor(uint32_t aColor);
   void updateCursor(int theCursor);
   
  private:
@@ -75,7 +76,7 @@ class Button : public Image {
   bool _hasOnHoverTexture;
   bool _hasText;
   std::string _text;
-  int _textColor;
+  uint32_t _textColor;
   
   Button(const Button&);
   void operator=(const Button&);

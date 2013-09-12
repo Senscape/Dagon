@@ -696,16 +696,16 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
         if (_currentRoom) {
             renderManager.blendNextUpdate();
             
-            Node* currentNode = this->currentNode();
-            Node* previousNode = currentNode->previousNode();
+            Node* current = this->currentNode();
+            Node* previous = current->previousNode();
             
-            _currentRoom->switchTo(previousNode);
+            _currentRoom->switchTo(previous);
             
-            if (currentNode->slideReturn()) {
-                script.processCallback(currentNode->slideReturn(), currentNode->luaObject());
+            if (current->slideReturn()) {
+                script.processCallback(current->slideReturn(), current->luaObject());
             }
             
-            if (!previousNode->isSlide())
+            if (!previous->isSlide())
                 cameraManager.unlock();
             
             performWalk = false;
@@ -715,13 +715,13 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
     if (_currentRoom) {
         if (_currentRoom->hasNodes()) {
             // Now we proceed to load the textures of the current node
-            Node* currentNode = _currentRoom->currentNode();
+            Node* current = _currentRoom->currentNode();
             textureManager.flush();
                 
-            if (currentNode->hasSpots()) {                
-                currentNode->beginIteratingSpots();
+            if (current->hasSpots()) {                
+                current->beginIteratingSpots();
                 do {
-                    Spot* spot = currentNode->currentSpot();
+                    Spot* spot = current->currentSpot();
                     
                     if (spot->hasAudio()) {
                         Audio* audio = spot->audio();
@@ -763,7 +763,7 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
                     
                     if (spot->hasFlag(kSpotAuto))
                         spot->play();
-                } while (currentNode->iterateSpots());
+                } while (current->iterateSpots());
             }
             else {
                 log.warning(kModControl, "%s", kString12006);
@@ -772,7 +772,7 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
             // Prepare the name for the window
             char title[kMaxObjectName];
             snprintf(title, kMaxObjectName, "%s (%s, %s)", config.script().c_str(),
-                     _currentRoom->name().c_str(), currentNode->description().c_str());
+                     _currentRoom->name().c_str(), current->description().c_str());
             system.setTitle(title);
         }
         
@@ -796,14 +796,14 @@ void DGControl::switchTo(Object* theTarget, bool instant) {
         
         if (!firstSwitch && performWalk && !instant) {
             cameraManager.simulateWalk();
-            Node* currentNode = this->currentNode();
+            Node* current = this->currentNode();
             
             // Finally, check if must play a single footstep
-            if (currentNode->hasFootstep()) {
-                currentNode->footstep()->unload();
-                audioManager.requestAudio(currentNode->footstep());
-                currentNode->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-                currentNode->footstep()->play();
+            if (current->hasFootstep()) {
+                current->footstep()->unload();
+                audioManager.requestAudio(current->footstep());
+                current->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+                current->footstep()->play();
             }
             else {
                 if (_currentRoom->hasDefaultFootstep()) {

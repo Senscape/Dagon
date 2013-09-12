@@ -86,7 +86,7 @@ class Object {
   void setLuaObject(int object);
   void setName(std::string aName);
   void setStatic();
-  void setType(unsigned int type);
+  void setType(unsigned int theType);
     
   // State changes
   void disable();

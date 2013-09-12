@@ -59,7 +59,7 @@ class DGCursorManager : public Object {
     int _x;
     int _y;
     
-    void _set(int type);
+    void _set(int typeOfCursor);
     
     DGCursorManager();
     DGCursorManager(DGCursorManager const&);
@@ -78,14 +78,14 @@ public:
     bool hasAction();
     bool hasImage();
     bool isDragging();
-    void load(int type, const char* imageFromFile, int offsetX = 0, int offsetY = 0);
+    void load(int typeOfCursor, const char* imageFromFile, int offsetX = 0, int offsetY = 0);
     bool onButton();
     Point position();
     void removeAction();
     void setDragging(bool flag);
     void setOnButton(bool flag);    
-    void setAction(Action* action);
-    void setCursor(int type);
+    void setAction(Action* theAction);
+    void setCursor(int typeOfCursor);
     void setSize(int size);
     void updateCoords(int x, int y);
 };

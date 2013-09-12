@@ -67,14 +67,14 @@ double Config::framesPerSecond() {
   return _fps;
 }
 
-double Config::globalSpeed() {
+float Config::globalSpeed() {
   if (_globalSpeed < _targetGlobalSpeed) {
     _globalSpeed += _globalSpeedPrecision;
   } else if (_globalSpeed > _targetGlobalSpeed) {
     _globalSpeed -= _globalSpeedPrecision;
   }
 
-  return _globalSpeed;
+  return static_cast<float>(_globalSpeed);
 }
 
 std::string Config::path(int ofType, const std::string &forFile,
@@ -152,18 +152,18 @@ void Config::setFramesPerSecond(double fps) {
   _fps = fps;
 }
 
-void Config::setPath(int forType, std::string path) {
+void Config::setPath(int forType, std::string thePath) {
   switch (forType) {
     case kPathApp: {
-      _appPath = path;
+      _appPath = thePath;
       break;
     }
     case kPathResources: {
-      _resPath = path;
+      _resPath = thePath;
       break;
     }
     case kPathUserData: {
-      _userPath = path;
+      _userPath = thePath;
       break;
     }
     default: {

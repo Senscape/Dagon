@@ -88,14 +88,13 @@ void Font::print(int x, int y, const std::string &text, ...) {
 
 // FIXME: This is a repeated method from RenderManager --
 //  it would be best to avoid this.
-void Font::setColor(int color) {
-  uint32_t aux = color;
-	uint8_t b = (aux & 0x000000ff);
-	uint8_t g = (aux & 0x0000ff00) >> 8;
-	uint8_t r = (aux & 0x00ff0000) >> 16;
-	uint8_t a = (aux & 0xff000000) >> 24;
+void Font::setColor(uint32_t color) {
+	uint8_t b = (color & 0x000000ff);
+	uint8_t g = (color & 0x0000ff00) >> 8;
+	uint8_t r = (color & 0x00ff0000) >> 16;
+	uint8_t a = (color & 0xff000000) >> 24;
   
-	glColor4f(r/255.0, g/255.0, b/255.0, a/255.0);
+	glColor4f(r/255.0f, g/255.0f, b/255.0f, a/255.0f);
 }
 
 void Font::setDefault(unsigned int heightOfFont) {

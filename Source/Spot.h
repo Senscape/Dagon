@@ -18,6 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <stdint.h>
 #include <vector>
 
 #include "Action.h"
@@ -62,7 +63,7 @@ class Spot : public Object {
   // Gets
   Action* action();
   Audio* audio();
-  int color();
+  uint32_t color();
   std::vector<int> arrayOfCoordinates();
   unsigned int face();
   Point origin();
@@ -74,7 +75,7 @@ class Spot : public Object {
   // Sets
   void setAction(Action* anAction);
   void setAudio(Audio* anAudio);
-  void setColor(int aColor);
+  void setColor(uint32_t theColor);
   void setOrigin(int x, int y);
   void setTexture(Texture* aTexture);
   void setVideo(DGVideo* aVideo);
@@ -94,7 +95,7 @@ class Spot : public Object {
   std::vector<int> _arrayOfCoordinates;
   unsigned int _onFace;
   
-  int _color;
+  uint32_t _color;
   int _flags;
   bool _hasAction;
   bool _hasAudio;

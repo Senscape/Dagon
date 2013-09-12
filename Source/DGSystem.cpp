@@ -54,8 +54,8 @@ bool DGSystem::init() {
       // Use a third of the screen
       SDL_DisplayMode desktopMode;
       SDL_GetDesktopDisplayMode(0, &desktopMode);
-      config.displayWidth = desktopMode.w / 1.5;
-      config.displayHeight = desktopMode.h / 1.5;
+      config.displayWidth = static_cast<int>(desktopMode.w / 1.5f);
+      config.displayHeight = static_cast<int>(desktopMode.h / 1.5f);
       videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
     }
   } else {

@@ -101,7 +101,7 @@ public:
     
     // Set speed for fades
     int setFadeSpeed(lua_State *L) {
-        o->setFadeSpeed(lua_tonumber(L, 1));
+        o->setFadeSpeed(static_cast<int>(lua_tonumber(L, 1)));
         return 0;
     }
     

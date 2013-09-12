@@ -38,7 +38,7 @@ Spot::Spot(std::vector<int> withArrayOfCoordinates,
   _hasTexture = false;
   _hasVideo = false;
   _isPlaying = false;
-  _volume = 1.0;
+  _volume = 1.0f;
   _xOrigin = 0;
   _yOrigin = 0;
   _zOrder = 0; // For future use
@@ -102,7 +102,7 @@ Audio* Spot::audio() {
   return _attachedAudio;
 }
 
-int Spot::color() {
+uint32_t Spot::color() {
   return _color;
 }
 
@@ -126,7 +126,7 @@ Texture* Spot::texture() {
 }
 
 int Spot::vertexCount() {
-  return (_arrayOfCoordinates.size() / 2.0);
+  return static_cast<int>(_arrayOfCoordinates.size() / 2);
 }
 
 DGVideo* Spot::video() {
@@ -159,16 +159,16 @@ void Spot::setAudio(Audio* anAudio) {
   _hasAudio = true;
 }
 
-void Spot::setColor(int aColor) {
-  if (!aColor) {
+void Spot::setColor(uint32_t theColor) {
+  if (!theColor) {
     // Make sure we avoid black while generating the color
-    int r, g, b;
+    uint8_t r, g, b;
     r = (rand() % 255) + 1;
     g = (rand() % 255) + 1;
     b = (rand() % 255) + 1;
-    aColor = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+    theColor = ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
   }
-  _color = aColor;
+  _color = theColor;
   _hasColor = true;
 }
 
@@ -215,18 +215,18 @@ void Spot::play() {
 }
 
 void Spot::resize(int width, int height) {
-  Point origin;
-  origin.x = _arrayOfCoordinates[0];
-  origin.y = _arrayOfCoordinates[1];
+  Point newOrigin;
+  newOrigin.x = _arrayOfCoordinates[0];
+  newOrigin.y = _arrayOfCoordinates[1];
   _arrayOfCoordinates.resize(8);
-  _arrayOfCoordinates[0] = origin.x;
-  _arrayOfCoordinates[1] = origin.y;
-  _arrayOfCoordinates[2] = origin.x + width;
-  _arrayOfCoordinates[3] = origin.y;
-  _arrayOfCoordinates[4] = origin.x + width;
-  _arrayOfCoordinates[5] = origin.y + height;
-  _arrayOfCoordinates[6] = origin.x;
-  _arrayOfCoordinates[7] = origin.y + height;
+  _arrayOfCoordinates[0] = newOrigin.x;
+  _arrayOfCoordinates[1] = newOrigin.y;
+  _arrayOfCoordinates[2] = newOrigin.x + width;
+  _arrayOfCoordinates[3] = newOrigin.y;
+  _arrayOfCoordinates[4] = newOrigin.x + width;
+  _arrayOfCoordinates[5] = newOrigin.y + height;
+  _arrayOfCoordinates[6] = newOrigin.x;
+  _arrayOfCoordinates[7] = newOrigin.y + height;
 }
 
 void Spot::stop() {

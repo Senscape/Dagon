@@ -15,6 +15,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <stdint.h>
+
 #include "DGCameraManager.h"
 #include "Config.h"
 #include "DGCursorManager.h"
@@ -180,7 +182,7 @@ bool DGScene::scanSpots() {
             // FIXME: Should unify the checks here a bit more...
             if (!cursorManager.isDragging() && !cursorManager.onButton()) {
                 Point position = cursorManager.position();
-                int color = renderManager.testColor(position.x, position.y);
+                uint32_t color = renderManager.testColor(position.x, position.y);
                 if (color) {
                     currentNode->beginIteratingSpots();
                     do {

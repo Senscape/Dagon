@@ -112,12 +112,12 @@ void DGRenderManager::init() {
     
     // NOTE: Here we read the default screen values to calculate the aspect ratio
 	for (int i = 0; i < (kDefCursorDetail + 1) * 2; i += 2) {
-		_defCursor[i] = (GLfloat)((.0075 * cosf(i * 1.87f * M_PI / kDefCursorDetail)) * config.displayWidth);
-		_defCursor[i + 1] = (GLfloat)((.01 * sinf(i * 1.87f * M_PI / kDefCursorDetail)) * config.displayHeight);
+		_defCursor[i] = static_cast<GLfloat>((.0075 * cos(i * 1.87 * M_PI / kDefCursorDetail)) * config.displayWidth);
+		_defCursor[i + 1] = static_cast<GLfloat>((.01 * sin(i * 1.87 * M_PI / kDefCursorDetail)) * config.displayHeight);
 	}    
     
     glEnableClientState(GL_VERTEX_ARRAY);
-    
+  
     if (config.framebuffer)
         _initFrameBuffer();
 }
@@ -150,7 +150,7 @@ void DGRenderManager::resetFade() {
 // Implementation - Conversion of coordinates
 ////////////////////////////////////////////////////////////
 
-Vector DGRenderManager::project(float x, float y, float z) {
+Vector DGRenderManager::project(GLdouble x, GLdouble y, GLdouble z) {
     Vector vector;
     GLdouble winX, winY, winZ;
     
@@ -167,13 +167,13 @@ Vector DGRenderManager::project(float x, float y, float z) {
 	
     // Get window coordinates based on the 3D object
     
-    gluProject((GLdouble)x, GLdouble(y), GLdouble(z),
+    gluProject(x, y, z,
                modelView, projection, viewport,
                &winX, &winY, &winZ);
-    
-    vector.x = (double)winX;
-    vector.y = config.displayHeight - (double)winY; // This one must be inverted
-    vector.z = (double)winZ;
+  
+    vector.x = winX;
+    vector.y = config.displayHeight - winY; // This one must be inverted
+    vector.z = winZ;
     
     return vector;
 }
@@ -364,48 +364,48 @@ void DGRenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned i
         // This code is a bit redundant but optimal: the center is only calculated in
         // the required cases. Basically, this projects the calculated point onto the
         // corresponding face.
-        float x, y, z;
+        float cx, cy, cz;
         
         switch (onFace) {
             case kNorth:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
-                z = 0.0f;
+                cx = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
+                cy = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                cz = 0.0f;
                 break;
             case kEast:
-                x = 0.0f;
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;                
-                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);                  
+                cx = 0.0f;
+                cy = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                cz = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
                 break;
             case kSouth:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;
-				y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
-				z = 0.0f;
+                cx = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;
+				cy = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+				cz = 0.0f;
                 break;
             case kWest:
-                x = 0.0f;
-                y = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;                
-                z = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;  
+                cx = 0.0f;
+                cy = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                cz = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2) * -1;
                 break;
             case kUp:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
-                y = 0.0f;                
-                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
+                cx = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
+                cy = 0.0f;
+                cz = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2) * -1;
                 break;                 
             case kDown:
-                x = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
-                y = 0.0f;
-                z = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2);                
+                cx = (GLfloat)center.x / (GLfloat)(cubeTextureSize / 2);
+                cy = 0.0f;
+                cz = (GLfloat)center.y / (GLfloat)(cubeTextureSize / 2);
                 break;                
         }
         
-        Vector vector = this->project(x, y, z);
+        Vector vector = this->project(cx, cy, cz);
         
-        if (vector.z < 1.0f) { // Only store coordinates on screen
+        if (vector.z < 1.0) { // Only store coordinates on screen
             Point point;
             
-            point.x = (int)vector.x;
-            point.y = (int)vector.y;  
+            point.x = static_cast<int>(vector.x);
+            point.y = static_cast<int>(vector.y);
             
             _arrayOfHelpers.push_back(point);
         }
@@ -460,24 +460,20 @@ void DGRenderManager::setAlpha(float alpha) {
     glColor4f(1.0f, 1.0f, 1.0f, alpha);
 }
 
-void DGRenderManager::setColor(int color, float alpha) {
-   	uint32_t aux = color;
+void DGRenderManager::setColor(uint32_t color, float alpha) {
+	uint8_t b = (color & 0x000000ff);
+	uint8_t g = (color & 0x0000ff00) >> 8;
+	uint8_t r = (color & 0x00ff0000) >> 16;
+	uint8_t a = (color & 0xff000000) >> 24;
     
-	uint8_t b = (aux & 0x000000ff);
-	uint8_t g = (aux & 0x0000ff00) >> 8;
-	uint8_t r = (aux & 0x00ff0000) >> 16;
-	uint8_t a = (aux & 0xff000000) >> 24;
-    
-	glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
-    
-    if (alpha)
-        glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), alpha); // Force specified alpha
-    else
-        glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
+  if (alpha)
+    glColor4f(r/255.0f, g/255.0f, b/255.0f, alpha); // Force specified alpha
+  else
+    glColor4f(r/255.0f, g/255.0f, b/255.0f, a/255.f);
 }
 
 // FIXME: glReadPixels has an important performace hit on older computers. Improve.
-int	DGRenderManager::testColor(int xPosition, int yPosition) {
+uint32_t	DGRenderManager::testColor(int xPosition, int yPosition) {
 	// This is static because it sometimes throws a stack corruption error
     static GLubyte pixel[3];
 	GLint r, g, b;
@@ -545,8 +541,8 @@ void DGRenderManager::blendView() {
 		int yStretch;
         
         if (_fadeWithZoom) {
-            xStretch = _blendOpacity * (config.displayWidth / 4);
-            yStretch = _blendOpacity * (config.displayHeight / 4);
+            xStretch = static_cast<int>(_blendOpacity) * (config.displayWidth / 4);
+            yStretch = static_cast<int>(_blendOpacity) * (config.displayHeight / 4);
             
             // This should a bit faster than the walk_time factor
             _blendOpacity += 0.015f * config.globalSpeed();
@@ -619,9 +615,11 @@ void DGRenderManager::fadeView() {
 
 Point DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     Point center;    
-    int vertex = arrayOfCoordinates.size() / 2.0f;
+    int vertex = static_cast<int>(arrayOfCoordinates.size() / 2);
     
     double area = 0.0;
+    double cx = 0;
+    double cy = 0;
     double x0 = 0.0; // Current vertex X
     double y0 = 0.0; // Current vertex Y
     double x1 = 0.0; // Next vertex X
@@ -630,9 +628,6 @@ Point DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     
     // For all vertices except last
     int i;
-
-	center.x = 0;
-	center.y = 0;
     
     for (i = 0; i < (vertex - 1); i++) {
         x0 = arrayOfCoordinates[i*2 + 0];
@@ -643,8 +638,8 @@ Point DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
         a = (x0 * y1) - (x1 * y0);
         area += a;
         
-        center.x += (x0 + x1) * a;
-        center.y += (y0 + y1) * a;
+        cx += (x0 + x1) * a;
+        cy += (y0 + y1) * a;
     }
     
     // Do last vertex
@@ -656,13 +651,16 @@ Point DGRenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
     a = (x0 * y1) - (x1 * y0);
     area += a;
     
-    center.x += (x0 + x1) * a;
-    center.y += (y0 + y1) * a;
+    cx += (x0 + x1) * a;
+    cy += (y0 + y1) * a;
     
     area *= 0.5f;
-    center.x /= (6 * area);
-    center.y /= (6 * area);
-    
+    cx /= (6 * area);
+    cy /= (6 * area);
+  
+  center.x = static_cast<int>(cx);
+  center.y = static_cast<int>(cy);
+  
     return center;
 }
 

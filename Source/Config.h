@@ -104,13 +104,13 @@ class Config {
 	bool verticalSync;
   
   double framesPerSecond();
-  double globalSpeed();
+  float globalSpeed();
   std::string path(int ofType, const std::string &forFile, int andObject);
   std::string script();
   std::string texExtension();
 
   void setFramesPerSecond(double fps);
-  void setPath(int forType, std::string path);
+  void setPath(int forType, std::string thePath);
   void setScript(std::string name);
   void setTexExtension(std::string ext);
   

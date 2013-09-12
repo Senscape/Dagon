@@ -91,30 +91,29 @@ static int DGCamLibSet(lua_State *L) {
 	
 	if (strcmp(key, "breathe") == 0)
 		DGCameraManager::instance().setBreathe((bool)lua_toboolean(L, 3));
-    
     if (strcmp(key, "fov") == 0)
-		DGCameraManager::instance().setFieldOfView(lua_tonumber(L, 3));
+      DGCameraManager::instance().setFieldOfView(static_cast<float>(lua_tonumber(L, 3)));
     
     if (strcmp(key, "horizontal") == 0)
-		DGCameraManager::instance().setAngleHorizontal(lua_tonumber(L, 3));
+		DGCameraManager::instance().setAngleHorizontal(static_cast<float>(lua_tonumber(L, 3)));
     
     if (strcmp(key, "inertia") == 0)
-		DGCameraManager::instance().setInertia(lua_tonumber(L, 3));
+		DGCameraManager::instance().setInertia(static_cast<int>(lua_tonumber(L, 3)));
     
     if (strcmp(key, "neutralZone") == 0)
-		DGCameraManager::instance().setNeutralZone(lua_tonumber(L, 3));
+		DGCameraManager::instance().setNeutralZone(static_cast<int>(lua_tonumber(L, 3)));
     
     if (strcmp(key, "speed") == 0)
-		DGCameraManager::instance().setMaxSpeed(lua_tonumber(L, 3));
+		DGCameraManager::instance().setMaxSpeed(static_cast<int>(lua_tonumber(L, 3)));
     
     if (strcmp(key, "smooth") == 0)
-		DGCameraManager::instance().setSpeedFactor(lua_tonumber(L, 3));
+		DGCameraManager::instance().setSpeedFactor(static_cast<int>(lua_tonumber(L, 3)));
     
     if (strcmp(key, "vertical") == 0)
-		DGCameraManager::instance().setAngleVertical(lua_tonumber(L, 3));
+		DGCameraManager::instance().setAngleVertical(static_cast<float>(lua_tonumber(L, 3)));
     
     if (strcmp(key, "verticalLimit") == 0)
-		DGCameraManager::instance().setVerticalLimit(lua_tonumber(L, 3));
+		DGCameraManager::instance().setVerticalLimit(static_cast<float>(lua_tonumber(L, 3)));
     
 	if (strcmp(key, "walk") == 0)
 		DGCameraManager::instance().setWalk((bool)lua_toboolean(L, 3));

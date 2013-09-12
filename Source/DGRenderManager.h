@@ -18,6 +18,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <stdint.h>
+
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -91,7 +93,7 @@ public:
     
     // Conversion of coordinates (note this requires glu)
     
-    Vector project(float x, float y, float z); // If more than three coordinates, attempts to calculate center
+    Vector project(GLdouble x, GLdouble y, GLdouble z); // If more than three coordinates, attempts to calculate center
     Vector unProject(int x, int y);
 
     // Drawing operations
@@ -107,8 +109,8 @@ public:
     void drawPostprocessedView(); // Expects orthogonal mode
     void drawSlide(int* withArrayOfCoordinates);
     void setAlpha(float alpha);
-    void setColor(int color, float alpha = 0);
-    int	testColor(int xPosition, int yPosition);
+    void setColor(uint32_t color, float alpha = 0);
+    uint32_t	testColor(int xPosition, int yPosition);
     
     // Helpers processing (indicates clickable spots)
     

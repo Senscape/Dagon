@@ -126,7 +126,7 @@ void DGFeedManager::show(const char* text) {
             _calculatePosition(&feed);
             feed.color = kColorWhite - 0xFF000000;
             feed.state = DGFeedFadeIn;
-            feed.timerHandle = timerManager.createManual((float)(even * DGFeedSpeed)); // Trigger should be configurable
+            feed.timerHandle = timerManager.createManual(even * DGFeedSpeed); // Trigger should be configurable
             
             _arrayOfActiveFeeds.push_back(feed);
             
@@ -186,7 +186,7 @@ void DGFeedManager::update() {
         }
         
         if ((*it).state != DGFeedDiscard) {
-            long displace = (it - _arrayOfActiveFeeds.end() + 1) * (_feedHeight + DGFeedMargin);
+            int displace = static_cast<int>((it - _arrayOfActiveFeeds.end() + 1) * (_feedHeight + DGFeedMargin));
             
             // Shadow code
             if (DGFeedShadowEnabled) {
@@ -220,8 +220,9 @@ void DGFeedManager::update() {
 ////////////////////////////////////////////////////////////
 
 void DGFeedManager::_calculatePosition(DGFeed* feed) {
-    int width = (_feedHeight * 0.66f); // We have no option but to estimate this
-    size_t length = strlen(feed->text) * width;
+    // We have no option but to estimate this
+    int width = static_cast<int>(_feedHeight * 0.66f);
+    int length = static_cast<int>(strlen(feed->text) * width);
     
     feed->location.x = (config.displayWidth / 2) - (length / 2);
     feed->location.y = config.displayHeight - _feedHeight - DGFeedMargin;

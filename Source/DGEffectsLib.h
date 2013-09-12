@@ -23,6 +23,8 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <stdint.h>
+
 #include "DGEffectsManager.h"
 
 ////////////////////////////////////////////////////////////
@@ -110,7 +112,7 @@ static int DGEffectsLibGet(lua_State *L) {
 static int DGEffectsLibSet(lua_State *L) {
     DGEffectsManager& effectsManager = DGEffectsManager::instance();
     
-    float value = (float)(luaL_checknumber(L, 3) / 100.0f);
+  float value = (float)(luaL_checknumber(L, 3) / 100.0f);
 	const char *key = luaL_checkstring(L, 2);
 	
 	if (strcmp(key, "brightness") == 0) {
@@ -134,16 +136,17 @@ static int DGEffectsLibSet(lua_State *L) {
     }
     
     if (strcmp(key, "dustColor") == 0) {
-        unsigned int color = lua_tonumber(L, 3);
-        effectsManager.setValuei(DGEffectDustColor, color);
+        effectsManager.setValuei(DGEffectDustColor,
+                                 static_cast<uint32_t>(lua_tonumber(L, 3)));
     }
     
     if (strcmp(key, "dustSize") == 0) {
-        effectsManager.setValuef(DGEffectDustSize, lua_tonumber(L, 3) / 10000.0f);
+        effectsManager.setValuef(DGEffectDustSize, (float)lua_tonumber(L, 3) / 10000.0f);
     }
     
     if (strcmp(key, "dustSpeed") == 0) {
-        effectsManager.setValuef(DGEffectDustSpeed, 100.0f - lua_tonumber(L, 3));
+        effectsManager.setValuef(DGEffectDustSpeed,
+                                 100.0f - (float)lua_tonumber(L, 3));
     }
     
     if (strcmp(key, "dustSpread") == 0) {
