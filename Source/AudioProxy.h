@@ -16,14 +16,14 @@
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
-// It's auto-included by DGProxy.h
+// It's auto-included by Proxy.h
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudioManager.h"
+#include "AudioManager.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -53,7 +53,7 @@ public:
     }
     
     // Register the new audio
-    DGAudioManager::instance().registerAudio(a);
+    AudioManager::instance().registerAudio(a);
     
     // Init the base class
     this->setObject(a);
@@ -64,7 +64,7 @@ public:
   
   // Match with another audio
   int match(lua_State *L) {
-    a->match((Audio*)DGProxyToAudio(L, 1));
+    a->match((Audio*)ProxyToAudio(L, 1));
     
     return 0;
   }
@@ -79,7 +79,7 @@ public:
   // Play the audio
   int play(lua_State *L) {
     // Request the audio
-    DGAudioManager::instance().requestAudio(a);
+    AudioManager::instance().requestAudio(a);
     a->play();
     
     return 0;

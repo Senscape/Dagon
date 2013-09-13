@@ -16,14 +16,14 @@
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
-// It's auto-included by DGProxy.h
+// It's auto-included by Proxy.h
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGControl.h"
+#include "Control.h"
 #include "Overlay.h"
 
 ////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ public:
     o->setName(luaL_checkstring(L, 1));
     
     // Register the new overlay
-    DGControl::instance().registerObject(o);
+    Control::instance().registerObject(o);
     
     // Init the base class
     this->setObject(o);
@@ -54,7 +54,7 @@ public:
   // Add a button to the overlay
   int addButton(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectButton) {
-      o->addButton(DGProxyToButton(L, 1));
+      o->addButton(ProxyToButton(L, 1));
       
       // Now we get the metatable of the added spot and set it
       // as a return value
@@ -70,7 +70,7 @@ public:
   // Add an image to the overlay
   int addImage(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectImage) {
-      o->addImage(DGProxyToImage(L, 1));
+      o->addImage(ProxyToImage(L, 1));
       
       // Now we get the metatable of the added spot and set it
       // as a return value

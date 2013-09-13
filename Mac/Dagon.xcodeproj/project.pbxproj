@@ -26,27 +26,27 @@
 		FB94ABDC17DE37350081574F /* Audio.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB8117DE37340081574F /* Audio.cpp */; };
 		FB94ABDD17DE37350081574F /* Button.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB8417DE37340081574F /* Button.cpp */; };
 		FB94ABDE17DE37350081574F /* Config.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB8817DE37340081574F /* Config.cpp */; };
-		FB94ABDF17DE37350081574F /* DGAudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB8C17DE37340081574F /* DGAudioManager.cpp */; };
-		FB94ABE017DE37350081574F /* DGCameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB8E17DE37340081574F /* DGCameraManager.cpp */; };
-		FB94ABE117DE37350081574F /* DGConsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9117DE37340081574F /* DGConsole.cpp */; };
-		FB94ABE217DE37350081574F /* DGControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9317DE37340081574F /* DGControl.cpp */; };
-		FB94ABE317DE37350081574F /* DGCursorManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9617DE37340081574F /* DGCursorManager.cpp */; };
+		FB94ABDF17DE37350081574F /* AudioManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB8C17DE37340081574F /* AudioManager.cpp */; };
+		FB94ABE017DE37350081574F /* CameraManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB8E17DE37340081574F /* CameraManager.cpp */; };
+		FB94ABE117DE37350081574F /* Console.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9117DE37340081574F /* Console.cpp */; };
+		FB94ABE217DE37350081574F /* Control.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9317DE37340081574F /* Control.cpp */; };
+		FB94ABE317DE37350081574F /* CursorManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9617DE37340081574F /* CursorManager.cpp */; };
 		FB94ABE417DE37350081574F /* DustData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9817DE37340081574F /* DustData.c */; };
-		FB94ABE517DE37350081574F /* DGEffectsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9A17DE37340081574F /* DGEffectsManager.cpp */; };
-		FB94ABE617DE37350081574F /* DGFeedManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9D17DE37340081574F /* DGFeedManager.cpp */; };
-		FB94ABE717DE37350081574F /* DGFontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9F17DE37340081574F /* DGFontManager.cpp */; };
-		FB94ABE817DE37350081574F /* DGInterface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA117DE37340081574F /* DGInterface.cpp */; };
-		FB94ABE917DE37350081574F /* DGLocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA317DE37340081574F /* DGLocator.cpp */; };
-		FB94ABEA17DE37350081574F /* DGRenderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA617DE37340081574F /* DGRenderManager.cpp */; };
-		FB94ABEB17DE37350081574F /* DGScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA817DE37340081574F /* DGScene.cpp */; };
-		FB94ABEC17DE37350081574F /* DGScript.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAA17DE37340081574F /* DGScript.cpp */; };
+		FB94ABE517DE37350081574F /* EffectsManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9A17DE37340081574F /* EffectsManager.cpp */; };
+		FB94ABE617DE37350081574F /* FeedManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9D17DE37340081574F /* FeedManager.cpp */; };
+		FB94ABE717DE37350081574F /* FontManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB9F17DE37340081574F /* FontManager.cpp */; };
+		FB94ABE817DE37350081574F /* Interface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA117DE37340081574F /* Interface.cpp */; };
+		FB94ABE917DE37350081574F /* Locator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA317DE37340081574F /* Locator.cpp */; };
+		FB94ABEA17DE37350081574F /* RenderManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA617DE37340081574F /* RenderManager.cpp */; };
+		FB94ABEB17DE37350081574F /* Scene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABA817DE37340081574F /* Scene.cpp */; };
+		FB94ABEC17DE37350081574F /* Script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAA17DE37340081574F /* Script.cpp */; };
 		FB94ABED17DE37350081574F /* ShaderData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAC17DE37340081574F /* ShaderData.c */; };
 		FB94ABEE17DE37350081574F /* SplashData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAE17DE37340081574F /* SplashData.c */; };
-		FB94ABEF17DE37350081574F /* DGState.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAF17DE37340081574F /* DGState.cpp */; };
-		FB94ABF017DE37350081574F /* DGSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB117DE37340081574F /* DGSystem.cpp */; };
-		FB94ABF117DE37350081574F /* DGTimerManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB417DE37340081574F /* DGTimerManager.cpp */; };
-		FB94ABF217DE37350081574F /* DGVideo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB617DE37350081574F /* DGVideo.cpp */; };
-		FB94ABF317DE37350081574F /* DGVideoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB817DE37350081574F /* DGVideoManager.cpp */; };
+		FB94ABEF17DE37350081574F /* State.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABAF17DE37340081574F /* State.cpp */; };
+		FB94ABF017DE37350081574F /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB117DE37340081574F /* System.cpp */; };
+		FB94ABF117DE37350081574F /* TimerManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB417DE37340081574F /* TimerManager.cpp */; };
+		FB94ABF217DE37350081574F /* Video.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB617DE37350081574F /* Video.cpp */; };
+		FB94ABF317DE37350081574F /* VideoManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABB817DE37350081574F /* VideoManager.cpp */; };
 		FB94ABF417DE37350081574F /* Font.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABBA17DE37350081574F /* Font.cpp */; };
 		FB94ABF517DE37350081574F /* FontData.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABBC17DE37350081574F /* FontData.c */; };
 		FB94ABF617DE37350081574F /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABBE17DE37350081574F /* Image.cpp */; };
@@ -104,52 +104,52 @@
 		FB94AB8917DE37340081574F /* Config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Config.h; sourceTree = "<group>"; };
 		FB94AB8A17DE37340081574F /* ConfigLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConfigLib.h; sourceTree = "<group>"; };
 		FB94AB8B17DE37340081574F /* Defines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Defines.h; sourceTree = "<group>"; };
-		FB94AB8C17DE37340081574F /* DGAudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGAudioManager.cpp; sourceTree = "<group>"; };
-		FB94AB8D17DE37340081574F /* DGAudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGAudioManager.h; sourceTree = "<group>"; };
-		FB94AB8E17DE37340081574F /* DGCameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCameraManager.cpp; sourceTree = "<group>"; };
-		FB94AB8F17DE37340081574F /* DGCameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCameraManager.h; sourceTree = "<group>"; };
-		FB94AB9017DE37340081574F /* DGCamLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCamLib.h; sourceTree = "<group>"; };
-		FB94AB9117DE37340081574F /* DGConsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGConsole.cpp; sourceTree = "<group>"; };
-		FB94AB9217DE37340081574F /* DGConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGConsole.h; sourceTree = "<group>"; };
-		FB94AB9317DE37340081574F /* DGControl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGControl.cpp; sourceTree = "<group>"; };
-		FB94AB9417DE37340081574F /* DGControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGControl.h; sourceTree = "<group>"; };
-		FB94AB9517DE37340081574F /* DGCursorLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCursorLib.h; sourceTree = "<group>"; };
-		FB94AB9617DE37340081574F /* DGCursorManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGCursorManager.cpp; sourceTree = "<group>"; };
-		FB94AB9717DE37340081574F /* DGCursorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGCursorManager.h; sourceTree = "<group>"; };
+		FB94AB8C17DE37340081574F /* AudioManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioManager.cpp; sourceTree = "<group>"; };
+		FB94AB8D17DE37340081574F /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioManager.h; sourceTree = "<group>"; };
+		FB94AB8E17DE37340081574F /* CameraManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CameraManager.cpp; sourceTree = "<group>"; };
+		FB94AB8F17DE37340081574F /* CameraManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraManager.h; sourceTree = "<group>"; };
+		FB94AB9017DE37340081574F /* CameraLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CameraLib.h; sourceTree = "<group>"; };
+		FB94AB9117DE37340081574F /* Console.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Console.cpp; sourceTree = "<group>"; };
+		FB94AB9217DE37340081574F /* Console.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Console.h; sourceTree = "<group>"; };
+		FB94AB9317DE37340081574F /* Control.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Control.cpp; sourceTree = "<group>"; };
+		FB94AB9417DE37340081574F /* Control.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Control.h; sourceTree = "<group>"; };
+		FB94AB9517DE37340081574F /* CursorLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CursorLib.h; sourceTree = "<group>"; };
+		FB94AB9617DE37340081574F /* CursorManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CursorManager.cpp; sourceTree = "<group>"; };
+		FB94AB9717DE37340081574F /* CursorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CursorManager.h; sourceTree = "<group>"; };
 		FB94AB9817DE37340081574F /* DustData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DustData.c; sourceTree = "<group>"; };
-		FB94AB9917DE37340081574F /* DGEffectsLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGEffectsLib.h; sourceTree = "<group>"; };
-		FB94AB9A17DE37340081574F /* DGEffectsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGEffectsManager.cpp; sourceTree = "<group>"; };
-		FB94AB9B17DE37340081574F /* DGEffectsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGEffectsManager.h; sourceTree = "<group>"; };
-		FB94AB9C17DE37340081574F /* DGEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGEvent.h; sourceTree = "<group>"; };
-		FB94AB9D17DE37340081574F /* DGFeedManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGFeedManager.cpp; sourceTree = "<group>"; };
-		FB94AB9E17DE37340081574F /* DGFeedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGFeedManager.h; sourceTree = "<group>"; };
-		FB94AB9F17DE37340081574F /* DGFontManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGFontManager.cpp; sourceTree = "<group>"; };
-		FB94ABA017DE37340081574F /* DGFontManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGFontManager.h; sourceTree = "<group>"; };
-		FB94ABA117DE37340081574F /* DGInterface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGInterface.cpp; sourceTree = "<group>"; };
-		FB94ABA217DE37340081574F /* DGInterface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGInterface.h; sourceTree = "<group>"; };
-		FB94ABA317DE37340081574F /* DGLocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGLocator.cpp; sourceTree = "<group>"; };
-		FB94ABA417DE37340081574F /* DGLocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGLocator.h; sourceTree = "<group>"; };
-		FB94ABA517DE37340081574F /* DGProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGProxy.h; sourceTree = "<group>"; };
-		FB94ABA617DE37340081574F /* DGRenderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGRenderManager.cpp; sourceTree = "<group>"; };
-		FB94ABA717DE37340081574F /* DGRenderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGRenderManager.h; sourceTree = "<group>"; };
-		FB94ABA817DE37340081574F /* DGScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGScene.cpp; sourceTree = "<group>"; };
-		FB94ABA917DE37340081574F /* DGScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGScene.h; sourceTree = "<group>"; };
-		FB94ABAA17DE37340081574F /* DGScript.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGScript.cpp; sourceTree = "<group>"; };
-		FB94ABAB17DE37340081574F /* DGScript.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGScript.h; sourceTree = "<group>"; };
+		FB94AB9917DE37340081574F /* EffectsLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectsLib.h; sourceTree = "<group>"; };
+		FB94AB9A17DE37340081574F /* EffectsManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectsManager.cpp; sourceTree = "<group>"; };
+		FB94AB9B17DE37340081574F /* EffectsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectsManager.h; sourceTree = "<group>"; };
+		FB94AB9C17DE37340081574F /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		FB94AB9D17DE37340081574F /* FeedManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FeedManager.cpp; sourceTree = "<group>"; };
+		FB94AB9E17DE37340081574F /* FeedManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedManager.h; sourceTree = "<group>"; };
+		FB94AB9F17DE37340081574F /* FontManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FontManager.cpp; sourceTree = "<group>"; };
+		FB94ABA017DE37340081574F /* FontManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontManager.h; sourceTree = "<group>"; };
+		FB94ABA117DE37340081574F /* Interface.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Interface.cpp; sourceTree = "<group>"; };
+		FB94ABA217DE37340081574F /* Interface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Interface.h; sourceTree = "<group>"; };
+		FB94ABA317DE37340081574F /* Locator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Locator.cpp; sourceTree = "<group>"; };
+		FB94ABA417DE37340081574F /* Locator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Locator.h; sourceTree = "<group>"; };
+		FB94ABA517DE37340081574F /* Proxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Proxy.h; sourceTree = "<group>"; };
+		FB94ABA617DE37340081574F /* RenderManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderManager.cpp; sourceTree = "<group>"; };
+		FB94ABA717DE37340081574F /* RenderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderManager.h; sourceTree = "<group>"; };
+		FB94ABA817DE37340081574F /* Scene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scene.cpp; sourceTree = "<group>"; };
+		FB94ABA917DE37340081574F /* Scene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scene.h; sourceTree = "<group>"; };
+		FB94ABAA17DE37340081574F /* Script.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Script.cpp; sourceTree = "<group>"; };
+		FB94ABAB17DE37340081574F /* Script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Script.h; sourceTree = "<group>"; };
 		FB94ABAC17DE37340081574F /* ShaderData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ShaderData.c; sourceTree = "<group>"; };
-		FB94ABAD17DE37340081574F /* DGSlideProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSlideProxy.h; sourceTree = "<group>"; };
+		FB94ABAD17DE37340081574F /* SlideProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SlideProxy.h; sourceTree = "<group>"; };
 		FB94ABAE17DE37340081574F /* SplashData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = SplashData.c; sourceTree = "<group>"; };
-		FB94ABAF17DE37340081574F /* DGState.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGState.cpp; sourceTree = "<group>"; };
-		FB94ABB017DE37340081574F /* DGState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGState.h; sourceTree = "<group>"; };
-		FB94ABB117DE37340081574F /* DGSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGSystem.cpp; sourceTree = "<group>"; };
-		FB94ABB217DE37340081574F /* DGSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSystem.h; sourceTree = "<group>"; };
-		FB94ABB317DE37340081574F /* DGSystemLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGSystemLib.h; sourceTree = "<group>"; };
-		FB94ABB417DE37340081574F /* DGTimerManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGTimerManager.cpp; sourceTree = "<group>"; };
-		FB94ABB517DE37340081574F /* DGTimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGTimerManager.h; sourceTree = "<group>"; };
-		FB94ABB617DE37350081574F /* DGVideo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGVideo.cpp; sourceTree = "<group>"; };
-		FB94ABB717DE37350081574F /* DGVideo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGVideo.h; sourceTree = "<group>"; };
-		FB94ABB817DE37350081574F /* DGVideoManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DGVideoManager.cpp; sourceTree = "<group>"; };
-		FB94ABB917DE37350081574F /* DGVideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DGVideoManager.h; sourceTree = "<group>"; };
+		FB94ABAF17DE37340081574F /* State.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = State.cpp; sourceTree = "<group>"; };
+		FB94ABB017DE37340081574F /* State.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = State.h; sourceTree = "<group>"; };
+		FB94ABB117DE37340081574F /* System.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = System.cpp; sourceTree = "<group>"; };
+		FB94ABB217DE37340081574F /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = System.h; sourceTree = "<group>"; };
+		FB94ABB317DE37340081574F /* SystemLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SystemLib.h; sourceTree = "<group>"; };
+		FB94ABB417DE37340081574F /* TimerManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimerManager.cpp; sourceTree = "<group>"; };
+		FB94ABB517DE37340081574F /* TimerManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimerManager.h; sourceTree = "<group>"; };
+		FB94ABB617DE37350081574F /* Video.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Video.cpp; sourceTree = "<group>"; };
+		FB94ABB717DE37350081574F /* Video.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Video.h; sourceTree = "<group>"; };
+		FB94ABB817DE37350081574F /* VideoManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoManager.cpp; sourceTree = "<group>"; };
+		FB94ABB917DE37350081574F /* VideoManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoManager.h; sourceTree = "<group>"; };
 		FB94ABBA17DE37350081574F /* Font.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Font.cpp; sourceTree = "<group>"; };
 		FB94ABBB17DE37350081574F /* Font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Font.h; sourceTree = "<group>"; };
 		FB94ABBC17DE37350081574F /* FontData.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = FontData.c; sourceTree = "<group>"; };
@@ -321,8 +321,8 @@
 				FB94ABD217DE37350081574F /* Spot.cpp */,
 				FB94ABD817DE37350081574F /* Texture.h */,
 				FB94ABD717DE37350081574F /* Texture.cpp */,
-				FB94ABB717DE37350081574F /* DGVideo.h */,
-				FB94ABB617DE37350081574F /* DGVideo.cpp */,
+				FB94ABB717DE37350081574F /* Video.h */,
+				FB94ABB617DE37350081574F /* Video.cpp */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -332,29 +332,29 @@
 			children = (
 				FB94AC0617DE3E630081574F /* Libraries */,
 				FB94AC0717DE3E680081574F /* Proxies */,
-				FB94AB8D17DE37340081574F /* DGAudioManager.h */,
-				FB94AB8C17DE37340081574F /* DGAudioManager.cpp */,
-				FB94AB9417DE37340081574F /* DGControl.h */,
-				FB94AB9317DE37340081574F /* DGControl.cpp */,
-				FB94AB9C17DE37340081574F /* DGEvent.h */,
-				FB94AB9E17DE37340081574F /* DGFeedManager.h */,
-				FB94AB9D17DE37340081574F /* DGFeedManager.cpp */,
-				FB94ABA017DE37340081574F /* DGFontManager.h */,
-				FB94AB9F17DE37340081574F /* DGFontManager.cpp */,
-				FB94ABA417DE37340081574F /* DGLocator.h */,
-				FB94ABA317DE37340081574F /* DGLocator.cpp */,
-				FB94ABAB17DE37340081574F /* DGScript.h */,
-				FB94ABAA17DE37340081574F /* DGScript.cpp */,
-				FB94ABB017DE37340081574F /* DGState.h */,
-				FB94ABAF17DE37340081574F /* DGState.cpp */,
-				FB94ABB217DE37340081574F /* DGSystem.h */,
-				FB94ABB117DE37340081574F /* DGSystem.cpp */,
+				FB94AB8D17DE37340081574F /* AudioManager.h */,
+				FB94AB8C17DE37340081574F /* AudioManager.cpp */,
+				FB94AB9417DE37340081574F /* Control.h */,
+				FB94AB9317DE37340081574F /* Control.cpp */,
+				FB94AB9C17DE37340081574F /* Event.h */,
+				FB94AB9E17DE37340081574F /* FeedManager.h */,
+				FB94AB9D17DE37340081574F /* FeedManager.cpp */,
+				FB94ABA017DE37340081574F /* FontManager.h */,
+				FB94AB9F17DE37340081574F /* FontManager.cpp */,
+				FB94ABA417DE37340081574F /* Locator.h */,
+				FB94ABA317DE37340081574F /* Locator.cpp */,
+				FB94ABAB17DE37340081574F /* Script.h */,
+				FB94ABAA17DE37340081574F /* Script.cpp */,
+				FB94ABB017DE37340081574F /* State.h */,
+				FB94ABAF17DE37340081574F /* State.cpp */,
+				FB94ABB217DE37340081574F /* System.h */,
+				FB94ABB117DE37340081574F /* System.cpp */,
 				FB94ABDA17DE37350081574F /* TextureManager.h */,
 				FB94ABD917DE37350081574F /* TextureManager.cpp */,
-				FB94ABB517DE37340081574F /* DGTimerManager.h */,
-				FB94ABB417DE37340081574F /* DGTimerManager.cpp */,
-				FB94ABB917DE37350081574F /* DGVideoManager.h */,
-				FB94ABB817DE37350081574F /* DGVideoManager.cpp */,
+				FB94ABB517DE37340081574F /* TimerManager.h */,
+				FB94ABB417DE37340081574F /* TimerManager.cpp */,
+				FB94ABB917DE37350081574F /* VideoManager.h */,
+				FB94ABB817DE37350081574F /* VideoManager.cpp */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -362,20 +362,20 @@
 		FB94AC0317DE3CD20081574F /* View */ = {
 			isa = PBXGroup;
 			children = (
-				FB94AB8F17DE37340081574F /* DGCameraManager.h */,
-				FB94AB8E17DE37340081574F /* DGCameraManager.cpp */,
-				FB94AB9217DE37340081574F /* DGConsole.h */,
-				FB94AB9117DE37340081574F /* DGConsole.cpp */,
-				FB94AB9717DE37340081574F /* DGCursorManager.h */,
-				FB94AB9617DE37340081574F /* DGCursorManager.cpp */,
-				FB94AB9B17DE37340081574F /* DGEffectsManager.h */,
-				FB94AB9A17DE37340081574F /* DGEffectsManager.cpp */,
-				FB94ABA217DE37340081574F /* DGInterface.h */,
-				FB94ABA117DE37340081574F /* DGInterface.cpp */,
-				FB94ABA717DE37340081574F /* DGRenderManager.h */,
-				FB94ABA617DE37340081574F /* DGRenderManager.cpp */,
-				FB94ABA917DE37340081574F /* DGScene.h */,
-				FB94ABA817DE37340081574F /* DGScene.cpp */,
+				FB94AB8F17DE37340081574F /* CameraManager.h */,
+				FB94AB8E17DE37340081574F /* CameraManager.cpp */,
+				FB94AB9217DE37340081574F /* Console.h */,
+				FB94AB9117DE37340081574F /* Console.cpp */,
+				FB94AB9717DE37340081574F /* CursorManager.h */,
+				FB94AB9617DE37340081574F /* CursorManager.cpp */,
+				FB94AB9B17DE37340081574F /* EffectsManager.h */,
+				FB94AB9A17DE37340081574F /* EffectsManager.cpp */,
+				FB94ABA217DE37340081574F /* Interface.h */,
+				FB94ABA117DE37340081574F /* Interface.cpp */,
+				FB94ABA717DE37340081574F /* RenderManager.h */,
+				FB94ABA617DE37340081574F /* RenderManager.cpp */,
+				FB94ABA917DE37340081574F /* Scene.h */,
+				FB94ABA817DE37340081574F /* Scene.cpp */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -405,11 +405,11 @@
 		FB94AC0617DE3E630081574F /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				FB94AB9017DE37340081574F /* DGCamLib.h */,
+				FB94AB9017DE37340081574F /* CameraLib.h */,
 				FB94AB8A17DE37340081574F /* ConfigLib.h */,
-				FB94AB9517DE37340081574F /* DGCursorLib.h */,
-				FB94AB9917DE37340081574F /* DGEffectsLib.h */,
-				FB94ABB317DE37340081574F /* DGSystemLib.h */,
+				FB94AB9517DE37340081574F /* CursorLib.h */,
+				FB94AB9917DE37340081574F /* EffectsLib.h */,
+				FB94ABB317DE37340081574F /* SystemLib.h */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -423,9 +423,9 @@
 				FB94ABC717DE37350081574F /* NodeProxy.h */,
 				FB94ABCA17DE37350081574F /* ObjectProxy.h */,
 				FB94ABCD17DE37350081574F /* OverlayProxy.h */,
-				FB94ABA517DE37340081574F /* DGProxy.h */,
+				FB94ABA517DE37340081574F /* Proxy.h */,
 				FB94ABD117DE37350081574F /* RoomProxy.h */,
-				FB94ABAD17DE37340081574F /* DGSlideProxy.h */,
+				FB94ABAD17DE37340081574F /* SlideProxy.h */,
 				FB94ABD417DE37350081574F /* SpotProxy.h */,
 			);
 			name = Proxies;
@@ -518,27 +518,27 @@
 				FB94ABDC17DE37350081574F /* Audio.cpp in Sources */,
 				FB94ABDD17DE37350081574F /* Button.cpp in Sources */,
 				FB94ABDE17DE37350081574F /* Config.cpp in Sources */,
-				FB94ABDF17DE37350081574F /* DGAudioManager.cpp in Sources */,
-				FB94ABE017DE37350081574F /* DGCameraManager.cpp in Sources */,
-				FB94ABE117DE37350081574F /* DGConsole.cpp in Sources */,
-				FB94ABE217DE37350081574F /* DGControl.cpp in Sources */,
-				FB94ABE317DE37350081574F /* DGCursorManager.cpp in Sources */,
+				FB94ABDF17DE37350081574F /* AudioManager.cpp in Sources */,
+				FB94ABE017DE37350081574F /* CameraManager.cpp in Sources */,
+				FB94ABE117DE37350081574F /* Console.cpp in Sources */,
+				FB94ABE217DE37350081574F /* Control.cpp in Sources */,
+				FB94ABE317DE37350081574F /* CursorManager.cpp in Sources */,
 				FB94ABE417DE37350081574F /* DustData.c in Sources */,
-				FB94ABE517DE37350081574F /* DGEffectsManager.cpp in Sources */,
-				FB94ABE617DE37350081574F /* DGFeedManager.cpp in Sources */,
-				FB94ABE717DE37350081574F /* DGFontManager.cpp in Sources */,
-				FB94ABE817DE37350081574F /* DGInterface.cpp in Sources */,
-				FB94ABE917DE37350081574F /* DGLocator.cpp in Sources */,
-				FB94ABEA17DE37350081574F /* DGRenderManager.cpp in Sources */,
-				FB94ABEB17DE37350081574F /* DGScene.cpp in Sources */,
-				FB94ABEC17DE37350081574F /* DGScript.cpp in Sources */,
+				FB94ABE517DE37350081574F /* EffectsManager.cpp in Sources */,
+				FB94ABE617DE37350081574F /* FeedManager.cpp in Sources */,
+				FB94ABE717DE37350081574F /* FontManager.cpp in Sources */,
+				FB94ABE817DE37350081574F /* Interface.cpp in Sources */,
+				FB94ABE917DE37350081574F /* Locator.cpp in Sources */,
+				FB94ABEA17DE37350081574F /* RenderManager.cpp in Sources */,
+				FB94ABEB17DE37350081574F /* Scene.cpp in Sources */,
+				FB94ABEC17DE37350081574F /* Script.cpp in Sources */,
 				FB94ABED17DE37350081574F /* ShaderData.c in Sources */,
 				FB94ABEE17DE37350081574F /* SplashData.c in Sources */,
-				FB94ABEF17DE37350081574F /* DGState.cpp in Sources */,
-				FB94ABF017DE37350081574F /* DGSystem.cpp in Sources */,
-				FB94ABF117DE37350081574F /* DGTimerManager.cpp in Sources */,
-				FB94ABF217DE37350081574F /* DGVideo.cpp in Sources */,
-				FB94ABF317DE37350081574F /* DGVideoManager.cpp in Sources */,
+				FB94ABEF17DE37350081574F /* State.cpp in Sources */,
+				FB94ABF017DE37350081574F /* System.cpp in Sources */,
+				FB94ABF117DE37350081574F /* TimerManager.cpp in Sources */,
+				FB94ABF217DE37350081574F /* Video.cpp in Sources */,
+				FB94ABF317DE37350081574F /* VideoManager.cpp in Sources */,
 				FB94ABF417DE37350081574F /* Font.cpp in Sources */,
 				FB94ABF517DE37350081574F /* FontData.c in Sources */,
 				FB94ABF617DE37350081574F /* Image.cpp in Sources */,

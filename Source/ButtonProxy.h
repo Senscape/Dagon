@@ -16,7 +16,7 @@
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
-// It's auto-included by DGProxy.h
+// It's auto-included by Proxy.h
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
@@ -26,7 +26,7 @@
 #include <stdint.h>
 
 #include "Button.h"
-#include "DGScript.h"
+#include "Script.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -107,9 +107,9 @@ public:
       case SWITCH:
         int typeOfTarget = DGCheckProxy(L, 2);
         if (typeOfTarget == kObjectNode)
-          action.target = DGProxyToNode(L, 2);
+          action.target = ProxyToNode(L, 2);
         else if (typeOfTarget == kObjectRoom)
-          action.target = DGProxyToRoom(L, 2);
+          action.target = ProxyToRoom(L, 2);
         else {
           Log::instance().error(kModScript, "%s", kString14008);
           return 0;

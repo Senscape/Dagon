@@ -426,7 +426,7 @@ void Texture::loadFromMemory(const unsigned char* dataToLoad, long size) {
 
 void Texture::loadRawData(const unsigned char* dataToLoad,
                           int withWidth, int andHeight) {
-  // Mostly useful to load frames from DGVideo.
+  // Mostly useful to load frames from Video.
   // Note it defaults to inverted RGB.
   if (!_isLoaded) {
     glGenTextures(1, &_ident);

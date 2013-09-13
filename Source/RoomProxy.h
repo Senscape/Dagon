@@ -16,17 +16,17 @@
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
-// It's auto-included by DGProxy.h
+// It's auto-included by Proxy.h
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudioManager.h"
-#include "DGControl.h"
+#include "AudioManager.h"
+#include "Control.h"
 #include "Room.h"
-#include "DGTimerManager.h"
+#include "TimerManager.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -45,7 +45,7 @@ public:
     r->setName(luaL_checkstring(L, 1));
     
     // Register the new room
-    DGControl::instance().registerObject(r);
+    Control::instance().registerObject(r);
     
     // Init the base class
     this->setObject(r);
@@ -57,7 +57,7 @@ public:
   // Add an audio to the room
   int addAudio(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectAudio) {
-      r->addAudio(DGProxyToAudio(L, 1));
+      r->addAudio(ProxyToAudio(L, 1));
       
       // Now we get the metatable of the added audio and set it
       // as a return value
@@ -73,7 +73,7 @@ public:
   // Add a node to the room
   int addNode(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectNode) {
-      r->addNode(DGProxyToNode(L, 1));
+      r->addNode(ProxyToNode(L, 1));
       
       // Now we get the metatable of the added node and set it
       // as a return value
@@ -90,14 +90,14 @@ public:
   int setDefaultFootstep(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectAudio) {
       // Just set the audio object
-      r->setDefaultFootstep((Audio*)DGProxyToAudio(L, 1));
+      r->setDefaultFootstep((Audio*)ProxyToAudio(L, 1));
     }
     else {
       // If not, create and set (this is later deleted by the Audio Manager)
       Audio* audio = new Audio;
       audio->setResource(luaL_checkstring(L, 1));
       
-      DGAudioManager::instance().registerAudio(audio);
+      AudioManager::instance().registerAudio(audio);
       
       r->setDefaultFootstep(audio);
     }
@@ -114,7 +114,7 @@ public:
     
     int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // Pop and return a reference to the table.
     bool shouldLoop = lua_toboolean(L, 2);
-    int handle = DGTimerManager::instance().create(luaL_checknumber(L, 1), shouldLoop, ref, r->luaObject());
+    int handle = TimerManager::instance().create(luaL_checknumber(L, 1), shouldLoop, ref, r->luaObject());
     
     lua_pushnumber(L, handle);
     

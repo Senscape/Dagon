@@ -19,7 +19,7 @@
 
 #include "Button.h"
 #include "Config.h"
-#include "DGFontManager.h"
+#include "FontManager.h"
 #include "Texture.h"
 
 ////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@
 
 Button::Button() :
 config(Config::instance()),
-fontManager(DGFontManager::instance())
+fontManager(FontManager::instance())
 {
   _hasAction = false;
   _hasFont = false;

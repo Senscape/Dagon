@@ -16,14 +16,14 @@
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
-// It's auto-included by DGProxy.h
+// It's auto-included by Proxy.h
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGCameraManager.h"
+#include "CameraManager.h"
 #include "Config.h"
 
 ////////////////////////////////////////////////////////////
@@ -192,7 +192,7 @@ static int ConfigLibSet(lua_State *L) {
   if (strcmp(key, "controlMode") == 0) {
     Config::instance().controlMode = (int)luaL_checknumber(L, 3);
     // Must refresh the viewport with this change
-    DGCameraManager::instance().setViewport(Config::instance().displayWidth, Config::instance().displayHeight);
+    CameraManager::instance().setViewport(Config::instance().displayWidth, Config::instance().displayHeight);
   }
   
   if (strcmp(key, "displayWidth") == 0)

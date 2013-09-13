@@ -16,17 +16,17 @@
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
-// It's auto-included by DGProxy.h
+// It's auto-included by Proxy.h
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGAudioManager.h"
+#include "AudioManager.h"
 #include "Spot.h"
 #include "Texture.h"
-#include "DGVideoManager.h"
+#include "VideoManager.h"
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -121,7 +121,7 @@ public:
     Action action;
     Audio* audio;
     Texture* texture;
-    DGVideo* video;
+    Video* video;
     
     // For the video attach, autoplay defaults to true
     bool autoplay, loop, sync;
@@ -132,7 +132,7 @@ public:
       case AUDIO:
         if (DGCheckProxy(L, 2) == kObjectAudio) {
           // Just set the audio object
-          s->setAudio(DGProxyToAudio(L, 2));
+          s->setAudio(ProxyToAudio(L, 2));
           
           // Now we get the metatable of the added audio and set it
           // as a return value
@@ -146,7 +146,7 @@ public:
           audio = new Audio;
           audio->setResource(luaL_checkstring(L, 2));
           
-          DGAudioManager::instance().registerAudio(audio);
+          AudioManager::instance().registerAudio(audio);
           
           if (s->hasFlag(kSpotLoop))
             audio->setLoopable(true);
@@ -191,7 +191,7 @@ public:
       case IMAGE:
         // FIXME: This texture isn't managed. We should be able to communicate with the
         // texture manager, register this texture, and parse its path if necessary, OR
-        // use the DGControl register method.
+        // use the Control register method.
         
         // TODO: Decide here if we have an extension and therefore set the name or the
         // resource of the texture.
@@ -212,13 +212,13 @@ public:
         
         type = DGCheckProxy(L, 2);
         if (type == kObjectNode)
-          action.target = DGProxyToNode(L, 2);
+          action.target = ProxyToNode(L, 2);
         else if (type == kObjectSlide) {
           action.cursor = kCursorLook;
-          action.target = DGProxyToSlide(L, 2);
+          action.target = ProxyToSlide(L, 2);
         }
         else if (type == kObjectRoom)
-          action.target = DGProxyToRoom(L, 2);
+          action.target = ProxyToRoom(L, 2);
         else {
           Log::instance().error(kModScript, "%s", kString14008);
           return 0;
@@ -239,12 +239,12 @@ public:
         if (s->hasFlag(kSpotSync)) sync = true;
         else sync = false;
         
-        video = new DGVideo(autoplay, loop, sync);
+        video = new Video(autoplay, loop, sync);
         
         // TODO: Path is set by the video manager
         video->setResource(Config::instance().path(kPathResources, luaL_checkstring(L, 2), kObjectVideo).c_str());
         s->setVideo(video);
-        DGVideoManager::instance().registerVideo(video);
+        VideoManager::instance().registerVideo(video);
         
         break;
     }
@@ -279,8 +279,8 @@ public:
     // Test for synced audio or video
     if (s->hasVideo()) {
       if (s->isPlaying() && s->video()->isSynced()) {
-        DGControl::instance().syncSpot(s);
-        return DGScript::instance().suspend();
+        Control::instance().syncSpot(s);
+        return Script::instance().suspend();
       }
     }
     

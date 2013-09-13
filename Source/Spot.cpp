@@ -20,7 +20,7 @@
 #include "Audio.h"
 #include "Spot.h"
 #include "Texture.h"
-#include "DGVideo.h"
+#include "Video.h"
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -129,7 +129,7 @@ int Spot::vertexCount() {
   return static_cast<int>(_arrayOfCoordinates.size() / 2);
 }
 
-DGVideo* Spot::video() {
+Video* Spot::video() {
   return _attachedVideo;
 }
 
@@ -186,7 +186,7 @@ void Spot::setTexture(Texture* aTexture) {
   _hasTexture = true;
 }
 
-void Spot::setVideo(DGVideo* aVideo) {
+void Spot::setVideo(Video* aVideo) {
   _attachedVideo = aVideo;
   _hasVideo = true;
 }

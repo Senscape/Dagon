@@ -1,0 +1,62 @@
+////////////////////////////////////////////////////////////
+//
+// DAGON - An Adventure Game Engine
+// Copyright (c) 2011-2013 Senscape s.r.l.
+// All rights reserved.
+//
+// This Source Code Form is subject to the terms of the
+// Mozilla Public License, v. 2.0. If a copy of the MPL was
+// not distributed with this file, You can obtain one at
+// http://mozilla.org/MPL/2.0/.
+//
+////////////////////////////////////////////////////////////
+
+// TODO: This is like... the saddest state manager ever. Must
+// migrate more functionality here.
+
+////////////////////////////////////////////////////////////
+// Headers
+////////////////////////////////////////////////////////////
+
+#include "State.h"
+
+////////////////////////////////////////////////////////////
+// Implementation - Constructor
+////////////////////////////////////////////////////////////
+
+State::State() {
+  _current = StateNode;
+  _previous = _current;
+}
+
+////////////////////////////////////////////////////////////
+// Implementation - Destructor
+////////////////////////////////////////////////////////////
+
+State::~State() {
+  // Nothing to do here
+}
+
+////////////////////////////////////////////////////////////
+// Implementation
+////////////////////////////////////////////////////////////
+
+int State::current() {
+  return _current;
+}
+
+int State::previous() {
+  return _previous;
+}
+
+void State::set(int theState) {
+  _previous = _current;
+  _current = theState;
+}
+
+void State::setPrevious() {
+  int auxState = _current;
+  
+  _current = _previous;
+  _previous = auxState;
+}

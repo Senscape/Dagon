@@ -11,13 +11,7 @@
 //
 ////////////////////////////////////////////////////////////
 
-#include "Control.h"
+#include "Locator.h"
+#include "State.h"
 
-int main(int argc, char *argv[]) {
-  Control& control = Control::instance();
-  
-  control.init();
-  control.run();
-  
-  return 0;
-}
+State* dg::Locator::_state = new State;

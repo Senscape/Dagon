@@ -39,7 +39,7 @@ enum SpotFlags {
 
 class Audio;
 class Texture;
-class DGVideo;
+class Video;
 
 ////////////////////////////////////////////////////////////
 // Interface
@@ -69,7 +69,7 @@ class Spot : public Object {
   Point origin();
   Texture* texture();
   int vertexCount();
-  DGVideo* video();
+  Video* video();
   float volume();
   
   // Sets
@@ -78,7 +78,7 @@ class Spot : public Object {
   void setColor(uint32_t theColor);
   void setOrigin(int x, int y);
   void setTexture(Texture* aTexture);
-  void setVideo(DGVideo* aVideo);
+  void setVideo(Video* aVideo);
   void setVolume(float theVolume);
   
   // State changes
@@ -90,7 +90,7 @@ class Spot : public Object {
   Action* _actionData;
   Audio* _attachedAudio;
   Texture* _attachedTexture;
-  DGVideo* _attachedVideo;
+  Video* _attachedVideo;
   
   std::vector<int> _arrayOfCoordinates;
   unsigned int _onFace;

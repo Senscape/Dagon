@@ -16,17 +16,17 @@
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
-// It's auto-included by DGProxy.h
+// It's auto-included by Proxy.h
 ////////////////////////////////////////////////////////////
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "DGControl.h"
+#include "Control.h"
 #include "Node.h"
 #include "Room.h"
-#include "DGScript.h"
+#include "Script.h"
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -63,14 +63,14 @@ public:
     n->setName(luaL_checkstring(L, 1));
     
     // Register the node in the controller (generates the bundle)
-    DGControl::instance().registerObject(n);
+    Control::instance().registerObject(n);
     
-    if (DGScript::instance().isExecutingModule()) {
+    if (Script::instance().isExecutingModule()) {
       // A module is being executed, so we know a room
       // object of the same name exists
       
-      lua_getglobal(L, DGScript::instance().module());
-      Room* r = DGProxyToRoom(L, -1);
+      lua_getglobal(L, Script::instance().module());
+      Room* r = ProxyToRoom(L, -1);
       
       // We add the node automatically
       r->addNode(n);
@@ -86,7 +86,7 @@ public:
   // Add a spot to the node
   int addSpot(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectSpot) {
-      n->addSpot(DGProxyToSpot(L, 1));
+      n->addSpot(ProxyToSpot(L, 1));
       
       // Now we get the metatable of the added spot and set it
       // as a return value
@@ -134,10 +134,10 @@ public:
       else {
         switch (DGCheckProxy(L, 3)) {
           case kObjectNode:
-            n->addLink(dir, (Object*)DGProxyToNode(L, 3));
+            n->addLink(dir, (Object*)ProxyToNode(L, 3));
             break;
           case kObjectRoom:
-            n->addLink(dir, (Object*)DGProxyToRoom(L, 3));
+            n->addLink(dir, (Object*)ProxyToRoom(L, 3));
             break;
         }
         
@@ -153,14 +153,14 @@ public:
   int setFootstep(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectAudio) {
       // Just set the audio object
-      n->setFootstep((Audio*)DGProxyToAudio(L, 1));
+      n->setFootstep((Audio*)ProxyToAudio(L, 1));
     }
     else {
       // If not, create and set (this is later deleted by the Audio Manager)
       Audio* audio = new Audio;
       audio->setResource(luaL_checkstring(L, 1));
       
-      DGAudioManager::instance().registerAudio(audio);
+      AudioManager::instance().registerAudio(audio);
       
       n->setFootstep(audio);
     }

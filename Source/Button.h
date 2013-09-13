@@ -31,7 +31,7 @@
 
 class Config;
 class Font;
-class DGFontManager;
+class FontManager;
 class Texture;
 
 ////////////////////////////////////////////////////////////
@@ -66,7 +66,7 @@ class Button : public Image {
   
  private:
   Config& config;
-  DGFontManager& fontManager;
+  FontManager& fontManager;
   
   Action* _action;
   Texture* _onHoverTexture;
