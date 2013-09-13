@@ -27,12 +27,13 @@ solution "Dagon"
       includedirs { "Libraries/Headers", "Libraries/Headers/freetype2" }
       libdirs { "Libraries/Mac" }
 
-      links { "AudioToolbox.framework", "AudioUnit.framework", "Carbon.framework", "Cocoa.framework", "CoreAudio.framework",
-              "CoreFoundation.framework", "ForceFeedback.framework", "IOKit.framework", "OpenAL.framework", "OpenGL.framework" }
-      links { "freetype", "GLEW", "lua", "ogg", "SDL2", "vorbis", "vorbisfile", "theoradec" }
-      
-      buildoptions "-std=c++11"
-      linkoptions "-stdlib=libc++"
+      links { "AudioToolbox.framework", "AudioUnit.framework", 
+              "Carbon.framework", "Cocoa.framework", 
+              "CoreAudio.framework", "CoreFoundation.framework",
+              "ForceFeedback.framework", "IOKit.framework",
+              "OpenAL.framework", "OpenGL.framework" }
+      links { "freetype", "GLEW", "lua", "ogg", "SDL2",
+              "vorbis", "vorbisfile", "theoradec" }
  
       configuration "Debug"
          defines { "_DEBUG", "DEBUG" }
