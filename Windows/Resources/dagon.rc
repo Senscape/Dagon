@@ -1,12 +1,12 @@
-#include "DGversion.h"
+#include "Version.h"
 
 #define mkstr(a) # a
 #define in_between(a, b) mkstr(a) "." mkstr(b)
 
-#define	FILEVER	DGVersionMajor, DGVersionMinor, DGVersionRelease, DGVersionBuild
+#define	FILEVER	DAGON_VERSION_MAJOR, DAGON_VERSION_MINOR, DAGON_VERSION_RELEASE, DAGON_BUILD
 #define	PRODVER	FILEVER
 
-#define	STRFILEVER "Dagon " in_between(DGVersionMajor, DGVersionMinor)
+#define	STRFILEVER "Dagon " in_between(DAGON_VERSION_MAJOR, DAGON_VERSION_MINOR)
 #define	STRPRODVER STRFILEVER
 
 /////////////////////////////////////////////////////////////////////////////
@@ -14,7 +14,7 @@
 // Icon
 //
 
-100 ICON MOVEABLE PURE LOADONCALL DISCARDABLE "dagon.ico"
+100 ICON MOVEABLE PURE LOADONCALL DISCARDABLE "Dagon.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -23,8 +23,8 @@
 //
 
 1 VERSIONINFO
- FILEVERSION FILEVER
- PRODUCTVERSION PRODVER
+ FILEVERSION DAGON_VERSION_NUM
+ PRODUCTVERSION DAGON_VERSION_NUM
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -39,12 +39,12 @@ BEGIN
     BEGIN
         BLOCK "040904E4"
         BEGIN
-            VALUE "Comments", "Dagon Engine\0"
+            VALUE "Comments", "Dagon\0"
             VALUE "CompanyName", "Senscape s.r.l.\0"
-            VALUE "FileDescription", "Dagon\0"
+            VALUE "FileDescription", "Dagon - An Adventure Game Engine\0"
             VALUE "FileVersion", STRFILEVER
             VALUE "InternalName", "Dagon\0"
-            VALUE "LegalCopyright", "© 2011\0"
+            VALUE "LegalCopyright", "© 2013\0"
             VALUE "LegalTrademarks", "Copyright © 2011\0"
             VALUE "OriginalFilename", "Dagon.exe\0"
             VALUE "PrivateBuild", "Developed by Senscape s.r.l.\0"

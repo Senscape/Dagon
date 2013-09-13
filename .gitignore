@@ -30,7 +30,6 @@ xcuserdata/
 
 # Visual Studio Express
 *.csproj
-*.filters
 *.ncb
 *.opensdf
 *.scc
