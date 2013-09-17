@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		FB83885C17DF9831000D81CB /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB83884F17DF94FB000D81CB /* AudioToolbox.framework */; };
-		FB83885D17DF9831000D81CB /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB83885117DF9500000D81CB /* AudioUnit.framework */; };
 		FB83885E17DF9831000D81CB /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB83884D17DF94F6000D81CB /* Carbon.framework */; };
 		FB83885F17DF9831000D81CB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB94AB3017DE217D0081574F /* Cocoa.framework */; };
 		FB83886017DF9831000D81CB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB83884B17DF94F2000D81CB /* CoreFoundation.framework */; };
@@ -59,6 +57,8 @@
 		FB94ABFD17DE37350081574F /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABD517DE37350081574F /* stb_image.c */; };
 		FB94ABFE17DE37350081574F /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABD717DE37350081574F /* Texture.cpp */; };
 		FB94ABFF17DE37350081574F /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABD917DE37350081574F /* TextureManager.cpp */; };
+		FBFB216617E8E41100428F15 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBFB216417E8E3F600428F15 /* AudioToolbox.framework */; };
+		FBFB216717E8E41100428F15 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FBFB216217E8E3EF00428F15 /* AudioUnit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -77,8 +77,6 @@
 /* Begin PBXFileReference section */
 		FB83884B17DF94F2000D81CB /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		FB83884D17DF94F6000D81CB /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
-		FB83884F17DF94FB000D81CB /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		FB83885117DF9500000D81CB /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
 		FB83885317DF9507000D81CB /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		FB83885517DF9510000D81CB /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		FB83885717DF9515000D81CB /* ForceFeedback.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ForceFeedback.framework; path = System/Library/Frameworks/ForceFeedback.framework; sourceTree = SDKROOT; };
@@ -90,7 +88,7 @@
 		FB94AB6B17DE334D0081574F /* Dagon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Dagon.icns; sourceTree = "<group>"; };
 		FB94AB6E17DE33570081574F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		FB94AB7017DE34500081574F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		FB94AB7217DE35290081574F /* OpenAL-Soft.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "OpenAL-Soft.framework"; path = "../Frameworks/OpenAL-Soft.framework"; sourceTree = "<group>"; };
+		FB94AB7217DE35290081574F /* OpenAL-Soft.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "OpenAL-Soft.framework"; sourceTree = "<group>"; };
 		FB94AB7617DE35410081574F /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		FB94AB8017DE37340081574F /* Action.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Action.h; sourceTree = "<group>"; };
 		FB94AB8117DE37340081574F /* Audio.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Audio.cpp; sourceTree = "<group>"; };
@@ -185,6 +183,8 @@
 		FB94ABDA17DE37350081574F /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
 		FB94ABDB17DE37350081574F /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		FB94AC0917DE3FF60081574F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FBFB216217E8E3EF00428F15 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = System/Library/Frameworks/AudioUnit.framework; sourceTree = SDKROOT; };
+		FBFB216417E8E3F600428F15 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -193,8 +193,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB94AB7417DE35290081574F /* OpenAL-Soft.framework in Frameworks */,
-				FB83885C17DF9831000D81CB /* AudioToolbox.framework in Frameworks */,
-				FB83885D17DF9831000D81CB /* AudioUnit.framework in Frameworks */,
+				FBFB216617E8E41100428F15 /* AudioToolbox.framework in Frameworks */,
+				FBFB216717E8E41100428F15 /* AudioUnit.framework in Frameworks */,
 				FB83885E17DF9831000D81CB /* Carbon.framework in Frameworks */,
 				FB83885F17DF9831000D81CB /* Cocoa.framework in Frameworks */,
 				FB83886117DF9831000D81CB /* CoreAudio.framework in Frameworks */,
@@ -211,8 +211,8 @@
 		FB83885B17DF97F0000D81CB /* System */ = {
 			isa = PBXGroup;
 			children = (
-				FB83884F17DF94FB000D81CB /* AudioToolbox.framework */,
-				FB83885117DF9500000D81CB /* AudioUnit.framework */,
+				FBFB216417E8E3F600428F15 /* AudioToolbox.framework */,
+				FBFB216217E8E3EF00428F15 /* AudioUnit.framework */,
 				FB83884D17DF94F6000D81CB /* Carbon.framework */,
 				FB94AB3017DE217D0081574F /* Cocoa.framework */,
 				FB83885317DF9507000D81CB /* CoreAudio.framework */,
@@ -248,8 +248,7 @@
 				FB94AB7217DE35290081574F /* OpenAL-Soft.framework */,
 				FB83885B17DF97F0000D81CB /* System */,
 			);
-			name = Frameworks;
-			path = ../Frameworks;
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 		FB94AB3617DE217D0081574F /* Dagon */ = {
@@ -588,7 +587,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
@@ -602,7 +601,7 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
+				FRAMEWORK_SEARCH_PATHS = Frameworks;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -628,10 +627,10 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../Libraries/Headers,
-					../Libraries/Headers/freetype2,
+					Headers,
+					Headers/freetype2,
 				);
-				LIBRARY_SEARCH_PATHS = ../Libraries/Mac;
+				LIBRARY_SEARCH_PATHS = Libraries;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
@@ -642,7 +641,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				CLANG_ANALYZER_SECURITY_FLOATLOOPCOUNTER = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_RAND = YES;
 				CLANG_ANALYZER_SECURITY_INSECUREAPI_STRCPY = YES;
@@ -657,7 +656,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
+				FRAMEWORK_SEARCH_PATHS = Frameworks;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -677,10 +676,10 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					../Libraries/Headers,
-					../Libraries/Headers/freetype2,
+					Headers,
+					Headers/freetype2,
 				);
-				LIBRARY_SEARCH_PATHS = ../Libraries/Mac;
+				LIBRARY_SEARCH_PATHS = Libraries;
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = macosx;
 			};
