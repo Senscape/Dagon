@@ -144,12 +144,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\Source;$(ProjectDir)\Libraries\Headers;$(ProjectDir)\Libraries\Headers\freetype2;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\Source;$(ProjectDir)\Headers;$(ProjectDir)\Headers\freetype2;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\Libraries\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\Source;$(ProjectDir)\Libraries\Headers;$(ProjectDir)\Libraries\Headers\freetype2;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)..\Source;$(ProjectDir)\Headers;$(ProjectDir)\Headers\freetype2;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\Libraries\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
