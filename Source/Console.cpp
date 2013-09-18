@@ -81,7 +81,7 @@ void Console::enable() {
 }
 
 void Console::execute() {
-  log.command(kModScript, _command);
+  log.command(kModScript, _command.c_str());
   _isReadyToProcess = true;
 }
 
