@@ -28,6 +28,9 @@ xcuserdata/
 *~
 *.depend
 
+# Windows
+*.db
+
 # Visual Studio Express
 *.csproj
 *.ncb
