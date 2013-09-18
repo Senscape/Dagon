@@ -177,7 +177,7 @@ void Console::update() {
           
           // Draw the current line
           renderManager.setColor(logData.color);
-          _font->print(ConsoleMargin, ((ConsoleSpacing + kDefFontSize) * row) - _offset, logData.line);
+          _font->print(ConsoleMargin, ((ConsoleSpacing + kDefFontSize) * row) - _offset, logData.line.c_str());
           
           row--;
         } while (log.iterateHistory());

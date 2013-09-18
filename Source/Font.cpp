@@ -48,13 +48,13 @@ bool Font::isLoaded() {
   return _isLoaded;
 }
 
-void Font::print(int x, int y, const std::string &text, ...) {
-  if (!text.empty() && _isLoaded) {
+void Font::print(int x, int y, const char* text, ...) {
+  if (_isLoaded) {
     char buffer[kMaxFeedLength];
     va_list ap;
     
     va_start(ap, text);
-    int length = vsnprintf(buffer, kMaxFeedLength, text.c_str(), ap);
+    int length = vsnprintf(buffer, kMaxFeedLength, text, ap);
     va_end(ap);
     
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);

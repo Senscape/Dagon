@@ -22,7 +22,6 @@
 
 #include <AL/al.h>
 #include <AL/alc.h>
-#define OV_EXCLUDE_STATIC_CALLBACKS
 #include <ogg/ogg.h>
 #include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>

@@ -68,7 +68,7 @@ class Font : public Object {
   
   void clear();
   bool isLoaded();
-  void print(int x, int y, const std::string &text, ...);
+  void print(int x, int y, const char* text, ...);
   void setColor(uint32_t color);
   void setDefault(unsigned int heightOfFont);
   void setLibrary(FT_Library* library);
