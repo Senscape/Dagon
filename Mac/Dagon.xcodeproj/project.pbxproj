@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB5B829917EB43B4002B0209 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB5B829817EB43B4002B0209 /* Images.xcassets */; };
 		FB83885E17DF9831000D81CB /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB83884D17DF94F6000D81CB /* Carbon.framework */; };
 		FB83885F17DF9831000D81CB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB94AB3017DE217D0081574F /* Cocoa.framework */; };
 		FB83886017DF9831000D81CB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB83884B17DF94F2000D81CB /* CoreFoundation.framework */; };
@@ -16,7 +17,6 @@
 		FB83886417DF9831000D81CB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB94AB7617DE35410081574F /* OpenGL.framework */; };
 		FB94AB4717DE217D0081574F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = FB94AB4517DE217D0081574F /* MainMenu.xib */; };
 		FB94AB6A17DE33210081574F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = FB94AB6817DE33210081574F /* Credits.rtf */; };
-		FB94AB6C17DE334D0081574F /* Dagon.icns in Resources */ = {isa = PBXBuildFile; fileRef = FB94AB6B17DE334D0081574F /* Dagon.icns */; };
 		FB94AB6F17DE33570081574F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FB94AB6D17DE33570081574F /* InfoPlist.strings */; };
 		FB94AB7117DE34500081574F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94AB7017DE34500081574F /* main.cpp */; };
 		FB94AB7417DE35290081574F /* OpenAL-Soft.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB94AB7217DE35290081574F /* OpenAL-Soft.framework */; };
@@ -75,6 +75,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FB5B829817EB43B4002B0209 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Resources/Images.xcassets; sourceTree = SOURCE_ROOT; };
 		FB83884B17DF94F2000D81CB /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		FB83884D17DF94F6000D81CB /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		FB83885317DF9507000D81CB /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -83,9 +84,7 @@
 		FB94AB2D17DE217D0081574F /* Dagon.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Dagon.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FB94AB3017DE217D0081574F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		FB94AB4617DE217D0081574F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		FB94AB5917DE27EE0081574F /* Dagon.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Dagon.entitlements; sourceTree = "<group>"; };
 		FB94AB6917DE33210081574F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
-		FB94AB6B17DE334D0081574F /* Dagon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Dagon.icns; sourceTree = "<group>"; };
 		FB94AB6E17DE33570081574F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		FB94AB7017DE34500081574F /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		FB94AB7217DE35290081574F /* OpenAL-Soft.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = "OpenAL-Soft.framework"; sourceTree = "<group>"; };
@@ -268,9 +267,8 @@
 		FB94AB3717DE217D0081574F /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				FB5B829817EB43B4002B0209 /* Images.xcassets */,
 				FB94AB6817DE33210081574F /* Credits.rtf */,
-				FB94AB5917DE27EE0081574F /* Dagon.entitlements */,
-				FB94AB6B17DE334D0081574F /* Dagon.icns */,
 				FB94AC0917DE3FF60081574F /* Info.plist */,
 				FB94AB6D17DE33570081574F /* InfoPlist.strings */,
 				FB94AB4517DE217D0081574F /* MainMenu.xib */,
@@ -458,8 +456,20 @@
 		FB94AB2517DE217D0081574F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = Senscape;
+				TargetAttributes = {
+					FB94AB2C17DE217D0081574F = {
+						SystemCapabilities = {
+							com.apple.Sandbox = {
+								enabled = 0;
+							};
+							com.apple.iCloud = {
+								enabled = 0;
+							};
+						};
+					};
+				};
 			};
 			buildConfigurationList = FB94AB2817DE217D0081574F /* Build configuration list for PBXProject "Dagon" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -484,7 +494,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB94AB6A17DE33210081574F /* Credits.rtf in Resources */,
-				FB94AB6C17DE334D0081574F /* Dagon.icns in Resources */,
+				FB5B829917EB43B4002B0209 /* Images.xcassets in Resources */,
 				FB94AB6F17DE33570081574F /* InfoPlist.strings in Resources */,
 				FB94AB4717DE217D0081574F /* MainMenu.xib in Resources */,
 			);
@@ -594,8 +604,9 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN_CXX0X_EXTENSIONS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
@@ -625,6 +636,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					Headers,
@@ -648,8 +660,9 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "c++98";
 				CLANG_CXX_LIBRARY = "libstdc++";
 				CLANG_LINK_OBJC_RUNTIME = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_CXX0X_EXTENSIONS = YES;
+				CLANG_WARN_CXX0X_EXTENSIONS = NO;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
@@ -674,6 +687,7 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNKNOWN_PRAGMAS = YES;
+				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
 					Headers,
@@ -688,7 +702,8 @@
 		FB94AB4B17DE217D0081574F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
@@ -710,6 +725,7 @@
 					"-lvorbisfile",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -717,7 +733,8 @@
 		FB94AB4C17DE217D0081574F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = Resources/Dagon.entitlements;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
@@ -738,6 +755,7 @@
 					"-lvorbisfile",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
