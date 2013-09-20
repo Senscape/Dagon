@@ -192,7 +192,8 @@ void Video::load() {
     
     if (_handle == NULL) {
       log.error(kModVideo, "%s: %s", kString17007, _resource);
-      //return;
+      SDL_UnlockMutex(_mutex);
+      return;
     }
     
     ogg_sync_init(&_theoraInfo->oy);
