@@ -22,7 +22,7 @@
 #include "Event.h"
 #include "Platform.h"
 
-#include "Lua.hpp"
+#include "lua.hpp"
 
 ////////////////////////////////////////////////////////////
 // Definitions
