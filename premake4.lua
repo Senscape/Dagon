@@ -1,44 +1,62 @@
--- A solution contains projects, and defines the available configurations
+-- Dagon - An Adventure Game Engine
 solution "Dagon"
-   configurations { "Debug", "Release" }
-   platforms { "x64" }
-   location "Build"
+  configurations { "Release", "Debug" }
+  platforms { "native", "universal" }
+  location "Build"
+  
+  configuration { "Release" }
+  defines { "NDEBUG" }
+  flags { "Optimize" }
+  targetdir "Build/Release"  
       
-   configuration { "Debug" }
-   targetdir "Build/Debug"
- 
-   configuration { "Release" }
-   targetdir "Build/Release"
+  configuration { "Debug" }
+  defines { "_DEBUG", "DEBUG" }
+  flags { "Symbols" }
+  targetdir "Build/Debug"
 
   if _ACTION == "clean" then
     os.rmdir("Build")
-  end   
+  end
  
-   -- A project defines one build target
-   project "Dagon"
-      targetname "dagon"
-      location "Build"
-      objdir "Build/Objects"
-   
-      kind "ConsoleApp"
-      language "C++"
-      files { "Source/**.h", "Source/**.c", "Source/**.cpp" }
-
-      includedirs { "Libraries/Headers", "Libraries/Headers/freetype2" }
-      libdirs { "Libraries/Mac" }
-
+  project "Dagon"
+    targetname "dagon"
+    defines { "GLEW_STATIC", "OV_EXCLUDE_STATIC_CALLBACKS" }
+    location "Build"
+    objdir "Build/Objects"
+     
+    kind "ConsoleApp"
+    language "C++"
+    files { "Source/**.h", "Source/**.c", "Source/**.cpp" }
+    
+    libraries = { "freetype", "GLEW", "lua", "ogg", "SDL2",
+                  "vorbis", "vorbisfile", "theoradec" }
+                  
+    if os.get() == "linux" then
+      for i = 1, #libraries do
+        local lib = libraries[i]
+        if os.findlib(lib) == nil then
+          print ("Library not found:", lib)
+          print "Aborting..."
+          os.exit()
+        end
+      end
+    end
+      
+    links { libraries }
+  
+    configuration "macosx"
+      includedirs { "Mac/Headers", "Mac/Headers/freetype2" }
+      libdirs { "Mac/Libraries" }
+    
       links { "AudioToolbox.framework", "AudioUnit.framework", 
               "Carbon.framework", "Cocoa.framework", 
               "CoreAudio.framework", "CoreFoundation.framework",
               "ForceFeedback.framework", "IOKit.framework",
               "OpenAL.framework", "OpenGL.framework" }
-      links { "freetype", "GLEW", "lua", "ogg", "SDL2",
-              "vorbis", "vorbisfile", "theoradec" }
+              
+    configuration "windows"
+      includedirs { "Windows/Headers", "Windows/Headers/freetype" }
+      libdirs { "Windows/Libraries" }
+      
+      links { "opengl32", "glu32", "Imm32", "version", "winmm" }
  
-      configuration "Debug"
-         defines { "_DEBUG", "DEBUG" }
-         flags { "Symbols" }
- 
-      configuration "Release"
-         defines { "NDEBUG" }
-         flags { "Optimize" }
