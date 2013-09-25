@@ -78,14 +78,11 @@ bool System::init() {
   }
   
   // Set vertical sync according to our configuration
-  if (config.verticalSync) {
-    SDL_GL_SetSwapInterval(1);
-  }
-  else {
-    // Force our own frame limiter on
+  SDL_GL_SetSwapInterval(config.verticalSync);
+  
+  // Force our own frame limiter on if vertical sync wasn't enabled
+  if (!SDL_GL_GetSwapInterval())
     config.frameLimiter = true;
-    SDL_GL_SetSwapInterval(0);
-  }
   
   SDL_WarpMouseInWindow(_window, config.displayWidth / 2,
                         config.displayHeight / 2);
