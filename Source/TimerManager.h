@@ -78,10 +78,10 @@ public:
     return timerManager;
   }
   
-  bool checkManual(int handle);
+  bool checkManual(int handle, int precision = 1000);
   int create(double trigger, bool shouldLoop, int handlerForLua, int luaObject = 0); // Returns a handle
   int createInternal(double trigger, void (*callback)()); // For timers created by the engine (not Lua)
-  int createManual(double trigger); // For timers that are manually checked by the user
+  int createManual(double trigger, int precision = 1000); // For timers that are manually checked by the user
   void destroy(int handle);
   void disable(int handle);
   void enable(int handle);

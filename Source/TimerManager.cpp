@@ -54,11 +54,11 @@ TimerManager::~TimerManager() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-bool TimerManager::checkManual(int handle) {
+bool TimerManager::checkManual(int handle, int precision) {
   DGTimer* timer = _lookUp(handle);
   
   if (timer->isEnabled) {
-    double currentTime = SDL_GetTicks() / 1000;
+    double currentTime = SDL_GetTicks() / precision;
     double duration = currentTime - timer->lastTime;
     
     if (duration > timer->trigger) {
@@ -117,14 +117,14 @@ int TimerManager::createInternal(double trigger, void (*callback)()) {
   return timer.handle;
 }
 
-int TimerManager::createManual(double trigger) {
+int TimerManager::createManual(double trigger, int precision) {
   DGTimer timer;
   
   timer.handle = _handles;
   timer.hasTriggered = false;
   timer.isEnabled = true;
   timer.isLoopable = false;
-  timer.lastTime = SDL_GetTicks() / 1000;
+  timer.lastTime = SDL_GetTicks() / precision;
   timer.type = DGTimerManual;
   
   timer.trigger = trigger;

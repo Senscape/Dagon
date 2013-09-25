@@ -398,14 +398,14 @@ void EffectsManager::update() {
     }
     
     if (_throbEnabled) {
-      static int handlerStyle1 = timerManager.createManual(0.1f);
-      static int handlerStyle2 = timerManager.createManual(2);
+      static int handlerStyle1 = timerManager.createManual(0.1f, 100);
+      static int handlerStyle2 = timerManager.createManual(2, 1000);
       static float aux;
       static float j = 1.0f;
       
       switch (_throbStyle) {
         case 1:
-          if (timerManager.checkManual(handlerStyle1)) {
+          if (timerManager.checkManual(handlerStyle1, 100)) {
             aux = (rand() % 10) - (rand() % 10);
             parameter = glGetUniformLocation(_program, "AdjustBrightness");
             glUniform1f(parameter, _adjustBrightness + (aux / _throbIntensity)); // Suggested: 50
@@ -426,7 +426,7 @@ void EffectsManager::update() {
           if (j > 0)
             j -= 0.1f;
           
-          if (timerManager.checkManual(handlerStyle2)) {
+          if (timerManager.checkManual(handlerStyle2, 1000)) {
             aux = (float)((rand() % 50) + 5) / _throbIntensity; // Suggested: 10
             j = 1.0f;
           }
