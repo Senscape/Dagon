@@ -5,6 +5,9 @@ bin/
 obj/
 release/
 debug/
+linux/
+mac/
+windows/
 
 # Mac OS X
 *.DS_store
