@@ -33,14 +33,14 @@ Its source code is also available in the following GitHub repo:
 https://github.com/Senscape/Asylum-Teaser
 
 To create your own project, copy the Dagon binary in a folder with a _main.lua_
-file or indicate the name of your main script in the [Dagon.cfg](Dagon.cfg) file
-included in the _Sample_ folder.
+file or indicate the name of your main script in the
+[Dagon.cfg](Sample/Dagon.cfg) file included in the _Sample_ folder.
 
 ### Support
 
 Feel free to visit our forums to discuss the engine and request technical
 support:
-http://www.senscape.net/forum
+http://forum.senscape.net
 
 ### Copyright
 
