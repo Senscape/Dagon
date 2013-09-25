@@ -53,17 +53,20 @@ Mac OS X:
 
 Windows:
 
-  We provide the following binaries packages for your convenience:
+  We provide the following Visual Studio binaries for your convenience:
 
   http://www.senscape.net/files/dagon-0.6.0-libs-win-x86.zip
   http://www.senscape.net/files/dagon-0.6.0-libs-win-x64.zip
+
+  Please note that on Visual Studio you may need to specify the target platform
+  as well as includes and libraries folders.
 
 ]]--
 
 -- Base solution
 solution "Dagon"
   configurations { "Release", "Debug" }
-  platforms { "native" } -- Default to native architecture
+  platforms { "native", "x32", "x64" }
   location "Build"
   
   configuration { "Release" }
@@ -106,7 +109,8 @@ solution "Dagon"
     libs_win = { "freetype", "glew32s", "libogg_static", 
                  "libtheora_static", "libvorbis_static", 
                  "libvorbisfile_static", "lua", "OpenAL32",
-                 "SDL2", "SDL2main", "opengl32", "glu32" }
+                 "SDL2", "SDL2main", "opengl32", "glu32"
+                 "Imm32", "version", "winmm" }
 
     -- Attempt to look for Lua library with most commonly used names
     local lua_lib_names = { "lua-5.1", "lua5.1", "lua" }
@@ -139,12 +143,15 @@ solution "Dagon"
     end
     
     -- Confirm that all the required libraries are present
-    for i = 1, #libraries do
-      local lib = libraries[i]
-      if os.findlib(lib) == nil then
-        print ("Library not found:", lib)
-        print "Aborting..."
-        os.exit()
+    -- (not working well on Windows)
+    if os.is("linux") or os.is("macosx") then
+      for i = 1, #libraries do
+        local lib = libraries[i]
+        if os.findlib(lib) == nil then
+          print ("Library not found:", lib)
+          print "Aborting..."
+          os.exit()
+        end
       end
     end
 
