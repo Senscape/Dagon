@@ -21,8 +21,14 @@
 #include "Audio.h"
 #include "Platform.h"
 
+#ifdef DAGON_MAC
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#else
 #include <AL/al.h>
 #include <AL/alc.h>
+#endif
+
 #include <SDL2/SDL_mutex.h>
 #include <SDL2/SDL_thread.h>
 

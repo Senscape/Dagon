@@ -24,21 +24,21 @@
 
 #if ((TARGET_OS_IPHONE) || (TARGET_IPHONE_SIMULATOR))
 
-#define PlatformiOS
+#define DAGON_IOS
 
 #else
 
-#define PlatformMac
+#define DAGON_MAC
 
 #endif
 
 #elif ((_WIN32) || (_WIN64))
 
-#define DagonPlatformWindows
+#define DAGON_WINDOWS
 
 #elif __linux || defined(__FreeBSD__)
 
-#define PlatformLinux
+#define DAGON_LINUX
 
 #endif
 

@@ -20,8 +20,16 @@
 
 #include <string>
 
+#include "Platform.h"
+
+#ifdef DAGON_MAC
+#include <OpenAL/al.h>
+#include <OpenAL/alc.h>
+#else
 #include <AL/al.h>
 #include <AL/alc.h>
+#endif
+
 #include <ogg/ogg.h>
 #include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>
