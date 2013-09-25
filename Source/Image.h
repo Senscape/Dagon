@@ -44,24 +44,24 @@ class Image : public Object {
   bool hasTexture();
   
   // Gets
-  int* arrayOfCoordinates();
+  float* arrayOfCoordinates();
   Point position();
   Size size();
   Texture* texture();
   
   // Sets
-  void setPosition(int x, int y);
-  void setSize(int width, int height);
+  void setPosition(float x, float y);
+  void setSize(float width, float height);
   void setTexture(const std::string &fromFileName);
   
   // State changes
-  void move(int offsetX, int offsetY);
+  void move(float offsetX, float offsetY);
   void scale(float factor);
   
  private:
   Config& config;
   
-  int _arrayOfCoordinates[8];
+  float _arrayOfCoordinates[8];
   Texture* _attachedTexture;
   bool _hasTexture;
   Rect _rect;

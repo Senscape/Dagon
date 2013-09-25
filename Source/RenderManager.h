@@ -107,7 +107,7 @@ public:
   void drawHelper(int xPosition, int yPosition, bool animate);
   void drawPolygon(std::vector<int> withArrayOfCoordinates, unsigned int onFace);
   void drawPostprocessedView(); // Expects orthogonal mode
-  void drawSlide(int* withArrayOfCoordinates);
+  void drawSlide(float* withArrayOfCoordinates);
   void setAlpha(float alpha);
   void setColor(uint32_t color, float alpha = 0);
   uint32_t    testColor(int xPosition, int yPosition);

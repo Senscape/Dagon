@@ -249,7 +249,7 @@ bool Scene::drawCutscene() {
     _cutsceneTexture->bind();
     
     // Note this is inverted
-    int coords[] = {0, 0,
+    float coords[] = {0, 0,
       config.displayWidth, 0,
       config.displayWidth, config.displayHeight,
       0, config.displayHeight};
@@ -300,7 +300,7 @@ void Scene::drawSplash() {
   _splashTexture->bind();
   
   // Note this is inverted
-  int coords[] = {0, 0,
+  float coords[] = {0, 0,
     config.displayWidth, 0,
     config.displayWidth, config.displayHeight,
     0, config.displayHeight};

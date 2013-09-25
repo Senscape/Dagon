@@ -428,7 +428,7 @@ void RenderManager::drawPostprocessedView() {
       effectsManager.update();
     }
     
-    int coords[] = {0, config.displayHeight,
+    float coords[] = {0, config.displayHeight,
       config.displayWidth, config.displayHeight,
       config.displayWidth, 0,
       0, 0};
@@ -441,7 +441,7 @@ void RenderManager::drawPostprocessedView() {
   }
 }
 
-void RenderManager::drawSlide(int* withArrayOfCoordinates) {
+void RenderManager::drawSlide(float* withArrayOfCoordinates) {
   glPushMatrix();
   
   if (_texturesEnabled) {
@@ -449,7 +449,7 @@ void RenderManager::drawSlide(int* withArrayOfCoordinates) {
     glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
   }
   
-  glVertexPointer(2, GL_INT, 0, withArrayOfCoordinates);
+  glVertexPointer(2, GL_FLOAT, 0, withArrayOfCoordinates);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
   
   glPopMatrix();
@@ -554,7 +554,7 @@ void RenderManager::blendView() {
     }
     
     // Note the coordinates here are inverted because of the way the screen is captured
-    int coords[] = {-xStretch, config.displayHeight + yStretch,
+    float coords[] = {-xStretch, config.displayHeight + yStretch,
       config.displayWidth + xStretch, config.displayHeight + yStretch,
       config.displayWidth + xStretch, -yStretch,
       -xStretch, -yStretch};
@@ -598,7 +598,7 @@ void RenderManager::reshape() {
 void RenderManager::fadeView() {
   // FIXME: This is done every time and it sucks
   
-  int coords[] = {0, 0,
+  float coords[] = {0, 0,
     config.displayWidth, 0,
     config.displayWidth, config.displayHeight,
     0, config.displayHeight};

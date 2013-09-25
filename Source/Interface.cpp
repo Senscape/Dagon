@@ -179,7 +179,7 @@ bool Interface::scanOverlays() {
             Button* button = (*itOverlay)->currentButton();
             if (button->isEnabled()) {
               Point position = cursorManager.position();
-              int* arrayOfCoordinates = button->arrayOfCoordinates();
+              float* arrayOfCoordinates = button->arrayOfCoordinates();
               if (position.x >= arrayOfCoordinates[0] && position.y >= arrayOfCoordinates[1] &&
                   position.x <= arrayOfCoordinates[4] && position.y <= arrayOfCoordinates[5]) {
                 

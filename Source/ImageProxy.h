@@ -48,8 +48,8 @@ public:
   
   // Move the image
   int move(lua_State *L) {
-    i->move(static_cast<int>(luaL_checknumber(L, 1)),
-            static_cast<int>(luaL_checknumber(L, 2)));
+    i->move(static_cast<float>(luaL_checknumber(L, 1)),
+            static_cast<float>(luaL_checknumber(L, 2)));
     return 0;
   }
   
@@ -69,15 +69,15 @@ public:
   
   // Set a new position
   int setPosition(lua_State *L) {
-    i->setPosition(static_cast<int>(luaL_checknumber(L, 1)),
-                   static_cast<int>(luaL_checknumber(L, 2)));
+    i->setPosition(static_cast<float>(luaL_checknumber(L, 1)),
+                   static_cast<float>(luaL_checknumber(L, 2)));
     return 0;
   }
   
   // Set a new size
   int setSize(lua_State *L) {
-    i->setSize(static_cast<int>(luaL_checknumber(L, 1)),
-               static_cast<int>(luaL_checknumber(L, 2)));
+    i->setSize(luaL_checknumber(L, 1),
+               luaL_checknumber(L, 2));
     return 0;
   }
   

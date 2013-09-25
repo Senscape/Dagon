@@ -160,7 +160,7 @@ void Console::update() {
       LogData logData;
       int row = (ConsoleRows - 2); // Extra row saved for prompt
       
-      int coords[] = { 0, -_offset,
+      float coords[] = { 0, -_offset,
         config.displayWidth, -_offset,
         config.displayWidth, _size - _offset,
         0, _size - _offset };

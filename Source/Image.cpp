@@ -60,7 +60,7 @@ bool Image::hasTexture() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-int* Image::arrayOfCoordinates() {
+float* Image::arrayOfCoordinates() {
   return _arrayOfCoordinates;
 }
 
@@ -80,13 +80,13 @@ Texture* Image::texture() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
-void Image::setPosition(int x, int y) {
+void Image::setPosition(float x, float y) {
   _rect.origin.x = x;
   _rect.origin.y = y;
   _calculateCoordinates();
 }
 
-void Image::setSize(int width, int height) {
+void Image::setSize(float width, float height) {
   _rect.size.width = width;
   _rect.size.height = height;
   _calculateCoordinates();
@@ -109,7 +109,7 @@ void Image::setTexture(const std::string &fromFileName) {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-void Image::move(int offsetX, int offsetY) {
+void Image::move(float offsetX, float offsetY) {
   _rect.origin.x += offsetX;
   _rect.origin.y += offsetY;
   _calculateCoordinates();

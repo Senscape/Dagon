@@ -67,7 +67,7 @@ void CursorManager::bindImage() {
   (*_current).image->bind();
 }
 
-int* CursorManager::arrayOfCoords() {
+float* CursorManager::arrayOfCoords() {
   return _arrayOfCoords;
 }
 

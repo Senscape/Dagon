@@ -15,13 +15,13 @@
 #define DAGON_GEOMETRY_H_
 
 typedef struct {
-  int x;
-  int y;
+  double x;
+  double y;
 } Point;
 
 typedef struct {
-  float width;
-  float height;
+  double width;
+  double height;
 } Size;
 
 typedef struct {
