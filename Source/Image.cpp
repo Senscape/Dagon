@@ -116,8 +116,8 @@ void Image::move(int offsetX, int offsetY) {
 }
 
 void Image::scale(float factor) {
-  _rect.size.width = static_cast<int>(_rect.size.width * factor);
-  _rect.size.height = static_cast<int>(_rect.size.height * factor);
+  _rect.size.width *= factor;
+  _rect.size.height *= factor;
   _calculateCoordinates();
 }
 

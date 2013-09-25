@@ -20,8 +20,8 @@ typedef struct {
 } Point;
 
 typedef struct {
-  int width;
-  int height;
+  float width;
+  float height;
 } Size;
 
 typedef struct {
