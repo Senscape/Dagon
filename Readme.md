@@ -1,4 +1,4 @@
-# DAGON - An Adventure Game Engine
+## DAGON - An Adventure Game Engine
 
 ### Description
 
@@ -17,27 +17,30 @@ Dagon can be built using Premake, a straightforward configuration system:
 http://industriousone.com/premake
 
 For more details on how to build on your specific system, please refer to
-premake4.lua.
+[premake4.lua](premake4.lua).
 
 ### Running
 
 We always recommend downloading the official Dagon binaries for deploying your
-games: https://github.com/Senscape/Dagon/releases
+games: 
+https://github.com/Senscape/Dagon/releases
 
 You may use the readily available _Asylum Interactive Teaser_ for testing, which also serves as an advanced and highly in-depth tutorial. It can be downloaded
-from Senscape's website: http://www.senscape.net/asylum-teaser
+from Senscape's website:
+http://www.senscape.net/asylum-teaser
 
 Its source code is also available in the following GitHub repo:
 https://github.com/Senscape/Asylum-Teaser
 
 To create your own project, copy the Dagon binary in a folder with a _main.lua_
-file or indicate the name of your main script in the Dagon.cfg file included
-in the _Sample_ folder.
+file or indicate the name of your main script in the [Dagon.cfg](Dagon.cfg) file
+included in the _Sample_ folder.
 
 ### Support
 
 Feel free to visit our forums to discuss the engine and request technical
-support: http://www.senscape.net/forum
+support:
+http://www.senscape.net/forum
 
 ### Copyright
 
