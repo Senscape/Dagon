@@ -590,21 +590,19 @@ void Control::reshape(int width, int height) {
 void Control::run() {
   _isRunning = true;
   
-  /*double startTime = system.time();
-   double updateInterval = 1.0 / (double)config.framerate;
+  double startTime = SDL_GetTicks();
+  double updateInterval = (1.0 / (double)config.framerate) * 1000;
    
-   while (_isRunning) {
-   if (config.frameLimiter) {
-   while (startTime < system.time()) {
-   this->update();
-   startTime += updateInterval;
-   }
-   }
-   else
-   this->update();
-   }*/
   while (_isRunning) {
-    this->update();
+    if (config.frameLimiter) {
+      while (startTime < SDL_GetTicks()) {
+        this->update();
+        startTime += updateInterval;
+      }
+    }
+    else {
+      this->update();
+    }
   }
 }
 
