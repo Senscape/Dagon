@@ -34,7 +34,6 @@ class CameraManager;
 class Config;
 class Console;
 class CursorManager;
-class DGFont;
 class FeedManager;
 class FontManager;
 class Interface;
