@@ -251,7 +251,7 @@
 				FB94AC0517DE3CEB0081574F /* Other Sources */,
 			);
 			name = Dagon;
-			path = ../Source;
+			path = ../src;
 			sourceTree = "<group>";
 		};
 		FB94AB3717DE217D0081574F /* Supporting Files */ = {
@@ -629,11 +629,19 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					/usr/local/include/freetype2,
+					../extlibs/headers,
+					../extlibs/headers/libfreetype/osx,
+					../extlibs/headers/libfreetype/osx/freetype2,
+					../extlibs/headers/libsdl2/osx,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					"../extlibs/libs-osx/lib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				SYMROOT = ../build;
 			};
 			name = Debug;
 		};
@@ -678,17 +686,25 @@
 				HEADER_SEARCH_PATHS = (
 					/usr/local/include,
 					/usr/local/include/freetype2,
+					../extlibs/headers,
+					../extlibs/headers/libfreetype/osx,
+					../extlibs/headers/libfreetype/osx/freetype2,
+					../extlibs/headers/libsdl2/osx,
 				);
-				LIBRARY_SEARCH_PATHS = /usr/local/lib;
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				LIBRARY_SEARCH_PATHS = (
+					/usr/local/lib,
+					"../extlibs/libs-osx/lib",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				SDKROOT = macosx;
+				SYMROOT = ../build;
 			};
 			name = Release;
 		};
 		FB94AB4B17DE217D0081574F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -702,17 +718,14 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				OTHER_LDFLAGS = (
-					/usr/local/lib/libfreetype.a,
-					/usr/local/lib/libglew.a,
-					/usr/local/lib/liblua.a,
-					/usr/local/lib/libogg.a,
-					/usr/local/lib/libpng.a,
-					/usr/local/lib/libSDL2.a,
-					/usr/local/lib/libtheoradec.a,
-					/usr/local/lib/libvorbis.a,
-					/usr/local/lib/libvorbisfile.a,
-					"-lbz2",
-					"-lz",
+					"-lfreetype",
+					"-lglew",
+					"-llua",
+					"-logg",
+					"-lsdl2",
+					"-ltheoradec",
+					"-lvorbis",
+					"-lvorbisfile",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
@@ -723,7 +736,7 @@
 		FB94AB4C17DE217D0081574F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD)";
+				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
@@ -736,17 +749,14 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
 				OTHER_LDFLAGS = (
-					/usr/local/lib/libfreetype.a,
-					/usr/local/lib/libglew.a,
-					/usr/local/lib/liblua.a,
-					/usr/local/lib/libogg.a,
-					/usr/local/lib/libpng.a,
-					/usr/local/lib/libSDL2.a,
-					/usr/local/lib/libtheoradec.a,
-					/usr/local/lib/libvorbis.a,
-					/usr/local/lib/libvorbisfile.a,
-					"-lbz2",
-					"-lz",
+					"-lfreetype",
+					"-lglew",
+					"-llua",
+					"-logg",
+					"-lsdl2",
+					"-ltheoradec",
+					"-lvorbis",
+					"-lvorbisfile",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";

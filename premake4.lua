@@ -109,7 +109,7 @@ solution "Dagon"
     libs_win = { "freetype", "glew32s", "libogg_static", 
                  "libtheora_static", "libvorbis_static", 
                  "libvorbisfile_static", "lua", "OpenAL32",
-                 "SDL2", "SDL2main", "opengl32", "glu32"
+                 "SDL2", "SDL2main", "opengl32", "glu32",
                  "Imm32", "version", "winmm" }
 
     -- Attempt to look for Lua library with most commonly used names
