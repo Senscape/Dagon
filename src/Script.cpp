@@ -353,6 +353,7 @@ int Script::_globalPlay(lua_State *L) {
   Audio* audio = new Audio;
   
   audio->setResource(luaL_checkstring(L, 1));
+  audio->setStatic();
   AudioManager::instance().registerAudio(audio);
   AudioManager::instance().requestAudio(audio);
   audio->play();
