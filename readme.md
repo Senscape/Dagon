@@ -14,8 +14,8 @@ compatibility breaking changes may be introduced until version 1.0 is released._
 ### Installation
 
 Project files for Microsoft Visual Studio 2012 and Xcode 5.0 are provided in the
-[msvc](msvc) and [xcode](xcode) folders respectively. Dagon can be also built using
-Premake, a straightforward configuration system:
+[visualc](visualc) and [xcode](xcode) folders respectively. Dagon can be also built
+using Premake, a straightforward configuration tool:
 http://industriousone.com/premake
 
 For more details on how to build on your specific system, please refer to
