@@ -36,8 +36,7 @@ static int SystemLibBrowse(lua_State *L) {
 }
 
 static int SystemLibInit(lua_State *L) {
-  Control::instance().init();
-  
+  // Unused
   return 0;
 }
 

@@ -134,7 +134,7 @@ public:
     return control;
   }
   
-  void init();
+  void init(int argc, char* argv[]);
   Node* currentNode();
   Room* currentRoom();
   void cutscene(const char* fileName);

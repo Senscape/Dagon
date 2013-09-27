@@ -112,10 +112,14 @@ Control::~Control() {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-void Control::init() {
+void Control::init(int argc, char* argv[]) {
   log.trace(kModControl, "========================================");
   log.info(kModControl, "%s: %s", kString12001, DAGON_VERSION_STRING);
   log.info(kModControl, "%s: %d", kString12004, DAGON_BUILD);
+  
+  if (argc >= 2 && strncmp (argv[1], "-psn", 4) == 0 ) {
+    system.findPaths();
+  }
   
   // FIXME: Solve problem when script not found (console isn't shown)
   script.init();

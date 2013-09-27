@@ -16,7 +16,7 @@
 int main(int argc, char *argv[]) {
   Control& control = Control::instance();
   
-  control.init();
+  control.init(argc, argv);
   control.run();
   
   return 0;

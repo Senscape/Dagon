@@ -29,9 +29,25 @@ void System::browse(const char* url) {
   log.warning(kModSystem, "Browsing is currently disabled");
 }
 
-void System::findPaths() {
-  // TODO: Re-implement
+#ifdef DAGON_MAC
+namespace {
+#include <CoreFoundation/CoreFoundation.h>
+#include <unistd.h>
 }
+void System::findPaths() {
+  CFURLRef mainRef = CFBundleCopyBundleURL(CFBundleGetMainBundle());
+  CFURLRef parentRef = CFURLCreateCopyDeletingLastPathComponent(NULL, mainRef);
+  CFStringRef macPath = CFURLCopyFileSystemPath(parentRef, kCFURLPOSIXPathStyle);
+  
+  const char *pathPtr = CFStringGetCStringPtr(macPath,
+                                              CFStringGetSystemEncoding());
+  chdir(pathPtr);
+}
+#else
+void System::findPaths() {
+  // Nothing to do for now
+}
+#endif
 
 bool System::init() {
   log.trace(kModSystem, "%s", kString13001);
@@ -97,6 +113,7 @@ void System::setTitle(const char* title) {
 
 void System::update() {
   config.setFramesPerSecond(_calculateFrames(kFrameratePrecision));
+  SDL_GL_SwapWindow(_window);
   SDL_Event event;
   while(SDL_PollEvent(&event)) {
     switch (event.type) {
@@ -184,8 +201,6 @@ void System::update() {
         break;
     }
   }
-  
-  SDL_GL_SwapWindow(_window);
 }
 
 void System::terminate() {
