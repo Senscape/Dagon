@@ -1,12 +1,9 @@
 #include "Version.h"
 
-#define mkstr(a) # a
-#define in_between(a, b) mkstr(a) "." mkstr(b)
-
 #define	FILEVER	DAGON_VERSION_MAJOR, DAGON_VERSION_MINOR, DAGON_VERSION_RELEASE, DAGON_BUILD
 #define	PRODVER	FILEVER
 
-#define	STRFILEVER "Dagon " in_between(DAGON_VERSION_MAJOR, DAGON_VERSION_MINOR)
+#define	STRFILEVER "Dagon " DAGON_VERSION_STRING
 #define	STRPRODVER STRFILEVER
 
 /////////////////////////////////////////////////////////////////////////////
@@ -23,8 +20,8 @@
 //
 
 1 VERSIONINFO
- FILEVERSION DAGON_VERSION_NUM
- PRODUCTVERSION DAGON_VERSION_NUM
+ FILEVERSION FILEVER
+ PRODUCTVERSION PRODVER
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -41,11 +38,11 @@ BEGIN
         BEGIN
             VALUE "Comments", "Dagon\0"
             VALUE "CompanyName", "Senscape s.r.l.\0"
-            VALUE "FileDescription", "Dagon - An Adventure Game Engine\0"
+            VALUE "FileDescription", "An Adventure Game Engine\0"
             VALUE "FileVersion", STRFILEVER
             VALUE "InternalName", "Dagon\0"
             VALUE "LegalCopyright", "© 2013\0"
-            VALUE "LegalTrademarks", "Copyright © 2011\0"
+            VALUE "LegalTrademarks", "Copyright © 2013\0"
             VALUE "OriginalFilename", "Dagon.exe\0"
             VALUE "PrivateBuild", "Developed by Senscape s.r.l.\0"
             VALUE "ProductName", "Dagon\0"

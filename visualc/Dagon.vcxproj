@@ -19,107 +19,107 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Source\Action.h" />
-    <ClInclude Include="..\Source\Audio.h" />
-    <ClInclude Include="..\Source\AudioManager.h" />
-    <ClInclude Include="..\Source\AudioProxy.h" />
-    <ClInclude Include="..\Source\Button.h" />
-    <ClInclude Include="..\Source\ButtonProxy.h" />
-    <ClInclude Include="..\Source\CameraLib.h" />
-    <ClInclude Include="..\Source\CameraManager.h" />
-    <ClInclude Include="..\Source\Colors.h" />
-    <ClInclude Include="..\Source\Config.h" />
-    <ClInclude Include="..\Source\ConfigLib.h" />
-    <ClInclude Include="..\Source\Console.h" />
-    <ClInclude Include="..\Source\Control.h" />
-    <ClInclude Include="..\Source\CursorLib.h" />
-    <ClInclude Include="..\Source\CursorManager.h" />
-    <ClInclude Include="..\Source\Defines.h" />
-    <ClInclude Include="..\Source\EffectsLib.h" />
-    <ClInclude Include="..\Source\EffectsManager.h" />
-    <ClInclude Include="..\Source\Event.h" />
-    <ClInclude Include="..\Source\FeedManager.h" />
-    <ClInclude Include="..\Source\Font.h" />
-    <ClInclude Include="..\Source\FontManager.h" />
-    <ClInclude Include="..\Source\Geometry.h" />
-    <ClInclude Include="..\Source\Image.h" />
-    <ClInclude Include="..\Source\ImageProxy.h" />
-    <ClInclude Include="..\Source\Interface.h" />
-    <ClInclude Include="..\Source\Language.h" />
-    <ClInclude Include="..\Source\Locator.h" />
-    <ClInclude Include="..\Source\Log.h" />
-    <ClInclude Include="..\Source\Luna.h" />
-    <ClInclude Include="..\Source\Node.h" />
-    <ClInclude Include="..\Source\NodeProxy.h" />
-    <ClInclude Include="..\Source\Object.h" />
-    <ClInclude Include="..\Source\ObjectProxy.h" />
-    <ClInclude Include="..\Source\Overlay.h" />
-    <ClInclude Include="..\Source\OverlayProxy.h" />
-    <ClInclude Include="..\Source\Platform.h" />
-    <ClInclude Include="..\Source\Proxy.h" />
-    <ClInclude Include="..\Source\RenderManager.h" />
-    <ClInclude Include="..\Source\Room.h" />
-    <ClInclude Include="..\Source\RoomProxy.h" />
-    <ClInclude Include="..\Source\Scene.h" />
-    <ClInclude Include="..\Source\Script.h" />
-    <ClInclude Include="..\Source\SlideProxy.h" />
-    <ClInclude Include="..\Source\Spot.h" />
-    <ClInclude Include="..\Source\SpotProxy.h" />
-    <ClInclude Include="..\Source\State.h" />
-    <ClInclude Include="..\Source\stb_image.h" />
-    <ClInclude Include="..\Source\System.h" />
-    <ClInclude Include="..\Source\SystemLib.h" />
-    <ClInclude Include="..\Source\Texture.h" />
-    <ClInclude Include="..\Source\TextureManager.h" />
-    <ClInclude Include="..\Source\TimerManager.h" />
-    <ClInclude Include="..\Source\Version.h" />
-    <ClInclude Include="..\Source\Video.h" />
-    <ClInclude Include="..\Source\VideoManager.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\Source\Audio.cpp" />
-    <ClCompile Include="..\Source\AudioManager.cpp" />
-    <ClCompile Include="..\Source\Button.cpp" />
-    <ClCompile Include="..\Source\CameraManager.cpp" />
-    <ClCompile Include="..\Source\Config.cpp" />
-    <ClCompile Include="..\Source\Console.cpp" />
-    <ClCompile Include="..\Source\Control.cpp" />
-    <ClCompile Include="..\Source\CursorManager.cpp" />
-    <ClCompile Include="..\Source\DustData.c" />
-    <ClCompile Include="..\Source\EffectsManager.cpp" />
-    <ClCompile Include="..\Source\FeedManager.cpp" />
-    <ClCompile Include="..\Source\Font.cpp" />
-    <ClCompile Include="..\Source\FontData.c" />
-    <ClCompile Include="..\Source\FontManager.cpp" />
-    <ClCompile Include="..\Source\Image.cpp" />
-    <ClCompile Include="..\Source\Interface.cpp" />
-    <ClCompile Include="..\Source\Locator.cpp" />
-    <ClCompile Include="..\Source\Log.cpp" />
-    <ClCompile Include="..\Source\main.cpp" />
-    <ClCompile Include="..\Source\Node.cpp" />
-    <ClCompile Include="..\Source\Object.cpp" />
-    <ClCompile Include="..\Source\Overlay.cpp" />
-    <ClCompile Include="..\Source\RenderManager.cpp" />
-    <ClCompile Include="..\Source\Room.cpp" />
-    <ClCompile Include="..\Source\Scene.cpp" />
-    <ClCompile Include="..\Source\Script.cpp" />
-    <ClCompile Include="..\Source\ShaderData.c" />
-    <ClCompile Include="..\Source\SplashData.c" />
-    <ClCompile Include="..\Source\Spot.cpp" />
-    <ClCompile Include="..\Source\State.cpp" />
-    <ClCompile Include="..\Source\stb_image.c" />
-    <ClCompile Include="..\Source\System.cpp" />
-    <ClCompile Include="..\Source\Texture.cpp" />
-    <ClCompile Include="..\Source\TextureManager.cpp" />
-    <ClCompile Include="..\Source\TimerManager.cpp" />
-    <ClCompile Include="..\Source\Video.cpp" />
-    <ClCompile Include="..\Source\VideoManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Image Include="Resources\Dagon.ico" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resources\Dagon.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\Action.h" />
+    <ClInclude Include="..\src\Audio.h" />
+    <ClInclude Include="..\src\AudioManager.h" />
+    <ClInclude Include="..\src\AudioProxy.h" />
+    <ClInclude Include="..\src\Button.h" />
+    <ClInclude Include="..\src\ButtonProxy.h" />
+    <ClInclude Include="..\src\CameraLib.h" />
+    <ClInclude Include="..\src\CameraManager.h" />
+    <ClInclude Include="..\src\Colors.h" />
+    <ClInclude Include="..\src\Config.h" />
+    <ClInclude Include="..\src\ConfigLib.h" />
+    <ClInclude Include="..\src\Console.h" />
+    <ClInclude Include="..\src\Control.h" />
+    <ClInclude Include="..\src\CursorLib.h" />
+    <ClInclude Include="..\src\CursorManager.h" />
+    <ClInclude Include="..\src\Defines.h" />
+    <ClInclude Include="..\src\EffectsLib.h" />
+    <ClInclude Include="..\src\EffectsManager.h" />
+    <ClInclude Include="..\src\Event.h" />
+    <ClInclude Include="..\src\FeedManager.h" />
+    <ClInclude Include="..\src\Font.h" />
+    <ClInclude Include="..\src\FontManager.h" />
+    <ClInclude Include="..\src\Geometry.h" />
+    <ClInclude Include="..\src\Image.h" />
+    <ClInclude Include="..\src\ImageProxy.h" />
+    <ClInclude Include="..\src\Interface.h" />
+    <ClInclude Include="..\src\Language.h" />
+    <ClInclude Include="..\src\Locator.h" />
+    <ClInclude Include="..\src\Log.h" />
+    <ClInclude Include="..\src\Luna.h" />
+    <ClInclude Include="..\src\Node.h" />
+    <ClInclude Include="..\src\NodeProxy.h" />
+    <ClInclude Include="..\src\Object.h" />
+    <ClInclude Include="..\src\ObjectProxy.h" />
+    <ClInclude Include="..\src\Overlay.h" />
+    <ClInclude Include="..\src\OverlayProxy.h" />
+    <ClInclude Include="..\src\Platform.h" />
+    <ClInclude Include="..\src\Proxy.h" />
+    <ClInclude Include="..\src\RenderManager.h" />
+    <ClInclude Include="..\src\Room.h" />
+    <ClInclude Include="..\src\RoomProxy.h" />
+    <ClInclude Include="..\src\Scene.h" />
+    <ClInclude Include="..\src\Script.h" />
+    <ClInclude Include="..\src\SlideProxy.h" />
+    <ClInclude Include="..\src\Spot.h" />
+    <ClInclude Include="..\src\SpotProxy.h" />
+    <ClInclude Include="..\src\State.h" />
+    <ClInclude Include="..\src\stb_image.h" />
+    <ClInclude Include="..\src\System.h" />
+    <ClInclude Include="..\src\SystemLib.h" />
+    <ClInclude Include="..\src\Texture.h" />
+    <ClInclude Include="..\src\TextureManager.h" />
+    <ClInclude Include="..\src\TimerManager.h" />
+    <ClInclude Include="..\src\Version.h" />
+    <ClInclude Include="..\src\Video.h" />
+    <ClInclude Include="..\src\VideoManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Audio.cpp" />
+    <ClCompile Include="..\src\AudioManager.cpp" />
+    <ClCompile Include="..\src\Button.cpp" />
+    <ClCompile Include="..\src\CameraManager.cpp" />
+    <ClCompile Include="..\src\Config.cpp" />
+    <ClCompile Include="..\src\Console.cpp" />
+    <ClCompile Include="..\src\Control.cpp" />
+    <ClCompile Include="..\src\CursorManager.cpp" />
+    <ClCompile Include="..\src\DustData.c" />
+    <ClCompile Include="..\src\EffectsManager.cpp" />
+    <ClCompile Include="..\src\FeedManager.cpp" />
+    <ClCompile Include="..\src\Font.cpp" />
+    <ClCompile Include="..\src\FontData.c" />
+    <ClCompile Include="..\src\FontManager.cpp" />
+    <ClCompile Include="..\src\Image.cpp" />
+    <ClCompile Include="..\src\Interface.cpp" />
+    <ClCompile Include="..\src\Locator.cpp" />
+    <ClCompile Include="..\src\Log.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\Node.cpp" />
+    <ClCompile Include="..\src\Object.cpp" />
+    <ClCompile Include="..\src\Overlay.cpp" />
+    <ClCompile Include="..\src\RenderManager.cpp" />
+    <ClCompile Include="..\src\Room.cpp" />
+    <ClCompile Include="..\src\Scene.cpp" />
+    <ClCompile Include="..\src\Script.cpp" />
+    <ClCompile Include="..\src\ShaderData.c" />
+    <ClCompile Include="..\src\SplashData.c" />
+    <ClCompile Include="..\src\Spot.cpp" />
+    <ClCompile Include="..\src\State.cpp" />
+    <ClCompile Include="..\src\stb_image.c" />
+    <ClCompile Include="..\src\System.cpp" />
+    <ClCompile Include="..\src\Texture.cpp" />
+    <ClCompile Include="..\src\TextureManager.cpp" />
+    <ClCompile Include="..\src\TimerManager.cpp" />
+    <ClCompile Include="..\src\Video.cpp" />
+    <ClCompile Include="..\src\VideoManager.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{F97B6D16-FC92-4AAD-97CA-690C5646914F}</ProjectGuid>
@@ -175,27 +175,31 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\Source;$(ProjectDir)\Headers;$(ProjectDir)\Headers\freetype2;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Libraries\x86;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir)\..\src;$(ProjectDir)\..\extlibs\headers;$(ProjectDir)\..\extlibs\headers\libfreetype\windows;$(ProjectDir)\..\extlibs\headers\libfreetype\windows\freetype2;$(ProjectDir)\..\extlibs\headers\libsdl2\windows;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\..\extlibs\libs-msvc\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\..\build\Win32\$(Configuration)\</OutDir>
+    <IntDir>..\build\objs\Win32\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\Source;$(ProjectDir)\Headers;$(ProjectDir)\Headers\freetype2;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Libraries\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\..\src;$(ProjectDir)\..\extlibs\headers;$(ProjectDir)\..\extlibs\headers\libfreetype\windows;$(ProjectDir)\..\extlibs\headers\libfreetype\windows\freetype2;$(ProjectDir)\..\extlibs\headers\libsdl2\windows;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\..\extlibs\libs-msvc\x64;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\..\build\Win64\$(Configuration)\</OutDir>
+    <IntDir>..\build\objs\Win64\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\Source;$(ProjectDir)\Headers;$(ProjectDir)\Headers\freetype2;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Libraries\x86;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <IncludePath>$(ProjectDir)\..\src;$(ProjectDir)\..\extlibs\headers;$(ProjectDir)\..\extlibs\headers\libfreetype\windows;$(ProjectDir)\..\extlibs\headers\libfreetype\windows\freetype2;$(ProjectDir)\..\extlibs\headers\libsdl2\windows;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\..\extlibs\libs-msvc\x86;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\..\build\Win32\$(Configuration)\</OutDir>
+    <IntDir>..\build\objs\Win32\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\Source;$(ProjectDir)\Headers;$(ProjectDir)\Headers\freetype2;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)\Libraries\x64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\..\src;$(ProjectDir)\..\extlibs\headers;$(ProjectDir)\..\extlibs\headers\libfreetype\windows;$(ProjectDir)\..\extlibs\headers\libfreetype\windows\freetype2;$(ProjectDir)\..\extlibs\headers\libsdl2\windows;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)\..\extlibs\libs-msvc\x64;$(LibraryPath)</LibraryPath>
+    <OutDir>$(SolutionDir)\..\build\Win64\$(Configuration)\</OutDir>
+    <IntDir>..\build\objs\Win64\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
