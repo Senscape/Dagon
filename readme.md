@@ -13,7 +13,9 @@ compatibility breaking changes may be introduced until version 1.0 is released._
 
 ### Installation
 
-Dagon can be built using Premake, a straightforward configuration system:
+Project files for Microsoft Visual Studio 2012 and Xcode 5.0 are provided in the
+[msvc](msvc) and [xcode](xcode) folders respectively. Dagon can be also built using
+Premake, a straightforward configuration system:
 http://industriousone.com/premake
 
 For more details on how to build on your specific system, please refer to
@@ -25,7 +27,8 @@ We always recommend downloading the official Dagon binaries for deploying your
 games: 
 https://github.com/Senscape/Dagon/releases
 
-You may use the readily available _Asylum Interactive Teaser_ for testing, which also serves as an advanced and highly in-depth tutorial. It can be downloaded
+You may use the readily available _Asylum Interactive Teaser_ for testing, 
+which also serves as an advanced and highly in-depth tutorial. It can be downloaded
 from Senscape's website:
 http://www.senscape.net/asylum-teaser
 
