@@ -26,8 +26,8 @@
 #define kDefVideoPath "Video/"
 // TODO: Maybe change to 'Assets'
 #define kDefResourcePath "Resources/"
-#define kDefConfigFile "Dagon.cfg"
-#define kDefLogFile "Dagon.log"
+#define kDefConfigFile "dagon.cfg"
+#define kDefLogFile "dagon.log"
 #define kDefTexExtension "tex"
 
 // TODO: We should be able to read this value from each texture bundle

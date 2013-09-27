@@ -600,7 +600,10 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/debug";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/debug";
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "../extlibs/libs-osx/Frameworks";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = 1;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -627,21 +630,19 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/usr/local/include,
-					/usr/local/include/freetype2,
 					../extlibs/headers,
 					../extlibs/headers/libfreetype/osx,
 					../extlibs/headers/libfreetype/osx/freetype2,
 					../extlibs/headers/libsdl2/osx,
 				);
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib,
-					"../extlibs/libs-osx/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "../extlibs/libs-osx/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OBJROOT = "$(SYMROOT)/objs";
 				ONLY_ACTIVE_ARCH = YES;
+				PROJECT_TEMP_DIR = "$(OBJROOT)";
 				SDKROOT = macosx;
-				SYMROOT = ../build;
+				SYMROOT = ../build/osx;
+				TARGET_TEMP_DIR = "$(CONFIGURATION_TEMP_DIR)";
 			};
 			name = Debug;
 		};
@@ -662,9 +663,13 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/release";
+				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/release";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "../extlibs/libs-osx/Frameworks";
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
@@ -684,20 +689,18 @@
 				GCC_WARN_UNUSED_FUNCTION = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					/usr/local/include,
-					/usr/local/include/freetype2,
 					../extlibs/headers,
 					../extlibs/headers/libfreetype/osx,
 					../extlibs/headers/libfreetype/osx/freetype2,
 					../extlibs/headers/libsdl2/osx,
 				);
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/lib,
-					"../extlibs/libs-osx/lib",
-				);
+				LIBRARY_SEARCH_PATHS = "../extlibs/libs-osx/lib";
 				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				OBJROOT = "$(SYMROOT)/objs";
+				PROJECT_TEMP_DIR = "$(OBJROOT)";
 				SDKROOT = macosx;
-				SYMROOT = ../build;
+				SYMROOT = ../build/osx;
+				TARGET_TEMP_DIR = "$(CONFIGURATION_TEMP_DIR)";
 			};
 			name = Release;
 		};

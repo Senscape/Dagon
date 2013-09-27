@@ -9,14 +9,10 @@ site:
 
 http://industriousone.com/premake
 
-Usage is as simple as typing 'premake4 [action]'. Please, do note that this
-configuration targets the native architecture of the host computer and will
-attempt to link dynamically. Also, the Windows configuration only builds as
-a console.
-
-Because this Premake file is primarily intended for building from source and
-contributing to Dagon, we strongly suggest that you download the official binary
-releases for deploying your games:
+Usage is as simple as typing 'premake4 [action]'. Because this Premake file is
+primarily intended for building from source and contributing to Dagon, we
+strongly suggest that you download the official binary releases for deploying
+your games:
 
 https://github.com/Senscape/Dagon/releases
 
@@ -39,50 +35,43 @@ Linux:
 
   We suggest installing the following packages via apt-get: libfreetype6-dev,
   libglew-dev, liblua5.1-0-dev, libogg-dev, libopenal-dev, libvorbis-dev,
-  libtheora-dev.
+  libtheora-dev, libSDL2-dev.
 
-  SDL2 was not available in default repos as of this writing and had to be built
-  from scratch.
+  SDL2 was not available in some default repos as of this writing and had to be
+  built from scratch.
 
 Mac OS X:
 
-  We strongly encourage using Homebrew to install packages: http://brew.sh
+  Libraries are included in the extlibs folder. You may also use Homebrew to
+  install custom packages: http://brew.sh
 
   Suggested Homebrew formulas are: freetype, glew, lua, libogg, libvorbis,
   theora, sdl2.
 
 Windows:
 
-  We provide the following Visual Studio binaries for your convenience:
-
-  http://www.senscape.net/files/dagon-0.6.0-libs-win-x86.zip
-  http://www.senscape.net/files/dagon-0.6.0-libs-win-x64.zip
-
-  Please note that on Visual Studio you may need to specify the target platform
-  as well as includes and libraries folders.
+  Libraries for Visual Studio are included in the extlibs folder.
 
 ]]--
 
 -- Base solution
 solution "Dagon"
-  configurations { "Release", "Debug" }
-  platforms { "native", "x32", "x64" }
-  location "Build"
-  
-  configuration { "Release" }
-  defines { "NDEBUG" }
-  flags { "Optimize" }
-  targetdir "Build/Release"  
+  configurations { "Debug", "Release" }
+  platforms { "x32", "x64", "universal" }
       
   configuration { "Debug" }
   defines { "_DEBUG", "DEBUG" }
   flags { "Symbols" }
-  targetdir "Build/Debug"
+  targetdir "build/debug"
+
+  configuration { "Release" }
+  defines { "NDEBUG" }
+  flags { "Optimize" }
+  targetdir "build/release"    
 
   -- Clean up if required and exit
   if _ACTION == "clean" then
-    os.rmdir("Build")
-    os.exit()
+    os.rmdir("build")
   end
  
   -- The main Dagon project
@@ -91,66 +80,39 @@ solution "Dagon"
     -- GLEW_STATIC only applies to Windows, but there's no harm done if defined
     -- on other systems.
     defines { "GLEW_STATIC", "OV_EXCLUDE_STATIC_CALLBACKS" }
-    location "Build"
-    objdir "Build/Objects"
+    location "build"
+    objdir "build/objs"
      
-    -- Note that we always build as a console app, even on Windows.
+    -- Note that we always build as a console app, even on Windows. Please use
+    -- the corresponding Xcode or Visual Studio project files to build a
+    -- user-friendly binary.
     kind "ConsoleApp"
     language "C++"
-    files { "Source/**.h", "Source/**.c", "Source/**.cpp" }
-    
-    libraries = {}
+    files { "src/**.h", "src/**.c", "src/**.cpp" }
     
     -- Libraries required for Unix-based systems
-    libs_unix = { "freetype", "GLEW", "ogg", "SDL2", 
-                  "vorbis", "vorbisfile", "theoradec" }
-    
-    -- Libraries required for Windows, preferring static binaries
-    libs_win = { "freetype", "glew32s", "libogg_static", 
-                 "libtheora_static", "libvorbis_static", 
-                 "libvorbisfile_static", "lua", "OpenAL32",
-                 "SDL2", "SDL2main", "opengl32", "glu32",
-                 "Imm32", "version", "winmm" }
-
-    -- Attempt to look for Lua library with most commonly used names
-    local lua_lib_names = { "lua-5.1", "lua5.1", "lua" }
-    local lua_lib = { name = nil, dir = nil }
-    for i = 1, #lua_lib_names do
-      lua_lib.name = lua_lib_names[i]
-      lua_lib.dir = os.findlib(lua_lib.name)
-      if(lua_lib.dir ~= nil) then
-        break
-      end
-    end
+    libs_unix = { "freetype", "GLEW", "GL", "GLU", "ogg", "openal", 
+                  "SDL2", "vorbis", "vorbisfile", "theoradec" }
   
-    -- Build the libraries table according to the host system
-    if os.is("linux") then
-      libraries = libs_unix
-      table.insert(libraries, "GL")
-      table.insert(libraries, "GLU")
-      table.insert(libraries, "openal")
-      table.insert(libraries, lua_lib.name)
-    elseif os.is("macosx") then
-      libraries = libs_unix
-      table.insert(libraries, lua_lib.name)
-    elseif os.is("windows") then
-      libraries = libs_win
-      table.insert(libraries, lua_lib.name)
-    else
-      print "Attempting to build on unsupported system."
-      print "Aborting..."
-      os.exit()
-    end
-    
-    -- Confirm that all the required libraries are present
-    -- (not working well on Windows)
-    if os.is("linux") or os.is("macosx") then
-      for i = 1, #libraries do
-        local lib = libraries[i]
+    -- Search for libraries on Linux systems
+    if os.get() == "linux" then
+      -- Attempt to look for Lua library with most commonly used names
+      local lua_lib_names = { "lua-5.1", "lua5.1", "lua" }
+      local lua_lib = { name = nil, dir = nil }
+      for i = 1, #lua_lib_names do
+        lua_lib.name = lua_lib_names[i]
+        lua_lib.dir = os.findlib(lua_lib.name)
+        if(lua_lib.dir ~= nil) then
+          break
+        end
+      end
+      table.insert(libs_unix, lua_lib.name)
+
+      -- Confirm that all the required libraries are present
+      for i = 1, #libs_unix do
+        local lib = libs_unix[i]
         if os.findlib(lib) == nil then
-          print ("Library not found:", lib)
-          print "Aborting..."
-          os.exit()
+          print ("WARNING: Library " .. lib .. " not found")
         end
       end
     end
@@ -162,16 +124,37 @@ solution "Dagon"
                     "/usr/local/include/lua5.1",
                     "/usr/local/include/freetype2" }
       libdirs { "/usr/lib", "/usr/local/lib" }
-      links { libraries }
+      links { libs_unix }
   
     configuration "macosx"
       includedirs { "/usr/include", "/usr/include/lua5.1", 
                     "/usr/include/freetype2", "/usr/local/include",
                     "/usr/local/include/lua5.1",
-                    "/usr/local/include/freetype2" }
-      libdirs { "/usr/lib", "/usr/local/lib" }
-      links { "OpenAL.framework", "OpenGL.framework" }
-      links { libraries }
+                    "/usr/local/include/freetype2",
+                    "extlibs/headers",
+                    "extlibs/headers/libfreetype/osx",
+                    "extlibs/headers/libfreetype/osx/freetype2",
+                    "extlibs/headers/libsdl2/osx" }
+      libdirs { "/usr/lib", "/usr/local/lib", 
+                "extlibs/libs-osx/Frameworks", "extlibs/libs-osx/lib" }
+      links { "freetype", "GLEW", "lua", "ogg", "SDL2", 
+              "vorbis", "vorbisfile", "theoradec" }
+      links { "AudioToolbox.framework", "AudioUnit.framework",
+              "Carbon.framework", "Cocoa.framework", "CoreAudio.framework",
+              "CoreFoundation.framework", "ForceFeedback.framework", 
+              "IOKit.framework", "OpenAL.framework", "OpenGL.framework" }
               
     configuration "windows"
-      links { libraries }
+      includedirs { "extlibs/headers",
+                    "extlibs/headers/libfreetype/windows",
+                    "extlibs/headers/libfreetype/windows/freetype",
+                    "extlibs/headers/libsdl2/windows" }
+      links { "freetype", "glew32s", "libogg_static", 
+              "libtheora_static", "libvorbis_static", 
+              "libvorbisfile_static", "lua", "OpenAL32",
+              "SDL2", "SDL2main", "opengl32", "glu32",
+              "Imm32", "version", "winmm" }
+      configuration ("windows", "x32")
+        libdirs { "extlibs/libs-msvc/libs/x86" }
+      configuration ("windows", "x64")
+        libdirs { "extlibs/libs-msvc/libs/x64" }
