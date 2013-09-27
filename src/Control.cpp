@@ -114,7 +114,7 @@ Control::~Control() {
 
 void Control::init() {
   log.trace(kModControl, "========================================");
-  log.info(kModControl, "%s: %s", kString12001, DAGON_VERSION);
+  log.info(kModControl, "%s: %s", kString12001, DAGON_VERSION_STRING);
   log.info(kModControl, "%s: %d", kString12004, DAGON_BUILD);
   
   // FIXME: Solve problem when script not found (console isn't shown)

@@ -506,7 +506,7 @@ int Script::_globalStopTimer(lua_State *L) {
 }
 
 int Script::_globalVersion(lua_State *L) {
-  lua_pushstring(L, DAGON_VERSION);
+  lua_pushstring(L, DAGON_VERSION_STRING);
   
   return 1;
 }

@@ -51,9 +51,6 @@ enum MaxValues {
 #define kFileSeqStart 1
 #define kFileSeqDigits 3
 
-#define mkstr(a) # a
-#define in_between(a) mkstr(a)
-
 enum CursorTypes {
   kCursorNormal,
   kCursorDrag,
