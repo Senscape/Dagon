@@ -34,7 +34,7 @@ https://github.com/Senscape/Asylum-Teaser
 
 To create your own project, copy the Dagon binary in a folder with a _main.lua_
 file or indicate the name of your main script in the
-[Dagon.cfg](Sample/Dagon.cfg) file included in the _Sample_ folder.
+[dagon.cfg](examples/dagon.cfg) file included in the _examples_ folder.
 
 ### Support
 
