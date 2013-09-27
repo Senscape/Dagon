@@ -177,29 +177,29 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)\..\src;$(ProjectDir)\..\extlibs\headers;$(ProjectDir)\..\extlibs\headers\libfreetype\windows;$(ProjectDir)\..\extlibs\headers\libfreetype\windows\freetype2;$(ProjectDir)\..\extlibs\headers\libsdl2\windows;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\..\extlibs\libs-msvc\x86;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)\..\build\Win32\$(Configuration)\</OutDir>
-    <IntDir>..\build\objs\Win32\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\..\build\win32\debug</OutDir>
+    <IntDir>..\build\objs\win32\debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)\..\src;$(ProjectDir)\..\extlibs\headers;$(ProjectDir)\..\extlibs\headers\libfreetype\windows;$(ProjectDir)\..\extlibs\headers\libfreetype\windows\freetype2;$(ProjectDir)\..\extlibs\headers\libsdl2\windows;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\..\extlibs\libs-msvc\x64;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)\..\build\Win64\$(Configuration)\</OutDir>
-    <IntDir>..\build\objs\Win64\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\..\build\win64\debug\</OutDir>
+    <IntDir>..\build\objs\win64\debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)\..\src;$(ProjectDir)\..\extlibs\headers;$(ProjectDir)\..\extlibs\headers\libfreetype\windows;$(ProjectDir)\..\extlibs\headers\libfreetype\windows\freetype2;$(ProjectDir)\..\extlibs\headers\libsdl2\windows;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\..\extlibs\libs-msvc\x86;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)\..\build\Win32\$(Configuration)\</OutDir>
-    <IntDir>..\build\objs\Win32\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\..\build\win32\release\</OutDir>
+    <IntDir>..\build\objs\win32\release\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)\..\src;$(ProjectDir)\..\extlibs\headers;$(ProjectDir)\..\extlibs\headers\libfreetype\windows;$(ProjectDir)\..\extlibs\headers\libfreetype\windows\freetype2;$(ProjectDir)\..\extlibs\headers\libsdl2\windows;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)\..\extlibs\libs-msvc\x64;$(LibraryPath)</LibraryPath>
-    <OutDir>$(SolutionDir)\..\build\Win64\$(Configuration)\</OutDir>
-    <IntDir>..\build\objs\Win64\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)\..\build\win64\release\</OutDir>
+    <IntDir>..\build\objs\win64\release\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

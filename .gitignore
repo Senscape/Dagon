@@ -2,8 +2,7 @@
 *.log
 *.bak
 build/
-bin/
-obj/
+objs/
 release/
 debug/
 

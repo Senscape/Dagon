@@ -58,6 +58,7 @@ Windows:
 solution "Dagon"
   configurations { "Debug", "Release" }
   platforms { "x32", "x64", "universal" }
+  location "build"
       
   configuration { "Debug" }
   defines { "_DEBUG", "DEBUG" }
@@ -155,6 +156,6 @@ solution "Dagon"
               "SDL2", "SDL2main", "opengl32", "glu32",
               "Imm32", "version", "winmm" }
       configuration ("windows", "x32")
-        libdirs { "extlibs/libs-msvc/libs/x86" }
+        libdirs { "extlibs/libs-msvc/x86" }
       configuration ("windows", "x64")
-        libdirs { "extlibs/libs-msvc/libs/x64" }
+        libdirs { "extlibs/libs-msvc/x64" }
