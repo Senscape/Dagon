@@ -67,7 +67,7 @@ log(Log::instance())
   _width = withWidth;
   _height = andHeight;
   _depth = andDepth;
-  _bitmap = new GLubyte[_width * _height * comp];
+  _bitmap = new GLubyte[_width * _height * comp](); // Zero all bits
   glGenTextures(1, &_ident);
   glBindTexture(GL_TEXTURE_2D, _ident);
   glTexImage2D(GL_TEXTURE_2D, 0, comp, _width, _height,
