@@ -56,16 +56,16 @@ Windows:
 
 -- Base solution
 solution "Dagon"
-  configurations { "Debug", "Release" }
-  platforms { "x32", "x64", "universal" }
+  configurations { "debug", "release" }
+  platforms { "native" }
   location "build"
       
-  configuration { "Debug" }
+  configuration { "debug" }
   defines { "_DEBUG", "DEBUG" }
   flags { "Symbols" }
   targetdir "build/debug"
 
-  configuration { "Release" }
+  configuration { "release" }
   defines { "NDEBUG" }
   flags { "Optimize" }
   targetdir "build/release"    
@@ -92,8 +92,8 @@ solution "Dagon"
     files { "src/**.h", "src/**.c", "src/**.cpp" }
     
     -- Libraries required for Unix-based systems
-    libs_unix = { "freetype", "GLEW", "GL", "GLU", "ogg", "openal", 
-                  "SDL2", "vorbis", "vorbisfile", "theoradec" }
+    libs_unix = { "freetype", "GLEW", "GL", "GLU", "ogg", "openal", "vorbis",
+		  "vorbisfile", "theoradec", "SDL2", "dl", "pthread" }
   
     -- Search for libraries on Linux systems
     if os.get() == "linux" then
@@ -155,7 +155,8 @@ solution "Dagon"
               "libvorbisfile_static", "lua", "OpenAL32",
               "SDL2", "SDL2main", "opengl32", "glu32",
               "Imm32", "version", "winmm" }
-      configuration ("windows", "x32")
-        libdirs { "extlibs/libs-msvc/x86" }
-      configuration ("windows", "x64")
+      if os.is64bit then
         libdirs { "extlibs/libs-msvc/x64" }
+      else
+        libdirs { "extlibs/libs-msvc/x86" }
+      end
