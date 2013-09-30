@@ -630,8 +630,11 @@ void Control::switchTo(Object* theTarget, bool instant) {
         audioManager.clear();
         feedManager.clear(); // Clear all pending feeds
         
-        if (!firstSwitch)
+        if (!firstSwitch) {
           renderManager.blendNextUpdate(true);
+          if (currentNode()->isSlide())
+            cameraManager.unlock();
+        }
         
         _currentRoom = (Room*)theTarget;
         _scene->setRoom((Room*)theTarget);
@@ -677,6 +680,9 @@ void Control::switchTo(Object* theTarget, bool instant) {
         renderManager.blendNextUpdate(true);
         
         if (_currentRoom) {
+          if (currentNode()->isSlide())
+            cameraManager.unlock();
+          
           Node* node = (Node*)theTarget;
           if (!_currentRoom->switchTo(node)) {
             log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
