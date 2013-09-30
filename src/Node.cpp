@@ -27,6 +27,7 @@
 ////////////////////////////////////////////////////////////
 
 Node::Node() {
+  _previousNode = this;
   _hasFootstep = false;
   _isSlide = false;
   _slideReturn = 0;
