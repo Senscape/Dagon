@@ -151,9 +151,26 @@ void System::update() {
         break;
       }
       case SDL_MOUSEMOTION:
-        Control::instance().processMouse(event.motion.x,
+        if (config.controlMode == kControlFixed) {
+          if (Control::instance().isDirectControlActive()) {
+            SDL_SetRelativeMouseMode(SDL_TRUE);
+            Control::instance().processMouse(event.motion.xrel,
+                                             event.motion.yrel,
+                                             EventMouseMove);
+          }
+          else {
+            SDL_SetRelativeMouseMode(SDL_FALSE);
+            Control::instance().processMouse(event.motion.x,
+                                             event.motion.y,
+                                             EventMouseMove);
+          }
+        }
+        else {
+          SDL_SetRelativeMouseMode(SDL_FALSE);
+          Control::instance().processMouse(event.motion.x,
                                            event.motion.y,
                                            EventMouseMove);
+        }
         break;
       case SDL_MOUSEBUTTONDOWN:
         if (event.button.button == SDL_BUTTON_LEFT) {
