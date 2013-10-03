@@ -14,6 +14,9 @@
 #ifndef DAGON_DEFINES_H_
 #define DAGON_DEFINES_H_
 
+#include <cstdarg>
+#include <cstdio>
+
 // Defaults
 
 #define kDefScriptFile "Main" // Also name of the window
@@ -93,9 +96,6 @@ enum Directions {
 // Temporary fix for Visual Studio
 
 #ifdef _MSC_VER
-
-#include <stdarg.h>
-#include <stdio.h>
 
 #define snprintf c99_snprintf
 
