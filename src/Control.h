@@ -23,6 +23,8 @@
 #include "Platform.h"
 #include "System.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -157,5 +159,7 @@ public:
   void terminate();
   void update();
 };
+  
+}
 
 #endif // DG_CONTROL_H

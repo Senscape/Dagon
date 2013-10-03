@@ -21,6 +21,8 @@
 #include "Image.h"
 #include "Overlay.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -210,4 +212,6 @@ void Overlay::move(int offsetX, int offsetY) {
   // Store the new position
   _position.x += offsetX;
   _position.y += offsetY;
+}
+  
 }

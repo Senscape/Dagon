@@ -24,6 +24,8 @@
 
 // TODO: Use 1.1 API calls
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -202,7 +204,7 @@ void Video::load() {
     theora_info_init(&_theoraInfo->ti);
     
     while (!stateFlag) {
-      size_t ret = _bufferData(&_theoraInfo->oy);
+      std::size_t ret = _bufferData(&_theoraInfo->oy);
       
       if (ret == 0)
         break;
@@ -253,7 +255,7 @@ void Video::load() {
       if (ogg_sync_pageout(& _theoraInfo->oy, & _theoraInfo->og) > 0)
         _queuePage(_theoraInfo, &_theoraInfo->og);
       else {
-        size_t ret = _bufferData(&_theoraInfo->oy);
+        std::size_t ret = _bufferData(&_theoraInfo->oy);
         if (ret == 0) {
           log.error(kModVideo, "%s", kString17009);
           //return;
@@ -392,9 +394,9 @@ void Video::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-size_t Video::_bufferData(ogg_sync_state* oy) {
+std::size_t Video::_bufferData(ogg_sync_state* oy) {
   char *buffer = ogg_sync_buffer(oy, VideoBuffer);
-  size_t bytes = fread(buffer, 1, VideoBuffer, _handle);
+  std::size_t bytes = fread(buffer, 1, VideoBuffer, _handle);
   
   ogg_sync_wrote(oy, bytes);
   
@@ -553,4 +555,6 @@ int Video::_queuePage(DGTheoraInfo* theoraInfo, ogg_page *page) {
   if (theoraInfo->theora_p) ogg_stream_pagein(&theoraInfo->to, page);
   
   return 0;
+}
+  
 }

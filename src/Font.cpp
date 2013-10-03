@@ -23,6 +23,8 @@
 #include "Language.h"
 #include "Log.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -191,4 +193,6 @@ int Font::_next(int a) {
   int rval = 1;
   while (rval < a) rval <<= 1;
   return rval;
+}
+  
 }

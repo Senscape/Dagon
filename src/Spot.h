@@ -25,6 +25,8 @@
 #include "Geometry.h"
 #include "Colors.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -111,5 +113,7 @@ class Spot : public Object {
   Spot(const Spot&);
   void operator=(const Spot&);
 };
+  
+}
 
 #endif // DAGON_SPOT_H_

@@ -23,6 +23,8 @@
 
 #include "Action.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -88,5 +90,7 @@ class Node : public Object {
   Node(const Node&);
   void operator=(const Node&);
 };
+  
+}
 
 #endif // DAGON_NODE_H_

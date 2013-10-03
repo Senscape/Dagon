@@ -23,6 +23,8 @@
 #include "Texture.h"
 #include "stb_image.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Defines
 ////////////////////////////////////////////////////////////
@@ -492,4 +494,6 @@ void Texture::unload() {
     _isBitmapLoaded = false;
     _isLoaded = false;
   }
+}
+  
 }

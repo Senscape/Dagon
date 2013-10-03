@@ -23,7 +23,7 @@
 #include "FontManager.h"
 #include "RenderManager.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -187,4 +187,6 @@ void Console::update() {
       _font->print(ConsoleMargin, (_size - (ConsoleSpacing + kDefFontSize)) - _offset, ">%s_", _command.c_str());
     }
   }
+}
+  
 }

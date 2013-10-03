@@ -23,6 +23,8 @@
 
 #include "Platform.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -91,5 +93,7 @@ public:
   void terminate();
   bool update();
 };
+  
+}
 
 #endif // DG_TIMERMANAGER_H

@@ -25,6 +25,8 @@
 
 #include "Object.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -113,5 +115,7 @@ class Texture : public Object {
   Texture(const Texture&);
   void operator=(const Texture&);
 };
+  
+}
 
 #endif // DAGON_TEXTURE_H_

@@ -25,6 +25,8 @@
 #include "Language.h"
 #include "Log.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -416,9 +418,10 @@ ALboolean Audio::_verifyError(const std::string &operation) {
 
 // And now... The Vorbisfile callbacks
 
-size_t Audio::_oggRead(void* ptr, size_t size, size_t nmemb, void* datasource) {
+std::size_t Audio::_oggRead(void* ptr, std::size_t size, std::size_t nmemb,
+                            void* datasource) {
   Audio* audio = static_cast<Audio*>(datasource);
-  size_t nSize = size * nmemb;
+  std::size_t nSize = size * nmemb;
   
   if ((audio->_resource.dataRead + nSize) > audio->_resource.dataSize)
     nSize = audio->_resource.dataSize - audio->_resource.dataRead;
@@ -466,4 +469,6 @@ int Audio::_oggClose(void* datasource) {
 long Audio::_oggTell(void* datasource) {
   Audio* audio = static_cast<Audio*>(datasource);
   return audio->_resource.dataRead;
+}
+  
 }

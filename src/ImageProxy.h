@@ -25,6 +25,8 @@
 
 #include "Image.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -112,5 +114,7 @@ Luna<ImageProxy>::RegType ImageProxy::methods[] = {
   method(ImageProxy, size),
   {0,0}
 };
+  
+}
 
 #endif // DG_IMAGEPROXY_H

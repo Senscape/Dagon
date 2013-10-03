@@ -14,6 +14,8 @@
 #ifndef DG_STATE_H
 #define DG_STATE_H
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -49,5 +51,7 @@ public:
   void set(int theState);
   void setPrevious();
 };
+  
+}
 
 #endif // DG_STATE_H

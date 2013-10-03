@@ -21,7 +21,7 @@
 #include "FontManager.h"
 #include "TimerManager.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -90,7 +90,7 @@ void FeedManager::queue(const char* text, const char* audio) {
 }
 
 void FeedManager::reshape() {
-  vector<DGFeed>::iterator it;
+  std::vector<DGFeed>::iterator it;
   
   it = _arrayOfActiveFeeds.begin();
   
@@ -109,16 +109,16 @@ void FeedManager::setFont(const char* fromFileName, unsigned int heightOfFont) {
 
 void FeedManager::show(const char* text) {
   if (config.subtitles && (strcmp(text, "") != 0)) {
-    string str = text;
-    size_t maxChars = config.displayWidth / _feedHeight;
-    size_t even = str.length() / (str.length() / maxChars + 1);
-    size_t currSpace = 0;
-    size_t nextSpace = 0;
+    std::string str = text;
+    std::size_t maxChars = config.displayWidth / _feedHeight;
+    std::size_t even = str.length() / (str.length() / maxChars + 1);
+    std::size_t currSpace = 0;
+    std::size_t nextSpace = 0;
     
     _dim();
     while (nextSpace != str.npos) {
       nextSpace = str.find(" " , even + currSpace);
-      string substr = str.substr(currSpace, (nextSpace - currSpace));
+      std::string substr = str.substr(currSpace, (nextSpace - currSpace));
       
       DGFeed feed;
       
@@ -149,7 +149,7 @@ void FeedManager::showAndPlay(const char* text, const char* audio) {
 }
 
 void FeedManager::update() {
-  vector<DGFeed>::iterator it;
+  std::vector<DGFeed>::iterator it;
   
   it = _arrayOfActiveFeeds.begin();
   
@@ -229,7 +229,7 @@ void FeedManager::_calculatePosition(DGFeed* feed) {
 }
 
 void FeedManager::_dim() {
-  vector<DGFeed>::iterator it;
+  std::vector<DGFeed>::iterator it;
   
   it = _arrayOfActiveFeeds.begin();
   
@@ -243,7 +243,7 @@ void FeedManager::_dim() {
 void FeedManager::_flush() {
   bool done = false;
   
-  vector<DGFeed>::iterator it;
+  std::vector<DGFeed>::iterator it;
   
   while (!done) {
     done = true;
@@ -259,4 +259,6 @@ void FeedManager::_flush() {
       it++;
     }
   }
+}
+  
 }

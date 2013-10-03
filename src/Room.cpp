@@ -21,6 +21,8 @@
 #include "Node.h"
 #include "Room.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -127,4 +129,6 @@ bool Room::switchTo(Node* theNode) {
     }
   }
   return false;
+}
+  
 }

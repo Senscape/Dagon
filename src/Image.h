@@ -23,6 +23,8 @@
 #include "Geometry.h"
 #include "Object.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Forward declarations
 ////////////////////////////////////////////////////////////
@@ -71,5 +73,7 @@ class Image : public Object {
   Image(const Image&);
   void operator=(const Image&);
 };
+  
+}
 
 #endif // DAGON_IMAGE_H_

@@ -43,6 +43,8 @@
 #define NW  "NW"
 #define SW  "SW"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -187,5 +189,7 @@ Luna<NodeProxy>::RegType NodeProxy::methods[] = {
   method(NodeProxy, setFootstep),
   {0,0}
 };
+  
+}
 
 #endif // DG_NODEPROXY_H

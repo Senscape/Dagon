@@ -22,6 +22,8 @@
 #include "Spot.h"
 #include "Texture.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -244,4 +246,6 @@ void Node::_link(unsigned int direction, Action* action) {
     auxSpot->setColor(0);
     _arrayOfSpots.push_back(auxSpot);
   }
+}
+  
 }

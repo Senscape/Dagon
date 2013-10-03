@@ -32,6 +32,8 @@
 #define DGFeedShadowEnabled     1
 #define DGFeedShadowDistance    2
 
+namespace dagon {
+
 enum DGFeedStates {
   DGFeedFadeIn,
   DGFeedIdle,
@@ -99,5 +101,7 @@ public:
   void showAndPlay(const char* text, const char* audio);
   void update();
 };
+  
+}
 
 #endif // DG_FEEDMANAGER_H

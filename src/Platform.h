@@ -84,6 +84,8 @@
 // Key definitions
 ////////////////////////////////////////////////////////////
 
+namespace dagon {
+
 enum InputKeys {
   kKeyBackspace = SDLK_BACKSPACE,
   kKeyF1 = SDLK_F1,
@@ -104,5 +106,7 @@ enum InputKeys {
   kKeyEnter = SDLK_RETURN,
   kKeySpace = SDLK_SPACE
 };
+  
+}
 
 #endif // DAGON_PLATFORM_H_

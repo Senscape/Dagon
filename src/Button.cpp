@@ -22,6 +22,8 @@
 #include "FontManager.h"
 #include "Texture.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -137,4 +139,6 @@ void Button::setTextColor(uint32_t aColor) {
 void Button::updateCursor(int theCursor) {
   if (_hasAction)
     _action->cursor = theCursor;
+}
+  
 }

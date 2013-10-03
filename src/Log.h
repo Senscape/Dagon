@@ -23,6 +23,8 @@
 #include <stdint.h>
 #include <vector>
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Forward declarations
 ////////////////////////////////////////////////////////////
@@ -99,5 +101,7 @@ class Log {
   Log(const Log&);
   void operator=(const Log&);
 };
+  
+}
 
 #endif // DAGON_LOG_H_

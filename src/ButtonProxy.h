@@ -28,6 +28,8 @@
 #include "Button.h"
 #include "Script.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -213,5 +215,7 @@ Luna<ButtonProxy>::RegType ButtonProxy::methods[] = {
   method(ButtonProxy, text),
   {0,0}
 };
+  
+}
 
 #endif // DG_BUTTONPROXY_H

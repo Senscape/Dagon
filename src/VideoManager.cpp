@@ -21,7 +21,7 @@
 #include "Log.h"
 #include "VideoManager.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -54,7 +54,7 @@ void VideoManager::flush() {
   bool done = false;
   if (_isInitialized) {
     if (!_arrayOfActiveVideos.empty()) {
-      vector<Video*>::iterator it;
+      std::vector<Video*>::iterator it;
       while (!done) {
         if (SDL_LockMutex(_mutex) == 0) {
           it = _arrayOfActiveVideos.begin();
@@ -137,7 +137,7 @@ void VideoManager::terminate() {
   // directly in the script
   if (!_arrayOfVideos.empty()) {
     if (SDL_LockMutex(_mutex) == 0) {
-      vector<Video*>::iterator it = _arrayOfVideos.begin();
+      std::vector<Video*>::iterator it = _arrayOfVideos.begin();
       while (it != _arrayOfVideos.end()) {
         delete *it;
         it++;
@@ -153,7 +153,7 @@ bool VideoManager::update() {
   if (_isRunning) {
     if (!_arrayOfActiveVideos.empty()) {
       if (SDL_LockMutex(_mutex) == 0) {
-        vector<Video*>::iterator it = _arrayOfActiveVideos.begin();
+        std::vector<Video*>::iterator it = _arrayOfActiveVideos.begin();
         while (it != _arrayOfActiveVideos.end()) {
           (*it)->update();
           it++;
@@ -177,4 +177,6 @@ int VideoManager::_runThread(void *ptr) {
     SDL_Delay(1);
   }
   return 0;
+}
+  
 }

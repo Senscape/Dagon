@@ -14,6 +14,8 @@
 #ifndef DG_INTERFACE_H
 #define DG_INTERFACE_H
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -50,5 +52,7 @@ public:
   void fadeOut();
   bool scanOverlays();
 };
+  
+}
 
 #endif // DG_INTERFACE_H

@@ -26,6 +26,8 @@
 #include "CameraManager.h"
 #include "Config.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -265,5 +267,7 @@ const struct luaL_Reg ConfigLib[] =
   {"__newindex", ConfigLibSet},
   {NULL, NULL}
 };
+  
+}
 
 #endif // DG_CONFIGLIB_H

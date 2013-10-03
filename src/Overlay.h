@@ -22,6 +22,8 @@
 
 #include "Geometry.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -74,5 +76,7 @@ class Overlay : public Object {
   Overlay(const Overlay&);
   void operator=(const Overlay&);
 };
+  
+}
 
 #endif // DAGON_OVERLAY_H_

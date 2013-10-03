@@ -25,6 +25,8 @@
 #include "Colors.h"
 #include "Image.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Forward declarations
 ////////////////////////////////////////////////////////////
@@ -81,5 +83,7 @@ class Button : public Image {
   Button(const Button&);
   void operator=(const Button&);
 };
+  
+}
 
 #endif // DAGON_BUTTON_H_

@@ -14,7 +14,7 @@
 #include "Control.h"
 
 int main(int argc, char *argv[]) {
-  Control& control = Control::instance();
+  dagon::Control& control = dagon::Control::instance();
   
   control.init(argc, argv);
   control.run();

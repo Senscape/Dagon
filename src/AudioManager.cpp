@@ -21,7 +21,7 @@
 #include "Config.h"
 #include "Log.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -53,7 +53,7 @@ AudioManager::~AudioManager() {
 void AudioManager::clear() {
   if (_isInitialized) {
     if (!_arrayOfActiveAudios.empty()) {
-      vector<Audio*>::iterator it;
+      std::vector<Audio*>::iterator it;
       if (SDL_LockMutex(_mutex) == 0) {
         it = _arrayOfActiveAudios.begin();
         while (it != _arrayOfActiveAudios.end()) {
@@ -72,7 +72,7 @@ void AudioManager::clear() {
 void AudioManager::flush() {
   if (_isInitialized) {
     if (!_arrayOfActiveAudios.empty()) {
-      vector<Audio*>::iterator it;
+      std::vector<Audio*>::iterator it;
       bool done = false;
       while (!done) {
         if (SDL_LockMutex(_mutex) == 0) {
@@ -274,7 +274,7 @@ void AudioManager::terminate() {
   
   if (!_arrayOfAudios.empty()) {
     if (SDL_LockMutex(_mutex) == 0) {
-      vector<Audio*>::iterator it = _arrayOfAudios.begin();
+      std::vector<Audio*>::iterator it = _arrayOfAudios.begin();
       while (it != _arrayOfAudios.end()) {
         // FIXME: Should delete here and let the audio object unload itself
         (*it)->unload();
@@ -299,7 +299,7 @@ bool AudioManager::update() {
   if (_isRunning) {
     if (!_arrayOfActiveAudios.empty()) {
       if (SDL_LockMutex(_mutex) == 0) {
-        vector<Audio*>::iterator it = _arrayOfActiveAudios.begin();
+        std::vector<Audio*>::iterator it = _arrayOfActiveAudios.begin();
         while (it != _arrayOfActiveAudios.end()) {
           (*it)->update();
           it++;
@@ -323,4 +323,6 @@ int AudioManager::_runThread(void *ptr) {
     SDL_Delay(1);
   }
   return 0;
+}
+  
 }

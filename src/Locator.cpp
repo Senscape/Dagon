@@ -14,4 +14,8 @@
 #include "Locator.h"
 #include "State.h"
 
-State* dg::Locator::_state = new State;
+namespace dagon {
+
+State* Locator::_state = new State;
+
+}

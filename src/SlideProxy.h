@@ -29,6 +29,8 @@
 #include "Spot.h"
 #include "Texture.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -145,5 +147,7 @@ Luna<SlideProxy>::RegType SlideProxy::methods[] = {
   method(SlideProxy, onReturn),
   {0,0}
 };
+  
+}
 
 #endif // DG_SLIDEPROXY_H

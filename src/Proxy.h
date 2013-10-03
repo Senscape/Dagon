@@ -48,6 +48,16 @@ extern "C" {
 
 #define method(class, name) {#name, &class::name}
 
+// We include non-proxy libraries here as well
+
+#include "CameraLib.h"
+#include "ConfigLib.h"
+#include "EffectsLib.h"
+#include "CursorLib.h"
+#include "SystemLib.h"
+
+namespace dagon {
+  
 static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
 static Audio* ProxyToAudio(lua_State *L, int idx);
 static Button* ProxyToButton(lua_State *L, int idx);
@@ -57,12 +67,14 @@ static Overlay* ProxyToOverlay(lua_State *L, int idx);
 static Room* ProxyToRoom(lua_State *L, int idx);
 static Node* ProxyToSlide(lua_State *L, int idx);
 static Spot* ProxyToSpot(lua_State *L, int idx);
+  
+}
 
 // Now that the proxy functions has been declared, we
 // proceed to include the remaining headers
-
+  
 #include "ObjectProxy.h"
-
+  
 #include "AudioProxy.h"
 #include "ButtonProxy.h"
 #include "ImageProxy.h"
@@ -72,13 +84,7 @@ static Spot* ProxyToSpot(lua_State *L, int idx);
 #include "SlideProxy.h"
 #include "SpotProxy.h"
 
-// We include non-proxy libraries here as well
-
-#include "CameraLib.h"
-#include "ConfigLib.h"
-#include "EffectsLib.h"
-#include "CursorLib.h"
-#include "SystemLib.h"
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation
@@ -183,6 +189,8 @@ Node* ProxyToSlide(lua_State *L, int idx) {
 Spot* ProxyToSpot(lua_State *L, int idx) {
   SpotProxy* s = Luna<SpotProxy>::check(L, idx);
   return s->ptr();
+}
+  
 }
 
 #endif // DG_PROXY_H

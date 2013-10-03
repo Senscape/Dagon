@@ -25,6 +25,8 @@
 
 #include "CameraManager.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -131,5 +133,7 @@ const struct luaL_Reg CameraLib[] =
   {"__newindex", CameraLibSet},
   {NULL, NULL}
 };
+  
+}
 
 #endif // DG_CAMLIB_H

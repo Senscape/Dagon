@@ -26,7 +26,7 @@
 #include "RenderManager.h"
 #include "Texture.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -101,7 +101,7 @@ void Interface::drawHelpers() {
 
 void Interface::drawOverlays() {
   if (!_arrayOfOverlays.empty()) {
-    vector<Overlay*>::iterator itOverlay;
+    std::vector<Overlay*>::iterator itOverlay;
     
     itOverlay = _arrayOfOverlays.begin();
     
@@ -165,7 +165,7 @@ bool Interface::scanOverlays() {
   cursorManager.setOnButton(false);
   
   if (!_arrayOfOverlays.empty()) {
-    vector<Overlay*>::reverse_iterator itOverlay;
+    std::vector<Overlay*>::reverse_iterator itOverlay;
     
     itOverlay = _arrayOfOverlays.rbegin();
     
@@ -201,4 +201,6 @@ bool Interface::scanOverlays() {
   }
   
   return false;
+}
+  
 }

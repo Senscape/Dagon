@@ -22,6 +22,8 @@
 
 #include "Platform.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -127,5 +129,7 @@ public:
   void resetView();
   void reshape();
 };
+  
+}
 
 #endif // DG_RENDERMANAGER_H

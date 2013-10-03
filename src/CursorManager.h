@@ -21,6 +21,8 @@
 #include "Action.h"
 #include "Platform.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -89,5 +91,7 @@ public:
   void setSize(int size);
   void updateCoords(int x, int y);
 };
+  
+}
 
 #endif // DG_CURSOR_H

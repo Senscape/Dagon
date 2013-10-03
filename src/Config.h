@@ -22,6 +22,8 @@
 
 #include "Defines.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -134,5 +136,7 @@ private:
   Config(const Config&);
   void operator=(const Config&);
 };
+  
+}
 
 #endif // DAGON_CONFIG_H_

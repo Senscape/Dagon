@@ -26,6 +26,8 @@
 #include "Log.h"
 #include "Object.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -252,4 +254,6 @@ void Log::_log(LogData* data) {
   
   if (config.debugMode)
     std::cout << data->line.c_str() << std::endl; // Echo to console
+}
+
 }

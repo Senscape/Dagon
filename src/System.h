@@ -22,6 +22,8 @@
 
 #include "Platform.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -56,5 +58,7 @@ public:
   void toggleFullscreen();
   void update();
 };
+  
+}
 
 #endif // DG_SYSTEM_H

@@ -17,6 +17,8 @@
 
 #include "Object.h"
 
+namespace dagon {
+
 static int globalID = 0;
 
 ////////////////////////////////////////////////////////////
@@ -176,4 +178,6 @@ void Object::updateFade() {
       _fadeLevel -= _fadeSpeed;
     }
   }
+}
+  
 }

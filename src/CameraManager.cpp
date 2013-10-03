@@ -18,6 +18,8 @@
 #include "CameraManager.h"
 #include "Config.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -765,4 +767,6 @@ int CameraManager::_toDegrees(GLdouble angle, GLdouble limit) {
 GLdouble CameraManager::_toRadians(GLdouble angle, GLdouble limit) {
   GLdouble radians = (angle * limit) / 360.0;
   return radians;
+}
+  
 }

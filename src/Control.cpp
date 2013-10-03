@@ -43,7 +43,7 @@
 #include "TimerManager.h"
 #include "VideoManager.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -786,8 +786,8 @@ void Control::switchTo(Object* theTarget, bool instant) {
     
     // This has to be done every time so that room audios keep playing
     if (_currentRoom->hasAudios() && (!_currentRoom->currentNode()->isSlide() && theTarget != NULL)) {
-      vector<Audio*>::iterator it;
-      vector<Audio*> arrayOfAudios = _currentRoom->arrayOfAudios();
+      std::vector<Audio*>::iterator it;
+      std::vector<Audio*> arrayOfAudios = _currentRoom->arrayOfAudios();
       
       it = arrayOfAudios.begin();
       
@@ -1040,4 +1040,6 @@ void Control::_updateView(int state, bool inBackground) {
     // Flush the buffers
     system.update();
   }
+}
+  
 }

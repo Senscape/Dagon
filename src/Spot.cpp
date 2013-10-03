@@ -22,6 +22,8 @@
 #include "Texture.h"
 #include "Video.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -173,7 +175,7 @@ void Spot::setColor(uint32_t theColor) {
 }
 
 void Spot::setOrigin(int x, int y) {
-  for (size_t i = 0; i < _arrayOfCoordinates.size(); i += 2) {
+  for (std::size_t i = 0; i < _arrayOfCoordinates.size(); i += 2) {
     _arrayOfCoordinates[i] += x;
     _arrayOfCoordinates[i + 1] += y;
   }
@@ -233,4 +235,6 @@ void Spot::stop() {
   _isPlaying = false;
   if (_hasAudio)
     _attachedAudio->stop();
+}
+  
 }

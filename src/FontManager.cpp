@@ -18,7 +18,7 @@
 #include "FontManager.h"
 #include "Log.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -81,4 +81,6 @@ Font* FontManager::loadDefault() {
   }
   
   return &_defaultFont;
+}
+  
 }

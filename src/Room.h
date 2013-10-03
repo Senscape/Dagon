@@ -20,6 +20,8 @@
 
 #include <vector>
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -74,5 +76,7 @@ class Room : public Object {
   Room(const Room&);
   void operator=(const Room&);
 };
+  
+}
 
 #endif // DAGON_ROOM_H_

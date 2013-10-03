@@ -31,6 +31,8 @@
 
 #define kDefFontSize 10
 
+namespace dagon {
+
 class Font;
 class Log;
 
@@ -62,5 +64,7 @@ public:
   Font* load(const char* fromFileName, unsigned int heightOfFont);
   Font* loadDefault();
 };
+  
+}
 
 #endif // DG_FONTMANAGER_H

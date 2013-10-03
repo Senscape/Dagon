@@ -20,6 +20,8 @@
 
 #include "State.h"
 
+namespace dagon {
+  
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -59,4 +61,6 @@ void State::setPrevious() {
   
   _current = _previous;
   _previous = auxState;
+}
+  
 }

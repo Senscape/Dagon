@@ -20,6 +20,8 @@
 
 #include <string>
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -116,5 +118,7 @@ class Object {
   Object(const Object&);
   void operator=(const Object&);
 };
+  
+}
 
 #endif // DAGON_OBJECT_H_

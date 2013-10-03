@@ -25,6 +25,8 @@
 
 #include "CursorManager.h"
 
+namespace dagon {
+
 // FIXME: The cursor manager shouldn't inherit from Object...
 // In fact, it shouldn't be a singleton.
 
@@ -77,5 +79,7 @@ static const struct luaL_reg kCursorLib [] = {
   {"load", CursorLibLoad},
   {NULL, NULL}
 };
+  
+}
 
 #endif // DG_CURSORLIB_H

@@ -32,6 +32,8 @@
 #include <SDL2/SDL_mutex.h>
 #include <SDL2/SDL_thread.h>
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -85,5 +87,7 @@ public:
   void terminate();
   bool update();
 };
+  
+}
 
 #endif // DG_AUDIOMANAGER_H

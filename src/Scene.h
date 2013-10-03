@@ -20,6 +20,8 @@
 
 #include "Video.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -77,5 +79,7 @@ public:
   void loadSplash();
   void unloadSplash();
 };
+  
+}
 
 #endif // DG_SCENE_H

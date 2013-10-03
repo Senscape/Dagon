@@ -11,7 +11,10 @@
 //
 ////////////////////////////////////////////////////////////
 
-#pragma once
+#ifndef DAGON_LOCATOR_H_
+#define DAGON_LOCATOR_H_
+
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -23,11 +26,13 @@ class State;
 // Interface
 ////////////////////////////////////////////////////////////
 
-namespace dg {
-  class Locator {
-    static State* _state;
-    
-  public:
-    static State* getState() { return _state; }
-  };
+class Locator {
+  static State* _state;
+  
+public:
+  static State* getState() { return _state; }
+};
+
 }
+
+#endif // DAGON_LOCATOR_H_

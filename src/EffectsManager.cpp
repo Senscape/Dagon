@@ -21,6 +21,8 @@
 #include "Texture.h"
 #include "TimerManager.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -509,4 +511,6 @@ bool EffectsManager::_textFileRead() {
   }
   
   return false;
+}
+  
 }

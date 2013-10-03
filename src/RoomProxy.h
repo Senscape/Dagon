@@ -28,6 +28,8 @@
 #include "Room.h"
 #include "TimerManager.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -142,5 +144,7 @@ Luna<RoomProxy>::RegType RoomProxy::methods[] = {
   method(RoomProxy, startTimer),
   {0,0}
 };
+  
+}
 
 #endif // DG_ROOMPROXY_H

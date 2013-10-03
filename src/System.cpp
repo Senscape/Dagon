@@ -20,6 +20,8 @@
 #include "Log.h"
 #include "System.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
@@ -252,4 +254,6 @@ double System::_calculateFrames(double theInterval = 1.0) {
   else fpsFrameCount++;
   
   return fps;
+}
+
 }

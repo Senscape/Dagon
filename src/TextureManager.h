@@ -21,6 +21,8 @@
 #include "Platform.h"
 #include "Texture.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -76,5 +78,7 @@ public:
   void setRoomToPreload(Room* theRoom);
   bool updatePreloader();
 };
+  
+}
 
 #endif // DG_TEXTUREMANAGER_H

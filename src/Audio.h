@@ -39,6 +39,8 @@
 #include "Object.h"
 #include "Geometry.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Forward declarations
 ////////////////////////////////////////////////////////////
@@ -64,8 +66,8 @@ struct Resource {
   int index;
   std::string name;
   char* data;
-  size_t dataRead;
-  size_t dataSize;
+  std::size_t dataRead;
+  std::size_t dataSize;
 };
 
 ////////////////////////////////////////////////////////////
@@ -131,8 +133,8 @@ class Audio : public Object {
   ALboolean _verifyError(const std::string &operation);
   
   // Callbacks for Vorbisfile library
-  static size_t _oggRead(void* ptr, size_t size,
-                         size_t nmemb, void* datasource);
+  static std::size_t _oggRead(void* ptr, std::size_t size,
+                         std::size_t nmemb, void* datasource);
   static int _oggSeek(void* datasource, ogg_int64_t offset, int whence);
   static int _oggClose(void* datasource);
   static long _oggTell(void* datasource);
@@ -140,5 +142,7 @@ class Audio : public Object {
   Audio(const Audio&);
   void operator=(const Audio&);
 };
+  
+}
 
 #endif // DAGON_AUDIO_H_

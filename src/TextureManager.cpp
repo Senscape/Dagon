@@ -22,7 +22,7 @@
 #include "Spot.h"
 #include "TextureManager.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Definitions
@@ -47,7 +47,7 @@ log(Log::instance())
 
 TextureManager::~TextureManager() {
   if (!_arrayOfTextures.empty()) {
-    vector<Texture*>::iterator it;
+    std::vector<Texture*>::iterator it;
     
     it = _arrayOfTextures.begin();
     
@@ -204,4 +204,6 @@ bool TextureManager::updatePreloader() {
 
 bool TextureSort(Texture* t1, Texture* t2) {
   return t1->usageCount() < t2->usageCount();
+}
+  
 }

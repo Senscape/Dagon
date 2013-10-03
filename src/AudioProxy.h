@@ -25,6 +25,8 @@
 
 #include "AudioManager.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -113,5 +115,7 @@ Luna<AudioProxy>::RegType AudioProxy::methods[] = {
   method(AudioProxy, stop),
   {0,0}
 };
+  
+}
 
 #endif // DG_AUDIOPROXY_H

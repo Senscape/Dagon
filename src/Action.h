@@ -28,6 +28,8 @@
 
 // FIXME: Potential conflict of enums in Script class
 
+namespace dagon {
+
 enum ActionTypes {
   kActionFunction = 100,
   kActionFeed,
@@ -44,5 +46,7 @@ struct Action {
   Object* target;
   int type;
 };
+  
+}
 
 #endif // DAGON_ACTION_H_

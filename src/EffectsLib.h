@@ -27,6 +27,8 @@
 
 #include "EffectsManager.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -218,5 +220,7 @@ const struct luaL_Reg EffectsLib[] =
   {"__newindex", EffectsLibSet},
   {NULL, NULL}
 };
+  
+}
 
 #endif // DG_EFFECTSLIB_H

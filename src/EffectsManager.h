@@ -22,6 +22,8 @@
 
 #include "Platform.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -152,5 +154,7 @@ public:
   void update();
   float value(int valueID);
 };
+  
+}
 
 #endif // DG_EFFECTSMANAGER_H

@@ -26,6 +26,8 @@
 #include "Control.h"
 #include "Overlay.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -145,5 +147,7 @@ Luna<OverlayProxy>::RegType OverlayProxy::methods[] = {
   method(OverlayProxy, setPosition),
   {0,0}
 };
+  
+}
 
 #endif // DG_OVERLAYPROXY_H

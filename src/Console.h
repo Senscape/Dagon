@@ -20,6 +20,8 @@
 
 #include "Platform.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -86,5 +88,7 @@ public:
   void inputChar(char aKey);
   bool isReadyToProcess();
 };
+  
+}
 
 #endif // DG_CONSOLE_H

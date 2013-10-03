@@ -31,7 +31,7 @@
 
 #include "State.h"
 
-using namespace std;
+namespace dagon {
 
 Video _cutscene; // FIXME: Static to avoid Theora issues, revise later
 
@@ -320,4 +320,6 @@ void Scene::unloadSplash() {
   _splashTexture->unload();
   delete _splashTexture;
   _isSplashLoaded = false;
+}
+  
 }

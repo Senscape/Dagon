@@ -14,6 +14,8 @@
 #ifndef DG_EVENT_H
 #define DG_EVENT_H
 
+namespace dagon {
+
 enum DGGlobalEvents { // For Lua
   EventEnterNode = 0x101, // Must implement
   EventLeaveNode = 0x102, // Must implement
@@ -38,5 +40,7 @@ enum DGMouseEvents {
   EventMouseRightDown = 0x305,
   EventMouseRightUp = 0x306
 };
+  
+}
 
 #endif // DG_EVENT_H

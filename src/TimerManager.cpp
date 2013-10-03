@@ -22,7 +22,7 @@
 #include "TimerManager.h"
 #include "Language.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -267,3 +267,4 @@ int TimerManager::_runThread(void *ptr) {
   return 0;
 }
 
+}

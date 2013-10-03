@@ -24,6 +24,8 @@
 #include "Platform.h"
 #include "Video.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
@@ -67,5 +69,7 @@ public:
   void terminate();
   bool update();
 };
+  
+}
 
 #endif // DG_VIDEOMANAGER_H

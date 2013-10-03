@@ -20,6 +20,8 @@
 #include "Config.h"
 #include "Object.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -184,4 +186,6 @@ void Config::setTexExtension(std::string ext) {
   } else {
     bundleEnabled = false;
   }
+}
+  
 }

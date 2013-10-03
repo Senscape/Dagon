@@ -19,6 +19,8 @@
 #include "Image.h"
 #include "Texture.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
@@ -134,4 +136,6 @@ void Image::_calculateCoordinates() {
   _arrayOfCoordinates[5] = _rect.origin.y + _rect.size.height;
   _arrayOfCoordinates[6] = _rect.origin.x;
   _arrayOfCoordinates[7] = _rect.origin.y + _rect.size.height;
+}
+
 }

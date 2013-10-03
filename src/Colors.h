@@ -16,6 +16,8 @@
 
 // All these colors have full opacity
 
+namespace dagon {
+
 enum Colors {
   kColorBlack = 0xFF000000,
   kColorBlue = 0xFF0000AA,
@@ -34,5 +36,7 @@ enum Colors {
   kColorYellow = 0xFFFFFF55,
   kColorWhite = 0xFFFFFFFF
 };
+
+}
 
 #endif // DAGON_COLORS_H_

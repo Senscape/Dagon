@@ -19,7 +19,7 @@
 #include "CursorManager.h"
 #include "TextureManager.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -196,4 +196,6 @@ void CursorManager::_set(int typeOfCursor) {
   }
   
   _hasImage = false;
+}
+  
 }

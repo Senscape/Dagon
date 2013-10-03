@@ -25,6 +25,8 @@
 
 #include "Control.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -72,5 +74,7 @@ static const struct luaL_reg SystemLib [] = {
   {"terminate", SystemLibTerminate},
   {NULL, NULL}
 };
+
+}
 
 #endif // DG_SYSTEMLIB_H

@@ -30,6 +30,8 @@
 #define kDefLogFile "dagon.log"
 #define kDefTexExtension "tex"
 
+namespace dagon {
+
 // TODO: We should be able to read this value from each texture bundle
 unsigned const kDefTexSize = 2048;
 const float kFrameratePrecision = 0.2f;
@@ -121,5 +123,7 @@ inline int c99_snprintf(char* str, size_t size, const char* format, ...) {
 }
 
 #endif // _MSC_VER
+  
+}
 
 #endif // DAGON_DEFINES_H_

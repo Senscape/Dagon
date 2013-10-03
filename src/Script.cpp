@@ -26,14 +26,14 @@
 
 #include "Luna.h"
 
-using namespace std;
-
 // The way the engine is designed, all static Lua functions will have
 // to grab a reference to the Control singleton and Log when required.
 // No performance hit whatsoever but something to keep in mind.
 
 // Spots launch audio and video, then perform a switch in that order.
 // This is to avoid doing many customs.
+
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -628,4 +628,6 @@ void Script::_registerGlobals() {
   lua_getglobal(_L, "_G");
   luaL_register(_L, NULL, globalLibs);
   lua_pop(_L, 1);
+}
+  
 }

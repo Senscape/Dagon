@@ -14,6 +14,8 @@
 #ifndef DAGON_GEOMETRY_H_
 #define DAGON_GEOMETRY_H_
 
+namespace dagon {
+
 typedef struct {
   double x;
   double y;
@@ -36,5 +38,7 @@ typedef struct {
 } Vector;
 
 // TODO: Add functions to make point, size, etc.
+
+}
 
 #endif // DAGON_GEOMETRY_H_

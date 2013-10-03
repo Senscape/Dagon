@@ -28,6 +28,8 @@
 
 #include "Object.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Forward declarations
 ////////////////////////////////////////////////////////////
@@ -90,5 +92,7 @@ class Font : public Object {
   Font(const Font&);
   void operator=(const Font&);
 };
+  
+}
 
 #endif // DAGON_FONT_H_

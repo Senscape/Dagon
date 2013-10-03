@@ -28,6 +28,8 @@
 #include "Texture.h"
 #include "VideoManager.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -317,5 +319,7 @@ Luna<SpotProxy>::RegType SpotProxy::methods[] = {
   method(SpotProxy, stop),
   {0,0}
 };
+  
+}
 
 #endif // DG_SPOTPROXY_H

@@ -21,7 +21,7 @@
 #include "RenderManager.h"
 #include "Texture.h"
 
-using namespace std;
+namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -284,7 +284,7 @@ void RenderManager::drawHelper(int xPosition, int yPosition, bool animate) {
     glBlendFunc(GL_ONE, GL_ZERO);
 }
 
-void RenderManager::drawPolygon(vector<int> withArrayOfCoordinates, unsigned int onFace) {
+void RenderManager::drawPolygon(std::vector<int> withArrayOfCoordinates, unsigned int onFace) {
   const float x = 1.0f;
   const float y = 1.0f;
   
@@ -613,7 +613,7 @@ void RenderManager::fadeView() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-Point RenderManager::_centerOfPolygon(vector<int> arrayOfCoordinates) {
+Point RenderManager::_centerOfPolygon(std::vector<int> arrayOfCoordinates) {
   Point center;
   int vertex = static_cast<int>(arrayOfCoordinates.size() / 2);
   
@@ -720,4 +720,6 @@ void RenderManager::_initFrameBufferTexture() {
   
   // Unbind the texture
   glBindTexture(GL_TEXTURE_2D, 0);
+}
+  
 }

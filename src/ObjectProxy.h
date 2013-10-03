@@ -41,6 +41,8 @@ method(proxy, toggle)
 
 #include "Object.h"
 
+namespace dagon {
+
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -117,5 +119,7 @@ private:
   Object* o;
   
 };
+  
+}
 
 #endif // DG_OBJECTPROXY_H
