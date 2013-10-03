@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SCENE_H
-#define DG_SCENE_H
+#ifndef DAGON_SCENE_H_
+#define DAGON_SCENE_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -82,4 +82,4 @@ public:
   
 }
 
-#endif // DG_SCENE_H
+#endif // DAGON_SCENE_H_

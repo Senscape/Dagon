@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_FEEDMANAGER_H
-#define DG_FEEDMANAGER_H
+#ifndef DAGON_FEEDMANAGER_H_
+#define DAGON_FEEDMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -104,4 +104,4 @@ public:
   
 }
 
-#endif // DG_FEEDMANAGER_H
+#endif // DAGON_FEEDMANAGER_H_

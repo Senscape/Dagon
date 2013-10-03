@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_PROXY_H
-#define DG_PROXY_H
+#ifndef DAGON_PROXY_H_
+#define DAGON_PROXY_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -193,4 +193,4 @@ Spot* ProxyToSpot(lua_State *L, int idx) {
   
 }
 
-#endif // DG_PROXY_H
+#endif // DAGON_PROXY_H_

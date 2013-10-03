@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_RENDERMANAGER_H
-#define DG_RENDERMANAGER_H
+#ifndef DAGON_RENDERMANAGER_H_
+#define DAGON_RENDERMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -132,4 +132,4 @@ public:
   
 }
 
-#endif // DG_RENDERMANAGER_H
+#endif // DAGON_RENDERMANAGER_H_

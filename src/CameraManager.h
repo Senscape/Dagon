@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_CAMERAMANAGER_H
-#define DG_CAMERAMANAGER_H
+#ifndef DAGON_CAMERAMANAGER_H_
+#define DAGON_CAMERAMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -217,4 +217,4 @@ public:
   
 }
 
-#endif // DG_CAMERAMANAGER_H
+#endif // DAGON_CAMERAMANAGER_H_

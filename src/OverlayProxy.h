@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_OVERLAYPROXY_H
-#define DG_OVERLAYPROXY_H
+#ifndef DAGON_OVERLAYPROXY_H_
+#define DAGON_OVERLAYPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -150,4 +150,4 @@ Luna<OverlayProxy>::RegType OverlayProxy::methods[] = {
   
 }
 
-#endif // DG_OVERLAYPROXY_H
+#endif // DAGON_OVERLAYPROXY_H_

@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SLIDEPROXY_H
-#define DG_SLIDEPROXY_H
+#ifndef DAGON_SLIDEPROXY_H_
+#define DAGON_SLIDEPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -150,4 +150,4 @@ Luna<SlideProxy>::RegType SlideProxy::methods[] = {
   
 }
 
-#endif // DG_SLIDEPROXY_H
+#endif // DAGON_SLIDEPROXY_H_

@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SYSTEMLIB_H
-#define DG_SYSTEMLIB_H
+#ifndef DAGON_SYSTEMLIB_H_
+#define DAGON_SYSTEMLIB_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -77,4 +77,4 @@ static const struct luaL_reg SystemLib [] = {
 
 }
 
-#endif // DG_SYSTEMLIB_H
+#endif // DAGON_SYSTEMLIB_H_

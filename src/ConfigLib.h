@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_CONFIGLIB_H
-#define DG_CONFIGLIB_H
+#ifndef DAGON_CONFIGLIB_H_
+#define DAGON_CONFIGLIB_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -270,4 +270,4 @@ const struct luaL_Reg ConfigLib[] =
   
 }
 
-#endif // DG_CONFIGLIB_H
+#endif // DAGON_CONFIGLIB_H_

@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_TEXTUREMANAGER_H
-#define DG_TEXTUREMANAGER_H
+#ifndef DAGON_TEXTUREMANAGER_H_
+#define DAGON_TEXTUREMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -81,4 +81,4 @@ public:
   
 }
 
-#endif // DG_TEXTUREMANAGER_H
+#endif // DAGON_TEXTUREMANAGER_H_

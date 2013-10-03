@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_EFFECTSMANAGER_H
-#define DG_EFFECTSMANAGER_H
+#ifndef DAGON_EFFECTSMANAGER_H_
+#define DAGON_EFFECTSMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -157,4 +157,4 @@ public:
   
 }
 
-#endif // DG_EFFECTSMANAGER_H
+#endif // DAGON_EFFECTSMANAGER_H_

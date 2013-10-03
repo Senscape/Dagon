@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_VIDEO_H
-#define DG_VIDEO_H
+#ifndef DAGON_VIDEO_H_
+#define DAGON_VIDEO_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -147,4 +147,4 @@ public:
   
 }
 
-#endif // DG_VIDEO_H
+#endif // DAGON_VIDEO_H_

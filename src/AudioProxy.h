@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_AUDIOPROXY_H
-#define DG_AUDIOPROXY_H
+#ifndef DAGON_AUDIOPROXY_H_
+#define DAGON_AUDIOPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -118,4 +118,4 @@ Luna<AudioProxy>::RegType AudioProxy::methods[] = {
   
 }
 
-#endif // DG_AUDIOPROXY_H
+#endif // DAGON_AUDIOPROXY_H_

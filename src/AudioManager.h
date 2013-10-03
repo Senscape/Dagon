@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_AUDIOMANAGER_H
-#define DG_AUDIOMANAGER_H
+#ifndef DAGON_AUDIOMANAGER_H_
+#define DAGON_AUDIOMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -90,4 +90,4 @@ public:
   
 }
 
-#endif // DG_AUDIOMANAGER_H
+#endif // DAGON_AUDIOMANAGER_H_

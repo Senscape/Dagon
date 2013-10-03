@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_OBJECTPROXY_H
-#define DG_OBJECTPROXY_H
+#ifndef DAGON_OBJECTPROXY_H_
+#define DAGON_OBJECTPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -122,4 +122,4 @@ private:
   
 }
 
-#endif // DG_OBJECTPROXY_H
+#endif // DAGON_OBJECTPROXY_H_

@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_NODEPROXY_H
-#define DG_NODEPROXY_H
+#ifndef DAGON_NODEPROXY_H_
+#define DAGON_NODEPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -192,4 +192,4 @@ Luna<NodeProxy>::RegType NodeProxy::methods[] = {
   
 }
 
-#endif // DG_NODEPROXY_H
+#endif // DAGON_NODEPROXY_H_

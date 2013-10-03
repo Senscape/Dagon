@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_STATE_H
-#define DG_STATE_H
+#ifndef DAGON_STATE_H_
+#define DAGON_STATE_H_
 
 namespace dagon {
 
@@ -54,4 +54,4 @@ public:
   
 }
 
-#endif // DG_STATE_H
+#endif // DAGON_STATE_H_

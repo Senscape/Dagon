@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_VIDEOMANAGER_H
-#define DG_VIDEOMANAGER_H
+#ifndef DAGON_VIDEOMANAGER_H_
+#define DAGON_VIDEOMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -72,4 +72,4 @@ public:
   
 }
 
-#endif // DG_VIDEOMANAGER_H
+#endif // DAGON_VIDEOMANAGER_H_

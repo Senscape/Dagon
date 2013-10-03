@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_IMAGEPROXY_H
-#define DG_IMAGEPROXY_H
+#ifndef DAGON_IMAGEPROXY_H_
+#define DAGON_IMAGEPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -117,4 +117,4 @@ Luna<ImageProxy>::RegType ImageProxy::methods[] = {
   
 }
 
-#endif // DG_IMAGEPROXY_H
+#endif // DAGON_IMAGEPROXY_H_

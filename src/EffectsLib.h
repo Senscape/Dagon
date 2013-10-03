@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_EFFECTSLIB_H
-#define DG_EFFECTSLIB_H
+#ifndef DAGON_EFFECTSLIB_H_
+#define DAGON_EFFECTSLIB_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -223,4 +223,4 @@ const struct luaL_Reg EffectsLib[] =
   
 }
 
-#endif // DG_EFFECTSLIB_H
+#endif // DAGON_EFFECTSLIB_H_

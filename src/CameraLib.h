@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_CAMLIB_H
-#define DG_CAMLIB_H
+#ifndef DAGON_CAMERALIB_H_
+#define DAGON_CAMERALIB_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -136,4 +136,4 @@ const struct luaL_Reg CameraLib[] =
   
 }
 
-#endif // DG_CAMLIB_H
+#endif // DAGON_CAMERALIB_H_

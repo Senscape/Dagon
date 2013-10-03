@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_BUTTONPROXY_H
-#define DG_BUTTONPROXY_H
+#ifndef DAGON_BUTTONPROXY_H_
+#define DAGON_BUTTONPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -218,4 +218,4 @@ Luna<ButtonProxy>::RegType ButtonProxy::methods[] = {
   
 }
 
-#endif // DG_BUTTONPROXY_H
+#endif // DAGON_BUTTONPROXY_H_

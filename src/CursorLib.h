@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_CURSORLIB_H
-#define DG_CURSORLIB_H
+#ifndef DAGON_CURSORLIB_H_
+#define DAGON_CURSORLIB_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -82,4 +82,4 @@ static const struct luaL_reg kCursorLib [] = {
   
 }
 
-#endif // DG_CURSORLIB_H
+#endif // DAGON_CURSORLIB_H_

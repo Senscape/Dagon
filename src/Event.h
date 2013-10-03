@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_EVENT_H
-#define DG_EVENT_H
+#ifndef DAGON_EVENT_H_
+#define DAGON_EVENT_H_
 
 namespace dagon {
 
@@ -43,4 +43,4 @@ enum DGMouseEvents {
   
 }
 
-#endif // DG_EVENT_H
+#endif // DAGON_EVENT_H_

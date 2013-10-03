@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SPOTPROXY_H
-#define DG_SPOTPROXY_H
+#ifndef DAGON_SPOTPROXY_H_
+#define DAGON_SPOTPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -322,4 +322,4 @@ Luna<SpotProxy>::RegType SpotProxy::methods[] = {
   
 }
 
-#endif // DG_SPOTPROXY_H
+#endif // DAGON_SPOTPROXY_H_

@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_CONSOLE_H
-#define DG_CONSOLE_H
+#ifndef DAGON_CONSOLE_H_
+#define DAGON_CONSOLE_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -91,4 +91,4 @@ public:
   
 }
 
-#endif // DG_CONSOLE_H
+#endif // DAGON_CONSOLE_H_

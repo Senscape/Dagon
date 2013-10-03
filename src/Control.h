@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_CONTROL_H
-#define DG_CONTROL_H
+#ifndef DAGON_CONTROL_H_
+#define DAGON_CONTROL_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -162,4 +162,4 @@ public:
   
 }
 
-#endif // DG_CONTROL_H
+#endif // DAGON_CONTROL_H_

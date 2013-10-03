@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_ROOMPROXY_H
-#define DG_ROOMPROXY_H
+#ifndef DAGON_ROOMPROXY_H_
+#define DAGON_ROOMPROXY_H_
 
 ////////////////////////////////////////////////////////////
 // NOTE: This header file should never be included directly.
@@ -147,4 +147,4 @@ Luna<RoomProxy>::RegType RoomProxy::methods[] = {
   
 }
 
-#endif // DG_ROOMPROXY_H
+#endif // DAGON_ROOMPROXY_H_

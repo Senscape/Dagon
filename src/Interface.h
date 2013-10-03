@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_INTERFACE_H
-#define DG_INTERFACE_H
+#ifndef DAGON_INTERFACE_H_
+#define DAGON_INTERFACE_H_
 
 namespace dagon {
 
@@ -55,4 +55,4 @@ public:
   
 }
 
-#endif // DG_INTERFACE_H
+#endif // DAGON_INTERFACE_H_

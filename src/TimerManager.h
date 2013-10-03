@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_TIMERMANAGER_H
-#define DG_TIMERMANAGER_H
+#ifndef DAGON_TIMERMANAGER_H_
+#define DAGON_TIMERMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -96,4 +96,4 @@ public:
   
 }
 
-#endif // DG_TIMERMANAGER_H
+#endif // DAGON_TIMERMANAGER_H_

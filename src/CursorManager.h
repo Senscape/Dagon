@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_CURSOR_H
-#define DG_CURSOR_H
+#ifndef DAGON_CURSORMANAGER_H_
+#define DAGON_CURSORMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -94,4 +94,4 @@ public:
   
 }
 
-#endif // DG_CURSOR_H
+#endif // DAGON_CURSORMANAGER_H_

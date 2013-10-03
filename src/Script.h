@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SCRIPT_H
-#define DG_SCRIPT_H
+#ifndef DAGON_SCRIPT_H_
+#define DAGON_SCRIPT_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -109,4 +109,4 @@ public:
   
 }
 
-#endif // DG_SCRIPT_H
+#endif // DAGON_SCRIPT_H_

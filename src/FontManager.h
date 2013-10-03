@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_FONTMANAGER_H
-#define DG_FONTMANAGER_H
+#ifndef DAGON_FONTMANAGER_H_
+#define DAGON_FONTMANAGER_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -67,4 +67,4 @@ public:
   
 }
 
-#endif // DG_FONTMANAGER_H
+#endif // DAGON_FONTMANAGER_H_

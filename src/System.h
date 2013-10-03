@@ -11,8 +11,8 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DG_SYSTEM_H
-#define DG_SYSTEM_H
+#ifndef DAGON_SYSTEM_H_
+#define DAGON_SYSTEM_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
@@ -61,4 +61,4 @@ public:
   
 }
 
-#endif // DG_SYSTEM_H
+#endif // DAGON_SYSTEM_H_
