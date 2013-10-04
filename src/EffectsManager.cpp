@@ -159,7 +159,7 @@ void EffectsManager::init() {
   this->setValuef(DGEffectSharpenRatio, _sharpenRatio);
   
   // Initialize dust
-  for (int i = 0; i < DGEffectsMaxDust; i++) {
+  for (int i = 0; i < DGEffectsMaxDust; ++i) {
     _buildParticle(i);
   }
   

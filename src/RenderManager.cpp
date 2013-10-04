@@ -148,7 +148,6 @@ void RenderManager::resetFade() {
 ////////////////////////////////////////////////////////////
 
 Vector RenderManager::project(GLdouble x, GLdouble y, GLdouble z) {
-  Vector vector;
   GLdouble winX, winY, winZ;
   
   // Arrays to hold matrix information
@@ -167,16 +166,14 @@ Vector RenderManager::project(GLdouble x, GLdouble y, GLdouble z) {
   gluProject(x, y, z,
              modelView, projection, viewport,
              &winX, &winY, &winZ);
-  
-  vector.x = winX;
-  vector.y = config.displayHeight - winY; // This one must be inverted
-  vector.z = winZ;
-  
-  return vector;
+
+  return MakeVector((double)winX,
+                    // This one must be inverted
+                    config.displayHeight - (double)winY,
+                    (double)winZ);
 }
 
 Vector RenderManager::unProject(int x, int y) {
-  Vector vector;
   GLdouble objX, objY, objZ;
   
   // Arrays to hold matrix information
@@ -196,11 +193,7 @@ Vector RenderManager::unProject(int x, int y) {
                modelView, projection, viewport,
                &objX, &objY, &objZ);
   
-  vector.x = objX;
-  vector.y = objY;
-  vector.z = objZ;
-  
-  return vector;
+  return MakeVector(objX, objY, objZ);
 }
 
 ////////////////////////////////////////////////////////////
@@ -399,12 +392,8 @@ void RenderManager::drawPolygon(std::vector<int> withArrayOfCoordinates, unsigne
     Vector vector = this->project(cx, cy, cz);
     
     if (vector.z < 1.0) { // Only store coordinates on screen
-      Point point;
-      
-      point.x = static_cast<int>(vector.x);
-      point.y = static_cast<int>(vector.y);
-      
-      _arrayOfHelpers.push_back(point);
+      _arrayOfHelpers.push_back(MakePoint(static_cast<int>(vector.x),
+                                          static_cast<int>(vector.y)));
     }
   }
   
@@ -611,7 +600,7 @@ void RenderManager::fadeView() {
 ////////////////////////////////////////////////////////////
 
 Point RenderManager::_centerOfPolygon(std::vector<int> arrayOfCoordinates) {
-  Point center;
+  Point center = ZeroPoint;
   int size = static_cast<int>(arrayOfCoordinates.size());
   int vertex = size >> 1;
   
@@ -621,9 +610,6 @@ Point RenderManager::_centerOfPolygon(std::vector<int> arrayOfCoordinates) {
   double x1 = 0.0; // Next vertex X
   double y1 = 0.0; // Next vertex Y
   double a = 0.0; // Partial signed area
-  
-  center.x = 0;
-  center.y = 0;
   
   // For all vertices
   for (int i = 0; i < vertex; ++i) {
@@ -635,8 +621,7 @@ Point RenderManager::_centerOfPolygon(std::vector<int> arrayOfCoordinates) {
     a = (x0 * y1) - (x1 * y0);
     area += a;
     
-    center.x += (x0 + x1) * a;
-    center.y += (y0 + y1) * a;
+    MovePoint(center, (x0 + x1) * a, (y0 + y1) * a);
   }
   
   area *= 3.0;

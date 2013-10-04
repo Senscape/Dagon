@@ -2,6 +2,7 @@
 //
 // DAGON - An Adventure Game Engine
 // Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2013 Alexander Alekseev
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -27,7 +28,6 @@ Point MakePoint(double x, double y) {
 	Point point;
 	point.x = x;
 	point.y = y;
-  
 	return point;
 }
 
@@ -35,7 +35,6 @@ Size MakeSize(double w, double h) {
 	Size size;
 	size.width = w;
 	size.height = h;
-  
 	return size;
 }
 
@@ -45,13 +44,21 @@ Rect MakeRect(double x, double y, double w, double h) {
 	rect.origin.y = y;
 	rect.size.width = w;
 	rect.size.height = h;
-  
 	return rect;
+}
+  
+Vector MakeVector(double x, double y, double z) {
+  Vector v;
+  v.x = x;
+  v.y = y;
+  v.z = z;
+  return v;
 }
 
 const Point ZeroPoint = MakePoint(0.0, 0.0);
 const Size ZeroSize = MakeSize(0.0, 0.0);
 const Rect ZeroRect = MakeRect(0.0, 0.0, 0.0, 0.0);
+const Vector ZeroVector = MakeVector(0.0, 0.0, 0.0);
 
 double MaxX(Rect rect) {
 	return rect.origin.x + rect.size.width;
