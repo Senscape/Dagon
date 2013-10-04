@@ -223,9 +223,8 @@ void FeedManager::_calculatePosition(DGFeed* feed) {
   // We have no option but to estimate this
   int width = static_cast<int>(_feedHeight * 0.66f);
   int length = static_cast<int>(strlen(feed->text) * width);
-  
-  feed->location.x = (config.displayWidth >> 1) - (length / 2);
-  feed->location.y = config.displayHeight - _feedHeight - DGFeedMargin;
+  feed->location = MakePoint((config.displayWidth >> 1) - (length / 2),
+                             config.displayHeight - _feedHeight - DGFeedMargin);
 }
 
 void FeedManager::_dim() {

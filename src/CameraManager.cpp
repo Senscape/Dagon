@@ -271,8 +271,7 @@ void CameraManager::setVerticalLimit(float limit) {
 void CameraManager::setViewport(int width, int height) {
   // NOTE: if screen size is changed while in Drag mode, the neutral zone for Free mode isn't updated
   
-  _viewport.width = width;
-  _viewport.height = height;
+  _viewport = MakeSize(width, height);
   
   // This forces the new display factor to be applied to the
   // current neutral zone (only in Free mode)
