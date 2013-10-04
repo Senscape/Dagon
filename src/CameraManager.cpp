@@ -144,14 +144,14 @@ int CameraManager::verticalLimit() {
 ////////////////////////////////////////////////////////////
 
 void CameraManager::setAngleHorizontal(float horizontal) {
-  if (horizontal != kCurrent) {
+  if (fabs(horizontal - kCurrent) > kEpsilon) {
     // Extrapolate the coordinates
     _angleH = _toRadians(horizontal, _angleHLimit);
   }
 }
 
 void CameraManager::setAngleVertical(float vertical) {
-  if (vertical != kCurrent) {
+  if (fabs(vertical - kCurrent) > kEpsilon) {
     // Extrapolate the coordinates
     _angleV = _toRadians(vertical, _angleVLimit);
   }
@@ -212,7 +212,11 @@ void CameraManager::setSpeedFactor(int speed) {
 }
 
 void CameraManager::setTargetAngle(float horizontal, float vertical) {
-  if (horizontal != kCurrent) {
+  if (fabs(horizontal - kCurrent) > kEpsilon) {
+    // Cancel horizontal motion
+    _motionLeft = 0;
+    _motionRight = 0;
+    
     // Substract n times pi (fix probable double turn)
     GLdouble pi, pos;
     pi = _angleH / (M_PI * 2);
@@ -226,7 +230,7 @@ void CameraManager::setTargetAngle(float horizontal, float vertical) {
     // TODO: Certain cases aren't supported in this code; ie:
     // slightly rotated left of North, then setting target angle
     // to East. Needs improving.
-    if (_angleHTarget == 0.0f) {
+    if (fabs(_angleHTarget) < kEpsilon) {
       if (_angleH > M_PI)
         _angleHTarget = M_PI * 2;
     }
@@ -241,7 +245,11 @@ void CameraManager::setTargetAngle(float horizontal, float vertical) {
     _angleHTarget = _angleH;
   }
   
-  if (vertical != kCurrent) {
+  if (fabs(vertical - kCurrent) > kEpsilon) {
+    // Cancel vertical motion
+    _motionUp = 0;
+    _motionDown = 0;
+    
     // Extrapolate the coordinates
     _angleVTarget = _toRadians(vertical, _angleVLimit);;
     
@@ -618,17 +626,17 @@ void CameraManager::update() {
   }
   
   // Apply horizontal motion
-  if (_motionLeft)
+  if (fabs(_motionLeft) > kEpsilon)
     _angleH -= sin(_accelH) * _motionLeft * config.globalSpeed();
   
-  if (_motionRight)
+  if (fabs(_motionRight) > kEpsilon)
     _angleH += sin(_accelH) * _motionRight * config.globalSpeed();
   
   // Apply vertical motion
-  if (_motionDown)
+  if (fabs(_motionDown) > kEpsilon)
     _angleV += sin(_accelV) * _motionDown * config.globalSpeed();
   
-  if (_motionUp)
+  if (fabs(_motionUp) > kEpsilon)
     _angleV -= sin(_accelV) * _motionUp * config.globalSpeed();
   
   // Limit horizontal rotation

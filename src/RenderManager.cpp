@@ -46,11 +46,8 @@ log(Log::instance())
 ////////////////////////////////////////////////////////////
 
 RenderManager::~RenderManager() {
-  if (_blendTexture)
-    delete _blendTexture;
-  
-  if (_fadeTexture)
-    delete _fadeTexture;
+  delete _blendTexture;
+  delete _fadeTexture;
 }
 
 ////////////////////////////////////////////////////////////
@@ -466,7 +463,7 @@ void RenderManager::setColor(uint32_t color, float alpha) {
   uint8_t r = (color & 0x00ff0000) >> 16;
   uint8_t a = (color & 0xff000000) >> 24;
   
-  if (alpha)
+  if (fabs(alpha) > kEpsilon)
     glColor4f(r/255.0f, g/255.0f, b/255.0f, alpha); // Force specified alpha
   else
     glColor4f(r/255.0f, g/255.0f, b/255.0f, a/255.f);
@@ -513,7 +510,7 @@ Point RenderManager::currentHelper() {
 }
 
 bool RenderManager::iterateHelpers() {
-  _itHelper++;
+  ++_itHelper;
   
   if (_itHelper == _arrayOfHelpers.end())
     return false;

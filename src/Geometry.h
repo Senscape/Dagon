@@ -14,6 +14,10 @@
 #ifndef DAGON_GEOMETRY_H_
 #define DAGON_GEOMETRY_H_
 
+#include <cfloat>
+
+#define kEpsilon FLT_EPSILON
+
 namespace dagon {
 
 typedef struct {
