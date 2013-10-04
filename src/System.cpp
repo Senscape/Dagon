@@ -102,8 +102,8 @@ bool System::init() {
   if (!SDL_GL_GetSwapInterval())
     config.frameLimiter = true;
   
-  SDL_WarpMouseInWindow(_window, config.displayWidth / 2,
-                        config.displayHeight / 2);
+  SDL_WarpMouseInWindow(_window, config.displayWidth >> 1,
+                        config.displayHeight >> 1);
   SDL_ShowCursor(false);
   
   return true;
@@ -150,6 +150,17 @@ void System::update() {
         }
         break;
       }
+      /*case SDL_KEYUP: {
+        switch (event.key.keysym.sym) {
+          case SDLK_w:
+          case SDLK_a:
+          case SDLK_s:
+          case SDLK_d:
+            Control::instance().processKey(event.key.keysym.sym,
+                                           EventKeyUp);
+            break;
+        }
+      }*/
       case SDL_MOUSEMOTION:
         if (config.controlMode == kControlFixed) {
           if (Control::instance().isDirectControlActive()) {
@@ -204,8 +215,8 @@ void System::update() {
             Control::instance().terminate();
             break;
           case SDL_WINDOWEVENT_LEAVE:
-            Control::instance().processMouse(config.displayWidth / 2,
-                                               config.displayHeight / 2,
+            Control::instance().processMouse(config.displayWidth >> 2,
+                                               config.displayHeight >> 2,
                                                EventMouseMove);
             break;
           case SDL_WINDOWEVENT_RESIZED:

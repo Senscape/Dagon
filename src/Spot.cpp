@@ -128,7 +128,7 @@ Texture* Spot::texture() {
 }
 
 int Spot::vertexCount() {
-  return static_cast<int>(_arrayOfCoordinates.size() / 2);
+  return static_cast<int>(_arrayOfCoordinates.size() >> 1);
 }
 
 Video* Spot::video() {

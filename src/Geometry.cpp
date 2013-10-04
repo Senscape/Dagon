@@ -23,7 +23,7 @@ namespace dagon {
 // Implementation
 ////////////////////////////////////////////////////////////
 
-inline Point MakePoint(double x, double y) {
+Point MakePoint(double x, double y) {
 	Point point;
 	point.x = x;
 	point.y = y;
@@ -31,7 +31,7 @@ inline Point MakePoint(double x, double y) {
 	return point;
 }
 
-inline Size MakeSize(double w, double h) {
+Size MakeSize(double w, double h) {
 	Size size;
 	size.width = w;
 	size.height = h;
@@ -39,7 +39,7 @@ inline Size MakeSize(double w, double h) {
 	return size;
 }
 
-inline Rect MakeRect(double x, double y, double w, double h) {
+Rect MakeRect(double x, double y, double w, double h) {
 	Rect rect;
 	rect.origin.x = x;
 	rect.origin.y = y;
@@ -53,36 +53,50 @@ const Point ZeroPoint = MakePoint(0.0, 0.0);
 const Size ZeroSize = MakeSize(0.0, 0.0);
 const Rect ZeroRect = MakeRect(0.0, 0.0, 0.0, 0.0);
 
-inline double MaxX(Rect rect) {
+double MaxX(Rect rect) {
 	return rect.origin.x + rect.size.width;
 }
 
-inline double MaxY(Rect rect) {
+double MaxY(Rect rect) {
 	return rect.origin.y + rect.size.height;
 }
 
-inline double MidX(Rect rect) {
+double MidX(Rect rect) {
 	return rect.origin.x + rect.size.width * 0.5;
 }
 
-inline double MidY(Rect rect) {
+double MidY(Rect rect) {
 	return rect.origin.y + rect.size.height * 0.5;
 }
 
-inline double MinX(Rect rect) {
+double MinX(Rect rect) {
 	return rect.origin.x;
 }
 
-inline double MinY(Rect rect) {
+double MinY(Rect rect) {
 	return rect.origin.y;
 }
 
-inline double Width(Rect rect) {
+double Width(Rect rect) {
 	return rect.size.width;
 }
 
-inline double Height(Rect rect) {
+double Height(Rect rect) {
 	return rect.size.height;
+}
+  
+void MovePoint(Point& point, double offsetX, double offsetY) {
+  point.x += offsetX;
+  point.y += offsetY;
+}
+  
+void MoveRect(Rect& rect, double offsetX, double offsetY) {
+  MovePoint(rect.origin, offsetX, offsetY);
+}
+  
+void ScaleRect(Rect& rect, double factor) {
+  rect.size.width *= factor;
+  rect.size.height *= factor;
 }
   
 }

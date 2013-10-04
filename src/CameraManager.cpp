@@ -198,10 +198,10 @@ void CameraManager::setNeutralZone(int zone) {
       int percentageY = ((config.displayHeight * zone) / 100) / 2;
       
       // Update panning regions with the new neutral zone
-      _panRegion.origin.x = (_viewport.width / 2) - percentageX;
-      _panRegion.origin.y = (_viewport.height / 2) - percentageY;
-      _panRegion.size.width = (_viewport.width / 2) + percentageX;
-      _panRegion.size.height = (_viewport.height / 2) + percentageY;
+      _panRegion = MakeRect((_viewport.width * 0.5) - percentageX,
+                            (_viewport.height * 0.5) - percentageY,
+                            (_viewport.width * 0.5) + percentageX,
+                            (_viewport.height * 0.5) + percentageY);
       
       break;
   }
@@ -364,8 +364,8 @@ void CameraManager::init() {
   _angleHPrevious = 0.0;
   _angleVPrevious = 0.0;
   
-  _angleHLimit = M_PI * 2;
-  _angleVLimit = M_PI / 2;
+  _angleHLimit = M_PI * 2.0f;
+  _angleVLimit = M_PI * 0.5f;
   
   _bob.currentFactor = DGCamBreatheFactor;
   _bob.currentSpeed = DGCamBreatheSpeed;
@@ -473,25 +473,25 @@ void CameraManager::simulateWalk() {
 }
 
 void CameraManager::stopPanning() {
-  this->pan(config.displayWidth / 2, config.displayHeight / 2);
+  this->pan(config.displayWidth >> 1, config.displayHeight >> 1);
 }
 
 // For the DRAG mode
 
 void CameraManager::startDragging(int xPosition, int yPosition) {
-  _panRegion.origin.x = xPosition - _dragNeutralZone;
-  _panRegion.origin.y = yPosition - _dragNeutralZone;
-  _panRegion.size.width = xPosition + _dragNeutralZone;
-  _panRegion.size.height = yPosition + _dragNeutralZone;
+  _panRegion = MakeRect(xPosition - _dragNeutralZone,
+                          yPosition - _dragNeutralZone,
+                          xPosition + _dragNeutralZone,
+                          yPosition + _dragNeutralZone);
 }
 
 void CameraManager::stopDragging() {
-  _panRegion.origin.x = (_viewport.width / 2) - _dragNeutralZone;
-  _panRegion.origin.y = (_viewport.height / 2) - _dragNeutralZone;
-  _panRegion.size.width = (_viewport.width / 2) + _dragNeutralZone;
-  _panRegion.size.height = (_viewport.height / 2) + _dragNeutralZone;
+  _panRegion = MakeRect((_viewport.width * 0.5) - _dragNeutralZone,
+                          (_viewport.height * 0.5) - _dragNeutralZone,
+                          (_viewport.width * 0.5) + _dragNeutralZone,
+                          (_viewport.height * 0.5) + _dragNeutralZone);
   
-  this->pan(config.displayWidth / 2, config.displayHeight / 2);
+  this->pan(config.displayWidth >> 1, config.displayHeight >> 1);
 }
 
 void CameraManager::lock() {

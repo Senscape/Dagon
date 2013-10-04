@@ -50,22 +50,26 @@ typedef Size *SizeArray;
 typedef Rect *RectPointer;
 typedef Rect *RectArray;
 
-inline Point MakePoint(double x, double y);
-inline Size MakeSize(double w, double h);
-inline Rect MakeRect(double x, double y, double w, double h);
+Point MakePoint(double x, double y);
+Size MakeSize(double w, double h);
+Rect MakeRect(double x, double y, double w, double h);
 
 extern const Point ZeroPoint;
 extern const Size ZeroSize;
 extern const Rect ZeroRect;
 
-inline double MaxX(Rect rect);
-inline double MaxY(Rect rect);
-inline double MidX(Rect rect);
-inline double MidY(Rect rect);
-inline double MinX(Rect rect);
-inline double MinY(Rect rect);
-inline double Width(Rect rect);
-inline double Height(Rect rect);
+double MaxX(Rect rect);
+double MaxY(Rect rect);
+double MidX(Rect rect);
+double MidY(Rect rect);
+double MinX(Rect rect);
+double MinY(Rect rect);
+double Width(Rect rect);
+double Height(Rect rect);
+  
+void MovePoint(Point& point, double offsetX, double offsetY);
+void MoveRect(Rect& rect, double offsetX, double offsetY);
+void ScaleRect(Rect& rect, double factor);
 }
 
 #endif // DAGON_GEOMETRY_H_

@@ -32,8 +32,8 @@ config(Config::instance())
   _hasImage = false;
   _isDragging = false;
   _onButton = false;
-  _x = config.displayWidth / 2;
-  _y = config.displayHeight / 2;
+  _x = config.displayWidth >> 1;
+  _y = config.displayHeight >> 1;
   
   this->setFadeSpeed(kFadeFastest); // Cursor always fades with fastest speed
   this->setSize(kDefCursorSize);
@@ -94,8 +94,7 @@ void CursorManager::load(int typeOfCursor, const char* imageFromFile, int offset
   
   cursor.type = typeOfCursor;
   cursor.image = texture;
-  cursor.origin.x = _half - offsetX;
-  cursor.origin.y = _half - offsetY;
+  cursor.origin = MakePoint(_half - offsetX, _half - offsetY);
   
   _arrayOfCursors.push_back(cursor);
 }
@@ -105,11 +104,7 @@ bool CursorManager::onButton() {
 }
 
 Point CursorManager::position() {
-  Point pos;
-  
-  pos.x = _x;
-  pos.y = _y;
-  
+  Point pos = MakePoint(_x, _y);
   return pos;
 }
 
@@ -144,8 +139,7 @@ void CursorManager::setCursor(int typeOfCursor) {
 
 void CursorManager::setSize(int size) {
   _size = size;
-  _half = _size / 2;
-  
+  _half = _size >> 1;
   this->updateCoords(_x, _y);
 }
 

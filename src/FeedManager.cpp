@@ -224,7 +224,7 @@ void FeedManager::_calculatePosition(DGFeed* feed) {
   int width = static_cast<int>(_feedHeight * 0.66f);
   int length = static_cast<int>(strlen(feed->text) * width);
   
-  feed->location.x = (config.displayWidth / 2) - (length / 2);
+  feed->location.x = (config.displayWidth >> 1) - (length / 2);
   feed->location.y = config.displayHeight - _feedHeight - DGFeedMargin;
 }
 

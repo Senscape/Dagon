@@ -29,10 +29,7 @@ Image::Image() :
 config(Config::instance())
 {
   _hasTexture = false;
-  _rect.origin.x = 0;
-  _rect.origin.y = 0;
-  _rect.size.width = 0;
-  _rect.size.height = 0;
+  _rect = ZeroRect;
   this->setType(kObjectImage);
 }
 
@@ -41,10 +38,9 @@ config(Config::instance())
 {
   this->setTexture(fromFileName);
   if (_attachedTexture->isLoaded()) {
-    _rect.origin.x = 0;
-    _rect.origin.y = 0;
-    _rect.size.width = _attachedTexture->width();
-    _rect.size.height = _attachedTexture->height();
+    _rect.origin = ZeroPoint;
+    _rect.size = MakeSize(_attachedTexture->width(),
+                          _attachedTexture->height());
     _calculateCoordinates();
   }
   this->setType(kObjectImage);
@@ -83,14 +79,12 @@ Texture* Image::texture() {
 ////////////////////////////////////////////////////////////
 
 void Image::setPosition(float x, float y) {
-  _rect.origin.x = x;
-  _rect.origin.y = y;
+  _rect.origin = MakePoint(x, y);
   _calculateCoordinates();
 }
 
 void Image::setSize(float width, float height) {
-  _rect.size.width = width;
-  _rect.size.height = height;
+  _rect.size = MakeSize(width, height);
   _calculateCoordinates();
 }
 
@@ -112,14 +106,12 @@ void Image::setTexture(const std::string &fromFileName) {
 ////////////////////////////////////////////////////////////
 
 void Image::move(float offsetX, float offsetY) {
-  _rect.origin.x += offsetX;
-  _rect.origin.y += offsetY;
+  MoveRect(_rect, offsetX, offsetY);
   _calculateCoordinates();
 }
 
 void Image::scale(float factor) {
-  _rect.size.width *= factor;
-  _rect.size.height *= factor;
+  ScaleRect(_rect, factor);
   _calculateCoordinates();
 }
 
@@ -128,14 +120,14 @@ void Image::scale(float factor) {
 ////////////////////////////////////////////////////////////
 
 void Image::_calculateCoordinates() {
-  _arrayOfCoordinates[0] = _rect.origin.x;
-  _arrayOfCoordinates[1] = _rect.origin.y;
-  _arrayOfCoordinates[2] = _rect.origin.x + _rect.size.width;
-  _arrayOfCoordinates[3] = _rect.origin.y;
-  _arrayOfCoordinates[4] = _rect.origin.x + _rect.size.width;
-  _arrayOfCoordinates[5] = _rect.origin.y + _rect.size.height;
-  _arrayOfCoordinates[6] = _rect.origin.x;
-  _arrayOfCoordinates[7] = _rect.origin.y + _rect.size.height;
+  _arrayOfCoordinates[0] = MinX(_rect);
+  _arrayOfCoordinates[1] = MinY(_rect);
+  _arrayOfCoordinates[2] = MaxX(_rect);
+  _arrayOfCoordinates[3] = MinY(_rect);
+  _arrayOfCoordinates[4] = MaxX(_rect);
+  _arrayOfCoordinates[5] = MaxY(_rect);
+  _arrayOfCoordinates[6] = MinX(_rect);
+  _arrayOfCoordinates[7] = MaxY(_rect);
 }
 
 }
