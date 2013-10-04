@@ -85,18 +85,15 @@ bool CursorManager::isDragging() {
 
 // NOTE: These textures aren't managed
 void CursorManager::load(int typeOfCursor, const char* imageFromFile, int offsetX, int offsetY) {
-  DGCursorData cursor;
   Texture* texture;
   
   texture = new Texture;
   texture->setResource(config.path(kPathResources, imageFromFile, kObjectCursor).c_str());
   texture->load();
   
-  cursor.type = typeOfCursor;
-  cursor.image = texture;
-  cursor.origin = MakePoint(_half - offsetX, _half - offsetY);
-  
-  _arrayOfCursors.push_back(cursor);
+  _arrayOfCursors.push_back(_makeCursorData(typeOfCursor, texture,
+                                            MakePoint(_half - offsetX,
+                                                      _half - offsetY)));
 }
 
 bool CursorManager::onButton() {
@@ -104,8 +101,7 @@ bool CursorManager::onButton() {
 }
 
 Point CursorManager::position() {
-  Point pos = MakePoint(_x, _y);
-  return pos;
+  return MakePoint(_x, _y);
 }
 
 void CursorManager::removeAction() {
@@ -175,6 +171,15 @@ void CursorManager::updateCoords(int x, int y) {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
+DGCursorData CursorManager::_makeCursorData(int type, Texture* image,
+                                            Point origin) {
+  DGCursorData cursorData;
+  cursorData.type = type;
+  cursorData.image = image;
+  cursorData.origin = origin;
+  return cursorData;
+}
+  
 void CursorManager::_set(int typeOfCursor) {
   if (!_arrayOfCursors.empty()) {
     _current = _arrayOfCursors.begin();

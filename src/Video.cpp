@@ -41,6 +41,20 @@ struct DGLookUpTable{
 };
 
 static struct DGLookUpTable _lookUpTable;
+  
+void setValuesInLookUpTable(DGLookUpTable& lookUpTable, int index,
+                            int32_t Y, int32_t RV, int32_t GV,
+                            int32_t GU, int32_t BU);
+  
+void setValuesInLookUpTable(DGLookUpTable& lookUpTable, int index,
+                            int32_t Y, int32_t RV, int32_t GV,
+                            int32_t GU, int32_t BU) {
+  lookUpTable.m_plY[index] = Y;
+  lookUpTable.m_plRV[index] = RV;
+  lookUpTable.m_plGV[index] = GV;
+  lookUpTable.m_plGU[index] = GU;
+  lookUpTable.m_plBU[index] = BU;
+}
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -414,9 +428,9 @@ void Video::_convertToRGB(uint8_t* puc_y, int stride_y,
   if (height_y < 0) {
     // We are flipping our output upside-down
     height_y  = -height_y;
-    puc_y     += (height_y     - 1) * stride_y ;
-    puc_u     += (height_y / 2 - 1) * stride_uv;
-    puc_v     += (height_y / 2 - 1) * stride_uv;
+    puc_y     += (height_y - 1) * stride_y ;
+    puc_u     += ((height_y >> 1) - 1) * stride_uv;
+    puc_v     += ((height_y >> 1) - 1) * stride_uv;
     stride_y  = -stride_y;
     stride_uv = -stride_uv;
   }
@@ -500,6 +514,40 @@ void Video::_initConversionToRGB() {
     }
   }
 }
+
+  /*
+void Video::_initConversionToRGB() {
+  for (int i = 0; i < 256; i++) {
+    if (i >= 16) {
+      if (i > 240) {
+        setValuesInLookUpTable(_lookUpTable, i,
+                               _lookUpTable.m_plY[240],
+                               _lookUpTable.m_plRV[240],
+                               _lookUpTable.m_plGV[240],
+                               _lookUpTable.m_plGU[240],
+                               _lookUpTable.m_plBU[240]);
+      }
+      else {
+        static const int factor = 16 - 128;
+        setValuesInLookUpTable(_lookUpTable, i,
+                               298 * (i - 16),
+                               408 * factor,
+                               -208 * factor,
+                               -100 * factor,
+                               517 * factor);
+      }
+    }
+    else {
+      setValuesInLookUpTable(_lookUpTable, i,
+                             0,
+                             408 * (i - 128),
+                             -208 * (i - 128),
+                             -100 * (i - 128),
+                             517 * (i - 128));
+    }
+  }
+}
+*/
 
 int Video::_prepareFrame() {
   while (_state == VideoPlaying) {

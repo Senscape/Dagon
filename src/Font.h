@@ -87,6 +87,8 @@ class Font : public Object {
   GLuint _textures[kMaxChars];
   
   void _loadFont(FT_Face &face);
+  Glyph _makeGlyph(float x, float y, FT_Bitmap bitmap,
+                   FT_BitmapGlyph bitmapGlyph, FT_Face face);
   int _next(int a);
   
   Font(const Font&);

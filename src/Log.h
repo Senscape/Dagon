@@ -95,6 +95,7 @@ class Log {
   std::vector<LogData> _history;
   std::vector<LogData>::reverse_iterator _it;
   void _log(LogData* data);
+  LogData _makeLogData(int color, int module, int type);
   
   Log();
   ~Log();

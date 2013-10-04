@@ -61,6 +61,7 @@ class CursorManager : public Object {
   int _x;
   int _y;
   
+  DGCursorData _makeCursorData(int type, Texture* image, Point origin);
   void _set(int typeOfCursor);
   
   CursorManager();

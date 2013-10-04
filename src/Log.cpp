@@ -57,11 +57,8 @@ void Log::command(int forModule, const char* theString, ...) {
   vsnprintf(&buffer[0], kMaxLogLength, theString, args);
   va_end(args);
   
-  LogData data;
+  LogData data = _makeLogData(kColorBrightMagenta, forModule, kLogTrace);
   data.line = buffer;
-  data.color = kColorBrightMagenta;
-  data.module = forModule;
-  data.type = kLogTrace;
   _log(&data);
 }
 
@@ -73,11 +70,8 @@ void Log::error(int forModule, const char* theString, ...) {
   vsnprintf(&buffer[0], kMaxLogLength, theString, args);
   va_end(args);
   
-  LogData data;
+  LogData data = _makeLogData(kColorBrightRed, forModule, kLogError);
   data.line = buffer;
-  data.color = kColorBrightRed;
-  data.module = forModule;
-  data.type = kLogError;
   _log(&data);
 }
 
@@ -89,11 +83,8 @@ void Log::info(int forModule, const char* theString, ...) {
   vsnprintf(&buffer[0], kMaxLogLength, theString, args);
   va_end(args);
   
-  LogData data;
+  LogData data = _makeLogData(kColorBrightCyan, forModule, kLogTrace);
   data.line = buffer;
-  data.color = kColorBrightCyan;
-  data.module = forModule;
-  data.type = kLogTrace;
   _log(&data);
 }
 
@@ -105,11 +96,8 @@ void Log::trace(int forModule, const char* theString, ...) {
   vsnprintf(&buffer[0], kMaxLogLength, theString, args);
   va_end(args);
   
-  LogData data;
+  LogData data = _makeLogData(kColorWhite, forModule, kLogTrace);
   data.line = buffer;
-  data.color = kColorWhite;
-  data.module = forModule;
-  data.type = kLogTrace;
   _log(&data);
 }
 
@@ -121,11 +109,8 @@ void Log::warning(int forModule, const char* theString, ...) {
   vsnprintf(&buffer[0], kMaxLogLength, theString, args);
   va_end(args);
   
-  LogData data;
+  LogData data = _makeLogData(kColorYellow, forModule, kLogWarning);
   data.line = buffer;
-  data.color = kColorYellow;
-  data.module = forModule;
-  data.type = kLogWarning;
   _log(&data);
 }
 
@@ -254,6 +239,14 @@ void Log::_log(LogData* data) {
   
   if (config.debugMode)
     std::cout << data->line.c_str() << std::endl; // Echo to console
+}
+  
+LogData Log::_makeLogData(int color, int module, int type) {
+  LogData logData;
+  logData.color = color;
+  logData.module = module;
+  logData.type = type;
+  return logData;
 }
 
 }
