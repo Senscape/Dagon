@@ -713,8 +713,12 @@ void Control::switchTo(Object* theTarget, bool instant) {
         script.processCallback(current->slideReturn(), current->luaObject());
       }
       
-      if (!previous->isSlide())
+      if (!previous->isSlide()) {
         cameraManager.unlock();
+        if (config.controlMode == kControlFixed)
+          // FIXME: Forced, but it should return to the previous mode
+          _directControlActive = true;
+      }
       
       performWalk = false;
     }

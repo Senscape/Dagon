@@ -538,8 +538,8 @@ void RenderManager::blendView() {
     int yStretch;
     
     if (_fadeWithZoom) {
-      xStretch = static_cast<int>(_blendOpacity) * (config.displayWidth / 4);
-      yStretch = static_cast<int>(_blendOpacity) * (config.displayHeight / 4);
+      xStretch = static_cast<int>(_blendOpacity) * (config.displayWidth >> 2);
+      yStretch = static_cast<int>(_blendOpacity) * (config.displayHeight >> 2);
       
       // This should a bit faster than the walk_time factor
       _blendOpacity += 0.015f * config.globalSpeed();
@@ -613,24 +613,24 @@ void RenderManager::fadeView() {
 Point RenderManager::_centerOfPolygon(std::vector<int> arrayOfCoordinates) {
   Point center;
   int size = static_cast<int>(arrayOfCoordinates.size());
-  int vertex = size / 2;
+  int vertex = size >> 1;
   
   double area = 0.0;
   double x0 = 0.0; // Current vertex X
   double y0 = 0.0; // Current vertex Y
   double x1 = 0.0; // Next vertex X
   double y1 = 0.0; // Next vertex Y
-  double a = 0.0;  // Partial signed area
+  double a = 0.0; // Partial signed area
   
   center.x = 0;
   center.y = 0;
   
   // For all vertices
   for (int i = 0; i < vertex; ++i) {
-    x0 = arrayOfCoordinates[i*2 + 0];
-    y0 = arrayOfCoordinates[i*2 + 1];
-    x1 = arrayOfCoordinates[(i*2 + 2) % size];
-    y1 = arrayOfCoordinates[(i*2 + 3) % size];
+    x0 = arrayOfCoordinates[i << 1];
+    y0 = arrayOfCoordinates[(i << 1) + 1];
+    x1 = arrayOfCoordinates[((i << 1) + 2) % size];
+    y1 = arrayOfCoordinates[((i << 1) + 3) % size];
     
     a = (x0 * y1) - (x1 * y0);
     area += a;

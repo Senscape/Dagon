@@ -97,6 +97,7 @@
     <ClCompile Include="..\src\Font.cpp" />
     <ClCompile Include="..\src\FontData.c" />
     <ClCompile Include="..\src\FontManager.cpp" />
+    <ClInclude Include="..\src\Geometry.cpp" />    
     <ClCompile Include="..\src\Image.cpp" />
     <ClCompile Include="..\src\Interface.cpp" />
     <ClCompile Include="..\src\Locator.cpp" />

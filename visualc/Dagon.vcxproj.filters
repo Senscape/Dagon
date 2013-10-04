@@ -237,6 +237,9 @@
     <ClCompile Include="..\src\FontManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>   
     <ClCompile Include="..\src\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
