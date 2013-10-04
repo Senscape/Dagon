@@ -612,51 +612,37 @@ void RenderManager::fadeView() {
 
 Point RenderManager::_centerOfPolygon(std::vector<int> arrayOfCoordinates) {
   Point center;
-  int vertex = static_cast<int>(arrayOfCoordinates.size() / 2);
+  int size = static_cast<int>(arrayOfCoordinates.size());
+  int vertex = size / 2;
   
   double area = 0.0;
-  double cx = 0;
-  double cy = 0;
   double x0 = 0.0; // Current vertex X
   double y0 = 0.0; // Current vertex Y
   double x1 = 0.0; // Next vertex X
   double y1 = 0.0; // Next vertex Y
   double a = 0.0;  // Partial signed area
   
-  // For all vertices except last
-  int i;
+  center.x = 0;
+  center.y = 0;
   
-  for (i = 0; i < (vertex - 1); i++) {
+  // For all vertices
+  for (int i = 0; i < vertex; ++i) {
     x0 = arrayOfCoordinates[i*2 + 0];
     y0 = arrayOfCoordinates[i*2 + 1];
-    x1 = arrayOfCoordinates[i*2 + 2];
-    y1 = arrayOfCoordinates[i*2 + 3];
+    x1 = arrayOfCoordinates[(i*2 + 2) % size];
+    y1 = arrayOfCoordinates[(i*2 + 3) % size];
     
     a = (x0 * y1) - (x1 * y0);
     area += a;
     
-    cx += (x0 + x1) * a;
-    cy += (y0 + y1) * a;
+    center.x += (x0 + x1) * a;
+    center.y += (y0 + y1) * a;
   }
   
-  // Do last vertex
-  x0 = arrayOfCoordinates[i*2 + 0];
-  y0 = arrayOfCoordinates[i*2 + 1];
-  x1 = arrayOfCoordinates[0];
-  y1 = arrayOfCoordinates[1];
-  
-  a = (x0 * y1) - (x1 * y0);
-  area += a;
-  
-  cx += (x0 + x1) * a;
-  cy += (y0 + y1) * a;
-  
-  area *= 0.5f;
-  cx /= (6 * area);
-  cy /= (6 * area);
-  
-  center.x = static_cast<int>(cx);
-  center.y = static_cast<int>(cy);
+  area *= 3.0;
+  double invArea = 1.0 / area;
+  center.x *= invArea;
+  center.y *= invArea;
   
   return center;
 }

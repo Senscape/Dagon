@@ -58,6 +58,7 @@
 		FB94ABFD17DE37350081574F /* stb_image.c in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABD517DE37350081574F /* stb_image.c */; };
 		FB94ABFE17DE37350081574F /* Texture.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABD717DE37350081574F /* Texture.cpp */; };
 		FB94ABFF17DE37350081574F /* TextureManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB94ABD917DE37350081574F /* TextureManager.cpp */; };
+		FBA6A1E417FF48220058671F /* Geometry.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FBA6A1E317FF48220058671F /* Geometry.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -182,6 +183,7 @@
 		FB94ABDA17DE37350081574F /* TextureManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureManager.h; sourceTree = "<group>"; };
 		FB94ABDB17DE37350081574F /* Version.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Version.h; sourceTree = "<group>"; };
 		FB94AC0917DE3FF60081574F /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FBA6A1E317FF48220058671F /* Geometry.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Geometry.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -275,6 +277,7 @@
 				FB94AB8817DE37340081574F /* Config.cpp */,
 				FB94AB8B17DE37340081574F /* Defines.h */,
 				FB94ABBD17DE37350081574F /* Geometry.h */,
+				FBA6A1E317FF48220058671F /* Geometry.cpp */,
 				FB94ABC117DE37350081574F /* Language.h */,
 				FB94ABC317DE37350081574F /* Log.h */,
 				FB94ABC217DE37350081574F /* Log.cpp */,
@@ -546,6 +549,7 @@
 				FB94ABF917DE37350081574F /* Object.cpp in Sources */,
 				FB94ABFA17DE37350081574F /* Overlay.cpp in Sources */,
 				FB94ABFB17DE37350081574F /* Room.cpp in Sources */,
+				FBA6A1E417FF48220058671F /* Geometry.cpp in Sources */,
 				FB94ABFC17DE37350081574F /* Spot.cpp in Sources */,
 				FB94ABFD17DE37350081574F /* stb_image.c in Sources */,
 				FB94ABFE17DE37350081574F /* Texture.cpp in Sources */,
