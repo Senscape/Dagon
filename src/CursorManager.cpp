@@ -50,7 +50,7 @@ CursorManager::~CursorManager() {
     
     while (_current != _arrayOfCursors.end()) {
       delete (*_current).image;
-      _current++;
+      ++_current;
     }
   }
 }
@@ -191,7 +191,7 @@ void CursorManager::_set(int typeOfCursor) {
         return;
       }
       
-      _current++;
+      ++_current;
     }
   }
   

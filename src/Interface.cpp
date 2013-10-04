@@ -156,7 +156,7 @@ void Interface::drawOverlays() {
         
       }
       
-      itOverlay++;
+      ++itOverlay;
     }
   }
 }
@@ -196,7 +196,7 @@ bool Interface::scanOverlays() {
         }
       }
       
-      itOverlay++;
+      ++itOverlay;
     }
   }
   

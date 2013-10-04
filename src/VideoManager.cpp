@@ -66,7 +66,7 @@ void VideoManager::flush() {
               done = false;
               break;
             }
-            else it++;
+            else ++it;
           }
           SDL_UnlockMutex(_mutex);
         } else {
@@ -114,7 +114,7 @@ void VideoManager::requestVideo(Video* target) {
       break;
     }
     
-    it++;
+    ++it;
   }
   
   if (!isActive) {
@@ -140,7 +140,7 @@ void VideoManager::terminate() {
       std::vector<Video*>::iterator it = _arrayOfVideos.begin();
       while (it != _arrayOfVideos.end()) {
         delete *it;
-        it++;
+        ++it;
       }
       SDL_UnlockMutex(_mutex);
     } else {
@@ -156,7 +156,7 @@ bool VideoManager::update() {
         std::vector<Video*>::iterator it = _arrayOfActiveVideos.begin();
         while (it != _arrayOfActiveVideos.end()) {
           (*it)->update();
-          it++;
+          ++it;
         }
         SDL_UnlockMutex(_mutex);
       } else {

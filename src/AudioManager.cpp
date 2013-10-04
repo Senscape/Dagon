@@ -59,7 +59,7 @@ void AudioManager::clear() {
         while (it != _arrayOfActiveAudios.end()) {
           (*it)->release();
           
-          it++;
+          ++it;
         }
         SDL_UnlockMutex(_mutex);
       } else {
@@ -92,16 +92,16 @@ void AudioManager::flush() {
                 switch ((*it)->state()) {
                   case kAudioPlaying:
                     (*it)->fadeOut();
-                    it++;
+                    ++it;
                     break;
                   case kAudioPaused:
                   default:
-                    it++;
+                    ++it;
                     break;
                 }
               }
             }
-            else it++;
+            else ++it;
           }
           SDL_UnlockMutex(_mutex);
         } else {
@@ -162,7 +162,7 @@ void AudioManager::init() {
     }
   }
   
-  if (strlen(deviceName) == 0) {
+  if (deviceName[0] == '\0') {
     log.trace(kModAudio, "%s", kString17004);
     _alDevice = alcOpenDevice(NULL); // Select the preferred device
   } else {
@@ -236,7 +236,7 @@ void AudioManager::requestAudio(Audio* target) {
       isActive = true;
       break;
     }
-    it++;
+    ++it;
   }
   
   if (!isActive) {
@@ -278,7 +278,7 @@ void AudioManager::terminate() {
       while (it != _arrayOfAudios.end()) {
         // FIXME: Should delete here and let the audio object unload itself
         (*it)->unload();
-        it++;
+        ++it;
       }
       SDL_UnlockMutex(_mutex);
     } else {
@@ -302,7 +302,7 @@ bool AudioManager::update() {
         std::vector<Audio*>::iterator it = _arrayOfActiveAudios.begin();
         while (it != _arrayOfActiveAudios.end()) {
           (*it)->update();
-          it++;
+          ++it;
         }
         SDL_UnlockMutex(_mutex);
       } else {

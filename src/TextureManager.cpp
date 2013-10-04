@@ -53,7 +53,7 @@ TextureManager::~TextureManager() {
     
     while (it != _arrayOfTextures.end()) {
       delete *it;
-      it++;
+      ++it;
     }
   }
 }

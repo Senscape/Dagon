@@ -798,7 +798,7 @@ void Control::switchTo(Object* theTarget, bool instant) {
         audioManager.requestAudio((*it));
         (*it)->play();
         
-        it++;
+        ++it;
       }
     }
     

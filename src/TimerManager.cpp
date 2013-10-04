@@ -196,7 +196,7 @@ void TimerManager::process() {
             break; // In case the vector has changed, break the loop
         }
       }
-      it++;
+      ++it;
     }
     SDL_UnlockMutex(_mutex);
   }
@@ -232,7 +232,7 @@ bool TimerManager::update() {
             timer->hasTriggered = true;
           }
         }
-        it++;
+        ++it;
       }
       SDL_UnlockMutex(_mutex);
     }
@@ -253,7 +253,7 @@ DGTimer* TimerManager::_lookUp(int handle) {
         SDL_UnlockMutex(_mutex);
         return &(*it);
       }
-      it++;
+      ++it;
     }
     SDL_UnlockMutex(_mutex);
   }
