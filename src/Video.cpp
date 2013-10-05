@@ -33,28 +33,14 @@ namespace dagon {
 // FIXME: No need to include this lookup table here, should go in the manager
 
 struct DGLookUpTable{
-  int32_t m_plY[256];
-  int32_t m_plRV[256];
-  int32_t m_plGV[256];
-  int32_t m_plGU[256];
-  int32_t m_plBU[256];
+  int m_plY[256];
+  int m_plRV[256];
+  int m_plGV[256];
+  int m_plGU[256];
+  int m_plBU[256];
 };
 
 static struct DGLookUpTable _lookUpTable;
-  
-void setValuesInLookUpTable(DGLookUpTable& lookUpTable, int index,
-                            int32_t Y, int32_t RV, int32_t GV,
-                            int32_t GU, int32_t BU);
-  
-void setValuesInLookUpTable(DGLookUpTable& lookUpTable, int index,
-                            int32_t Y, int32_t RV, int32_t GV,
-                            int32_t GU, int32_t BU) {
-  lookUpTable.m_plY[index] = Y;
-  lookUpTable.m_plRV[index] = RV;
-  lookUpTable.m_plGV[index] = GV;
-  lookUpTable.m_plGU[index] = GU;
-  lookUpTable.m_plBU[index] = BU;
-}
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -485,69 +471,21 @@ void Video::_convertToRGB(uint8_t* puc_y, int stride_y,
 }
 
 void Video::_initConversionToRGB() {
-  for (int i = 0; i < 256; i++) {
-    if (i >= 16)
-      if (i > 240)
-        _lookUpTable.m_plY[i] = _lookUpTable.m_plY[240];
-      else
-        _lookUpTable.m_plY[i] = 298 * (i - 16);
-      else
-        _lookUpTable.m_plY[i] = 0;
-    
-    if ((i >= 16) && (i <= 240)) {
-      _lookUpTable.m_plRV[i] = 408 * (i - 128);
-      _lookUpTable.m_plGV[i] = -208 * (i - 128);
-      _lookUpTable.m_plGU[i] = -100 * (i - 128);
-      _lookUpTable.m_plBU[i] = 517 * (i - 128);
-    }
-    else if (i < 16) {
-      _lookUpTable.m_plRV[i] = 408 * (16 - 128);
-      _lookUpTable.m_plGV[i] = -208 * (16 - 128);
-      _lookUpTable.m_plGU[i] = -100 * (16 - 128);
-      _lookUpTable.m_plBU[i] = 517 * (16 - 128);
-    }
-    else {
-      _lookUpTable.m_plRV[i] = _lookUpTable.m_plRV[240];
-      _lookUpTable.m_plGV[i] = _lookUpTable.m_plGV[240];
-      _lookUpTable.m_plGU[i] = _lookUpTable.m_plGU[240];
-      _lookUpTable.m_plBU[i] = _lookUpTable.m_plBU[240];
-    }
-  }
+  static const int prec = 8;
+  static const int CoY	= (int)(1.140 * (1 << prec) + 0.5); // 1.164
+  static const int CoRV	= (int)(1.581 * (1 << prec) + 0.5); // 1.596
+  static const int CoGU	= (int)(0.395 * (1 << prec) + 0.5); // 0.391
+  static const int CoGV	= (int)(0.581 * (1 << prec) + 0.5); // 0.813
+  static const int CoBU	= (int)(2.032 * (1 << prec) + 0.5); // 2.018
+  
+  for (int i = 0; i < 256; ++i) {
+		_lookUpTable.m_plGU[i] = -CoGU * (i - 128);
+		_lookUpTable.m_plGV[i] = -CoGV * (i - 128);
+		_lookUpTable.m_plBU[i] = CoBU * (i - 128);
+		_lookUpTable.m_plRV[i] = CoRV * (i - 128);
+		_lookUpTable.m_plY[i]  = CoY * (i - 16) + (prec / 2);
+	}
 }
-
-  /*
-void Video::_initConversionToRGB() {
-  for (int i = 0; i < 256; i++) {
-    if (i >= 16) {
-      if (i > 240) {
-        setValuesInLookUpTable(_lookUpTable, i,
-                               _lookUpTable.m_plY[240],
-                               _lookUpTable.m_plRV[240],
-                               _lookUpTable.m_plGV[240],
-                               _lookUpTable.m_plGU[240],
-                               _lookUpTable.m_plBU[240]);
-      }
-      else {
-        static const int factor = 16 - 128;
-        setValuesInLookUpTable(_lookUpTable, i,
-                               298 * (i - 16),
-                               408 * factor,
-                               -208 * factor,
-                               -100 * factor,
-                               517 * factor);
-      }
-    }
-    else {
-      setValuesInLookUpTable(_lookUpTable, i,
-                             0,
-                             408 * (i - 128),
-                             -208 * (i - 128),
-                             -100 * (i - 128),
-                             517 * (i - 128));
-    }
-  }
-}
-*/
 
 int Video::_prepareFrame() {
   while (_state == VideoPlaying) {
