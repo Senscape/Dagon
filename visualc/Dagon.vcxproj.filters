@@ -237,9 +237,6 @@
     <ClCompile Include="..\src\FontManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Geometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>   
     <ClCompile Include="..\src\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -307,6 +304,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\VideoManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Geometry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
