@@ -469,14 +469,15 @@ void Video::_convertToRGB(uint8_t* puc_y, int stride_y,
     puc_out += stride_diff;
   }
 }
-
+  
 void Video::_initConversionToRGB() {
+  // Manually tweaked alues from http://www.fourcc.org/fccyvrgb.php
   static const int prec = 8;
-  static const int CoY	= (int)(1.140 * (1 << prec) + 0.5); // 1.164
-  static const int CoRV	= (int)(1.581 * (1 << prec) + 0.5); // 1.596
-  static const int CoGU	= (int)(0.395 * (1 << prec) + 0.5); // 0.391
-  static const int CoGV	= (int)(0.581 * (1 << prec) + 0.5); // 0.813
-  static const int CoBU	= (int)(2.032 * (1 << prec) + 0.5); // 2.018
+  static const int CoY	= (int)(1.169 * (1 << prec) + 0.5);
+  static const int CoRV	= (int)(2.042 * (1 << prec) + 0.5);
+  static const int CoGU	= (int)(0.841 * (1 << prec) + 0.5);
+  static const int CoGV	= (int)(0.393 * (1 << prec) + 0.5);
+  static const int CoBU	= (int)(1.628 * (1 << prec) + 0.5);
   
   for (int i = 0; i < 256; ++i) {
 		_lookUpTable.m_plGU[i] = -CoGU * (i - 128);
