@@ -165,12 +165,6 @@ namespace dagon {
           Control::instance().processMouse(event.motion.x,
                                            event.motion.y,
                                            EventMouseMove);
-          if (config.controlMode == kControlFixed) {
-            if (Control::instance().isDirectControlActive()) {
-              SDL_WarpMouseInWindow(_window, config.displayWidth >> 1,
-                                    config.displayHeight >> 1);
-            }
-          }
           break;
         case SDL_MOUSEBUTTONDOWN:
           if (event.button.button == SDL_BUTTON_LEFT) {
@@ -218,6 +212,17 @@ namespace dagon {
           break;
         default:
           break;
+      }
+    }
+    if (config.controlMode == kControlFixed) {
+      if (Control::instance().isDirectControlActive()) {
+        double currentTime = SDL_GetTicks();
+        static double lastTime = currentTime;
+        if ((currentTime - lastTime) >= 100) {
+          SDL_WarpMouseInWindow(_window, config.displayWidth >> 1,
+                                config.displayHeight >> 1);
+          lastTime = SDL_GetTicks();
+        }
       }
     }
   }

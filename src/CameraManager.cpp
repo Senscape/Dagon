@@ -346,24 +346,22 @@ void CameraManager::directPan(int xPosition, int yPosition) {
   int centerX = config.displayWidth >> 1;
   int centerY = config.displayHeight >> 1;
   
-  if (xPosition != kCurrent) {
-    if (xPosition > centerX)
-      _deltaX = xPosition - centerX;
-    else if (xPosition < centerX)
-      _deltaX = xPosition - centerX;
-    else _deltaX = 0;
+  if (xPosition != centerX) {
+    _deltaX = xPosition - centerX;
+  }
+  else {
+    _deltaX = 0;
   }
   
-  if (yPosition != kCurrent) {
-    if (yPosition > centerY)
-      _deltaY = centerY - yPosition;
-    else if (yPosition < centerY)
-      _deltaY = centerY - yPosition;
-    else _deltaY = 0;
+  if (yPosition != centerY) {
+    _deltaY = centerY - yPosition;
+  }
+  else {
+    _deltaY = 0;
   }
   
-  float smoothH = config.displayWidth / (_maxSpeed * 5000);
-  float smoothV = config.displayHeight / (_maxSpeed * 5000);
+  float smoothH = config.displayWidth / (_maxSpeed * 10000);
+  float smoothV = config.displayHeight / (_maxSpeed * 10000);
   
   _angleH += _toRadians(_deltaX, 1) / smoothH;
   _angleV += _toRadians(_deltaY, 1) / smoothV;
