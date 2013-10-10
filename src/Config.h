@@ -29,7 +29,7 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
 
 enum ControlModes {
-  kControlDrag,
+  kControlDrag = 0,
   kControlFixed,
   kControlFree
 };
@@ -41,7 +41,7 @@ enum DefaultConfiguration {
   kDefAutopaths = true,
   kDefAutorun = true,
   kDefBundleEnabled = true,
-  kDefControlMode = kControlFree,
+  kDefControlMode = kControlFixed,
   kDefDisplayWidth = 0,
   kDefDisplayHeight = 0,
   kDefDisplayDepth = 32,
