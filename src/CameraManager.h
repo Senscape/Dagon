@@ -47,7 +47,6 @@ enum DGCamDefaults {
   DGCamInertia = 350, // Maintain motion after panning stops
   DGCamMaxSpeed = 25,
   DGCamSpeedFactor = 750000
-  
 };
 
 enum DGCamEffects {

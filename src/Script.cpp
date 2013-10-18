@@ -101,7 +101,8 @@ void Script::init() {
   _registerEnums();
   
   // Config modules path
-  luaL_dostring(_L, "package.path = package.path .. \";Modules/?.lua\"");
+  luaL_dostring(_L, "package.path = package.path .. \";modules/?.lua\"");
+  luaL_dostring(_L, "package.path = package.path .. \";scripts/?.lua\"");
   
   // Register all proxys
   Luna<AudioProxy>::Register(_L);
@@ -165,7 +166,7 @@ void Script::init() {
   
   // We're ready to roll, let's attempt to load the script in a Lua thread
   _thread = lua_newthread(_L);
-  snprintf(script, kMaxFileLength, "%s.lua", config.script().c_str());
+  snprintf(script, kMaxFileLength, "%s", config.script().c_str());
   if (luaL_loadfile(_thread, config.path(kPathApp, script, kObjectGeneric).c_str()) == 0)
     _isInitialized = true;
   else {
@@ -426,10 +427,16 @@ int Script::_globalRoom(lua_State *L) {
     // TODO: Read rooms from path
     snprintf(script, kMaxFileLength, "%s.lua", module);
     
-    if (luaL_loadfile(L, Config::instance().path(kPathApp, script, kObjectRoom).c_str()) == 0) {
+    int s = luaL_loadfile(L, Config::instance().path(kPathApp, script, kObjectRoom).c_str());
+    if (s == 0) {
       Script::instance().setModule(module);
-      lua_pcall(L, 0, 0, 0);
+      s = lua_pcall(L, 0, 0, 0);
       Script::instance().unsetModule();
+    }
+    
+    if (s !=0) {
+      Log::instance().error(kModScript, "%s", lua_tostring(L, -1));
+      lua_pop(L, 1); // remove error message
     }
   }
   

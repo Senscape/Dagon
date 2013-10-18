@@ -93,24 +93,25 @@ void Scene::drawSpots() {
         Spot* spot = currentNode->currentSpot();
         
         if (spot->hasTexture() && spot->isEnabled()) {
-          
-          if (spot->hasVideo()) {
-            // If it has a video, we need to check if it's playing
-            if (spot->isPlaying()) { // FIXME: Must stop the spot later!
-              if (spot->video()->hasNewFrame()) {
-                DGFrame* frame = spot->video()->currentFrame();
-                Texture* texture = spot->texture();
-                texture->loadRawData(frame->data, frame->width, frame->height);
+          if (spot->texture()->isLoaded()) {
+            if (spot->hasVideo()) {
+              // If it has a video, we need to check if it's playing
+              if (spot->isPlaying()) { // FIXME: Must stop the spot later!
+                if (spot->video()->hasNewFrame()) {
+                  DGFrame* frame = spot->video()->currentFrame();
+                  Texture* texture = spot->texture();
+                  texture->loadRawData(frame->data, frame->width, frame->height);
+                }
+                
+                spot->texture()->bind();
+                renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
               }
-              
+            }
+            else {
+              // Draw right away...
               spot->texture()->bind();
               renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
             }
-          }
-          else {
-            // Draw right away...
-            spot->texture()->bind();
-            renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
           }
         }
       } while (currentNode->iterateSpots());
