@@ -36,7 +36,7 @@ enum ControlModes {
 
 enum DefaultConfiguration {
   kDefAntialiasing = false,
-  kDefAudioBuffer = 16384,
+  kDefAudioBuffer = 8192,
   kDefAudioDevice = 0,
   kDefAutopaths = true,
   kDefAutorun = true,
