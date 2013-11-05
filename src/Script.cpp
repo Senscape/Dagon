@@ -166,13 +166,19 @@ void Script::init() {
   
   // We're ready to roll, let's attempt to load the script in a Lua thread
   _thread = lua_newthread(_L);
-  snprintf(script, kMaxFileLength, "%s", config.script().c_str());
-  if (luaL_loadfile(_thread, config.path(kPathApp, script, kObjectGeneric).c_str()) == 0)
+  snprintf(script, kMaxFileLength, "scripts/%s", config.script().c_str());
+  int s = luaL_loadfile(_thread, config.path(kPathApp, script, kObjectGeneric).c_str());
+  if (s == 0)
     _isInitialized = true;
   else {
     // Not found!
     log.error(kModScript, "%s: %s", kString14006, script);
     Control::instance().processKey(kKeyTab, false); // Simulate tab key to open the console
+  }
+  
+  if (s !=0 ) {
+    Log::instance().error(kModScript, "%s", lua_tostring(_thread, -1));
+    lua_pop(_thread, 1); // remove error message
   }
 }
 
@@ -265,7 +271,7 @@ void Script::_error(int result) {
     }
     
     // Now print the last Lua string in the stack, which should indicate the error
-    log.error(kModScript, "%s", lua_tostring(_L, -1));
+    log.error(kModScript, "%s", lua_tostring(_thread, -1));
   }
 }
 
@@ -424,7 +430,6 @@ int Script::_globalRoom(lua_State *L) {
     luaL_dostring(L, line);
     
     // Load the corresponding Lua file
-    // TODO: Read rooms from path
     snprintf(script, kMaxFileLength, "%s.lua", module);
     
     int s = luaL_loadfile(L, Config::instance().path(kPathApp, script, kObjectRoom).c_str());
@@ -434,7 +439,7 @@ int Script::_globalRoom(lua_State *L) {
       Script::instance().unsetModule();
     }
     
-    if (s !=0) {
+    if (s !=0 ) {
       Log::instance().error(kModScript, "%s", lua_tostring(L, -1));
       lua_pop(L, 1); // remove error message
     }
