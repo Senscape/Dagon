@@ -648,6 +648,12 @@ void Control::switchTo(Object* theTarget, bool instant) {
         
         textureManager.setRoomToPreload(_currentRoom);
         
+        if (_eventHandlers.hasEnterRoom)
+          script.processCallback(_eventHandlers.enterRoom, 0);
+        
+        if (_currentRoom->hasEnterEvent())
+          script.processCallback(_currentRoom->enterEvent(), 0);
+        
         performWalk = true;
         
         break;
@@ -689,6 +695,9 @@ void Control::switchTo(Object* theTarget, bool instant) {
             log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
             return;
           }
+          
+          if (_eventHandlers.hasEnterNode)
+            script.processCallback(_eventHandlers.enterNode, 0);
           performWalk = true;
         }
         else {

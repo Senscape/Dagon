@@ -30,6 +30,7 @@ namespace dagon {
 Room::Room() {
   _currentNode = NULL;
   _hasDefaultFootstep = false;
+  _hasEnterEvent = false;
   this->setType(kObjectRoom);
 }
 
@@ -109,6 +110,10 @@ Node* Room::addNode(Node* aNode) {
 void Room::beginIteratingNodes() {
   _it = _arrayOfNodes.begin();
 }
+  
+bool Room::hasEnterEvent() {
+  return _hasEnterEvent;
+}
 
 bool Room::iterateNodes() {
   ++_it;
@@ -117,6 +122,16 @@ bool Room::iterateNodes() {
   } else {
     return true;
   }
+}
+
+int Room::enterEvent() {
+  assert(_hasEnterEvent = true);
+  return _luaReference;
+}
+  
+void Room::setEnterEvent(int luaReference) {
+  _hasEnterEvent = true;
+  _luaReference = luaReference;
 }
 
 bool Room::switchTo(Node* theNode) {

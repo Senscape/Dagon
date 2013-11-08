@@ -201,14 +201,18 @@ void Script::processCallback(int handler, int object) {
   
   lua_rawgeti(_thread, LUA_REGISTRYINDEX, handler);
   
-  if (_isSuspended) {
+  if (int result =  lua_pcall(_thread, 0, 0, 0))
+    _error(result);
+  
+  // TODO: Confirm this change is not breaking something else
+/*  if (_isSuspended) {
     if (int result =  lua_pcall(_thread, 0, 0, 0))
       _error(result);
   }
   else {
     if (int result = lua_resume(_thread, 0))
       _error(result);
-  }
+  }*/
 }
 
 void Script::processCommand(const char *command) {

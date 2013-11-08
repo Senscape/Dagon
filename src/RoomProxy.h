@@ -88,6 +88,14 @@ public:
     return 0;
   }
   
+  // Set an onEnter event
+  int onEnter(lua_State *L) {
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    r->setEnterEvent(ref);
+    
+    return 0;
+  }
+  
   // Set the default footstep
   int setDefaultFootstep(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectAudio) {
@@ -140,6 +148,7 @@ Luna<RoomProxy>::RegType RoomProxy::methods[] = {
   ObjectMethods(RoomProxy),
   method(RoomProxy, addAudio),
   method(RoomProxy, addNode),
+  method(RoomProxy, onEnter),
   method(RoomProxy, setDefaultFootstep),
   method(RoomProxy, startTimer),
   {0,0}

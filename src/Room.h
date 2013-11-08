@@ -48,6 +48,7 @@ class Room : public Object {
   Node* currentNode();
   Audio* defaultFootstep();
   int effectsFlags();
+  int enterEvent();
   
   // Sets
   void setDefaultFootstep(Audio* theFootstep);
@@ -57,8 +58,10 @@ class Room : public Object {
   Audio* addAudio(Audio* anAudio);
   Node* addNode(Node* aNode);
   void beginIteratingNodes();
+  bool hasEnterEvent();
   bool iterateNodes();
   Node* iterator();
+  void setEnterEvent(int luaReference);
   bool switchTo(Node* theNode);
   
  private:
@@ -72,6 +75,8 @@ class Room : public Object {
   Audio* _defaultFootstep;
   int _effectsFlags;
   bool _hasDefaultFootstep;
+  bool _hasEnterEvent;
+  int _luaReference;
   
   Room(const Room&);
   void operator=(const Room&);
