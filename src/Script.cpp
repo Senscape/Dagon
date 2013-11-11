@@ -332,6 +332,7 @@ int Script::_globalLookAt(lua_State *L) {
   int horizontal = static_cast<int>(luaL_checknumber(L, 1));
   int vertical = 0; // Always assumes a 'flat' vertical angle
   bool instant = false;
+  bool adjustment = false;
   
   switch (horizontal) {
     case kNorth:   horizontal = 0;     break;
@@ -349,12 +350,20 @@ int Script::_globalLookAt(lua_State *L) {
     }
   }
   
-  if (lua_gettop(L) == 3) {
-    instant = lua_toboolean(L, 3);
+  if (lua_istable(L, 3)) {
+    lua_pushnil(L);
+    while (lua_next(L, 3) != 0) {
+      const char* key = lua_tostring(L, -2);
+      
+      if (strcmp(key, "instant") == 0) instant = lua_toboolean(L, -1);
+      if (strcmp(key, "adjustment") == 0) adjustment = lua_toboolean(L, -1);
+      
+      lua_pop(L, 1);
+    }
   }
   
   
-  Control::instance().lookAt(horizontal, vertical, instant);
+  Control::instance().lookAt(horizontal, vertical, instant, adjustment);
   
   if (instant) return 0;
   else return Script::instance().suspend();
@@ -480,13 +489,13 @@ int Script::_globalSnap(lua_State *L) {
 int Script::_globalSwitch(lua_State *L) {
   switch (DGCheckProxy(L, 1)) {
     case kObjectNode:
-      Control::instance().switchTo(ProxyToNode(L, 1), lua_toboolean(L, 2));
+      Control::instance().switchTo(ProxyToNode(L, 1));
       break;
     case kObjectRoom:
-      Control::instance().switchTo(ProxyToRoom(L, 1), lua_toboolean(L, 2));
+      Control::instance().switchTo(ProxyToRoom(L, 1));
       break;
     case kObjectSlide:
-      Control::instance().switchTo(ProxyToSlide(L, 1), lua_toboolean(L, 2));
+      Control::instance().switchTo(ProxyToSlide(L, 1));
       break;
     case kObjectGeneric:
       Log::instance().error(kModScript, "%s", kString14003);
@@ -521,6 +530,29 @@ int Script::_globalStopTimer(lua_State *L) {
   
   return 0;
 }
+  
+  int Script::_globalWalkTo(lua_State *L) {
+    switch (DGCheckProxy(L, 1)) {
+      case kObjectNode:
+        Control::instance().walkTo(ProxyToNode(L, 1));
+        break;
+      case kObjectRoom:
+        Control::instance().walkTo(ProxyToRoom(L, 1));
+        break;
+      case kObjectSlide:
+        Control::instance().walkTo(ProxyToSlide(L, 1));
+        break;
+      case kObjectGeneric:
+        Log::instance().error(kModScript, "%s", kString14003);
+        break;
+        
+      case kObjectNone:
+        Log::instance().error(kModScript, "%s", kString14004);
+        break;
+    }
+    
+    return 0;
+  }
 
 int Script::_globalVersion(lua_State *L) {
   lua_pushstring(L, DAGON_VERSION_STRING);
@@ -638,6 +670,7 @@ void Script::_registerGlobals() {
     {"startTimer", _globalStartTimer},
     {"stopTimer", _globalStopTimer},
     {"version", _globalVersion},
+    {"walkTo", _globalWalkTo},
     {NULL, NULL}
   };
   
