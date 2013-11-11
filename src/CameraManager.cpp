@@ -51,7 +51,10 @@ bool CameraManager::canWalk() {
 }
 
 bool CameraManager::isPanning() {
-  return _isPanning;
+  if (_fovAdjustment)
+    return true;
+  else
+    return _isPanning;
 }
 
 ////////////////////////////////////////////////////////////
@@ -172,6 +175,7 @@ void CameraManager::setFieldOfView(float fov) {
   if (!_isLocked) {
     _fovNormal = fov;
     _fovCurrent = _fovNormal;
+    _fovPrevious = _fovNormal;
     this->setViewport(config.displayWidth, config.displayHeight); // Update the viewport
   }
 }
@@ -211,7 +215,17 @@ void CameraManager::setSpeedFactor(int speed) {
   _speedFactor = speed * 10000;
 }
 
-void CameraManager::setTargetAngle(float horizontal, float vertical) {
+void CameraManager::setTargetAngle(float horizontal, float vertical, bool fovAdjustment) {
+  if (fovAdjustment) {
+    _fovAdjustment = true;
+    _bob.currentFactor = DGCamWalkFactor;
+    _bob.currentSpeed = DGCamWalkSpeed;
+    
+    _fovNormal = _fovPrevious - (float)(DGCamWalkZoomIn / 2);
+    
+    _bob.state = DGCamWalking;
+  }
+  
   if (fabs(horizontal - kCurrent) > kEpsilon) {
     // Cancel horizontal motion
     _motionLeft = 0;
@@ -371,6 +385,7 @@ void CameraManager::init() {
   _canBreathe = false;
   _canWalk = false;
   _isLocked = false;
+  _fovAdjustment = false;
   
   _accelH = 0.0f;
   _accelV = 0.0f;
@@ -460,7 +475,7 @@ void CameraManager::panToTargetAngle() {
   if (!_isLocked) {
     if (_angleH < (_angleHTarget - _targetHError) || _angleH > (_angleHTarget + _targetHError)) {
       _deltaX = static_cast<int>((_angleHTarget - _angleH) * 360);
-      _speedH = static_cast<float>(fabs((float)_deltaX) / (float)_speedFactor);
+      _speedH = static_cast<float>(fabs((float)_deltaX) / ((float)_speedFactor) * 4);
     }
     else {
       _deltaX = 0;
@@ -469,11 +484,22 @@ void CameraManager::panToTargetAngle() {
     
     if (_angleV < (_angleVTarget - _targetVError) || _angleV > (_angleVTarget + _targetVError)) {
       _deltaY = static_cast<int>((_angleVTarget - _angleV) * 360);
-      _speedV = static_cast<float>(fabs((float)_deltaY) / (float)_speedFactor);
+      _speedV = static_cast<float>(fabs((float)_deltaY) / ((float)_speedFactor) * 3);
     }
     else {
-      _deltaY = 0;
+      _deltaY = 0 ;
       _angleVTarget = _angleV;
+    }
+  }
+  
+  if (_fovAdjustment) {
+    if (_fovNormal == _fovCurrent) {
+      _fovAdjustment = false;
+      _fovNormal = _fovPrevious;
+      _fovCurrent = _fovPrevious;
+      if (_canBreathe)
+        _bob.state = DGCamBreathing;
+      else _bob.state = DGCamIdle;
     }
   }
 }
@@ -715,8 +741,9 @@ void CameraManager::_calculateBob() {
       break;
     case DGCamWalking:
       // Perform walk FX operations
-      if (_fovCurrent > _fovNormal)
+      if (_fovCurrent > _fovNormal) {
         _fovCurrent -= static_cast<GLfloat>((10.0 / DGCamWalkZoomIn) * config.globalSpeed());
+      }
       else {
         _fovCurrent = _fovNormal;
         if (_canBreathe)

@@ -91,6 +91,8 @@ class CameraManager {
   bool _canBreathe;
   bool _canWalk;
   
+  bool _fovAdjustment;
+  
   float _accelH;
   float _accelV;
   
@@ -187,7 +189,7 @@ public:
   void setMaxSpeed(int theSpeed);
   void setNeutralZone(int zone);
   void setSpeedFactor(int speed);
-  void setTargetAngle(float horizontal, float vertical);
+  void setTargetAngle(float horizontal, float vertical, bool fovAdjustment);
   void setVerticalLimit(float limit);
   void setViewport(int width, int height);
   void setWalk(bool enabled);
