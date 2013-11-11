@@ -142,7 +142,7 @@ public:
   void cutscene(const char* fileName);
   bool isConsoleActive();
   bool isDirectControlActive();
-  void lookAt(float horizontal, float vertical, bool instant);
+  void lookAt(float horizontal, float vertical, bool instant, bool adjustment);
   void processFunctionKey(int aKey);
   void processKey(int aKey, int eventFlags);
   void processMouse(int x, int y, int eventFlags);
@@ -153,7 +153,8 @@ public:
   void reshape(int width, int height);
   void sleep(int forSeconds);
   void syncSpot(Spot* spot);
-  void switchTo(Object* theTarget, bool instant = false);
+  void switchTo(Object* theTarget);
+  void walkTo(Object* theTarget);
   void run();
   void takeSnapshot();
   void terminate();

@@ -213,13 +213,13 @@ bool Control::isDirectControlActive() {
     return false;
 }
 
-void Control::lookAt(float horizontal, float vertical, bool instant) {
+void Control::lookAt(float horizontal, float vertical, bool instant, bool adjustment) {
   if (instant) {
     cameraManager.setAngleHorizontal(horizontal);
     cameraManager.setAngleVertical(vertical);
   }
   else {
-    cameraManager.setTargetAngle(horizontal, vertical);
+    cameraManager.setTargetAngle(horizontal, vertical, adjustment);
     _state->set(StateLookAt);
     cursorManager.fadeOut();
   }
@@ -386,15 +386,8 @@ void Control::processMouse(int x, int y, int eventFlags) {
     script.processCallback(_eventHandlers.mouseButton, 0);
   }
   
-  if (config.controlMode == kControlFixed) {
-    if (eventFlags == EventMouseRightUp) {
-      _directControlActive = !_directControlActive;
-    }
-  }
-  else {
-    if ((eventFlags == EventMouseRightUp) && _eventHandlers.hasMouseRightButton) {
-      script.processCallback(_eventHandlers.mouseRightButton, 0);
-    }
+  if ((eventFlags == EventMouseRightUp) && _eventHandlers.hasMouseRightButton) {
+    script.processCallback(_eventHandlers.mouseRightButton, 0);
   }
   
   // The overlay system is handled differently than the spots, so we
@@ -617,13 +610,21 @@ void Control::sleep(int forSeconds) {
   cursorManager.fadeOut();
 }
 
-void Control::switchTo(Object* theTarget, bool instant) {
+void Control::switchTo(Object* theTarget) {
   static bool firstSwitch = true;
-  bool performWalk;
   
   _updateView(StateNode, true);
   
   videoManager.flush();
+  
+  if (firstSwitch) {
+    firstSwitch = false;
+  }
+  else {
+    renderManager.blendNextUpdate(true);
+  }
+  
+  cameraManager.setViewport(config.displayWidth, config.displayHeight);
   
   if (theTarget) {
     switch (theTarget->type()) {
@@ -631,8 +632,7 @@ void Control::switchTo(Object* theTarget, bool instant) {
         audioManager.clear();
         feedManager.clear(); // Clear all pending feeds
         
-        if (!firstSwitch) {
-          renderManager.blendNextUpdate(true);
+        if (currentNode()) {
           if (currentNode()->isSlide())
             cameraManager.unlock();
         }
@@ -654,12 +654,8 @@ void Control::switchTo(Object* theTarget, bool instant) {
         if (_currentRoom->hasEnterEvent())
           script.processCallback(_currentRoom->enterEvent(), 0);
         
-        performWalk = true;
-        
         break;
       case kObjectSlide:
-        renderManager.blendNextUpdate();
-        
         if (_currentRoom) {
           Node* node = (Node*)theTarget;
           node->setPreviousNode(this->currentNode());
@@ -673,7 +669,6 @@ void Control::switchTo(Object* theTarget, bool instant) {
             _directControlActive = false;
           
           cameraManager.lock();
-          performWalk = false;
         }
         else {
           log.error(kModControl, "%s", kString12009);
@@ -683,9 +678,6 @@ void Control::switchTo(Object* theTarget, bool instant) {
         break;
       case kObjectNode:
         audioManager.clear();
-        
-        renderManager.blendNextUpdate(true);
-        
         if (_currentRoom) {
           if (currentNode()->isSlide())
             cameraManager.unlock();
@@ -698,7 +690,6 @@ void Control::switchTo(Object* theTarget, bool instant) {
           
           if (_eventHandlers.hasEnterNode)
             script.processCallback(_eventHandlers.enterNode, 0);
-          performWalk = true;
         }
         else {
           log.error(kModControl, "%s", kString12009);
@@ -712,8 +703,6 @@ void Control::switchTo(Object* theTarget, bool instant) {
     // Only slides switch to NULL targets, so we check whether the new object is another slide.
     // If it isn't, we unlock the camera.
     if (_currentRoom) {
-      renderManager.blendNextUpdate();
-      
       Node* current = this->currentNode();
       Node* previous = current->previousNode();
       
@@ -729,8 +718,6 @@ void Control::switchTo(Object* theTarget, bool instant) {
           // FIXME: Forced, but it should return to the previous mode
           _directControlActive = true;
       }
-      
-      performWalk = false;
     }
   }
   
@@ -815,35 +802,34 @@ void Control::switchTo(Object* theTarget, bool instant) {
         ++it;
       }
     }
-    
-    if (!firstSwitch && performWalk && !instant) {
-      cameraManager.simulateWalk();
-      Node* current = this->currentNode();
-      
-      // Finally, check if must play a single footstep
-      if (current->hasFootstep()) {
-        current->footstep()->unload();
-        audioManager.requestAudio(current->footstep());
-        current->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-        current->footstep()->play();
-      }
-      else {
-        if (_currentRoom->hasDefaultFootstep()) {
-          _currentRoom->defaultFootstep()->unload();
-          audioManager.requestAudio(_currentRoom->defaultFootstep());
-          _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-          _currentRoom->defaultFootstep()->play();
-        }
-      }
-    }
   }
   
   audioManager.flush();
   
   cameraManager.stopPanning();
+}
   
-  if (firstSwitch)
-    firstSwitch = false;
+void Control::walkTo(Object* theTarget) {
+  this->switchTo(theTarget);
+  
+  cameraManager.simulateWalk();
+  Node* current = this->currentNode();
+  
+  // Finally, check if must play a single footstep
+  if (current->hasFootstep()) {
+    current->footstep()->unload();
+    audioManager.requestAudio(current->footstep());
+    current->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+    current->footstep()->play();
+  }
+  else {
+    if (_currentRoom->hasDefaultFootstep()) {
+      _currentRoom->defaultFootstep()->unload();
+      audioManager.requestAudio(_currentRoom->defaultFootstep());
+      _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+      _currentRoom->defaultFootstep()->play();
+    }
+  }
 }
 
 void Control::syncSpot(Spot* spot) {
@@ -960,7 +946,7 @@ void Control::_processAction(){
       break;
     case kActionSwitch:
       cursorManager.removeAction();
-      switchTo(action->target);
+      walkTo(action->target);
       break;
   }
 }
