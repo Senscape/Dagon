@@ -32,6 +32,7 @@ Node::Node() {
   _previousNode = this;
   _hasFootstep = false;
   _isSlide = false;
+  _parentRoom = 0;
   _slideReturn = 0;
   this->setType(kObjectNode);
 }
@@ -97,6 +98,10 @@ Audio* Node::footstep() {
   return _footstep;
 }
 
+Room* Node::parentRoom() {
+  return _parentRoom;
+}
+  
 Node* Node::previousNode() {
   return _previousNode;
 }
@@ -116,6 +121,10 @@ void Node::setDescription(std::string theDescription) {
 void Node::setFootstep(Audio* theFootstep) {
   _footstep = theFootstep;
   _hasFootstep = true;
+}
+  
+void Node::setParentRoom(Room* room) {
+  _parentRoom = room;
 }
 
 void Node::setPreviousNode(Node* node) {

@@ -102,7 +102,7 @@ Audio* Room::addAudio(Audio* anAudio) {
 Node* Room::addNode(Node* aNode) {
   if (_arrayOfNodes.empty())
     _currentNode = aNode;
-  
+  aNode->setParentRoom(this);
   _arrayOfNodes.push_back(aNode);
   return aNode;
 }

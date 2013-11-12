@@ -30,6 +30,7 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
 
 class Audio;
+class Room;
 class Spot;
 
 ////////////////////////////////////////////////////////////
@@ -52,6 +53,7 @@ class Node : public Object {
   Spot* currentSpot();
   std::string description();
   Audio* footstep();
+  Room* parentRoom();
   Node* previousNode();
   int slideReturn();
   
@@ -59,6 +61,7 @@ class Node : public Object {
   void setBundleName(std::string theName);
   void setDescription(std::string theDescription);
   void setFootstep(Audio* theFootstep);
+  void setParentRoom(Room* room);
   void setPreviousNode(Node* node);
   void setSlide(bool enabled);
   void setSlideReturn(int luaHandler);
@@ -80,6 +83,7 @@ class Node : public Object {
   std::string _description;
   
   Audio* _footstep;
+  Room* _parentRoom;
   Node* _previousNode;
   bool _hasFootstep;
   bool _isSlide;

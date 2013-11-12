@@ -678,23 +678,39 @@ void Control::switchTo(Object* theTarget) {
         break;
       case kObjectNode:
         audioManager.clear();
-        if (_currentRoom) {
-          if (currentNode()->isSlide())
-            cameraManager.unlock();
-          
-          Node* node = (Node*)theTarget;
-          if (!_currentRoom->switchTo(node)) {
-            log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
-            return;
+        if (currentNode()->isSlide())
+          cameraManager.unlock();
+        
+        Node* node = (Node*)theTarget;
+        Room* room = node->parentRoom();
+        
+        if (room) {
+          if (room != _currentRoom) {
+            feedManager.clear(); // Clear all pending feeds
+            _currentRoom = room;
+            _scene->setRoom(room);
+            timerManager.setLuaObject(_currentRoom->luaObject());
+            textureManager.setRoomToPreload(_currentRoom);
+            
+            if (_eventHandlers.hasEnterRoom)
+              script.processCallback(_eventHandlers.enterRoom, 0);
+            
+            if (_currentRoom->hasEnterEvent())
+              script.processCallback(_currentRoom->enterEvent(), 0);
           }
-          
-          if (_eventHandlers.hasEnterNode)
-            script.processCallback(_eventHandlers.enterNode, 0);
         }
         else {
           log.error(kModControl, "%s", kString12009);
           return;
         }
+        
+        if (!_currentRoom->switchTo(node)) {
+          log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
+          return;
+        }
+        
+        if (_eventHandlers.hasEnterNode)
+          script.processCallback(_eventHandlers.enterNode, 0);
         
         break;
     }
