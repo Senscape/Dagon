@@ -51,10 +51,7 @@ bool CameraManager::canWalk() {
 }
 
 bool CameraManager::isPanning() {
-  if (_fovAdjustment)
-    return true;
-  else
-    return _isPanning;
+  return _fovAdjustment ? true : _isPanning;
 }
 
 ////////////////////////////////////////////////////////////
