@@ -231,13 +231,8 @@ void AudioManager::requestAudio(Audio* target) {
   std::vector<Audio*>::iterator it;
   it = _arrayOfActiveAudios.begin();
   
-  while (it != _arrayOfActiveAudios.end()) {
-    if ((*it) == target) {
-      isActive = true;
-      break;
-    }
-    ++it;
-  }
+  isActive = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(),
+                       target) != _arrayOfActiveAudios.end();
   
   if (!isActive) {
     if (SDL_LockMutex(_mutex) == 0) {
