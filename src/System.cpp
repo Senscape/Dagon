@@ -198,8 +198,8 @@ namespace dagon {
               Control::instance().terminate();
               break;
             case SDL_WINDOWEVENT_LEAVE:
-              Control::instance().processMouse(config.displayWidth >> 2,
-                                               config.displayHeight >> 2,
+              Control::instance().processMouse(config.displayWidth >> 1,
+                                               config.displayHeight >> 1,
                                                EventMouseMove);
               break;
             case SDL_WINDOWEVENT_RESIZED:
