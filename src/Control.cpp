@@ -365,12 +365,10 @@ void Control::processKey(int aKey, int eventFlags) {
 void Control::processMouse(int x, int y, int eventFlags) {
   // TODO: Horrible nesting of IFs here... improve
   
-  if (config.controlMode == kControlFixed) {
-    if (!_directControlActive) {
-      cursorManager.updateCoords(x, y);
-    }
+  if ((config.controlMode != kControlFixed) ||
+      !_directControlActive) {
+    cursorManager.updateCoords(x, y);
   }
-  else cursorManager.updateCoords(x, y);
   
   if (!cursorManager.isEnabled() || cursorManager.isFading()) {
     // Ignore all the rest
