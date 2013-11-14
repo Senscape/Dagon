@@ -73,7 +73,7 @@ enum SystemPaths {
 ////////////////////////////////////////////////////////////
 
 class Config {
-public:
+ public:
   static Config& instance() {
     static Config config;
     return config;
@@ -119,7 +119,7 @@ public:
   // TODO: Provide members to save/load configurations
   // (also used by system to save them in the user's folder)
   
-private:
+ private:
   std::string _appPath;
   std::string _resPath;
   std::string _scriptName;

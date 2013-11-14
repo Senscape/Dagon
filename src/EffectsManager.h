@@ -33,23 +33,27 @@ namespace dagon {
 #define kEffectsMaxDust        10000
 #define kEffectsDustFactor     32767.0f
 
+namespace effects {
+
 typedef enum {
-  kEffectBrightness,
-  kEffectSaturation,
-  kEffectContrast,
-  kEffectDust,
-  kEffectDustColor,
-  kEffectDustSize,
-  kEffectDustSpeed,
-  kEffectDustSpread,
-  kEffectMotionBlur,
-  kEffectNoise,
-  kEffectSepia,
-  kEffectSharpen,
-  kEffectSharpenRatio,
-  kEffectThrob,
-  kEffectThrobStyle
-} kEffects;
+  kBrightness,
+  kSaturation,
+  kContrast,
+  kDust,
+  kDustColor,
+  kDustSize,
+  kDustSpeed,
+  kDustSpread,
+  kMotionBlur,
+  kNoise,
+  kSepia,
+  kSharpen,
+  kSharpenRatio,
+  kThrob,
+  kThrobStyle
+} EffectsSettings;
+
+}
 
 typedef struct {
   GLfloat x,y,z;
@@ -86,21 +90,21 @@ class EffectsManager {
   Texture* _dustTexture;
   char* _shaderData;
   
-  float _adjustBrightness;
-  float _adjustSaturation;
-  float _adjustContrast;
-  uint32_t _dustColor;
-  float _dustIntensity;
-  float _dustSize;
-  float _dustSpeed;
-  float _dustSpread;
-  float _motionBlurIntensity;
-  float _noiseIntensity;
-  float _sepiaIntensity;
-  float _sharpenRatio;
-  float _sharpenIntensity;
+  int _adjustBrightness;
+  int _adjustSaturation;
+  int _adjustContrast;
+  int _dustColor;
+  int _dustIntensity;
+  int _dustSize;
+  int _dustSpeed;
+  int _dustSpread;
+  int _motionBlurIntensity;
+  int _noiseIntensity;
+  int _sepiaIntensity;
+  int _sharpenRatio;
+  int _sharpenIntensity;
   int _throbStyle;
-  float _throbIntensity;
+  int _throbIntensity;
   
   bool _isActive;
   bool _isInitialized;

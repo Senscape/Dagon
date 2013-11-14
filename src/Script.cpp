@@ -284,9 +284,9 @@ int Script::_globalCopy(lua_State *L) {
   
   // TODO: Implement
   /*EffectsManager& effectsManager = EffectsManager::instance();
-  lua_pushnumber(L, effectsManager.value(kEffectBrightness) * 100.0f);
+  lua_pushnumber(L, effectsManager.value(kBrightness) * 100.0f);
   lua_setfield(L, -2, "brightness");
-  lua_pushnumber(L, effectsManager.value(kEffectContrast) * 100.0f);*/
+  lua_pushnumber(L, effectsManager.value(kContrast) * 100.0f);*/
   
   return 1;
 }
