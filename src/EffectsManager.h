@@ -28,38 +28,28 @@ namespace dagon {
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGEffectsFileName       "DGShaderData.fs"
-#define DGEffectsReadFromFile   0
-#define DGEffectsMaxDust        10000
-#define DGEffectsDustFactor     32767.0f
+#define kEffectsFileName       "DGShaderData.fs"
+#define kEffectsReadFromFile   0
+#define kEffectsMaxDust        10000
+#define kEffectsDustFactor     32767.0f
 
-enum DGEffects {
-  DGEffectAdjust,
-  DGEffectDust,
-  DGEffectMotionBlur,
-  DGEffectNoise,
-  DGEffectSepia,
-  DGEffectSharpen,
-  DGEffectThrob
-};
-
-enum DGEffectsValues {
-  DGEffectAdjustBrightness,
-  DGEffectAdjustSaturation,
-  DGEffectAdjustContrast,
-  DGEffectDustColor,
-  DGEffectDustIntensity,
-  DGEffectDustSize,
-  DGEffectDustSpeed,
-  DGEffectDustSpread,
-  DGEffectMotionBlurIntensity,
-  DGEffectNoiseIntensity,
-  DGEffectSepiaIntensity,
-  DGEffectSharpenRatio,
-  DGEffectSharpenIntensity,
-  DGEffectThrobStyle,
-  DGEffectThrobIntensity
-};
+typedef enum {
+  kEffectBrightness,
+  kEffectSaturation,
+  kEffectContrast,
+  kEffectDust,
+  kEffectDustColor,
+  kEffectDustSize,
+  kEffectDustSpeed,
+  kEffectDustSpread,
+  kEffectMotionBlur,
+  kEffectNoise,
+  kEffectSepia,
+  kEffectSharpen,
+  kEffectSharpenRatio,
+  kEffectThrob,
+  kEffectThrobStyle
+} kEffects;
 
 typedef struct {
   GLfloat x,y,z;
@@ -91,37 +81,24 @@ class EffectsManager {
   GLuint _fragment;
   GLuint _program;
   
-  DGParticle _particles[DGEffectsMaxDust];
+  DGParticle _particles[kEffectsMaxDust];
   
   Texture* _dustTexture;
   char* _shaderData;
   
-  bool _adjustEnabled;
   float _adjustBrightness;
   float _adjustSaturation;
   float _adjustContrast;
-  
-  bool _dustEnabled;
   uint32_t _dustColor;
   float _dustIntensity;
   float _dustSize;
   float _dustSpeed;
   float _dustSpread;
-  
-  bool _motionBlurEnabled;
   float _motionBlurIntensity;
-  
-  bool _noiseEnabled;
   float _noiseIntensity;
-  
-  bool _sepiaEnabled;
   float _sepiaIntensity;
-  
-  bool _sharpenEnabled;
   float _sharpenRatio;
   float _sharpenIntensity;
-  
-  bool _throbEnabled;
   int _throbStyle;
   float _throbIntensity;
   
@@ -145,10 +122,8 @@ public:
   
   void drawDust();
   void init();
-  bool isEnabled(int effectID);
   void pause();
   void play();
-  void setEnabled(int effectID, bool enabled);
   void setValuef(int valueID, float theValue);
   void setValuei(int valueID, int theValue);
   void update();

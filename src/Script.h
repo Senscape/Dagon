@@ -63,6 +63,7 @@ class Script {
   
   int _ref;
   void _error(int result);
+  static int _globalCopy(lua_State *L);
   static int _globalCurrentNode(lua_State *L);
   static int _globalCurrentRoom(lua_State *L);
   static int _globalCutscene(lua_State *L);

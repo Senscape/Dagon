@@ -32,14 +32,6 @@ cameraManager(CameraManager::instance()),
 config(Config::instance()),
 timerManager(TimerManager::instance())
 {
-  _adjustEnabled = false;
-  _dustEnabled = false;
-  _motionBlurEnabled = false;
-  _noiseEnabled = false;
-  _sepiaEnabled = false;
-  _sharpenEnabled = false;
-  _throbEnabled = false;
-  
   _adjustBrightness = 1.0f;
   _adjustSaturation = 1.0f;
   _adjustContrast = 1.0f;
@@ -84,7 +76,7 @@ EffectsManager::~EffectsManager() {
 ////////////////////////////////////////////////////////////
 
 void EffectsManager::drawDust() {
-  if (_dustEnabled && config.effects) {
+  if (_dustIntensity && config.effects) {
     // Temporary
     glPushMatrix();
     
@@ -128,7 +120,7 @@ void EffectsManager::drawDust() {
 void EffectsManager::init() {
   const char* pointerToData;
   
-  if (DGEffectsReadFromFile) {
+  if (kEffectsReadFromFile) {
     if (_textFileRead()) {
       pointerToData = _shaderData;
     }
@@ -149,49 +141,22 @@ void EffectsManager::init() {
   _isInitialized = true;
   
   // Set default values
-  this->setValuef(DGEffectAdjustBrightness, _adjustBrightness);
-  this->setValuef(DGEffectAdjustContrast, _adjustContrast);
-  this->setValuef(DGEffectAdjustSaturation, _adjustSaturation);
-  this->setValuef(DGEffectMotionBlurIntensity, _motionBlurIntensity); // Lowest
-  this->setValuef(DGEffectNoiseIntensity, _noiseIntensity);
-  this->setValuef(DGEffectSepiaIntensity, _sepiaIntensity);
-  this->setValuef(DGEffectSharpenIntensity, _sharpenIntensity);
-  this->setValuef(DGEffectSharpenRatio, _sharpenRatio);
+  this->setValuef(kEffectBrightness, _adjustBrightness);
+  this->setValuef(kEffectContrast, _adjustContrast);
+  this->setValuef(kEffectSaturation, _adjustSaturation);
+  this->setValuef(kEffectMotionBlur, _motionBlurIntensity); // Lowest
+  this->setValuef(kEffectNoise, _noiseIntensity);
+  this->setValuef(kEffectSepia, _sepiaIntensity);
+  this->setValuef(kEffectSharpen, _sharpenIntensity);
+  this->setValuef(kEffectSharpenRatio, _sharpenRatio);
   
   // Initialize dust
-  for (int i = 0; i < DGEffectsMaxDust; ++i) {
+  for (int i = 0; i < kEffectsMaxDust; ++i) {
     _buildParticle(i);
   }
   
   _dustTexture = new Texture;
   _dustTexture->loadFromMemory(kDustData, 3666);
-}
-
-bool EffectsManager::isEnabled(int effectID) {
-  switch (effectID) {
-    case DGEffectAdjust:
-      return _adjustEnabled;
-      
-    case DGEffectDust:
-      return _dustEnabled;
-      
-    case DGEffectMotionBlur:
-      return _motionBlurEnabled;
-      
-    case DGEffectNoise:
-      return _noiseEnabled;
-      
-    case DGEffectSepia:
-      return _sepiaEnabled;
-      
-    case DGEffectSharpen:
-      return _sharpenEnabled;
-      
-    case DGEffectThrob:
-      return _throbEnabled;
-  }
-  
-  return false;
 }
 
 void EffectsManager::pause() {
@@ -209,146 +174,114 @@ void EffectsManager::play() {
   }
 }
 
-void EffectsManager::setEnabled(int effectID, bool enabled) {
-  if (_isInitialized) {
-    GLint parameter;
-    
-    this->play();
-    
-    switch (effectID) {
-      case DGEffectAdjust:
-        _adjustEnabled = enabled;
-        parameter = glGetUniformLocation(_program, "AdjustEnabled");
-        break;
-        
-      case DGEffectDust:
-        _dustEnabled = enabled;
-        this->pause();
-        return;
-        
-      case DGEffectMotionBlur:
-        _motionBlurEnabled = enabled;
-        parameter = glGetUniformLocation(_program, "MotionBlurEnabled");
-        break;
-        
-      case DGEffectNoise:
-        _noiseEnabled = enabled;
-        parameter = glGetUniformLocation(_program, "NoiseEnabled");
-        break;
-        
-      case DGEffectSepia:
-        _sepiaEnabled = enabled;
-        parameter = glGetUniformLocation(_program, "SepiaEnabled");
-        break;
-        
-      case DGEffectSharpen:
-        _sharpenEnabled = enabled;
-        parameter = glGetUniformLocation(_program, "SharpenEnabled");
-        break;
-        
-      case DGEffectThrob:
-        _throbEnabled = enabled;
-        
-        if (!_throbEnabled) {
-          // Special case, we reset the brightness and contrast
-          this->setValuef(DGEffectAdjustBrightness, _adjustBrightness);
-          this->setValuef(DGEffectAdjustContrast, _adjustContrast);
-        }
-        
-        this->pause();
-        return;
-        
-      default:
-        this->pause();
-        return;
-    }
-    
-    glUniform1i(parameter, enabled);
-    
-    this->pause();
-  }
-}
-
 void EffectsManager::setValuef(int valueID, float theValue) {
   if (_isInitialized) {
     GLint parameter;
+    GLint intensity;
     
     this->play();
     
     switch (valueID) {
-      case DGEffectAdjustBrightness:
-        parameter = glGetUniformLocation(_program, "AdjustBrightness");
+      case kEffectBrightness:
+        intensity = glGetUniformLocation(_program, "AdjustBrightness");
         _adjustBrightness = theValue;
         break;
         
-      case DGEffectAdjustSaturation:
-        parameter = glGetUniformLocation(_program, "AdjustSaturation");
+      case kEffectSaturation:
+        intensity = glGetUniformLocation(_program, "AdjustSaturation");
         _adjustSaturation = theValue;
         break;
         
-      case DGEffectAdjustContrast:
-        parameter = glGetUniformLocation(_program, "AdjustContrast");
+      case kEffectContrast:
+        intensity = glGetUniformLocation(_program, "AdjustContrast");
         _adjustContrast = theValue;
         break;
         
-      case DGEffectDustColor:
-        _dustColor = (int)theValue;
+      case kEffectDustColor:
+        _dustColor = static_cast<uint32_t>(theValue);
         this->pause();
         return;
         
-      case DGEffectDustIntensity:
-        if (theValue < DGEffectsMaxDust)
+      case kEffectDust:
+        if (theValue < kEffectsMaxDust)
           _dustIntensity = theValue;
         this->pause();
         return;
         
-      case DGEffectDustSize:
+      case kEffectDustSize:
         _dustSize = theValue;
         this->pause();
         return;
         
-      case DGEffectDustSpeed:
+      case kEffectDustSpeed:
         _dustSpeed = theValue;
         this->pause();
         return;
         
-      case DGEffectDustSpread:
+      case kEffectDustSpread:
         _dustSpread = theValue;
         this->pause();
         return;
         
-      case DGEffectMotionBlurIntensity:
-        parameter = glGetUniformLocation(_program, "MotionBlurIntensity");
+      case kEffectMotionBlur:
+        parameter = glGetUniformLocation(_program, "MotionBlurEnabled");
+        intensity = glGetUniformLocation(_program, "MotionBlurIntensity");
         _motionBlurIntensity = theValue;
+        if (theValue)
+          glUniform1i(parameter, true);
+        else
+          glUniform1i(parameter, false);
         break;
         
-      case DGEffectNoiseIntensity:
-        parameter = glGetUniformLocation(_program, "NoiseIntensity");
+      case kEffectNoise:
+        parameter = glGetUniformLocation(_program, "NoiseEnabled");
+        intensity = glGetUniformLocation(_program, "NoiseIntensity");
         _noiseIntensity = theValue;
+        if (theValue)
+          glUniform1i(parameter, true);
+        else
+          glUniform1i(parameter, false);
         break;
         
-      case DGEffectSepiaIntensity:
-        parameter = glGetUniformLocation(_program, "SepiaIntensity");
+      case kEffectSepia:
+        parameter = glGetUniformLocation(_program, "SepiaEnabled");
+        intensity = glGetUniformLocation(_program, "SepiaIntensity");
         _sepiaIntensity = theValue;
+        if (theValue)
+          glUniform1i(parameter, true);
+        else
+          glUniform1i(parameter, false);
         break;
         
-      case DGEffectSharpenRatio:
-        parameter = glGetUniformLocation(_program, "SharpenRatio");
+      case kEffectSharpenRatio:
+        intensity = glGetUniformLocation(_program, "SharpenRatio");
         _sharpenRatio = theValue;
         break;
         
-      case DGEffectSharpenIntensity:
-        parameter = glGetUniformLocation(_program, "SharpenIntensity");
+      case kEffectSharpen:
+        parameter = glGetUniformLocation(_program, "SharpenEnabled");
+        intensity = glGetUniformLocation(_program, "SharpenIntensity");
         _sharpenIntensity = theValue;
+        if (theValue)
+          glUniform1i(parameter, true);
+        else
+          glUniform1i(parameter, false);
         break;
         
-      case DGEffectThrobStyle:
+      case kEffectThrobStyle:
         _throbStyle = (int)theValue;
         this->pause();
         return;
         
-      case DGEffectThrobIntensity:
+      case kEffectThrob:
         _throbIntensity = theValue;
+        if (!_throbIntensity) {
+          // Special case, we reset the brightness and contrast
+          intensity = glGetUniformLocation(_program, "AdjustBrightness");
+          glUniform1f(intensity, _adjustBrightness);
+          intensity = glGetUniformLocation(_program, "AdjustContrast");
+          glUniform1f(intensity, _adjustContrast);
+        }
         this->pause();
         return;
         
@@ -357,7 +290,19 @@ void EffectsManager::setValuef(int valueID, float theValue) {
         return;
     }
     
-    glUniform1f(parameter, theValue);
+    glUniform1f(intensity, theValue);
+    
+    // Special case to enable/disable adjustment if three values are normal
+    if ((fabs(_adjustBrightness - 1.0f) < kEpsilon) &&
+        (fabs(_adjustContrast - 1.0f) < kEpsilon) &&
+        (fabs(_adjustSaturation - 1.0f) < kEpsilon)) {
+      parameter = glGetUniformLocation(_program, "AdjustEnabled");
+      glUniform1i(parameter, false);
+    }
+    else {
+      parameter = glGetUniformLocation(_program, "AdjustEnabled");
+      glUniform1i(parameter, true);
+    }
     
     this->pause();
   }
@@ -366,7 +311,7 @@ void EffectsManager::setValuef(int valueID, float theValue) {
 void EffectsManager::setValuei(int valueID, int theValue) {
   if (_isInitialized) {
     switch (valueID) {
-      case DGEffectDustColor:
+      case kEffectDustColor:
         _dustColor = theValue;
         break;
         
@@ -382,7 +327,7 @@ void EffectsManager::update() {
   if (_isActive) {
     GLint parameter;
     
-    if (_motionBlurEnabled) {
+    if (_motionBlurIntensity) {
       parameter = glGetUniformLocation(_program, "MotionBlurOffsetX");
       glUniform1f(parameter, cameraManager.motionHorizontal());
       
@@ -390,7 +335,7 @@ void EffectsManager::update() {
       glUniform1f(parameter, cameraManager.motionVertical());
     }
     
-    if (_noiseEnabled) {
+    if (_noiseIntensity) {
       parameter = glGetUniformLocation(_program, "NoiseRand");
       glUniform1f(parameter, noise);
       
@@ -399,7 +344,7 @@ void EffectsManager::update() {
       else noise = 0.0f;
     }
     
-    if (_throbEnabled) {
+    if (_throbIntensity) {
       static int handlerStyle1 = timerManager.createManual(0.1f, 100);
       static int handlerStyle2 = timerManager.createManual(2, 1000);
       static float aux;
@@ -440,21 +385,21 @@ void EffectsManager::update() {
 
 float EffectsManager::value(int valueID) {
   switch (valueID) {
-    case DGEffectAdjustBrightness: return _adjustBrightness;
-    case DGEffectAdjustSaturation: return _adjustSaturation;
-    case DGEffectAdjustContrast: return _adjustContrast;
-    case DGEffectDustColor: return _dustColor;
-    case DGEffectDustIntensity: return _dustIntensity;
-    case DGEffectDustSize: return _dustSize;
-    case DGEffectDustSpeed: return _dustSpeed;
-    case DGEffectDustSpread: return _dustSpread;
-    case DGEffectMotionBlurIntensity: return _motionBlurIntensity;
-    case DGEffectNoiseIntensity: return _noiseIntensity;
-    case DGEffectSepiaIntensity: return _sepiaIntensity;
-    case DGEffectSharpenRatio: return _sharpenRatio;
-    case DGEffectSharpenIntensity: return _sharpenIntensity;
-    case DGEffectThrobStyle: return _throbStyle;
-    case DGEffectThrobIntensity: return _throbIntensity;
+    case kEffectBrightness: return _adjustBrightness;
+    case kEffectSaturation: return _adjustSaturation;
+    case kEffectContrast: return _adjustContrast;
+    case kEffectDustColor: return _dustColor;
+    case kEffectDust: return _dustIntensity;
+    case kEffectDustSize: return _dustSize;
+    case kEffectDustSpeed: return _dustSpeed;
+    case kEffectDustSpread: return _dustSpread;
+    case kEffectMotionBlur: return _motionBlurIntensity;
+    case kEffectNoise: return _noiseIntensity;
+    case kEffectSepia: return _sepiaIntensity;
+    case kEffectSharpenRatio: return _sharpenRatio;
+    case kEffectSharpen: return _sharpenIntensity;
+    case kEffectThrobStyle: return _throbStyle;
+    case kEffectThrob: return _throbIntensity;
   }
   
   return 0.0f;
@@ -468,23 +413,23 @@ float EffectsManager::value(int valueID) {
 void EffectsManager::_buildParticle(int idx) {
   int s;
   
-  s = rand() % (int)DGEffectsDustFactor;
-  _particles[idx].xd = -(s / DGEffectsDustFactor - 0.5f) / _dustSpread;
+  s = rand() % (int)kEffectsDustFactor;
+  _particles[idx].xd = -(s / kEffectsDustFactor - 0.5f) / _dustSpread;
   
-  s = rand() % (int)DGEffectsDustFactor;
-  _particles[idx].zd = -(s / DGEffectsDustFactor - 0.5f) / _dustSpread;
+  s = rand() % (int)kEffectsDustFactor;
+  _particles[idx].zd = -(s / kEffectsDustFactor - 0.5f) / _dustSpread;
   
-  s = rand() % (int)DGEffectsDustFactor;
-  _particles[idx].yd = -s / DGEffectsDustFactor / _dustSpeed;
+  s = rand() % (int)kEffectsDustFactor;
+  _particles[idx].yd = -s / kEffectsDustFactor / _dustSpeed;
   
-  s = rand() % (int)DGEffectsDustFactor;
-  _particles[idx].x = s / DGEffectsDustFactor - 0.5f;
+  s = rand() % (int)kEffectsDustFactor;
+  _particles[idx].x = s / kEffectsDustFactor - 0.5f;
   
-  s = rand() % (int)DGEffectsDustFactor;
-  _particles[idx].y = s / DGEffectsDustFactor;
+  s = rand() % (int)kEffectsDustFactor;
+  _particles[idx].y = s / kEffectsDustFactor;
   
-  s = rand() % (int)DGEffectsDustFactor;
-  _particles[idx].z = s / DGEffectsDustFactor - 0.5f;
+  s = rand() % (int)kEffectsDustFactor;
+  _particles[idx].z = s / kEffectsDustFactor - 0.5f;
 }
 
 // Modified example from Lighthouse 3D: http://www.lighthouse3d.com
@@ -492,7 +437,7 @@ bool EffectsManager::_textFileRead() {
   FILE* fh;
   long size = 0;
   
-  fh = fopen(DGEffectsFileName, "rt");
+  fh = fopen(kEffectsFileName, "rt");
   if (fh != NULL) {
     
     fseek(fh, 0, SEEK_END);

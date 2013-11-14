@@ -39,72 +39,72 @@ static int EffectsLibGet(lua_State *L) {
   const char *key = luaL_checkstring(L, 2);
   
   if (strcmp(key, "brightness") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectAdjustBrightness) * 100.0f);
+    lua_pushnumber(L, effectsManager.value(kEffectBrightness) * 100.0f);
     return 1;
   }
   
   if (strcmp(key, "contrast") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectAdjustContrast) * 100.0f);
+    lua_pushnumber(L, effectsManager.value(kEffectContrast) * 100.0f);
     return 1;
   }
   
   if (strcmp(key, "dust") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectDustIntensity) / 100.0f);
+    lua_pushnumber(L, effectsManager.value(kEffectDust) / 100.0f);
     return 1;
   }
   
   if (strcmp(key, "dustColor") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectDustColor));
+    lua_pushnumber(L, effectsManager.value(kEffectDustColor));
     return 1;
   }
   
   if (strcmp(key, "dustSize") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectDustSize) * 10000.0f);
+    lua_pushnumber(L, effectsManager.value(kEffectDustSize) * 10000.0f);
     return 1;
   }
   
   if (strcmp(key, "dustSpeed") == 0) {
-    lua_pushnumber(L, 100.0f - effectsManager.value(DGEffectDustSpeed));
+    lua_pushnumber(L, 100.0f - effectsManager.value(kEffectDustSpeed));
     return 1;
   }
   
   if (strcmp(key, "dustSpread") == 0) {
-    lua_pushnumber(L, 100.0f - (effectsManager.value(DGEffectDustSpread) / 10.0f));
+    lua_pushnumber(L, 100.0f - (effectsManager.value(kEffectDustSpread) / 10.0f));
     return 1;
   }
   
   if (strcmp(key, "saturation") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectAdjustSaturation) * 100.0f);
+    lua_pushnumber(L, effectsManager.value(kEffectSaturation) * 100.0f);
     return 1;
   }
   
   if (strcmp(key, "motionBlur") == 0) {
-    lua_pushnumber(L, (1000.0f - effectsManager.value(DGEffectMotionBlurIntensity) * 100.0f));
+    lua_pushnumber(L, (1000.0f - effectsManager.value(kEffectMotionBlur) * 100.0f));
     return 1;
   }
   
   if (strcmp(key, "noise") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectNoiseIntensity) * 100.0f);
+    lua_pushnumber(L, effectsManager.value(kEffectNoise) * 100.0f);
     return 1;
   }
   
   if (strcmp(key, "sepia") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectSepiaIntensity) * 100.0f);
+    lua_pushnumber(L, effectsManager.value(kEffectSepia) * 100.0f);
     return 1;
   }
   
   if (strcmp(key, "sharpen") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectSharpenIntensity) * 100.0f);
+    lua_pushnumber(L, effectsManager.value(kEffectSharpen) * 100.0f);
     return 1;
   }
   
   if (strcmp(key, "throb") == 0) {
-    lua_pushnumber(L, (100.0f - (effectsManager.value(DGEffectThrobIntensity) * 100.0f)));
+    lua_pushnumber(L, (100.0f - (effectsManager.value(kEffectThrob) * 100.0f)));
     return 1;
   }
   
   if (strcmp(key, "throbStyle") == 0) {
-    lua_pushnumber(L, effectsManager.value(DGEffectThrobStyle));
+    lua_pushnumber(L, effectsManager.value(kEffectThrobStyle));
     return 1;
   }
   
@@ -118,94 +118,61 @@ static int EffectsLibSet(lua_State *L) {
   const char *key = luaL_checkstring(L, 2);
   
   if (strcmp(key, "brightness") == 0) {
-    effectsManager.setValuef(DGEffectAdjustBrightness, value);
+    effectsManager.setValuef(kEffectBrightness, value);
   }
   
   if (strcmp(key, "contrast") == 0) {
-    effectsManager.setValuef(DGEffectAdjustContrast, value);
+    effectsManager.setValuef(kEffectContrast, value);
   }
   
   if (strcmp(key, "saturation") == 0) {
-    effectsManager.setValuef(DGEffectAdjustSaturation, value);
+    effectsManager.setValuef(kEffectSaturation, value);
   }
   
   if (strcmp(key, "dust") == 0) {
-    if (fabs(value) > kEpsilon) {
-      effectsManager.setEnabled(DGEffectDust, true);
-      effectsManager.setValuef(DGEffectDustIntensity, value * 10000.0f);
-    }
-    else effectsManager.setEnabled(DGEffectDust, false);
+    effectsManager.setValuef(kEffectDust, value * 10000.0f);
   }
   
   if (strcmp(key, "dustColor") == 0) {
-    effectsManager.setValuei(DGEffectDustColor,
+    effectsManager.setValuei(kEffectDustColor,
                              static_cast<uint32_t>(lua_tonumber(L, 3)));
   }
   
   if (strcmp(key, "dustSize") == 0) {
-    effectsManager.setValuef(DGEffectDustSize, (float)lua_tonumber(L, 3) / 10000.0f);
+    effectsManager.setValuef(kEffectDustSize, (float)lua_tonumber(L, 3) / 10000.0f);
   }
   
   if (strcmp(key, "dustSpeed") == 0) {
-    effectsManager.setValuef(DGEffectDustSpeed,
+    effectsManager.setValuef(kEffectDustSpeed,
                              100.0f - (float)lua_tonumber(L, 3));
   }
   
   if (strcmp(key, "dustSpread") == 0) {
-    effectsManager.setValuef(DGEffectDustSpread, 1000.0f - (value * 1000.0f));
+    effectsManager.setValuef(kEffectDustSpread, 1000.0f - (value * 1000.0f));
   }
-  
-  // Special case to enable/disable adjustment if three values are normal
-  if ((fabs(effectsManager.value(DGEffectAdjustBrightness) - 1.0f) < kEpsilon) &&
-      (fabs(effectsManager.value(DGEffectAdjustSaturation) - 1.0f) < kEpsilon) &&
-      (fabs(effectsManager.value(DGEffectAdjustContrast) - 1.0f) < kEpsilon)) {
-    effectsManager.setEnabled(DGEffectAdjust, false);
-  }
-  else effectsManager.setEnabled(DGEffectAdjust, true);
   
   if (strcmp(key, "motionBlur") == 0) {
-    if (fabs(value) > kEpsilon) {
-      effectsManager.setEnabled(DGEffectMotionBlur, true);
-      effectsManager.setValuef(DGEffectMotionBlurIntensity, (10.0f - value));
-    }
-    else effectsManager.setEnabled(DGEffectMotionBlur, false);
+    effectsManager.setValuef(kEffectMotionBlur, (10.0f - value));
   }
   
   if (strcmp(key, "noise") == 0) {
-    if (fabs(value) > kEpsilon) {
-      effectsManager.setEnabled(DGEffectNoise, true);
-      effectsManager.setValuef(DGEffectNoiseIntensity, value);
-    }
-    else effectsManager.setEnabled(DGEffectNoise, false);
+    effectsManager.setValuef(kEffectNoise, value);
   }
   
   if (strcmp(key, "sepia") == 0) {
-    if (fabs(value) > kEpsilon) {
-      effectsManager.setEnabled(DGEffectSepia, true);
-      effectsManager.setValuef(DGEffectSepiaIntensity, value);
-    }
-    else effectsManager.setEnabled(DGEffectSepia, false);
+    effectsManager.setValuef(kEffectSepia, value);
   }
   
   if (strcmp(key, "sharpen") == 0) {
-    if (fabs(value) > kEpsilon) {
-      effectsManager.setEnabled(DGEffectSharpen, true);
-      effectsManager.setValuef(DGEffectSharpenIntensity, value);
-    }
-    else effectsManager.setEnabled(DGEffectSharpen, false);
+    effectsManager.setValuef(kEffectSharpen, value);
   }
   
   if (strcmp(key, "throb") == 0) {
-    if (fabs(value) > kEpsilon) {
-      effectsManager.setEnabled(DGEffectThrob, true);
-      effectsManager.setValuef(DGEffectThrobIntensity,
-                               (100.0f - (value * 100.0f)));
-    }
-    else effectsManager.setEnabled(DGEffectThrob, false);
+    effectsManager.setValuef(kEffectThrob, (100.0f - (value * 100.0f)));
   }
   
   if (strcmp(key, "throbStyle") == 0) {
-    effectsManager.setValuef(DGEffectThrobStyle, value * 100.0f);
+    effectsManager.setValuef(kEffectThrobStyle, value * 100.0f);
   }
   
   return 0;

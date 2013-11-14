@@ -278,6 +278,18 @@ void Script::_error(int result) {
     log.error(kModScript, "%s", lua_tostring(_thread, -1));
   }
 }
+  
+int Script::_globalCopy(lua_State *L) {
+  lua_newtable(L);
+  
+  // TODO: Implement
+  /*EffectsManager& effectsManager = EffectsManager::instance();
+  lua_pushnumber(L, effectsManager.value(kEffectBrightness) * 100.0f);
+  lua_setfield(L, -2, "brightness");
+  lua_pushnumber(L, effectsManager.value(kEffectContrast) * 100.0f);*/
+  
+  return 1;
+}
 
 int Script::_globalCurrentNode(lua_State *L) {
   Node* node = Control::instance().currentNode();
@@ -652,6 +664,7 @@ void Script::_registerEnums() {
 
 void Script::_registerGlobals() {
   static const struct luaL_reg globalLibs [] = {
+    {"copy", _globalCopy},
     {"currentNode", _globalCurrentNode},
     {"currentRoom", _globalCurrentRoom},
     {"cutscene", _globalCutscene},
