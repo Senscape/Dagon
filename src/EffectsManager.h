@@ -20,6 +20,7 @@
 
 #include <stdint.h>
 
+#include "Configurable.h"
 #include "Platform.h"
 
 namespace dagon {
@@ -34,11 +35,16 @@ namespace dagon {
 #define kEffectsDustFactor     32767.0f
 
 namespace effects {
+  
+const char* Names[] = { "brightness", "contrast", "saturation",
+  "dust", "dustColor", "dustSize", "dustSpeed", "dustSpread",
+  "motionBlur", "noise", "sepia", "sharpen", "sharpenRatio",
+  "throb", "throbStyle" };
 
 typedef enum {
   kBrightness,
-  kSaturation,
   kContrast,
+  kSaturation,
   kDust,
   kDustColor,
   kDustSize,
@@ -51,7 +57,7 @@ typedef enum {
   kSharpenRatio,
   kThrob,
   kThrobStyle
-} EffectsSettings;
+} Settings;
 
 }
 
@@ -77,38 +83,18 @@ extern "C" const char kShaderData[];
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
-class EffectsManager {
+class EffectsManager : public Configurable {
   Config& config;
   CameraManager& cameraManager;
   TimerManager& timerManager;
   
   GLuint _fragment;
   GLuint _program;
-  
   DGParticle _particles[kEffectsMaxDust];
-  
   Texture* _dustTexture;
   char* _shaderData;
-  
-  int _adjustBrightness;
-  int _adjustSaturation;
-  int _adjustContrast;
-  int _dustColor;
-  int _dustIntensity;
-  int _dustSize;
-  int _dustSpeed;
-  int _dustSpread;
-  int _motionBlurIntensity;
-  int _noiseIntensity;
-  int _sepiaIntensity;
-  int _sharpenRatio;
-  int _sharpenIntensity;
-  int _throbStyle;
-  int _throbIntensity;
-  
   bool _isActive;
   bool _isInitialized;
-  
   bool _textFileRead();
   
   void _buildParticle(int idx); // For dust
@@ -128,10 +114,8 @@ public:
   void init();
   void pause();
   void play();
-  void setValuef(int valueID, float theValue);
-  void setValuei(int valueID, int theValue);
+  void set(const std::string& theName, int theValue);
   void update();
-  float value(int valueID);
 };
   
 }

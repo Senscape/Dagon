@@ -32,21 +32,21 @@ cameraManager(CameraManager::instance()),
 config(Config::instance()),
 timerManager(TimerManager::instance())
 {
-  _adjustBrightness = 100;
-  _adjustSaturation = 100;
-  _adjustContrast = 100;
-  _dustColor = kColorWhite;
-  _dustIntensity = 00;
-  _dustSize = 2;
-  _dustSpeed = 1;
-  _dustSpread = 20;
-  _motionBlurIntensity = 4; // Lowest
-  _noiseIntensity = 0;
-  _sepiaIntensity = 0;
-  _sharpenRatio = 25; // Not currently used in the script, so we set a standard value here
-  _sharpenIntensity = 0;
-  _throbStyle = 0;
-  _throbIntensity = 0; // Lowest
+  this->setValue("brightness", 100);
+  this->setValue("contrast", 100);
+  this->setValue("saturation", 100);
+  this->setValue("dust", 0);
+  this->setValue("dustColor", kColorWhite);
+  this->setValue("dustSize", 2);
+  this->setValue("dustSpeed", 1);
+  this->setValue("dustSpread", 20);
+  this->setValue("motionBlur", 4);
+  this->setValue("noise", 350);
+  this->setValue("sepia", 0);
+  this->setValue("sharpen", 0);
+  this->setValue("sharpenRatio", 25);
+  this->setValue("throb", 0);
+  this->setValue("throbStyle", 1);
   
   _isActive = false;
   _isInitialized = false;
@@ -76,12 +76,12 @@ EffectsManager::~EffectsManager() {
 ////////////////////////////////////////////////////////////
 
 void EffectsManager::drawDust() {
-  float internalSize = _dustSize / 2000.0f;
-  if (_dustIntensity && config.effects) {
+  float internalSize = this->get("dustSize") / 2000.0f;
+  if (this->get("dust") && config.effects) {
     // Temporary
     glPushMatrix();
     
-    uint32_t aux = _dustColor;
+    uint32_t aux = this->get("dustColor");
     
     uint8_t b = (aux & 0x000000ff);
     uint8_t g = (aux & 0x0000ff00) >> 8;
@@ -91,10 +91,10 @@ void EffectsManager::drawDust() {
     glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
     
     _dustTexture->bind();
-    for (int i = 0; i < (_dustIntensity * 100); i++) {
-      _particles[i].x += _particles[i].xd / (100 - _dustSpeed);
-      _particles[i].y += _particles[i].yd / (100 - _dustSpeed);
-      _particles[i].z += _particles[i].zd / (100 - _dustSpeed);
+    for (int i = 0; i < (this->get("dust") * 100); i++) {
+      _particles[i].x += _particles[i].xd / (100 - this->get("dustSpeed"));
+      _particles[i].y += _particles[i].yd / (100 - this->get("dustSpeed"));
+      _particles[i].z += _particles[i].zd / (100 - this->get("dustSpeed"));
       if (_particles[i].y <= -0.5f) {
         _buildParticle(i);
       }
@@ -141,16 +141,6 @@ void EffectsManager::init() {
   
   _isInitialized = true;
   
-  // Set default values
-  this->setValuef(effects::kBrightness, _adjustBrightness);
-  this->setValuef(effects::kContrast, _adjustContrast);
-  this->setValuef(effects::kSaturation, _adjustSaturation);
-  this->setValuef(effects::kMotionBlur, _motionBlurIntensity); // Lowest
-  this->setValuef(effects::kNoise, _noiseIntensity);
-  this->setValuef(effects::kSepia, _sepiaIntensity);
-  this->setValuef(effects::kSharpen, _sharpenIntensity);
-  this->setValuef(effects::kSharpenRatio, _sharpenRatio);
-  
   // Initialize dust
   for (int i = 0; i < kEffectsMaxDust; ++i) {
     _buildParticle(i);
@@ -175,63 +165,65 @@ void EffectsManager::play() {
   }
 }
 
-void EffectsManager::setValuef(int valueID, float theValue) {
+void EffectsManager::set(const std::string& theName, int theValue) {
   if (_isInitialized) {
     GLint parameter;
     GLint intensity;
-    //GLfloat internalValue;
     
     this->play();
     
-    switch (valueID) {
+    // Temporary fix
+    int key = this->index(theName);
+                 
+    switch (key) {
       case effects::kBrightness:
         intensity = glGetUniformLocation(_program, "AdjustBrightness");
-        _adjustBrightness = theValue;
+        _theSettings[theName].value = theValue;
         theValue = theValue / 100.0f;
         break;
         
       case effects::kSaturation:
         intensity = glGetUniformLocation(_program, "AdjustSaturation");
-        _adjustSaturation = theValue;
+        _theSettings[theName].value = theValue;
         theValue = theValue / 100.0f;
         break;
         
       case effects::kContrast:
         intensity = glGetUniformLocation(_program, "AdjustContrast");
-        _adjustContrast = theValue;
+        _theSettings[theName].value = theValue;
         theValue = theValue / 100.0f;
         break;
         
       case effects::kDustColor:
-        _dustColor = static_cast<uint32_t>(theValue);
+        _theSettings[theName].value = theValue;
         this->pause();
         return;
         
       case effects::kDust:
         if ((theValue * 100) < kEffectsMaxDust)
-          _dustIntensity = theValue;
+          _theSettings[theName].value = theValue;
         this->pause();
         return;
         
       case effects::kDustSize:
-        _dustSize = theValue;
+        _theSettings[theName].value = theValue;
         this->pause();
         return;
         
       case effects::kDustSpeed:
-        _dustSpeed = theValue;
+        _theSettings[theName].value = theValue;
         this->pause();
         return;
         
       case effects::kDustSpread:
-        _dustSpread = theValue;
+        _theSettings[theName].value = theValue;
         this->pause();
         return;
         
       case effects::kMotionBlur:
         parameter = glGetUniformLocation(_program, "MotionBlurEnabled");
         intensity = glGetUniformLocation(_program, "MotionBlurIntensity");
-        _motionBlurIntensity = theValue;
+        _theSettings[theName].value = theValue;
         if (theValue)
           glUniform1i(parameter, true);
         else
@@ -242,7 +234,7 @@ void EffectsManager::setValuef(int valueID, float theValue) {
       case effects::kNoise:
         parameter = glGetUniformLocation(_program, "NoiseEnabled");
         intensity = glGetUniformLocation(_program, "NoiseIntensity");
-        _noiseIntensity = theValue;
+        _theSettings[theName].value = theValue;
         if (theValue)
           glUniform1i(parameter, true);
         else
@@ -253,7 +245,7 @@ void EffectsManager::setValuef(int valueID, float theValue) {
       case effects::kSepia:
         parameter = glGetUniformLocation(_program, "SepiaEnabled");
         intensity = glGetUniformLocation(_program, "SepiaIntensity");
-        _sepiaIntensity = theValue;
+        _theSettings[theName].value = theValue;
         if (theValue)
           glUniform1i(parameter, true);
         else
@@ -263,14 +255,14 @@ void EffectsManager::setValuef(int valueID, float theValue) {
         
       case effects::kSharpenRatio:
         intensity = glGetUniformLocation(_program, "SharpenRatio");
-        _sharpenRatio = theValue;
+        _theSettings[theName].value = theValue;
         theValue = theValue / 100.0f;
         break;
         
       case effects::kSharpen:
         parameter = glGetUniformLocation(_program, "SharpenEnabled");
         intensity = glGetUniformLocation(_program, "SharpenIntensity");
-        _sharpenIntensity = theValue;
+        _theSettings[theName].value = theValue;
         if (theValue)
           glUniform1i(parameter, true);
         else
@@ -279,18 +271,18 @@ void EffectsManager::setValuef(int valueID, float theValue) {
         break;
         
       case effects::kThrobStyle:
-        _throbStyle = (int)theValue;
+        _theSettings[theName].value = theValue;
         this->pause();
         return;
         
       case effects::kThrob:
-        _throbIntensity = theValue;
-        if (!_throbIntensity) {
+        _theSettings[theName].value = theValue;
+        if (!theValue) {
           // Special case, we reset the brightness and contrast
           intensity = glGetUniformLocation(_program, "AdjustBrightness");
-          glUniform1f(intensity, _adjustBrightness / 100.0f);
+          glUniform1f(intensity, this->get("brightness") / 100.0f);
           intensity = glGetUniformLocation(_program, "AdjustContrast");
-          glUniform1f(intensity, _adjustContrast / 100.0f);
+          glUniform1f(intensity, this->get("contrast") / 100.0f);
         }
         this->pause();
         return;
@@ -303,9 +295,9 @@ void EffectsManager::setValuef(int valueID, float theValue) {
     glUniform1f(intensity, theValue);
     
     // Special case to enable/disable adjustment if three values are normal
-    if ((_adjustBrightness != 100) ||
-        (_adjustContrast != 100) ||
-        (_adjustSaturation != 100)) {
+    if ((this->get("brightness") != 100) ||
+        (this->get("contrast") != 100) ||
+        (this->get("saturation") != 100)) {
       parameter = glGetUniformLocation(_program, "AdjustEnabled");
       glUniform1i(parameter, true);
     }
@@ -318,26 +310,13 @@ void EffectsManager::setValuef(int valueID, float theValue) {
   }
 }
 
-void EffectsManager::setValuei(int valueID, int theValue) {
-  if (_isInitialized) {
-    switch (valueID) {
-      case effects::kDustColor:
-        _dustColor = theValue;
-        break;
-        
-      default:
-        break;
-    }
-  }
-}
-
 void EffectsManager::update() {
   static float noise = 0.0f;
   
   if (_isActive) {
     GLint parameter;
     
-    if (_motionBlurIntensity) {
+    if (this->get("motionBlur")) {
       parameter = glGetUniformLocation(_program, "MotionBlurOffsetX");
       glUniform1f(parameter, cameraManager.motionHorizontal());
       
@@ -345,7 +324,7 @@ void EffectsManager::update() {
       glUniform1f(parameter, cameraManager.motionVertical());
     }
     
-    if (_noiseIntensity) {
+    if (this->get("noise")) {
       parameter = glGetUniformLocation(_program, "NoiseRand");
       glUniform1f(parameter, noise);
       
@@ -354,32 +333,32 @@ void EffectsManager::update() {
       else noise = 0.0f;
     }
     
-    if (_throbIntensity) {
+    if (this->get("throb")) {
       static int handlerStyle1 = timerManager.createManual(0.1f, 100);
       static int handlerStyle2 = timerManager.createManual(2, 1000);
       static float aux;
       static float j = 1.0f;
-      float internalIntensity = (100 - _throbIntensity);
+      float internalIntensity = (100 - this->get("throb"));
       
-      switch (_throbStyle) {
+      switch (this->get("throbStyle")) {
         case 1:
           if (timerManager.checkManual(handlerStyle1, 100)) {
             aux = (rand() % 10) - (rand() % 10);
             parameter = glGetUniformLocation(_program, "AdjustBrightness");
-            glUniform1f(parameter, (_adjustBrightness / 100.0f) + (aux / internalIntensity)); // Suggested: 50
+            glUniform1f(parameter, (this->get("brightness") / 100.0f) + (aux / internalIntensity)); // Suggested: 50
             
             aux = rand() % 10;
             parameter = glGetUniformLocation(_program, "AdjustContrast");
-            glUniform1f(parameter, (_adjustContrast / 100.0f) + (aux / internalIntensity));
+            glUniform1f(parameter, (this->get("contrast") / 100.0f) + (aux / internalIntensity));
           }
           break;
           
         case 2:
           parameter = glGetUniformLocation(_program, "AdjustBrightness");
-          glUniform1f(parameter, (_adjustBrightness / 100.0f) + (aux * j));
+          glUniform1f(parameter, (this->get("brightness") / 100.0f) + (aux * j));
           
           parameter = glGetUniformLocation(_program, "AdjustContrast");
-          glUniform1f(parameter, (_adjustContrast / 100.0f) + 0.15f);
+          glUniform1f(parameter, (this->get("contrast") / 100.0f) + 0.15f);
           
           if (j > 0)
             j -= 0.1f;
@@ -394,28 +373,6 @@ void EffectsManager::update() {
   }
 }
 
-float EffectsManager::value(int valueID) {
-  switch (valueID) {
-    case effects::kBrightness: return _adjustBrightness;
-    case effects::kSaturation: return _adjustSaturation;
-    case effects::kContrast: return _adjustContrast;
-    case effects::kDustColor: return _dustColor;
-    case effects::kDust: return _dustIntensity;
-    case effects::kDustSize: return _dustSize;
-    case effects::kDustSpeed: return _dustSpeed;
-    case effects::kDustSpread: return _dustSpread;
-    case effects::kMotionBlur: return _motionBlurIntensity;
-    case effects::kNoise: return _noiseIntensity;
-    case effects::kSepia: return _sepiaIntensity;
-    case effects::kSharpenRatio: return _sharpenRatio;
-    case effects::kSharpen: return _sharpenIntensity;
-    case effects::kThrobStyle: return _throbStyle;
-    case effects::kThrob: return _throbIntensity;
-  }
-  
-  return 0.0f;
-}
-
 
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
@@ -425,13 +382,13 @@ void EffectsManager::_buildParticle(int idx) {
   int s;
   
   s = rand() % (int)kEffectsDustFactor;
-  _particles[idx].xd = -(s / kEffectsDustFactor - 0.5f) / (100 - _dustSpread);
+  _particles[idx].xd = -(s / kEffectsDustFactor - 0.5f) / (100 - this->get("dustSpread"));
   
   s = rand() % (int)kEffectsDustFactor;
-  _particles[idx].zd = -(s / kEffectsDustFactor - 0.5f) / (100 - _dustSpread);
+  _particles[idx].zd = -(s / kEffectsDustFactor - 0.5f) / (100 - this->get("dustSpread"));
   
   s = rand() % (int)kEffectsDustFactor;
-  _particles[idx].yd = -s / kEffectsDustFactor / (100 - _dustSpeed);
+  _particles[idx].yd = -s / kEffectsDustFactor / (100 - this->get("dustSpread"));
   
   s = rand() % (int)kEffectsDustFactor;
   _particles[idx].x = s / kEffectsDustFactor - 0.5f;

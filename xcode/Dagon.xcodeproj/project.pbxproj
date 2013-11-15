@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FB0BF4CA183518D900B29013 /* Configurable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0BF4C8183518D900B29013 /* Configurable.cpp */; };
 		FB4EE42C17F205DD003F9C49 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB94AB7617DE35410081574F /* OpenGL.framework */; };
 		FB4EE42E17F20614003F9C49 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB4EE42D17F20614003F9C49 /* Cocoa.framework */; };
 		FB4EE43017F20625003F9C49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB4EE42F17F20625003F9C49 /* IOKit.framework */; };
@@ -74,6 +75,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		FB0BF4C8183518D900B29013 /* Configurable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configurable.cpp; sourceTree = "<group>"; };
+		FB0BF4C9183518D900B29013 /* Configurable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configurable.h; sourceTree = "<group>"; };
 		FB4EE42D17F20614003F9C49 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		FB4EE42F17F20625003F9C49 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		FB4EE43117F20630003F9C49 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -275,6 +278,8 @@
 				FB94AB8717DE37340081574F /* Colors.h */,
 				FB94AB8917DE37340081574F /* Config.h */,
 				FB94AB8817DE37340081574F /* Config.cpp */,
+				FB0BF4C9183518D900B29013 /* Configurable.h */,
+				FB0BF4C8183518D900B29013 /* Configurable.cpp */,
 				FB94AB8B17DE37340081574F /* Defines.h */,
 				FB94ABBD17DE37350081574F /* Geometry.h */,
 				FBA6A1E317FF48220058671F /* Geometry.cpp */,
@@ -517,6 +522,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB94AB7117DE34500081574F /* main.cpp in Sources */,
+				FB0BF4CA183518D900B29013 /* Configurable.cpp in Sources */,
 				FB94ABDC17DE37350081574F /* Audio.cpp in Sources */,
 				FB94ABDD17DE37350081574F /* Button.cpp in Sources */,
 				FB94ABDE17DE37350081574F /* Config.cpp in Sources */,
