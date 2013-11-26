@@ -32,6 +32,14 @@ cameraManager(CameraManager::instance()),
 config(Config::instance()),
 timerManager(TimerManager::instance())
 {
+  const char* Names[] = { "brightness", "contrast", "saturation",
+    "dust", "dustColor", "dustSize", "dustSpeed", "dustSpread",
+    "motionBlur", "noise", "sepia", "sharpen", "sharpenRatio",
+    "throb", "throbStyle" };
+  
+  const size_t len = sizeof(Names) / sizeof(Names[0]);
+  this->initAliases(len, Names);
+  
   this->setValue("brightness", 100);
   this->setValue("contrast", 100);
   this->setValue("saturation", 100);
@@ -165,7 +173,7 @@ void EffectsManager::play() {
   }
 }
 
-void EffectsManager::set(const std::string& theName, int theValue) {
+void EffectsManager::set(const std::string& theName, float theValue) {
   if (_isInitialized) {
     GLint parameter;
     GLint intensity;
@@ -173,7 +181,7 @@ void EffectsManager::set(const std::string& theName, int theValue) {
     this->play();
     
     // Temporary fix
-    int key = this->index(theName);
+    int key = this->indexOf(theName);
                  
     switch (key) {
       case effects::kBrightness:

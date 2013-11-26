@@ -35,11 +35,6 @@ namespace dagon {
 #define kEffectsDustFactor     32767.0f
 
 namespace effects {
-  
-const char* Names[] = { "brightness", "contrast", "saturation",
-  "dust", "dustColor", "dustSize", "dustSpeed", "dustSpread",
-  "motionBlur", "noise", "sepia", "sharpen", "sharpenRatio",
-  "throb", "throbStyle" };
 
 typedef enum {
   kBrightness,
@@ -83,7 +78,7 @@ extern "C" const char kShaderData[];
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
-class EffectsManager : public Configurable {
+class EffectsManager : public Configurable<effects::Settings> {
   Config& config;
   CameraManager& cameraManager;
   TimerManager& timerManager;
@@ -114,7 +109,7 @@ public:
   void init();
   void pause();
   void play();
-  void set(const std::string& theName, int theValue);
+  void set(const std::string& theName, float theValue);
   void update();
 };
   

@@ -18,6 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <cassert>
 #include <map>
 #include <string>
 
@@ -28,7 +29,6 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
   
 typedef struct {
-  int index; // Temporary fix
   int min;
   int max;
   int value;
@@ -38,20 +38,65 @@ typedef struct {
 // Interface
 ////////////////////////////////////////////////////////////
   
+template <typename T>
 class Configurable {
  protected:
+  std::map <std::string, T> SettingAlias;
+  typename std::map <std::string, T>::const_iterator _aliasIterator;
+  
   typedef std::map<std::string, Setting> SettingCollection;
   SettingCollection _theSettings;
   
  public:
+  Configurable() {};
+  
+  bool beginIteratingSettings() {
+    if (!_theSettings.empty()) {
+      _aliasIterator = SettingAlias.begin();
+      return true;
+    }
+    return false;
+  }
+  
+  bool iterateSettings() {
+    ++_aliasIterator;
+    if (_aliasIterator == SettingAlias.end() || SettingAlias.empty()) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  
+  std::string getCurrentSetting(Setting* pointerToSetting) {
+    assert(_aliasIterator != SettingAlias.end());
+    pointerToSetting->min = _theSettings[_aliasIterator->first].min;
+    pointerToSetting->max = _theSettings[_aliasIterator->first].max;
+    pointerToSetting->value = _theSettings[_aliasIterator->first].value;
+    return _aliasIterator->first;
+  }
+  
+  void initAliases(int numberOfAliases, const char* listOfAliases[]) {
+    _numberOfAliases = numberOfAliases;
+    for (int i = 0; i < _numberOfAliases; ++i) {
+      SettingAlias[listOfAliases[i]] = T(i);
+    }
+  }
+  
+  T indexOf(const std::string &value) {
+    typename std::map <std::string, T>::const_iterator iValue = SettingAlias.find(value);
+    if (iValue  == SettingAlias.end())
+      throw 0;
+    return iValue->second;
+  }
+  
   int operator[](const std::string& theName) {
     return _theSettings[theName].value;
   }
   int get(const std::string& theName) {
     return _theSettings[theName].value;
   }
-  int index(const std::string& theName) {
-    return _theSettings[theName].index;
+  int numberOfAliases() {
+    return _numberOfAliases;
   }
   void loadSettings(const SettingCollection& theSettings) {
     _theSettings = theSettings;
@@ -61,17 +106,17 @@ class Configurable {
   }
   void setValue(const std::string& theName, int theValue) {
     if (_theSettings.find(theName) == _theSettings.end()) {
-      static int c = 0;
       Setting newSetting;
-      newSetting.index = c;
       newSetting.value = theValue;
       _theSettings.insert(std::pair<std::string, Setting>(theName, newSetting));
-      c++;
     }
     else {
       _theSettings[theName].value = theValue;
     }
   }
+  
+ private:
+  int _numberOfAliases;
 };
 
 }

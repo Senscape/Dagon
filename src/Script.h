@@ -74,6 +74,7 @@ class Script {
   static int _globalPrint(lua_State *L);
   static int _globalQueue(lua_State *L);
   static int _globalRegister(lua_State *L);
+  static int _globalReplace(lua_State *L);
   static int _globalRoom(lua_State *L);
   static int _globalSetFont(lua_State *L);
   static int _globalSleep(lua_State *L);

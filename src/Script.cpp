@@ -282,11 +282,15 @@ void Script::_error(int result) {
 int Script::_globalCopy(lua_State *L) {
   lua_newtable(L);
   
-  // TODO: Implement
-  /*EffectsManager& effectsManager = EffectsManager::instance();
-  lua_pushnumber(L, effectsManager.value(kBrightness) * 100.0f);
-  lua_setfield(L, -2, "brightness");
-  lua_pushnumber(L, effectsManager.value(kContrast) * 100.0f);*/
+  EffectsManager& effectsManager = EffectsManager::instance();
+  if (effectsManager.beginIteratingSettings()) {
+    Setting theEffect;
+    while (effectsManager.iterateSettings()) {
+      std::string name = effectsManager.getCurrentSetting(&theEffect);
+      lua_pushnumber(L, theEffect.value);
+      lua_setfield(L, -2, name.c_str());
+    }
+  }
   
   return 1;
 }
@@ -430,6 +434,29 @@ int Script::_globalRegister(lua_State *L) {
   int ref = luaL_ref(L, LUA_REGISTRYINDEX);  // pop and return a reference to the table.
   
   Control::instance().registerGlobalHandler((unsigned int)luaL_checknumber(L, 1), ref);
+  
+  return 0;
+}
+  
+int Script::_globalReplace(lua_State *L) {
+  if (!lua_istable(L, 1)) {
+    luaL_error(L, kString14013);
+    
+    return 0;
+  }
+  
+  EffectsManager& effectsManager = EffectsManager::instance();
+  lua_pushnil(L);
+  while (lua_next(L, 1) != 0) {
+    const char* key = lua_tostring(L, -2);
+    if (strcmp(key, "dustColor") == 0) {
+      effectsManager.set(key, static_cast<uint32_t>(lua_tonumber(L, 3)));
+    }
+    else {
+      effectsManager.set(key, static_cast<int>(lua_tonumber(L, 3)));
+    }
+    lua_pop(L, 1);
+  }
   
   return 0;
 }
@@ -675,6 +702,7 @@ void Script::_registerGlobals() {
     {"print", _globalPrint},
     {"queue", _globalQueue},
     {"register", _globalRegister},
+    {"replace", _globalReplace},
     {"room", _globalRoom},
     {"setFont", _globalSetFont},
     {"snap", _globalSnap},
