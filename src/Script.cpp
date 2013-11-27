@@ -280,8 +280,9 @@ void Script::_error(int result) {
 }
   
 int Script::_globalCopy(lua_State *L) {
-  lua_newtable(L);
+  luaL_checkudata(L, 1, "EffectsLib");
   
+  lua_newtable(L);
   EffectsManager& effectsManager = EffectsManager::instance();
   if (effectsManager.beginIteratingSettings()) {
     Setting theEffect;
