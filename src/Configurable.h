@@ -34,6 +34,8 @@ typedef struct {
   int value;
 } Setting;
   
+typedef std::map<std::string, Setting> SettingCollection;
+  
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
@@ -43,8 +45,7 @@ class Configurable {
  protected:
   std::map <std::string, T> SettingAlias;
   typename std::map <std::string, T>::const_iterator _aliasIterator;
-  
-  typedef std::map<std::string, Setting> SettingCollection;
+
   SettingCollection _theSettings;
   
  public:

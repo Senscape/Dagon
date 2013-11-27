@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <vector>
+#include "Configurable.h"
 
 namespace dagon {
 
@@ -41,18 +42,19 @@ class Room : public Object {
   // Checks
   bool hasAudios();
   bool hasDefaultFootstep();
+  bool hasEffects();
   bool hasNodes();
   
   // Gets
   std::vector<Audio*> arrayOfAudios();
   Node* currentNode();
   Audio* defaultFootstep();
-  int effectsFlags();
+  SettingCollection effects();
   int enterEvent();
   
   // Sets
   void setDefaultFootstep(Audio* theFootstep);
-  void setEffects(int theEffectFlags);
+  void setEffects(const SettingCollection& theEffects);
   
   // State changes
   Audio* addAudio(Audio* anAudio);
@@ -65,6 +67,8 @@ class Room : public Object {
   bool switchTo(Node* theNode);
   
  private:
+  SettingCollection _theEffects;
+  
   std::vector<Node*> _arrayOfNodes;
   std::vector<Node*>::iterator _it;
   Node* _currentNode;
@@ -73,8 +77,8 @@ class Room : public Object {
   // so that no unnecessary fade ins/outs are performed.
   std::vector<Audio*> _arrayOfAudios;
   Audio* _defaultFootstep;
-  int _effectsFlags;
   bool _hasDefaultFootstep;
+  bool _hasEffects;
   bool _hasEnterEvent;
   int _luaReference;
   

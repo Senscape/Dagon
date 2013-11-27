@@ -115,6 +115,28 @@ public:
     return 0;
   }
   
+  int setEffects(lua_State *L) {
+    if (!lua_istable(L, 1)) {
+      luaL_error(L, kString14013);
+      return 0;
+    }
+    
+    SettingCollection theEffects;
+    lua_pushnil(L);
+    while (lua_next(L, 1) != 0) {
+      const char* key = lua_tostring(L, -2);
+      if (strcmp(key, "dustColor") == 0) {
+        theEffects[key].value = static_cast<uint32_t>(lua_tonumber(L, 3));
+      }
+      else {
+        theEffects[key].value = static_cast<int>(lua_tonumber(L, 3));
+      }
+      lua_pop(L, 1);
+    }
+    r->setEffects(theEffects);
+    return 0;
+  }
+  
   int startTimer(lua_State *L) {
     if (!lua_isfunction(L, -1)) {
       Log::instance().trace(kModScript, "%s", kString14009);
@@ -150,6 +172,7 @@ Luna<RoomProxy>::RegType RoomProxy::methods[] = {
   method(RoomProxy, addNode),
   method(RoomProxy, onEnter),
   method(RoomProxy, setDefaultFootstep),
+  method(RoomProxy, setEffects),
   method(RoomProxy, startTimer),
   {0,0}
 };

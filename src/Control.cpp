@@ -29,6 +29,7 @@
 #include "CursorManager.h"
 #include "FeedManager.h"
 #include "FontManager.h"
+#include "EffectsManager.h"
 #include "Interface.h"
 #include "Log.h"
 #include "Node.h"
@@ -651,6 +652,11 @@ void Control::switchTo(Object* theTarget) {
         
         if (_currentRoom->hasEnterEvent())
           script.processCallback(_currentRoom->enterEvent(), 0);
+        
+        if (_currentRoom->hasEffects()) {
+          EffectsManager& effectsManager = EffectsManager::instance();
+          effectsManager.loadSettings(_currentRoom->effects());
+        }
         
         break;
       case kObjectSlide:

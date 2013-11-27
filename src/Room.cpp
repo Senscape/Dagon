@@ -30,6 +30,7 @@ namespace dagon {
 Room::Room() {
   _currentNode = NULL;
   _hasDefaultFootstep = false;
+  _hasEffects = false;
   _hasEnterEvent = false;
   this->setType(kObjectRoom);
 }
@@ -44,6 +45,10 @@ bool Room::hasAudios() {
 
 bool Room::hasDefaultFootstep() {
   return _hasDefaultFootstep;
+}
+  
+bool Room::hasEffects() {
+  return _hasEffects;
 }
 
 bool Room::hasNodes() {
@@ -68,8 +73,8 @@ Audio* Room::defaultFootstep() {
   return _defaultFootstep;
 }
 
-int Room::effectsFlags() {
-  return _effectsFlags;
+SettingCollection Room::effects() {
+  return _theEffects;
 }
 
 Node* Room::iterator() {
@@ -86,8 +91,9 @@ void Room::setDefaultFootstep(Audio* theFootstep) {
   _hasDefaultFootstep = true;
 }
 
-void Room::setEffects(int theEffectFlags) {
-  _effectsFlags = theEffectFlags;
+void Room::setEffects(const SettingCollection& theEffects) {
+  _theEffects = theEffects;
+  _hasEffects = true;
 }
 
 ////////////////////////////////////////////////////////////
