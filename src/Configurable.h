@@ -105,15 +105,8 @@ class Configurable {
   void saveSettings(SettingCollection* theSettings) {
     *theSettings = _theSettings;
   }
-  void setValue(const std::string& theName, int theValue) {
-    if (_theSettings.find(theName) == _theSettings.end()) {
-      Setting newSetting;
-      newSetting.value = theValue;
-      _theSettings.insert(std::pair<std::string, Setting>(theName, newSetting));
-    }
-    else {
-      _theSettings[theName].value = theValue;
-    }
+  void set(const std::string& theName, int theValue) {
+    _theSettings[theName].value = theValue;
   }
   
  private:

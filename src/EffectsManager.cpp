@@ -40,21 +40,21 @@ timerManager(TimerManager::instance())
   const size_t len = sizeof(Names) / sizeof(Names[0]);
   this->initAliases(len, Names);
   
-  this->setValue("brightness", 100);
-  this->setValue("contrast", 100);
-  this->setValue("saturation", 100);
-  this->setValue("dust", 0);
-  this->setValue("dustColor", kColorWhite);
-  this->setValue("dustSize", 2);
-  this->setValue("dustSpeed", 1);
-  this->setValue("dustSpread", 20);
-  this->setValue("motionBlur", 4);
-  this->setValue("noise", 350);
-  this->setValue("sepia", 0);
-  this->setValue("sharpen", 0);
-  this->setValue("sharpenRatio", 25);
-  this->setValue("throb", 0);
-  this->setValue("throbStyle", 1);
+  set("brightness", 100);
+  set("contrast", 100);
+  set("saturation", 100);
+  set("dust", 0);
+  set("dustColor", kColorWhite);
+  set("dustSize", 2);
+  set("dustSpeed", 1);
+  set("dustSpread", 20);
+  set("motionBlur", 4);
+  set("noise", 350);
+  set("sepia", 0);
+  set("sharpen", 0);
+  set("sharpenRatio", 25);
+  set("throb", 0);
+  set("throbStyle", 1);
   
   _isActive = false;
   _isInitialized = false;
@@ -82,6 +82,113 @@ EffectsManager::~EffectsManager() {
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
+  
+void EffectsManager::_updateShader(int theEffect, float withValue) {
+  if (_isInitialized) {
+    GLint parameter;
+    GLint intensity;
+    
+    play();
+    
+    switch (theEffect) {
+      case effects::kBrightness:
+        intensity = glGetUniformLocation(_program, "AdjustBrightness");
+        withValue = withValue / 100.0f;
+        glUniform1f(intensity, withValue);
+        break;
+        
+      case effects::kSaturation:
+        intensity = glGetUniformLocation(_program, "AdjustSaturation");
+        withValue = withValue / 100.0f;
+        glUniform1f(intensity, withValue);
+        break;
+        
+      case effects::kContrast:
+        intensity = glGetUniformLocation(_program, "AdjustContrast");
+        withValue = withValue / 100.0f;
+        glUniform1f(intensity, withValue);
+        break;
+        
+      case effects::kMotionBlur:
+        parameter = glGetUniformLocation(_program, "MotionBlurEnabled");
+        intensity = glGetUniformLocation(_program, "MotionBlurIntensity");
+        if (withValue)
+          glUniform1i(parameter, true);
+        else
+          glUniform1i(parameter, false);
+        withValue = (10 - withValue) / 1.0f;
+        glUniform1f(intensity, withValue);
+        break;
+        
+      case effects::kNoise:
+        parameter = glGetUniformLocation(_program, "NoiseEnabled");
+        intensity = glGetUniformLocation(_program, "NoiseIntensity");
+        if (withValue)
+          glUniform1i(parameter, true);
+        else
+          glUniform1i(parameter, false);
+        withValue = withValue / 100.0f;
+        glUniform1f(intensity, withValue);
+        break;
+        
+      case effects::kSepia:
+        parameter = glGetUniformLocation(_program, "SepiaEnabled");
+        intensity = glGetUniformLocation(_program, "SepiaIntensity");
+        if (withValue)
+          glUniform1i(parameter, true);
+        else
+          glUniform1i(parameter, false);
+        withValue = withValue / 100.0f;
+        glUniform1f(intensity, withValue);
+        break;
+        
+      case effects::kSharpenRatio:
+        intensity = glGetUniformLocation(_program, "SharpenRatio");
+        withValue = withValue / 100.0f;
+        glUniform1f(intensity, withValue);
+        break;
+        
+      case effects::kSharpen:
+        parameter = glGetUniformLocation(_program, "SharpenEnabled");
+        intensity = glGetUniformLocation(_program, "SharpenIntensity");
+        if (withValue)
+          glUniform1i(parameter, true);
+        else
+          glUniform1i(parameter, false);
+        withValue = withValue / 10.0f;
+        glUniform1f(intensity, withValue);
+        break;
+        
+      case effects::kThrob:
+        if (!withValue) {
+          // Special case, we reset the brightness and contrast
+          intensity = glGetUniformLocation(_program, "AdjustBrightness");
+          glUniform1f(intensity, this->get("brightness") / 100.0f);
+          intensity = glGetUniformLocation(_program, "AdjustContrast");
+          glUniform1f(intensity, this->get("contrast") / 100.0f);
+        }
+        break;
+        
+      default:
+        break;
+    }
+    
+    // Special case to enable/disable adjustment if three values are normal
+    if ((this->get("brightness") != 100) ||
+        (this->get("contrast") != 100) ||
+        (this->get("saturation") != 100)) {
+      parameter = glGetUniformLocation(_program, "AdjustEnabled");
+      glUniform1i(parameter, true);
+    }
+    else {
+      parameter = glGetUniformLocation(_program, "AdjustEnabled");
+      glUniform1i(parameter, false);
+    }
+    
+    pause();
+  }
+}
+
 
 void EffectsManager::drawDust() {
   float internalSize = this->get("dustSize") / 2000.0f;
@@ -99,7 +206,10 @@ void EffectsManager::drawDust() {
     glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
     
     _dustTexture->bind();
-    for (int i = 0; i < (this->get("dust") * 100); i++) {
+    int numOfParticles = this->get("dust") * 100;
+    if (numOfParticles > kEffectsMaxDust)
+      numOfParticles = kEffectsMaxDust;
+    for (int i = 0; i < numOfParticles; i++) {
       _particles[i].x += _particles[i].xd / (100 - this->get("dustSpeed"));
       _particles[i].y += _particles[i].yd / (100 - this->get("dustSpeed"));
       _particles[i].z += _particles[i].zd / (100 - this->get("dustSpeed"));
@@ -157,6 +267,20 @@ void EffectsManager::init() {
   _dustTexture = new Texture;
   _dustTexture->loadFromMemory(kDustData, 3666);
 }
+  
+void EffectsManager::loadSettings(const SettingCollection& theSettings) {
+  Configurable::loadSettings(theSettings);
+  
+  if (beginIteratingSettings()) {
+    Setting theEffect;
+    while (iterateSettings()) {
+      std::string theName = getCurrentSetting(&theEffect);
+      int key = Configurable::indexOf(theName);
+      Configurable::set(theName, theEffect.value);
+      _updateShader(key, theEffect.value);
+    }
+  }
+}
 
 void EffectsManager::pause() {
   if (_isActive) {
@@ -174,148 +298,9 @@ void EffectsManager::play() {
 }
 
 void EffectsManager::set(const std::string& theName, float theValue) {
-  if (_isInitialized) {
-    GLint parameter;
-    GLint intensity;
-    
-    this->play();
-    
-    // Temporary fix
-    int key = this->indexOf(theName);
-                 
-    switch (key) {
-      case effects::kBrightness:
-        intensity = glGetUniformLocation(_program, "AdjustBrightness");
-        _theSettings[theName].value = theValue;
-        theValue = theValue / 100.0f;
-        break;
-        
-      case effects::kSaturation:
-        intensity = glGetUniformLocation(_program, "AdjustSaturation");
-        _theSettings[theName].value = theValue;
-        theValue = theValue / 100.0f;
-        break;
-        
-      case effects::kContrast:
-        intensity = glGetUniformLocation(_program, "AdjustContrast");
-        _theSettings[theName].value = theValue;
-        theValue = theValue / 100.0f;
-        break;
-        
-      case effects::kDustColor:
-        _theSettings[theName].value = theValue;
-        this->pause();
-        return;
-        
-      case effects::kDust:
-        if ((theValue * 100) < kEffectsMaxDust)
-          _theSettings[theName].value = theValue;
-        this->pause();
-        return;
-        
-      case effects::kDustSize:
-        _theSettings[theName].value = theValue;
-        this->pause();
-        return;
-        
-      case effects::kDustSpeed:
-        _theSettings[theName].value = theValue;
-        this->pause();
-        return;
-        
-      case effects::kDustSpread:
-        _theSettings[theName].value = theValue;
-        this->pause();
-        return;
-        
-      case effects::kMotionBlur:
-        parameter = glGetUniformLocation(_program, "MotionBlurEnabled");
-        intensity = glGetUniformLocation(_program, "MotionBlurIntensity");
-        _theSettings[theName].value = theValue;
-        if (theValue)
-          glUniform1i(parameter, true);
-        else
-          glUniform1i(parameter, false);
-        theValue = (10 - theValue) / 1.0f;
-        break;
-        
-      case effects::kNoise:
-        parameter = glGetUniformLocation(_program, "NoiseEnabled");
-        intensity = glGetUniformLocation(_program, "NoiseIntensity");
-        _theSettings[theName].value = theValue;
-        if (theValue)
-          glUniform1i(parameter, true);
-        else
-          glUniform1i(parameter, false);
-        theValue = theValue / 100.0f;
-        break;
-        
-      case effects::kSepia:
-        parameter = glGetUniformLocation(_program, "SepiaEnabled");
-        intensity = glGetUniformLocation(_program, "SepiaIntensity");
-        _theSettings[theName].value = theValue;
-        if (theValue)
-          glUniform1i(parameter, true);
-        else
-          glUniform1i(parameter, false);
-        theValue = theValue / 100.0f;
-        break;
-        
-      case effects::kSharpenRatio:
-        intensity = glGetUniformLocation(_program, "SharpenRatio");
-        _theSettings[theName].value = theValue;
-        theValue = theValue / 100.0f;
-        break;
-        
-      case effects::kSharpen:
-        parameter = glGetUniformLocation(_program, "SharpenEnabled");
-        intensity = glGetUniformLocation(_program, "SharpenIntensity");
-        _theSettings[theName].value = theValue;
-        if (theValue)
-          glUniform1i(parameter, true);
-        else
-          glUniform1i(parameter, false);
-        theValue = theValue / 10.0f;
-        break;
-        
-      case effects::kThrobStyle:
-        _theSettings[theName].value = theValue;
-        this->pause();
-        return;
-        
-      case effects::kThrob:
-        _theSettings[theName].value = theValue;
-        if (!theValue) {
-          // Special case, we reset the brightness and contrast
-          intensity = glGetUniformLocation(_program, "AdjustBrightness");
-          glUniform1f(intensity, this->get("brightness") / 100.0f);
-          intensity = glGetUniformLocation(_program, "AdjustContrast");
-          glUniform1f(intensity, this->get("contrast") / 100.0f);
-        }
-        this->pause();
-        return;
-        
-      default:
-        this->pause();
-        return;
-    }
-    
-    glUniform1f(intensity, theValue);
-    
-    // Special case to enable/disable adjustment if three values are normal
-    if ((this->get("brightness") != 100) ||
-        (this->get("contrast") != 100) ||
-        (this->get("saturation") != 100)) {
-      parameter = glGetUniformLocation(_program, "AdjustEnabled");
-      glUniform1i(parameter, true);
-    }
-    else {
-      parameter = glGetUniformLocation(_program, "AdjustEnabled");
-      glUniform1i(parameter, false);
-    }
-    
-    this->pause();
-  }
+  int key = Configurable::indexOf(theName);
+  Configurable::set(theName, theValue);
+  _updateShader(key, theValue);
 }
 
 void EffectsManager::update() {

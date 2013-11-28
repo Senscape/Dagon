@@ -611,6 +611,7 @@ void Control::sleep(int forSeconds) {
 
 void Control::switchTo(Object* theTarget) {
   static bool firstSwitch = true;
+  static SettingCollection previousEffects; // Temporary patch
   
   _updateView(StateNode, true);
   
@@ -627,7 +628,7 @@ void Control::switchTo(Object* theTarget) {
   
   if (theTarget) {
     switch (theTarget->type()) {
-      case kObjectRoom:
+      case kObjectRoom: {
         audioManager.clear();
         feedManager.clear(); // Clear all pending feeds
         
@@ -653,12 +654,16 @@ void Control::switchTo(Object* theTarget) {
         if (_currentRoom->hasEnterEvent())
           script.processCallback(_currentRoom->enterEvent(), 0);
         
+        EffectsManager& effectsManager = EffectsManager::instance();
         if (_currentRoom->hasEffects()) {
-          EffectsManager& effectsManager = EffectsManager::instance();
+          effectsManager.saveSettings(&previousEffects);
           effectsManager.loadSettings(_currentRoom->effects());
+        } else {
+          if (!previousEffects.empty())
+            effectsManager.loadSettings(previousEffects);
         }
-        
         break;
+      }
       case kObjectSlide:
         if (_currentRoom) {
           Node* node = (Node*)theTarget;
@@ -680,7 +685,7 @@ void Control::switchTo(Object* theTarget) {
         }
         
         break;
-      case kObjectNode:
+      case kObjectNode: {
         audioManager.clear();
         if (currentNode()->isSlide())
           cameraManager.unlock();
@@ -701,6 +706,15 @@ void Control::switchTo(Object* theTarget) {
             
             if (_currentRoom->hasEnterEvent())
               script.processCallback(_currentRoom->enterEvent(), 0);
+            
+            EffectsManager& effectsManager = EffectsManager::instance();
+            if (_currentRoom->hasEffects()) {
+              effectsManager.saveSettings(&previousEffects);
+              effectsManager.loadSettings(_currentRoom->effects());
+            } else {
+              if (!previousEffects.empty())
+                effectsManager.loadSettings(previousEffects);
+            }
           }
         }
         else {
@@ -717,6 +731,7 @@ void Control::switchTo(Object* theTarget) {
           script.processCallback(_eventHandlers.enterNode, 0);
         
         break;
+      }
     }
   }
   else {

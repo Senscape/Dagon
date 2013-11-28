@@ -93,6 +93,7 @@ class EffectsManager : public Configurable<effects::Settings> {
   bool _textFileRead();
   
   void _buildParticle(int idx); // For dust
+  void _updateShader(int theEffect, float withValue);
   
   EffectsManager();
   EffectsManager(EffectsManager const&);
@@ -107,6 +108,7 @@ public:
   
   void drawDust();
   void init();
+  void loadSettings(const SettingCollection& theSettings);
   void pause();
   void play();
   void set(const std::string& theName, float theValue);

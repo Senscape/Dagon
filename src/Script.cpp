@@ -286,11 +286,11 @@ int Script::_globalCopy(lua_State *L) {
   EffectsManager& effectsManager = EffectsManager::instance();
   if (effectsManager.beginIteratingSettings()) {
     Setting theEffect;
-    while (effectsManager.iterateSettings()) {
+    do {
       std::string name = effectsManager.getCurrentSetting(&theEffect);
       lua_pushnumber(L, theEffect.value);
       lua_setfield(L, -2, name.c_str());
-    }
+    } while (effectsManager.iterateSettings());
   }
   
   return 1;
