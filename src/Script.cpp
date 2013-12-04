@@ -599,6 +599,31 @@ int Script::_globalVersion(lua_State *L) {
   
   return 1;
 }
+  
+int Script::_globalWhichRoom(lua_State *L) {
+  switch (DGCheckProxy(L, 1)) {
+    case kObjectNode: {
+      Node* node = ProxyToNode(L, 1);
+      if (node) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, node->parentRoom()->luaObject());
+        return 1;
+      }
+      break;
+    }
+    case kObjectRoom: {
+      Room* room = ProxyToRoom(L, 1);
+      if (room) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, room->luaObject());
+        return 1;
+      }
+      break;
+    }
+    default:
+      break;
+  }
+  
+  return 0;
+}
 
 void Script::_registerEnums() {
   // Push all enum values
@@ -713,6 +738,7 @@ void Script::_registerGlobals() {
     {"stopTimer", _globalStopTimer},
     {"version", _globalVersion},
     {"walkTo", _globalWalkTo},
+    {"whichRoom", _globalWhichRoom},
     {NULL, NULL}
   };
   
