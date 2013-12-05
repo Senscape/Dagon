@@ -31,7 +31,7 @@ namespace dagon {
 typedef struct {
   int min;
   int max;
-  int value;
+  uint32_t value;
 } Setting;
   
 typedef std::map<std::string, Setting> SettingCollection;
@@ -105,7 +105,7 @@ class Configurable {
   void saveSettings(SettingCollection* theSettings) {
     *theSettings = _theSettings;
   }
-  void set(const std::string& theName, int theValue) {
+  void set(const std::string& theName, uint32_t theValue) {
     _theSettings[theName].value = theValue;
   }
   

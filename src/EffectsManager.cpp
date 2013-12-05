@@ -44,7 +44,7 @@ timerManager(TimerManager::instance())
   set("contrast", 100);
   set("saturation", 100);
   set("dust", 0);
-  set("dustColor", kColorWhite);
+  _theSettings["dustColor"].value = 0xffeeddaa;
   set("dustSize", 2);
   set("dustSpeed", 1);
   set("dustSpread", 20);
@@ -196,12 +196,11 @@ void EffectsManager::drawDust() {
     // Temporary
     glPushMatrix();
     
-    uint32_t aux = this->get("dustColor");
-    
-    uint8_t b = (aux & 0x000000ff);
-    uint8_t g = (aux & 0x0000ff00) >> 8;
-    uint8_t r = (aux & 0x00ff0000) >> 16;
-    uint8_t a = (aux & 0xff000000) >> 24;
+    uint32_t aux = _theSettings["dustColor"].value;
+    uint8_t r = (aux & 0xff000000) >> 24;
+    uint8_t g = (aux & 0x00ff0000) >> 16;
+    uint8_t b = (aux & 0x0000ff00) >> 8;
+    uint8_t a = (aux & 0x000000ff);
     
     glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
     
