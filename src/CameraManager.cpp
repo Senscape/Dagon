@@ -134,6 +134,10 @@ float* CameraManager::position() {
 int CameraManager::speedFactor() {
   return _speedFactor / 10000;
 }
+  
+int CameraManager::horizontalLimit() {
+  return _toDegrees(_angleHLimit, M_PI * 2);
+}
 
 int CameraManager::verticalLimit() {
   return _toDegrees(_angleVLimit, M_PI * 2);
@@ -273,6 +277,13 @@ void CameraManager::setTargetAngle(float horizontal, float vertical, bool fovAdj
   else {
     _angleVTarget = _angleV;
   }
+}
+  
+void CameraManager::setHorizontalLimit(float limit) {
+  if (!limit)
+    _angleHLimit = M_PI * 2.0f;
+  else
+    _angleHLimit = _toRadians(limit, M_PI * 2);
 }
 
 void CameraManager::setVerticalLimit(float limit) {
@@ -680,10 +691,24 @@ void CameraManager::update() {
     _angleV -= sin(_accelV) * _motionUp * config.globalSpeed();
   
   // Limit horizontal rotation
-  if (_angleH > (GLfloat)_angleHLimit)
-    _angleH = 0.0f;
-  else if (_angleH < 0.0f)
-    _angleH = (GLfloat)_angleHLimit;
+  if (_angleHLimit == M_PI * 2.0f) {
+    if (_angleH > (GLfloat)_angleHLimit)
+      _angleH = 0.0f;
+    else if (_angleH < 0.0f)
+      _angleH = (GLfloat)_angleHLimit;
+  }
+  else {
+    if (_angleH > (GLfloat)_angleHLimit) {
+      _angleH = (GLfloat)_angleHLimit;
+      _motionLeft = 0.0f;
+      _motionRight = 0.0f;
+    }
+    else if (_angleH < -(GLfloat)_angleHLimit) {
+      _angleH = -(GLfloat)_angleHLimit;
+      _motionLeft = 0.0f;
+      _motionRight = 0.0f;
+    }
+  }
   
   // Limit vertical rotation
   if (_angleV > (GLfloat)_angleVLimit) {

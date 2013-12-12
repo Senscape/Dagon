@@ -169,6 +169,7 @@ public:
   int angleVertical();
   int cursorWhenPanning();
   float fieldOfView();
+  int horizontalLimit();
   int inertia();
   int maxSpeed();
   float motionHorizontal();
@@ -185,6 +186,7 @@ public:
   void setAngleVertical(float vertical);
   void setBreathe(bool enabled);
   void setFieldOfView(float fov);
+  void setHorizontalLimit(float limit);  
   void setInertia(int theInertia);
   void setMaxSpeed(int theSpeed);
   void setNeutralZone(int zone);
