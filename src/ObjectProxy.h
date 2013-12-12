@@ -117,9 +117,9 @@ public:
   
 private:
   Object* o;
-  
+
 };
-  
+
 }
 
 #endif // DAGON_OBJECTPROXY_H_

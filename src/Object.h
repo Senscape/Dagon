@@ -27,11 +27,11 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
 
 enum FadeSpeeds {
-  kFadeNormal = 200,
-  kFadeSlow = 350,
-  kFadeSlowest = 500,
+  kFadeNormal = 250,
+  kFadeSlow = 1500,
+  kFadeSlowest = 3000,
   kFadeFast = 100,
-  kFadeFastest = 50
+  kFadeFastest = 10
 };
 
 enum FadeTypes {

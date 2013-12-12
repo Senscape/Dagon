@@ -105,7 +105,7 @@ void RenderManager::init() {
   
   _blendTexture = new Texture(0, 0, 0); // All default values
   _fadeTexture = new Texture(1, 1, 0); // Minimal black texture
-  _fadeTexture->setFadeSpeed(kFadeFastest);
+  _fadeTexture->setFadeSpeed(kFadeFast);
   
   // NOTE: Here we read the default screen values to calculate the aspect ratio
   for (int i = 0; i < (kDefCursorDetail + 1) * 2; i += 2) {
