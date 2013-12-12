@@ -828,11 +828,12 @@ void Control::switchTo(Object* theTarget) {
       it = arrayOfAudios.begin();
       
       while (it != arrayOfAudios.end()) {
+        audioManager.requestAudio((*it));
         if ((*it)->state() != kAudioPlaying)
           (*it)->fadeIn();
-        
-        audioManager.requestAudio((*it));
-        (*it)->play();
+        if ((*it)->doesAutoplay()) {
+          (*it)->play();
+        }
         
         ++it;
       }

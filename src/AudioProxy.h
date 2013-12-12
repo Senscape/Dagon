@@ -46,7 +46,11 @@ public:
       lua_pushnil(L);
       while (lua_next(L, 2) != 0) {
         const char* key = lua_tostring(L, -2);
-        
+
+        if (strcmp(key, "auto") == 0) {
+          a->setAutoplay(lua_toboolean(L, -1));
+          a->setStatic();
+        }
         if (strcmp(key, "loop") == 0) a->setLoopable(lua_toboolean(L, -1));
         if (strcmp(key, "volume") == 0) a->setDefaultFadeLevel((float)(lua_tonumber(L, -1) / 100));
         

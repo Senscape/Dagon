@@ -35,6 +35,7 @@ Audio::Audio() :
 config(Config::instance()),
 log(Log::instance())
 {
+  _doesAutoplay = true;
   _isLoaded = false;
   _isLoopable = false;
   _isMatched = false;
@@ -62,6 +63,10 @@ Audio::~Audio() {
 // Implementation - Checks
 ////////////////////////////////////////////////////////////
 
+bool Audio::doesAutoplay() {
+  return _doesAutoplay;
+}
+  
 bool Audio::isLoaded() {
   bool value = false;
   if (SDL_LockMutex(_mutex) == 0) {
@@ -104,6 +109,10 @@ int Audio::state() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
+void Audio::setAutoplay(bool autoplay) {
+  _doesAutoplay = autoplay;
+}
+  
 void Audio::setLoopable(bool loopable) {
   _isLoopable = loopable;
 }

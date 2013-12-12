@@ -80,6 +80,7 @@ class Audio : public Object {
   ~Audio();
   
   // Checks
+  bool doesAutoplay();
   bool isLoaded();
   bool isLoopable();
   bool isPlaying();
@@ -89,6 +90,7 @@ class Audio : public Object {
   int state();
   
   // Sets
+  void setAutoplay(bool autoplay);
   void setLoopable(bool loopable);
   void setPosition(unsigned int face, Point origin);
   void setResource(std::string fileName);
@@ -112,6 +114,7 @@ class Audio : public Object {
   // Eventually all file management will be handled by a separate class
   Resource _resource;
   
+  bool _doesAutoplay;
   bool _isLoaded;
   bool _isLoopable;
   bool _isMatched;
