@@ -56,6 +56,8 @@ timerManager(TimerManager::instance())
   set("throb", 0);
   set("throbStyle", 1);
   
+  _calculateDustData();
+  
   _isActive = false;
   _isInitialized = false;
 }
@@ -169,6 +171,14 @@ void EffectsManager::_updateShader(int theEffect, float withValue) {
         }
         break;
         
+      case effects::kDust:
+      case effects::kDustColor:
+      case effects::kDustSize:
+      case effects::kDustSpeed:
+      case effects::kDustSpread:
+        _calculateDustData();
+        break;
+        
       default:
         break;
     }
@@ -191,7 +201,6 @@ void EffectsManager::_updateShader(int theEffect, float withValue) {
 
 
 void EffectsManager::drawDust() {
-  float internalSize = this->get("dustSize") / 2000.0f;
   if (this->get("dust") && config.effects) {
     // Temporary
     glPushMatrix();
@@ -205,13 +214,10 @@ void EffectsManager::drawDust() {
     glColor4f((float)(r / 255.0f), (float)(g / 255.0f), (float)(b / 255.0f), (float)(a / 255.f));
     
     _dustTexture->bind();
-    int numOfParticles = this->get("dust") * 100;
-    if (numOfParticles > kEffectsMaxDust)
-      numOfParticles = kEffectsMaxDust;
-    for (int i = 0; i < numOfParticles; i++) {
-      _particles[i].x += _particles[i].xd / (100 - this->get("dustSpeed"));
-      _particles[i].y += _particles[i].yd / (100 - this->get("dustSpeed"));
-      _particles[i].z += _particles[i].zd / (100 - this->get("dustSpeed"));
+    for (int i = 0; i < _dustData.numOfParticles; i++) {
+      _particles[i].x += _particles[i].xd / _dustData.speed;
+      _particles[i].y += _particles[i].yd / _dustData.speed;
+      _particles[i].z += _particles[i].zd / _dustData.speed;
       if (_particles[i].y <= -0.5f) {
         _buildParticle(i);
       }
@@ -222,10 +228,10 @@ void EffectsManager::drawDust() {
       glRotatef(1.0f, 0.0f, 1.0f, 0.0f);
       
       GLfloat quadCoords[] = {
-        _particles[i].x, _particles[i].y, _particles[i].z + internalSize,
-        _particles[i].x, _particles[i].y + internalSize, _particles[i].z + internalSize,
-        _particles[i].x + internalSize, _particles[i].y + internalSize, _particles[i].z + internalSize,
-        _particles[i].x + internalSize, _particles[i].y, _particles[i].z + internalSize };
+        _particles[i].x, _particles[i].y, _particles[i].z + _dustData.size,
+        _particles[i].x, _particles[i].y + _dustData.size, _particles[i].z + _dustData.size,
+        _particles[i].x + _dustData.size, _particles[i].y + _dustData.size, _particles[i].z + _dustData.size,
+        _particles[i].x + _dustData.size, _particles[i].y, _particles[i].z + _dustData.size };
       
       glVertexPointer(3, GL_FLOAT, 0, quadCoords);
       glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
@@ -369,18 +375,29 @@ void EffectsManager::update() {
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
+  
+void EffectsManager::_calculateDustData() {
+  _dustData.numOfParticles = this->get("dust") * 100;
+  
+  if (_dustData.numOfParticles > kEffectsMaxDust)
+    _dustData.numOfParticles = kEffectsMaxDust;
+  
+  _dustData.size = this->get("dustSize") / 2000.0f;
+  _dustData.speed = 100 - this->get("dustSpeed");
+  _dustData.spread = 100 - this->get("dustSpread");
+}
 
 void EffectsManager::_buildParticle(int idx) {
   int s;
   
   s = rand() % (int)kEffectsDustFactor;
-  _particles[idx].xd = -(s / kEffectsDustFactor - 0.5f) / (100 - this->get("dustSpread"));
+  _particles[idx].xd = -(s / kEffectsDustFactor - 0.5f) / _dustData.spread;
   
   s = rand() % (int)kEffectsDustFactor;
-  _particles[idx].zd = -(s / kEffectsDustFactor - 0.5f) / (100 - this->get("dustSpread"));
+  _particles[idx].zd = -(s / kEffectsDustFactor - 0.5f) / _dustData.spread;
   
   s = rand() % (int)kEffectsDustFactor;
-  _particles[idx].yd = -s / kEffectsDustFactor / (100 - this->get("dustSpread"));
+  _particles[idx].yd = -s / kEffectsDustFactor / _dustData.spread;
   
   s = rand() % (int)kEffectsDustFactor;
   _particles[idx].x = s / kEffectsDustFactor - 0.5f;

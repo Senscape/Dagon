@@ -62,6 +62,13 @@ typedef struct {
   GLfloat xd,yd,zd;
   GLfloat cs;
 } DGParticle;
+  
+typedef struct {
+  int numOfParticles;
+  float size;
+  int speed;
+  int spread;
+} DGDustData;
 
 class CameraManager;
 class Config;
@@ -85,6 +92,7 @@ class EffectsManager : public Configurable<effects::Settings> {
   
   GLuint _fragment;
   GLuint _program;
+  DGDustData _dustData;
   DGParticle _particles[kEffectsMaxDust];
   Texture* _dustTexture;
   char* _shaderData;
@@ -92,6 +100,7 @@ class EffectsManager : public Configurable<effects::Settings> {
   bool _isInitialized;
   bool _textFileRead();
   
+  void _calculateDustData();
   void _buildParticle(int idx); // For dust
   void _updateShader(int theEffect, float withValue);
   
