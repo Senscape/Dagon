@@ -982,7 +982,15 @@ void Control::_processAction(){
       break;
     case kActionSwitch:
       cursorManager.removeAction();
-      walkTo(action->target);
+      // FIXME: Temporary hack until we separate the slide code from node code
+      if (this->currentNode() != NULL) {
+        if (this->currentNode()->isSlide()) {
+          config.controlMode = kControlFixed;
+          switchTo(action->target);
+        }
+        else
+          walkTo(action->target);
+      }
       break;
   }
 }

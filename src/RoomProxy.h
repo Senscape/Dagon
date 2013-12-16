@@ -88,6 +88,22 @@ public:
     return 0;
   }
   
+  // Add a slide to the room
+  int addSlide(lua_State *L) {
+    if (DGCheckProxy(L, 1) == kObjectSlide) {
+      r->addNode(ProxyToSlide(L, 1));
+      
+      // Now we get the metatable of the added node and set it
+      // as a return value
+      lua_getfield(L, LUA_REGISTRYINDEX, NodeProxyName);
+      lua_setmetatable(L, -2);
+      
+      return 1;
+    }
+    
+    return 0;
+  }
+  
   // Set an onEnter event
   int onEnter(lua_State *L) {
     int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
@@ -170,6 +186,7 @@ Luna<RoomProxy>::RegType RoomProxy::methods[] = {
   ObjectMethods(RoomProxy),
   method(RoomProxy, addAudio),
   method(RoomProxy, addNode),
+  method(RoomProxy, addSlide),
   method(RoomProxy, onEnter),
   method(RoomProxy, setDefaultFootstep),
   method(RoomProxy, setEffects),
