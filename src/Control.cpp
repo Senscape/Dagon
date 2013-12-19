@@ -1008,6 +1008,12 @@ void Control::_updateView(int state, bool inBackground) {
   // FIXME: Add a render stack of Objects, especially for overlays
   // IMPORTANT: Ensure this function is thread-safe when switching rooms or nodes
   
+  if (!inBackground) {
+    // User post-render operations, supporting textures
+    if (_eventHandlers.hasPreRender)
+      script.processCallback(_eventHandlers.preRender, 0);
+  }
+  
   // Setup the scene
   
   _scene->clear();
