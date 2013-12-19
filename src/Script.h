@@ -85,6 +85,7 @@ class Script {
   static int _globalVersion(lua_State *L);
   static int _globalWalkTo(lua_State *L);
   static int _globalWhichRoom(lua_State *L);
+  static int _globalZoomOut(lua_State *L);
   void _registerEnums();
   void _registerGlobals();
   

@@ -571,28 +571,28 @@ int Script::_globalStopTimer(lua_State *L) {
   return 0;
 }
   
-  int Script::_globalWalkTo(lua_State *L) {
-    switch (DGCheckProxy(L, 1)) {
-      case kObjectNode:
-        Control::instance().walkTo(ProxyToNode(L, 1));
-        break;
-      case kObjectRoom:
-        Control::instance().walkTo(ProxyToRoom(L, 1));
-        break;
-      case kObjectSlide:
-        Control::instance().walkTo(ProxyToSlide(L, 1));
-        break;
-      case kObjectGeneric:
-        Log::instance().error(kModScript, "%s", kString14003);
-        break;
-        
-      case kObjectNone:
-        Log::instance().error(kModScript, "%s", kString14004);
-        break;
-    }
-    
-    return 0;
+int Script::_globalWalkTo(lua_State *L) {
+  switch (DGCheckProxy(L, 1)) {
+    case kObjectNode:
+      Control::instance().walkTo(ProxyToNode(L, 1));
+      break;
+    case kObjectRoom:
+      Control::instance().walkTo(ProxyToRoom(L, 1));
+      break;
+    case kObjectSlide:
+      Control::instance().walkTo(ProxyToSlide(L, 1));
+      break;
+    case kObjectGeneric:
+      Log::instance().error(kModScript, "%s", kString14003);
+      break;
+      
+    case kObjectNone:
+      Log::instance().error(kModScript, "%s", kString14004);
+      break;
   }
+  
+  return 0;
+}
 
 int Script::_globalVersion(lua_State *L) {
   lua_pushstring(L, DAGON_VERSION_STRING);
@@ -625,6 +625,11 @@ int Script::_globalWhichRoom(lua_State *L) {
   return 0;
 }
 
+int Script::_globalZoomOut(lua_State *L) {
+  Control::instance().switchTo(NULL);
+  return 0;
+}
+  
 void Script::_registerEnums() {
   // Push all enum values
   DGLuaEnum(_L, AUDIO, kObjectAudio);
@@ -739,6 +744,7 @@ void Script::_registerGlobals() {
     {"version", _globalVersion},
     {"walkTo", _globalWalkTo},
     {"whichRoom", _globalWhichRoom},
+    {"zoomOut", _globalZoomOut},
     {NULL, NULL}
   };
   
