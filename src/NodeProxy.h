@@ -151,6 +151,22 @@ public:
     
   }
   
+  // Set an onEnter event
+  int onEnter(lua_State *L) {
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    n->setEnterEvent(ref);
+    
+    return 0;
+  }
+  
+  // Set an onEnter event
+  int onLeave(lua_State *L) {
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    n->setLeaveEvent(ref);
+    
+    return 0;
+  }
+  
   // Set a custom footstep
   int setFootstep(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectAudio) {
@@ -186,6 +202,8 @@ Luna<NodeProxy>::RegType NodeProxy::methods[] = {
   ObjectMethods(NodeProxy),
   method(NodeProxy, addSpot),
   method(NodeProxy, link),
+  method(NodeProxy, onEnter),
+  method(NodeProxy, onLeave),
   method(NodeProxy, setFootstep),
   {0,0}
 };

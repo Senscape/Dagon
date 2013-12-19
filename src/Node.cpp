@@ -64,6 +64,14 @@ bool Node::hasBundleName() {
 bool Node::hasFootstep() {
   return _hasFootstep;
 }
+  
+bool Node::hasEnterEvent() {
+  return _hasEnterEvent;
+}
+  
+bool Node::hasLeaveEvent() {
+  return _hasLeaveEvent;
+}
 
 bool Node::hasSpots() {
   return !_arrayOfSpots.empty();
@@ -94,8 +102,18 @@ std::string Node::description() {
   return _description;
 }
 
+int Node::enterEvent() {
+  assert(_hasEnterEvent = true);
+  return _luaEnterReference;
+}
+  
 Audio* Node::footstep() {
   return _footstep;
+}
+  
+int Node::leaveEvent() {
+  assert(_hasLeaveEvent = true);
+  return _luaLeaveReference;
 }
 
 Room* Node::parentRoom() {
@@ -117,10 +135,20 @@ void Node::setBundleName(std::string theName) {
 void Node::setDescription(std::string theDescription) {
   _description = theDescription;
 }
+  
+void Node::setEnterEvent(int theLuaReference) {
+  _hasEnterEvent = true;
+  _luaEnterReference = theLuaReference;
+}
 
 void Node::setFootstep(Audio* theFootstep) {
   _footstep = theFootstep;
   _hasFootstep = true;
+}
+  
+void Node::setLeaveEvent(int theLuaReference) {
+  _hasLeaveEvent = true;
+  _luaLeaveReference = theLuaReference;
 }
   
 void Node::setParentRoom(Room* room) {

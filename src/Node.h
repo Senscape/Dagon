@@ -44,7 +44,9 @@ class Node : public Object {
   
   // Checks
   bool hasBundleName();
+  bool hasEnterEvent();
   bool hasFootstep();
+  bool hasLeaveEvent();
   bool hasSpots();
   bool isSlide();
   
@@ -52,7 +54,9 @@ class Node : public Object {
   std::string bundleName();
   Spot* currentSpot();
   std::string description();
+  int enterEvent();
   Audio* footstep();
+  int leaveEvent();  
   Room* parentRoom();
   Node* previousNode();
   int slideReturn();
@@ -60,7 +64,9 @@ class Node : public Object {
   // Sets
   void setBundleName(std::string theName);
   void setDescription(std::string theDescription);
+  void setEnterEvent(int theLuaReference);
   void setFootstep(Audio* theFootstep);
+  void setLeaveEvent(int theLuaReference);
   void setParentRoom(Room* room);
   void setPreviousNode(Node* node);
   void setSlide(bool enabled);
@@ -85,8 +91,12 @@ class Node : public Object {
   Audio* _footstep;
   Room* _parentRoom;
   Node* _previousNode;
+  bool _hasEnterEvent;
   bool _hasFootstep;
+  bool _hasLeaveEvent;
   bool _isSlide;
+  int _luaEnterReference;
+  int _luaLeaveReference;
   int _slideReturn;
   
   void _link(unsigned int direction, Action* action);

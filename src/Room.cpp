@@ -47,6 +47,10 @@ bool Room::hasDefaultFootstep() {
   return _hasDefaultFootstep;
 }
   
+bool Room::hasEnterEvent() {
+  return _hasEnterEvent;
+}
+  
 bool Room::hasEffects() {
   return _hasEffects;
 }
@@ -76,6 +80,11 @@ Audio* Room::defaultFootstep() {
 SettingCollection Room::effects() {
   return _theEffects;
 }
+  
+int Room::enterEvent() {
+  assert(_hasEnterEvent = true);
+  return _luaReference;
+}
 
 Node* Room::iterator() {
   assert(_it != _arrayOfNodes.end());
@@ -94,6 +103,11 @@ void Room::setDefaultFootstep(Audio* theFootstep) {
 void Room::setEffects(const SettingCollection& theEffects) {
   _theEffects = theEffects;
   _hasEffects = true;
+}
+  
+void Room::setEnterEvent(int luaReference) {
+  _hasEnterEvent = true;
+  _luaReference = luaReference;
 }
 
 ////////////////////////////////////////////////////////////
@@ -116,10 +130,6 @@ Node* Room::addNode(Node* aNode) {
 void Room::beginIteratingNodes() {
   _it = _arrayOfNodes.begin();
 }
-  
-bool Room::hasEnterEvent() {
-  return _hasEnterEvent;
-}
 
 bool Room::iterateNodes() {
   ++_it;
@@ -128,16 +138,6 @@ bool Room::iterateNodes() {
   } else {
     return true;
   }
-}
-
-int Room::enterEvent() {
-  assert(_hasEnterEvent = true);
-  return _luaReference;
-}
-  
-void Room::setEnterEvent(int luaReference) {
-  _hasEnterEvent = true;
-  _luaReference = luaReference;
 }
 
 bool Room::switchTo(Node* theNode) {

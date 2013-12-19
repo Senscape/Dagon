@@ -626,6 +626,11 @@ void Control::switchTo(Object* theTarget) {
   
   cameraManager.setViewport(config.displayWidth, config.displayHeight);
   
+  if (currentNode()){
+    if (currentNode()->hasLeaveEvent())
+      script.processCallback(currentNode()->leaveEvent(), 0);
+  }
+  
   if (theTarget) {
     switch (theTarget->type()) {
       case kObjectRoom: {
@@ -729,6 +734,9 @@ void Control::switchTo(Object* theTarget) {
         
         if (_eventHandlers.hasEnterNode)
           script.processCallback(_eventHandlers.enterNode, 0);
+        
+        if (node->hasEnterEvent())
+          script.processCallback(node->enterEvent(), 0);
         
         break;
       }
