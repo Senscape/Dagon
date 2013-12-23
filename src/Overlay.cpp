@@ -31,6 +31,7 @@ Overlay::Overlay() {
   _position.x = 0;
   _position.y = 0;
   _isIteratingBackwards = false;
+  _isLocked = false;
   this->disable(); // Overlays are disabled by default
   this->setType(kObjectOverlay);
 }
@@ -68,6 +69,10 @@ Button* Overlay::currentButton() {
 Image* Overlay::currentImage() {
   assert(_itImage != _arrayOfImages.end());
   return *_itImage;
+}
+  
+bool Overlay::isLocked() {
+  return _isLocked;
 }
 
 ////////////////////////////////////////////////////////////
@@ -116,6 +121,7 @@ void Overlay::beginIteratingImages() {
 
 void Overlay::fadeIn() {
   // Force enabling the overlay
+  _isLocked = false;
   this->enable();
   
   // Buttons
@@ -140,6 +146,9 @@ void Overlay::fadeIn() {
 }
 
 void Overlay::fadeOut() {
+  // Force disabling the overlay
+  _isLocked = true;
+  
   // Buttons
   if (!_arrayOfButtons.empty()) {
     std::vector<Button*>::iterator itButton;

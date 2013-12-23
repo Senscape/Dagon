@@ -48,6 +48,7 @@ class Overlay : public Object {
   // Gets
   Button* currentButton();
   Image* currentImage();
+  bool isLocked();
   
   // Sets
   void setPosition(int x, int y);
@@ -70,6 +71,7 @@ class Overlay : public Object {
   std::vector<Button*>::reverse_iterator _ritButton;
   std::vector<Image*>::iterator _itImage;
   
+  bool _isLocked;
   bool _isIteratingBackwards;
   Point _position;
   

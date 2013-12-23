@@ -170,7 +170,7 @@ bool Interface::scanOverlays() {
     itOverlay = _arrayOfOverlays.rbegin();
     
     while (itOverlay != _arrayOfOverlays.rend()) {
-      if ((*itOverlay)->isEnabled()) {
+      if ((*itOverlay)->isEnabled() && !(*itOverlay)->isLocked()) {
         
         if ((*itOverlay)->hasButtons()) {
           (*itOverlay)->beginIteratingButtons(true);
