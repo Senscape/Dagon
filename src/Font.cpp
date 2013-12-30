@@ -94,7 +94,9 @@ void Font::wPrint(int x, int y, const char* text) {
   if (_isLoaded) {
     size_t origsize = strlen(text) + 1;
     wchar_t wcstring[kMaxFeedLength];
+   // setlocale(LC_CTYPE, "en_US.UTF-8");
     mbstowcs(wcstring, text, origsize);
+   // setlocale(LC_ALL,"C");
     
     glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

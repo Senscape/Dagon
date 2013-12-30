@@ -60,8 +60,6 @@ void FontManager::init(){
   FT_Library_Version(_library, &major, &minor, &patch);
   log.info(kModFont, "%s: %d.%d.%d", kString15002, major, minor, patch);
   
-  setlocale(LC_CTYPE, "en_US.UTF-8");
-  
   _isInitialized = true;
 }
 

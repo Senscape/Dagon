@@ -26,7 +26,7 @@
 
 #define kDefFeedSize 10
 #define DGFeedMargin 25
-#define DGFeedMaxLines 5
+#define DGFeedMaxLines 10
 #define DGFeedSpeed 0.25
 
 #define DGFeedShadowEnabled     1
