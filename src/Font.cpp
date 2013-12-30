@@ -17,6 +17,8 @@
 
 #include <cstdarg>
 #include <cstdio>
+#include <iostream>
+#include <sstream>
 
 #include "Config.h"
 #include "Font.h"
@@ -67,6 +69,41 @@ void Font::print(int x, int y, const char* text, ...) {
     for (const char* c = buffer; length > 0; c++, length--) {
       int ch = *c;
       
+      GLfloat texCoords[] = { 0, 0, 0, _glyph[ch].y,
+        _glyph[ch].x, _glyph[ch].y, _glyph[ch].x, 0 };
+      
+      GLshort coords[] = { 0, 0, 0, _glyph[ch].rows,
+        _glyph[ch].width, _glyph[ch].rows, _glyph[ch].width, 0 };
+      
+      glBindTexture(GL_TEXTURE_2D, _textures[ch]);
+      glTranslatef(static_cast<GLfloat>(_glyph[ch].left), 0, 0);
+      glPushMatrix();
+      glTranslatef(0, -static_cast<GLfloat>(_glyph[ch].top) + _height, 0);
+      glTexCoordPointer(2, GL_FLOAT, 0, texCoords);
+      glVertexPointer(2, GL_SHORT, 0, coords);
+      glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+      glPopMatrix();
+      glTranslatef(static_cast<GLfloat>(_glyph[ch].advance >> 6), 0, 0);
+    }
+    glPopMatrix();
+    glPopAttrib();
+  }
+}
+
+void Font::wPrint(int x, int y, const char* text) {
+  if (_isLoaded) {
+    size_t origsize = strlen(text) + 1;
+    wchar_t wcstring[kMaxFeedLength];
+    mbstowcs(wcstring, text, origsize);
+    
+    glPushAttrib(GL_CURRENT_BIT | GL_ENABLE_BIT | GL_TRANSFORM_BIT);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glPushMatrix();
+    glTranslatef(x, y, 0);
+    
+    size_t length = wcslen(wcstring);
+    for (const wchar_t* c = wcstring; length > 0; c++, length--) {
+      unsigned long ch = *c;
       GLfloat texCoords[] = { 0, 0, 0, _glyph[ch].y,
         _glyph[ch].x, _glyph[ch].y, _glyph[ch].x, 0 };
       
@@ -141,7 +178,7 @@ void Font::_loadFont(FT_Face &face) {
   FT_Set_Char_Size(face, _height << 6, _height << 6, 96, 96);
   glGenTextures(kMaxChars, _textures);
   
-  for (unsigned char ch = 0; ch < kMaxChars; ch++) {
+  for (wchar_t ch = 0; ch < kMaxChars; ch++) {
     if (FT_Load_Glyph(face, FT_Get_Char_Index(face, ch), FT_LOAD_DEFAULT)) {
       log.error(kModFont, "%s: %c", kString15006, ch);
       return;
