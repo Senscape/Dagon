@@ -31,6 +31,7 @@ namespace dagon {
 Node::Node() {
   _previousNode = this;
   _hasFootstep = false;
+  _hasEnterEvent = false;
   _isSlide = false;
   _parentRoom = 0;
   _slideReturn = 0;
