@@ -107,6 +107,7 @@ void Script::init() {
   // Register all proxys
   Luna<AudioProxy>::Register(_L);
   Luna<ButtonProxy>::Register(_L);
+  Luna<GroupProxy>::Register(_L);
   Luna<ImageProxy>::Register(_L);
   Luna<NodeProxy>::Register(_L);
   Luna<OverlayProxy>::Register(_L);

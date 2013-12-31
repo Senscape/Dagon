@@ -18,6 +18,7 @@
 #include <cstdlib>
 
 #include "Audio.h"
+#include "Group.h"
 #include "Spot.h"
 #include "Texture.h"
 #include "Video.h"

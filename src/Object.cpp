@@ -15,6 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "Group.h"
 #include "Object.h"
 
 namespace dagon {
@@ -32,6 +33,7 @@ Object::Object() {
   _fadeLevel = 1.0f;
   _fadeTarget = 1.0f;
   _isEnabled = true;
+  _isGrouped = false;  
   _isStatic = false;
   _id = ++globalID;
   this->setFadeSpeed(kFadeNormal);
@@ -104,6 +106,11 @@ void Object::setFadeLevel(float level) {
 void Object::setFadeSpeed(int speed) {
   _fadeSpeed = 1.0f / static_cast<float>(speed);
 }
+  
+void Object::setGroup(Group* theGroup) {
+  _attachedGroup = theGroup;
+  _isGrouped = true;
+}
 
 void Object::setLuaObject(int object) {
   _luaObject = object;
@@ -126,12 +133,18 @@ void Object::setStatic() {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-void Object::disable() {
-  _isEnabled = false;
+void Object::disable(bool forced) {
+  if (_isGrouped && !forced)
+    _attachedGroup->disable();
+  else
+    _isEnabled = false;
 }
 
-void Object::enable() {
-  _isEnabled = true;
+void Object::enable(bool forced) {
+  if (_isGrouped && !forced)
+    _attachedGroup->enable();
+  else
+    _isEnabled = true;
 }
 
 void Object::fadeIn() {

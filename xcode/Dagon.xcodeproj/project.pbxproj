@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		FB0BF4CA183518D900B29013 /* Configurable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0BF4C8183518D900B29013 /* Configurable.cpp */; };
+		FB0C9301187304200072D5E3 /* Group.cpp in Sources */ = {isa = PBXBuildFile; fileRef = FB0C92FF187304200072D5E3 /* Group.cpp */; };
 		FB4EE42C17F205DD003F9C49 /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB94AB7617DE35410081574F /* OpenGL.framework */; };
 		FB4EE42E17F20614003F9C49 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB4EE42D17F20614003F9C49 /* Cocoa.framework */; };
 		FB4EE43017F20625003F9C49 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FB4EE42F17F20625003F9C49 /* IOKit.framework */; };
@@ -77,6 +78,9 @@
 /* Begin PBXFileReference section */
 		FB0BF4C8183518D900B29013 /* Configurable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Configurable.cpp; sourceTree = "<group>"; };
 		FB0BF4C9183518D900B29013 /* Configurable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Configurable.h; sourceTree = "<group>"; };
+		FB0C92FF187304200072D5E3 /* Group.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Group.cpp; sourceTree = "<group>"; };
+		FB0C9300187304200072D5E3 /* Group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Group.h; sourceTree = "<group>"; };
+		FB0C9302187307640072D5E3 /* GroupProxy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GroupProxy.h; sourceTree = "<group>"; };
 		FB4EE42D17F20614003F9C49 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		FB4EE42F17F20625003F9C49 /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		FB4EE43117F20630003F9C49 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -302,6 +306,8 @@
 				FB94AB8417DE37340081574F /* Button.cpp */,
 				FB94ABBB17DE37350081574F /* Font.h */,
 				FB94ABBA17DE37350081574F /* Font.cpp */,
+				FB0C9300187304200072D5E3 /* Group.h */,
+				FB0C92FF187304200072D5E3 /* Group.cpp */,
 				FB94ABBF17DE37350081574F /* Image.h */,
 				FB94ABBE17DE37350081574F /* Image.cpp */,
 				FB94ABC617DE37350081574F /* Node.h */,
@@ -414,6 +420,7 @@
 			children = (
 				FB94AB8317DE37340081574F /* AudioProxy.h */,
 				FB94AB8617DE37340081574F /* ButtonProxy.h */,
+				FB0C9302187307640072D5E3 /* GroupProxy.h */,
 				FB94ABC017DE37350081574F /* ImageProxy.h */,
 				FB94ABC717DE37350081574F /* NodeProxy.h */,
 				FB94ABCA17DE37350081574F /* ObjectProxy.h */,
@@ -544,6 +551,7 @@
 				FB94ABEE17DE37350081574F /* SplashData.c in Sources */,
 				FB94ABEF17DE37350081574F /* State.cpp in Sources */,
 				FB94ABF017DE37350081574F /* System.cpp in Sources */,
+				FB0C9301187304200072D5E3 /* Group.cpp in Sources */,
 				FB94ABF117DE37350081574F /* TimerManager.cpp in Sources */,
 				FB94ABF217DE37350081574F /* Video.cpp in Sources */,
 				FB94ABF317DE37350081574F /* VideoManager.cpp in Sources */,

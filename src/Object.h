@@ -26,6 +26,8 @@ namespace dagon {
 // Definitions
 ////////////////////////////////////////////////////////////
 
+class Group;
+
 enum FadeSpeeds {
   kFadeNormal = 250,
   kFadeSlow = 1500,
@@ -50,6 +52,7 @@ enum ObjectTypes {
   // them here
   kObjectCursor,
   kObjectFont,
+  kObjectGroup,
   kObjectImage,
   kObjectNode,
   kObjectOverlay,
@@ -85,14 +88,15 @@ class Object {
   void setDefaultFadeLevel(float level);
   void setFadeLevel(float level);
   void setFadeSpeed(int speed);
+  void setGroup(Group* theGroup);
   void setLuaObject(int object);
   void setName(std::string aName);
   void setStatic();
   void setType(unsigned int theType);
   
   // State changes
-  void disable();
-  void enable();
+  void disable(bool forced = false);
+  void enable(bool forced = false);
   void fadeIn();
   void fadeOut();
   void release();
@@ -101,6 +105,8 @@ class Object {
   void updateFade();
   
  private:
+  Group* _attachedGroup;
+  
   unsigned int _id;
   int _luaObject;
   std::string _name;
@@ -113,6 +119,7 @@ class Object {
   float _fadeSpeed;
   float _fadeTarget;
   bool _isEnabled;
+  bool _isGrouped;
   bool _isStatic;
   
   Object(const Object&);

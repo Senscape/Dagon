@@ -103,7 +103,7 @@ class Spot : public Object {
   bool _hasAudio;
   bool _hasColor;
   bool _hasTexture;
-  bool _hasVideo;
+  bool _hasVideo; 
   bool _isPlaying;
   float _volume;
   int _xOrigin;
