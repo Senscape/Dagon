@@ -48,6 +48,8 @@
     <ClInclude Include="..\src\Font.h" />
     <ClInclude Include="..\src\FontManager.h" />
     <ClInclude Include="..\src\Geometry.h" />
+    <ClInclude Include="..\src\Group.h" />
+    <ClInclude Include="..\src\GroupProxy.h" />
     <ClInclude Include="..\src\Image.h" />
     <ClInclude Include="..\src\ImageProxy.h" />
     <ClInclude Include="..\src\Interface.h" />
@@ -98,6 +100,7 @@
     <ClCompile Include="..\src\FontData.c" />
     <ClCompile Include="..\src\FontManager.cpp" />
     <ClCompile Include="..\src\Geometry.cpp" />
+    <ClCompile Include="..\src\Group.cpp" />
     <ClCompile Include="..\src\Image.cpp" />
     <ClCompile Include="..\src\Interface.cpp" />
     <ClCompile Include="..\src\Locator.cpp" />
@@ -145,7 +148,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
@@ -153,7 +156,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v110_xp</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
     <UseOfMfc>false</UseOfMfc>
