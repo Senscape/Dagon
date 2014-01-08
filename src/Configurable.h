@@ -21,6 +21,7 @@
 #include <cassert>
 #include <map>
 #include <string>
+#include <stdint.h>
 
 namespace dagon {
   
