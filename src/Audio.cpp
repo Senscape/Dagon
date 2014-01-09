@@ -343,12 +343,19 @@ bool Audio::_fillBuffer(ALuint* buffer) {
   static bool _hasStreamingError = false;
   
   if (!_hasStreamingError) {
+    // Prevent audio cuts if file size too small
+    int bufferSize = config.audioBuffer;
+    if (static_cast<int>(_resource.dataSize) < bufferSize) {
+      log.trace(kModAudio, "Buffer size: %d, file size: %d", bufferSize, _resource.dataSize);
+      bufferSize = static_cast<int>(_resource.dataSize);
+    }
+    
     char* data;
-    data = new char[config.audioBuffer];
+    data = new char[bufferSize];
     int size = 0;
-    while (size < config.audioBuffer) {
+    while (size < bufferSize) {
       int section;
-      long result = ov_read(&_oggStream, data + size, config.audioBuffer - size,
+      long result = ov_read(&_oggStream, data + size, bufferSize - size,
                             0, 2, 1, &section);
       if (result > 0) {
         size += static_cast<int>(result);
