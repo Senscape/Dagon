@@ -94,6 +94,11 @@ void Script::init() {
   else
     log.error(kModScript, "%s", kString14015);
   
+  // TODO: Temporarily moved this here, even though Control should report this
+  log.trace(kModControl, "========================================");
+  log.info(kModControl, "%s: %s", kString12001, DAGON_VERSION_STRING);
+  log.info(kModControl, "%s: %d", kString12004, DAGON_BUILD);
+  
   log.trace(kModScript, "%s", kString14001);
   log.info(kModScript, "%s: %s", kString14002, LUA_RELEASE);
   
