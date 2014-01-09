@@ -990,7 +990,6 @@ void Control::_processAction(){
       else feedManager.show(action->feed.c_str());
       break;
     case kActionSwitch:
-      cursorManager.removeAction();
       // FIXME: Temporary hack until we separate the slide code from node code
       if (this->currentNode() != NULL) {
         if (this->currentNode()->isSlide()) {
@@ -1002,6 +1001,7 @@ void Control::_processAction(){
       }
       break;
   }
+  cursorManager.removeAction();
 }
 
 void Control::_updateView(int state, bool inBackground) {

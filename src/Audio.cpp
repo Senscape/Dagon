@@ -346,7 +346,7 @@ bool Audio::_fillBuffer(ALuint* buffer) {
     // Prevent audio cuts if file size too small
     int bufferSize = config.audioBuffer;
     if (static_cast<int>(_resource.dataSize) < bufferSize) {
-      log.trace(kModAudio, "Buffer size: %d, file size: %d", bufferSize, _resource.dataSize);
+      //log.trace(kModAudio, "Buffer size: %d, file size: %d", bufferSize, _resource.dataSize);
       bufferSize = static_cast<int>(_resource.dataSize);
     }
     
