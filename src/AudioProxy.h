@@ -91,11 +91,25 @@ public:
     return 0;
   }
   
+  // Set the volume
+  int setVolume(lua_State *L) {
+    a->forceFadeLevel((float)(lua_tonumber(L, -1) / 100));
+    
+    return 0;
+  }
+  
   // Stop the audio
   int stop(lua_State *L) {
     a->stop();
     
     return 0;
+  }
+  
+  // Get the volume
+  int volume(lua_State *L) {
+    lua_pushnumber(L, a->fadeLevel() * 100);
+    
+    return 1;
   }
   
   Audio* ptr() { return a; }
@@ -116,7 +130,9 @@ Luna<AudioProxy>::RegType AudioProxy::methods[] = {
   method(AudioProxy, match),
   method(AudioProxy, play),
   method(AudioProxy, pause),
+  method(AudioProxy, setVolume),
   method(AudioProxy, stop),
+  method(AudioProxy, volume),
   {0,0}
 };
   

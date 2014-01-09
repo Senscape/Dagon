@@ -312,8 +312,6 @@ void Audio::update() {
       }
       
       // Run fade operations
-      // TODO: Better change the name of the Object "updateFade" function,
-      // it's somewhat confusing.
       this->updateFade();
       
       // FIXME: Not very elegant as we're doing this check every time

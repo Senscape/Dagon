@@ -85,6 +85,7 @@ class Object {
   unsigned int type();
   
   // Sets
+  void forceFadeLevel(float level);
   void setDefaultFadeLevel(float level);
   void setFadeLevel(float level);
   void setFadeSpeed(int speed);

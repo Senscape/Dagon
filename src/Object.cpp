@@ -87,6 +87,13 @@ unsigned int Object::type() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
+void Object::forceFadeLevel(float level) {
+  _defaultFade = level;
+  _fadeLevel = level;
+  _fadeTarget = level;
+  _fadeDirection = kFadeNone;
+}
+  
 void Object::setDefaultFadeLevel(float level) {
   _defaultFade = level;
   this->setFadeLevel(_defaultFade);

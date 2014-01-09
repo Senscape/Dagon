@@ -774,10 +774,15 @@ void Control::switchTo(Object* theTarget) {
           if (spot->hasAudio()) {
             Audio* audio = spot->audio();
             
+            // Ignore handling fade if audio is set to 0 at this stage
+            if (audio->fadeLevel() != 0.0f) {
+              if (!audio->isLoaded())
+                audio->forceFadeLevel(0.0f);
+              audio->setDefaultFadeLevel(spot->volume());
+            }
             // Request the audio
             audioManager.requestAudio(audio);
             audio->setPosition(spot->face(), spot->origin());
-            audio->setDefaultFadeLevel(spot->volume());
           }
           
           // TODO: Merge the video autoplay with spot properties
