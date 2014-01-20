@@ -634,6 +634,7 @@ void Control::switchTo(Object* theTarget) {
   if (theTarget) {
     switch (theTarget->type()) {
       case kObjectRoom: {
+        log.trace(kModControl, "Switching to room...");
         audioManager.clear();
         feedManager.clear(); // Clear all pending feeds
         
@@ -642,6 +643,7 @@ void Control::switchTo(Object* theTarget) {
             cameraManager.unlock();
         }
         
+        log.trace(kModControl, "Set room and Lua objet");
         _currentRoom = (Room*)theTarget;
         _scene->setRoom((Room*)theTarget);
         timerManager.setLuaObject(_currentRoom->luaObject());
@@ -653,25 +655,34 @@ void Control::switchTo(Object* theTarget) {
         
         textureManager.setRoomToPreload(_currentRoom);
         
-        if (_eventHandlers.hasEnterRoom)
+        if (_eventHandlers.hasEnterRoom) {
+          log.trace(kModControl, "Has global enter event");
           script.processCallback(_eventHandlers.enterRoom, 0);
+        }
         
-        if (_currentRoom->hasEnterEvent())
+        if (_currentRoom->hasEnterEvent()) {
+          log.trace(kModControl, "Has room enter event");
           script.processCallback(_currentRoom->enterEvent(), 0);
+        }
         
         EffectsManager& effectsManager = EffectsManager::instance();
         if (_currentRoom->hasEffects()) {
+          log.trace(kModControl, "Loading room effects");
           effectsManager.saveSettings(&previousEffects);
           effectsManager.loadSettings(_currentRoom->effects());
         } else {
-          if (!previousEffects.empty())
+          if (!previousEffects.empty()) {
+            log.trace(kModControl, "Loading previous effects");
             effectsManager.loadSettings(previousEffects);
+          }
         }
         break;
       }
       case kObjectSlide:
+        log.trace(kModControl, "Switching to slide...");
         if (_currentRoom) {
           Node* node = (Node*)theTarget;
+          log.trace(kModControl, "Set previous node");
           node->setPreviousNode(this->currentNode());
           
           if (!_currentRoom->switchTo(node)) {
@@ -691,34 +702,44 @@ void Control::switchTo(Object* theTarget) {
         
         break;
       case kObjectNode: {
+        log.trace(kModControl, "Switching to node...");
         audioManager.clear();
         if (currentNode()->isSlide())
           cameraManager.unlock();
         
+        log.trace(kModControl, "Set parent room");
         Node* node = (Node*)theTarget;
         Room* room = node->parentRoom();
         
         if (room) {
           if (room != _currentRoom) {
+            log.trace(kModControl, "New room, so cleaning up...");
             feedManager.clear(); // Clear all pending feeds
             _currentRoom = room;
             _scene->setRoom(room);
             timerManager.setLuaObject(_currentRoom->luaObject());
             textureManager.setRoomToPreload(_currentRoom);
             
-            if (_eventHandlers.hasEnterRoom)
+            if (_eventHandlers.hasEnterRoom) {
+              log.trace(kModControl, "Has global room enter event");
               script.processCallback(_eventHandlers.enterRoom, 0);
+            }
             
-            if (_currentRoom->hasEnterEvent())
+            if (_currentRoom->hasEnterEvent()) {
+              log.trace(kModControl, "Has room enter event");
               script.processCallback(_currentRoom->enterEvent(), 0);
+            }
             
             EffectsManager& effectsManager = EffectsManager::instance();
             if (_currentRoom->hasEffects()) {
+              log.trace(kModControl, "Loading room effects");
               effectsManager.saveSettings(&previousEffects);
               effectsManager.loadSettings(_currentRoom->effects());
             } else {
-              if (!previousEffects.empty())
+              if (!previousEffects.empty()) {
+                log.trace(kModControl, "Loading previous effects");
                 effectsManager.loadSettings(previousEffects);
+              }
             }
           }
         }
@@ -732,11 +753,15 @@ void Control::switchTo(Object* theTarget) {
           return;
         }
         
-        if (_eventHandlers.hasEnterNode)
+        if (_eventHandlers.hasEnterNode) {
+          log.trace(kModControl, "Has global node enter event");
           script.processCallback(_eventHandlers.enterNode, 0);
+        }
         
-        if (node->hasEnterEvent())
+        if (node->hasEnterEvent()) {
+          log.trace(kModControl, "Has node enter event");
           script.processCallback(node->enterEvent(), 0);
+        }
         
         break;
       }
