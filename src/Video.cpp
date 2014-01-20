@@ -51,6 +51,7 @@ log(Log::instance())
 {
   this->setType(kObjectVideo);
   
+  _handle = NULL;
   _hasNewFrame = false;
   _hasResource = false;
   _isLoaded = false;
@@ -61,6 +62,12 @@ log(Log::instance())
   _isSynced = false;
   
   _theoraInfo = new DGTheoraInfo;
+
+  _theoraInfo->bos = 0;
+  _theoraInfo->theora_p = 0;
+  _theoraInfo->videobuf_ready = 0;
+  _theoraInfo->videobuf_granulepos -= 1;
+  _theoraInfo->videobuf_time = 0;
   
   _initConversionToRGB();
   _mutex = SDL_CreateMutex();
@@ -147,7 +154,13 @@ bool Video::isSynced() {
 ////////////////////////////////////////////////////////////
 
 DGFrame* Video::currentFrame() {
-  return &_currentFrame;
+  if (SDL_LockMutex(_mutex) == 0) {
+	memcpy(_auxFrame.data, _currentFrame.data, (_theoraInfo->ti.width * _theoraInfo->ti.height) * 3);
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModVideo, "%s", kString18002);
+  }
+  return &_auxFrame;
 }
 
 const char* Video::resource() {
@@ -239,12 +252,14 @@ void Video::load() {
              (result = ogg_stream_packetout(&_theoraInfo->to, &_theoraInfo->op))) {
         if (result < 0) {
           log.error(kModVideo, "%s", kString17008);
-          //return;
+		  SDL_UnlockMutex(_mutex);
+          return;
         }
         
         if (theora_decode_header(&_theoraInfo->ti, &_theoraInfo->tc, &_theoraInfo->op)) {
           log.error(kModVideo, "%s", kString17008);
-          //return;
+		  SDL_UnlockMutex(_mutex);
+          return;
         }
         
         _theoraInfo->theora_p++;
@@ -258,7 +273,8 @@ void Video::load() {
         std::size_t ret = _bufferData(&_theoraInfo->oy);
         if (ret == 0) {
           log.error(kModVideo, "%s", kString17009);
-          //return;
+		  SDL_UnlockMutex(_mutex);
+          return;
         }
       }
     }
@@ -274,6 +290,11 @@ void Video::load() {
     _currentFrame.height = _theoraInfo->ti.height;
     _currentFrame.depth = 24; // NOTE: We only support flat RGB for now
     _currentFrame.data = (unsigned char*)malloc((_theoraInfo->ti.width * _theoraInfo->ti.height) * 3);
+
+	_auxFrame.width = _currentFrame.width;
+	_auxFrame.height = _currentFrame.height;
+	_auxFrame.depth = _currentFrame.depth;
+	_auxFrame.data = (unsigned char*)malloc((_theoraInfo->ti.width * _theoraInfo->ti.height) * 3);
     
     while (ogg_sync_pageout(&_theoraInfo->oy, &_theoraInfo->og) > 0) {
       _queuePage(_theoraInfo, &_theoraInfo->og);
@@ -353,6 +374,7 @@ void Video::unload() {
       _theoraInfo->theora_p = 0;
       
       free(_currentFrame.data);
+	  free(_auxFrame.data);
       fclose(_handle);
     }
     SDL_UnlockMutex(_mutex);

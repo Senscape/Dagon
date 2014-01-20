@@ -21,6 +21,7 @@
 #include "Config.h"
 #include "CursorManager.h"
 #include "Font.h"
+#include "Log.h"
 #include "Node.h"
 #include "RenderManager.h"
 #include "Room.h"
@@ -33,7 +34,7 @@
 
 namespace dagon {
 
-Video _cutscene; // FIXME: Static to avoid Theora issues, revise later
+static Video _cutscene; // FIXME: Static to avoid Theora issues, revise later
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor

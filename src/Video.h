@@ -79,6 +79,7 @@ class Log;
 class Video : public Object {
   Log& log;
   
+  DGFrame _auxFrame;
   DGFrame _currentFrame;
   DGTheoraInfo* _theoraInfo;
   
