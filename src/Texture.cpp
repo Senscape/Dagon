@@ -445,8 +445,10 @@ void Texture::loadRawData(const unsigned char* dataToLoad,
     _isLoaded = true;
   } else {
     glBindTexture(GL_TEXTURE_2D, _ident);
+	//log.trace(kModTexture, "Copying data...");
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, withWidth, andHeight,
                     GL_BGR, GL_UNSIGNED_BYTE, dataToLoad);
+	//log.trace(kModTexture, "Done copying!");
   }
 }
 
