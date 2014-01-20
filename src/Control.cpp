@@ -609,6 +609,8 @@ void Control::switchTo(Object* theTarget) {
   static bool firstSwitch = true;
   static SettingCollection previousEffects; // Temporary patch
   
+  log.trace(kModControl, "Begin switching...");
+  
   _updateView(StateNode, true);
   
   videoManager.flush();
@@ -623,8 +625,10 @@ void Control::switchTo(Object* theTarget) {
   cameraManager.setViewport(config.displayWidth, config.displayHeight);
   
   if (currentNode()){
-    if (currentNode()->hasLeaveEvent())
+    if (currentNode()->hasLeaveEvent()) {
+      log.trace(kModControl, "Has node onLeave callback");
       script.processCallback(currentNode()->leaveEvent(), 0);
+    }
   }
   
   if (theTarget) {
@@ -742,16 +746,19 @@ void Control::switchTo(Object* theTarget) {
     // Only slides switch to NULL targets, so we check whether the new object is another slide.
     // If it isn't, we unlock the camera.
     if (_currentRoom) {
+      log.trace(kModControl, "Returning from slide...");
       Node* current = this->currentNode();
       Node* previous = current->previousNode();
       
       _currentRoom->switchTo(previous);
       
       if (current->slideReturn()) {
+        log.trace(kModControl, "Has slide onLeave callback");
         script.processCallback(current->slideReturn(), current->luaObject());
       }
       
       if (!previous->isSlide()) {
+        log.trace(kModControl, "Unlock camera and return to direct control");
         cameraManager.unlock();
         if (config.controlMode == kControlFixed)
           // FIXME: Forced, but it should return to the previous mode
@@ -764,14 +771,17 @@ void Control::switchTo(Object* theTarget) {
     if (_currentRoom->hasNodes()) {
       // Now we proceed to load the textures of the current node
       Node* current = _currentRoom->currentNode();
+      log.trace(kModControl, "Flushing textures...");
       textureManager.flush();
       
       if (current->hasSpots()) {
         current->beginIteratingSpots();
+        log.trace(kModControl, "Processing spots...");
         do {
           Spot* spot = current->currentSpot();
           
           if (spot->hasAudio()) {
+            log.trace(kModControl, "Loading audio...");
             Audio* audio = spot->audio();
             
             // Ignore handling fade if audio is set to 0 at this stage
@@ -788,6 +798,7 @@ void Control::switchTo(Object* theTarget) {
           // TODO: Merge the video autoplay with spot properties
           // TODO: Decide after video finishes playing if last frame is showed or removed
           if (spot->hasVideo()) {
+            log.trace(kModControl, "Loading video...");
             Video* video = spot->video();
             videoManager.requestVideo(video);
             
@@ -807,6 +818,7 @@ void Control::switchTo(Object* theTarget) {
           }
           
           if (spot->hasTexture()) {
+            log.trace(kModControl, "Loading image...");
             textureManager.requestTexture(spot->texture());
             
             // Only resize if nothing but origin
@@ -826,11 +838,13 @@ void Control::switchTo(Object* theTarget) {
       char title[kMaxObjectName];
       snprintf(title, kMaxObjectName, "%s (%s, %s)", config.script().c_str(),
                _currentRoom->name().c_str(), current->description().c_str());
+      log.trace(kModControl, "Set window title");
       system.setTitle(title);
     }
     
     // This has to be done every time so that room audios keep playing
     if (_currentRoom->hasAudios() && (!_currentRoom->currentNode()->isSlide() && theTarget != NULL)) {
+      log.trace(kModControl, "Managing environmental sounds...");
       std::vector<Audio*>::iterator it;
       std::vector<Audio*> arrayOfAudios = _currentRoom->arrayOfAudios();
       
@@ -849,9 +863,12 @@ void Control::switchTo(Object* theTarget) {
     }
   }
   
+  log.trace(kModControl, "Flushing audio...");
   audioManager.flush();
   
   cameraManager.stopPanning();
+  
+  log.trace(kModControl, "Done!");
 }
   
 void Control::walkTo(Object* theTarget) {
@@ -976,7 +993,7 @@ void Control::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-void Control::_processAction(){
+void Control::_processAction() {
   Action* action = cursorManager.action();
   
   switch (action->type) {
