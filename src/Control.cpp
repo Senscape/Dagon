@@ -611,7 +611,7 @@ void Control::switchTo(Object* theTarget) {
   
   //log.trace(kModControl, "Begin switching...");
   
-  //_updateView(StateNode, true);
+  _updateView(StateNode, true);
   
   videoManager.flush();
   
@@ -1073,7 +1073,7 @@ void Control::_updateView(int state, bool inBackground) {
       break;
     case StateNode:
       _scene->scanSpots();
-      _scene->drawSpots();
+      _scene->drawSpots(inBackground);
       
       if (!inBackground) {
         _interface->drawHelpers();

@@ -62,7 +62,7 @@ public:
   ~Scene();
   
   void clear();
-  void drawSpots();
+  void drawSpots(bool disableVideos = false);
   void fadeIn();
   void fadeOut();
   bool scanSpots();

@@ -77,7 +77,7 @@ void Scene::clear() {
   cameraManager.update();
 }
 
-void Scene::drawSpots() {
+void Scene::drawSpots(bool disableVideos) {
   bool processed = false;
   
   if (_canDrawSpots) {
@@ -95,7 +95,8 @@ void Scene::drawSpots() {
         
         if (spot->hasTexture() && spot->isEnabled()) {
           if (spot->texture()->isLoaded()) {
-            if (spot->hasVideo()) {
+			// FIXME: This was the culprit of a crash that should be investigated someday
+            if (spot->hasVideo() && !disableVideos) {
               // If it has a video, we need to check if it's playing
               if (spot->isPlaying()) { // FIXME: Must stop the spot later!
                 if (spot->video()->hasNewFrame()) {
@@ -190,7 +191,7 @@ bool Scene::scanSpots() {
           do {
             Spot* spot = currentNode->currentSpot();
             if (color == spot->color()) {
-              cursorManager.setAction(spot->action());
+              cursorManager.setAction(*spot->action());
               foundAction = true;
               
               break;
