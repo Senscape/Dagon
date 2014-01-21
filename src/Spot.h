@@ -35,8 +35,8 @@ enum SpotFlags {
   kSpotAuto = 0x1,
   kSpotClass = 0x2,
   kSpotLoop = 0x4,
-  kSpotSync = 0x8,
-  kSpotUser = 0x10
+  kSpotSync = 0x6,
+  kSpotUser = 0x8
 };
 
 class Audio;
