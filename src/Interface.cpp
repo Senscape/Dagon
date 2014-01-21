@@ -186,7 +186,7 @@ bool Interface::scanOverlays() {
                 cursorManager.setOnButton(true);
                 if (button->hasAction()) {
                   Action action = button->action();
-                  cursorManager.setAction(&action);
+                  cursorManager.setAction(action);
                 }
                 
                 return true;

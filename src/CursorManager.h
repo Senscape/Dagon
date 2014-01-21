@@ -56,7 +56,7 @@ class CursorManager : public Object {
   bool _hasImage;
   bool _isDragging;
   bool _onButton; // Decide in Control?
-  Action* _pointerToAction;
+  Action _pointerToAction;
   int _size;
   int _x;
   int _y;
@@ -87,7 +87,7 @@ public:
   void removeAction();
   void setDragging(bool flag);
   void setOnButton(bool flag);
-  void setAction(Action* theAction);
+  void setAction(Action theAction);
   void setCursor(int typeOfCursor);
   void setSize(int size);
   void updateCoords(int x, int y);
