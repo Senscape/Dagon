@@ -118,40 +118,47 @@ void Audio::setLoopable(bool loopable) {
 }
 
 void Audio::setPosition(unsigned int face, Point origin) {
-  float x = origin.x / kDefTexSize;
-  float y = origin.y / kDefTexSize;
+  if (SDL_LockMutex(_mutex) == 0) {  
+    if (_isLoaded) {
+      float x = origin.x / kDefTexSize;
+      float y = origin.y / kDefTexSize;
   
-  switch (face) {
-    case kNorth: {
-      alSource3f(_alSource, AL_POSITION, x, y, -1.0f);
-      break;
-    }
-    case kEast: {
-      alSource3f(_alSource, AL_POSITION, 1.0f, y, x);
-      break;
-    }
-    case kSouth: {
-      alSource3f(_alSource, AL_POSITION, -x, y, 1.0f);
-      break;
-    }
-    case kWest: {
-      alSource3f(_alSource, AL_POSITION, -1.0f, y, -x);
-      break;
-    }
-    case kUp: {
-      alSource3f(_alSource, AL_POSITION, 0.0f, 1.0f, 0.0f);
-      break;
-    }
-    case kDown: {
-      alSource3f(_alSource, AL_POSITION, 0.0f, -1.0f, 0.0f);
-      break;
-    }
-    default: {
-      assert(false);
-    }
+      switch (face) {
+        case kNorth: {
+          alSource3f(_alSource, AL_POSITION, x, y, -1.0f);
+          break;
+        }
+        case kEast: {
+          alSource3f(_alSource, AL_POSITION, 1.0f, y, x);
+          break;
+        }
+        case kSouth: {
+          alSource3f(_alSource, AL_POSITION, -x, y, 1.0f);
+          break;
+        }
+        case kWest: {
+          alSource3f(_alSource, AL_POSITION, -1.0f, y, -x);
+          break;
+        }
+        case kUp: {
+          alSource3f(_alSource, AL_POSITION, 0.0f, 1.0f, 0.0f);
+          break;
+        }
+        case kDown: {
+          alSource3f(_alSource, AL_POSITION, 0.0f, -1.0f, 0.0f);
+          break;
+        }
+        default: {
+          assert(false);
+        }
+      }
+  
+      _verifyError("position");
+	}
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
   }
-  
-  _verifyError("position");
 }
 
 void Audio::setResource(std::string fileName) {

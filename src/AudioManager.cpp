@@ -101,6 +101,12 @@ void AudioManager::flush() {
                 }
               }
             }
+			else if ((*it)->state() == kAudioStopped) {
+			  (*it)->unload();
+              _arrayOfActiveAudios.erase(it);
+              done = false;
+              break;
+			}
             else ++it;
           }
           SDL_UnlockMutex(_mutex);
@@ -218,30 +224,29 @@ void AudioManager::registerAudio(Audio* target) {
 }
 
 void AudioManager::requestAudio(Audio* target) {
+  if (_arrayOfActiveAudios.size() >= kMaxNumberOfAudios) 
+	  return;
+
+  // If the audio is not active, then it's added to
+  // that vector
+  // If the audio is not active, then it's added to
+  // that vector
+  if (SDL_LockMutex(_mutex) == 0) {
+    bool isActive = false;
+    isActive = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(),
+                       target) != _arrayOfActiveAudios.end();
+	if (!isActive) {
+	  _arrayOfActiveAudios.push_back(target);
+    }
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
+  }
+
   if (!target->isLoaded()) {
     target->load();
   }
-  
   target->retain();
-  
-  // If the audio is not active, then it's added to
-  // that vector
-  
-  bool isActive = false;
-  std::vector<Audio*>::iterator it;
-  it = _arrayOfActiveAudios.begin();
-  
-  isActive = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(),
-                       target) != _arrayOfActiveAudios.end();
-  
-  if (!isActive) {
-    if (SDL_LockMutex(_mutex) == 0) {
-      _arrayOfActiveAudios.push_back(target);
-      SDL_UnlockMutex(_mutex);
-    } else {
-      log.error(kModAudio, "%s", kString18002);
-    }
-  }
   
   // FIXME: Not very elegant. Must implement a state condition for
   // each audio object. Perhaps use AL_STATE even.

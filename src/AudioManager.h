@@ -38,6 +38,8 @@ namespace dagon {
 // Definitions
 ////////////////////////////////////////////////////////////
 
+#define kMaxNumberOfAudios 32
+
 class Config;
 class Log;
 
