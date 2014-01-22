@@ -55,6 +55,13 @@ class Log;
 // TODO: Allow to configure the number of buffers
 #define kAudioBuffers 4
 
+enum AudioBufferState {
+  kAudioStreamEOF = -1,
+  kAudioStreamError = -2,
+  kAudioGenericError = -3,
+  kAudioStreamOK = 1
+};
+
 enum AudioStates {
   kAudioInitial,
   kAudioPlaying,
@@ -130,7 +137,7 @@ class Audio : public Object {
   OggVorbis_File _oggStream;
   
   // Private methods
-  bool _fillBuffer(ALuint* buffer);
+  int _fillBuffer(ALuint* buffer);
   void _emptyBuffers();
   std::string _randomizeFile(const std::string &fileName);
   ALboolean _verifyError(const std::string &operation);

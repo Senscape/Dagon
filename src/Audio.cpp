@@ -211,13 +211,14 @@ void Audio::load() {
         alSource3f(_alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
         alSource3f(_alSource, AL_DIRECTION, 0.0f, 0.0f, 0.0f);
         
-        for (int i = 0; i < kAudioBuffers; i++) {
-          if (!_fillBuffer(&_alBuffers[i])) {
-            _verifyError("prebuffer");
+		int buffersRead = 0;
+        for (buffersRead = 0; buffersRead < kAudioBuffers; buffersRead++) {
+          if (_fillBuffer(&_alBuffers[buffersRead]) == kAudioStreamEOF) {
+            break;
           }
         }
-        alSourceQueueBuffers(_alSource, kAudioBuffers, _alBuffers);
-        
+        alSourceQueueBuffers(_alSource, buffersRead, _alBuffers);
+        _verifyError("prebuffer");
         if (config.mute || this->fadeLevel() < 0.0) {
           alSourcef(_alSource, AL_GAIN, 0.0f);
         } else {
@@ -345,7 +346,7 @@ void Audio::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-bool Audio::_fillBuffer(ALuint* buffer) {
+int Audio::_fillBuffer(ALuint* buffer) {
   // This is a failsafe; if this is true, we won't attempt to stream anymore
   static bool _hasStreamingError = false;
   
@@ -375,7 +376,7 @@ bool Audio::_fillBuffer(ALuint* buffer) {
           ov_raw_seek(&_oggStream, 0);
           _state = kAudioStopped;
         }
-        return false;
+        return kAudioStreamEOF;
       } else if (result == OV_HOLE) {
         // May return OV_HOLE after we rewind the stream, so we just re-loop.
         continue;
@@ -383,14 +384,14 @@ bool Audio::_fillBuffer(ALuint* buffer) {
         // Error
         log.error(kModAudio, "%s: %s", kString16007, _resource.name.c_str());
         _hasStreamingError = true;
-        return false;
+        return kAudioStreamError;
       }
     }
     alBufferData(*buffer, _alFormat, data, size, _rate);
     delete[] data;
-    return true;
+    return kAudioStreamOK;
   } else {
-    return false;
+    return kAudioGenericError;
   }
 }
 
