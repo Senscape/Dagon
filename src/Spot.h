@@ -32,11 +32,11 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
 
 enum SpotFlags {
-  kSpotAuto = 0x1,
-  kSpotClass = 0x2,
-  kSpotLoop = 0x4,
-  kSpotSync = 0x6,
-  kSpotUser = 0x8
+  kSpotAuto = 0x2,
+  kSpotClass = 0x4,
+  kSpotLoop = 0x6,
+  kSpotSync = 0x8,
+  kSpotUser = 0x10
 };
 
 class Audio;
