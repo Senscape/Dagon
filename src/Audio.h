@@ -53,7 +53,7 @@ class Log;
 ////////////////////////////////////////////////////////////
 
 // TODO: Allow to configure the number of buffers
-#define kAudioBuffers 2
+#define kAudioBuffers 4
 
 enum AudioStates {
   kAudioInitial,

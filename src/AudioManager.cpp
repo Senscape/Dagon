@@ -101,12 +101,12 @@ void AudioManager::flush() {
                 }
               }
             }
-			else if ((*it)->state() == kAudioStopped) {
-			  (*it)->unload();
-              _arrayOfActiveAudios.erase(it);
-              done = false;
-              break;
-			}
+            else if ((*it)->state() == kAudioStopped) {
+              (*it)->unload();
+                    _arrayOfActiveAudios.erase(it);
+                    done = false;
+                    break;
+            }
             else ++it;
           }
           SDL_UnlockMutex(_mutex);
@@ -226,9 +226,12 @@ void AudioManager::registerAudio(Audio* target) {
 void AudioManager::requestAudio(Audio* target) {
   if (_arrayOfActiveAudios.size() >= kMaxNumberOfAudios) 
 	  return;
+  
+  if (!target->isLoaded()) {
+    target->load();
+  }
+  target->retain();
 
-  // If the audio is not active, then it's added to
-  // that vector
   // If the audio is not active, then it's added to
   // that vector
   if (SDL_LockMutex(_mutex) == 0) {
@@ -242,11 +245,6 @@ void AudioManager::requestAudio(Audio* target) {
   } else {
     log.error(kModAudio, "%s", kString18002);
   }
-
-  if (!target->isLoaded()) {
-    target->load();
-  }
-  target->retain();
   
   // FIXME: Not very elegant. Must implement a state condition for
   // each audio object. Perhaps use AL_STATE even.
