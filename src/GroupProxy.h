@@ -76,6 +76,18 @@ class GroupProxy : public ObjectProxy {
     return 0;
   }
   
+  // Play the group
+  int play(lua_State *L) {
+    g->play();
+    return 0;
+  }
+  
+  // Stop the group
+  int stop(lua_State *L) {
+    g->stop();
+    return 0;
+  }
+  
   Group* ptr() { return g; }
   
  private:
@@ -93,6 +105,8 @@ Luna<GroupProxy>::RegType GroupProxy::methods[] = {
   method(GroupProxy, addSpot),
   method(GroupProxy, disable),
   method(GroupProxy, enable),
+  method(GroupProxy, play),
+  method(GroupProxy, stop),
   {0,0}
 };
   

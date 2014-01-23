@@ -50,6 +50,8 @@ class Group : public Object {
   Spot* addSpot(Spot* aSpot);
   void disable();
   void enable();
+  void stop();
+  void play();
   
  private:
   std::vector<Spot*> _arrayOfSpots;

@@ -71,5 +71,23 @@ void Group::enable() {
     ++_it;
   }
 }
+  
+void Group::play() {
+  std::vector<Spot*>::iterator _it = _arrayOfSpots.begin();
+  while (_it != _arrayOfSpots.end()) {
+    Spot* spot = (*_it);
+    spot->play();
+    ++_it;
+  }
+}
+  
+void Group::stop() {
+  std::vector<Spot*>::iterator _it = _arrayOfSpots.begin();
+  while (_it != _arrayOfSpots.end()) {
+    Spot* spot = (*_it);
+    spot->stop();
+    ++_it;
+  }
+}
 
 }
