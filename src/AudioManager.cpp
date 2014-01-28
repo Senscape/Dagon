@@ -232,18 +232,18 @@ void AudioManager::requestAudio(Audio* target) {
   }
   target->retain();
 
+  bool isActive = false;
+  isActive = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(),
+                       target) != _arrayOfActiveAudios.end();
   // If the audio is not active, then it's added to
   // that vector
-  if (SDL_LockMutex(_mutex) == 0) {
-    bool isActive = false;
-    isActive = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(),
-                       target) != _arrayOfActiveAudios.end();
-	if (!isActive) {
-	  _arrayOfActiveAudios.push_back(target);
+  if (!isActive) {
+    if (SDL_LockMutex(_mutex) == 0) {
+      _arrayOfActiveAudios.push_back(target);
+      SDL_UnlockMutex(_mutex);
+    } else {
+      log.error(kModAudio, "%s", kString18002);
     }
-    SDL_UnlockMutex(_mutex);
-  } else {
-    log.error(kModAudio, "%s", kString18002);
   }
   
   // FIXME: Not very elegant. Must implement a state condition for
