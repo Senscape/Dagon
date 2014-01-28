@@ -96,10 +96,10 @@ void Scene::drawSpots(bool disableVideos) {
         if (spot->hasTexture() && spot->isEnabled()) {
           if (spot->texture()->isLoaded()) {
 			// FIXME: This was the culprit of a crash that should be investigated someday
-            if (spot->hasVideo() && !disableVideos) {
+            if (spot->hasVideo()) {
               // If it has a video, we need to check if it's playing
               if (spot->isPlaying()) { // FIXME: Must stop the spot later!
-                if (spot->video()->hasNewFrame()) {
+                if (spot->video()->hasNewFrame() && !disableVideos) {
                   DGFrame* frame = spot->video()->currentFrame();
                   Texture* texture = spot->texture();
                   texture->loadRawData(frame->data, frame->width, frame->height);
