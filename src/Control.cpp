@@ -851,7 +851,7 @@ void Control::switchTo(Object* theTarget) {
               spot->resize(spot->texture()->width(), spot->texture()->height());
           }
           
-          if (spot->hasFlag(kSpotAuto))
+          if (spot->hasFlag(kSpotAuto) || spot->isPlaying())
             spot->play();
         } while (current->iterateSpots());
       }
