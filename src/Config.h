@@ -27,6 +27,8 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
+  
+#define kMaxAudioBuffers 16
 
 enum ControlModes {
   kControlDrag = 0,
@@ -53,6 +55,7 @@ enum DefaultConfiguration {
   kDefFullscreen = false,
   kDefLog = true,
   kDefMute = false,
+  kDefNumOfAudioBuffers = 8,
   kDefShowHelpers = false,
   kDefShowSplash = true,
   kDefShowSpots = false,
@@ -97,6 +100,7 @@ class Config {
   bool fullscreen;
   bool log;
   bool mute;
+  int numOfAudioBuffers;
   bool showHelpers;
   bool showSplash;
   bool showSpots;

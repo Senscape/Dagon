@@ -20,6 +20,7 @@
 
 #include <string>
 
+#include "Config.h"
 #include "Platform.h"
 
 #ifdef DAGON_MAC
@@ -51,9 +52,6 @@ class Log;
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
-
-// TODO: Allow to configure the number of buffers
-#define kAudioBuffers 4
 
 enum AudioBufferState {
   kAudioStreamEOF = -1,
@@ -127,7 +125,7 @@ class Audio : public Object {
   bool _isMatched;
   int _state;
   
-  ALuint _alBuffers[kAudioBuffers];
+  ALuint _alBuffers[kMaxAudioBuffers];
 	ALenum _alFormat;
   ALuint _alSource;
   int _channels;

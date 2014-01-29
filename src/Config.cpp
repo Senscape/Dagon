@@ -46,6 +46,7 @@ Config::Config() {
   fullscreen = kDefFullscreen;
   log = kDefLog;
   mute = kDefMute;
+  numOfAudioBuffers = kDefNumOfAudioBuffers;
   showHelpers = kDefShowHelpers;
   showSplash = kDefShowSplash;
   showSpots = kDefShowSpots;

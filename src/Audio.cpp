@@ -21,7 +21,6 @@
 #include <sstream>
 
 #include "Audio.h"
-#include "Config.h"
 #include "Language.h"
 #include "Log.h"
 
@@ -205,14 +204,14 @@ void Audio::load() {
           log.error(kModAudio, "%s: %s", kString16009, fileToLoad.c_str());
         }
         
-        alGenBuffers(kAudioBuffers, _alBuffers);
+        alGenBuffers(config.numOfAudioBuffers, _alBuffers);
         alGenSources(1, &_alSource);
         alSource3f(_alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
         alSource3f(_alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
         alSource3f(_alSource, AL_DIRECTION, 0.0f, 0.0f, 0.0f);
         
 		int buffersRead = 0;
-        for (buffersRead = 0; buffersRead < kAudioBuffers; buffersRead++) {
+        for (buffersRead = 0; buffersRead < config.numOfAudioBuffers; buffersRead++) {
           if (_fillBuffer(&_alBuffers[buffersRead]) == kAudioStreamEOF) {
             break;
           }
@@ -294,7 +293,7 @@ void Audio::unload() {
       }
       _emptyBuffers();
       alDeleteSources(1, &_alSource);
-      alDeleteBuffers(kAudioBuffers, _alBuffers);
+      alDeleteBuffers(config.numOfAudioBuffers, _alBuffers);
       ov_clear(&_oggStream);
       delete[] _resource.data;
       _isLoaded = false;
