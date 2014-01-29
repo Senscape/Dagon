@@ -18,7 +18,7 @@
 #define DAGON_VERSION_MINOR 6
 #define DAGON_VERSION_RELEASE 8
 #define DAGON_VERSION_TYPE "a"
-#define DAGON_BUILD 1010
+#define DAGON_BUILD 1011
 
 #define mkstr(a) # a
 #define mkver(a, b, c) mkstr(a) "." mkstr(b) "." mkstr(c)
