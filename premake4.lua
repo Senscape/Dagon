@@ -93,7 +93,7 @@ solution "Dagon"
     
     -- Libraries required for Unix-based systems
     libs_unix = { "freetype", "GLEW", "GL", "GLU", "ogg", "openal", "vorbis",
-		  "vorbisfile", "theoradec", "SDL2", "dl", "pthread" }
+		  "vorbisfile", "theoradec", "SDL2" }
   
     -- Search for libraries on Linux systems
     if os.get() == "linux" then
@@ -125,7 +125,18 @@ solution "Dagon"
                     "/usr/local/include/lua5.1",
                     "/usr/local/include/freetype2" }
       libdirs { "/usr/lib", "/usr/local/lib" }
+      links { libs_unix, "dl" }
+      linkoptions { "-pthread" }
+
+    configuration "bsd"
+      includedirs { "/usr/include",
+                    "/usr/local/include/freetype2",
+                    "/usr/local/include" }
+      libdirs { "/usr/lib", "/usr/local/lib" }
+      buildoptions { "`pkg-config --cflags lua-5.1`" }
+      linkoptions { "`pkg-config --libs lua-5.1`" }
       links { libs_unix }
+      linkoptions { "-pthread" }
   
     configuration "macosx"
       includedirs { "/usr/include", "/usr/include/lua5.1", 
