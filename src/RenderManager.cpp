@@ -400,7 +400,7 @@ void RenderManager::drawPolygon(std::vector<int> withArrayOfCoordinates, unsigne
   glVertexPointer(3, GL_FLOAT, 0, spotVertCoords);
   glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray >> 1);
   
-  delete spotVertCoords;
+  delete[] spotVertCoords;
   
   glPopMatrix();
 }
