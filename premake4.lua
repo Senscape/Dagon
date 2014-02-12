@@ -80,7 +80,7 @@ solution "Dagon"
     targetname "dagon"
     -- GLEW_STATIC only applies to Windows, but there's no harm done if defined
     -- on other systems.
-    defines { "GLEW_STATIC", "OV_EXCLUDE_STATIC_CALLBACKS" }
+    defines { "GLEW_STATIC", "OV_EXCLUDE_STATIC_CALLBACKS", "KTX_OPENGL" }
     location "build"
     objdir "build/objs"
      
@@ -93,7 +93,7 @@ solution "Dagon"
     
     -- Libraries required for Unix-based systems
     libs_unix = { "freetype", "GLEW", "GL", "GLU", "ogg", "openal", "vorbis",
-		  "vorbisfile", "theoradec", "SDL2", "m", "stdc++" }
+		  "vorbisfile", "theoradec", "SDL2", "m", "stdc++", "ktx" }
   
     -- Search for libraries on Linux systems
     if os.get() == "linux" then
@@ -150,7 +150,7 @@ solution "Dagon"
       libdirs { "/usr/lib", "/usr/local/lib", 
                 "extlibs/libs-osx/Frameworks", "extlibs/libs-osx/lib" }
       links { "freetype", "GLEW", "lua", "ogg", "SDL2", 
-              "vorbis", "vorbisfile", "theoradec" }
+              "vorbis", "vorbisfile", "theoradec", "ktx" }
       links { "AudioToolbox.framework", "AudioUnit.framework",
               "Carbon.framework", "Cocoa.framework", "CoreAudio.framework",
               "CoreFoundation.framework", "ForceFeedback.framework", 
@@ -165,7 +165,7 @@ solution "Dagon"
               "libtheora_static", "libvorbis_static", 
               "libvorbisfile_static", "lua", "OpenAL32",
               "SDL2", "SDL2main", "opengl32", "glu32",
-              "Imm32", "version", "winmm" }
+              "Imm32", "version", "winmm", "libktx" }
       if os.is64bit then
         libdirs { "extlibs/libs-msvc/x64" }
       else
