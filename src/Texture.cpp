@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <fstream>
+#include <ktx.h>
 
 #include "Config.h"
 #include "Language.h"
@@ -30,6 +31,7 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
 
 char TEXIdent[] = "KS_TEX"; // We keep this one for backward compatibility
+const char KTXIdent[] = { '\xAB', '\x4B', '\x54', '\x58', '\x20', '\x31', '\x31', '\xBB', '\x0D', '\x0A', '\x1A', '\x0A' };
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -196,7 +198,7 @@ void Texture::load() {
       
       FILE* fh = fopen(_resource.c_str(), "rb");
       if (fh != NULL) {
-        char magic[10]; // Used to identity file types
+        char magic[12]; // Used to identity file types
         if (fread(&magic, sizeof(magic), 1, fh) == 0) {
           // Couldn't read magic number
           log.error(kModTexture, "%s: %s", kString10003, _resource.c_str());
@@ -257,6 +259,32 @@ void Texture::load() {
           glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
           glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
           delete[] _bitmap;
+        } else if (memcmp(KTXIdent, &magic, sizeof(KTXIdent)) == 0) {
+          GLenum target = 0;
+          GLenum error = 0;
+          GLboolean mipmapped = false;
+          KTX_error_code ktxerror;
+
+          fseek(fh, 0, SEEK_SET);
+
+          ktxerror = ktxLoadTextureF(fh, &_ident, &target, NULL, &mipmapped, &error, NULL, NULL);
+
+          if (ktxerror == KTX_SUCCESS) {
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+            if (mipmapped) {
+              glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+            } else {
+              glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            }
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            _isLoaded = true;
+          } else {
+            log.error(kModTexture, "KTX load error: %s", ktxerror);
+          }
         } else { // Let stb_image load the texture
           if (!_isBitmapLoaded) {
             fseek(fh, 0, SEEK_SET);
