@@ -116,6 +116,7 @@ void Room::setEnterEvent(int luaReference) {
 
 Audio* Room::addAudio(Audio* anAudio) {
   _arrayOfAudios.push_back(anAudio);
+  anAudio->setFadeSpeed(kFadeSlow);
   return anAudio;
 }
 
