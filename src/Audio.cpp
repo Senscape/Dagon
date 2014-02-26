@@ -257,10 +257,10 @@ void Audio::play() {
         ov_time_seek(&_oggStream, _matchedAudio->cursor());
       
       if (_isVarying) {
-        float p = ((rand() % 40) + 80) / 100.0f;
+        float p = ((rand() % 20) + 90) / 100.0f;
         alSourcef(_alSource, AL_PITCH, p);
-        alSourcePlay(_alSource);
       }
+      alSourcePlay(_alSource);
       _state = kAudioPlaying;
       _verifyError("play");
     }
