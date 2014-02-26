@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <fstream>
-#include <ktx.h>
+//#include <ktx.h>
 
 #include "Config.h"
 #include "Language.h"
@@ -259,7 +259,7 @@ void Texture::load() {
           glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
           glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
           delete[] _bitmap;
-        } else if (memcmp(KTXIdent, &magic, sizeof(KTXIdent)) == 0) {
+        } /*else if (memcmp(KTXIdent, &magic, sizeof(KTXIdent)) == 0) {
           GLenum target = 0;
           GLenum error = 0;
           GLboolean mipmapped = false;
@@ -285,7 +285,7 @@ void Texture::load() {
           } else {
             log.error(kModTexture, "KTX load error: %s", ktxerror);
           }
-        } else { // Let stb_image load the texture
+        }*/ else { // Let stb_image load the texture
           if (!_isBitmapLoaded) {
             fseek(fh, 0, SEEK_SET);
             int x, y, comp;
