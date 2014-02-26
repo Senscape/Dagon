@@ -38,6 +38,7 @@ log(Log::instance())
   _isLoaded = false;
   _isLoopable = false;
   _isMatched = false;
+  _isVarying = false;
   _state = kAudioInitial;
   _oggCallbacks.read_func = _oggRead;
   _oggCallbacks.seek_func = _oggSeek;
@@ -90,6 +91,10 @@ bool Audio::isPlaying() {
     log.error(kModAudio, "%s", kString18002);
   }
   return value;
+}
+  
+bool Audio::isVarying() {
+  return _isVarying;
 }
 
 ////////////////////////////////////////////////////////////
@@ -162,6 +167,10 @@ void Audio::setPosition(unsigned int face, Point origin) {
 
 void Audio::setResource(std::string fileName) {
   _resource.name = fileName;
+}
+  
+void Audio::setVarying(bool varying) {
+  _isVarying = varying;
 }
 
 ////////////////////////////////////////////////////////////
@@ -246,7 +255,12 @@ void Audio::play() {
     if (_isLoaded && (_state != kAudioPlaying)) {
       if (_isMatched)
         ov_time_seek(&_oggStream, _matchedAudio->cursor());
-      alSourcePlay(_alSource);
+      
+      if (_isVarying) {
+        float p = ((rand() % 40) + 80) / 100.0f;
+        alSourcef(_alSource, AL_PITCH, p);
+        alSourcePlay(_alSource);
+      }
       _state = kAudioPlaying;
       _verifyError("play");
     }

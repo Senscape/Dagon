@@ -397,6 +397,11 @@ int Script::_globalPlay(lua_State *L) {
   
   audio->setResource(luaL_checkstring(L, 1));
   audio->setStatic();
+  
+  if (lua_isboolean(L, 2)) {
+    audio->setVarying(lua_toboolean(L, 2));
+  }
+  
   AudioManager::instance().registerAudio(audio);
   AudioManager::instance().requestAudio(audio);
   audio->play();
@@ -410,7 +415,7 @@ int Script::_globalQueue(lua_State *L) {
   return 0;
 }
 
-int Script::_globalPrint (lua_State *L) {
+int Script::_globalPrint(lua_State *L) {
   int n = lua_gettop(L);  /* number of arguments */
   int i;
   

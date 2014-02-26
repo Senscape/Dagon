@@ -89,6 +89,7 @@ class Audio : public Object {
   bool isLoaded();
   bool isLoopable();
   bool isPlaying();
+  bool isVarying();
   
   // Gets
   double cursor(); // For match function
@@ -99,6 +100,7 @@ class Audio : public Object {
   void setLoopable(bool loopable);
   void setPosition(unsigned int face, Point origin);
   void setResource(std::string fileName);
+  void setVarying(bool varying);
   
   // State changes
   void load();
@@ -123,6 +125,7 @@ class Audio : public Object {
   bool _isLoaded;
   bool _isLoopable;
   bool _isMatched;
+  bool _isVarying;
   int _state;
   
   ALuint _alBuffers[kMaxAudioBuffers];

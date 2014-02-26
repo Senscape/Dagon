@@ -53,6 +53,7 @@ public:
         }
         if (strcmp(key, "loop") == 0) a->setLoopable(lua_toboolean(L, -1));
         if (strcmp(key, "volume") == 0) a->setDefaultFadeLevel((float)(lua_tonumber(L, -1) / 100));
+        if (strcmp(key, "varying") == 0) a->setVarying(lua_toboolean(L, -1));
         
         lua_pop(L, 1);
       }
