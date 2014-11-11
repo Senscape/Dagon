@@ -16,7 +16,7 @@ your games:
 
 https://github.com/Senscape/Dagon/releases
 
-Copyright (c) 2011-2013 Senscape s.r.l. All rights reserved.
+Copyright (c) 2011-2014 Senscape s.r.l. All rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
@@ -35,7 +35,7 @@ Linux:
 
   We suggest installing the following packages via apt-get: libfreetype6-dev,
   libglew-dev, liblua5.1-0-dev, libogg-dev, libopenal-dev, libvorbis-dev,
-  libtheora-dev, libSDL2-dev.
+  libtheora-dev, libsdl2-dev.
 
   SDL2 was not available in some default repos as of this writing and had to be
   built from scratch.
