@@ -95,11 +95,10 @@ class Control {
   Log& log;
   RenderManager& renderManager;
   Script& script;
+  System system;
   TextureManager& textureManager;
   TimerManager& timerManager;
   VideoManager& videoManager;
-  
-  System system;
   
   std::vector<Room*> _arrayOfRooms;
   Room* _currentRoom;

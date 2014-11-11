@@ -63,10 +63,10 @@ namespace dagon {
 static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
 static Audio* ProxyToAudio(lua_State *L, int idx);
 static Button* ProxyToButton(lua_State *L, int idx);
-static Group* ProxyToGroup(lua_State *L, int idx);
+//static Group* ProxyToGroup(lua_State *L, int idx);
 static Image* ProxyToImage(lua_State *L, int idx);
 static Node* ProxyToNode(lua_State *L, int idx);
-static Overlay* ProxyToOverlay(lua_State *L, int idx);
+//static Overlay* ProxyToOverlay(lua_State *L, int idx);
 static Room* ProxyToRoom(lua_State *L, int idx);
 static Node* ProxyToSlide(lua_State *L, int idx);
 static Spot* ProxyToSpot(lua_State *L, int idx);

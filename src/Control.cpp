@@ -52,7 +52,6 @@ namespace dagon {
 
 Control::Control() :
 audioManager(AudioManager::instance()),
-textureManager(TextureManager::instance()),
 cameraManager(CameraManager::instance()),
 config(Config::instance()),
 cursorManager(CursorManager::instance()),
@@ -62,6 +61,7 @@ log(Log::instance()),
 renderManager(RenderManager::instance()),
 script(Script::instance()),
 system(Config::instance(), Log::instance()),
+textureManager(TextureManager::instance()),
 timerManager(TimerManager::instance()),
 videoManager(VideoManager::instance())
 {
