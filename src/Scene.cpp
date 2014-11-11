@@ -252,11 +252,13 @@ bool Scene::drawCutscene() {
     _cutsceneTexture->bind();
     
     // Note this is inverted
-    float coords[] = {0, 0,
-      config.displayWidth, 0,
-      config.displayWidth, config.displayHeight,
-      0, config.displayHeight};
-    
+    float coords[] = {
+                               0,                           0,
+      float(config.displayWidth),                           0,
+      float(config.displayWidth), float(config.displayHeight),
+                               0, float(config.displayHeight)
+    };
+
     renderManager.enablePostprocess();
     cameraManager.beginOrthoView();
     renderManager.enableTextures();
@@ -303,11 +305,13 @@ void Scene::drawSplash() {
   _splashTexture->bind();
   
   // Note this is inverted
-  float coords[] = {0, 0,
-    config.displayWidth, 0,
-    config.displayWidth, config.displayHeight,
-    0, config.displayHeight};
-  
+  float coords[] = {
+                             0,                           0,
+    float(config.displayWidth),                           0,
+    float(config.displayWidth), float(config.displayHeight),
+                             0, float(config.displayHeight)
+  };
+
   cameraManager.beginOrthoView();
   renderManager.enableTextures();
   renderManager.drawSlide(coords);
