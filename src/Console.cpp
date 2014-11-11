@@ -160,11 +160,13 @@ void Console::update() {
       LogData logData;
       int row = (ConsoleRows - 2); // Extra row saved for prompt
       
-      float coords[] = { 0, -_offset,
-        config.displayWidth, -_offset,
-        config.displayWidth, _size - _offset,
-        0, _size - _offset };
-      
+      float coords[] = {
+                                 0, float(       -_offset),
+        float(config.displayWidth), float(       -_offset),
+        float(config.displayWidth), float(_size - _offset),
+                                 0, float(_size - _offset)
+      };
+
       // Draw the slide
       renderManager.disableTextures();
       renderManager.setColor(0x25AA0000); // TODO: Add a mask color to achieve this (ie: Red + Shade)

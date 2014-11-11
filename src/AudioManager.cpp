@@ -122,22 +122,22 @@ void AudioManager::init() {
   log.trace(kModAudio, "%s", kString16001);
   
   char deviceName[256];
-  char *defaultDevice;
+  //char *defaultDevice;
   char *deviceList;
   char *devices[12];
-  int numDevices, numDefaultDevice;
+  int numDevices;  //, numDefaultDevice;
   
   strcpy(deviceName, "");
   if (config.debugMode) {
     if (alcIsExtensionPresent(NULL, (ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
-      defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+      //defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
       deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
       for (numDevices = 0; numDevices < 12; numDevices++) {devices[numDevices] = NULL;}
       for (numDevices = 0; numDevices < 12; numDevices++) {
         devices[numDevices] = deviceList;
-        if (strcmp(devices[numDevices], defaultDevice) == 0) {
-          numDefaultDevice = numDevices;
-        }
+        //if (strcmp(devices[numDevices], defaultDevice) == 0) {
+        //  numDefaultDevice = numDevices;
+        //}
         deviceList += strlen(deviceList);
         if (deviceList[0] == 0) {
           if (deviceList[1] == 0) {

@@ -414,11 +414,13 @@ void RenderManager::drawPostprocessedView() {
       effectsManager.update();
     }
     
-    float coords[] = {0, config.displayHeight,
-      config.displayWidth, config.displayHeight,
-      config.displayWidth, 0,
-      0, 0};
-    
+    float coords[] = {
+                               0, float(config.displayHeight),
+      float(config.displayWidth), float(config.displayHeight),
+      float(config.displayWidth),                           0,
+                               0,                           0
+    };
+
     this->drawSlide(coords);
     
     effectsManager.pause();
@@ -523,8 +525,8 @@ void RenderManager::copyView() {
 
 void RenderManager::blendView() {
   if (_blendNextUpdate) {
-    int xStretch;
-    int yStretch;
+    float xStretch;
+    float yStretch;
     
     if (_fadeWithZoom) {
       xStretch = static_cast<int>(_blendOpacity) * (config.displayWidth >> 2);
@@ -540,11 +542,13 @@ void RenderManager::blendView() {
     }
     
     // Note the coordinates here are inverted because of the way the screen is captured
-    float coords[] = {-xStretch, config.displayHeight + yStretch,
-      config.displayWidth + xStretch, config.displayHeight + yStretch,
-      config.displayWidth + xStretch, -yStretch,
-      -xStretch, -yStretch};
-    
+    float coords[] = {
+                                  -xStretch, float(config.displayHeight) + yStretch,
+      float(config.displayWidth) + xStretch, float(config.displayHeight) + yStretch,
+      float(config.displayWidth) + xStretch,                              -yStretch,
+                                  -xStretch,                              -yStretch
+    };
+
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f - _blendOpacity);
     
     _blendTexture->bind();
@@ -584,10 +588,12 @@ void RenderManager::reshape() {
 void RenderManager::fadeView() {
   // FIXME: This is done every time and it sucks
   
-  float coords[] = {0, 0,
-    config.displayWidth, 0,
-    config.displayWidth, config.displayHeight,
-    0, config.displayHeight};
+  float coords[] = {
+                             0,                           0,
+    float(config.displayWidth),                           0,
+    float(config.displayWidth), float(config.displayHeight),
+                             0, float(config.displayHeight)
+  };
   
   _fadeTexture->updateFade();
   _fadeTexture->bind();

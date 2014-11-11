@@ -83,6 +83,7 @@ solution "Dagon"
     defines { "GLEW_STATIC", "OV_EXCLUDE_STATIC_CALLBACKS", "KTX_OPENGL" }
     location "build"
     objdir "build/objs"
+    buildoptions { "-Wall" }
      
     -- Note that we always build as a console app, even on Windows. Please use
     -- the corresponding Xcode or Visual Studio project files to build a

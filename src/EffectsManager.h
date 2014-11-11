@@ -86,8 +86,8 @@ extern "C" const char kShaderData[];
 ////////////////////////////////////////////////////////////
 
 class EffectsManager : public Configurable<effects::Settings> {
-  Config& config;
   CameraManager& cameraManager;
+  Config& config;
   TimerManager& timerManager;
   
   GLuint _fragment;
