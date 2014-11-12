@@ -112,7 +112,7 @@ public:
     lua_pushnil(L);
     while (lua_next(L, 1) != 0) {
       const char* key = lua_tostring(L, -2);
-      int dir;
+      int dir = kNorth;
       
       // We can only read the key as a string, so we have no choice but
       // do an ugly nesting of strcmps()

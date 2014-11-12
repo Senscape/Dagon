@@ -387,6 +387,10 @@ void RenderManager::drawPolygon(std::vector<int> withArrayOfCoordinates, unsigne
         cy = 0.0f;
         cz = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1);
         break;
+      default:
+        cx = 0.0f;
+        cy = 0.0f;
+        cz = 0.0f;
     }
     
     Vector vector = this->project(cx, cy, cz);
