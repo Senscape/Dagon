@@ -23,6 +23,7 @@
 #include "Proxy.h"
 #include "Script.h"
 #include "TimerManager.h"
+#include "Serializer.h"
 
 #include "Luna.h"
 
@@ -508,8 +509,62 @@ int Script::_globalStopTimer(lua_State *L) {
 
 int Script::_globalVersion(lua_State *L) {
   lua_pushstring(L, DAGON_VERSION_STRING);
-  
+
   return 1;
+}
+
+int Script::_globalPersist(lua_State *L) {
+  bool overwrite = false;
+  char name[kMaxFileLength];
+  snprintf(name, kMaxFileLength, "%s.sav", luaL_checkstring(L, 1));
+
+  if (lua_istable(L, 2)) {
+    lua_pushnil(L);
+    while (lua_next(L, 2) != 0) {
+      if (!lua_isstring(L, -2)) {
+        lua_pop(L, 1);
+        continue;
+      }
+
+      lua_pushvalue(L, -2);
+      if (strcmp(lua_tostring(L, -1), "overwrite") == 0)
+        overwrite = lua_toboolean(L, -2);
+      lua_pop(L, 2);
+    }
+  }
+
+  SDL_RWops* file;
+  const std::string path = Config::instance().path(kPathUserData, name, kObjectSave);
+  if ((file = SDL_RWFromFile(path.c_str(), "rb"))) { // Check if file exists
+    SDL_RWclose(file);
+
+    if (!overwrite) {
+      lua_pushboolean(L, false);
+      return 1;
+    }
+  }
+
+  if (!(file = SDL_RWFromFile(path.c_str(), "wb"))) {
+    lua_pushboolean(L, false);
+    lua_pushstring(L, SDL_GetError());
+    return 2;
+  }
+
+  { // Scope to ensure file is closed if its removal is attempted
+    Serializer save(L, file);
+
+    if (!save.writeHeader() || !save.writeGlobals())
+      goto SAVE_ERROR;
+
+    lua_pushboolean(L, true);
+    return 1;
+  }
+
+SAVE_ERROR:
+  remove(path.c_str());
+  lua_pushboolean(L, false);
+  lua_pushstring(L, SDL_GetError());
+  return 2;
 }
 
 void Script::_registerEnums() {
@@ -622,6 +677,7 @@ void Script::_registerGlobals() {
     {"startTimer", _globalStartTimer},
     {"stopTimer", _globalStopTimer},
     {"version", _globalVersion},
+    {"persist", _globalPersist},
     {NULL, NULL}
   };
   

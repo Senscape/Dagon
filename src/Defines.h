@@ -29,6 +29,7 @@
 #define kDefVideoPath "Video/"
 // TODO: Maybe change to 'Assets'
 #define kDefResourcePath "Resources/"
+#define kDefSavePath "Saves/"
 #define kDefConfigFile "dagon.cfg"
 #define kDefLogFile "dagon.log"
 #define kDefTexExtension "tex"
