@@ -553,21 +553,17 @@ int Script::_globalPersist(lua_State *L) {
     return 2;
   }
 
-  { // Scope to ensure file is closed if its removal is attempted
-    Serializer save(L, file);
+  Serializer save(L, file);
 
-    if (!save.writeHeader() || !save.writeGlobals())
-      goto SAVE_ERROR;
-
-    lua_pushboolean(L, true);
+  if (!save.writeHeader() || !save.writeGlobals()) {
+    Log::instance().error(kModScript, "Error while saving: %s", SDL_GetError());
+    remove(path.c_str());
+    lua_pushboolean(L, false);
     return 1;
   }
 
-SAVE_ERROR:
-  remove(path.c_str());
-  lua_pushboolean(L, false);
-  lua_pushstring(L, SDL_GetError());
-  return 2;
+  lua_pushboolean(L, true);
+  return 1;
 }
 
 int Script::_globalGetSaves(lua_State *L) {
