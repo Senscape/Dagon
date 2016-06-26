@@ -16,7 +16,6 @@
 ////////////////////////////////////////////////////////////
 
 #include "Serializer.h"
-
 #include "Node.h"
 #include "Control.h"
 #include "Version.h"
@@ -25,7 +24,6 @@
 #include <climits>
 
 namespace dagon {
-
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor & Destructor

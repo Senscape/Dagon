@@ -33,6 +33,7 @@
 #define kDefConfigFile "dagon.cfg"
 #define kDefLogFile "dagon.log"
 #define kDefTexExtension "tex"
+#define kDefSaveExtension "sav"
 
 namespace dagon {
 

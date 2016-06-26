@@ -149,7 +149,8 @@ solution "Dagon"
       includedirs { "extlibs/headers",
                     "extlibs/headers/libfreetype/windows",
                     "extlibs/headers/libfreetype/windows/freetype",
-                    "extlibs/headers/libsdl2/windows" }
+                    "extlibs/headers/libsdl2/windows",
+                    "extlibs/headers/dirent" }
       links { "freetype", "glew32s", "libogg_static", 
               "libtheora_static", "libvorbis_static", 
               "libvorbisfile_static", "lua", "OpenAL32",
