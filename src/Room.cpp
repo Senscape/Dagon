@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -30,6 +30,8 @@ namespace dagon {
 Room::Room() {
   _currentNode = NULL;
   _hasDefaultFootstep = false;
+  _hasEffects = false;
+  _hasEnterEvent = false;
   this->setType(kObjectRoom);
 }
 
@@ -43,6 +45,14 @@ bool Room::hasAudios() {
 
 bool Room::hasDefaultFootstep() {
   return _hasDefaultFootstep;
+}
+  
+bool Room::hasEnterEvent() {
+  return _hasEnterEvent;
+}
+  
+bool Room::hasEffects() {
+  return _hasEffects;
 }
 
 bool Room::hasNodes() {
@@ -67,8 +77,13 @@ Audio* Room::defaultFootstep() {
   return _defaultFootstep;
 }
 
-int Room::effectsFlags() {
-  return _effectsFlags;
+SettingCollection Room::effects() {
+  return _theEffects;
+}
+  
+int Room::enterEvent() {
+  assert(_hasEnterEvent = true);
+  return _luaReference;
 }
 
 Node* Room::iterator() {
@@ -85,8 +100,14 @@ void Room::setDefaultFootstep(Audio* theFootstep) {
   _hasDefaultFootstep = true;
 }
 
-void Room::setEffects(int theEffectFlags) {
-  _effectsFlags = theEffectFlags;
+void Room::setEffects(const SettingCollection& theEffects) {
+  _theEffects = theEffects;
+  _hasEffects = true;
+}
+  
+void Room::setEnterEvent(int luaReference) {
+  _hasEnterEvent = true;
+  _luaReference = luaReference;
 }
 
 ////////////////////////////////////////////////////////////
@@ -95,13 +116,14 @@ void Room::setEffects(int theEffectFlags) {
 
 Audio* Room::addAudio(Audio* anAudio) {
   _arrayOfAudios.push_back(anAudio);
+  anAudio->setFadeSpeed(kFadeSlow);
   return anAudio;
 }
 
 Node* Room::addNode(Node* aNode) {
   if (_arrayOfNodes.empty())
     _currentNode = aNode;
-  
+  aNode->setParentRoom(this);
   _arrayOfNodes.push_back(aNode);
   return aNode;
 }

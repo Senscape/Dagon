@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -29,6 +29,7 @@
 #include "CursorManager.h"
 #include "FeedManager.h"
 #include "FontManager.h"
+#include "EffectsManager.h"
 #include "Interface.h"
 #include "Log.h"
 #include "Node.h"
@@ -51,7 +52,6 @@ namespace dagon {
 
 Control::Control() :
 audioManager(AudioManager::instance()),
-textureManager(TextureManager::instance()),
 cameraManager(CameraManager::instance()),
 config(Config::instance()),
 cursorManager(CursorManager::instance()),
@@ -61,6 +61,7 @@ log(Log::instance()),
 renderManager(RenderManager::instance()),
 script(Script::instance()),
 system(Config::instance(), Log::instance()),
+textureManager(TextureManager::instance()),
 timerManager(TimerManager::instance()),
 videoManager(VideoManager::instance())
 {
@@ -117,10 +118,6 @@ void Control::init(int argc, char* argv[]) {
   // First thing we do to log properly
   system.findPaths();
 #endif
-  
-  log.trace(kModControl, "========================================");
-  log.info(kModControl, "%s: %s", kString12001, DAGON_VERSION_STRING);
-  log.info(kModControl, "%s: %d", kString12004, DAGON_BUILD);
   
   // FIXME: Solve problem when script not found (console isn't shown)
   script.init();
@@ -213,13 +210,13 @@ bool Control::isDirectControlActive() {
     return false;
 }
 
-void Control::lookAt(float horizontal, float vertical, bool instant) {
+void Control::lookAt(float horizontal, float vertical, bool instant, bool adjustment) {
   if (instant) {
     cameraManager.setAngleHorizontal(horizontal);
     cameraManager.setAngleVertical(vertical);
   }
   else {
-    cameraManager.setTargetAngle(horizontal, vertical);
+    cameraManager.setTargetAngle(horizontal, vertical, adjustment);
     _state->set(StateLookAt);
     cursorManager.fadeOut();
   }
@@ -266,7 +263,7 @@ void Control::processKey(int aKey, int eventFlags) {
             else {
               if (!_isShuttingDown) {
                 _scene->fadeOut();
-                _shutdownTimer = timerManager.createManual(1.5);
+                _shutdownTimer = timerManager.createManual(1.0);
                 _isShuttingDown = true;
               }
             }
@@ -365,12 +362,10 @@ void Control::processKey(int aKey, int eventFlags) {
 void Control::processMouse(int x, int y, int eventFlags) {
   // TODO: Horrible nesting of IFs here... improve
   
-  if (config.controlMode == kControlFixed) {
-    if (!_directControlActive) {
-      cursorManager.updateCoords(x, y);
-    }
+  if ((config.controlMode != kControlFixed) ||
+      !_directControlActive) {
+    cursorManager.updateCoords(x, y);
   }
-  else cursorManager.updateCoords(x, y);
   
   if (!cursorManager.isEnabled() || cursorManager.isFading()) {
     // Ignore all the rest
@@ -386,15 +381,8 @@ void Control::processMouse(int x, int y, int eventFlags) {
     script.processCallback(_eventHandlers.mouseButton, 0);
   }
   
-  if (config.controlMode == kControlFixed) {
-    if (eventFlags == EventMouseRightUp) {
-      _directControlActive = !_directControlActive;
-    }
-  }
-  else {
-    if ((eventFlags == EventMouseRightUp) && _eventHandlers.hasMouseRightButton) {
-      script.processCallback(_eventHandlers.mouseRightButton, 0);
-    }
+  if ((eventFlags == EventMouseRightUp) && _eventHandlers.hasMouseRightButton) {
+    script.processCallback(_eventHandlers.mouseRightButton, 0);
   }
   
   // The overlay system is handled differently than the spots, so we
@@ -617,26 +605,45 @@ void Control::sleep(int forSeconds) {
   cursorManager.fadeOut();
 }
 
-void Control::switchTo(Object* theTarget, bool instant) {
+void Control::switchTo(Object* theTarget) {
   static bool firstSwitch = true;
-  bool performWalk;
+  static SettingCollection previousEffects; // Temporary patch
+  
+  //log.trace(kModControl, "Begin switching...");
   
   _updateView(StateNode, true);
   
   videoManager.flush();
   
+  if (firstSwitch) {
+    firstSwitch = false;
+  }
+  else {
+    renderManager.blendNextUpdate(true);
+  }
+  
+  cameraManager.setViewport(config.displayWidth, config.displayHeight);
+  
+  if (currentNode()){
+    if (currentNode()->hasLeaveEvent()) {
+      //log.trace(kModControl, "Has node onLeave callback");
+      script.processCallback(currentNode()->leaveEvent(), 0);
+    }
+  }
+  
   if (theTarget) {
     switch (theTarget->type()) {
-      case kObjectRoom:
+      case kObjectRoom: {
+        //log.trace(kModControl, "Switching to room...");
         audioManager.clear();
         feedManager.clear(); // Clear all pending feeds
         
-        if (!firstSwitch) {
-          renderManager.blendNextUpdate(true);
+        if (currentNode()) {
           if (currentNode()->isSlide())
             cameraManager.unlock();
         }
         
+        //log.trace(kModControl, "Set room and Lua objet");
         _currentRoom = (Room*)theTarget;
         _scene->setRoom((Room*)theTarget);
         timerManager.setLuaObject(_currentRoom->luaObject());
@@ -648,14 +655,34 @@ void Control::switchTo(Object* theTarget, bool instant) {
         
         textureManager.setRoomToPreload(_currentRoom);
         
-        performWalk = true;
+        if (_eventHandlers.hasEnterRoom) {
+          //log.trace(kModControl, "Has global enter event");
+          script.processCallback(_eventHandlers.enterRoom, 0);
+        }
         
+        if (_currentRoom->hasEnterEvent()) {
+          //log.trace(kModControl, "Has room enter event");
+          script.processCallback(_currentRoom->enterEvent(), 0);
+        }
+        
+        EffectsManager& effectsManager = EffectsManager::instance();
+        if (_currentRoom->hasEffects()) {
+          //log.trace(kModControl, "Loading room effects");
+          effectsManager.saveSettings(&previousEffects);
+          effectsManager.loadSettings(_currentRoom->effects());
+        } else {
+          if (!previousEffects.empty()) {
+            //log.trace(kModControl, "Loading previous effects");
+            effectsManager.loadSettings(previousEffects);
+          }
+        }
         break;
+      }
       case kObjectSlide:
-        renderManager.blendNextUpdate();
-        
+        //log.trace(kModControl, "Switching to slide...");
         if (_currentRoom) {
           Node* node = (Node*)theTarget;
+          //log.trace(kModControl, "Set previous node");
           node->setPreviousNode(this->currentNode());
           
           if (!_currentRoom->switchTo(node)) {
@@ -667,7 +694,6 @@ void Control::switchTo(Object* theTarget, bool instant) {
             _directControlActive = false;
           
           cameraManager.lock();
-          performWalk = false;
         }
         else {
           log.error(kModControl, "%s", kString12009);
@@ -675,53 +701,94 @@ void Control::switchTo(Object* theTarget, bool instant) {
         }
         
         break;
-      case kObjectNode:
+      case kObjectNode: {
+        //log.trace(kModControl, "Switching to node...");
         audioManager.clear();
+        if (currentNode()->isSlide())
+          cameraManager.unlock();
         
-        renderManager.blendNextUpdate(true);
+        //log.trace(kModControl, "Set parent room");
+        Node* node = (Node*)theTarget;
+        Room* room = node->parentRoom();
         
-        if (_currentRoom) {
-          if (currentNode()->isSlide())
-            cameraManager.unlock();
-          
-          Node* node = (Node*)theTarget;
-          if (!_currentRoom->switchTo(node)) {
-            log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
-            return;
+        if (room) {
+          if (room != _currentRoom) {
+            //log.trace(kModControl, "New room, so cleaning up...");
+            feedManager.clear(); // Clear all pending feeds
+            _currentRoom = room;
+            _scene->setRoom(room);
+            timerManager.setLuaObject(_currentRoom->luaObject());
+            textureManager.setRoomToPreload(_currentRoom);
+            
+            if (_eventHandlers.hasEnterRoom) {
+              //log.trace(kModControl, "Has global room enter event");
+              script.processCallback(_eventHandlers.enterRoom, 0);
+            }
+            
+            if (_currentRoom->hasEnterEvent()) {
+              //log.trace(kModControl, "Has room enter event");
+              script.processCallback(_currentRoom->enterEvent(), 0);
+            }
+            
+            EffectsManager& effectsManager = EffectsManager::instance();
+            if (_currentRoom->hasEffects()) {
+              //log.trace(kModControl, "Loading room effects");
+              effectsManager.saveSettings(&previousEffects);
+              effectsManager.loadSettings(_currentRoom->effects());
+            } else {
+              if (!previousEffects.empty()) {
+                //log.trace(kModControl, "Loading previous effects");
+                effectsManager.loadSettings(previousEffects);
+              }
+            }
           }
-          performWalk = true;
         }
         else {
           log.error(kModControl, "%s", kString12009);
           return;
         }
         
+        if (!_currentRoom->switchTo(node)) {
+          log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
+          return;
+        }
+        
+        if (_eventHandlers.hasEnterNode) {
+          //log.trace(kModControl, "Has global node enter event");
+          script.processCallback(_eventHandlers.enterNode, 0);
+        }
+        
+        if (node->hasEnterEvent()) {
+          //log.trace(kModControl, "Has node enter event");
+          script.processCallback(node->enterEvent(), 0);
+        }
+        
         break;
+      }
     }
   }
   else {
     // Only slides switch to NULL targets, so we check whether the new object is another slide.
     // If it isn't, we unlock the camera.
     if (_currentRoom) {
-      renderManager.blendNextUpdate();
-      
+      //log.trace(kModControl, "Returning from slide...");
       Node* current = this->currentNode();
       Node* previous = current->previousNode();
       
       _currentRoom->switchTo(previous);
       
       if (current->slideReturn()) {
+        //log.trace(kModControl, "Has slide onLeave callback");
         script.processCallback(current->slideReturn(), current->luaObject());
       }
       
       if (!previous->isSlide()) {
+        //log.trace(kModControl, "Unlock camera and return to direct control");
         cameraManager.unlock();
         if (config.controlMode == kControlFixed)
           // FIXME: Forced, but it should return to the previous mode
           _directControlActive = true;
       }
-      
-      performWalk = false;
     }
   }
   
@@ -729,25 +796,34 @@ void Control::switchTo(Object* theTarget, bool instant) {
     if (_currentRoom->hasNodes()) {
       // Now we proceed to load the textures of the current node
       Node* current = _currentRoom->currentNode();
+      //log.trace(kModControl, "Flushing textures...");
       textureManager.flush();
       
       if (current->hasSpots()) {
         current->beginIteratingSpots();
+        //log.trace(kModControl, "Processing spots...");
         do {
           Spot* spot = current->currentSpot();
           
           if (spot->hasAudio()) {
+            //log.trace(kModControl, "Loading audio...");
             Audio* audio = spot->audio();
             
+            // Ignore handling fade if audio is set to 0 at this stage
+            if (audio->fadeLevel() != 0.0f) {
+              if (!audio->isLoaded())
+                audio->forceFadeLevel(0.0f);
+              audio->setDefaultFadeLevel(spot->volume());
+            }
             // Request the audio
             audioManager.requestAudio(audio);
             audio->setPosition(spot->face(), spot->origin());
-            audio->setDefaultFadeLevel(spot->volume());
           }
           
           // TODO: Merge the video autoplay with spot properties
           // TODO: Decide after video finishes playing if last frame is showed or removed
           if (spot->hasVideo()) {
+            //log.trace(kModControl, "Loading video...");
             Video* video = spot->video();
             videoManager.requestVideo(video);
             
@@ -767,6 +843,7 @@ void Control::switchTo(Object* theTarget, bool instant) {
           }
           
           if (spot->hasTexture()) {
+            //log.trace(kModControl, "Loading image...");
             textureManager.requestTexture(spot->texture());
             
             // Only resize if nothing but origin
@@ -774,7 +851,7 @@ void Control::switchTo(Object* theTarget, bool instant) {
               spot->resize(spot->texture()->width(), spot->texture()->height());
           }
           
-          if (spot->hasFlag(kSpotAuto))
+          if (spot->hasFlag(kSpotAuto) || spot->isPlaying())
             spot->play();
         } while (current->iterateSpots());
       }
@@ -786,11 +863,13 @@ void Control::switchTo(Object* theTarget, bool instant) {
       char title[kMaxObjectName];
       snprintf(title, kMaxObjectName, "%s (%s, %s)", config.script().c_str(),
                _currentRoom->name().c_str(), current->description().c_str());
+      //log.trace(kModControl, "Set window title");
       system.setTitle(title);
     }
     
     // This has to be done every time so that room audios keep playing
     if (_currentRoom->hasAudios() && (!_currentRoom->currentNode()->isSlide() && theTarget != NULL)) {
+      //log.trace(kModControl, "Managing environmental sounds...");
       std::vector<Audio*>::iterator it;
       std::vector<Audio*> arrayOfAudios = _currentRoom->arrayOfAudios();
       
@@ -799,42 +878,45 @@ void Control::switchTo(Object* theTarget, bool instant) {
       while (it != arrayOfAudios.end()) {
         if ((*it)->state() != kAudioPlaying)
           (*it)->fadeIn();
-        
         audioManager.requestAudio((*it));
-        (*it)->play();
+        if ((*it)->doesAutoplay()) {
+          (*it)->play();
+        }
         
         ++it;
       }
     }
-    
-    if (!firstSwitch && performWalk && !instant) {
-      cameraManager.simulateWalk();
-      Node* current = this->currentNode();
-      
-      // Finally, check if must play a single footstep
-      if (current->hasFootstep()) {
-        current->footstep()->unload();
-        audioManager.requestAudio(current->footstep());
-        current->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-        current->footstep()->play();
-      }
-      else {
-        if (_currentRoom->hasDefaultFootstep()) {
-          _currentRoom->defaultFootstep()->unload();
-          audioManager.requestAudio(_currentRoom->defaultFootstep());
-          _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-          _currentRoom->defaultFootstep()->play();
-        }
-      }
-    }
   }
   
+  //log.trace(kModControl, "Flushing audio...");
   audioManager.flush();
   
   cameraManager.stopPanning();
   
-  if (firstSwitch)
-    firstSwitch = false;
+  //log.trace(kModControl, "Done!");
+}
+  
+void Control::walkTo(Object* theTarget) {
+  this->switchTo(theTarget);
+  
+  cameraManager.simulateWalk();
+  Node* current = this->currentNode();
+  
+  // Finally, check if must play a single footstep
+  if (current->hasFootstep()) {
+    current->footstep()->unload();
+    audioManager.requestAudio(current->footstep());
+    current->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+    current->footstep()->play();
+  }
+  else {
+    if (_currentRoom->hasDefaultFootstep()) {
+      _currentRoom->defaultFootstep()->unload();
+      audioManager.requestAudio(_currentRoom->defaultFootstep());
+      _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
+      _currentRoom->defaultFootstep()->play();
+    }
+  }
 }
 
 void Control::syncSpot(Spot* spot) {
@@ -936,7 +1018,7 @@ void Control::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-void Control::_processAction(){
+void Control::_processAction() {
   Action* action = cursorManager.action();
   
   switch (action->type) {
@@ -950,16 +1032,30 @@ void Control::_processAction(){
       else feedManager.show(action->feed.c_str());
       break;
     case kActionSwitch:
-      cursorManager.removeAction();
-      switchTo(action->target);
+      // FIXME: Temporary hack until we separate the slide code from node code
+      if (this->currentNode() != NULL) {
+        if (this->currentNode()->isSlide()) {
+          config.controlMode = kControlFixed;
+          switchTo(action->target);
+        }
+        else
+          walkTo(action->target);
+      }
       break;
   }
+  cursorManager.removeAction();
 }
 
 void Control::_updateView(int state, bool inBackground) {
   // TODO: Suspend all operations when doing a switch
   // FIXME: Add a render stack of Objects, especially for overlays
   // IMPORTANT: Ensure this function is thread-safe when switching rooms or nodes
+  
+  if (!inBackground) {
+    // User post-render operations, supporting textures
+    if (_eventHandlers.hasPreRender)
+      script.processCallback(_eventHandlers.preRender, 0);
+  }
   
   // Setup the scene
   
@@ -977,7 +1073,7 @@ void Control::_updateView(int state, bool inBackground) {
       break;
     case StateNode:
       _scene->scanSpots();
-      _scene->drawSpots();
+      _scene->drawSpots(inBackground);
       
       if (!inBackground) {
         _interface->drawHelpers();

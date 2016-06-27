@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -20,6 +20,7 @@
 
 #include <string>
 
+#include "Config.h"
 #include "Platform.h"
 
 #ifdef DAGON_MAC
@@ -52,8 +53,12 @@ class Log;
 // Definitions
 ////////////////////////////////////////////////////////////
 
-// TODO: Allow to configure the number of buffers
-#define kAudioBuffers 2
+enum AudioBufferState {
+  kAudioStreamEOF = -1,
+  kAudioStreamError = -2,
+  kAudioGenericError = -3,
+  kAudioStreamOK = 1
+};
 
 enum AudioStates {
   kAudioInitial,
@@ -80,18 +85,22 @@ class Audio : public Object {
   ~Audio();
   
   // Checks
+  bool doesAutoplay();
   bool isLoaded();
   bool isLoopable();
   bool isPlaying();
+  bool isVarying();
   
   // Gets
   double cursor(); // For match function
   int state();
   
   // Sets
+  void setAutoplay(bool autoplay);
   void setLoopable(bool loopable);
   void setPosition(unsigned int face, Point origin);
   void setResource(std::string fileName);
+  void setVarying(bool varying);
   
   // State changes
   void load();
@@ -112,12 +121,14 @@ class Audio : public Object {
   // Eventually all file management will be handled by a separate class
   Resource _resource;
   
+  bool _doesAutoplay;
   bool _isLoaded;
   bool _isLoopable;
   bool _isMatched;
+  bool _isVarying;
   int _state;
   
-  ALuint _alBuffers[kAudioBuffers];
+  ALuint _alBuffers[kMaxAudioBuffers];
 	ALenum _alFormat;
   ALuint _alSource;
   int _channels;
@@ -127,7 +138,7 @@ class Audio : public Object {
   OggVorbis_File _oggStream;
   
   // Private methods
-  bool _fillBuffer(ALuint* buffer);
+  int _fillBuffer(ALuint* buffer);
   void _emptyBuffers();
   std::string _randomizeFile(const std::string &fileName);
   ALboolean _verifyError(const std::string &operation);

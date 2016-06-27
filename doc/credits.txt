@@ -6,6 +6,7 @@ Alexander Alekseev
 Dmitry Marakasov
 Gerardo Heidel
 Ignaz Forster
+Anthony Garcia
 
 Dagon is based on the following libraries with their respective credits:
 

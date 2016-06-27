@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -117,9 +117,9 @@ public:
   
 private:
   Object* o;
-  
+
 };
-  
+
 }
 
 #endif // DAGON_OBJECTPROXY_H_

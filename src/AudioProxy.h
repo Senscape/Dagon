@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -46,9 +46,14 @@ public:
       lua_pushnil(L);
       while (lua_next(L, 2) != 0) {
         const char* key = lua_tostring(L, -2);
-        
+
+        if (strcmp(key, "auto") == 0) {
+          a->setAutoplay(lua_toboolean(L, -1));
+          a->setStatic();
+        }
         if (strcmp(key, "loop") == 0) a->setLoopable(lua_toboolean(L, -1));
         if (strcmp(key, "volume") == 0) a->setDefaultFadeLevel((float)(lua_tonumber(L, -1) / 100));
+        if (strcmp(key, "varying") == 0) a->setVarying(lua_toboolean(L, -1));
         
         lua_pop(L, 1);
       }
@@ -87,11 +92,25 @@ public:
     return 0;
   }
   
+  // Set the volume
+  int setVolume(lua_State *L) {
+    a->forceFadeLevel((float)(lua_tonumber(L, -1) / 100));
+    
+    return 0;
+  }
+  
   // Stop the audio
   int stop(lua_State *L) {
     a->stop();
     
     return 0;
+  }
+  
+  // Get the volume
+  int volume(lua_State *L) {
+    lua_pushnumber(L, a->fadeLevel() * 100);
+    
+    return 1;
   }
   
   Audio* ptr() { return a; }
@@ -112,7 +131,9 @@ Luna<AudioProxy>::RegType AudioProxy::methods[] = {
   method(AudioProxy, match),
   method(AudioProxy, play),
   method(AudioProxy, pause),
+  method(AudioProxy, setVolume),
   method(AudioProxy, stop),
+  method(AudioProxy, volume),
   {0,0}
 };
   

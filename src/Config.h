@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -27,6 +27,8 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
+  
+#define kMaxAudioBuffers 16
 
 enum ControlModes {
   kControlDrag = 0,
@@ -36,7 +38,7 @@ enum ControlModes {
 
 enum DefaultConfiguration {
   kDefAntialiasing = false,
-  kDefAudioBuffer = 16384,
+  kDefAudioBuffer = 8192,
   kDefAudioDevice = 0,
   kDefAutopaths = true,
   kDefAutorun = true,
@@ -53,6 +55,7 @@ enum DefaultConfiguration {
   kDefFullscreen = false,
   kDefLog = true,
   kDefMute = false,
+  kDefNumOfAudioBuffers = 8,
   kDefShowHelpers = false,
   kDefShowSplash = true,
   kDefShowSpots = false,
@@ -73,7 +76,7 @@ enum SystemPaths {
 ////////////////////////////////////////////////////////////
 
 class Config {
-public:
+ public:
   static Config& instance() {
     static Config config;
     return config;
@@ -97,6 +100,7 @@ public:
   bool fullscreen;
   bool log;
   bool mute;
+  int numOfAudioBuffers;
   bool showHelpers;
   bool showSplash;
   bool showSpots;
@@ -119,7 +123,7 @@ public:
   // TODO: Provide members to save/load configurations
   // (also used by system to save them in the user's folder)
   
-private:
+ private:
   std::string _appPath;
   std::string _resPath;
   std::string _scriptName;

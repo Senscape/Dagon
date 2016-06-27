@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -101,6 +101,12 @@ void AudioManager::flush() {
                 }
               }
             }
+            else if ((*it)->state() == kAudioStopped) {
+              (*it)->unload();
+                    _arrayOfActiveAudios.erase(it);
+                    done = false;
+                    break;
+            }
             else ++it;
           }
           SDL_UnlockMutex(_mutex);
@@ -116,22 +122,22 @@ void AudioManager::init() {
   log.trace(kModAudio, "%s", kString16001);
   
   char deviceName[256];
-  char *defaultDevice;
+  //char *defaultDevice;
   char *deviceList;
   char *devices[12];
-  int numDevices, numDefaultDevice;
+  int numDevices;  //, numDefaultDevice;
   
   strcpy(deviceName, "");
   if (config.debugMode) {
     if (alcIsExtensionPresent(NULL, (ALCchar*)"ALC_ENUMERATION_EXT") == AL_TRUE) { // Check if enumeration extension is present
-      defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
+      //defaultDevice = (char *)alcGetString(NULL, ALC_DEFAULT_DEVICE_SPECIFIER);
       deviceList = (char *)alcGetString(NULL, ALC_DEVICE_SPECIFIER);
       for (numDevices = 0; numDevices < 12; numDevices++) {devices[numDevices] = NULL;}
       for (numDevices = 0; numDevices < 12; numDevices++) {
         devices[numDevices] = deviceList;
-        if (strcmp(devices[numDevices], defaultDevice) == 0) {
-          numDefaultDevice = numDevices;
-        }
+        //if (strcmp(devices[numDevices], defaultDevice) == 0) {
+        //  numDefaultDevice = numDevices;
+        //}
         deviceList += strlen(deviceList);
         if (deviceList[0] == 0) {
           if (deviceList[1] == 0) {
@@ -218,27 +224,19 @@ void AudioManager::registerAudio(Audio* target) {
 }
 
 void AudioManager::requestAudio(Audio* target) {
+  if (_arrayOfActiveAudios.size() >= kMaxNumberOfAudios) 
+	  return;
+  
   if (!target->isLoaded()) {
     target->load();
   }
-  
   target->retain();
-  
+
+  bool isActive = false;
+  isActive = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(),
+                       target) != _arrayOfActiveAudios.end();
   // If the audio is not active, then it's added to
   // that vector
-  
-  bool isActive = false;
-  std::vector<Audio*>::iterator it;
-  it = _arrayOfActiveAudios.begin();
-  
-  while (it != _arrayOfActiveAudios.end()) {
-    if ((*it) == target) {
-      isActive = true;
-      break;
-    }
-    ++it;
-  }
-  
   if (!isActive) {
     if (SDL_LockMutex(_mutex) == 0) {
       _arrayOfActiveAudios.push_back(target);

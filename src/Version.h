@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -16,9 +16,9 @@
 
 #define DAGON_VERSION_MAJOR 0
 #define DAGON_VERSION_MINOR 6
-#define DAGON_VERSION_RELEASE 5
+#define DAGON_VERSION_RELEASE 8
 #define DAGON_VERSION_TYPE "a"
-#define DAGON_BUILD 1007
+#define DAGON_BUILD 1011
 
 #define mkstr(a) # a
 #define mkver(a, b, c) mkstr(a) "." mkstr(b) "." mkstr(c)

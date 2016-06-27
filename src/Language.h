@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -62,7 +62,7 @@
 #define kString12006 "No spots to draw"
 #define kString12007 "Creating objects in runtime is not recommended"
 #define kString12008 "Node not added to current room"
-#define kString12009 "No current room specified"
+#define kString12009 "Unspecified room for node"
 #define kString12010 "Slide not added to current room"
 
 // Funny messages when shutting down

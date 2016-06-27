@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -19,18 +19,17 @@
 
 // Defaults
 
-#define kDefScriptFile "Main" // Also name of the window
-#define kDefAudioPath "Audio/"
-#define kDefCursorPath "Cursors/"
-#define kDefFontPath "Fonts/"
-#define kDefImagePath "Images/"
-#define kDefNodePath "Nodes/"
-#define kDefRoomPath "Rooms/"
-#define kDefVideoPath "Video/"
-// TODO: Maybe change to 'Assets'
-#define kDefResourcePath "Resources/"
-#define kDefSavePath "Saves/"
-#define kDefConfigFile "dagon.cfg"
+#define kDefScriptFile "main.lua" // Also name of the window
+#define kDefAudioPath "audio/"
+#define kDefCursorPath "cursors/"
+#define kDefFontPath "fonts/"
+#define kDefImagePath "images/"
+#define kDefNodePath "nodes/"
+#define kDefRoomPath "rooms/"
+#define kDefVideoPath "video/"
+#define kDefResourcePath "resources/"
+#define kDefSavePath "saves/"
+#define kDefConfigFile "config.lua"
 #define kDefLogFile "dagon.log"
 #define kDefTexExtension "tex"
 #define kDefSaveExtension "sav"

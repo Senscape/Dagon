@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -20,6 +20,7 @@
 
 #include <string>
 #include <stdint.h>
+#include <wchar.h>
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
@@ -41,7 +42,7 @@ class Log;
 // Definitions
 ////////////////////////////////////////////////////////////
 
-unsigned const kMaxChars = 128;
+const wchar_t kMaxChars = 256;
 
 // This structure holds information from the Freetype font
 typedef struct {
@@ -71,6 +72,7 @@ class Font : public Object {
   void clear();
   bool isLoaded();
   void print(int x, int y, const char* text, ...);
+  void wPrint(int x, int y, const char* text);
   void setColor(uint32_t color);
   void setDefault(unsigned int heightOfFont);
   void setLibrary(FT_Library* library);

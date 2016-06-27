@@ -16,7 +16,7 @@ your games:
 
 https://github.com/Senscape/Dagon/releases
 
-Copyright (c) 2011-2013 Senscape s.r.l. All rights reserved.
+Copyright (c) 2011-2014 Senscape s.r.l. All rights reserved.
 
 This Source Code Form is subject to the terms of the Mozilla Public License,
 v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
@@ -35,7 +35,7 @@ Linux:
 
   We suggest installing the following packages via apt-get: libfreetype6-dev,
   libglew-dev, liblua5.1-0-dev, libogg-dev, libopenal-dev, libvorbis-dev,
-  libtheora-dev, libSDL2-dev.
+  libtheora-dev, libsdl2-dev.
 
   SDL2 was not available in some default repos as of this writing and had to be
   built from scratch.
@@ -80,9 +80,10 @@ solution "Dagon"
     targetname "dagon"
     -- GLEW_STATIC only applies to Windows, but there's no harm done if defined
     -- on other systems.
-    defines { "GLEW_STATIC", "OV_EXCLUDE_STATIC_CALLBACKS" }
+    defines { "GLEW_STATIC", "OV_EXCLUDE_STATIC_CALLBACKS", "KTX_OPENGL" }
     location "build"
     objdir "build/objs"
+    buildoptions { "-Wall" }
      
     -- Note that we always build as a console app, even on Windows. Please use
     -- the corresponding Xcode or Visual Studio project files to build a
@@ -93,7 +94,7 @@ solution "Dagon"
     
     -- Libraries required for Unix-based systems
     libs_unix = { "freetype", "GLEW", "GL", "GLU", "ogg", "openal", "vorbis",
-		  "vorbisfile", "theoradec", "SDL2", "dl", "pthread" }
+		  "vorbisfile", "theoradec", "SDL2", "m", "stdc++" }
   
     -- Search for libraries on Linux systems
     if os.get() == "linux" then
@@ -125,7 +126,18 @@ solution "Dagon"
                     "/usr/local/include/lua5.1",
                     "/usr/local/include/freetype2" }
       libdirs { "/usr/lib", "/usr/local/lib" }
+      links { libs_unix, "dl" }
+      linkoptions { "-pthread" }
+
+    configuration "bsd"
+      includedirs { "/usr/include",
+                    "/usr/local/include/freetype2",
+                    "/usr/local/include" }
+      libdirs { "/usr/lib", "/usr/local/lib" }
+      buildoptions { "`pkg-config --cflags lua-5.1`" }
+      linkoptions { "`pkg-config --libs lua-5.1`" }
       links { libs_unix }
+      linkoptions { "-pthread" }
   
     configuration "macosx"
       includedirs { "/usr/include", "/usr/include/lua5.1", 
@@ -139,7 +151,7 @@ solution "Dagon"
       libdirs { "/usr/lib", "/usr/local/lib", 
                 "extlibs/libs-osx/Frameworks", "extlibs/libs-osx/lib" }
       links { "freetype", "GLEW", "lua", "ogg", "SDL2", 
-              "vorbis", "vorbisfile", "theoradec" }
+              "vorbis", "vorbisfile", "theoradec", "ktx" }
       links { "AudioToolbox.framework", "AudioUnit.framework",
               "Carbon.framework", "Cocoa.framework", "CoreAudio.framework",
               "CoreFoundation.framework", "ForceFeedback.framework", 
@@ -155,7 +167,7 @@ solution "Dagon"
               "libtheora_static", "libvorbis_static", 
               "libvorbisfile_static", "lua", "OpenAL32",
               "SDL2", "SDL2main", "opengl32", "glu32",
-              "Imm32", "version", "winmm" }
+              "Imm32", "version", "winmm", "libktx" }
       if os.is64bit then
         libdirs { "extlibs/libs-msvc/x64" }
       else

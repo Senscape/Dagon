@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -31,7 +31,10 @@ namespace dagon {
 Node::Node() {
   _previousNode = this;
   _hasFootstep = false;
+  _hasEnterEvent = false;
+  _hasLeaveEvent = false;
   _isSlide = false;
+  _parentRoom = 0;
   _slideReturn = 0;
   this->setType(kObjectNode);
 }
@@ -43,12 +46,20 @@ Node::Node() {
 Node::~Node() {
   // Note that we only delete spots automatically created by this class,
   // not ones by the user
-  _it = _arrayOfSpots.begin();
-  while (_it != _arrayOfSpots.end()) {
-    Spot* spot = (*_it);
-    if (spot->hasFlag(kSpotClass))
-      delete spot;
-    ++_it;
+  bool done = false;
+  while (!done) {
+	_it = _arrayOfSpots.begin();
+    done = true;
+    while ((_it != _arrayOfSpots.end())) {
+		Spot* spot = (*_it);
+        if (spot->hasFlag(kSpotClass)) {
+		  // FIXME: Class spots should be in a different vector
+		  //delete spot;
+		  _arrayOfSpots.erase(_it);
+          done = false;
+          break;
+        } else ++_it;
+    }
   }
 }
 
@@ -62,6 +73,14 @@ bool Node::hasBundleName() {
 
 bool Node::hasFootstep() {
   return _hasFootstep;
+}
+  
+bool Node::hasEnterEvent() {
+  return _hasEnterEvent;
+}
+  
+bool Node::hasLeaveEvent() {
+  return _hasLeaveEvent;
 }
 
 bool Node::hasSpots() {
@@ -93,10 +112,24 @@ std::string Node::description() {
   return _description;
 }
 
+int Node::enterEvent() {
+  assert(_hasEnterEvent = true);
+  return _luaEnterReference;
+}
+  
 Audio* Node::footstep() {
   return _footstep;
 }
+  
+int Node::leaveEvent() {
+  assert(_hasLeaveEvent = true);
+  return _luaLeaveReference;
+}
 
+Room* Node::parentRoom() {
+  return _parentRoom;
+}
+  
 Node* Node::previousNode() {
   return _previousNode;
 }
@@ -112,10 +145,24 @@ void Node::setBundleName(std::string theName) {
 void Node::setDescription(std::string theDescription) {
   _description = theDescription;
 }
+  
+void Node::setEnterEvent(int theLuaReference) {
+  _hasEnterEvent = true;
+  _luaEnterReference = theLuaReference;
+}
 
 void Node::setFootstep(Audio* theFootstep) {
   _footstep = theFootstep;
   _hasFootstep = true;
+}
+  
+void Node::setLeaveEvent(int theLuaReference) {
+  _hasLeaveEvent = true;
+  _luaLeaveReference = theLuaReference;
+}
+  
+void Node::setParentRoom(Room* room) {
+  _parentRoom = room;
 }
 
 void Node::setPreviousNode(Node* node) {

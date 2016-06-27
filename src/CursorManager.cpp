@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -60,7 +60,7 @@ CursorManager::~CursorManager() {
 ////////////////////////////////////////////////////////////
 
 Action* CursorManager::action() {
-  return _pointerToAction;
+  return &_pointerToAction;
 }
 
 void CursorManager::bindImage() {
@@ -105,7 +105,6 @@ Point CursorManager::position() {
 }
 
 void CursorManager::removeAction() {
-  _pointerToAction = NULL;
   _hasAction = false;
 }
 
@@ -121,12 +120,12 @@ void CursorManager::setOnButton(bool flag) {
   _onButton = flag;
 }
 
-void CursorManager::setAction(Action* theAction) {
+void CursorManager::setAction(Action theAction) {
   _pointerToAction = theAction;
   _hasAction = true;
   
   // Set the image, if available
-  this->_set(theAction->cursor);
+  this->_set(theAction.cursor);
 }
 
 void CursorManager::setCursor(int typeOfCursor) {

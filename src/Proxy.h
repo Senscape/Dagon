@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -27,6 +27,7 @@ extern "C" {
 #include "Platform.h"
 #include "Audio.h"
 #include "Button.h"
+#include "Group.h"
 #include "Image.h"
 #include "Node.h"
 #include "Overlay.h"
@@ -39,6 +40,7 @@ extern "C" {
 
 #define AudioProxyName "Audio"
 #define ButtonProxyName "Button"
+#define GroupProxyName "Group"
 #define ImageProxyName "Image"
 #define NodeProxyName "Node"
 #define OverlayProxyName "Overlay"
@@ -61,9 +63,10 @@ namespace dagon {
 static int DGCheckProxy(lua_State *L, int idx); // Returns the object type
 static Audio* ProxyToAudio(lua_State *L, int idx);
 static Button* ProxyToButton(lua_State *L, int idx);
+//static Group* ProxyToGroup(lua_State *L, int idx);
 static Image* ProxyToImage(lua_State *L, int idx);
 static Node* ProxyToNode(lua_State *L, int idx);
-static Overlay* ProxyToOverlay(lua_State *L, int idx);
+//static Overlay* ProxyToOverlay(lua_State *L, int idx);
 static Room* ProxyToRoom(lua_State *L, int idx);
 static Node* ProxyToSlide(lua_State *L, int idx);
 static Spot* ProxyToSpot(lua_State *L, int idx);
@@ -77,6 +80,7 @@ static Spot* ProxyToSpot(lua_State *L, int idx);
   
 #include "AudioProxy.h"
 #include "ButtonProxy.h"
+#include "GroupProxy.h"
 #include "ImageProxy.h"
 #include "NodeProxy.h"
 #include "OverlayProxy.h"
@@ -125,6 +129,9 @@ int DGCheckProxy(lua_State *L, int idx) {
     if (_checkutype(L, idx, ButtonProxy::className))
       return kObjectButton; // It's a button
     
+    if (_checkutype(L, idx, GroupProxy::className))
+      return kObjectGroup; // It's an group
+    
     if (_checkutype(L, idx, ImageProxy::className))
       return kObjectImage; // It's an image
     
@@ -159,6 +166,11 @@ Audio* ProxyToAudio(lua_State *L, int idx) {
 Button* ProxyToButton(lua_State *L, int idx) {
   ButtonProxy* b = Luna<ButtonProxy>::check(L, idx);
   return b->ptr();
+}
+  
+Group* ProxyToGroup(lua_State *L, int idx) {
+  GroupProxy* g = Luna<GroupProxy>::check(L, idx);
+  return g->ptr();
 }
 
 Image* ProxyToImage(lua_State *L, int idx) {

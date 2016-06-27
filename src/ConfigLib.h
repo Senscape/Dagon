@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -122,6 +122,11 @@ static int ConfigLibGet(lua_State *L) {
     return 1;
   }
   
+  if (strcmp(key, "numOfAudioBuffers") == 0) {
+    lua_pushnumber(L, Config::instance().numOfAudioBuffers);
+    return 1;
+  }
+  
   if (strcmp(key, "script") == 0) {
     lua_pushstring(L, Config::instance().script().c_str());
     return 1;
@@ -226,6 +231,15 @@ static int ConfigLibSet(lua_State *L) {
   
   if (strcmp(key, "mute") == 0)
     Config::instance().mute = (bool)lua_toboolean(L, 3);
+  
+  if (strcmp(key, "numOfAudioBuffers") == 0) {
+    int numOfAudioBuffers = (int)luaL_checknumber(L, 3);
+    
+    if (numOfAudioBuffers > kMaxAudioBuffers)
+      numOfAudioBuffers = kMaxAudioBuffers;
+    
+    Config::instance().numOfAudioBuffers = (int)luaL_checknumber(L, 3);
+  }
   
   if (strcmp(key, "script") == 0)
     Config::instance().setScript(luaL_checkstring(L, 3));
