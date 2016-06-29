@@ -57,6 +57,7 @@ enum ObjectTypes {
   kObjectNode,
   kObjectOverlay,
   kObjectRoom,
+  kObjectSave,
   kObjectSlide,
   kObjectSpot,
   kObjectTexture,

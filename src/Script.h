@@ -83,6 +83,8 @@ class Script {
   static int _globalStartTimer(lua_State *L);
   static int _globalStopTimer(lua_State *L);
   static int _globalVersion(lua_State *L);
+  static int _globalPersist(lua_State *L);
+  static int _globalGetSaves(lua_State *L);
   static int _globalWalkTo(lua_State *L);
   static int _globalWhichRoom(lua_State *L);
   static int _globalZoomOut(lua_State *L);

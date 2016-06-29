@@ -23,8 +23,12 @@
 #include "Proxy.h"
 #include "Script.h"
 #include "TimerManager.h"
+#include "Serializer.h"
+#include "Deserializer.h"
 
 #include "Luna.h"
+
+#include <dirent.h>
 
 // The way the engine is designed, all static Lua functions will have
 // to grab a reference to the Control singleton and Log when required.
@@ -607,7 +611,90 @@ int Script::_globalWalkTo(lua_State *L) {
 
 int Script::_globalVersion(lua_State *L) {
   lua_pushstring(L, DAGON_VERSION_STRING);
-  
+
+  return 1;
+}
+
+int Script::_globalPersist(lua_State *L) {
+  bool overwrite = false;
+  char name[kMaxFileLength];
+  snprintf(name, kMaxFileLength, "%s.%s", luaL_checkstring(L, 1), kDefSaveExtension);
+
+  if (lua_istable(L, 2)) {
+    lua_pushnil(L);
+    while (lua_next(L, 2) != 0) {
+      if (!lua_isstring(L, -2)) {
+        lua_pop(L, 1);
+        continue;
+      }
+
+      lua_pushvalue(L, -2);
+      if (strcmp(lua_tostring(L, -1), "overwrite") == 0)
+        overwrite = lua_toboolean(L, -2);
+      lua_pop(L, 2);
+    }
+  }
+
+  SDL_RWops* file;
+  const std::string path = Config::instance().path(kPathUserData, name, kObjectSave);
+  if ((file = SDL_RWFromFile(path.c_str(), "rb"))) { // Check if file exists
+    SDL_RWclose(file);
+
+    if (!overwrite) {
+      lua_pushboolean(L, false);
+      return 1;
+    }
+  }
+
+  if (!(file = SDL_RWFromFile(path.c_str(), "wb"))) {
+    lua_pushboolean(L, false);
+    lua_pushstring(L, SDL_GetError());
+    return 2;
+  }
+
+  Serializer save(L, file);
+
+  if (!save.writeHeader() || !save.writeGlobals()) {
+    Log::instance().error(kModScript, "Error while saving: %s", SDL_GetError());
+    remove(path.c_str());
+    lua_pushboolean(L, false);
+    return 1;
+  }
+
+  lua_pushboolean(L, true);
+  return 1;
+}
+
+int Script::_globalGetSaves(lua_State *L) {
+  const std::string dirPath = Config::instance().path(kPathUserData, "", kObjectSave);
+  DIR *dir = opendir(dirPath.c_str());
+  if (!dir) {
+    // TODO: More specific error message (what does the errno mean?)
+    Log::instance().error(kModScript, "Couldn't open directory \"%s\". Errno: %d",
+                          dirPath.c_str(), errno);
+    return 0;
+  }
+
+  lua_newtable(L);
+  dirent *entry;
+  while ((entry = readdir(dir)) != nullptr) {
+    const char *dot = strrchr(entry->d_name, '.');
+    if (dot && strcmp(dot + 1, kDefSaveExtension) == 0) {
+      char name[kMaxFileLength];
+      size_t len = strlen(entry->d_name) - strlen(kDefSaveExtension) - 1; // - 1 because of .
+      strncpy(name, entry->d_name, len); // Cut off extension
+      name[len] = '\0';
+
+      const std::string path = Config::instance().path(kPathUserData, entry->d_name, kObjectSave);
+      const std::string preview = Deserializer::readPreview(path);
+
+      lua_pushstring(L, name);
+      lua_pushstring(L, preview.c_str());
+      lua_settable(L, -3);
+    }
+  }
+
+  closedir(dir);
   return 1;
 }
   
@@ -753,6 +840,8 @@ void Script::_registerGlobals() {
     {"startTimer", _globalStartTimer},
     {"stopTimer", _globalStopTimer},
     {"version", _globalVersion},
+    {"persist", _globalPersist},
+    {"getSaves", _globalGetSaves},
     {"walkTo", _globalWalkTo},
     {"whichRoom", _globalWhichRoom},
     {"zoomOut", _globalZoomOut},

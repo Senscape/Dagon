@@ -28,9 +28,11 @@
 #define kDefRoomPath "rooms/"
 #define kDefVideoPath "video/"
 #define kDefResourcePath "resources/"
+#define kDefSavePath "saves/"
 #define kDefConfigFile "config.lua"
 #define kDefLogFile "dagon.log"
 #define kDefTexExtension "tex"
+#define kDefSaveExtension "sav"
 
 namespace dagon {
 

@@ -143,6 +143,8 @@ std::string Config::path(int ofType, const std::string &forFile,
     }
     case kPathUserData: {
       fullPath = _userPath;
+      if (andObject == kObjectSave)
+        fullPath += kDefSavePath;
       break;
     }
     default: {
