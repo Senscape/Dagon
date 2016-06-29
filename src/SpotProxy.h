@@ -275,6 +275,9 @@ public:
   int play(lua_State *L) {
     // WARNING: Potential thread conflict here! Let the manager decide when to pause
     // thread(s).
+    if (s->hasAudio()) {
+      AudioManager::instance().requestAudio(s->audio());
+    }
     
     s->play();
     
