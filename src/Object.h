@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -26,12 +26,14 @@ namespace dagon {
 // Definitions
 ////////////////////////////////////////////////////////////
 
+class Group;
+
 enum FadeSpeeds {
-  kFadeNormal = 200,
-  kFadeSlow = 350,
-  kFadeSlowest = 500,
+  kFadeNormal = 250,
+  kFadeSlow = 1500,
+  kFadeSlowest = 3000,
   kFadeFast = 100,
-  kFadeFastest = 50
+  kFadeFastest = 10
 };
 
 enum FadeTypes {
@@ -50,6 +52,7 @@ enum ObjectTypes {
   // them here
   kObjectCursor,
   kObjectFont,
+  kObjectGroup,
   kObjectImage,
   kObjectNode,
   kObjectOverlay,
@@ -82,17 +85,19 @@ class Object {
   unsigned int type();
   
   // Sets
+  void forceFadeLevel(float level);
   void setDefaultFadeLevel(float level);
   void setFadeLevel(float level);
   void setFadeSpeed(int speed);
+  void setGroup(Group* theGroup);
   void setLuaObject(int object);
   void setName(std::string aName);
   void setStatic();
   void setType(unsigned int theType);
   
   // State changes
-  void disable();
-  void enable();
+  void disable(bool forced = false);
+  void enable(bool forced = false);
   void fadeIn();
   void fadeOut();
   void release();
@@ -101,6 +106,8 @@ class Object {
   void updateFade();
   
  private:
+  Group* _attachedGroup;
+  
   unsigned int _id;
   int _luaObject;
   std::string _name;
@@ -113,6 +120,7 @@ class Object {
   float _fadeSpeed;
   float _fadeTarget;
   bool _isEnabled;
+  bool _isGrouped;
   bool _isStatic;
   
   Object(const Object&);

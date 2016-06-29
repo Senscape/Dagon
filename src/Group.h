@@ -11,65 +11,56 @@
 //
 ////////////////////////////////////////////////////////////
 
-#ifndef DAGON_VIDEOMANAGER_H_
-#define DAGON_VIDEOMANAGER_H_
+#ifndef DAGON_GROUP_H_
+#define DAGON_GROUP_H_
 
 ////////////////////////////////////////////////////////////
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <SDL2/SDL_mutex.h>
-#include <SDL2/SDL_thread.h>
+#include <string>
+#include <vector>
 
-#include "Platform.h"
-#include "Video.h"
+#include "Object.h"
 
 namespace dagon {
-
+  
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
 
-class Config;
-class Log;
+class Spot;
 
 ////////////////////////////////////////////////////////////
-// Interface - Singleton class
+// Interface
 ////////////////////////////////////////////////////////////
 
-class VideoManager {
-  Config& config;
-  Log& log;
+class Group : public Object {
+ public:
+  Group();
+  ~Group() {};
   
-  SDL_mutex* _mutex;
-  SDL_Thread* _thread;
-  std::vector<Video*> _arrayOfVideos;
-  std::vector<Video*> _arrayOfActiveVideos;
+  // Gets
+  std::string description();
   
-  bool _isInitialized;
-  bool _isRunning;
+  // Sets
+  void setDescription(std::string theDescription);
   
-  static int _runThread(void *ptr);
+  // State changes
+  Spot* addSpot(Spot* aSpot);
+  void disable();
+  void enable();
+  void stop();
+  void play();
   
-  VideoManager();
-  VideoManager(VideoManager const&);
-  VideoManager& operator=(VideoManager const&);
-  ~VideoManager();
+ private:
+  std::vector<Spot*> _arrayOfSpots;
+  std::string _description;
   
-public:
-  static VideoManager& instance() {
-    static VideoManager videoManager;
-    return videoManager;
-  }
-  
-  void init();
-  void flush();
-  void registerVideo(Video* target);
-  void requestVideo(Video* target);
-  void terminate();
-  bool update();
+  Group(const Group&);
+  void operator=(const Group&);
 };
   
 }
 
-#endif // DAGON_VIDEOMANAGER_H_
+#endif // DAGON_GROUP_H_

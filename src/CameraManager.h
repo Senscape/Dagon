@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -47,7 +47,6 @@ enum DGCamDefaults {
   DGCamInertia = 350, // Maintain motion after panning stops
   DGCamMaxSpeed = 25,
   DGCamSpeedFactor = 750000
-  
 };
 
 enum DGCamEffects {
@@ -91,6 +90,8 @@ class CameraManager {
   
   bool _canBreathe;
   bool _canWalk;
+  
+  bool _fovAdjustment;
   
   float _accelH;
   float _accelV;
@@ -168,6 +169,7 @@ public:
   int angleVertical();
   int cursorWhenPanning();
   float fieldOfView();
+  int horizontalLimit();
   int inertia();
   int maxSpeed();
   float motionHorizontal();
@@ -184,11 +186,12 @@ public:
   void setAngleVertical(float vertical);
   void setBreathe(bool enabled);
   void setFieldOfView(float fov);
+  void setHorizontalLimit(float limit);  
   void setInertia(int theInertia);
   void setMaxSpeed(int theSpeed);
   void setNeutralZone(int zone);
   void setSpeedFactor(int speed);
-  void setTargetAngle(float horizontal, float vertical);
+  void setTargetAngle(float horizontal, float vertical, bool fovAdjustment);
   void setVerticalLimit(float limit);
   void setViewport(int width, int height);
   void setWalk(bool enabled);

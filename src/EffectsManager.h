@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -20,6 +20,7 @@
 
 #include <stdint.h>
 
+#include "Configurable.h"
 #include "Platform.h"
 
 namespace dagon {
@@ -28,38 +29,32 @@ namespace dagon {
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define DGEffectsFileName       "DGShaderData.fs"
-#define DGEffectsReadFromFile   0
-#define DGEffectsMaxDust        10000
-#define DGEffectsDustFactor     32767.0f
+#define kEffectsFileName       "DGShaderData.fs"
+#define kEffectsReadFromFile   0
+#define kEffectsMaxDust        10000
+#define kEffectsDustFactor     32767.0f
 
-enum DGEffects {
-  DGEffectAdjust,
-  DGEffectDust,
-  DGEffectMotionBlur,
-  DGEffectNoise,
-  DGEffectSepia,
-  DGEffectSharpen,
-  DGEffectThrob
-};
+namespace effects {
 
-enum DGEffectsValues {
-  DGEffectAdjustBrightness,
-  DGEffectAdjustSaturation,
-  DGEffectAdjustContrast,
-  DGEffectDustColor,
-  DGEffectDustIntensity,
-  DGEffectDustSize,
-  DGEffectDustSpeed,
-  DGEffectDustSpread,
-  DGEffectMotionBlurIntensity,
-  DGEffectNoiseIntensity,
-  DGEffectSepiaIntensity,
-  DGEffectSharpenRatio,
-  DGEffectSharpenIntensity,
-  DGEffectThrobStyle,
-  DGEffectThrobIntensity
-};
+typedef enum {
+  kBrightness,
+  kContrast,
+  kSaturation,
+  kDust,
+  kDustColor,
+  kDustSize,
+  kDustSpeed,
+  kDustSpread,
+  kMotionBlur,
+  kNoise,
+  kSepia,
+  kSharpen,
+  kSharpenRatio,
+  kThrob,
+  kThrobStyle
+} Settings;
+
+}
 
 typedef struct {
   GLfloat x,y,z;
@@ -67,6 +62,13 @@ typedef struct {
   GLfloat xd,yd,zd;
   GLfloat cs;
 } DGParticle;
+  
+typedef struct {
+  int numOfParticles;
+  float size;
+  int speed;
+  int spread;
+} DGDustData;
 
 class CameraManager;
 class Config;
@@ -83,54 +85,24 @@ extern "C" const char kShaderData[];
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
 
-class EffectsManager {
-  Config& config;
+class EffectsManager : public Configurable<effects::Settings> {
   CameraManager& cameraManager;
+  Config& config;
   TimerManager& timerManager;
   
   GLuint _fragment;
   GLuint _program;
-  
-  DGParticle _particles[DGEffectsMaxDust];
-  
+  DGDustData _dustData;
+  DGParticle _particles[kEffectsMaxDust];
   Texture* _dustTexture;
   char* _shaderData;
-  
-  bool _adjustEnabled;
-  float _adjustBrightness;
-  float _adjustSaturation;
-  float _adjustContrast;
-  
-  bool _dustEnabled;
-  uint32_t _dustColor;
-  float _dustIntensity;
-  float _dustSize;
-  float _dustSpeed;
-  float _dustSpread;
-  
-  bool _motionBlurEnabled;
-  float _motionBlurIntensity;
-  
-  bool _noiseEnabled;
-  float _noiseIntensity;
-  
-  bool _sepiaEnabled;
-  float _sepiaIntensity;
-  
-  bool _sharpenEnabled;
-  float _sharpenRatio;
-  float _sharpenIntensity;
-  
-  bool _throbEnabled;
-  int _throbStyle;
-  float _throbIntensity;
-  
   bool _isActive;
   bool _isInitialized;
-  
   bool _textFileRead();
   
+  void _calculateDustData();
   void _buildParticle(int idx); // For dust
+  void _updateShader(int theEffect, float withValue);
   
   EffectsManager();
   EffectsManager(EffectsManager const&);
@@ -145,14 +117,11 @@ public:
   
   void drawDust();
   void init();
-  bool isEnabled(int effectID);
+  void loadSettings(const SettingCollection& theSettings);
   void pause();
   void play();
-  void setEnabled(int effectID, bool enabled);
-  void setValuef(int valueID, float theValue);
-  void setValuei(int valueID, int theValue);
+  void set(const std::string& theName, float theValue);
   void update();
-  float value(int valueID);
 };
   
 }

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -63,6 +63,7 @@ class Script {
   
   int _ref;
   void _error(int result);
+  static int _globalCopy(lua_State *L);
   static int _globalCurrentNode(lua_State *L);
   static int _globalCurrentRoom(lua_State *L);
   static int _globalCutscene(lua_State *L);
@@ -73,6 +74,7 @@ class Script {
   static int _globalPrint(lua_State *L);
   static int _globalQueue(lua_State *L);
   static int _globalRegister(lua_State *L);
+  static int _globalReplace(lua_State *L);
   static int _globalRoom(lua_State *L);
   static int _globalSetFont(lua_State *L);
   static int _globalSleep(lua_State *L);
@@ -81,6 +83,9 @@ class Script {
   static int _globalStartTimer(lua_State *L);
   static int _globalStopTimer(lua_State *L);
   static int _globalVersion(lua_State *L);
+  static int _globalWalkTo(lua_State *L);
+  static int _globalWhichRoom(lua_State *L);
+  static int _globalZoomOut(lua_State *L);
   void _registerEnums();
   void _registerGlobals();
   

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -21,6 +21,7 @@
 #include "Config.h"
 #include "CursorManager.h"
 #include "Font.h"
+#include "Log.h"
 #include "Node.h"
 #include "RenderManager.h"
 #include "Room.h"
@@ -33,7 +34,7 @@
 
 namespace dagon {
 
-Video _cutscene; // FIXME: Static to avoid Theora issues, revise later
+static Video _cutscene; // FIXME: Static to avoid Theora issues, revise later
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -76,7 +77,7 @@ void Scene::clear() {
   cameraManager.update();
 }
 
-void Scene::drawSpots() {
+void Scene::drawSpots(bool disableVideos) {
   bool processed = false;
   
   if (_canDrawSpots) {
@@ -93,24 +94,26 @@ void Scene::drawSpots() {
         Spot* spot = currentNode->currentSpot();
         
         if (spot->hasTexture() && spot->isEnabled()) {
-          
-          if (spot->hasVideo()) {
-            // If it has a video, we need to check if it's playing
-            if (spot->isPlaying()) { // FIXME: Must stop the spot later!
-              if (spot->video()->hasNewFrame()) {
-                DGFrame* frame = spot->video()->currentFrame();
-                Texture* texture = spot->texture();
-                texture->loadRawData(frame->data, frame->width, frame->height);
+          if (spot->texture()->isLoaded()) {
+			// FIXME: This was the culprit of a crash that should be investigated someday
+            if (spot->hasVideo()) {
+              // If it has a video, we need to check if it's playing
+              if (spot->isPlaying()) { // FIXME: Must stop the spot later!
+                if (spot->video()->hasNewFrame() && !disableVideos) {
+                  DGFrame* frame = spot->video()->currentFrame();
+                  Texture* texture = spot->texture();
+                  texture->loadRawData(frame->data, frame->width, frame->height);
+                }
+                
+                spot->texture()->bind();
+                renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
               }
-              
+            }
+            else {
+              // Draw right away...
               spot->texture()->bind();
               renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
             }
-          }
-          else {
-            // Draw right away...
-            spot->texture()->bind();
-            renderManager.drawPolygon(spot->arrayOfCoordinates(), spot->face());
           }
         }
       } while (currentNode->iterateSpots());
@@ -188,7 +191,7 @@ bool Scene::scanSpots() {
           do {
             Spot* spot = currentNode->currentSpot();
             if (color == spot->color()) {
-              cursorManager.setAction(spot->action());
+              cursorManager.setAction(*spot->action());
               foundAction = true;
               
               break;
@@ -249,11 +252,13 @@ bool Scene::drawCutscene() {
     _cutsceneTexture->bind();
     
     // Note this is inverted
-    float coords[] = {0, 0,
-      config.displayWidth, 0,
-      config.displayWidth, config.displayHeight,
-      0, config.displayHeight};
-    
+    float coords[] = {
+                               0,                           0,
+      float(config.displayWidth),                           0,
+      float(config.displayWidth), float(config.displayHeight),
+                               0, float(config.displayHeight)
+    };
+
     renderManager.enablePostprocess();
     cameraManager.beginOrthoView();
     renderManager.enableTextures();
@@ -300,11 +305,13 @@ void Scene::drawSplash() {
   _splashTexture->bind();
   
   // Note this is inverted
-  float coords[] = {0, 0,
-    config.displayWidth, 0,
-    config.displayWidth, config.displayHeight,
-    0, config.displayHeight};
-  
+  float coords[] = {
+                             0,                           0,
+    float(config.displayWidth),                           0,
+    float(config.displayWidth), float(config.displayHeight),
+                             0, float(config.displayHeight)
+  };
+
   cameraManager.beginOrthoView();
   renderManager.enableTextures();
   renderManager.drawSlide(coords);

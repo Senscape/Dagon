@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -103,7 +103,7 @@ class Spot : public Object {
   bool _hasAudio;
   bool _hasColor;
   bool _hasTexture;
-  bool _hasVideo;
+  bool _hasVideo; 
   bool _isPlaying;
   float _volume;
   int _xOrigin;

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -56,7 +56,7 @@ class CursorManager : public Object {
   bool _hasImage;
   bool _isDragging;
   bool _onButton; // Decide in Control?
-  Action* _pointerToAction;
+  Action _pointerToAction;
   int _size;
   int _x;
   int _y;
@@ -87,7 +87,7 @@ public:
   void removeAction();
   void setDragging(bool flag);
   void setOnButton(bool flag);
-  void setAction(Action* theAction);
+  void setAction(Action theAction);
   void setCursor(int typeOfCursor);
   void setSize(int size);
   void updateCoords(int x, int y);

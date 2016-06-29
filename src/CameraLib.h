@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -46,6 +46,11 @@ static int CameraLibGet(lua_State *L) {
   
   if (strcmp(key, "horizontal") == 0) {
     lua_pushnumber(L, CameraManager::instance().angleHorizontal());
+    return 1;
+  }
+  
+  if (strcmp(key, "horizontalLimit") == 0) {
+    lua_pushnumber(L, CameraManager::instance().horizontalLimit());
     return 1;
   }
   
@@ -98,6 +103,9 @@ static int CameraLibSet(lua_State *L) {
   
   if (strcmp(key, "horizontal") == 0)
     CameraManager::instance().setAngleHorizontal(static_cast<float>(lua_tonumber(L, 3)));
+
+  if (strcmp(key, "horizontalLimit") == 0)
+    CameraManager::instance().setHorizontalLimit(static_cast<float>(lua_tonumber(L, 3)));
   
   if (strcmp(key, "inertia") == 0)
     CameraManager::instance().setInertia(static_cast<int>(lua_tonumber(L, 3)));

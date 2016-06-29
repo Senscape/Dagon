@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -170,7 +170,7 @@ bool Interface::scanOverlays() {
     itOverlay = _arrayOfOverlays.rbegin();
     
     while (itOverlay != _arrayOfOverlays.rend()) {
-      if ((*itOverlay)->isEnabled()) {
+      if ((*itOverlay)->isEnabled() && !(*itOverlay)->isLocked()) {
         
         if ((*itOverlay)->hasButtons()) {
           (*itOverlay)->beginIteratingButtons(true);
@@ -186,7 +186,7 @@ bool Interface::scanOverlays() {
                 cursorManager.setOnButton(true);
                 if (button->hasAction()) {
                   Action action = button->action();
-                  cursorManager.setAction(&action);
+                  cursorManager.setAction(action);
                 }
                 
                 return true;

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -191,12 +191,12 @@ void FeedManager::update() {
       // Shadow code
       if (DGFeedShadowEnabled) {
         _feedFont->setColor(kColorBlack & (*it).color);
-        _feedFont->print((*it).location.x + DGFeedShadowDistance,
+        _feedFont->wPrint((*it).location.x + DGFeedShadowDistance,
                          (*it).location.y + displace + DGFeedShadowDistance, (*it).text);
       }
       
       _feedFont->setColor((*it).color);
-      _feedFont->print((*it).location.x, (*it).location.y + displace, (*it).text);
+      _feedFont->wPrint((*it).location.x, (*it).location.y + displace, (*it).text);
     }
     
     ++it;

@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -105,7 +105,7 @@ void RenderManager::init() {
   
   _blendTexture = new Texture(0, 0, 0); // All default values
   _fadeTexture = new Texture(1, 1, 0); // Minimal black texture
-  _fadeTexture->setFadeSpeed(kFadeFastest);
+  _fadeTexture->setFadeSpeed(kFadeFast);
   
   // NOTE: Here we read the default screen values to calculate the aspect ratio
   for (int i = 0; i < (kDefCursorDetail + 1) * 2; i += 2) {
@@ -387,6 +387,10 @@ void RenderManager::drawPolygon(std::vector<int> withArrayOfCoordinates, unsigne
         cy = 0.0f;
         cz = (GLfloat)center.y / (GLfloat)(cubeTextureSize >> 1);
         break;
+      default:
+        cx = 0.0f;
+        cy = 0.0f;
+        cz = 0.0f;
     }
     
     Vector vector = this->project(cx, cy, cz);
@@ -400,7 +404,7 @@ void RenderManager::drawPolygon(std::vector<int> withArrayOfCoordinates, unsigne
   glVertexPointer(3, GL_FLOAT, 0, spotVertCoords);
   glDrawArrays(GL_TRIANGLE_FAN, 0, sizeOfArray >> 1);
   
-  delete spotVertCoords;
+  delete[] spotVertCoords;
   
   glPopMatrix();
 }
@@ -414,11 +418,13 @@ void RenderManager::drawPostprocessedView() {
       effectsManager.update();
     }
     
-    float coords[] = {0, config.displayHeight,
-      config.displayWidth, config.displayHeight,
-      config.displayWidth, 0,
-      0, 0};
-    
+    float coords[] = {
+                               0, float(config.displayHeight),
+      float(config.displayWidth), float(config.displayHeight),
+      float(config.displayWidth),                           0,
+                               0,                           0
+    };
+
     this->drawSlide(coords);
     
     effectsManager.pause();
@@ -459,7 +465,7 @@ void RenderManager::setColor(uint32_t color, float alpha) {
 }
 
 // FIXME: glReadPixels has an important performace hit on older computers. Improve.
-uint32_t    RenderManager::testColor(int xPosition, int yPosition) {
+uint32_t RenderManager::testColor(int xPosition, int yPosition) {
   // This is static because it sometimes throws a stack corruption error
   static GLubyte pixel[3];
   GLint r, g, b;
@@ -523,8 +529,8 @@ void RenderManager::copyView() {
 
 void RenderManager::blendView() {
   if (_blendNextUpdate) {
-    int xStretch;
-    int yStretch;
+    float xStretch;
+    float yStretch;
     
     if (_fadeWithZoom) {
       xStretch = static_cast<int>(_blendOpacity) * (config.displayWidth >> 2);
@@ -540,11 +546,13 @@ void RenderManager::blendView() {
     }
     
     // Note the coordinates here are inverted because of the way the screen is captured
-    float coords[] = {-xStretch, config.displayHeight + yStretch,
-      config.displayWidth + xStretch, config.displayHeight + yStretch,
-      config.displayWidth + xStretch, -yStretch,
-      -xStretch, -yStretch};
-    
+    float coords[] = {
+                                  -xStretch, float(config.displayHeight) + yStretch,
+      float(config.displayWidth) + xStretch, float(config.displayHeight) + yStretch,
+      float(config.displayWidth) + xStretch,                              -yStretch,
+                                  -xStretch,                              -yStretch
+    };
+
     glColor4f(1.0f, 1.0f, 1.0f, 1.0f - _blendOpacity);
     
     _blendTexture->bind();
@@ -584,10 +592,12 @@ void RenderManager::reshape() {
 void RenderManager::fadeView() {
   // FIXME: This is done every time and it sucks
   
-  float coords[] = {0, 0,
-    config.displayWidth, 0,
-    config.displayWidth, config.displayHeight,
-    0, config.displayHeight};
+  float coords[] = {
+                             0,                           0,
+    float(config.displayWidth),                           0,
+    float(config.displayWidth), float(config.displayHeight),
+                             0, float(config.displayHeight)
+  };
   
   _fadeTexture->updateFade();
   _fadeTexture->bind();

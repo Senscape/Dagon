@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -19,6 +19,7 @@
 
 #include "Config.h"
 #include "Object.h"
+#include "Script.h"
 
 namespace dagon {
 
@@ -45,6 +46,7 @@ Config::Config() {
   fullscreen = kDefFullscreen;
   log = kDefLog;
   mute = kDefMute;
+  numOfAudioBuffers = kDefNumOfAudioBuffers;
   showHelpers = kDefShowHelpers;
   showSplash = kDefShowSplash;
   showSpots = kDefShowSpots;
@@ -52,6 +54,7 @@ Config::Config() {
   subtitles = kDefSubtitles;
   texCompression = kDefTexCompression;
   verticalSync = kDefVerticalSync;
+  _scriptName = kDefScriptFile;
   _resPath = kDefResourcePath;
   _texExtension = kDefTexExtension;
   
@@ -87,41 +90,52 @@ std::string Config::path(int ofType, const std::string &forFile,
     case kPathApp: {
       fullPath = _appPath;
       if (autopaths) {
-        if (andObject == kObjectRoom)
+        if (andObject == kObjectRoom) {
+          fullPath += "scripts/";
           fullPath += kDefRoomPath;
+        }
       }
       break;
     }
     case kPathResources: {
       fullPath = _resPath;
       if (autopaths) {
-        switch (andObject) {
-          case kObjectAudio: {
-            fullPath += kDefAudioPath;
-            break;
-          }
-          case kObjectCursor: {
-            fullPath += kDefCursorPath;
-            break;
-          }
-          case kObjectFont: {
-            fullPath += kDefFontPath;
-            break;
-          }
-          case kObjectImage: {
-            fullPath += kDefImagePath;
-            break;
-          }
-          case kObjectNode: {
-            fullPath += kDefNodePath;
-            break;
-          }
-          case kObjectVideo: {
-            fullPath += kDefVideoPath;
-            break;
-          }
-          default: {
-            assert(false);
+        // This is a temporary hack until the Resources manager is implemented
+        if (Script::instance().isExecutingModule()) {
+          std::string roomPath = Script::instance().module();
+          fullPath += "rooms/";
+          fullPath += roomPath;
+          fullPath += "/";
+        }
+        else {
+          switch (andObject) {
+            case kObjectAudio: {
+              fullPath += kDefAudioPath;
+              break;
+            }
+            case kObjectCursor: {
+              fullPath += kDefCursorPath;
+              break;
+            }
+            case kObjectFont: {
+              fullPath += kDefFontPath;
+              break;
+            }
+            case kObjectImage: {
+              fullPath += kDefImagePath;
+              break;
+            }
+            case kObjectNode: {
+              fullPath += kDefNodePath;
+              break;
+            }
+            case kObjectVideo: {
+              fullPath += kDefVideoPath;
+              break;
+            }
+            default: {
+              assert(false);
+            }
           }
         }
       }

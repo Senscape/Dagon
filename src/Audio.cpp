@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -21,7 +21,6 @@
 #include <sstream>
 
 #include "Audio.h"
-#include "Config.h"
 #include "Language.h"
 #include "Log.h"
 
@@ -35,9 +34,11 @@ Audio::Audio() :
 config(Config::instance()),
 log(Log::instance())
 {
+  _doesAutoplay = true;
   _isLoaded = false;
   _isLoopable = false;
   _isMatched = false;
+  _isVarying = false;
   _state = kAudioInitial;
   _oggCallbacks.read_func = _oggRead;
   _oggCallbacks.seek_func = _oggSeek;
@@ -62,6 +63,10 @@ Audio::~Audio() {
 // Implementation - Checks
 ////////////////////////////////////////////////////////////
 
+bool Audio::doesAutoplay() {
+  return _doesAutoplay;
+}
+  
 bool Audio::isLoaded() {
   bool value = false;
   if (SDL_LockMutex(_mutex) == 0) {
@@ -87,6 +92,10 @@ bool Audio::isPlaying() {
   }
   return value;
 }
+  
+bool Audio::isVarying() {
+  return _isVarying;
+}
 
 ////////////////////////////////////////////////////////////
 // Implementation - Gets
@@ -104,49 +113,64 @@ int Audio::state() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
+void Audio::setAutoplay(bool autoplay) {
+  _doesAutoplay = autoplay;
+}
+  
 void Audio::setLoopable(bool loopable) {
   _isLoopable = loopable;
 }
 
 void Audio::setPosition(unsigned int face, Point origin) {
-  float x = origin.x / kDefTexSize;
-  float y = origin.y / kDefTexSize;
+  if (SDL_LockMutex(_mutex) == 0) {  
+    if (_isLoaded) {
+      float x = origin.x / kDefTexSize;
+      float y = origin.y / kDefTexSize;
   
-  switch (face) {
-    case kNorth: {
-      alSource3f(_alSource, AL_POSITION, x, y, -1.0f);
-      break;
-    }
-    case kEast: {
-      alSource3f(_alSource, AL_POSITION, 1.0f, y, x);
-      break;
-    }
-    case kSouth: {
-      alSource3f(_alSource, AL_POSITION, -x, y, 1.0f);
-      break;
-    }
-    case kWest: {
-      alSource3f(_alSource, AL_POSITION, -1.0f, y, -x);
-      break;
-    }
-    case kUp: {
-      alSource3f(_alSource, AL_POSITION, 0.0f, 1.0f, 0.0f);
-      break;
-    }
-    case kDown: {
-      alSource3f(_alSource, AL_POSITION, 0.0f, -1.0f, 0.0f);
-      break;
-    }
-    default: {
-      assert(false);
-    }
+      switch (face) {
+        case kNorth: {
+          alSource3f(_alSource, AL_POSITION, x, y, -1.0f);
+          break;
+        }
+        case kEast: {
+          alSource3f(_alSource, AL_POSITION, 1.0f, y, x);
+          break;
+        }
+        case kSouth: {
+          alSource3f(_alSource, AL_POSITION, -x, y, 1.0f);
+          break;
+        }
+        case kWest: {
+          alSource3f(_alSource, AL_POSITION, -1.0f, y, -x);
+          break;
+        }
+        case kUp: {
+          alSource3f(_alSource, AL_POSITION, 0.0f, 1.0f, 0.0f);
+          break;
+        }
+        case kDown: {
+          alSource3f(_alSource, AL_POSITION, 0.0f, -1.0f, 0.0f);
+          break;
+        }
+        default: {
+          assert(false);
+        }
+      }
+  
+      _verifyError("position");
+	}
+    SDL_UnlockMutex(_mutex);
+  } else {
+    log.error(kModAudio, "%s", kString18002);
   }
-  
-  _verifyError("position");
 }
 
 void Audio::setResource(std::string fileName) {
   _resource.name = fileName;
+}
+  
+void Audio::setVarying(bool varying) {
+  _isVarying = varying;
 }
 
 ////////////////////////////////////////////////////////////
@@ -189,19 +213,20 @@ void Audio::load() {
           log.error(kModAudio, "%s: %s", kString16009, fileToLoad.c_str());
         }
         
-        alGenBuffers(kAudioBuffers, _alBuffers);
+        alGenBuffers(config.numOfAudioBuffers, _alBuffers);
         alGenSources(1, &_alSource);
         alSource3f(_alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
         alSource3f(_alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
         alSource3f(_alSource, AL_DIRECTION, 0.0f, 0.0f, 0.0f);
         
-        for (int i = 0; i < kAudioBuffers; i++) {
-          if (!_fillBuffer(&_alBuffers[i])) {
-            _verifyError("prebuffer");
+		int buffersRead = 0;
+        for (buffersRead = 0; buffersRead < config.numOfAudioBuffers; buffersRead++) {
+          if (_fillBuffer(&_alBuffers[buffersRead]) == kAudioStreamEOF) {
+            break;
           }
         }
-        alSourceQueueBuffers(_alSource, kAudioBuffers, _alBuffers);
-        
+        alSourceQueueBuffers(_alSource, buffersRead, _alBuffers);
+        _verifyError("prebuffer");
         if (config.mute || this->fadeLevel() < 0.0) {
           alSourcef(_alSource, AL_GAIN, 0.0f);
         } else {
@@ -230,6 +255,11 @@ void Audio::play() {
     if (_isLoaded && (_state != kAudioPlaying)) {
       if (_isMatched)
         ov_time_seek(&_oggStream, _matchedAudio->cursor());
+      
+      if (_isVarying) {
+        float p = ((rand() % 20) + 90) / 100.0f;
+        alSourcef(_alSource, AL_PITCH, p);
+      }
       alSourcePlay(_alSource);
       _state = kAudioPlaying;
       _verifyError("play");
@@ -277,7 +307,7 @@ void Audio::unload() {
       }
       _emptyBuffers();
       alDeleteSources(1, &_alSource);
-      alDeleteBuffers(kAudioBuffers, _alBuffers);
+      alDeleteBuffers(config.numOfAudioBuffers, _alBuffers);
       ov_clear(&_oggStream);
       delete[] _resource.data;
       _isLoaded = false;
@@ -303,8 +333,6 @@ void Audio::update() {
       }
       
       // Run fade operations
-      // TODO: Better change the name of the Object "updateFade" function,
-      // it's somewhat confusing.
       this->updateFade();
       
       // FIXME: Not very elegant as we're doing this check every time
@@ -331,17 +359,24 @@ void Audio::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
-bool Audio::_fillBuffer(ALuint* buffer) {
+int Audio::_fillBuffer(ALuint* buffer) {
   // This is a failsafe; if this is true, we won't attempt to stream anymore
   static bool _hasStreamingError = false;
   
   if (!_hasStreamingError) {
+    // Prevent audio cuts if file size too small
+    int bufferSize = config.audioBuffer;
+    if (static_cast<int>(_resource.dataSize) < bufferSize) {
+      //log.trace(kModAudio, "Buffer size: %d, file size: %d", bufferSize, _resource.dataSize);
+      bufferSize = static_cast<int>(_resource.dataSize);
+    }
+    
     char* data;
-    data = new char[config.audioBuffer];
+    data = new char[bufferSize];
     int size = 0;
-    while (size < config.audioBuffer) {
+    while (size < bufferSize) {
       int section;
-      long result = ov_read(&_oggStream, data + size, config.audioBuffer - size,
+      long result = ov_read(&_oggStream, data + size, bufferSize - size,
                             0, 2, 1, &section);
       if (result > 0) {
         size += static_cast<int>(result);
@@ -354,7 +389,7 @@ bool Audio::_fillBuffer(ALuint* buffer) {
           ov_raw_seek(&_oggStream, 0);
           _state = kAudioStopped;
         }
-        return false;
+        return kAudioStreamEOF;
       } else if (result == OV_HOLE) {
         // May return OV_HOLE after we rewind the stream, so we just re-loop.
         continue;
@@ -362,14 +397,14 @@ bool Audio::_fillBuffer(ALuint* buffer) {
         // Error
         log.error(kModAudio, "%s: %s", kString16007, _resource.name.c_str());
         _hasStreamingError = true;
-        return false;
+        return kAudioStreamError;
       }
     }
     alBufferData(*buffer, _alFormat, data, size, _rate);
     delete[] data;
-    return true;
+    return kAudioStreamOK;
   } else {
-    return false;
+    return kAudioGenericError;
   }
 }
 

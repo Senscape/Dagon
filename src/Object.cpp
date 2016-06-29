@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -15,6 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "Group.h"
 #include "Object.h"
 
 namespace dagon {
@@ -32,6 +33,7 @@ Object::Object() {
   _fadeLevel = 1.0f;
   _fadeTarget = 1.0f;
   _isEnabled = true;
+  _isGrouped = false;  
   _isStatic = false;
   _id = ++globalID;
   this->setFadeSpeed(kFadeNormal);
@@ -85,6 +87,13 @@ unsigned int Object::type() {
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
 
+void Object::forceFadeLevel(float level) {
+  _defaultFade = level;
+  _fadeLevel = level;
+  _fadeTarget = level;
+  _fadeDirection = kFadeNone;
+}
+  
 void Object::setDefaultFadeLevel(float level) {
   _defaultFade = level;
   this->setFadeLevel(_defaultFade);
@@ -103,6 +112,11 @@ void Object::setFadeLevel(float level) {
 
 void Object::setFadeSpeed(int speed) {
   _fadeSpeed = 1.0f / static_cast<float>(speed);
+}
+  
+void Object::setGroup(Group* theGroup) {
+  _attachedGroup = theGroup;
+  _isGrouped = true;
 }
 
 void Object::setLuaObject(int object) {
@@ -126,12 +140,18 @@ void Object::setStatic() {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-void Object::disable() {
-  _isEnabled = false;
+void Object::disable(bool forced) {
+  if (_isGrouped && !forced)
+    _attachedGroup->disable();
+  else
+    _isEnabled = false;
 }
 
-void Object::enable() {
-  _isEnabled = true;
+void Object::enable(bool forced) {
+  if (_isGrouped && !forced)
+    _attachedGroup->enable();
+  else
+    _isEnabled = true;
 }
 
 void Object::fadeIn() {

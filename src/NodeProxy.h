@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -112,7 +112,7 @@ public:
     lua_pushnil(L);
     while (lua_next(L, 1) != 0) {
       const char* key = lua_tostring(L, -2);
-      int dir;
+      int dir = kNorth;
       
       // We can only read the key as a string, so we have no choice but
       // do an ugly nesting of strcmps()
@@ -151,6 +151,22 @@ public:
     
   }
   
+  // Set an onEnter event
+  int onEnter(lua_State *L) {
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    n->setEnterEvent(ref);
+    
+    return 0;
+  }
+  
+  // Set an onEnter event
+  int onLeave(lua_State *L) {
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    n->setLeaveEvent(ref);
+    
+    return 0;
+  }
+  
   // Set a custom footstep
   int setFootstep(lua_State *L) {
     if (DGCheckProxy(L, 1) == kObjectAudio) {
@@ -161,6 +177,7 @@ public:
       // If not, create and set (this is later deleted by the Audio Manager)
       Audio* audio = new Audio;
       audio->setResource(luaL_checkstring(L, 1));
+      audio->setVarying(true); // We force variation for footsteps
       
       AudioManager::instance().registerAudio(audio);
       
@@ -186,6 +203,8 @@ Luna<NodeProxy>::RegType NodeProxy::methods[] = {
   ObjectMethods(NodeProxy),
   method(NodeProxy, addSpot),
   method(NodeProxy, link),
+  method(NodeProxy, onEnter),
+  method(NodeProxy, onLeave),
   method(NodeProxy, setFootstep),
   {0,0}
 };

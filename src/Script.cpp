@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -94,6 +94,11 @@ void Script::init() {
   else
     log.error(kModScript, "%s", kString14015);
   
+  // TODO: Temporarily moved this here, even though Control should report this
+  log.trace(kModControl, "========================================");
+  log.info(kModControl, "%s: %s", kString12001, DAGON_VERSION_STRING);
+  log.info(kModControl, "%s: %d", kString12004, DAGON_BUILD);
+  
   log.trace(kModScript, "%s", kString14001);
   log.info(kModScript, "%s: %s", kString14002, LUA_RELEASE);
   
@@ -101,11 +106,13 @@ void Script::init() {
   _registerEnums();
   
   // Config modules path
-  luaL_dostring(_L, "package.path = package.path .. \";Modules/?.lua\"");
+  luaL_dostring(_L, "package.path = package.path .. \";modules/?.lua\"");
+  luaL_dostring(_L, "package.path = package.path .. \";scripts/?.lua\"");
   
   // Register all proxys
   Luna<AudioProxy>::Register(_L);
   Luna<ButtonProxy>::Register(_L);
+  Luna<GroupProxy>::Register(_L);
   Luna<ImageProxy>::Register(_L);
   Luna<NodeProxy>::Register(_L);
   Luna<OverlayProxy>::Register(_L);
@@ -165,13 +172,19 @@ void Script::init() {
   
   // We're ready to roll, let's attempt to load the script in a Lua thread
   _thread = lua_newthread(_L);
-  snprintf(script, kMaxFileLength, "%s.lua", config.script().c_str());
-  if (luaL_loadfile(_thread, config.path(kPathApp, script, kObjectGeneric).c_str()) == 0)
+  snprintf(script, kMaxFileLength, "scripts/%s", config.script().c_str());
+  int s = luaL_loadfile(_thread, config.path(kPathApp, script, kObjectGeneric).c_str());
+  if (s == 0)
     _isInitialized = true;
   else {
     // Not found!
     log.error(kModScript, "%s: %s", kString14006, script);
     Control::instance().processKey(kKeyTab, false); // Simulate tab key to open the console
+  }
+  
+  if (s !=0 ) {
+    Log::instance().error(kModScript, "%s", lua_tostring(_thread, -1));
+    lua_pop(_thread, 1); // remove error message
   }
 }
 
@@ -194,14 +207,18 @@ void Script::processCallback(int handler, int object) {
   
   lua_rawgeti(_thread, LUA_REGISTRYINDEX, handler);
   
-  if (_isSuspended) {
+  if (int result =  lua_pcall(_thread, 0, 0, 0))
+    _error(result);
+  
+  // TODO: Confirm this change is not breaking something else
+/*  if (_isSuspended) {
     if (int result =  lua_pcall(_thread, 0, 0, 0))
       _error(result);
   }
   else {
     if (int result = lua_resume(_thread, 0))
       _error(result);
-  }
+  }*/
 }
 
 void Script::processCommand(const char *command) {
@@ -264,8 +281,25 @@ void Script::_error(int result) {
     }
     
     // Now print the last Lua string in the stack, which should indicate the error
-    log.error(kModScript, "%s", lua_tostring(_L, -1));
+    log.error(kModScript, "%s", lua_tostring(_thread, -1));
   }
+}
+  
+int Script::_globalCopy(lua_State *L) {
+  luaL_checkudata(L, 1, "EffectsLib");
+  
+  lua_newtable(L);
+  EffectsManager& effectsManager = EffectsManager::instance();
+  if (effectsManager.beginIteratingSettings()) {
+    Setting theEffect;
+    do {
+      std::string name = effectsManager.getCurrentSetting(&theEffect);
+      lua_pushnumber(L, theEffect.value);
+      lua_setfield(L, -2, name.c_str());
+    } while (effectsManager.iterateSettings());
+  }
+  
+  return 1;
 }
 
 int Script::_globalCurrentNode(lua_State *L) {
@@ -321,6 +355,7 @@ int Script::_globalLookAt(lua_State *L) {
   int horizontal = static_cast<int>(luaL_checknumber(L, 1));
   int vertical = 0; // Always assumes a 'flat' vertical angle
   bool instant = false;
+  bool adjustment = false;
   
   switch (horizontal) {
     case kNorth:   horizontal = 0;     break;
@@ -338,12 +373,20 @@ int Script::_globalLookAt(lua_State *L) {
     }
   }
   
-  if (lua_gettop(L) == 3) {
-    instant = lua_toboolean(L, 3);
+  if (lua_istable(L, 3)) {
+    lua_pushnil(L);
+    while (lua_next(L, 3) != 0) {
+      const char* key = lua_tostring(L, -2);
+      
+      if (strcmp(key, "instant") == 0) instant = lua_toboolean(L, -1);
+      if (strcmp(key, "adjustment") == 0) adjustment = lua_toboolean(L, -1);
+      
+      lua_pop(L, 1);
+    }
   }
   
   
-  Control::instance().lookAt(horizontal, vertical, instant);
+  Control::instance().lookAt(horizontal, vertical, instant, adjustment);
   
   if (instant) return 0;
   else return Script::instance().suspend();
@@ -354,6 +397,11 @@ int Script::_globalPlay(lua_State *L) {
   
   audio->setResource(luaL_checkstring(L, 1));
   audio->setStatic();
+  
+  if (lua_isboolean(L, 2)) {
+    audio->setVarying(lua_toboolean(L, 2));
+  }
+  
   AudioManager::instance().registerAudio(audio);
   AudioManager::instance().requestAudio(audio);
   audio->play();
@@ -367,7 +415,7 @@ int Script::_globalQueue(lua_State *L) {
   return 0;
 }
 
-int Script::_globalPrint (lua_State *L) {
+int Script::_globalPrint(lua_State *L) {
   int n = lua_gettop(L);  /* number of arguments */
   int i;
   
@@ -401,6 +449,29 @@ int Script::_globalRegister(lua_State *L) {
   
   return 0;
 }
+  
+int Script::_globalReplace(lua_State *L) {
+  if (!lua_istable(L, 1)) {
+    luaL_error(L, kString14013);
+    
+    return 0;
+  }
+  
+  EffectsManager& effectsManager = EffectsManager::instance();
+  lua_pushnil(L);
+  while (lua_next(L, 1) != 0) {
+    const char* key = lua_tostring(L, -2);
+    if (strcmp(key, "dustColor") == 0) {
+      effectsManager.set(key, static_cast<uint32_t>(lua_tonumber(L, 3)));
+    }
+    else {
+      effectsManager.set(key, static_cast<int>(lua_tonumber(L, 3)));
+    }
+    lua_pop(L, 1);
+  }
+  
+  return 0;
+}
 
 int Script::_globalRoom(lua_State *L) {
   // NOTE: This is a convenience Lua hack, which in theory is 100% safe.
@@ -423,13 +494,18 @@ int Script::_globalRoom(lua_State *L) {
     luaL_dostring(L, line);
     
     // Load the corresponding Lua file
-    // TODO: Read rooms from path
     snprintf(script, kMaxFileLength, "%s.lua", module);
     
-    if (luaL_loadfile(L, Config::instance().path(kPathApp, script, kObjectRoom).c_str()) == 0) {
+    int s = luaL_loadfile(L, Config::instance().path(kPathApp, script, kObjectRoom).c_str());
+    if (s == 0) {
       Script::instance().setModule(module);
-      lua_pcall(L, 0, 0, 0);
+      s = lua_pcall(L, 0, 0, 0);
       Script::instance().unsetModule();
+    }
+    
+    if (s !=0 ) {
+      Log::instance().error(kModScript, "%s", lua_tostring(L, -1));
+      lua_pop(L, 1); // remove error message
     }
   }
   
@@ -464,13 +540,13 @@ int Script::_globalSnap(lua_State *L) {
 int Script::_globalSwitch(lua_State *L) {
   switch (DGCheckProxy(L, 1)) {
     case kObjectNode:
-      Control::instance().switchTo(ProxyToNode(L, 1), lua_toboolean(L, 2));
+      Control::instance().switchTo(ProxyToNode(L, 1));
       break;
     case kObjectRoom:
-      Control::instance().switchTo(ProxyToRoom(L, 1), lua_toboolean(L, 2));
+      Control::instance().switchTo(ProxyToRoom(L, 1));
       break;
     case kObjectSlide:
-      Control::instance().switchTo(ProxyToSlide(L, 1), lua_toboolean(L, 2));
+      Control::instance().switchTo(ProxyToSlide(L, 1));
       break;
     case kObjectGeneric:
       Log::instance().error(kModScript, "%s", kString14003);
@@ -505,13 +581,66 @@ int Script::_globalStopTimer(lua_State *L) {
   
   return 0;
 }
+  
+int Script::_globalWalkTo(lua_State *L) {
+  switch (DGCheckProxy(L, 1)) {
+    case kObjectNode:
+      Control::instance().walkTo(ProxyToNode(L, 1));
+      break;
+    case kObjectRoom:
+      Control::instance().walkTo(ProxyToRoom(L, 1));
+      break;
+    case kObjectSlide:
+      Control::instance().walkTo(ProxyToSlide(L, 1));
+      break;
+    case kObjectGeneric:
+      Log::instance().error(kModScript, "%s", kString14003);
+      break;
+      
+    case kObjectNone:
+      Log::instance().error(kModScript, "%s", kString14004);
+      break;
+  }
+  
+  return 0;
+}
 
 int Script::_globalVersion(lua_State *L) {
   lua_pushstring(L, DAGON_VERSION_STRING);
   
   return 1;
 }
+  
+int Script::_globalWhichRoom(lua_State *L) {
+  switch (DGCheckProxy(L, 1)) {
+    case kObjectNode: {
+      Node* node = ProxyToNode(L, 1);
+      if (node) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, node->parentRoom()->luaObject());
+        return 1;
+      }
+      break;
+    }
+    case kObjectRoom: {
+      Room* room = ProxyToRoom(L, 1);
+      if (room) {
+        lua_rawgeti(L, LUA_REGISTRYINDEX, room->luaObject());
+        return 1;
+      }
+      break;
+    }
+    default:
+      break;
+  }
+  
+  return 0;
+}
 
+int Script::_globalZoomOut(lua_State *L) {
+  Control::instance().switchTo(NULL);
+  return 0;
+}
+  
 void Script::_registerEnums() {
   // Push all enum values
   DGLuaEnum(_L, AUDIO, kObjectAudio);
@@ -604,6 +733,7 @@ void Script::_registerEnums() {
 
 void Script::_registerGlobals() {
   static const struct luaL_reg globalLibs [] = {
+    {"copy", _globalCopy},
     {"currentNode", _globalCurrentNode},
     {"currentRoom", _globalCurrentRoom},
     {"cutscene", _globalCutscene},
@@ -614,6 +744,7 @@ void Script::_registerGlobals() {
     {"print", _globalPrint},
     {"queue", _globalQueue},
     {"register", _globalRegister},
+    {"replace", _globalReplace},
     {"room", _globalRoom},
     {"setFont", _globalSetFont},
     {"snap", _globalSnap},
@@ -622,6 +753,9 @@ void Script::_registerGlobals() {
     {"startTimer", _globalStartTimer},
     {"stopTimer", _globalStopTimer},
     {"version", _globalVersion},
+    {"walkTo", _globalWalkTo},
+    {"whichRoom", _globalWhichRoom},
+    {"zoomOut", _globalZoomOut},
     {NULL, NULL}
   };
   

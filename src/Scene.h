@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -62,7 +62,7 @@ public:
   ~Scene();
   
   void clear();
-  void drawSpots();
+  void drawSpots(bool disableVideos = false);
   void fadeIn();
   void fadeOut();
   bool scanSpots();

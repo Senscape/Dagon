@@ -1,5 +1,13 @@
 -- DAGON Configuration File
 
+-- Possible control modes: Drag (0), Fixed (1), Free (2)
+-- Drag requires the left button to be pressed to rotate the camera. Fixed keeps the mouse
+-- centered and allows direct control of the camera. In this case, the right button
+-- toggles between controlling the camera or the cursor (NOTE: This one is still rather
+-- finicky). Finally, Free is the default one and rotates the camera as the mouse nears
+-- the border of the screen.
+controlMode = 2
+
 -- Debug mode. Enable to turn on the debug console and useful information.
 debugMode = false
 
@@ -10,6 +18,9 @@ debugMode = false
 -- Visual effects. Can be disabled if the game is performing too slowly.
 effects = true
 
+-- Windows only: Disregard the screen best resolution and force the specified one.
+forcedFullscreen = false
+
 -- Switch to fullscreen mode by default.
 fullscreen = true
 
@@ -17,9 +28,9 @@ fullscreen = true
 log = false
 
 -- Script to load.
-script = "Main"
+--script = "Custom.lua"
 
--- Set to false if you want to remove the Dagon splash.
+-- Set to false if you want to remove the Dagon splash and stop being a cool person.
 showSplash = true
 
 -- Silent feeds. This silences the main character but keeps the feedback text.

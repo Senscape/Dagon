@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////
 //
 // DAGON - An Adventure Game Engine
-// Copyright (c) 2011-2013 Senscape s.r.l.
+// Copyright (c) 2011-2014 Senscape s.r.l.
 // All rights reserved.
 //
 // This Source Code Form is subject to the terms of the
@@ -80,17 +80,17 @@ public:
         // do an ugly nesting of strcmps()
         if (strcmp(key, "auto") == 0) {
           if (lua_toboolean(L, -1) == 1) flags = flags | kSpotAuto;
-          else flags = flags & ~kSpotAuto;
+          //else flags = flags & ~kSpotAuto;
         }
         
         if (strcmp(key, "loop") == 0) {
           if (lua_toboolean(L, -1) == 1) flags = flags | kSpotLoop;
-          else flags = flags & ~kSpotLoop;
+          //else flags = flags & ~kSpotLoop;
         }
         
         if (strcmp(key, "sync") == 0) {
           if (lua_toboolean(L, -1) == 1) flags = flags | kSpotSync;
-          else flags = flags & kSpotSync;
+          //else flags = flags & kSpotSync;
         }
         
         if (strcmp(key, "volume") == 0) volume = (float)(lua_tonumber(L, -1) / 100);
