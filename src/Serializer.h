@@ -37,6 +37,8 @@ class Serializer {
   bool writeGlobalField(const std::string &key, const std::string &val);
   // This assumes the table is at stack position -1
   std::string stringifyTable(const std::string parentKey);
+  // Callback for Lua when dumping a function
+  static int writeFunction(lua_State *L, const void *p, size_t sz, void *ud);
 
 public:
   Serializer(lua_State *L, SDL_RWops *rw);
@@ -44,6 +46,7 @@ public:
 
   bool writeHeader();
   bool writeGlobals();
+  bool writeRoomData();
 };
 
 }

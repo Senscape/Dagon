@@ -654,7 +654,7 @@ int Script::_globalPersist(lua_State *L) {
 
   Serializer save(L, file);
 
-  if (!save.writeHeader() || !save.writeGlobals()) {
+  if (!save.writeHeader() || !save.writeGlobals() || !save.writeRoomData()) {
     Log::instance().error(kModScript, "Error while saving: %s", SDL_GetError());
     remove(path.c_str());
     lua_pushboolean(L, false);

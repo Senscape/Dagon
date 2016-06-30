@@ -51,6 +51,26 @@ TimerManager::~TimerManager() {
 }
 
 ////////////////////////////////////////////////////////////
+// Implementation - Gets
+////////////////////////////////////////////////////////////
+
+std::vector<DGTimer> TimerManager::timers() {
+  return _arrayOfTimers;
+}
+
+double TimerManager::timeLeft(const DGTimer &timer) {
+  if (SDL_LockMutex(_mutex) == 0) {
+    double currentTime = SDL_GetTicks() / 1000;
+    double duration = currentTime - timer.lastTime;
+    double timeLeft = timer.trigger - duration;
+    SDL_UnlockMutex(_mutex);
+    return timeLeft;
+  }
+
+  return 0;
+}
+
+////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
 

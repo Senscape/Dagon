@@ -16,8 +16,13 @@
 ////////////////////////////////////////////////////////////
 
 #include "Serializer.h"
-#include "Node.h"
+#include "Audio.h"
+#include "CameraManager.h"
 #include "Control.h"
+#include "Node.h"
+#include "Room.h"
+#include "Spot.h"
+#include "TimerManager.h"
 #include "Version.h"
 
 #include <cstring>
@@ -136,6 +141,12 @@ std::string Serializer::stringifyTable(const std::string parentKey) {
   return str;
 }
 
+int Serializer::writeFunction(lua_State *L, const void *p, size_t sz, void *ud) {
+  SDL_RWops *rw = reinterpret_cast<SDL_RWops*>(ud);
+  if (!SDL_RWwrite(rw, p, sz, 1))
+    return 1;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Public
 ////////////////////////////////////////////////////////////
@@ -161,6 +172,13 @@ bool Serializer::writeHeader() {
     if (!SDL_RWwrite(_rw, desc.c_str(), len, 1))
       return false;
   }
+
+  // Write current room name
+  const std::string name = Control::instance().currentRoom()->name();
+  if (!SDL_WriteU8(_rw, name.length()))
+    return false;
+  if (!SDL_RWwrite(_rw, name.c_str(), name.length(), 1))
+    return false;
 
   return true;
 }
@@ -222,6 +240,153 @@ bool Serializer::writeGlobals() {
   if (!SDL_WriteBE32(_rw, numGlobals))
     return false;
   if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end
+    return false;
+
+  return true;
+}
+
+bool Serializer::writeRoomData() {
+  Room *room = Control::instance().currentRoom();
+
+  // Write the enable status for the spots of all nodes
+  uint16_t numNodes = 0;
+  if (room->hasNodes()) {
+    int64_t nodesPtr = SDL_RWtell(_rw);
+    if (nodesPtr < 0)
+      return false;
+    if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of nodes
+      return false;
+
+    room->beginIteratingNodes();
+    do {
+      Node *node = room->iterator();
+
+      uint16_t numSpots = 0;
+      if (node->hasSpots()) {
+        int64_t spotsPtr = SDL_RWtell(_rw);
+        if (spotsPtr < 0)
+          return false;
+        if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of spots
+          return false;
+
+        node->beginIteratingSpots();
+        do {
+          Spot *spot = node->currentSpot();
+          if (!SDL_WriteU8(_rw, spot->isEnabled()))
+            return false;
+          numSpots++;
+        } while (node->iterateSpots());
+
+        if (SDL_RWseek(_rw, spotsPtr, RW_SEEK_SET) < 0)
+          return false;
+      }
+
+      if (!SDL_WriteBE16(_rw, numSpots))
+        return false;
+
+      numNodes++;
+    } while (room->iterateNodes());
+
+    if (SDL_RWseek(_rw, nodesPtr, RW_SEEK_SET) < 0)
+      return false;
+  }
+
+  if (!SDL_WriteBE16(_rw, numNodes))
+    return false;
+  if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end
+    return false;
+
+  // Write node number
+  uint16_t nodeIdx = 0;
+  if (room->hasNodes()) {
+    room->beginIteratingNodes();
+    do {
+      if (room->iterator() == room->currentNode())
+        break;
+
+      nodeIdx++;
+    } while (room->iterateNodes());
+  }
+
+  if (!SDL_WriteBE16(_rw, nodeIdx))
+    return false;
+
+  // Write camera angles
+  if (!SDL_WriteBE16(_rw, CameraManager::instance().angleHorizontal()))
+    return false;
+  if (!SDL_WriteBE16(_rw, CameraManager::instance().angleVertical()))
+    return false;
+
+  // Write audio states
+  if (!SDL_WriteBE16(_rw, room->arrayOfAudios().size()))
+    return false;
+
+  for (Audio *audio : room->arrayOfAudios()) {
+    if (!SDL_WriteU8(_rw, audio->state()))
+      return false;
+  }
+
+  // Write timers
+  int64_t timersPtr = SDL_RWtell(_rw);
+  if (timersPtr < 0)
+    return false;
+  if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of timers
+    return false;
+
+  uint16_t numTimers = 0;
+  for (const auto &timer : TimerManager::instance().timers()) {
+    if (timer.type != DGTimerNormal || !timer.isEnabled ||
+        (!timer.isLoopable && timer.hasTriggered))
+      continue;
+
+    double timeLeft = TimerManager::instance().timeLeft(timer);
+    if (timeLeft > 0) {
+      const std::string timerTime = std::to_string(timeLeft);
+      if (!SDL_WriteU8(_rw, timerTime.length()))
+        return false;
+      if (!SDL_RWwrite(_rw, timerTime.c_str(), timerTime.length(), 1))
+        return false;
+
+      lua_rawgeti(_L, LUA_REGISTRYINDEX, timer.luaHandler); // Push timer function to top of stack
+
+      int64_t funcSizePtr = SDL_RWtell(_rw);
+      if (funcSizePtr < 0)
+        return false;
+      if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual function size
+        return false;
+
+      int64_t beforeFuncPtr = SDL_RWtell(_rw);
+      if (beforeFuncPtr < 0)
+        return false;
+      int errCode = lua_dump(_L, writeFunction, _rw);
+      if (errCode != 0)
+        return false;
+      int64_t afterFuncPtr = SDL_RWtell(_rw);
+      if (afterFuncPtr < 0)
+        return false;
+
+      uint16_t numBytesWritten = afterFuncPtr - beforeFuncPtr;
+      if (SDL_RWseek(_rw, funcSizePtr, RW_SEEK_SET) < 0)
+        return false;
+      if (!SDL_WriteBE16(_rw, numBytesWritten))
+        return false;
+
+      if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end
+        return false;
+
+      numTimers++;
+    }
+  }
+
+  if (SDL_RWseek(_rw, timersPtr, RW_SEEK_SET) < 0)
+    return false;
+  if (!SDL_WriteBE16(_rw, numTimers))
+    return false;
+  if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end
+    return false;
+
+  // Write control mode
+  if (!SDL_WriteU8(_rw, Config::instance().controlMode))
     return false;
 
   return true;
