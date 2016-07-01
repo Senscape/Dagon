@@ -170,6 +170,10 @@ void Script::init() {
   lua_setfenv(_L, -2);
   
   lua_setglobal(_L, "effects");
+
+  // Create a table for game scripts to store data they want persisted
+  lua_newtable(_L);
+  lua_setglobal(_L, "dgPersistence");
   
   // Now we register the global functions that don't belong to any library
   _registerGlobals();
@@ -654,7 +658,7 @@ int Script::_globalPersist(lua_State *L) {
 
   Serializer save(L, file);
 
-  if (!save.writeHeader() || !save.writeGlobals() || !save.writeRoomData()) {
+  if (!save.writeHeader() || !save.writeScriptData() || !save.writeRoomData()) {
     Log::instance().error(kModScript, "Error while saving: %s", SDL_GetError());
     remove(path.c_str());
     lua_pushboolean(L, false);
