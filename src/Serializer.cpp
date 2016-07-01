@@ -145,6 +145,7 @@ int Serializer::writeFunction(lua_State *L, const void *p, size_t sz, void *ud) 
   SDL_RWops *rw = reinterpret_cast<SDL_RWops*>(ud);
   if (!SDL_RWwrite(rw, p, sz, 1))
     return 1;
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////
@@ -341,6 +342,14 @@ bool Serializer::writeRoomData() {
 
     double timeLeft = TimerManager::instance().timeLeft(timer);
     if (timeLeft > 0) {
+      const std::string triggerStr = std::to_string(timer.trigger);
+      if (!SDL_WriteU8(_rw, timer.isLoopable))
+        return false;
+      if (!SDL_WriteU8(_rw, triggerStr.length()))
+        return false;
+      if (!SDL_RWwrite(_rw, triggerStr.c_str(), triggerStr.length(), 1))
+        return false;
+
       const std::string timerTime = std::to_string(timeLeft);
       if (!SDL_WriteU8(_rw, timerTime.length()))
         return false;
