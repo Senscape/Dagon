@@ -53,14 +53,12 @@ bool Serializer::writeField(const std::string &key, const std::string &val) {
 
 int32_t Serializer::writeTable(const std::string parentKey) {
   // Handle cycles
-  for (int i = 0; i < _tblMap.size(); i++) {
-    const std::string regKey = kTablePrefix + std::to_string(i);
-    lua_pushstring(_L, regKey.c_str());
-    lua_gettable(_L, LUA_REGISTRYINDEX);
+  for (const auto &table : _tblMap) {
+    lua_rawgeti(_L, LUA_REGISTRYINDEX, table.first);
 
     if (lua_equal(_L, -1, -2)) { // Maybe a cycle...
       lua_pop(_L, 1);
-      if (!writeField(parentKey, _tblMap[regKey]))
+      if (!writeField(parentKey, table.second))
         return -1;
       return 1;
     }
@@ -69,11 +67,8 @@ int32_t Serializer::writeTable(const std::string parentKey) {
   }
 
   { // Store this table
-    const std::string regKey = kTablePrefix + std::to_string(_tblMap.size());
-    lua_pushstring(_L, regKey.c_str());
-    lua_pushvalue(_L, -2);
-    lua_settable(_L, LUA_REGISTRYINDEX);
-    _tblMap[regKey] = parentKey;
+    int ref = luaL_ref(_L, LUA_REGISTRYINDEX);
+    _tblMap[ref] = parentKey;
   }
 
   lua_pushnil(_L);

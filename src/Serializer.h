@@ -24,15 +24,13 @@
 #include <string>
 #include <unordered_map>
 
-#define kTablePrefix "DG_TABLE_"
-
 namespace dagon {
 
 class Serializer {
   lua_State *_L;
   SDL_RWops *_rw;
 
-  std::unordered_map<std::string, std::string> _tblMap;
+  std::unordered_map<int, std::string> _tblMap;
 
   bool writeField(const std::string &key, const std::string &val);
   // This assumes a table is at stack position -1
