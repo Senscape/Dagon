@@ -34,9 +34,9 @@ class Serializer {
 
   std::unordered_map<std::string, std::string> _tblMap;
 
-  bool writeGlobalField(const std::string &key, const std::string &val);
-  // This assumes the table is at stack position -1
-  std::string stringifyTable(const std::string parentKey);
+  bool writeField(const std::string &key, const std::string &val);
+  // This assumes a table is at stack position -1
+  int32_t writeTable(const std::string parentKey);
   // Callback for Lua when dumping a function
   static int writeFunction(lua_State *L, const void *p, size_t sz, void *ud);
 
@@ -45,7 +45,7 @@ public:
   ~Serializer();
 
   bool writeHeader();
-  bool writeGlobals();
+  bool writeScriptData();
   bool writeRoomData();
 };
 
