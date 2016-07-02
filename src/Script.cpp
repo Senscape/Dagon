@@ -292,6 +292,29 @@ void Script::_error(int result) {
     log.error(kModScript, "%s", lua_tostring(_thread, -1));
   }
 }
+
+void Script::_loadRoomFile(lua_State *L, const char *module) {
+  char line[kMaxLogLength], script[kMaxFileLength];
+
+  // Parse line to automatically create the room
+  snprintf(line, kMaxLogLength, "%s = Room(\"%s\")", module, module);
+  luaL_dostring(L, line);
+
+  // Load the corresponding Lua file
+  snprintf(script, kMaxFileLength, "%s.lua", module);
+
+  int s = luaL_loadfile(L, config.path(kPathApp, script, kObjectRoom).c_str());
+  if (s == 0) {
+    setModule(module);
+    s = lua_pcall(L, 0, 0, 0);
+    unsetModule();
+  }
+
+  if (s != 0) {
+    log.error(kModScript, "%s", lua_tostring(L, -1));
+    lua_pop(L, 1); // remove error message
+  }
+}
   
 int Script::_globalCopy(lua_State *L) {
   luaL_checkudata(L, 1, "EffectsLib");
@@ -495,26 +518,7 @@ int Script::_globalRoom(lua_State *L) {
   // We first check if the object already exists
   lua_getglobal(L, module);
   if (!lua_isuserdata(L, -1)) {
-    char line[kMaxLogLength], script[kMaxFileLength];
-    
-    // Parse line to automatically create the room
-    snprintf(line, kMaxLogLength, "%s = Room(\"%s\")", module, module);
-    luaL_dostring(L, line);
-    
-    // Load the corresponding Lua file
-    snprintf(script, kMaxFileLength, "%s.lua", module);
-    
-    int s = luaL_loadfile(L, Config::instance().path(kPathApp, script, kObjectRoom).c_str());
-    if (s == 0) {
-      Script::instance().setModule(module);
-      s = lua_pcall(L, 0, 0, 0);
-      Script::instance().unsetModule();
-    }
-    
-    if (s !=0 ) {
-      Log::instance().error(kModScript, "%s", lua_tostring(L, -1));
-      lua_pop(L, 1); // remove error message
-    }
+    Script::instance()._loadRoomFile(L, module);
   }
   
   // Nothing else to do...
@@ -664,6 +668,65 @@ int Script::_globalPersist(lua_State *L) {
     lua_pushboolean(L, false);
     return 1;
   }
+
+  lua_pushboolean(L, true);
+  return 1;
+}
+
+int Script::_globalUnpersist(lua_State *L) {
+  char fileName[kMaxFileLength];
+  snprintf(fileName, kMaxFileLength, "%s.%s", luaL_checkstring(L, 1), kDefSaveExtension);
+
+  SDL_RWops *file;
+  const std::string filePath = Config::instance().path(kPathUserData, fileName, kObjectSave);
+  if (!(file = SDL_RWFromFile(filePath.c_str(), "rb"))) {
+    Log::instance().error(kModScript, "Error opening save game file: %s", SDL_GetError());
+    lua_pushboolean(L, false);
+    return 1;
+  }
+
+  Deserializer loader(L, file);
+  if (!loader.readHeader()) {
+    Log::instance().error(kModScript, "Error reading header: %s", SDL_GetError());
+    lua_pushboolean(L, false);
+    return 1;
+  }
+
+  if (loader.version() != DAGON_VERSION_STRING) {
+    Log::instance().info(kModScript,
+                         "Version mismatch. Save file was created in %s attempting to load in %s",
+                         loader.version(), DAGON_VERSION_STRING);
+  }
+
+  Script::instance()._loadRoomFile(L, loader.roomName().c_str());
+  if (!loader.readScriptData()) {
+    Log::instance().error(kModScript, "Error loading Lua data! %s", SDL_GetError());
+    lua_pushboolean(L, false);
+    return 1;
+  }
+
+  // Switch to room
+  lua_getglobal(L, loader.roomName().c_str());
+  lua_insert(L, 1);
+  _globalSwitch(L);
+
+  // Restore room state
+  loader.toggleSpots();
+  
+  Node *newNode;
+  if ((newNode = loader.readNode()))
+    Control::instance().switchTo(newNode);
+
+  loader.adjustCamera();
+  loader.toggleAudio();
+
+  if (!loader.readTimers()) {
+    Log::instance().error(kModScript, "Error reading timers! %s", SDL_GetError());
+    lua_pushboolean(L, false);
+    return 1;
+  }
+
+  loader.readControlMode();
 
   lua_pushboolean(L, true);
   return 1;
@@ -845,6 +908,7 @@ void Script::_registerGlobals() {
     {"stopTimer", _globalStopTimer},
     {"version", _globalVersion},
     {"persist", _globalPersist},
+    {"unpersist", _globalUnpersist},
     {"getSaves", _globalGetSaves},
     {"walkTo", _globalWalkTo},
     {"whichRoom", _globalWhichRoom},

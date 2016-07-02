@@ -51,6 +51,7 @@ class Room : public Object {
   Audio* defaultFootstep();
   SettingCollection effects();
   int enterEvent();
+  size_t numNodes();
   
   // Sets
   void setDefaultFootstep(Audio* theFootstep);

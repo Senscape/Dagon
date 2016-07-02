@@ -63,6 +63,7 @@ class Script {
   
   int _ref;
   void _error(int result);
+  void _loadRoomFile(lua_State *L, const char *module);
   static int _globalCopy(lua_State *L);
   static int _globalCurrentNode(lua_State *L);
   static int _globalCurrentRoom(lua_State *L);
@@ -84,6 +85,7 @@ class Script {
   static int _globalStopTimer(lua_State *L);
   static int _globalVersion(lua_State *L);
   static int _globalPersist(lua_State *L);
+  static int _globalUnpersist(lua_State *L);
   static int _globalGetSaves(lua_State *L);
   static int _globalWalkTo(lua_State *L);
   static int _globalWhichRoom(lua_State *L);
