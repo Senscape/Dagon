@@ -285,19 +285,19 @@ bool Deserializer::readTimers() {
     std::vector<uint8_t> triggerBuf(triggerLen);
     if (!SDL_RWread(_rw, triggerBuf.data(), triggerBuf.capacity(), 1))
       return false;
-
     const std::string triggerStr(triggerBuf.begin(), triggerBuf.end());
+
     try {
       double trigger = std::stod(triggerStr);
 
-      uint8_t timeLeftLen = SDL_ReadU8(_rw);
-      std::vector<uint8_t> timeLeftBuf(timeLeftLen);
-      if (!SDL_RWread(_rw, timeLeftBuf.data(), timeLeftBuf.capacity(), 1))
+      uint8_t elapsedLen = SDL_ReadU8(_rw);
+      std::vector<uint8_t> elapsedBuf(elapsedLen);
+      if (!SDL_RWread(_rw, elapsedBuf.data(), elapsedBuf.capacity(), 1))
         return false;
+      const std::string elapsedStr(elapsedBuf.begin(), elapsedBuf.end());
 
-      const std::string timeLeftStr(timeLeftBuf.begin(), timeLeftBuf.end());
       try {
-        double timeLeft = std::stod(timeLeftStr);
+        double elapsed = std::stod(elapsedStr);
 
         LuaReaderData data;
         uint16_t funcLen = SDL_ReadBE16(_rw);
@@ -317,14 +317,13 @@ bool Deserializer::readTimers() {
           continue;
         }
         
-        double duration = trigger - timeLeft;
         int ref = luaL_ref(_L, LUA_REGISTRYINDEX);
         TimerManager::instance().create(trigger, isLoopable, ref);
-        TimerManager::instance().timers().back().lastTime -= duration; // Rewind start time.
+        TimerManager::instance().timers().back().lastTime -= elapsed; // Rewind start time.
       }
       catch (std::exception &e) {
         Log::instance().warning(kModScript, "Malformed timer. Couldn't parse time %s",
-                                timeLeftStr);
+                                elapsedStr);
         { // Read function block
           uint16_t len = SDL_ReadBE16(_rw);
           std::vector<uint8_t> buf(len);
@@ -361,7 +360,7 @@ void Deserializer::readControlMode() {
   case kControlDrag:
   case kControlFixed:
   case kControlFree: {
-    Config::instance().controlMode = controlMode; // TODO: is this enough?
+    Config::instance().controlMode = controlMode;
     break;
   }
   default: {

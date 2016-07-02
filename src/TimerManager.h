@@ -82,9 +82,9 @@ public:
 
   // Gets
   std::vector<DGTimer> timers();
-  double timeLeft(const DGTimer &timer); // How long until it (re)triggers?
-                                         // Caller should ensure that it makes sense to query this
-                                         // timer for it's remaining time.
+  double timeElapsed(const DGTimer &timer); // How long since it was started?
+                                            // Caller should ensure it makes sense to query
+                                            // this timer for it's elapsed time.
   
   bool checkManual(int handle, int precision = 1000);
   int create(double trigger, bool shouldLoop, int handlerForLua, int luaObject = 0); // Returns a handle

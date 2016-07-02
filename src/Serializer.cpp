@@ -299,8 +299,8 @@ bool Serializer::writeRoomData() {
         (!timer.isLoopable && timer.hasTriggered))
       continue;
 
-    double timeLeft = TimerManager::instance().timeLeft(timer);
-    if (timeLeft > 0) {
+    double elapsed = TimerManager::instance().timeElapsed(timer);
+    if (timer.trigger - elapsed > 0) {
       const std::string triggerStr = std::to_string(timer.trigger);
       if (!SDL_WriteU8(_rw, timer.isLoopable))
         return false;
@@ -309,10 +309,10 @@ bool Serializer::writeRoomData() {
       if (!SDL_RWwrite(_rw, triggerStr.c_str(), triggerStr.length(), 1))
         return false;
 
-      const std::string timerTime = std::to_string(timeLeft);
-      if (!SDL_WriteU8(_rw, timerTime.length()))
+      const std::string elapsedStr = std::to_string(elapsed);
+      if (!SDL_WriteU8(_rw, elapsedStr.length()))
         return false;
-      if (!SDL_RWwrite(_rw, timerTime.c_str(), timerTime.length(), 1))
+      if (!SDL_RWwrite(_rw, elapsedStr.c_str(), elapsedStr.length(), 1))
         return false;
 
       lua_rawgeti(_L, LUA_REGISTRYINDEX, timer.luaHandler); // Push timer function to top of stack
