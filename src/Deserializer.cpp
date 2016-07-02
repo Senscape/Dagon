@@ -183,12 +183,21 @@ void Deserializer::toggleSpots() {
 Node *Deserializer::readNode() {
   Room *room = Control::instance().currentRoom();
   uint16_t nodeIdx = SDL_ReadBE16(_rw);
+  Node *node;
+
   if (room->hasNodes()) {
     room->beginIteratingNodes();
-    return room->iterator() + nodeIdx;
+
+    do {
+      node = room->iterator();
+
+      if (nodeIdx == 0)
+        break;
+      nodeIdx--;
+    } while (room->iterateNodes());
   }
 
-  return nullptr;
+  return node;
 }
 
 void Deserializer::adjustCamera() {
