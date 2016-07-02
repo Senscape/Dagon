@@ -263,9 +263,18 @@ bool Serializer::writeRoomData() {
     return false;
 
   // Write camera angles
-  if (!SDL_WriteBE16(_rw, CameraManager::instance().angleHorizontal()))
+  int hAngle = CameraManager::instance().angleHorizontal();
+  const std::string hAngleStr = std::to_string(hAngle);
+  if (!SDL_WriteU8(_rw, hAngleStr.length()))
     return false;
-  if (!SDL_WriteBE16(_rw, CameraManager::instance().angleVertical()))
+  if (!SDL_RWwrite(_rw, hAngleStr.c_str(), hAngleStr.length(), 1))
+    return false;
+
+  int vAngle = CameraManager::instance().angleVertical();
+  const std::string vAngleStr = std::to_string(vAngle);
+  if (!SDL_WriteU8(_rw, vAngleStr.length()))
+    return false;
+  if (!SDL_RWwrite(_rw, vAngleStr.c_str(), vAngleStr.length(), 1))
     return false;
 
   // Write audio states

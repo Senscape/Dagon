@@ -717,7 +717,12 @@ int Script::_globalUnpersist(lua_State *L) {
   if ((newNode = loader.readNode()))
     Control::instance().switchTo(newNode);
 
-  loader.adjustCamera();
+  if (!loader.adjustCamera()) {
+    Log::instance().error(kModScript, "Error adjusting camera! %s", SDL_GetError());
+    lua_pushboolean(L, false);
+    return 1;
+  }
+
   loader.toggleAudio();
 
   if (!loader.readTimers()) {

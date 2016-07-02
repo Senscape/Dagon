@@ -59,7 +59,7 @@ public:
   bool readScriptData();
   void toggleSpots();
   Node *readNode();
-  void adjustCamera();
+  bool adjustCamera();
   void toggleAudio();
   bool readTimers();
   void readControlMode();

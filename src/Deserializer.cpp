@@ -200,12 +200,36 @@ Node *Deserializer::readNode() {
   return node;
 }
 
-void Deserializer::adjustCamera() {
-  uint16_t hAngle = SDL_ReadBE16(_rw);
-  CameraManager::instance().setAngleHorizontal(hAngle);
+bool Deserializer::adjustCamera() {
+  uint8_t hAngleLen = SDL_ReadU8(_rw);
+  std::vector<uint8_t> hAngleBuf(hAngleLen);
+  if (!SDL_RWread(_rw, hAngleBuf.data(), hAngleBuf.capacity(), 1))
+    return false;
+  const std::string hAngleStr(hAngleBuf.begin(), hAngleBuf.end());
 
-  uint16_t vAngle = SDL_ReadBE16(_rw);
-  CameraManager::instance().setAngleVertical(vAngle);
+  try {
+    int hAngle = std::stoi(hAngleStr);
+    CameraManager::instance().setAngleHorizontal(hAngle);
+  }
+  catch (std::exception &e) {
+    Log::instance().warning(kModScript, "Unable to parse horizontal angle: %s", hAngleStr);
+  }
+
+  uint8_t vAngleLen = SDL_ReadU8(_rw);
+  std::vector<uint8_t> vAngleBuf(vAngleLen);
+  if (!SDL_RWread(_rw, vAngleBuf.data(), vAngleBuf.capacity(), 1))
+    return false;
+  const std::string vAngleStr(vAngleBuf.begin(), vAngleBuf.end());
+
+  try {
+    int vAngle = std::stoi(vAngleStr);
+    CameraManager::instance().setAngleVertical(vAngle);
+  }
+  catch (std::exception &e) {
+    Log::instance().warning(kModScript, "Unable to parse vertical angle: %s", vAngleStr);
+  }
+
+  return true;
 }
 
 void Deserializer::toggleAudio() {
