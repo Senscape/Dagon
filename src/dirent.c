@@ -1,3 +1,5 @@
+#if ((_WIN32) || (_WIN64))
+
 /*
 
     Implementation of POSIX directory browsing functions and types for Win32.
@@ -146,3 +148,5 @@ void rewinddir(DIR *dir)
     But that said, if there are any problems please get in touch.
 
 */
+
+#endif
