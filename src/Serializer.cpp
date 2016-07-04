@@ -159,7 +159,7 @@ bool Serializer::writeHeader() {
 
     if (!SDL_WriteU8(_rw, len))
       return false;
-    if (!SDL_RWwrite(_rw, desc.c_str(), len, 1))
+    if (len > 0 && !SDL_RWwrite(_rw, desc.c_str(), len, 1))
       return false;
   }
 

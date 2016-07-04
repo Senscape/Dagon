@@ -701,19 +701,13 @@ int Script::_globalUnpersist(lua_State *L) {
 
   // Create new room from file. Remove existing room first.
   lua_getglobal(L, loader.roomName().c_str());
-  if (DGCheckProxy(L, -1) == kObjectRoom) {
-    Room *oldRoom = ProxyToRoom(L, -1);
-    lua_pop(L, 1); // Pop Room.
+  Room *oldRoom = ProxyToRoom(L, -1);
+  lua_pop(L, 1);
 
-    Script::instance()._loadRoomFile(L, loader.roomName().c_str());
+  Script::instance()._loadRoomFile(L, loader.roomName().c_str());
 
-    if (oldRoom)
-      Control::instance().replaceRoom(oldRoom);
-  }
-  else {
-    lua_pop(L, 1); // Pop Room.
-    Script::instance()._loadRoomFile(L, loader.roomName().c_str());
-  }
+  if (oldRoom)
+    Control::instance().replaceRoom(oldRoom);
 
   // Load Lua variables.
   if (!loader.readScriptData()) {
