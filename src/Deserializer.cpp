@@ -392,38 +392,4 @@ void Deserializer::readControlMode() {
   }
 }
 
-std::string Deserializer::readPreview(const std::string &path) {
-  SDL_RWops *rw = SDL_RWFromFile(path.c_str(), "rb");
-  if (!rw) {
-    Log::instance().error(kModScript, "%s", SDL_GetError());
-    return "";
-  }
-
-  uint8_t len;
-  if (!(len = SDL_ReadU8(rw))) {
-    Log::instance().error(kModScript, "%s", SDL_GetError());
-    return "";
-  }
-
-  char buf[UCHAR_MAX + 1]; // + 1 for \0
-  if (!SDL_RWread(rw, buf, len, 1)) {
-    Log::instance().error(kModScript, "%s", SDL_GetError());
-    return "";
-  }
-
-  if (!(len = SDL_ReadU8(rw))) {
-    Log::instance().error(kModScript, "%s", SDL_GetError());
-    return "";
-  }
-
-  if (!SDL_RWread(rw, buf, len, 1)) {
-    Log::instance().error(kModScript, "%s", SDL_GetError());
-    return "";
-  }
-  SDL_RWclose(rw);
-
-  buf[len] = '\0';
-  return buf;
-}
-
 }

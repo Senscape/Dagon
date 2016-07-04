@@ -775,10 +775,16 @@ int Script::_globalGetSaves(lua_State *L) {
       name[len] = '\0';
 
       const std::string path = Config::instance().path(kPathUserData, entry->d_name, kObjectSave);
-      const std::string preview = Deserializer::readPreview(path);
+      SDL_RWops *file;
+      if (!(file = SDL_RWFromFile(path.c_str(), "rb")))
+        continue;
+
+      Deserializer loader(L, file);
+      if (!loader.readHeader())
+        continue;
 
       lua_pushstring(L, name);
-      lua_pushstring(L, preview.c_str());
+      lua_pushstring(L, loader.preview().c_str());
       lua_settable(L, -3);
     }
   }

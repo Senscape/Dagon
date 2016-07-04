@@ -63,7 +63,6 @@ public:
   void toggleAudio();
   bool readTimers();
   void readControlMode();
-  static std::string readPreview(const std::string &path);
 };
 
 }
