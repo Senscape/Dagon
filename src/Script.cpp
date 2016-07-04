@@ -656,21 +656,24 @@ int Script::_globalPersist(lua_State *L) {
 
   if (!(file = SDL_RWFromFile(path.c_str(), "wb"))) {
     Log::instance().error(kModScript, "Can't open save file for writing: %s", SDL_GetError());
-    remove(path.c_str());
     lua_pushboolean(L, false);
     return 1;
   }
 
-  Serializer save(L, file);
+  { // Scope to ensure file is closed before going to SAVE_ERROR
+    Serializer save(L, file);
 
-  if (!save.writeHeader() || !save.writeScriptData() || !save.writeRoomData()) {
-    Log::instance().error(kModScript, "Error while saving: %s", SDL_GetError());
-    remove(path.c_str());
-    lua_pushboolean(L, false);
-    return 1;
+    if (!save.writeHeader() || !save.writeScriptData() || !save.writeRoomData())
+      goto SAVE_ERROR;
   }
 
   lua_pushboolean(L, true);
+  return 1;
+
+SAVE_ERROR:
+  Log::instance().error(kModScript, "Error while saving: %s", SDL_GetError());
+  remove(path.c_str());
+  lua_pushboolean(L, false);
   return 1;
 }
 
