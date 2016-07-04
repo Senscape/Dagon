@@ -67,6 +67,7 @@ int32_t Serializer::writeTable(const std::string parentKey) {
   }
 
   { // Store this table
+    lua_pushvalue(_L, -1);
     int ref = luaL_ref(_L, LUA_REGISTRYINDEX);
     _tblMap[ref] = parentKey;
   }
