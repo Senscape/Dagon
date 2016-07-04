@@ -1,24 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2012 for Windows Desktop
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dagon", "Dagon.vcxproj", "{F97B6D16-FC92-4AAD-97CA-690C5646914F}"
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Dagon", "Dagon.vcxproj", "{0E78040D-7A8C-2CBE-430E-D01DAFE128EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
-		Debug|Win64 = Debug|Win64
-		Release|Win32 = Release|Win32
-		Release|Win64 = Release|Win64
+		debug|native = debug|native
+		release|native = release|native
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F97B6D16-FC92-4AAD-97CA-690C5646914F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{F97B6D16-FC92-4AAD-97CA-690C5646914F}.Debug|Win32.Build.0 = Debug|Win32
-		{F97B6D16-FC92-4AAD-97CA-690C5646914F}.Debug|Win64.ActiveCfg = Debug|x64
-		{F97B6D16-FC92-4AAD-97CA-690C5646914F}.Debug|Win64.Build.0 = Debug|x64
-		{F97B6D16-FC92-4AAD-97CA-690C5646914F}.Release|Win32.ActiveCfg = Release|Win32
-		{F97B6D16-FC92-4AAD-97CA-690C5646914F}.Release|Win32.Build.0 = Release|Win32
-		{F97B6D16-FC92-4AAD-97CA-690C5646914F}.Release|Win64.ActiveCfg = Release|x64
-		{F97B6D16-FC92-4AAD-97CA-690C5646914F}.Release|Win64.Build.0 = Release|x64
+		{0E78040D-7A8C-2CBE-430E-D01DAFE128EF}.debug|native.ActiveCfg = debug native|Win32
+		{0E78040D-7A8C-2CBE-430E-D01DAFE128EF}.debug|native.Build.0 = debug native|Win32
+		{0E78040D-7A8C-2CBE-430E-D01DAFE128EF}.release|native.ActiveCfg = release native|Win32
+		{0E78040D-7A8C-2CBE-430E-D01DAFE128EF}.release|native.Build.0 = release native|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
