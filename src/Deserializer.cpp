@@ -78,31 +78,25 @@ std::string Deserializer::roomName() {
 
 bool Deserializer::readHeader() {
   { // Read Dagon version string
-    uint8_t len;
-    if (!(len = SDL_ReadU8(_rw)))
-      return false;
+    uint8_t len = SDL_ReadU8(_rw);
     std::vector<uint8_t> buf(len);
-    if (!SDL_RWread(_rw, buf.data(), buf.capacity(), 1))
+    if (len > 0 && !SDL_RWread(_rw, buf.data(), buf.capacity(), 1))
       return false;
     _dgVersion = std::string(buf.begin(), buf.end());
   }
 
   { // Read preview text
-    uint8_t len;
-    if (!(len = SDL_ReadU8(_rw)))
-      return false;
+    uint8_t len = SDL_ReadU8(_rw);
     std::vector<uint8_t> buf(len);
-    if (!SDL_RWread(_rw, buf.data(), buf.capacity(), 1))
+    if (len > 0 && !SDL_RWread(_rw, buf.data(), buf.capacity(), 1))
       return false;
     _preview = std::string(buf.begin(), buf.end());
   }
 
   { // Read Room name
-    uint8_t len;
-    if (!(len = SDL_ReadU8(_rw)))
-      return false;
+    uint8_t len = SDL_ReadU8(_rw);
     std::vector<uint8_t> buf(len);
-    if (!SDL_RWread(_rw, buf.data(), buf.capacity(), 1))
+    if (len > 0 && !SDL_RWread(_rw, buf.data(), buf.capacity(), 1))
       return false;
     _roomName = std::string(buf.begin(), buf.end());
   }
