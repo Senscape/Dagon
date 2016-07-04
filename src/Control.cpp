@@ -44,6 +44,8 @@
 #include "TimerManager.h"
 #include "VideoManager.h"
 
+#include <algorithm>
+
 namespace dagon {
 
 ////////////////////////////////////////////////////////////
@@ -1012,6 +1014,20 @@ void Control::update() {
       this->terminate();
     }
   }
+}
+
+size_t Control::numRooms() {
+  return _arrayOfRooms.size();
+}
+
+std::vector<Room*> Control::rooms() {
+  return _arrayOfRooms;
+}
+
+void Control::replaceRoom(Room *replacee) {
+  Room *replacement = _arrayOfRooms.back();
+  std::replace(_arrayOfRooms.begin(), _arrayOfRooms.end(), replacee, replacement);
+  _arrayOfRooms.pop_back();
 }
 
 ////////////////////////////////////////////////////////////

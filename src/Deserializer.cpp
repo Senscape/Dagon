@@ -129,52 +129,75 @@ bool Deserializer::readScriptData() {
 }
 
 void Deserializer::toggleSpots() {
-  Room *room = Control::instance().currentRoom();
-
-  uint16_t numNodes = SDL_ReadBE16(_rw);
-  if (numNodes != room->numNodes()) {
-    Log::instance().warning(kModScript, "Node number mismatch. Expected %d. Got %d", numNodes,
-                            room->numNodes());
+  // Restore spot activation statuses
+  uint16_t numRooms = SDL_ReadBE16(_rw);
+  if (numRooms != Control::instance().numRooms()) {
+    Log::instance().warning(kModScript, "Room number mismatch. Expected %d. Got %d", numRooms,
+                            Control::instance().numRooms());
   }
 
-  // Restore spot activation statuses
-  if (room->hasNodes()) {
-    room->beginIteratingNodes();
+  for (Room *room : Control::instance().rooms()) {
+    if (numRooms == 0)
+      break;
 
-    do {
-      Node *node = room->iterator();
+    uint16_t numNodes = SDL_ReadBE16(_rw);
+    if (numNodes != room->numNodes()) {
+      Log::instance().warning(kModScript, "Node number mismatch. Expected %d. Got %d", numNodes,
+                              room->numNodes());
+    }
 
-      uint16_t numSpots = SDL_ReadBE16(_rw);
-      if (numSpots != node->numSpots()) {
-        Log::instance().warning(kModScript, "Spot number mismatch. Expected %d. Got %d", numSpots,
-                                node->numSpots());
-      }
+    if (room->hasNodes()) {
+      room->beginIteratingNodes();
 
-      if (node->hasSpots()) {
-        node->beginIteratingSpots();
+      do {
+        Node *node = room->iterator();
 
-        do {
-          Spot *spot = node->currentSpot();
-          bool enable = SDL_ReadU8(_rw);
-          if (enable)
-            spot->enable(true); // TODO: find out if we should always force enable.
-          else
-            spot->disable(true); // TODO: find out if we should always force disable.
-          numSpots--;
-        } while (node->iterateSpots() && numSpots > 0);
+        uint16_t numSpots = SDL_ReadBE16(_rw);
+        if (numSpots != node->numSpots()) {
+          Log::instance().warning(kModScript, "Spot number mismatch. Expected %d. Got %d",
+                                  numSpots, node->numSpots());
+        }
 
-        // Read remaining spots (necessary if number of spots has been reduced)
-        for (size_t i = 0; i < numSpots; i++)
+        if (node->hasSpots()) {
+          node->beginIteratingSpots();
+
+          do {
+            Spot *spot = node->currentSpot();
+
+            bool enable = SDL_ReadU8(_rw);
+            if (enable)
+              spot->enable(true); // TODO: find out if we should always force enable.
+            else
+              spot->disable(true); // TODO: find out if we should always force disable.
+
+            numSpots--;
+          } while (node->iterateSpots() && numSpots > 0);
+
+          // Read remaining spots (necessary if number of spots has been reduced)
+          for (size_t i = 0; i < numSpots; i++)
+            SDL_ReadU8(_rw);
+        }
+
+        numNodes--;
+      } while (room->iterateNodes() && numNodes > 0);
+
+      // Read remaining nodes (necessary if number of nodes has been reduced)
+      for (size_t i = 0; i < numNodes; i++) {
+        uint16_t numSpots = SDL_ReadBE16(_rw);
+        for (size_t j = 0; j < numSpots; j++)
           SDL_ReadU8(_rw);
       }
+    }
 
-      numNodes--;
-    } while (room->iterateNodes() && numNodes > 0);
+    numRooms--;
+  }
 
-    // Read remaining nodes (necessary if number of nodes has been reduced)
-    for (size_t i = 0; i < numNodes; i++) {
+  // Read remaining rooms (necessary if number of rooms has been reduced)
+  for (size_t i = 0; i < numRooms; i++) {
+    uint16_t numNodes = SDL_ReadBE16(_rw);
+    for (size_t j = 0; j < numNodes; j++) {
       uint16_t numSpots = SDL_ReadBE16(_rw);
-      for (size_t j = 0; j < numSpots; j++)
+      for (size_t k = 0; k < numSpots; k++)
         SDL_ReadU8(_rw);
     }
   }

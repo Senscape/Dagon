@@ -195,57 +195,36 @@ bool Serializer::writeScriptData() {
 }
 
 bool Serializer::writeRoomData() {
-  Room *room = Control::instance().currentRoom();
+  // Write the enable status for the spots of all nodes of all rooms
+  if (!SDL_WriteBE16(_rw, Control::instance().numRooms()))
+    return false;
 
-  // Write the enable status for the spots of all nodes
-  uint16_t numNodes = 0;
-  if (room->hasNodes()) {
-    int64_t nodesPtr = SDL_RWtell(_rw);
-    if (nodesPtr < 0)
-      return false;
-    if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of nodes
+  for (Room *room : Control::instance().rooms()) {
+    if (!SDL_WriteBE16(_rw, room->numNodes()))
       return false;
 
-    room->beginIteratingNodes();
-    do {
-      Node *node = room->iterator();
+    if (room->hasNodes()) {
+      room->beginIteratingNodes();
 
-      uint16_t numSpots = 0;
-      if (node->hasSpots()) {
-        int64_t spotsPtr = SDL_RWtell(_rw);
-        if (spotsPtr < 0)
-          return false;
-        if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of spots
+      do {
+        Node *node = room->iterator();
+
+        if (!SDL_WriteBE16(_rw, node->numSpots()))
           return false;
 
-        node->beginIteratingSpots();
-        do {
-          Spot *spot = node->currentSpot();
-          if (!SDL_WriteU8(_rw, spot->isEnabled()))
-            return false;
-          numSpots++;
-        } while (node->iterateSpots());
+        if (node->hasSpots()) {
+          node->beginIteratingSpots();
 
-        if (SDL_RWseek(_rw, spotsPtr, RW_SEEK_SET) < 0)
-          return false;
-      }
-
-      if (!SDL_WriteBE16(_rw, numSpots))
-        return false;
-      if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end
-        return false;
-
-      numNodes++;
-    } while (room->iterateNodes());
-
-    if (SDL_RWseek(_rw, nodesPtr, RW_SEEK_SET) < 0)
-      return false;
+          do {
+            if (!SDL_WriteU8(_rw, node->currentSpot()->isEnabled()))
+              return false;
+          } while (node->iterateSpots());
+        }
+      } while (room->iterateNodes());
+    }
   }
 
-  if (!SDL_WriteBE16(_rw, numNodes))
-    return false;
-  if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end
-    return false;
+  Room *room = Control::instance().currentRoom();
 
   // Write node number
   uint16_t nodeIdx = 0;

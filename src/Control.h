@@ -158,6 +158,9 @@ public:
   void takeSnapshot();
   void terminate();
   void update();
+  size_t numRooms();
+  std::vector<Room*> rooms();
+  void replaceRoom(Room *replacee);
 };
   
 }

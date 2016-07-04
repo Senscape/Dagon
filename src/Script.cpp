@@ -698,7 +698,17 @@ int Script::_globalUnpersist(lua_State *L) {
                          loader.version(), DAGON_VERSION_STRING);
   }
 
+  // Create new room from file. Remove existing room first.
+  lua_getglobal(L, loader.roomName().c_str());
+  Room *oldRoom = ProxyToRoom(L, -1);
+  lua_pop(L, 1); // Pop Room.
+
   Script::instance()._loadRoomFile(L, loader.roomName().c_str());
+
+  if (oldRoom)
+    Control::instance().replaceRoom(oldRoom);
+
+  // Load Lua variables.
   if (!loader.readScriptData()) {
     Log::instance().error(kModScript, "Error loading Lua data! %s", SDL_GetError());
     lua_pushboolean(L, false);
