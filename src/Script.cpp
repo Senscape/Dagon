@@ -655,9 +655,10 @@ int Script::_globalPersist(lua_State *L) {
   }
 
   if (!(file = SDL_RWFromFile(path.c_str(), "wb"))) {
+    Log::instance().error(kModScript, "Can't open save file for writing: %s", SDL_GetError());
+    remove(path.c_str());
     lua_pushboolean(L, false);
-    lua_pushstring(L, SDL_GetError());
-    return 2;
+    return 1;
   }
 
   Serializer save(L, file);
