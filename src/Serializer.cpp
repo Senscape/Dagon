@@ -196,57 +196,36 @@ bool Serializer::writeScriptData() {
 }
 
 bool Serializer::writeRoomData() {
-  Room *room = Control::instance().currentRoom();
+  // Write the enable status for the spots of all nodes of all rooms
+  if (!SDL_WriteBE16(_rw, Control::instance().numRooms()))
+    return false;
 
-  // Write the enable status for the spots of all nodes
-  uint16_t numNodes = 0;
-  if (room->hasNodes()) {
-    int64_t nodesPtr = SDL_RWtell(_rw);
-    if (nodesPtr < 0)
-      return false;
-    if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of nodes
+  for (Room *room : Control::instance().rooms()) {
+    if (!SDL_WriteBE16(_rw, room->numNodes()))
       return false;
 
-    room->beginIteratingNodes();
-    do {
-      Node *node = room->iterator();
+    if (room->hasNodes()) {
+      room->beginIteratingNodes();
 
-      uint16_t numSpots = 0;
-      if (node->hasSpots()) {
-        int64_t spotsPtr = SDL_RWtell(_rw);
-        if (spotsPtr < 0)
-          return false;
-        if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of spots
+      do {
+        Node *node = room->iterator();
+
+        if (!SDL_WriteBE16(_rw, node->numSpots()))
           return false;
 
-        node->beginIteratingSpots();
-        do {
-          Spot *spot = node->currentSpot();
-          if (!SDL_WriteU8(_rw, spot->isEnabled()))
-            return false;
-          numSpots++;
-        } while (node->iterateSpots());
+        if (node->hasSpots()) {
+          node->beginIteratingSpots();
 
-        if (SDL_RWseek(_rw, spotsPtr, RW_SEEK_SET) < 0)
-          return false;
-      }
-
-      if (!SDL_WriteBE16(_rw, numSpots))
-        return false;
-      if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end
-        return false;
-
-      numNodes++;
-    } while (room->iterateNodes());
-
-    if (SDL_RWseek(_rw, nodesPtr, RW_SEEK_SET) < 0)
-      return false;
+          do {
+            if (!SDL_WriteU8(_rw, node->currentSpot()->isEnabled()))
+              return false;
+          } while (node->iterateSpots());
+        }
+      } while (room->iterateNodes());
+    }
   }
 
-  if (!SDL_WriteBE16(_rw, numNodes))
-    return false;
-  if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end
-    return false;
+  Room *room = Control::instance().currentRoom();
 
   // Write node number
   uint16_t nodeIdx = 0;
@@ -264,9 +243,18 @@ bool Serializer::writeRoomData() {
     return false;
 
   // Write camera angles
-  if (!SDL_WriteBE16(_rw, CameraManager::instance().angleHorizontal()))
+  int hAngle = CameraManager::instance().angleHorizontal();
+  const std::string hAngleStr = std::to_string(hAngle);
+  if (!SDL_WriteU8(_rw, hAngleStr.length()))
     return false;
-  if (!SDL_WriteBE16(_rw, CameraManager::instance().angleVertical()))
+  if (!SDL_RWwrite(_rw, hAngleStr.c_str(), hAngleStr.length(), 1))
+    return false;
+
+  int vAngle = CameraManager::instance().angleVertical();
+  const std::string vAngleStr = std::to_string(vAngle);
+  if (!SDL_WriteU8(_rw, vAngleStr.length()))
+    return false;
+  if (!SDL_RWwrite(_rw, vAngleStr.c_str(), vAngleStr.length(), 1))
     return false;
 
   // Write audio states
@@ -291,8 +279,8 @@ bool Serializer::writeRoomData() {
         (!timer.isLoopable && timer.hasTriggered))
       continue;
 
-    double timeLeft = TimerManager::instance().timeLeft(timer);
-    if (timeLeft > 0) {
+    double elapsed = TimerManager::instance().timeElapsed(timer);
+    if (timer.trigger - elapsed > 0) {
       const std::string triggerStr = std::to_string(timer.trigger);
       if (!SDL_WriteU8(_rw, timer.isLoopable))
         return false;
@@ -301,10 +289,10 @@ bool Serializer::writeRoomData() {
       if (!SDL_RWwrite(_rw, triggerStr.c_str(), triggerStr.length(), 1))
         return false;
 
-      const std::string timerTime = std::to_string(timeLeft);
-      if (!SDL_WriteU8(_rw, timerTime.length()))
+      const std::string elapsedStr = std::to_string(elapsed);
+      if (!SDL_WriteU8(_rw, elapsedStr.length()))
         return false;
-      if (!SDL_RWwrite(_rw, timerTime.c_str(), timerTime.length(), 1))
+      if (!SDL_RWwrite(_rw, elapsedStr.c_str(), elapsedStr.length(), 1))
         return false;
 
       lua_rawgeti(_L, LUA_REGISTRYINDEX, timer.luaHandler); // Push timer function to top of stack

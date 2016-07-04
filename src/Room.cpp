@@ -86,6 +86,10 @@ int Room::enterEvent() {
   return _luaReference;
 }
 
+size_t Room::numNodes() {
+  return _arrayOfNodes.size();
+}
+
 Node* Room::iterator() {
   assert(_it != _arrayOfNodes.end());
   return *_it;
