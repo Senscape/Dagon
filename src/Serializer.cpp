@@ -257,6 +257,13 @@ bool Serializer::writeRoomData() {
   if (!SDL_RWwrite(_rw, vAngleStr.c_str(), vAngleStr.length(), 1))
     return false;
 
+  float fov = CameraManager::instance().fieldOfView();
+  const std::string fovStr = std::to_string(fov);
+  if (!SDL_WriteU8(_rw, fovStr.length()))
+    return false;
+  if (!SDL_RWwrite(_rw, fovStr.c_str(), fovStr.length(), 1))
+    return false;
+
   // Write audio states
   if (!SDL_WriteBE16(_rw, room->arrayOfAudios().size()))
     return false;

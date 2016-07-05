@@ -246,6 +246,25 @@ bool Deserializer::adjustCamera() {
     Log::instance().warning(kModScript, "Unable to parse vertical angle: %s", vAngleStr);
   }
 
+  uint8_t fovLen = SDL_ReadU8(_rw);
+  std::vector<uint8_t> fovBuf(fovLen);
+  if (!SDL_RWread(_rw, fovBuf.data(), fovBuf.capacity(), 1))
+    return false;
+  const std::string fovStr(fovBuf.begin(), fovBuf.end());
+
+  try {
+    float fov = std::stof(fovStr);
+    bool lock = CameraManager::instance().isLocked();
+    if (lock)
+      CameraManager::instance().unlock();
+    CameraManager::instance().setFieldOfView(fov);
+    if (lock)
+      CameraManager::instance().lock();
+  }
+  catch (std::exception &e) {
+    Log::instance().warning(kModScript, "Unable to parse field of view: %s", fovStr);
+  }
+
   return true;
 }
 
