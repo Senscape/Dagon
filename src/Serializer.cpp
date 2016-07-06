@@ -30,6 +30,8 @@
 
 namespace dagon {
 
+const char SAVIdent[] = { '\x44', '\x41', '\x47', '\x4F', '\x4E', '\x53', '\x41', '\x56', '\x45' };
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor & Destructor
 ////////////////////////////////////////////////////////////
@@ -142,6 +144,10 @@ int Serializer::writeFunction(lua_State *L, const void *p, size_t sz, void *ud) 
 ////////////////////////////////////////////////////////////
 
 bool Serializer::writeHeader() {
+  // Write magic number
+  if (!SDL_RWwrite(_rw, SAVIdent, sizeof(SAVIdent), 1))
+    return false;
+
   // Write version information
   {
     const size_t len = UCHAR_MAX > strlen(DAGON_VERSION_STRING) ? strlen(DAGON_VERSION_STRING) :
