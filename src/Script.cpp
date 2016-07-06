@@ -663,7 +663,16 @@ int Script::_globalPersist(lua_State *L) {
   { // Scope to ensure file is closed before going to SAVE_ERROR
     Serializer save(L, file);
 
-    if (!save.writeHeader() || !save.writeScriptData() || !save.writeRoomData())
+    if (!save.writeHeader())
+      goto SAVE_ERROR;
+    
+    if (Control::instance().currentRoom()->hasPersistEvent())
+      Script::instance().processCallback(Control::instance().currentRoom()->persistEvent(), 0);
+
+    if (Control::instance().currentNode()->hasPersistEvent())
+      Script::instance().processCallback(Control::instance().currentNode()->persistEvent(), 0);
+    
+    if (!save.writeScriptData() || !save.writeRoomData())
       goto SAVE_ERROR;
   }
 
@@ -724,12 +733,21 @@ int Script::_globalUnpersist(lua_State *L) {
   lua_insert(L, 1);
   _globalSwitch(L);
 
+  // Fire unpersist event
+  lua_getglobal(L, loader.roomName().c_str());
+  Room *newRoom = ProxyToRoom(L, -1);
+  lua_pop(L, 1);
+  if (newRoom->hasUnpersistEvent())
+    Script::instance().processCallback(newRoom->unpersistEvent(), 0);
+
   // Restore room state
   loader.toggleSpots();
   
   Node *newNode;
   if ((newNode = loader.readNode()))
     Control::instance().switchTo(newNode);
+  if (newNode->hasUnpersistEvent())
+    Script::instance().processCallback(newNode->unpersistEvent(), 0);
 
   if (!loader.adjustCamera()) {
     Log::instance().error(kModScript, "Error adjusting camera! %s", SDL_GetError());

@@ -169,6 +169,31 @@ public:
     
     return 1;
   }
+
+  int onPersist(lua_State *L) {
+    if (!lua_isfunction(L, 1)) {
+      Log::instance().trace(kModScript, kString14009);
+      return 0;
+    }
+
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    r->setPersistEvent(ref);
+
+    return 0;
+  }
+
+  int onUnpersist(lua_State *L) {
+    if (!lua_isfunction(L, 1)) {
+      Log::instance().trace(kModScript, kString14009);
+      return 0;
+    }
+    
+    lua_pushvalue(L, 1);
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    r->setUnpersistEvent(ref);
+
+    return 0;
+  }
   
   Room* ptr() { return r; }
   
@@ -192,6 +217,8 @@ Luna<RoomProxy>::RegType RoomProxy::methods[] = {
   method(RoomProxy, setDefaultFootstep),
   method(RoomProxy, setEffects),
   method(RoomProxy, startTimer),
+  method(RoomProxy, onPersist),
+  method(RoomProxy, onUnpersist),
   {0,0}
 };
   

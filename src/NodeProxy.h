@@ -166,6 +166,31 @@ public:
     
     return 0;
   }
+
+  int onPersist(lua_State *L) {
+    if (!lua_isfunction(L, 1)) {
+      Log::instance().trace(kModScript, kString14009);
+      return 0;
+    }
+
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    n->setPersistEvent(ref);
+
+    return 0;
+  }
+
+  int onUnpersist(lua_State *L) {
+    if (!lua_isfunction(L, 1)) {
+      Log::instance().trace(kModScript, kString14009);
+      return 0;
+    }
+
+    lua_pushvalue(L, 1);
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    n->setUnpersistEvent(ref);
+
+    return 0;
+  }
   
   // Set a custom footstep
   int setFootstep(lua_State *L) {
@@ -205,6 +230,8 @@ Luna<NodeProxy>::RegType NodeProxy::methods[] = {
   method(NodeProxy, link),
   method(NodeProxy, onEnter),
   method(NodeProxy, onLeave),
+  method(NodeProxy, onPersist),
+  method(NodeProxy, onUnpersist),
   method(NodeProxy, setFootstep),
   {0,0}
 };

@@ -33,6 +33,8 @@ Node::Node() {
   _hasFootstep = false;
   _hasEnterEvent = false;
   _hasLeaveEvent = false;
+  _hasPersistEvent = false;
+  _hasUnpersistEvent = false;
   _isSlide = false;
   _parentRoom = 0;
   _slideReturn = 0;
@@ -95,6 +97,14 @@ int Node::slideReturn() {
   return _slideReturn;
 }
 
+bool Node::hasPersistEvent() {
+  return _hasPersistEvent;
+}
+
+bool Node::hasUnpersistEvent() {
+  return _hasUnpersistEvent;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
@@ -138,6 +148,16 @@ size_t Node::numSpots() {
   return _arrayOfSpots.size();
 }
 
+int Node::persistEvent() {
+  assert(_hasPersistEvent == true);
+  return _luaPersistRef;
+}
+
+int Node::unpersistEvent() {
+  assert(_hasUnpersistEvent == true);
+  return _luaUnpersistRef;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
@@ -179,6 +199,16 @@ void Node::setSlide(bool enabled) {
 
 void Node::setSlideReturn(int luaHandler) {
   _slideReturn = luaHandler;
+}
+
+void Node::setPersistEvent(const int luaRef) {
+  _hasPersistEvent = true;
+  _luaPersistRef = luaRef;
+}
+
+void Node::setUnpersistEvent(const int luaRef) {
+  _hasUnpersistEvent = true;
+  _luaUnpersistRef = luaRef;
 }
 
 ////////////////////////////////////////////////////////////
