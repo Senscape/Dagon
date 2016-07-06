@@ -49,6 +49,8 @@ class Node : public Object {
   bool hasLeaveEvent();
   bool hasSpots();
   bool isSlide();
+  bool hasPersistEvent();
+  bool hasUnpersistEvent();
   
   // Gets
   std::string bundleName();
@@ -61,6 +63,8 @@ class Node : public Object {
   Node* previousNode();
   size_t numSpots();
   int slideReturn();
+  int persistEvent();
+  int unpersistEvent();
   
   // Sets
   void setBundleName(std::string theName);
@@ -72,6 +76,8 @@ class Node : public Object {
   void setPreviousNode(Node* node);
   void setSlide(bool enabled);
   void setSlideReturn(int luaHandler);
+  void setPersistEvent(const int luaRef);
+  void setUnpersistEvent(const int luaRef);
   
   // State changes
   void addCustomLink(unsigned int withDirection, int luaHandler);
@@ -99,6 +105,10 @@ class Node : public Object {
   int _luaEnterReference;
   int _luaLeaveReference;
   int _slideReturn;
+  bool _hasPersistEvent;
+  int _luaPersistRef;
+  bool _hasUnpersistEvent;
+  int _luaUnpersistRef;
   
   void _link(unsigned int direction, Action* action);
   

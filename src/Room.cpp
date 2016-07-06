@@ -32,6 +32,8 @@ Room::Room() {
   _hasDefaultFootstep = false;
   _hasEffects = false;
   _hasEnterEvent = false;
+  _hasPersistEvent = false;
+  _hasUnpersistEvent = false;
   this->setType(kObjectRoom);
 }
 
@@ -60,6 +62,14 @@ bool Room::hasNodes() {
   return !_arrayOfNodes.empty();
 }
 
+bool Room::hasPersistEvent() {
+  return _hasPersistEvent;
+}
+
+bool Room::hasUnpersistEvent() {
+  return _hasUnpersistEvent;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
@@ -84,6 +94,16 @@ SettingCollection Room::effects() {
 int Room::enterEvent() {
   assert(_hasEnterEvent = true);
   return _luaReference;
+}
+
+int Room::persistEvent() {
+  assert(_hasPersistEvent == true);
+  return _persistReference;
+}
+
+int Room::unpersistEvent() {
+  assert(_hasUnpersistEvent == true);
+  return _unpersistReference;
 }
 
 size_t Room::numNodes() {
@@ -112,6 +132,16 @@ void Room::setEffects(const SettingCollection& theEffects) {
 void Room::setEnterEvent(int luaReference) {
   _hasEnterEvent = true;
   _luaReference = luaReference;
+}
+
+void Room::setPersistEvent(const int luaRef) {
+  _hasPersistEvent = true;
+  _persistReference = luaRef;
+}
+
+void Room::setUnpersistEvent(const int luaRef) {
+  _hasUnpersistEvent = true;
+  _unpersistReference = luaRef;
 }
 
 ////////////////////////////////////////////////////////////

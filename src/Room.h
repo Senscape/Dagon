@@ -44,6 +44,8 @@ class Room : public Object {
   bool hasDefaultFootstep();
   bool hasEffects();
   bool hasNodes();
+  bool hasPersistEvent();
+  bool hasUnpersistEvent();
   
   // Gets
   std::vector<Audio*> arrayOfAudios();
@@ -51,11 +53,15 @@ class Room : public Object {
   Audio* defaultFootstep();
   SettingCollection effects();
   int enterEvent();
+  int persistEvent();
+  int unpersistEvent();
   size_t numNodes();
   
   // Sets
   void setDefaultFootstep(Audio* theFootstep);
   void setEffects(const SettingCollection& theEffects);
+  void setPersistEvent(const int luaRef);
+  void setUnpersistEvent(const int luaRef);
   
   // State changes
   Audio* addAudio(Audio* anAudio);
@@ -82,6 +88,10 @@ class Room : public Object {
   bool _hasEffects;
   bool _hasEnterEvent;
   int _luaReference;
+  bool _hasPersistEvent;
+  int _persistReference;
+  bool _hasUnpersistEvent;
+  int _unpersistReference;
   
   Room(const Room&);
   void operator=(const Room&);
