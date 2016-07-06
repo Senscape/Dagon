@@ -29,6 +29,8 @@
 
 namespace dagon {
 
+const char SAVIdent[] = { '\x44', '\x41', '\x47', '\x4F', '\x4E', '\x53', '\x41', '\x56', '\x45' };
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor & Destructor
 ////////////////////////////////////////////////////////////
@@ -77,6 +79,16 @@ std::string Deserializer::roomName() {
 ////////////////////////////////////////////////////////////
 
 bool Deserializer::readHeader() {
+  { // Read magic number
+    char buf[sizeof(SAVIdent)];
+    if (!SDL_RWread(_rw, buf, sizeof(SAVIdent), 1))
+      return false;
+    if (std::memcmp(SAVIdent, buf, sizeof(SAVIdent)) != 0) {
+      Log::instance().error(kModScript, "Unexpected magic number. This is not a Dagon save file.");
+      return false;
+    }
+  }
+
   { // Read Dagon version string
     uint8_t len = SDL_ReadU8(_rw);
     std::vector<uint8_t> buf(len);
