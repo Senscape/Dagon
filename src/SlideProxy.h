@@ -128,6 +128,31 @@ public:
     
     return 0;
   }
+
+  int onPersist(lua_State *L) {
+    if (!lua_isfunction(L, 1)) {
+      Log::instance().trace(kModScript, kString14009);
+      return 0;
+    }
+
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    n->setPersistEvent(ref);
+
+    return 0;
+  }
+
+  int onUnpersist(lua_State *L) {
+    if (!lua_isfunction(L, 1)) {
+      Log::instance().trace(kModScript, kString14009);
+      return 0;
+    }
+
+    lua_pushvalue(L, 1);
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop and return a reference to the table.
+    n->setUnpersistEvent(ref);
+
+    return 0;
+  }
   
   Node* ptr() { return n; }
   
@@ -145,6 +170,8 @@ Luna<SlideProxy>::RegType SlideProxy::methods[] = {
   ObjectMethods(SlideProxy),
   method(SlideProxy, addSpot),
   method(SlideProxy, onReturn),
+  method(SlideProxy, onPersist),
+  method(SlideProxy, onUnpersist),
   {0,0}
 };
   
