@@ -1,3 +1,5 @@
+![Logo](https://raw.githubusercontent.com/Senscape/Dagon/master/extras/brand_small.png)
+
 ## DAGON - An Adventure Game Engine
 
 ### Description
