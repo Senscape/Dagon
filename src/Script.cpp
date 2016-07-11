@@ -716,13 +716,11 @@ int Script::_globalUnpersist(lua_State *L) {
   Room *oldRoom = ProxyToRoom(L, -1);
   lua_pop(L, 1);
 
-  Script::instance()._loadRoomFile(L, loader.roomName().c_str());
+  if (!oldRoom) { // Room doesn't exist. Create it.
+    Script::instance()._loadRoomFile(L, loader.roomName().c_str());
+  }
 
-  if (oldRoom)
-    Control::instance().replaceRoom(oldRoom);
-
-  // Load Lua variables.
-  if (!loader.readScriptData()) {
+  if (!loader.readScriptData()) { // Load Lua variables.
     Log::instance().error(kModScript, "Error loading Lua data! %s", SDL_GetError());
     lua_pushboolean(L, false);
     return 1;
