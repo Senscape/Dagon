@@ -81,7 +81,8 @@ public:
   }
 
   // Gets
-  std::vector<DGTimer> timers();
+  std::vector<DGTimer>& timers(); // THIS BREAKS ENCAPSULATION.
+                                  // Make sure you don't mutate the vector on accident.
   double timeElapsed(const DGTimer &timer); // How long since it was started?
                                             // Caller should ensure it makes sense to query
                                             // this timer for it's elapsed time.
