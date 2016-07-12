@@ -267,6 +267,46 @@ bool Serializer::writeRoomData() {
     return false;
   }
 
+  // Write Slide previous node hashes.
+  int64_t numSlidesPtr = SDL_RWtell(_rw);
+  if (numSlidesPtr < 0)
+    return false;
+  if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for actual number of Slides.
+    return false;
+
+  uint16_t numSlides = 0;
+  for (Room *room : Control::instance().rooms()) {
+    if (room->hasNodes()) {
+      room->beginIteratingNodes();
+
+      do {
+        Node *node = room->iterator();
+        if (node->isSlide()) {
+          try {
+            size_t hash = Control::instance().objMap.at(node);
+            size_t prevHash = Control::instance().objMap.at(node->previousNode());
+
+            if (!SDL_WriteBE64(_rw, hash))
+              return false;
+            if (!SDL_WriteBE64(_rw, prevHash))
+              return false;
+            numSlides++;
+          }
+          catch (std::out_of_range &e) {
+            Log::instance().warning(kModScript, "No object mapping for Slide or previous Node.");
+          }
+        }
+      } while (room->iterateNodes());
+    }
+  }
+
+  if (SDL_RWseek(_rw, numSlidesPtr, SEEK_SET) < 0)
+    return false;
+  if (!SDL_WriteBE16(_rw, numSlides))
+    return false;
+  if (SDL_RWseek(_rw, 0, SEEK_END) < 0) // Restore file pointer to end.
+    return false;
+
   // Write camera angles
   int hAngle = CameraManager::instance().angleHorizontal();
   const std::string hAngleStr = std::to_string(hAngle);
