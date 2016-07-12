@@ -19,6 +19,7 @@
 #include "Audio.h"
 #include "CameraManager.h"
 #include "Control.h"
+#include "Log.h"
 #include "Node.h"
 #include "Room.h"
 #include "Spot.h"
@@ -150,8 +151,7 @@ bool Serializer::writeHeader() {
 
   // Write version information
   {
-    const size_t len = UCHAR_MAX > strlen(DAGON_VERSION_STRING) ? strlen(DAGON_VERSION_STRING) :
-                                                                  UCHAR_MAX;
+    const size_t len = strlen(DAGON_VERSION_STRING);
     if (!SDL_WriteU8(_rw, len))
       return false;
     if (!SDL_RWwrite(_rw, DAGON_VERSION_STRING, len, 1))
@@ -170,6 +170,11 @@ bool Serializer::writeHeader() {
   }
 
   // Write current room name
+  if (Control::instance().currentRoom() && Control::instance().currentRoom()->name().empty()) {
+    Log::instance().error(kModScript, "Cannot save out of a Room.");
+    return false;
+  }
+
   const std::string name = Control::instance().currentRoom()->name();
   if (!SDL_WriteU8(_rw, name.length()))
     return false;
@@ -203,50 +208,64 @@ bool Serializer::writeScriptData() {
 
 bool Serializer::writeRoomData() {
   // Write the enable status for the spots of all nodes of all rooms
-  if (!SDL_WriteBE16(_rw, Control::instance().numRooms()))
+  int64_t numSpotsPtr = SDL_RWtell(_rw);
+  if (numSpotsPtr < 0)
+    return false;
+  if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of Spots.
     return false;
 
+  uint16_t numSpots = 0;
   for (Room *room : Control::instance().rooms()) {
-    if (!SDL_WriteBE16(_rw, room->numNodes()))
-      return false;
-
     if (room->hasNodes()) {
       room->beginIteratingNodes();
 
       do {
         Node *node = room->iterator();
 
-        if (!SDL_WriteBE16(_rw, node->numSpots()))
-          return false;
-
         if (node->hasSpots()) {
           node->beginIteratingSpots();
 
           do {
-            if (!SDL_WriteU8(_rw, node->currentSpot()->isEnabled()))
-              return false;
+            Spot *spot = node->currentSpot();
+
+            try {
+              size_t hash = Control::instance().objMap.at(spot);
+              if (!SDL_WriteBE64(_rw, hash))
+                return false;
+              if (!SDL_WriteU8(_rw, spot->isEnabled()))
+                return false;
+              numSpots++;
+            }
+            catch (std::out_of_range &e) {
+              Log::instance().warning(kModScript,
+                "No object mapping for Spot. Spot state not saved.");
+            }
           } while (node->iterateSpots());
         }
       } while (room->iterateNodes());
     }
   }
 
+  if (SDL_RWseek(_rw, numSpotsPtr, SEEK_SET) < 0)
+    return false;
+  if (!SDL_WriteBE16(_rw, numSpots))
+    return false;
+  if (SDL_RWseek(_rw, 0, SEEK_END) < 0) // Restore file pointer to end.
+    return false;
+
   Room *room = Control::instance().currentRoom();
 
-  // Write node number
-  uint16_t nodeIdx = 0;
-  if (room->hasNodes()) {
-    room->beginIteratingNodes();
-    do {
-      if (room->iterator() == room->currentNode())
-        break;
-
-      nodeIdx++;
-    } while (room->iterateNodes());
+  // Write node hash
+  try {
+    size_t hash = Control::instance().objMap.at(room->currentNode());
+    if (!SDL_WriteBE64(_rw, hash)) {
+      return false;
+    }
   }
-
-  if (!SDL_WriteBE16(_rw, nodeIdx))
+  catch (std::out_of_range &e) {
+    Log::instance().error(kModScript, "No object mapping exists for current Node.");
     return false;
+  }
 
   // Write camera angles
   int hAngle = CameraManager::instance().angleHorizontal();
@@ -271,13 +290,33 @@ bool Serializer::writeRoomData() {
     return false;
 
   // Write audio states
-  if (!SDL_WriteBE16(_rw, room->arrayOfAudios().size()))
+  int64_t numAudioPtr = SDL_RWtell(_rw);
+  if (numAudioPtr < 0)
+    return false;
+  if (!SDL_WriteBE16(_rw, 0)) // 2 placeholder bytes for the actual number of audios
     return false;
 
+  uint16_t numAudios = 0;
   for (Audio *audio : room->arrayOfAudios()) {
-    if (!SDL_WriteU8(_rw, audio->state()))
-      return false;
+    try {
+      size_t hash = Control::instance().objMap.at(audio);
+      if (!SDL_WriteBE64(_rw, hash))
+        return false;
+      if (!SDL_WriteU8(_rw, audio->state()))
+        return false;
+      numAudios++;
+    }
+    catch (std::out_of_range &e) {
+      Log::instance().warning(kModScript, "No object mapping for Audio %s", audio->name());
+    }
   }
+
+  if (SDL_RWseek(_rw, numAudioPtr, RW_SEEK_SET) < 0)
+    return false;
+  if (!SDL_WriteBE16(_rw, numAudios))
+    return false;
+  if (SDL_RWseek(_rw, 0, RW_SEEK_END) < 0) // Restore file pointer to end.
+    return false;
 
   // Write timers
   int64_t timersPtr = SDL_RWtell(_rw);
