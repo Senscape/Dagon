@@ -709,7 +709,7 @@ int Script::_globalPersist(lua_State *L) {
       Script::instance().processCallback(room->persistEvent(), 0);
 
     Node *node = Control::instance().currentNode();
-    if (node->hasPersistEvent())
+    if (node && node->hasPersistEvent())
       Script::instance().processCallback(node->persistEvent(), 0);
     
     if (!save.writeScriptData() || !save.writeRoomData())
