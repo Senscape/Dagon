@@ -54,7 +54,7 @@ TimerManager::~TimerManager() {
 // Implementation - Gets
 ////////////////////////////////////////////////////////////
 
-std::vector<DGTimer> TimerManager::timers() {
+std::vector<DGTimer>& TimerManager::timers() {
   return _arrayOfTimers;
 }
 
