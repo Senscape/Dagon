@@ -337,9 +337,6 @@ int Script::_globalNewIndex(lua_State *L) {
     Control::instance().objMap[obj] = hash;
     Control::instance().invObjMap[hash] = obj;
   }
-  else {
-    printf("NOOOPE\n");
-  }
 
   lua_settop(L, 3);
   lua_rawset(L, 1);
