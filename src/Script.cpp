@@ -326,8 +326,19 @@ int Script::_globalNewIndex(lua_State *L) {
 
     std::hash<std::string> functor;
     size_t hash = functor(lua_tostring(L, 2)); // Hash the key.
+
+    try {
+      Control::instance().invObjMap.at(hash);
+      Log::instance().warning(kModScript,
+                              "Hash collision %u! Variable name %s is not unique enough.", hash, lua_tostring(L, 2));
+    }
+    catch (std::out_of_range &e) {}
+
     Control::instance().objMap[obj] = hash;
     Control::instance().invObjMap[hash] = obj;
+  }
+  else {
+    printf("NOOOPE\n");
   }
 
   lua_settop(L, 3);
