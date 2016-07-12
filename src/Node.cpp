@@ -15,6 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <algorithm>
 #include <cassert>
 
 #include "Audio.h"
@@ -48,21 +49,11 @@ Node::Node() {
 Node::~Node() {
   // Note that we only delete spots automatically created by this class,
   // not ones by the user
-  bool done = false;
-  while (!done) {
-	_it = _arrayOfSpots.begin();
-    done = true;
-    while ((_it != _arrayOfSpots.end())) {
-		Spot* spot = (*_it);
-        if (spot->hasFlag(kSpotClass)) {
-		  // FIXME: Class spots should be in a different vector
-		  //delete spot;
-		  _arrayOfSpots.erase(_it);
-          done = false;
-          break;
-        } else ++_it;
-    }
-  }
+  // FIXME: Class spots should be in a different vector
+  _arrayOfSpots.erase(std::remove_if(_arrayOfSpots.begin(),
+                                     _arrayOfSpots.end(),
+                                     [](Spot *spot) { return spot->hasFlag(kSpotClass); }),
+                      _arrayOfSpots.end());
 }
 
 ////////////////////////////////////////////////////////////
