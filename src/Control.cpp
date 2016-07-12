@@ -1014,10 +1014,6 @@ void Control::update() {
   }
 }
 
-size_t Control::numRooms() {
-  return _arrayOfRooms.size();
-}
-
 std::vector<Room*> Control::rooms() {
   return _arrayOfRooms;
 }

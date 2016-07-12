@@ -29,6 +29,7 @@
 #include "Luna.h"
 
 #include <dirent.h>
+#include <functional>
 
 // The way the engine is designed, all static Lua functions will have
 // to grab a reference to the Control singleton and Log when required.
@@ -174,6 +175,13 @@ void Script::init() {
   // Create a table for game scripts to store data they want persisted
   lua_newtable(_L);
   lua_setglobal(_L, "dgPersistence");
+
+  // Use __newindex metamethod on _G to map certain types of Dagon objects
+  lua_newtable(_L);
+  lua_pushstring(_L, "__newindex");
+  lua_pushcfunction(_L, _globalNewIndex);
+  lua_settable(_L, -3);
+  lua_setmetatable(_L, LUA_GLOBALSINDEX);
   
   // Now we register the global functions that don't belong to any library
   _registerGlobals();
@@ -293,27 +301,46 @@ void Script::_error(int result) {
   }
 }
 
-void Script::_loadRoomFile(lua_State *L, const char *module) {
-  char line[kMaxLogLength], script[kMaxFileLength];
+int Script::_globalNewIndex(lua_State *L) {
+  if (lua_type(L, 2) == LUA_TSTRING) { // Is key a string?
+    Object *obj;
 
-  // Parse line to automatically create the room
-  snprintf(line, kMaxLogLength, "%s = Room(\"%s\")", module, module);
-  luaL_dostring(L, line);
+    switch (DGCheckProxy(L, 3)) { // Get type of value.
+    case kObjectNode:
+      obj = ProxyToNode(L, 3);
+      break;
+    case kObjectSlide:
+      obj = ProxyToSlide(L, 3);
+      break;
+    case kObjectSpot:
+      obj = ProxyToSpot(L, 3);
+      break;
+    case kObjectAudio:
+      obj = ProxyToAudio(L, 3);
+      break;
+    default:
+      lua_settop(L, 3);
+      lua_rawset(L, 1);
+      return 0;
+    }
 
-  // Load the corresponding Lua file
-  snprintf(script, kMaxFileLength, "%s.lua", module);
+    std::hash<std::string> functor;
+    size_t hash = functor(lua_tostring(L, 2)); // Hash the key.
 
-  int s = luaL_loadfile(L, config.path(kPathApp, script, kObjectRoom).c_str());
-  if (s == 0) {
-    setModule(module);
-    s = lua_pcall(L, 0, 0, 0);
-    unsetModule();
+    try {
+      Control::instance().invObjMap.at(hash);
+      Log::instance().warning(kModScript,
+                              "Hash collision %u! Variable name %s is not unique enough.", hash, lua_tostring(L, 2));
+    }
+    catch (std::out_of_range &e) {}
+
+    Control::instance().objMap[obj] = hash;
+    Control::instance().invObjMap[hash] = obj;
   }
 
-  if (s != 0) {
-    log.error(kModScript, "%s", lua_tostring(L, -1));
-    lua_pop(L, 1); // remove error message
-  }
+  lua_settop(L, 3);
+  lua_rawset(L, 1);
+  return 0;
 }
   
 int Script::_globalCopy(lua_State *L) {
@@ -518,7 +545,26 @@ int Script::_globalRoom(lua_State *L) {
   // We first check if the object already exists
   lua_getglobal(L, module);
   if (!lua_isuserdata(L, -1)) {
-    Script::instance()._loadRoomFile(L, module);
+    char line[kMaxLogLength], script[kMaxFileLength];
+
+    // Parse line to automatically create the room
+    snprintf(line, kMaxLogLength, "%s = Room(\"%s\")", module, module);
+    luaL_dostring(L, line);
+
+    // Load the corresponding Lua file
+    snprintf(script, kMaxFileLength, "%s.lua", module);
+
+    int s = luaL_loadfile(L, Config::instance().path(kPathApp, script, kObjectRoom).c_str());
+    if (s == 0) {
+      Script::instance().setModule(module);
+      s = lua_pcall(L, 0, 0, 0);
+      Script::instance().unsetModule();
+    }
+
+    if (s != 0) {
+      Log::instance().error(kModScript, "%s", lua_tostring(L, -1));
+      lua_pop(L, 1); // remove error message
+    }
   }
   
   // Nothing else to do...
@@ -666,11 +712,13 @@ int Script::_globalPersist(lua_State *L) {
     if (!save.writeHeader())
       goto SAVE_ERROR;
     
-    if (Control::instance().currentRoom()->hasPersistEvent())
-      Script::instance().processCallback(Control::instance().currentRoom()->persistEvent(), 0);
+    Room *room = Control::instance().currentRoom();
+    if (room && room->hasPersistEvent())
+      Script::instance().processCallback(room->persistEvent(), 0);
 
-    if (Control::instance().currentNode()->hasPersistEvent())
-      Script::instance().processCallback(Control::instance().currentNode()->persistEvent(), 0);
+    Node *node = Control::instance().currentNode();
+    if (node && node->hasPersistEvent())
+      Script::instance().processCallback(node->persistEvent(), 0);
     
     if (!save.writeScriptData() || !save.writeRoomData())
       goto SAVE_ERROR;
@@ -711,14 +759,10 @@ int Script::_globalUnpersist(lua_State *L) {
                          loader.version(), DAGON_VERSION_STRING);
   }
 
-  // Create new room from file. Remove existing room first.
-  lua_getglobal(L, loader.roomName().c_str());
-  Room *oldRoom = ProxyToRoom(L, -1);
-  lua_pop(L, 1);
-
-  if (!oldRoom) { // Room doesn't exist. Create it.
-    Script::instance()._loadRoomFile(L, loader.roomName().c_str());
-  }
+  // Create Room if it doesn't exist.
+  lua_pushstring(L, loader.roomName().c_str());
+  lua_insert(L, 1);
+  _globalRoom(L);
 
   if (!loader.readScriptData()) { // Load Lua variables.
     Log::instance().error(kModScript, "Error loading Lua data! %s", SDL_GetError());
@@ -733,10 +777,12 @@ int Script::_globalUnpersist(lua_State *L) {
 
   // Fire unpersist event
   lua_getglobal(L, loader.roomName().c_str());
-  Room *newRoom = ProxyToRoom(L, -1);
-  lua_pop(L, 1);
-  if (newRoom->hasUnpersistEvent())
-    Script::instance().processCallback(newRoom->unpersistEvent(), 0);
+  lua_insert(L, 1);
+  if (DGCheckProxy(L, 1) == kObjectRoom) {
+    Room *newRoom = ProxyToRoom(L, 1);
+    if (newRoom->hasUnpersistEvent())
+      Script::instance().processCallback(newRoom->unpersistEvent(), 0);
+  }
 
   // Restore room state
   loader.toggleSpots();
@@ -744,7 +790,7 @@ int Script::_globalUnpersist(lua_State *L) {
   Node *newNode;
   if ((newNode = loader.readNode()))
     Control::instance().switchTo(newNode);
-  if (newNode->hasUnpersistEvent())
+  if (newNode && newNode->hasUnpersistEvent())
     Script::instance().processCallback(newNode->unpersistEvent(), 0);
 
   if (!loader.adjustCamera()) {

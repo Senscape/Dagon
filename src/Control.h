@@ -23,6 +23,8 @@
 #include "Platform.h"
 #include "System.h"
 
+#include <unordered_map>
+
 namespace dagon {
 
 ////////////////////////////////////////////////////////////
@@ -134,6 +136,9 @@ public:
     static Control control;
     return control;
   }
+
+  std::unordered_map<Object*, size_t> objMap;
+  std::unordered_map<size_t, Object*> invObjMap;
   
   void init(int argc, char* argv[]);
   Node* currentNode();
@@ -158,7 +163,6 @@ public:
   void takeSnapshot();
   void terminate();
   void update();
-  size_t numRooms();
   std::vector<Room*> rooms();
 };
   

@@ -95,6 +95,10 @@ bool Deserializer::readHeader() {
     if (len > 0 && !SDL_RWread(_rw, buf.data(), buf.capacity(), 1))
       return false;
     _dgVersion = std::string(buf.begin(), buf.end());
+    if (_dgVersion.empty()) {
+      Log::instance().error(kModScript, "Empty version string.");
+      return false;
+    }
   }
 
   { // Read preview text
@@ -111,6 +115,10 @@ bool Deserializer::readHeader() {
     if (len > 0 && !SDL_RWread(_rw, buf.data(), buf.capacity(), 1))
       return false;
     _roomName = std::string(buf.begin(), buf.end());
+    if (_roomName.empty()) {
+      Log::instance().error(kModScript, "Empty room name.");
+      return false;
+    }
   }
 
   return true;
@@ -136,97 +144,39 @@ bool Deserializer::readScriptData() {
 
 void Deserializer::toggleSpots() {
   // Restore spot activation statuses
-  uint16_t numRooms = SDL_ReadBE16(_rw);
-  if (numRooms != Control::instance().numRooms()) {
-    Log::instance().warning(kModScript, "Room number mismatch. Expected %d. Got %d", numRooms,
-                            Control::instance().numRooms());
-  }
+  uint16_t numSpots = SDL_ReadBE16(_rw);
+  for (uint16_t i = 0; i < numSpots; i++) {
+    uint64_t hash = SDL_ReadBE64(_rw);
 
-  for (Room *room : Control::instance().rooms()) {
-    if (numRooms == 0)
-      break;
+    try {
+      Spot *spot = static_cast<Spot*>(Control::instance().invObjMap.at(hash));
+      bool enable = static_cast<bool>(SDL_ReadU8(_rw));
 
-    uint16_t numNodes = SDL_ReadBE16(_rw);
-    if (numNodes != room->numNodes()) {
-      Log::instance().warning(kModScript, "Node number mismatch. Expected %d. Got %d", numNodes,
-                              room->numNodes());
+      if (enable)
+        spot->enable(true); // TODO: find out if we should always force enable.
+      else
+        spot->disable(true); // TODO: find out if we should always force disable.
     }
-
-    if (room->hasNodes()) {
-      room->beginIteratingNodes();
-
-      do {
-        Node *node = room->iterator();
-
-        uint16_t numSpots = SDL_ReadBE16(_rw);
-        if (numSpots != node->numSpots()) {
-          Log::instance().warning(kModScript, "Spot number mismatch. Expected %d. Got %d",
-                                  numSpots, node->numSpots());
-        }
-
-        if (node->hasSpots()) {
-          node->beginIteratingSpots();
-
-          do {
-            Spot *spot = node->currentSpot();
-
-            bool enable = SDL_ReadU8(_rw);
-            if (enable)
-              spot->enable(true); // TODO: find out if we should always force enable.
-            else
-              spot->disable(true); // TODO: find out if we should always force disable.
-
-            numSpots--;
-          } while (node->iterateSpots() && numSpots > 0);
-
-          // Read remaining spots (necessary if number of spots has been reduced)
-          for (size_t i = 0; i < numSpots; i++)
-            SDL_ReadU8(_rw);
-        }
-
-        numNodes--;
-      } while (room->iterateNodes() && numNodes > 0);
-
-      // Read remaining nodes (necessary if number of nodes has been reduced)
-      for (size_t i = 0; i < numNodes; i++) {
-        uint16_t numSpots = SDL_ReadBE16(_rw);
-        for (size_t j = 0; j < numSpots; j++)
-          SDL_ReadU8(_rw);
-      }
-    }
-
-    numRooms--;
-  }
-
-  // Read remaining rooms (necessary if number of rooms has been reduced)
-  for (size_t i = 0; i < numRooms; i++) {
-    uint16_t numNodes = SDL_ReadBE16(_rw);
-    for (size_t j = 0; j < numNodes; j++) {
-      uint16_t numSpots = SDL_ReadBE16(_rw);
-      for (size_t k = 0; k < numSpots; k++)
-        SDL_ReadU8(_rw);
+    catch (std::out_of_range &e) {
+      Log::instance().warning(kModScript, "No Spot object matches hash %u", hash);
+      SDL_ReadU8(_rw); // Read Spot status.
     }
   }
 }
 
 Node *Deserializer::readNode() {
-  Room *room = Control::instance().currentRoom();
-  uint16_t nodeIdx = SDL_ReadBE16(_rw);
-  Node *node;
+  uint64_t hash = SDL_ReadBE64(_rw);
 
-  if (room->hasNodes()) {
-    room->beginIteratingNodes();
-
-    do {
-      node = room->iterator();
-
-      if (nodeIdx == 0)
-        break;
-      nodeIdx--;
-    } while (room->iterateNodes());
+  try {
+    Node *node = static_cast<Node*>(Control::instance().invObjMap.at(hash));
+    return node;
+  }
+  catch (std::out_of_range &e) {
+    Log::instance().warning(kModScript, "No Node object matches hash %u", hash);
+    return nullptr;
   }
 
-  return node;
+  return nullptr;
 }
 
 bool Deserializer::adjustCamera() {
@@ -281,46 +231,42 @@ bool Deserializer::adjustCamera() {
 }
 
 void Deserializer::toggleAudio() {
-  Room *room = Control::instance().currentRoom();
-
   uint16_t numAudios = SDL_ReadBE16(_rw);
-  if (numAudios != room->arrayOfAudios().size()) {
-    Log::instance().warning(kModScript, "Audio number mismatch. Expected %d. Got %d", numAudios,
-                            room->arrayOfAudios().size());
+  for (uint16_t i = 0; i < numAudios; i++) {
+    uint64_t hash = SDL_ReadBE64(_rw);
+
+    try {
+      Audio *audio = static_cast<Audio*>(Control::instance().invObjMap.at(hash));
+      uint8_t state = SDL_ReadU8(_rw);
+
+      switch (state) {
+      case kAudioInitial: {
+        // TODO: find out what to do now?
+        break;
+      }
+      case kAudioPlaying: {
+        if (!audio->isPlaying())
+          audio->play();
+        break;
+      }
+      case kAudioPaused: {
+        audio->pause();
+        break;
+      }
+      case kAudioStopped: {
+        audio->stop();
+        break;
+      }
+      default: {
+        Log::instance().warning(kModScript, "Unknown audio state read: %d", state);
+      }
+      }
+    }
+    catch (std::out_of_range &e) {
+      SDL_ReadU8(_rw); // Read audio state.
+      Log::instance().warning(kModScript, "No Audio object matches hash %u", hash);
+    }
   }
-
-  for (Audio *audio : room->arrayOfAudios()) {
-    uint8_t state = SDL_ReadU8(_rw);
-
-    switch (state) {
-    case kAudioInitial: {
-      // TODO: find out what to do now?
-      break;
-    }
-    case kAudioPlaying: {
-      if (!audio->isPlaying())
-        audio->play();
-      break;
-    }
-    case kAudioPaused: {
-      audio->pause();
-      break;
-    }
-    case kAudioStopped: {
-      audio->stop();
-      break;
-    }
-    default: {
-      Log::instance().warning(kModScript, "Unknown audio state read: %d", state);
-    }
-    }
-
-    numAudios--;
-  }
-
-  // Read remaining audios (necessary if number of audios has been reduced)
-  for (uint16_t i = 0; i < numAudios; i++)
-    SDL_ReadU8(_rw);
 }
 
 bool Deserializer::readTimers() {

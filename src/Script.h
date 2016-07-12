@@ -63,7 +63,7 @@ class Script {
   
   int _ref;
   void _error(int result);
-  void _loadRoomFile(lua_State *L, const char *module);
+  static int _globalNewIndex(lua_State *L);
   static int _globalCopy(lua_State *L);
   static int _globalCurrentNode(lua_State *L);
   static int _globalCurrentRoom(lua_State *L);
