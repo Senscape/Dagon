@@ -793,6 +793,9 @@ int Script::_globalUnpersist(lua_State *L) {
   if (newNode && newNode->hasUnpersistEvent())
     Script::instance().processCallback(newNode->unpersistEvent(), 0);
 
+  // Restore previous Node for Slides.
+  loader.restorePreviousNodes();
+
   if (!loader.adjustCamera()) {
     Log::instance().error(kModScript, "Error adjusting camera! %s", SDL_GetError());
     lua_pushboolean(L, false);

@@ -179,6 +179,24 @@ Node *Deserializer::readNode() {
   return nullptr;
 }
 
+void Deserializer::restorePreviousNodes() {
+  uint16_t numSlides = SDL_ReadBE16(_rw);
+  for (uint16_t i = 0; i < numSlides; i++) {
+    uint64_t hash = SDL_ReadBE64(_rw);
+    uint64_t prevHash = SDL_ReadBE64(_rw);
+
+    try {
+      Node *node = static_cast<Node*>(Control::instance().invObjMap.at(hash));
+      Node *prevNode = static_cast<Node*>(Control::instance().invObjMap.at(prevHash));
+      node->setPreviousNode(prevNode);
+    }
+    catch (std::out_of_range &e) {
+      Log::instance().warning(kModScript,
+        "No matching Node pair for hash pair %u and %u", hash, prevHash);
+    }
+  }
+}
+
 bool Deserializer::adjustCamera() {
   uint8_t hAngleLen = SDL_ReadU8(_rw);
   std::vector<uint8_t> hAngleBuf(hAngleLen);
