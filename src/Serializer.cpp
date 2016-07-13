@@ -228,17 +228,19 @@ bool Serializer::writeRoomData() {
           do {
             Spot *spot = node->currentSpot();
 
-            try {
-              size_t hash = Control::instance().objMap.at(spot);
-              if (!SDL_WriteBE64(_rw, hash))
-                return false;
-              if (!SDL_WriteU8(_rw, spot->isEnabled()))
-                return false;
-              numSpots++;
-            }
-            catch (std::out_of_range &e) {
-              Log::instance().warning(kModScript,
-                "No object mapping for Spot{%s}. State not saved.", spot->stringifyCoords().c_str());
+            if (spot->hasFlag(kSpotUser)) {
+              try {
+                size_t hash = Control::instance().objMap.at(spot);
+                if (!SDL_WriteBE64(_rw, hash))
+                  return false;
+                if (!SDL_WriteU8(_rw, spot->isEnabled()))
+                  return false;
+                numSpots++;
+              }
+              catch (std::out_of_range &e) {
+                Log::instance().warning(kModScript,
+                  "No object mapping for Spot{%s}. State not saved.", spot->stringifyCoords().c_str());
+              }
             }
           } while (node->iterateSpots());
         }
