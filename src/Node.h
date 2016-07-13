@@ -61,7 +61,6 @@ class Node : public Object {
   int leaveEvent();  
   Room* parentRoom();
   Node* previousNode();
-  size_t numSpots();
   int slideReturn();
   int persistEvent();
   int unpersistEvent();
