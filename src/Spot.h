@@ -73,6 +73,7 @@ class Spot : public Object {
   int vertexCount();
   Video* video();
   float volume();
+  std::string stringifyCoords() const;
   
   // Sets
   void setAction(Action* anAction);

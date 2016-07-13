@@ -238,7 +238,7 @@ bool Serializer::writeRoomData() {
             }
             catch (std::out_of_range &e) {
               Log::instance().warning(kModScript,
-                "No object mapping for Spot. Spot state not saved.");
+                "No object mapping for Spot{%s}. State not saved.", spot->stringifyCoords().c_str());
             }
           } while (node->iterateSpots());
         }
