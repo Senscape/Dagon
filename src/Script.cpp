@@ -98,6 +98,13 @@ void Script::init() {
   }
   else
     log.error(kModScript, "%s", kString14015);
+
+  // Use __newindex metamethod on _G to map certain types of Dagon objects
+  lua_newtable(_L);
+  lua_pushstring(_L, "__newindex");
+  lua_pushcfunction(_L, _globalNewIndex);
+  lua_settable(_L, -3);
+  lua_setmetatable(_L, LUA_GLOBALSINDEX);
   
   // TODO: Temporarily moved this here, even though Control should report this
   log.trace(kModControl, "========================================");
@@ -175,13 +182,6 @@ void Script::init() {
   // Create a table for game scripts to store data they want persisted
   lua_newtable(_L);
   lua_setglobal(_L, "dgPersistence");
-
-  // Use __newindex metamethod on _G to map certain types of Dagon objects
-  lua_newtable(_L);
-  lua_pushstring(_L, "__newindex");
-  lua_pushcfunction(_L, _globalNewIndex);
-  lua_settable(_L, -3);
-  lua_setmetatable(_L, LUA_GLOBALSINDEX);
   
   // Now we register the global functions that don't belong to any library
   _registerGlobals();
@@ -302,6 +302,23 @@ void Script::_error(int result) {
 }
 
 int Script::_globalNewIndex(lua_State *L) {
+  if (lua_type(L, 3) == LUA_TTABLE) {
+    lua_getmetatable(L, LUA_GLOBALSINDEX);
+
+    if (lua_getmetatable(L, 3) == 0) {
+      lua_setmetatable(L, 3);
+    }
+    else {
+      lua_pushvalue(L, 2);
+      const char *tblName = lua_tostring(L, -1);
+      lua_pop(L, 1);
+      Log::instance().info(kModScript, "Overwriting __newindex of %s", tblName);
+      lua_pushstring(L, "__newindex");
+      lua_pushcfunction(L, _globalNewIndex);
+      lua_settable(L, -3);
+    }
+  }
+
   if (lua_type(L, 2) == LUA_TSTRING) { // Is key a string?
     Object *obj;
 
