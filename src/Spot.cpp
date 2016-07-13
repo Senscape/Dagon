@@ -15,7 +15,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <algorithm>
 #include <cstdlib>
+#include <iterator>
+#include <sstream>
 
 #include "Audio.h"
 #include "Group.h"
@@ -138,6 +141,13 @@ Video* Spot::video() {
 
 float Spot::volume() {
   return _volume;
+}
+
+std::string Spot::stringifyCoords() const {
+  std::stringstream coordStr;
+  std::copy(_arrayOfCoordinates.begin(), std::prev(_arrayOfCoordinates.end()),
+            std::ostream_iterator<int>(coordStr, ", "));
+  return coordStr.str() + std::to_string(_arrayOfCoordinates.back());
 }
 
 ////////////////////////////////////////////////////////////
