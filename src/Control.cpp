@@ -691,7 +691,7 @@ void Control::switchTo(Object* theTarget) {
           }
           
           if (_directControlActive)
-            _directControlActive = false;
+           // _directControlActive = false;
           
           cameraManager.lock();
         }
