@@ -21,6 +21,10 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <algorithm>
+#include <iterator>
+#include <set>
+
 #include "AudioManager.h"
 #include "CameraManager.h"
 #include "Config.h"
@@ -652,6 +656,26 @@ void Control::switchTo(Object* theTarget) {
           log.warning(kModControl, "%s: %s", kString12005, _currentRoom->name().c_str());
           return;
         }
+
+        // This has to be done every time so that room audios keep playing
+        if (_currentRoom->hasAudios()) {
+          //log.trace(kModControl, "Managing environmental sounds...");
+          std::vector<Audio*>::iterator it;
+          std::vector<Audio*> arrayOfAudios = _currentRoom->arrayOfAudios();
+
+          it = arrayOfAudios.begin();
+
+          while (it != arrayOfAudios.end()) {
+            if ((*it)->state() != kAudioPlaying)
+              (*it)->fadeIn();
+            audioManager.requestAudio((*it));
+            if ((*it)->doesAutoplay()) {
+              (*it)->play();
+            }
+
+            ++it;
+          }
+        }
         
         textureManager.setRoomToPreload(_currentRoom);
         
@@ -703,12 +727,59 @@ void Control::switchTo(Object* theTarget) {
         break;
       case kObjectNode: {
         //log.trace(kModControl, "Switching to node...");
-        audioManager.clear();
         if (currentNode()->isSlide())
           cameraManager.unlock();
         
         //log.trace(kModControl, "Set parent room");
+        Node* curNode = currentNode();
+        std::set<Audio*> curNodeAudios;
+
+        if (curNode && curNode->hasSpots()) {
+          curNode->beginIteratingSpots();
+
+          do {
+            Spot *curSpot = curNode->currentSpot();
+            if (curSpot->hasAudio() && curSpot->audio()->doesAutoplay()) {
+              curNodeAudios.insert(curSpot->audio());
+            }
+          } while (curNode->iterateSpots());
+        }
+
         Node* node = (Node*)theTarget;
+        std::set<Audio*> targetNodeAudios;
+
+        if (node->hasSpots()) {
+          node->beginIteratingSpots();
+
+          do {
+            Spot *targetspot = node->currentSpot();
+            if (targetspot->hasAudio() && targetspot->audio()->doesAutoplay()) {
+              targetNodeAudios.insert(targetspot->audio());
+            }
+          } while (node->iterateSpots());
+        }
+
+        std::vector<Audio*> audiosToStop;
+        std::set_difference(curNodeAudios.begin(), curNodeAudios.end(), targetNodeAudios.begin(),
+                            targetNodeAudios.end(), std::back_inserter(audiosToStop));
+
+        for (Audio *audio : audiosToStop) {
+          if (audio->isPlaying()) {
+            audio->fadeOut();
+          }
+        }
+
+        std::vector<Audio*> audiosToPlay;
+        std::set_difference(targetNodeAudios.begin(), targetNodeAudios.end(), curNodeAudios.begin(),
+                            curNodeAudios.end(), std::back_inserter(audiosToPlay));
+
+        for (Audio *audio : audiosToPlay) {
+          if (!audio->isPlaying()) {
+            audio->fadeIn();
+            audio->play();
+          }
+        }
+
         Room* room = node->parentRoom();
         
         if (room) {
@@ -865,26 +936,6 @@ void Control::switchTo(Object* theTarget) {
                _currentRoom->name().c_str(), current->description().c_str());
       //log.trace(kModControl, "Set window title");
       system.setTitle(title);
-    }
-    
-    // This has to be done every time so that room audios keep playing
-    if (_currentRoom->hasAudios() && (!_currentRoom->currentNode()->isSlide() && theTarget != NULL)) {
-      //log.trace(kModControl, "Managing environmental sounds...");
-      std::vector<Audio*>::iterator it;
-      std::vector<Audio*> arrayOfAudios = _currentRoom->arrayOfAudios();
-      
-      it = arrayOfAudios.begin();
-      
-      while (it != arrayOfAudios.end()) {
-        if ((*it)->state() != kAudioPlaying)
-          (*it)->fadeIn();
-        audioManager.requestAudio((*it));
-        if ((*it)->doesAutoplay()) {
-          (*it)->play();
-        }
-        
-        ++it;
-      }
     }
   }
   
