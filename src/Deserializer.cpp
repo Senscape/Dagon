@@ -20,6 +20,7 @@
 #include "CameraManager.h"
 #include "Config.h"
 #include "Control.h"
+#include "CursorManager.h"
 #include "Log.h"
 #include "Room.h"
 #include "Spot.h"
@@ -378,6 +379,18 @@ void Deserializer::readControlMode() {
   default: {
     Log::instance().warning(kModScript, "Unknown control mode: %d", controlMode);
   }
+  }
+}
+
+void Deserializer::readCursorState() {
+  uint8_t cursorType = SDL_ReadU8(_rw);
+  if (cursorType >= kCursorNormal && cursorType <= kCursorCustom) { // Not very nice, but better
+                                                                    // than switching over the
+                                                                    // large enum CursorTypes
+    CursorManager::instance().setType(cursorType);
+  }
+  else {
+    Log::instance().warning(kModScript, "Unknown cursor state: %d", cursorType);
   }
 }
 

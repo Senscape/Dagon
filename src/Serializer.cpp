@@ -19,6 +19,7 @@
 #include "Audio.h"
 #include "CameraManager.h"
 #include "Control.h"
+#include "CursorManager.h"
 #include "Log.h"
 #include "Node.h"
 #include "Room.h"
@@ -429,6 +430,10 @@ bool Serializer::writeRoomData() {
 
   // Write control mode
   if (!SDL_WriteU8(_rw, Config::instance().controlMode))
+    return false;
+
+  // Write cursor state
+  if (!SDL_WriteU8(_rw, CursorManager::instance().type()))
     return false;
 
   return true;

@@ -84,6 +84,7 @@ public:
   void load(int typeOfCursor, const char* imageFromFile, int offsetX = 0, int offsetY = 0);
   bool onButton();
   Point position();
+  int type();
   void removeAction();
   void setDragging(bool flag);
   void setOnButton(bool flag);

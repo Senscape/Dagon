@@ -64,6 +64,7 @@ public:
   void toggleAudio();
   bool readTimers();
   void readControlMode();
+  void readCursorState();
 };
 
 }

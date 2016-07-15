@@ -828,6 +828,7 @@ int Script::_globalUnpersist(lua_State *L) {
   }
 
   loader.readControlMode();
+  loader.readCursorState();
 
   lua_pushboolean(L, true);
   return 1;
