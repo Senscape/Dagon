@@ -739,7 +739,7 @@ void Control::switchTo(Object* theTarget) {
 
           do {
             Spot *curSpot = curNode->currentSpot();
-            if (curSpot->hasAudio() && curSpot->audio()->doesAutoplay()) {
+            if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
               curNodeAudios.insert(curSpot->audio());
             }
           } while (curNode->iterateSpots());
@@ -753,7 +753,7 @@ void Control::switchTo(Object* theTarget) {
 
           do {
             Spot *targetspot = node->currentSpot();
-            if (targetspot->hasAudio() && targetspot->audio()->doesAutoplay()) {
+            if (targetspot->hasAudio() && targetspot->hasFlag(kSpotAuto)) {
               targetNodeAudios.insert(targetspot->audio());
             }
           } while (node->iterateSpots());
