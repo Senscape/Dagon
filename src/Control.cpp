@@ -658,7 +658,14 @@ void Control::switchTo(Object* theTarget) {
         std::set_difference(curRoomAudios.begin(), curRoomAudios.end(), nextRoomAudios.begin(),
                             nextRoomAudios.end(), std::back_inserter(audiosToBeUnloaded));
         for (Audio *audio : audiosToBeUnloaded) {
-          audio->unload();
+          if (audio->isPlaying()) {
+            audio->setFadeSpeed(kFadeSlow);
+            audio->fadeOut();
+            audioManager.pendingUnload(audio);
+          }
+          else {
+            audio->unload();
+          }
         }
 
         //log.trace(kModControl, "Set room and Lua objet");
@@ -742,6 +749,8 @@ void Control::switchTo(Object* theTarget) {
         //log.trace(kModControl, "Switching to node...");
         if (currentNode()->isSlide())
           cameraManager.unlock();
+
+        audioManager.unloadPending();
         
         //log.trace(kModControl, "Set parent room");
         Node* curNode = currentNode();

@@ -292,6 +292,19 @@ void AudioManager::terminate() {
   }
 }
 
+void AudioManager::pendingUnload(Audio *target) {
+  _pendingUnload.push_back(target);
+}
+
+void AudioManager::unloadPending() {
+  for (auto it = _pendingUnload.begin(); it != _pendingUnload.end(); ++it) {
+    if (!(*it)->isPlaying()) {
+      (*it)->unload();
+      _pendingUnload.erase(it);
+    }
+  }
+}
+
 // Asynchronous method
 bool AudioManager::update() {
   if (_isRunning) {
