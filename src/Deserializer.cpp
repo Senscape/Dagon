@@ -20,7 +20,6 @@
 #include "CameraManager.h"
 #include "Config.h"
 #include "Control.h"
-#include "CursorManager.h"
 #include "Log.h"
 #include "Room.h"
 #include "Spot.h"
@@ -143,8 +142,8 @@ bool Deserializer::readScriptData() {
   return true;
 }
 
-void Deserializer::toggleSpots() {
-  // Restore spot activation statuses
+void Deserializer::restoreSpots() {
+  // Restore spot states
   uint16_t numSpots = SDL_ReadBE16(_rw);
   for (uint16_t i = 0; i < numSpots; i++) {
     uint64_t hash = SDL_ReadBE64(_rw);
@@ -157,10 +156,22 @@ void Deserializer::toggleSpots() {
         spot->enable(true); // TODO: find out if we should always force enable.
       else
         spot->disable(true); // TODO: find out if we should always force disable.
+
+      bool hasAction = static_cast<bool>(SDL_ReadU8(_rw));
+      if (hasAction) {
+        int cursorType = static_cast<int>(SDL_ReadU8(_rw));
+        if (spot->hasAction() && cursorType >= kCursorNormal && cursorType <= kCursorCustom) {
+          spot->action()->cursor = cursorType;
+        }
+      }
     }
     catch (std::out_of_range &e) {
       Log::instance().warning(kModScript, "No Spot object matches hash %u", hash);
-      SDL_ReadU8(_rw); // Read Spot status.
+      SDL_ReadU8(_rw); // Read enable status.
+      bool hasAction = static_cast<bool>(SDL_ReadU8(_rw));
+      if (hasAction) {
+        SDL_ReadU8(_rw); // Read cursor type.
+      }
     }
   }
 }
@@ -379,18 +390,6 @@ void Deserializer::readControlMode() {
   default: {
     Log::instance().warning(kModScript, "Unknown control mode: %d", controlMode);
   }
-  }
-}
-
-void Deserializer::readCursorState() {
-  uint8_t cursorType = SDL_ReadU8(_rw);
-  if (cursorType >= kCursorNormal && cursorType <= kCursorCustom) { // Not very nice, but better
-                                                                    // than switching over the
-                                                                    // large enum CursorTypes
-    CursorManager::instance().setType(cursorType);
-  }
-  else {
-    Log::instance().warning(kModScript, "Unknown cursor state: %d", cursorType);
   }
 }
 

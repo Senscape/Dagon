@@ -802,7 +802,7 @@ int Script::_globalUnpersist(lua_State *L) {
   }
 
   // Restore room state
-  loader.toggleSpots();
+  loader.restoreSpots();
   
   Node *newNode;
   if ((newNode = loader.readNode()))
@@ -828,7 +828,6 @@ int Script::_globalUnpersist(lua_State *L) {
   }
 
   loader.readControlMode();
-  loader.readCursorState();
 
   lua_pushboolean(L, true);
   return 1;

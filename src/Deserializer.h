@@ -57,14 +57,13 @@ public:
   // State changes
   bool readHeader();
   bool readScriptData();
-  void toggleSpots();
+  void restoreSpots();
   Node *readNode();
   void restorePreviousNodes();
   bool adjustCamera();
   void toggleAudio();
   bool readTimers();
   void readControlMode();
-  void readCursorState();
 };
 
 }

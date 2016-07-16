@@ -19,7 +19,6 @@
 #include "Audio.h"
 #include "CameraManager.h"
 #include "Control.h"
-#include "CursorManager.h"
 #include "Log.h"
 #include "Node.h"
 #include "Room.h"
@@ -208,7 +207,7 @@ bool Serializer::writeScriptData() {
 }
 
 bool Serializer::writeRoomData() {
-  // Write the enable status for the spots of all nodes of all rooms
+  // Write the state for the spots of all nodes of all rooms
   int64_t numSpotsPtr = SDL_RWtell(_rw);
   if (numSpotsPtr < 0)
     return false;
@@ -234,8 +233,18 @@ bool Serializer::writeRoomData() {
                 size_t hash = Control::instance().objMap.at(spot);
                 if (!SDL_WriteBE64(_rw, hash))
                   return false;
+
                 if (!SDL_WriteU8(_rw, spot->isEnabled()))
                   return false;
+
+                bool hasAction = spot->hasAction();
+                if (!SDL_WriteU8(_rw, hasAction))
+                  return false;
+                if (hasAction) {
+                  if (!SDL_WriteU8(_rw, spot->action()->cursor))
+                    return false;
+                }
+
                 numSpots++;
               }
               catch (std::out_of_range &e) {
@@ -430,10 +439,6 @@ bool Serializer::writeRoomData() {
 
   // Write control mode
   if (!SDL_WriteU8(_rw, Config::instance().controlMode))
-    return false;
-
-  // Write cursor state
-  if (!SDL_WriteU8(_rw, CursorManager::instance().type()))
     return false;
 
   return true;
