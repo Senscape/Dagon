@@ -639,16 +639,29 @@ void Control::switchTo(Object* theTarget) {
     switch (theTarget->type()) {
       case kObjectRoom: {
         //log.trace(kModControl, "Switching to room...");
-        audioManager.clear();
         feedManager.clear(); // Clear all pending feeds
         
         if (currentNode()) {
           if (currentNode()->isSlide())
             cameraManager.unlock();
         }
-        
-        //log.trace(kModControl, "Set room and Lua objet");
+
+        std::set<Audio*> curRoomAudios;
+        if (_currentRoom) {
+          curRoomAudios = _currentRoom->allAudios();
+        }
+
         _currentRoom = (Room*)theTarget;
+        std::set<Audio*> nextRoomAudios = _currentRoom->allAudios();
+
+        std::vector<Audio*> audiosToBeUnloaded;
+        std::set_difference(curRoomAudios.begin(), curRoomAudios.end(), nextRoomAudios.begin(),
+                            nextRoomAudios.end(), std::back_inserter(audiosToBeUnloaded));
+        for (Audio *audio : audiosToBeUnloaded) {
+          audio->unload();
+        }
+
+        //log.trace(kModControl, "Set room and Lua objet");
         _scene->setRoom((Room*)theTarget);
         timerManager.setLuaObject(_currentRoom->luaObject());
         
@@ -940,7 +953,6 @@ void Control::switchTo(Object* theTarget) {
   }
   
   //log.trace(kModControl, "Flushing audio...");
-  audioManager.flush();
   
   cameraManager.stopPanning();
   
