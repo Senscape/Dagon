@@ -297,10 +297,13 @@ void AudioManager::pendingUnload(Audio *target) {
 }
 
 void AudioManager::unloadPending() {
-  for (auto it = _pendingUnload.begin(); it != _pendingUnload.end(); ++it) {
+  for (auto it = _pendingUnload.begin(); it != _pendingUnload.end();) {
     if (!(*it)->isPlaying()) {
       (*it)->unload();
-      _pendingUnload.erase(it);
+      it = _pendingUnload.erase(it);
+    }
+    else {
+      ++it;
     }
   }
 }
