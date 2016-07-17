@@ -104,10 +104,6 @@ Point CursorManager::position() {
   return MakePoint(_x, _y);
 }
 
-int CursorManager::type() {
-  return _current->type;
-}
-
 void CursorManager::removeAction() {
   _hasAction = false;
 }
