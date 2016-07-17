@@ -665,6 +665,7 @@ void Control::switchTo(Object* theTarget) {
           }
           else {
             audio->unload();
+            audioManager.deactivateAudio(audio);
           }
         }
 
@@ -963,6 +964,7 @@ void Control::switchTo(Object* theTarget) {
   
   //log.trace(kModControl, "Flushing audio...");
   
+  audioManager.flush();
   cameraManager.stopPanning();
   
   //log.trace(kModControl, "Done!");

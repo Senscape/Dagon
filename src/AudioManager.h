@@ -85,6 +85,7 @@ public:
   
   void init();
   void registerAudio(Audio* target);
+  void deactivateAudio(Audio* target);
   void requestAudio(Audio* target);
   void setOrientation(float* orientation);
   void terminate();
