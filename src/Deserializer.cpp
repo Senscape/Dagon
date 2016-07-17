@@ -148,29 +148,30 @@ void Deserializer::restoreSpots() {
   for (uint16_t i = 0; i < numSpots; i++) {
     uint64_t hash = SDL_ReadBE64(_rw);
 
-    try {
-      Spot *spot = static_cast<Spot*>(Control::instance().invObjMap.at(hash));
-      bool enable = static_cast<bool>(SDL_ReadU8(_rw));
-
-      if (enable)
-        spot->enable(true); // TODO: find out if we should always force enable.
-      else
-        spot->disable(true); // TODO: find out if we should always force disable.
-
-      bool hasAction = static_cast<bool>(SDL_ReadU8(_rw));
-      if (hasAction) {
-        int cursorType = static_cast<int>(SDL_ReadU8(_rw));
-        if (spot->hasAction() && cursorType >= kCursorNormal && cursorType <= kCursorCustom) {
-          spot->action()->cursor = cursorType;
-        }
-      }
-    }
-    catch (std::out_of_range &e) {
-      Log::instance().warning(kModScript, "No Spot object matches hash %u", hash);
-      SDL_ReadU8(_rw); // Read enable status.
+    auto spotIter = Control::instance().invObjMap.find(hash);
+    if (spotIter == Control::instance().invObjMap.end()) {
+      Log::instance().warning(kModScript, "No Spot matches hash %llu", hash);
+      SDL_ReadU8(_rw); // Read Spot status.
       bool hasAction = static_cast<bool>(SDL_ReadU8(_rw));
       if (hasAction) {
         SDL_ReadU8(_rw); // Read cursor type.
+      }
+      continue;
+    }
+
+    Spot *spot = static_cast<Spot*>(spotIter->second);
+    bool enable = static_cast<bool>(SDL_ReadU8(_rw));
+
+    if (enable)
+      spot->enable(true); // TODO: find out if we should always force enable.
+    else
+      spot->disable(true); // TODO: find out if we should always force disable.
+
+    bool hasAction = static_cast<bool>(SDL_ReadU8(_rw));
+    if (hasAction) {
+      int cursorType = static_cast<int>(SDL_ReadU8(_rw));
+      if (spot->hasAction() && cursorType >= kCursorNormal && cursorType <= kCursorCustom) {
+        spot->action()->cursor = cursorType;
       }
     }
   }
@@ -179,16 +180,13 @@ void Deserializer::restoreSpots() {
 Node *Deserializer::readNode() {
   uint64_t hash = SDL_ReadBE64(_rw);
 
-  try {
-    Node *node = static_cast<Node*>(Control::instance().invObjMap.at(hash));
-    return node;
-  }
-  catch (std::out_of_range &e) {
-    Log::instance().warning(kModScript, "No Node object matches hash %u", hash);
+  auto nodeIter = Control::instance().invObjMap.find(hash);
+  if (nodeIter == Control::instance().invObjMap.end()) {
+    Log::instance().warning(kModScript, "No Node object matches hash %llu", hash);
     return nullptr;
   }
 
-  return nullptr;
+  return static_cast<Node*>(nodeIter->second);
 }
 
 void Deserializer::restorePreviousNodes() {
@@ -197,15 +195,21 @@ void Deserializer::restorePreviousNodes() {
     uint64_t hash = SDL_ReadBE64(_rw);
     uint64_t prevHash = SDL_ReadBE64(_rw);
 
-    try {
-      Node *node = static_cast<Node*>(Control::instance().invObjMap.at(hash));
-      Node *prevNode = static_cast<Node*>(Control::instance().invObjMap.at(prevHash));
-      node->setPreviousNode(prevNode);
+    auto nodeIter = Control::instance().invObjMap.find(hash);
+    if (nodeIter == Control::instance().invObjMap.end()) {
+      Log::instance().warning(kModScript, "No Slide matches hash %llu", hash);
+      continue;
     }
-    catch (std::out_of_range &e) {
-      Log::instance().warning(kModScript,
-        "No matching Node pair for hash pair %u and %u", hash, prevHash);
+
+    auto prevNodeIter = Control::instance().invObjMap.find(prevHash);
+    if (prevNodeIter == Control::instance().invObjMap.end()) {
+      Log::instance().warning(kModScript, "No Node matches hash %llu", prevHash);
+      continue;
     }
+
+    Node *node = static_cast<Node*>(nodeIter->second);
+    Node *prevNode = static_cast<Node*>(prevNodeIter->second);
+    node->setPreviousNode(prevNode);
   }
 }
 
@@ -264,37 +268,36 @@ void Deserializer::toggleAudio() {
   uint16_t numAudios = SDL_ReadBE16(_rw);
   for (uint16_t i = 0; i < numAudios; i++) {
     uint64_t hash = SDL_ReadBE64(_rw);
+    uint8_t state = SDL_ReadU8(_rw);
 
-    try {
-      Audio *audio = static_cast<Audio*>(Control::instance().invObjMap.at(hash));
-      uint8_t state = SDL_ReadU8(_rw);
-
-      switch (state) {
-      case kAudioInitial: {
-        // TODO: find out what to do now?
-        break;
-      }
-      case kAudioPlaying: {
-        if (!audio->isPlaying())
-          audio->play();
-        break;
-      }
-      case kAudioPaused: {
-        audio->pause();
-        break;
-      }
-      case kAudioStopped: {
-        audio->stop();
-        break;
-      }
-      default: {
-        Log::instance().warning(kModScript, "Unknown audio state read: %d", state);
-      }
-      }
+    auto audioIter = Control::instance().invObjMap.find(hash);
+    if (audioIter == Control::instance().invObjMap.end()) {
+      Log::instance().warning(kModScript, "No Audio object matches hash %llu", hash);
+      continue;
     }
-    catch (std::out_of_range &e) {
-      SDL_ReadU8(_rw); // Read audio state.
-      Log::instance().warning(kModScript, "No Audio object matches hash %u", hash);
+
+    Audio *audio = static_cast<Audio*>(audioIter->second);
+    switch (state) {
+    case kAudioInitial: {
+      // TODO: find out what to do now?
+      break;
+    }
+    case kAudioPlaying: {
+      if (!audio->isPlaying())
+        audio->play();
+      break;
+    }
+    case kAudioPaused: {
+      audio->pause();
+      break;
+    }
+    case kAudioStopped: {
+      audio->stop();
+      break;
+    }
+    default: {
+      Log::instance().warning(kModScript, "Unknown audio state read: %d", state);
+    }
     }
   }
 }
