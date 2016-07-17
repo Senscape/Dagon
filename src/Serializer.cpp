@@ -230,18 +230,20 @@ bool Serializer::writeRoomData() {
             Spot *spot = node->currentSpot();
 
             if (spot->hasFlag(kSpotUser)) {
-              try {
-                size_t hash = Control::instance().objMap.at(spot);
-                if (!SDL_WriteBE64(_rw, hash))
-                  return false;
-                if (!SDL_WriteU8(_rw, spot->isEnabled()))
-                  return false;
-                numSpots++;
-              }
-              catch (std::out_of_range &e) {
+              auto hashIter = Control::instance().objMap.find(spot);
+              if (hashIter == Control::instance().objMap.end()) {
                 Log::instance().warning(kModScript,
-                  "No object mapping for Spot{%s}. State not saved.", spot->stringifyCoords().c_str());
+                                        "No object mapping for Spot{%s}. State not saved.",
+                                        spot->stringifyCoords().c_str());
+                continue;
               }
+
+              uint64_t hash = hashIter->second;
+              if (!SDL_WriteBE64(_rw, hash))
+                return false;
+              if (!SDL_WriteU8(_rw, spot->isEnabled()))
+                return false;
+              numSpots++;
             }
           } while (node->iterateSpots());
         }
@@ -259,14 +261,14 @@ bool Serializer::writeRoomData() {
   Room *room = Control::instance().currentRoom();
 
   // Write node hash
-  try {
-    size_t hash = Control::instance().objMap.at(room->currentNode());
-    if (!SDL_WriteBE64(_rw, hash)) {
-      return false;
-    }
-  }
-  catch (std::out_of_range &e) {
+  auto hashIter = Control::instance().objMap.find(room->currentNode());
+  if (hashIter == Control::instance().objMap.end()) {
     Log::instance().error(kModScript, "No object mapping exists for current Node.");
+    return false;
+  }
+
+  uint64_t hash = hashIter->second;
+  if (!SDL_WriteBE64(_rw, hash)) {
     return false;
   }
 
@@ -285,19 +287,26 @@ bool Serializer::writeRoomData() {
       do {
         Node *node = room->iterator();
         if (node->isSlide()) {
-          try {
-            size_t hash = Control::instance().objMap.at(node);
-            size_t prevHash = Control::instance().objMap.at(node->previousNode());
+          auto hashIter = Control::instance().objMap.find(node);
+          if (hashIter == Control::instance().objMap.end()) {
+            Log::instance().warning(kModScript, "No object mapping for current Slide.");
+            continue;
+          }
 
-            if (!SDL_WriteBE64(_rw, hash))
-              return false;
-            if (!SDL_WriteBE64(_rw, prevHash))
-              return false;
-            numSlides++;
+          auto prevHashIter = Control::instance().objMap.find(node->previousNode());
+          if (prevHashIter == Control::instance().objMap.end()) {
+            Log::instance().warning(kModScript, "No object mapping for previous Node.");
+            continue;
           }
-          catch (std::out_of_range &e) {
-            Log::instance().warning(kModScript, "No object mapping for Slide or previous Node.");
-          }
+
+          uint64_t hash = hashIter->second;
+          uint64_t prevHash = prevHashIter->second;
+
+          if (!SDL_WriteBE64(_rw, hash))
+            return false;
+          if (!SDL_WriteBE64(_rw, prevHash))
+            return false;
+          numSlides++;
         }
       } while (room->iterateNodes());
     }
@@ -341,17 +350,18 @@ bool Serializer::writeRoomData() {
 
   uint16_t numAudios = 0;
   for (Audio *audio : room->arrayOfAudios()) {
-    try {
-      size_t hash = Control::instance().objMap.at(audio);
-      if (!SDL_WriteBE64(_rw, hash))
-        return false;
-      if (!SDL_WriteU8(_rw, audio->state()))
-        return false;
-      numAudios++;
-    }
-    catch (std::out_of_range &e) {
+    auto hashIter = Control::instance().objMap.find(audio);
+    if (hashIter == Control::instance().objMap.end()) {
       Log::instance().warning(kModScript, "No object mapping for Audio %s", audio->name());
+      continue;
     }
+
+    uint64_t hash = hashIter->second;
+    if (!SDL_WriteBE64(_rw, hash))
+      return false;
+    if (!SDL_WriteU8(_rw, audio->state()))
+      return false;
+    numAudios++;
   }
 
   if (SDL_RWseek(_rw, numAudioPtr, RW_SEEK_SET) < 0)

@@ -29,7 +29,6 @@
 #include "Luna.h"
 
 #include <dirent.h>
-#include <functional>
 
 // The way the engine is designed, all static Lua functions will have
 // to grab a reference to the Control singleton and Log when required.
@@ -322,7 +321,7 @@ int Script::_globalNewIndex(lua_State *L) {
   if (lua_type(L, 2) == LUA_TSTRING) { // Is key a string?
     Object *obj;
 
-    switch (DGCheckProxy(L, 3)) { // Get type of value.
+    switch (DGCheckProxy(L, 3)) { // We only care about certain types of values.
     case kObjectNode:
       obj = ProxyToNode(L, 3);
       break;
@@ -341,15 +340,33 @@ int Script::_globalNewIndex(lua_State *L) {
       return 0;
     }
 
-    std::hash<std::string> functor;
-    size_t hash = functor(lua_tostring(L, 2)); // Hash the key.
-
-    try {
-      Control::instance().invObjMap.at(hash);
-      Log::instance().warning(kModScript,
-                              "Hash collision %u! Variable name %s is not unique enough.", hash, lua_tostring(L, 2));
+    const char *varName = lua_tostring(L, 2);
+    if (strcmp(varName, "self") == 0) { // "self" is a special variable in Lua.
+                                        // Sometimes Lua creates a self variable automatically
+                                        // which will likely lead to warnings when loading.
+                                        // Ignore "self".
+      lua_settop(L, 3);
+      lua_rawset(L, 1);
+      return 0;
     }
-    catch (std::out_of_range &e) {}
+
+    uint8_t hashBuf[8]; // SipHash produces 64-bit outputs.
+    siphash(hashBuf, reinterpret_cast<const uint8_t*>(varName), strlen(varName),
+            reinterpret_cast<const uint8_t*>("0123456789ABCDEF"));
+    uint64_t hash = uint64_t(hashBuf[0] << 56) | uint64_t(hashBuf[1] << 48) |
+                    uint64_t(hashBuf[2] << 40) | uint64_t(hashBuf[3] << 32) |
+                    uint64_t(hashBuf[4] << 24) | uint64_t(hashBuf[5] << 16) |
+                    uint64_t(hashBuf[6] << 8)  | hashBuf[7];
+
+    auto objIter = Control::instance().invObjMap.find(hash);
+    if (objIter != Control::instance().invObjMap.end()) {
+      Log::instance().warning(kModScript,
+                              "Hash collision %llu! Variable name %s is not unique enough.", hash,
+                              lua_tostring(L, 2));
+      lua_settop(L, 3);
+      lua_rawset(L, 1);
+      return 0;
+    }
 
     Control::instance().objMap[obj] = hash;
     Control::instance().invObjMap[hash] = obj;

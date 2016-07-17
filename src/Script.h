@@ -44,6 +44,10 @@ enum DGAttachTypes {
 lua_pushnumber(L, val); \
 lua_setfield(L, -2, #name);
 
+extern "C" {
+  extern int siphash(uint8_t *out, const uint8_t *in, uint64_t inlen, const uint8_t *k);
+}
+
 class Config;
 class Log;
 

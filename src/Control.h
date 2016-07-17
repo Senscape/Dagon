@@ -137,8 +137,8 @@ public:
     return control;
   }
 
-  std::unordered_map<Object*, size_t> objMap;
-  std::unordered_map<size_t, Object*> invObjMap;
+  std::unordered_map<Object*, uint64_t> objMap;
+  std::unordered_map<uint64_t, Object*> invObjMap;
   
   void init(int argc, char* argv[]);
   Node* currentNode();
