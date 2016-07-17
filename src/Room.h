@@ -18,6 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <set>
 #include <vector>
 #include "Configurable.h"
 
@@ -56,7 +57,8 @@ class Room : public Object {
   int persistEvent();
   int unpersistEvent();
   size_t numNodes();
-  
+  std::set<Audio*> allAudios();
+
   // Sets
   void setDefaultFootstep(Audio* theFootstep);
   void setEffects(const SettingCollection& theEffects);

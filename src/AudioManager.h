@@ -58,6 +58,7 @@ class AudioManager {
   
   std::vector<Audio*> _arrayOfAudios;
   std::vector<Audio*> _arrayOfActiveAudios;
+  std::vector<Audio*> _pendingUnload;
   
   bool _isInitialized;
   bool _isRunning;
@@ -84,9 +85,12 @@ public:
   
   void init();
   void registerAudio(Audio* target);
+  void deactivateAudio(Audio* target);
   void requestAudio(Audio* target);
   void setOrientation(float* orientation);
   void terminate();
+  void pendingUnload(Audio *target);
+  void unloadPending();
   bool update();
 };
   

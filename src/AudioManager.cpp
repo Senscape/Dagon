@@ -223,6 +223,20 @@ void AudioManager::registerAudio(Audio* target) {
   _arrayOfAudios.push_back(target);
 }
 
+void AudioManager::deactivateAudio(Audio* target) {
+  if (SDL_LockMutex(_mutex) == 0) {
+    auto it = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(), target);
+    if (it != _arrayOfActiveAudios.end()) {
+      _arrayOfActiveAudios.erase(it);
+    }
+
+    SDL_UnlockMutex(_mutex);
+  }
+  else {
+    log.error(kModAudio, "%s", kString18002);
+  }
+}
+
 void AudioManager::requestAudio(Audio* target) {
   if (_arrayOfActiveAudios.size() >= kMaxNumberOfAudios) 
 	  return;
@@ -289,6 +303,23 @@ void AudioManager::terminate() {
     alcMakeContextCurrent(NULL);
     alcDestroyContext(_alContext);
     alcCloseDevice(_alDevice);
+  }
+}
+
+void AudioManager::pendingUnload(Audio *target) {
+  _pendingUnload.push_back(target);
+}
+
+void AudioManager::unloadPending() {
+  for (auto it = _pendingUnload.begin(); it != _pendingUnload.end();) {
+    if (!(*it)->isPlaying()) {
+      (*it)->unload();
+      deactivateAudio(*it);
+      it = _pendingUnload.erase(it);
+    }
+    else {
+      ++it;
+    }
   }
 }
 

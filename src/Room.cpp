@@ -20,6 +20,7 @@
 #include "Audio.h"
 #include "Node.h"
 #include "Room.h"
+#include "Spot.h"
 
 namespace dagon {
 
@@ -108,6 +109,33 @@ int Room::unpersistEvent() {
 
 size_t Room::numNodes() {
   return _arrayOfNodes.size();
+}
+
+std::set<Audio*> Room::allAudios() {
+  std::set<Audio*> roomAudios;
+  roomAudios.insert(_arrayOfAudios.begin(), _arrayOfAudios.end());
+
+  if (hasNodes()) {
+    beginIteratingNodes();
+
+    do {
+      Node *curNode = iterator();
+
+      if (curNode->hasSpots()) {
+        curNode->beginIteratingSpots();
+
+        do {
+          Spot *curSpot = curNode->currentSpot();
+
+          if (curSpot->hasAudio()) {
+            roomAudios.insert(curSpot->audio());
+          }
+        } while (curNode->iterateSpots());
+      }
+    } while (iterateNodes());
+  }
+
+  return roomAudios;
 }
 
 Node* Room::iterator() {
