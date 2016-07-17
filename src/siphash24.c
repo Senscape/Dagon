@@ -58,7 +58,7 @@
     v2 = ROTL(v2, 32);                                                         \
   } while (0)
 
-#ifdef DEBUG
+/*#ifdef DEBUG
 #define TRACE                                                                  \
   do {                                                                         \
     printf("(%3d) v0 %08x %08x\n", (int)inlen, (uint32_t)(v0 >> 32),           \
@@ -72,7 +72,8 @@
   } while (0)
 #else
 #define TRACE
-#endif
+#endif*/
+#define TRACE
 
 int siphash(uint8_t *out, const uint8_t *in, uint64_t inlen, const uint8_t *k) {
   /* "somepseudorandomlygeneratedbytes" */
