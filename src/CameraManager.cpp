@@ -251,7 +251,17 @@ void CameraManager::setTargetAngle(float horizontal, float vertical, bool fovAdj
     }
     
     // FIXME: This division is related to the amount of configured inertia. Not right.
-    _targetHError = fabs(_angleHTarget - _angleH) / 10.0;
+    if (fabs(_angleHTarget - _angleH) > M_PI) {
+      if (_angleH > _angleHTarget) {
+        _targetHError = fabs(_angleHTarget - _angleH + 2 * M_PI) / 10.0;
+      }
+      else {
+        _targetHError = fabs(_angleHTarget - _angleH - 2 * M_PI) / 10.0;
+      }
+    }
+    else {
+      _targetHError = fabs(_angleHTarget - _angleH) / 10.0;
+    }
     
     if (_targetHError < 0.02)
       _targetHError = 0.02;
@@ -481,8 +491,11 @@ void CameraManager::pan(int xPosition, int yPosition) {
 
 void CameraManager::panToTargetAngle() {
   if (!_isLocked) {
-    if (_angleH < (_angleHTarget - _targetHError) || _angleH > (_angleHTarget + _targetHError)) {
+    if (fabs(_angleHTarget - _angleH) > _targetHError) {
       _deltaX = static_cast<int>((_angleHTarget - _angleH) * 360);
+      if (fabs(_angleHTarget - _angleH) > M_PI) {
+        _deltaX *= -1;
+      }
       _speedH = static_cast<float>(fabs((float)_deltaX) / ((float)_speedFactor) * 4);
     }
     else {
