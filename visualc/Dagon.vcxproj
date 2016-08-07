@@ -195,6 +195,7 @@
     <ClCompile Include="..\src\Script.cpp" />
     <ClCompile Include="..\src\Serializer.cpp" />
     <ClCompile Include="..\src\ShaderData.c" />
+    <ClCompile Include="..\src\siphash24.c" />
     <ClCompile Include="..\src\SplashData.c" />
     <ClCompile Include="..\src\Spot.cpp" />
     <ClCompile Include="..\src\State.cpp" />
