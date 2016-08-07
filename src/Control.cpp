@@ -257,7 +257,7 @@ void Control::processKey(int aKey, int eventFlags) {
     case EventKeyDown:
       switch (aKey) {
         case kKeyEscape:
-          if (_hotkeyData[18].enabled) { // 18 is escape's index. Is it assigned as a hotkey?
+          if (_hotkeyData[18].enabled && _console->isHidden()) { // 18 is escape's index. Is it assigned as a hotkey?
             script.processCommand(_hotkeyData[18].line);
           }
           else if (_state->current() == StateSplash) {
@@ -283,7 +283,7 @@ void Control::processKey(int aKey, int eventFlags) {
           _console->toggle();
           break;
         case kKeySpace:
-          if (_hotkeyData[19].enabled) { // 19 is space's index. Is it assigned as a hotkey?
+          if (_hotkeyData[19].enabled && _console->isHidden()) { // 19 is space's index. Is it assigned as a hotkey?
             script.processCommand(_hotkeyData[19].line);
           }
           else if (_console->isHidden())
@@ -321,7 +321,7 @@ void Control::processKey(int aKey, int eventFlags) {
         case kKeyP: idx = 17; break;
       }
 
-      if (idx != 0) {
+      if (idx != 0 && _console->isHidden()) {
         if (_hotkeyData[idx].enabled) {
           script.processCommand(_hotkeyData[idx].line);
         }
