@@ -251,11 +251,16 @@ void Control::processFunctionKey(int aKey) {
 }
 
 void Control::processKey(int aKey, int eventFlags) {
+  int idx = 0;
+
   switch (eventFlags) {
     case EventKeyDown:
       switch (aKey) {
         case kKeyEscape:
-          if (_state->current() == StateSplash) {
+          if (_hotkeyData[18].enabled && _console->isHidden()) { // 18 is escape's index. Is it assigned as a hotkey?
+            script.processCommand(_hotkeyData[18].line);
+          }
+          else if (_state->current() == StateSplash) {
             _cancelSplash = true;
           }
           else {
@@ -278,7 +283,10 @@ void Control::processKey(int aKey, int eventFlags) {
           _console->toggle();
           break;
         case kKeySpace:
-          if (_console->isHidden())
+          if (_hotkeyData[19].enabled && _console->isHidden()) { // 19 is space's index. Is it assigned as a hotkey?
+            script.processCommand(_hotkeyData[19].line);
+          }
+          else if (_console->isHidden())
             config.showHelpers = !config.showHelpers;
           break;
         case 'w':
@@ -305,6 +313,18 @@ void Control::processKey(int aKey, int eventFlags) {
             cameraManager.pan(config.displayWidth, kCurrent);
           }
           break;
+
+        case kKeyI: idx = 13; break;
+        case kKeyJ: idx = 14; break;
+        case kKeyL: idx = 15; break;
+        case kKeyO: idx = 16; break;
+        case kKeyP: idx = 17; break;
+      }
+
+      if (idx != 0 && _console->isHidden()) {
+        if (_hotkeyData[idx].enabled) {
+          script.processCommand(_hotkeyData[idx].line);
+        }
       }
       
       // Process these keys only when the console is visible
@@ -520,6 +540,13 @@ void Control::registerHotkey(int aKey, const char* luaCommandToExecute) {
     case kKeyF10: idx = 10; break;
     case kKeyF11: idx = 11; break;
     case kKeyF12: idx = 12; break;
+    case kKeyI: idx = 13; break;
+    case kKeyJ: idx = 14; break;
+    case kKeyL: idx = 15; break;
+    case kKeyO: idx = 16; break;
+    case kKeyP: idx = 17; break;
+    case kKeyEscape: idx = 18; break;
+    case kKeySpace: idx = 19; break;
   }
   
   if (idx) {

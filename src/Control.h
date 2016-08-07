@@ -31,7 +31,7 @@ namespace dagon {
 // Definitions
 ////////////////////////////////////////////////////////////
 
-#define kMaxHotKeys 13
+#define kMaxHotKeys 20
 
 class AudioManager;
 class CameraManager;
