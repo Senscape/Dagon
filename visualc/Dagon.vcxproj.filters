@@ -329,6 +329,9 @@
     <ClCompile Include="..\src\dirent.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\siphash24.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resources\Dagon.ico">
