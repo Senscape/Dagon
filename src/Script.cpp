@@ -1002,6 +1002,13 @@ void Script::_registerEnums() {
   DGLuaEnum(_L, F10, kKeyF10);
   DGLuaEnum(_L, F11, kKeyF11);
   DGLuaEnum(_L, F12, kKeyF12);
+  DGLuaEnum(_L, KEY_i, kKeyI);
+  DGLuaEnum(_L, KEY_j, kKeyJ);
+  DGLuaEnum(_L, KEY_l, kKeyL);
+  DGLuaEnum(_L, KEY_o, kKeyO);
+  DGLuaEnum(_L, KEY_p, kKeyP);
+  DGLuaEnum(_L, ESC, kKeyEscape);
+  DGLuaEnum(_L, SPACE, kKeySpace);
   
   DGLuaEnum(_L, SLOW, kFadeSlow);
   DGLuaEnum(_L, SLOWEST, kFadeSlowest);

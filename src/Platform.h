@@ -104,7 +104,12 @@ enum InputKeys {
   kKeyQuote = SDL_SCANCODE_GRAVE,
   kKeyTab = SDLK_TAB,
   kKeyEnter = SDLK_RETURN,
-  kKeySpace = SDLK_SPACE
+  kKeySpace = SDLK_SPACE,
+  kKeyI = SDLK_i,
+  kKeyJ = SDLK_j,
+  kKeyL = SDLK_l,
+  kKeyO = SDLK_o,
+  kKeyP = SDLK_p
 };
   
 }
