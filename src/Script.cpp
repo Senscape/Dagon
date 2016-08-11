@@ -838,6 +838,14 @@ int Script::_globalUnpersist(lua_State *L) {
 
   loader.toggleAudio();
 
+  // Stop running timers.
+  for (auto timer : TimerManager::instance().timers()) {
+    if (timer.type == DGTimerNormal) {
+      // We only touch timers made by the game developer.
+      TimerManager::instance().disable(timer.handle);
+    }
+  }
+
   if (!loader.readTimers()) {
     Log::instance().error(kModScript, "Error reading timers! %s", SDL_GetError());
     lua_pushboolean(L, false);
