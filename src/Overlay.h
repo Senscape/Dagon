@@ -49,9 +49,11 @@ class Overlay : public Object {
   Button* currentButton();
   Image* currentImage();
   bool isLocked();
+  int defaultCursor() const;
   
   // Sets
   void setPosition(int x, int y);
+  void setDefaultCursor(int cursor);
   
   // State changes
   Button* addButton(Button* aButton);
@@ -74,6 +76,8 @@ class Overlay : public Object {
   bool _isLocked;
   bool _isIteratingBackwards;
   Point _position;
+
+  int _defaultCursor;
   
   Overlay(const Overlay&);
   void operator=(const Overlay&);

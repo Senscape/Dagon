@@ -122,6 +122,11 @@ public:
     
     return 0;
   }
+
+  int setDefaultCursor(lua_State *L) {
+    o->setDefaultCursor(static_cast<int>(luaL_checknumber(L, 1)));
+    return 0;
+  }
   
   Overlay* ptr() { return o; }
   
@@ -145,6 +150,7 @@ Luna<OverlayProxy>::RegType OverlayProxy::methods[] = {
   method(OverlayProxy, move),
   method(OverlayProxy, position),
   method(OverlayProxy, setPosition),
+  method(OverlayProxy, setDefaultCursor),
   {0,0}
 };
   

@@ -18,6 +18,7 @@
 #include <cassert>
 
 #include "Button.h"
+#include "Defines.h"
 #include "Image.h"
 #include "Overlay.h"
 
@@ -32,6 +33,7 @@ Overlay::Overlay() {
   _position.y = 0;
   _isIteratingBackwards = false;
   _isLocked = false;
+  _defaultCursor = kCursorNormal;
   this->disable(); // Overlays are disabled by default
   this->setType(kObjectOverlay);
 }
@@ -75,6 +77,10 @@ bool Overlay::isLocked() {
   return _isLocked;
 }
 
+int Overlay::defaultCursor() const {
+  return _defaultCursor;
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - Sets
 ////////////////////////////////////////////////////////////
@@ -90,6 +96,12 @@ void Overlay::setPosition(int x, int y) {
   // Store the new position
   _position.x = x;
   _position.y = y;
+}
+
+void Overlay::setDefaultCursor(int cursor) {
+  if (cursor >= kCursorNormal && kCursorCustom >= cursor) {
+    _defaultCursor = cursor;
+  }
 }
 
 ////////////////////////////////////////////////////////////
