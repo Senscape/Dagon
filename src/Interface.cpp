@@ -191,6 +191,9 @@ bool Interface::scanOverlays() {
                 
                 return true;
               }
+              else {
+                cursorManager.setCursor((*itOverlay)->defaultCursor());
+              }
             }
           } while ((*itOverlay)->iterateButtons());
         }
