@@ -278,7 +278,6 @@ void Control::processKey(int aKey, int eventFlags) {
             }
           }
           break;
-        case kKeyQuote:
         case kKeyTab:
           _console->toggle();
           break;
