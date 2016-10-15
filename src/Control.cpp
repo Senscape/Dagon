@@ -330,7 +330,6 @@ void Control::processKey(int aKey, int eventFlags) {
       if (!_console->isHidden()) {
         switch (aKey) {
           case kKeyEscape:
-          case kKeyQuote:
           case kKeyTab:
             // Ignore these
             break;
