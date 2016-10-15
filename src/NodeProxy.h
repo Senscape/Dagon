@@ -24,6 +24,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Control.h"
+#include "InternalAudio.h"
 #include "Node.h"
 #include "Room.h"
 #include "Script.h"
@@ -200,7 +201,8 @@ public:
     }
     else {
       // If not, create and set (this is later deleted by the Audio Manager)
-      Audio* audio = new InternalAudio(luaL_checkstring(L, 1), true);
+      Audio* audio = new InternalAudio(true);
+      audio->setAudioName(luaL_checkstring(L, 1));
       n->setFootstep(audio);
     }
     

@@ -15,19 +15,16 @@
 #define DAGON_INTERNAL_AUDIO_H
 
 #include "Audio.h"
-#include "AudioAsset.h"
 
 namespace dagon {
 
 class InternalAudio : public Audio {
 public:
-  InternalAudio(const std::string& audioName, bool temp);
+  InternalAudio(bool temp);
 
   bool isTemporary() const;
-  void setAsset(const std::shared_ptr<AudioAsset>& asset);
 private:
   bool _isTemporary;
-  std::shared_ptr<AudioAsset> _asset;
 };
 
 }

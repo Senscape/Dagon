@@ -31,6 +31,7 @@
 #include "FontManager.h"
 #include "EffectsManager.h"
 #include "Interface.h"
+#include "InternalAudio.h"
 #include "Log.h"
 #include "Node.h"
 #include "RenderManager.h"
@@ -71,6 +72,7 @@ videoManager(VideoManager::instance())
 {
   
   _currentRoom = NULL;
+  _previousRoom = nullptr;
   
   _sleepTimer = 0;
   
@@ -657,7 +659,7 @@ void Control::switchTo(Object* theTarget) {
     switch (theTarget->type()) {
       case kObjectRoom: {
         //log.trace(kModControl, "Switching to room...");
-        feedManager.clear(); // Clear all pending feeds
+        feedManager.cancel();
         
         if (currentNode()) {
           if (currentNode()->isSlide())
@@ -669,6 +671,7 @@ void Control::switchTo(Object* theTarget) {
           _currentRoom->releaseAssets();
         }
 
+        _previousRoom = _currentRoom;
         _currentRoom = (Room*)theTarget;
         //log.trace(kModControl, "Set room and Lua objet");
         _scene->setRoom((Room*)theTarget);
@@ -743,6 +746,10 @@ void Control::switchTo(Object* theTarget) {
         break;
       case kObjectNode: {
         //log.trace(kModControl, "Switching to node...");
+        if (_previousRoom) {
+          _previousRoom->releaseAssets();
+        }
+
         if (currentNode()->isSlide())
           cameraManager.unlock();
         
@@ -801,7 +808,7 @@ void Control::switchTo(Object* theTarget) {
         if (room) {
           if (room != _currentRoom) {
             //log.trace(kModControl, "New room, so cleaning up...");
-            feedManager.clear(); // Clear all pending feeds
+            feedManager.cancel();
             _currentRoom = room;
             _scene->setRoom(room);
             timerManager.setLuaObject(_currentRoom->luaObject());
@@ -969,15 +976,19 @@ void Control::walkTo(Object* theTarget) {
   
   // Finally, check if must play a single footstep
   if (current->hasFootstep()) {
+    assetRoom()->claimAsset(current->footstep());
     current->footstep()->play();
 
-    Audio* footstep = new InternalAudio(current->footstep()->audioName(), true);
+    Audio* footstep = new InternalAudio(true);
+    footstep->setAudioName(current->footstep()->audioName());
     current->setFootstep(footstep);
   }
   else if (_currentRoom->hasDefaultFootstep()) {
+    assetRoom()->claimAsset(_currentRoom->defaultFootstep());
     _currentRoom->defaultFootstep()->play();
 
-    Audio* footstep = new InternalAudio(_currentRoom->defaultFootstep()->audioName(), true);
+    Audio* footstep = new InternalAudio(true);
+    footstep->setAudioName(_currentRoom->defaultFootstep()->audioName());
     _currentRoom->setDefaultFootstep(footstep);
   }
 }
@@ -1019,6 +1030,8 @@ void Control::terminate() {
   audioManager.terminate();
   timerManager.terminate();
   videoManager.terminate();
+
+  assetRoom()->releaseAssets();
   
   int r = rand() % 8; // Double the replies, so that the default one appears often
   

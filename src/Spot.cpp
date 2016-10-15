@@ -58,9 +58,6 @@ Spot::Spot(std::vector<int> withArrayOfCoordinates,
 Spot::~Spot() {
   if (_hasAction)
     delete _actionData;
-  if (_hasAudio && _attachedAudio->isType(kObjectInternalAudio)) {
-    delete _attachedAudio;
-  }
 }
 
 ////////////////////////////////////////////////////////////

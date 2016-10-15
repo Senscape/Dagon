@@ -19,13 +19,10 @@
 #include <cstring>
 #include <sstream>
 
-#include "AssetManager.h"
 #include "Audio.h"
 #include "AudioManager.h"
-#include "Control.h"
 #include "Language.h"
 #include "Log.h"
-#include "Room.h"
 
 namespace dagon {
 
@@ -33,7 +30,7 @@ namespace dagon {
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-Audio::Audio(const std::string& audioName) :
+Audio::Audio() :
 config(Config::instance()),
 log(Log::instance())
 {
@@ -43,8 +40,6 @@ log(Log::instance())
   _isMatched = false;
   _isVarying = false;
   _state = kAudioInitial;
-  _audioName = audioName;
-  _filename = _randomizeFile(audioName);
   _oggCallbacks.read_func = _oggRead;
   _oggCallbacks.seek_func = _oggSeek;
   _oggCallbacks.close_func = _oggClose;
@@ -170,6 +165,11 @@ void Audio::setVarying(bool varying) {
   _isVarying = varying;
 }
 
+void Audio::setAudioName(const std::string& audioName) {
+  _audioName = audioName;
+  _filename = _randomizeFile(audioName);
+}
+
 ////////////////////////////////////////////////////////////
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
@@ -181,14 +181,11 @@ void Audio::match(Audio* audioToMatch) {
 
 void Audio::play() {
   if (SDL_LockMutex(_mutex) == 0) {
-    auto asset = AssetManager::instance().asAudioAsset(_filename);
-    if (asset.unique()) {
-      Control::instance().assetRoom()->claimAsset(this);
-    }
-
+    auto asset = AudioManager::instance().asAsset(_filename);
     asset->load();
     if (!asset->loaded()) {
       log.error(kModAudio, "%s: %s", kString16008, _filename.c_str());
+      SDL_UnlockMutex(_mutex);
       return;
     }
 
@@ -363,7 +360,7 @@ int Audio::_fillBuffer(ALuint* buffer) {
     return kAudioGenericError;
   }
 
-  auto asset = AssetManager::instance().asAudioAsset(_filename);
+  auto asset = AudioManager::instance().asAsset(_filename);
   if (!asset->loaded()) {
     log.error(kModAudio, "%s: %s", kString16011, _filename.c_str());
     _hasStreamingError = true;
@@ -373,7 +370,6 @@ int Audio::_fillBuffer(ALuint* buffer) {
   // Prevent audio cuts if file size too small
   int bufferSize = config.audioBuffer;
   if (static_cast<int>(asset->size()) < bufferSize) {
-    //log.trace(kModAudio, "Buffer size: %d, file size: %d", bufferSize, _resource.dataSize);
     bufferSize = static_cast<int>(asset->size());
   }
 
@@ -463,7 +459,7 @@ ALboolean Audio::_verifyError(const std::string &operation) {
 std::size_t Audio::_oggRead(void* ptr, std::size_t size, std::size_t nmemb,
                             void* datasource) {
   Audio* audio = static_cast<Audio*>(datasource);
-  auto asset = AssetManager::instance().asAudioAsset(audio->_filename);
+  auto asset = AudioManager::instance().asAsset(audio->_filename);
   if (!asset->loaded()) {
     Log::instance().error(kModAudio, "%s: %s", kString16011, audio->_filename.c_str());
     return 0;
@@ -481,7 +477,7 @@ std::size_t Audio::_oggRead(void* ptr, std::size_t size, std::size_t nmemb,
 
 int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
   Audio* audio = static_cast<Audio*>(datasource);
-  auto asset = AssetManager::instance().asAudioAsset(audio->_filename);
+  auto asset = AudioManager::instance().asAsset(audio->_filename);
   if (!asset->loaded()) {
     Log::instance().error(kModAudio, "%s: %s", kString16011, audio->_filename.c_str());
     return -1;

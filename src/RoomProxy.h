@@ -68,6 +68,18 @@ public:
       
       return 1;
     }
+    else if (lua_isstring(L, 1)) {
+      InternalAudio* a = new InternalAudio(false);
+      a->setAudioName(luaL_checkstring(L, 1));
+      r->addAudio(a);
+
+      a->setLoopable(true);
+      if (lua_isnumber(L, 2)) {
+        a->setDefaultFadeLevel((float)(lua_tonumber(L, 2) / 100));
+      }
+
+      return 0;
+    }
     
     return 0;
   }
@@ -119,7 +131,8 @@ public:
       r->setDefaultFootstep((Audio*)ProxyToAudio(L, 1));
     }
     else {
-      Audio* audio = new InternalAudio(luaL_checkstring(L, 1), true);
+      Audio* audio = new InternalAudio(true);
+      audio->setAudioName(luaL_checkstring(L, 1));
       r->setDefaultFootstep(audio);
     }
     

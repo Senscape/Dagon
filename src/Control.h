@@ -104,6 +104,7 @@ class Control {
   
   std::vector<Room*> _arrayOfRooms;
   Room* _currentRoom;
+  Room* _previousRoom;
   
   Console* _console;
   Interface* _interface;

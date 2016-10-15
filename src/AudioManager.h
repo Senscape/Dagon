@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Audio.h"
+#include "AudioAsset.h"
 #include "Platform.h"
 
 #ifdef DAGON_MAC
@@ -33,6 +34,7 @@
 #include <SDL2/SDL_thread.h>
 
 #include <set>
+#include <unordered_map>
 
 namespace dagon {
 
@@ -48,6 +50,8 @@ class Log;
 ////////////////////////////////////////////////////////////
 
 class AudioManager {
+  friend class FeedManager;
+
   Config& config;
   Log& log;
   
@@ -57,12 +61,14 @@ class AudioManager {
   SDL_Thread* _thread;
   
   std::set<Audio*> _activeAudios;
+  std::unordered_map<AssetID_t, std::weak_ptr<AudioAsset>> _activeAssets;
   
   bool _isInitialized;
   bool _isRunning;
   
   bool _update();
   static int _runThread(void *ptr);
+  void _unregisterAudio(Audio* target);
   
   AudioManager();
   AudioManager(AudioManager const&);
@@ -77,9 +83,9 @@ public:
   
   void init();
   void registerAudio(Audio* target);
-  bool unregisterAudio(Audio* target);
   void setOrientation(float* orientation);
   void terminate();
+  std::shared_ptr<AudioAsset> asAsset(const AssetID_t& id);
 };
   
 }

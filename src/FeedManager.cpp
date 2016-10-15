@@ -15,7 +15,6 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include "AssetManager.h"
 #include "AudioManager.h"
 #include "Config.h"
 #include "Control.h"
@@ -44,7 +43,7 @@ timerManager(TimerManager::instance())
 ////////////////////////////////////////////////////////////
 
 FeedManager::~FeedManager() {
-  // Nothing to do here (manager destroys the audio)
+  delete _feedAudio;
 }
 
 ////////////////////////////////////////////////////////////
@@ -53,11 +52,7 @@ FeedManager::~FeedManager() {
 
 void FeedManager::cancel() {
   this->clear();
-  
-  if (_feedAudio != nullptr) {
-    _feedAudio->stop();
-  }
-
+  _feedAudio->stop();
   _dim();
 }
 
@@ -66,7 +61,7 @@ void FeedManager::clear() {
 }
 
 void FeedManager::init() {
-  _feedAudio = nullptr;
+  _feedAudio = new Audio;
   _feedFont = fontManager.loadDefault();
 }
 
@@ -75,14 +70,10 @@ bool FeedManager::hasQueued() {
 }
 
 bool FeedManager::isPlaying() {
-  return _feedAudio == nullptr ? false : _feedAudio->isPlaying();
+  return _feedAudio->isPlaying();
 }
 
 void FeedManager::queue(const char* text, const char* audio) {
-  if (_feedAudio == nullptr) {
-    return;
-  }
-
   if (_feedAudio->state() != kAudioPlaying) {
     this->showAndPlay(text, audio);
   }
@@ -145,15 +136,20 @@ void FeedManager::show(const char* text) {
 void FeedManager::showAndPlay(const char* text, const char* audio) {
   this->show(text);
 
-  if (!config.silentFeeds) {
-    if (_feedAudio != nullptr) {
-      if (audioManager.unregisterAudio(_feedAudio)) {
-        delete _feedAudio;
-      }
+  if (!config.silentFeeds && strlen(audio) > 0) {
+    audioManager._unregisterAudio(_feedAudio);
+    delete _feedAudio;
+
+    _feedAudio = new Audio;
+    _feedAudio->setAudioName(audio);
+
+    if (Control::instance().currentRoom()) {
+      Control::instance().currentRoom()->claimAsset(_feedAudio);
+    }
+    else {
+      Control::instance().assetRoom()->claimAsset(_feedAudio);
     }
 
-    _feedAudio = new InternalAudio(audio, true);
-    _feedAudio->setAsset(AssetManager::instance().asAudioAsset(_feedAudio->filename()));
     _feedAudio->play();
   }
 }
@@ -213,7 +209,7 @@ void FeedManager::update() {
   }
   
   // Check for queued feeds
-  if (_feedAudio != nullptr && _feedAudio->state() != kAudioPlaying) {
+  if (_feedAudio->state() != kAudioPlaying) {
     if (!_arrayOfFeeds.empty()) {
       DGFeed feed = _arrayOfFeeds.front();
       

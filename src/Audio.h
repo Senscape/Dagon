@@ -76,7 +76,7 @@ class Audio : public Object {
   friend class AudioManager;
 
 public:
-  Audio(const std::string& audioName);
+  Audio();
   ~Audio();
   
   // Checks
@@ -96,6 +96,7 @@ public:
   void setLoopable(bool loopable);
   void setPosition(unsigned int face, Point origin);
   void setVarying(bool varying);
+  void setAudioName(const std::string& audioName);
   
   // State changes
   void match(Audio* audioToMatch);

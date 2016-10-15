@@ -13,22 +13,15 @@
 
 #include "InternalAudio.h"
 
-#include <cassert>
-
 namespace dagon {
 
-InternalAudio::InternalAudio(const std::string& audioName, bool temp) : Audio(audioName) {
+InternalAudio::InternalAudio(bool temp) : Audio() {
   _isTemporary = temp;
   setType(kObjectInternalAudio);
 }
 
 bool InternalAudio::isTemporary() const {
   return _isTemporary;
-}
-
-void InternalAudio::setAsset(const std::shared_ptr<AudioAsset>& asset) {
-  assert(_isTemporary);
-  _asset = asset;
 }
 
 }

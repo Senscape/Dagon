@@ -17,8 +17,8 @@
 
 #include <cassert>
 
-#include "AssetManager.h"
 #include "Audio.h"
+#include "AudioManager.h"
 #include "Node.h"
 #include "Room.h"
 #include "Spot.h"
@@ -199,15 +199,19 @@ void Room::claimAsset(Object* obj) {
   case kObjectInternalAudio:
   case kObjectAudio:
     Audio* audio = static_cast<Audio*>(obj);
-    _claimedAssets.emplace(AssetManager::instance().asAudioAsset(audio->filename()));
+    _claimedAssets.emplace(AudioManager::instance().asAsset(audio->filename()));
     break;
   }
 }
 
 void Room::releaseAssets() {
-  // TODO: Room audio should fade if its asset is released.
   for (auto audio : _arrayOfAudios) {
-    audio->stop();
+    if (!audio->isPlaying()) {
+      _claimedAssets.erase(AudioManager::instance().asAsset(audio->filename()));
+    }
+    else if (!audio->isFading()) {
+      audio->fadeOut();
+    }
   }
 
   for (auto node : _arrayOfNodes) {
@@ -217,14 +221,16 @@ void Room::releaseAssets() {
       do {
         Spot* spot = node->currentSpot();
 
-        if (spot->hasAudio() && spot->audio()->isPlaying()) {
-          spot->audio()->stop();
+        if (spot->hasAudio()) {
+          if (spot->audio()->isPlaying()) {
+            spot->audio()->stop();
+          }
+          
+          _claimedAssets.erase(AudioManager::instance().asAsset(spot->audio()->filename()));
         }
       } while (node->iterateSpots());
     }
   }
-
-  _claimedAssets.clear();
 }
 
 void Room::claimAudio() {

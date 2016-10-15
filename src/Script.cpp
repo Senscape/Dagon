@@ -485,7 +485,8 @@ int Script::_globalLookAt(lua_State *L) {
 }
 
 int Script::_globalPlay(lua_State *L) {
-  Audio* audio = new InternalAudio(luaL_checkstring(L, 1), true);
+  Audio* audio = new InternalAudio(true);
+  audio->setAudioName(luaL_checkstring(L, 1));
   Control::instance().assetRoom()->claimAsset(audio);
   
   if (lua_isboolean(L, 2)) {

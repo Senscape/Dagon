@@ -162,26 +162,6 @@ void AudioManager::registerAudio(Audio* target) {
   }
 }
 
-bool AudioManager::unregisterAudio(Audio* target) {
-  bool wasActive = false;
-
-  if (SDL_LockMutex(_mutex) == 0) {
-    auto it = _activeAudios.find(target);
-    if (it != _activeAudios.end()) {
-      target->_unload();
-      _activeAudios.erase(it);
-      wasActive = true;
-    }
-
-    SDL_UnlockMutex(_mutex);
-  }
-  else {
-    log.error(kModAudio, "%s", kString18002);
-  }
-
-  return wasActive;
-}
-
 void AudioManager::setOrientation(float* orientation) {
   if (_isInitialized) {
     alListenerfv(AL_ORIENTATION, orientation);
@@ -198,6 +178,8 @@ void AudioManager::terminate() {
   
   int threadReturnValue;
   SDL_WaitThread(_thread, &threadReturnValue);
+
+  _activeAssets.clear();
   
   // Now we shut down OpenAL completely
   if (_isInitialized) {
@@ -205,6 +187,30 @@ void AudioManager::terminate() {
     alcDestroyContext(_alContext);
     alcCloseDevice(_alDevice);
   }
+}
+
+std::shared_ptr<AudioAsset> AudioManager::asAsset(const AssetID_t& id) {
+  if (SDL_LockMutex(_mutex) != 0) {
+    log.error(kModAudio, "%s", kString18002);
+    return std::shared_ptr<AudioAsset>();
+  }
+
+  std::string fullId = config.path(kPathResources, id, kObjectAudio);
+  auto it = _activeAssets.find(fullId);
+  if (it != _activeAssets.end()) {
+    if (!it->second.expired()) {
+      SDL_UnlockMutex(_mutex);
+      return std::static_pointer_cast<AudioAsset>(it->second.lock());
+    }
+
+    _activeAssets.erase(it);
+  }
+
+  auto assetPtr = std::make_shared<AudioAsset>(fullId);
+  _activeAssets.emplace(fullId, assetPtr);
+
+  SDL_UnlockMutex(_mutex);
+  return assetPtr;
 }
 
 ////////////////////////////////////////////////////////////
@@ -218,6 +224,15 @@ bool AudioManager::_update() {
   }
 
   if (SDL_LockMutex(_mutex) == 0) {
+    for (auto it = _activeAssets.begin(); it != _activeAssets.end();) {
+      if (it->second.expired()) {
+        it = _activeAssets.erase(it);
+      }
+      else {
+        ++it;
+      }
+    }
+
     for (auto it = _activeAudios.begin(); it != _activeAudios.end();) {
       if ((*it)->state() == kAudioStopped) {
         (*it)->_unload();
@@ -251,6 +266,21 @@ int AudioManager::_runThread(void *ptr) {
     SDL_Delay(1);
   }
   return 0;
+}
+
+void AudioManager::_unregisterAudio(Audio* target) {
+  if (SDL_LockMutex(_mutex) == 0) {
+    auto it = _activeAudios.find(target);
+    if (it != _activeAudios.end()) {
+      (*it)->_unload();
+      _activeAudios.erase(it);
+    }
+
+    SDL_UnlockMutex(_mutex);
+  }
+  else {
+    log.error(kModAudio, "%s", kString18002);
+  }
 }
   
 }

@@ -144,8 +144,8 @@ public:
           return 1;
         }
         else {
-          // If not, create and set (deleted by the Audio Manager)
-          audio = new InternalAudio(luaL_checkstring(L, 2), false);
+          audio = new InternalAudio(false);
+          audio->setAudioName(luaL_checkstring(L, 2));
           
           if (s->hasFlag(kSpotLoop))
             audio->setLoopable(true);
