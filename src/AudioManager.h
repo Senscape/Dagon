@@ -32,13 +32,13 @@
 #include <SDL2/SDL_mutex.h>
 #include <SDL2/SDL_thread.h>
 
+#include <set>
+
 namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
-
-#define kMaxNumberOfAudios 32
 
 class Config;
 class Log;
@@ -56,13 +56,12 @@ class AudioManager {
   SDL_mutex* _mutex;
   SDL_Thread* _thread;
   
-  std::vector<Audio*> _arrayOfAudios;
-  std::vector<Audio*> _arrayOfActiveAudios;
-  std::vector<Audio*> _pendingUnload;
+  std::set<Audio*> _activeAudios;
   
   bool _isInitialized;
   bool _isRunning;
   
+  bool _update();
   static int _runThread(void *ptr);
   
   AudioManager();
@@ -76,22 +75,11 @@ public:
     return audioManager;
   }
   
-  // These two methods have similar purposes: clear() notifies the manager
-  // that the engine is about to load a new node, which prepares all
-  // active audios for release. flush() effectively unloads every audio
-  // that is no longer needed.
-  void clear();
-  void flush();
-  
   void init();
   void registerAudio(Audio* target);
-  void deactivateAudio(Audio* target);
-  void requestAudio(Audio* target);
+  bool unregisterAudio(Audio* target);
   void setOrientation(float* orientation);
   void terminate();
-  void pendingUnload(Audio *target);
-  void unloadPending();
-  bool update();
 };
   
 }

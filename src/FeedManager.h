@@ -18,6 +18,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "InternalAudio.h"
 #include "Platform.h"
 
 ////////////////////////////////////////////////////////////
@@ -68,7 +69,7 @@ class FeedManager {
   FontManager& fontManager;
   TimerManager& timerManager;
   
-  Audio* _feedAudio;
+  InternalAudio* _feedAudio;
   std::vector<DGFeed> _arrayOfActiveFeeds;
   std::vector<DGFeed> _arrayOfFeeds;
   Font* _feedFont;

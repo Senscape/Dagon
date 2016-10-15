@@ -120,6 +120,7 @@
 #define kString16008 "File not found"
 #define kString16009 "Unsupported number of channels in file"
 #define kString16010 "Unable to initialize Ogg callbacks"
+#define kString16011 "Unloaded audio usage"
 
 // Video module
 #define kString17001 "Initializing video manager..."

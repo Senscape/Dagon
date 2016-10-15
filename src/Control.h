@@ -143,6 +143,7 @@ public:
   void init(int argc, char* argv[]);
   Node* currentNode();
   Room* currentRoom();
+  Room* assetRoom() const;
   void cutscene(const char* fileName);
   bool isConsoleActive();
   bool isDirectControlActive();
@@ -153,7 +154,6 @@ public:
   void registerGlobalHandler(int forEvent, int handlerForLua);
   void registerHotkey(int aKey, const char* luaCommandToExecute);
   void registerObject(Object* theTarget);
-  void requestObject(Object* theTarget);
   void reshape(int width, int height);
   void sleep(int forSeconds);
   void syncSpot(Spot* spot);

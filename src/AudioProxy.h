@@ -38,9 +38,7 @@ public:
   
   // Constructor
   AudioProxy(lua_State *L) {
-    a = new Audio;
-    
-    a->setResource(luaL_checkstring(L, 1));
+    a = new Audio(luaL_checkstring(L, 1));
     
     if (lua_istable(L, 2)) {
       lua_pushnil(L);
@@ -58,9 +56,6 @@ public:
         lua_pop(L, 1);
       }
     }
-    
-    // Register the new audio
-    AudioManager::instance().registerAudio(a);
     
     // Init the base class
     this->setObject(a);
@@ -85,10 +80,7 @@ public:
   
   // Play the audio
   int play(lua_State *L) {
-    // Request the audio
-    AudioManager::instance().requestAudio(a);
     a->play();
-    
     return 0;
   }
   

@@ -19,6 +19,7 @@
 
 #include "AudioManager.h"
 #include "Config.h"
+#include "InternalAudio.h"
 #include "Log.h"
 
 namespace dagon {
@@ -49,74 +50,6 @@ AudioManager::~AudioManager() {
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
-
-void AudioManager::clear() {
-  if (_isInitialized) {
-    if (!_arrayOfActiveAudios.empty()) {
-      std::vector<Audio*>::iterator it;
-      if (SDL_LockMutex(_mutex) == 0) {
-        it = _arrayOfActiveAudios.begin();
-        while (it != _arrayOfActiveAudios.end()) {
-          (*it)->release();
-          
-          ++it;
-        }
-        SDL_UnlockMutex(_mutex);
-      } else {
-        log.error(kModAudio, "%s", kString18002);
-      }
-    }
-  }
-}
-
-void AudioManager::flush() {
-  if (_isInitialized) {
-    if (!_arrayOfActiveAudios.empty()) {
-      std::vector<Audio*>::iterator it;
-      bool done = false;
-      while (!done) {
-        if (SDL_LockMutex(_mutex) == 0) {
-          it = _arrayOfActiveAudios.begin();
-          done = true;
-          while ((it != _arrayOfActiveAudios.end())) {
-            if ((*it)->retainCount() == 0) {
-              if ((*it)->state() == kAudioStopped) { // Had to move this outside the switch
-                // TODO: Automatically flush stopped and non-retained audios after
-                // n update cycles
-                (*it)->unload();
-                _arrayOfActiveAudios.erase(it);
-                done = false;
-                break;
-              }
-              else {
-                switch ((*it)->state()) {
-                  case kAudioPlaying:
-                    (*it)->fadeOut();
-                    ++it;
-                    break;
-                  case kAudioPaused:
-                  default:
-                    ++it;
-                    break;
-                }
-              }
-            }
-            else if ((*it)->state() == kAudioStopped) {
-              (*it)->unload();
-                    _arrayOfActiveAudios.erase(it);
-                    done = false;
-                    break;
-            }
-            else ++it;
-          }
-          SDL_UnlockMutex(_mutex);
-        } else {
-          log.error(kModAudio, "%s", kString18002);
-        }
-      }
-    }
-  }
-}
 
 void AudioManager::init() {
   log.trace(kModAudio, "%s", kString16001);
@@ -220,16 +153,8 @@ void AudioManager::init() {
 }
 
 void AudioManager::registerAudio(Audio* target) {
-  _arrayOfAudios.push_back(target);
-}
-
-void AudioManager::deactivateAudio(Audio* target) {
   if (SDL_LockMutex(_mutex) == 0) {
-    auto it = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(), target);
-    if (it != _arrayOfActiveAudios.end()) {
-      _arrayOfActiveAudios.erase(it);
-    }
-
+    _activeAudios.insert(target);
     SDL_UnlockMutex(_mutex);
   }
   else {
@@ -237,34 +162,24 @@ void AudioManager::deactivateAudio(Audio* target) {
   }
 }
 
-void AudioManager::requestAudio(Audio* target) {
-  if (_arrayOfActiveAudios.size() >= kMaxNumberOfAudios) 
-	  return;
-  
-  if (!target->isLoaded()) {
-    target->load();
-  }
-  target->retain();
+bool AudioManager::unregisterAudio(Audio* target) {
+  bool wasActive = false;
 
-  bool isActive = false;
-  isActive = std::find(_arrayOfActiveAudios.begin(), _arrayOfActiveAudios.end(),
-                       target) != _arrayOfActiveAudios.end();
-  // If the audio is not active, then it's added to
-  // that vector
-  if (!isActive) {
-    if (SDL_LockMutex(_mutex) == 0) {
-      _arrayOfActiveAudios.push_back(target);
-      SDL_UnlockMutex(_mutex);
-    } else {
-      log.error(kModAudio, "%s", kString18002);
+  if (SDL_LockMutex(_mutex) == 0) {
+    auto it = _activeAudios.find(target);
+    if (it != _activeAudios.end()) {
+      target->_unload();
+      _activeAudios.erase(it);
+      wasActive = true;
     }
+
+    SDL_UnlockMutex(_mutex);
   }
-  
-  // FIXME: Not very elegant. Must implement a state condition for
-  // each audio object. Perhaps use AL_STATE even.
-  if (target->state() == kAudioPaused) {
-    target->play();
+  else {
+    log.error(kModAudio, "%s", kString18002);
   }
+
+  return wasActive;
 }
 
 void AudioManager::setOrientation(float* orientation) {
@@ -284,20 +199,6 @@ void AudioManager::terminate() {
   int threadReturnValue;
   SDL_WaitThread(_thread, &threadReturnValue);
   
-  if (!_arrayOfAudios.empty()) {
-    if (SDL_LockMutex(_mutex) == 0) {
-      std::vector<Audio*>::iterator it = _arrayOfAudios.begin();
-      while (it != _arrayOfAudios.end()) {
-        // FIXME: Should delete here and let the audio object unload itself
-        (*it)->unload();
-        ++it;
-      }
-      SDL_UnlockMutex(_mutex);
-    } else {
-      log.error(kModAudio, "%s", kString18002);
-    }
-  }
-  
   // Now we shut down OpenAL completely
   if (_isInitialized) {
     alcMakeContextCurrent(NULL);
@@ -306,49 +207,47 @@ void AudioManager::terminate() {
   }
 }
 
-void AudioManager::pendingUnload(Audio *target) {
-  _pendingUnload.push_back(target);
-}
-
-void AudioManager::unloadPending() {
-  for (auto it = _pendingUnload.begin(); it != _pendingUnload.end();) {
-    if (!(*it)->isPlaying()) {
-      (*it)->unload();
-      deactivateAudio(*it);
-      it = _pendingUnload.erase(it);
-    }
-    else {
-      ++it;
-    }
-  }
-}
-
-// Asynchronous method
-bool AudioManager::update() {
-  if (_isRunning) {
-    if (!_arrayOfActiveAudios.empty()) {
-      if (SDL_LockMutex(_mutex) == 0) {
-        std::vector<Audio*>::iterator it = _arrayOfActiveAudios.begin();
-        while (it != _arrayOfActiveAudios.end()) {
-          (*it)->update();
-          ++it;
-        }
-        SDL_UnlockMutex(_mutex);
-      } else {
-        log.error(kModAudio, "%s", kString18002);
-      }
-    }
-    return true;
-  }
-  return false;
-}
-
 ////////////////////////////////////////////////////////////
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
+// Asynchronous method
+bool AudioManager::_update() {
+  if (!_isRunning) {
+    return false;
+  }
+
+  if (SDL_LockMutex(_mutex) == 0) {
+    for (auto it = _activeAudios.begin(); it != _activeAudios.end();) {
+      if ((*it)->state() == kAudioStopped) {
+        (*it)->_unload();
+
+        if ((*it)->isType(kObjectInternalAudio)) {
+          auto audio = static_cast<InternalAudio*>(*it);
+          if (audio->isTemporary()) {
+            delete *it;
+          }
+        }
+
+        it = _activeAudios.erase(it);
+      }
+      else {
+        (*it)->update();
+        ++it;
+      }
+    }
+
+    SDL_UnlockMutex(_mutex);
+  }
+  else {
+    log.error(kModAudio, "%s", kString18002);
+  }
+
+  return true;
+}
+
 int AudioManager::_runThread(void *ptr) {
-  while (AudioManager::instance().update()) {
+  while (AudioManager::instance()._update()) {
     SDL_Delay(1);
   }
   return 0;

@@ -200,12 +200,7 @@ public:
     }
     else {
       // If not, create and set (this is later deleted by the Audio Manager)
-      Audio* audio = new Audio;
-      audio->setResource(luaL_checkstring(L, 1));
-      audio->setVarying(true); // We force variation for footsteps
-      
-      AudioManager::instance().registerAudio(audio);
-      
+      Audio* audio = new InternalAudio(luaL_checkstring(L, 1), true);
       n->setFootstep(audio);
     }
     

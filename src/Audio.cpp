@@ -15,14 +15,17 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <fstream>
 #include <cassert>
 #include <cstring>
 #include <sstream>
 
+#include "AssetManager.h"
 #include "Audio.h"
+#include "AudioManager.h"
+#include "Control.h"
 #include "Language.h"
 #include "Log.h"
+#include "Room.h"
 
 namespace dagon {
 
@@ -30,7 +33,7 @@ namespace dagon {
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
-Audio::Audio() :
+Audio::Audio(const std::string& audioName) :
 config(Config::instance()),
 log(Log::instance())
 {
@@ -40,6 +43,8 @@ log(Log::instance())
   _isMatched = false;
   _isVarying = false;
   _state = kAudioInitial;
+  _audioName = audioName;
+  _filename = _randomizeFile(audioName);
   _oggCallbacks.read_func = _oggRead;
   _oggCallbacks.seek_func = _oggSeek;
   _oggCallbacks.close_func = _oggClose;
@@ -55,7 +60,6 @@ log(Log::instance())
 ////////////////////////////////////////////////////////////
 
 Audio::~Audio() {
-  // TODO: Unload if required
   SDL_DestroyMutex(_mutex);
 }
 
@@ -65,17 +69,6 @@ Audio::~Audio() {
 
 bool Audio::doesAutoplay() {
   return _doesAutoplay;
-}
-  
-bool Audio::isLoaded() {
-  bool value = false;
-  if (SDL_LockMutex(_mutex) == 0) {
-    value = _isLoaded;
-    SDL_UnlockMutex(_mutex);
-  } else {
-    log.error(kModAudio, "%s", kString18002);
-  }
-  return value;
 }
 
 bool Audio::isLoopable() {
@@ -107,6 +100,14 @@ double Audio::cursor() {
 
 int Audio::state() {
   return _state;
+}
+
+AssetID_t Audio::filename() const {
+  return _filename;
+}
+
+std::string Audio::audioName() const {
+  return _audioName;
 }
 
 ////////////////////////////////////////////////////////////
@@ -164,10 +165,6 @@ void Audio::setPosition(unsigned int face, Point origin) {
     log.error(kModAudio, "%s", kString18002);
   }
 }
-
-void Audio::setResource(std::string fileName) {
-  _resource.name = fileName;
-}
   
 void Audio::setVarying(bool varying) {
   _isVarying = varying;
@@ -177,74 +174,6 @@ void Audio::setVarying(bool varying) {
 // Implementation - State changes
 ////////////////////////////////////////////////////////////
 
-void Audio::load() {
-  if (SDL_LockMutex(_mutex) == 0) {
-    if (!_isLoaded) {
-      std::string fileToLoad = _randomizeFile(_resource.name);
-      std::ifstream file(config.path(kPathResources,
-                                     fileToLoad, kObjectAudio).c_str(),
-                         std::ifstream::binary | std::ifstream::ate);
-      if (file.good()) {
-        _resource.dataSize = file.tellg();
-        _resource.data = new char[_resource.dataSize];
-        file.seekg(file.beg);
-        file.read(_resource.data, _resource.dataSize);
-        _resource.dataRead = 0;
-        
-        if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
-          log.error(kModAudio, "%s", kString16010);
-        }
-        
-        // We no longer require the file handle
-        file.close();
-        
-        // Get file info
-        vorbis_info* info = ov_info(&_oggStream, -1);
-        _channels = info->channels;
-        _rate = (ALsizei)info->rate;
-        
-        if (_channels == 1) {
-          _alFormat = AL_FORMAT_MONO16;
-          
-        } else if (_channels == 2 ) {
-          _alFormat = AL_FORMAT_STEREO16;
-        } else {
-          // Invalid number of channels
-          log.error(kModAudio, "%s: %s", kString16009, fileToLoad.c_str());
-        }
-        
-        alGenBuffers(config.numOfAudioBuffers, _alBuffers);
-        alGenSources(1, &_alSource);
-        alSource3f(_alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
-        alSource3f(_alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
-        alSource3f(_alSource, AL_DIRECTION, 0.0f, 0.0f, 0.0f);
-        
-		int buffersRead = 0;
-        for (buffersRead = 0; buffersRead < config.numOfAudioBuffers; buffersRead++) {
-          if (_fillBuffer(&_alBuffers[buffersRead]) == kAudioStreamEOF) {
-            break;
-          }
-        }
-        alSourceQueueBuffers(_alSource, buffersRead, _alBuffers);
-        _verifyError("prebuffer");
-        if (config.mute || this->fadeLevel() < 0.0) {
-          alSourcef(_alSource, AL_GAIN, 0.0f);
-        } else {
-          alSourcef(_alSource, AL_GAIN, this->fadeLevel());
-        }
-        
-        _isLoaded = true;
-        _verifyError("load");
-      } else {
-        log.error(kModAudio, "%s: %s", kString16008, fileToLoad.c_str());
-      }
-    }
-    SDL_UnlockMutex(_mutex);
-  } else {
-    log.error(kModAudio, "%s", kString18002);
-  }
-}
-
 void Audio::match(Audio* audioToMatch) {
   _matchedAudio = audioToMatch;
   _isMatched = true;
@@ -252,6 +181,21 @@ void Audio::match(Audio* audioToMatch) {
 
 void Audio::play() {
   if (SDL_LockMutex(_mutex) == 0) {
+    auto asset = AssetManager::instance().asAudioAsset(_filename);
+    if (asset.unique()) {
+      Control::instance().assetRoom()->claimAsset(this);
+    }
+
+    asset->load();
+    if (!asset->loaded()) {
+      log.error(kModAudio, "%s: %s", kString16008, _filename.c_str());
+      return;
+    }
+
+    if (!_isLoaded) {
+      _load();
+    }
+
     if (_isLoaded && (_state != kAudioPlaying)) {
       if (_isMatched)
         ov_time_seek(&_oggStream, _matchedAudio->cursor());
@@ -262,6 +206,7 @@ void Audio::play() {
       }
       alSourcePlay(_alSource);
       _state = kAudioPlaying;
+      AudioManager::instance().registerAudio(this);
       _verifyError("play");
     }
     SDL_UnlockMutex(_mutex);
@@ -290,28 +235,6 @@ void Audio::stop() {
       ov_raw_seek(&_oggStream, 0);
       _state = kAudioStopped;
       _verifyError("stop");
-    }
-    SDL_UnlockMutex(_mutex);
-  } else {
-    log.error(kModAudio, "%s", kString18002);
-  }
-}
-
-void Audio::unload() {
-  if (SDL_LockMutex(_mutex) == 0) {
-    if (_isLoaded) {
-      if (_state == kAudioPlaying) {
-        alSourceStop(_alSource);
-        ov_raw_seek(&_oggStream, 0);
-        _state = kAudioStopped;
-      }
-      _emptyBuffers();
-      alDeleteSources(1, &_alSource);
-      alDeleteBuffers(config.numOfAudioBuffers, _alBuffers);
-      ov_clear(&_oggStream);
-      delete[] _resource.data;
-      _isLoaded = false;
-      _verifyError("unload");
     }
     SDL_UnlockMutex(_mutex);
   } else {
@@ -359,53 +282,137 @@ void Audio::update() {
 // Implementation - Private methods
 ////////////////////////////////////////////////////////////
 
+void Audio::_load() {
+  _dataRead = 0;
+
+  if (ov_open_callbacks(this, &_oggStream, NULL, 0, _oggCallbacks) < 0) {
+    log.error(kModAudio, "%s", kString16010);
+  }
+
+  // Get file info
+  vorbis_info* info = ov_info(&_oggStream, -1);
+  _channels = info->channels;
+  _rate = (ALsizei)info->rate;
+
+  if (_channels == 1) {
+    _alFormat = AL_FORMAT_MONO16;
+
+  }
+  else if (_channels == 2) {
+    _alFormat = AL_FORMAT_STEREO16;
+  }
+  else {
+    // Invalid number of channels
+    log.error(kModAudio, "%s: %s", kString16009, _filename.c_str());
+  }
+
+  alGenBuffers(config.numOfAudioBuffers, _alBuffers);
+  alGenSources(1, &_alSource);
+  alSource3f(_alSource, AL_POSITION, 0.0f, 0.0f, 0.0f);
+  alSource3f(_alSource, AL_VELOCITY, 0.0f, 0.0f, 0.0f);
+  alSource3f(_alSource, AL_DIRECTION, 0.0f, 0.0f, 0.0f);
+
+  int buffersRead = 0;
+  for (buffersRead = 0; buffersRead < config.numOfAudioBuffers; buffersRead++) {
+    if (_fillBuffer(&_alBuffers[buffersRead]) == kAudioStreamEOF) {
+      break;
+    }
+  }
+  alSourceQueueBuffers(_alSource, buffersRead, _alBuffers);
+  _verifyError("prebuffer");
+  if (config.mute || this->fadeLevel() < 0.0) {
+    alSourcef(_alSource, AL_GAIN, 0.0f);
+  }
+  else {
+    alSourcef(_alSource, AL_GAIN, this->fadeLevel());
+  }
+
+  _isLoaded = true;
+  _verifyError("load");
+}
+
+void Audio::_unload() {
+  if (SDL_LockMutex(_mutex) == 0) {
+    if (_isLoaded) {
+      if (_state == kAudioPlaying) {
+        alSourceStop(_alSource);
+        ov_raw_seek(&_oggStream, 0);
+        _state = kAudioStopped;
+      }
+
+      _emptyBuffers();
+      alDeleteSources(1, &_alSource);
+      alDeleteBuffers(config.numOfAudioBuffers, _alBuffers);
+      ov_clear(&_oggStream);
+      _isLoaded = false;
+      _verifyError("unload");
+    }
+
+    SDL_UnlockMutex(_mutex);
+  }
+  else {
+    log.error(kModAudio, "%s", kString18002);
+  }
+}
+
 int Audio::_fillBuffer(ALuint* buffer) {
   // This is a failsafe; if this is true, we won't attempt to stream anymore
   static bool _hasStreamingError = false;
-  
-  if (!_hasStreamingError) {
-    // Prevent audio cuts if file size too small
-    int bufferSize = config.audioBuffer;
-    if (static_cast<int>(_resource.dataSize) < bufferSize) {
-      //log.trace(kModAudio, "Buffer size: %d, file size: %d", bufferSize, _resource.dataSize);
-      bufferSize = static_cast<int>(_resource.dataSize);
-    }
-    
-    char* data;
-    data = new char[bufferSize];
-    int size = 0;
-    while (size < bufferSize) {
-      int section;
-      long result = ov_read(&_oggStream, data + size, bufferSize - size,
-                            0, 2, 1, &section);
-      if (result > 0) {
-        size += static_cast<int>(result);
-      } else if (result == 0) {
-        // EOF
-        if (_isLoopable) {
-          ov_raw_seek(&_oggStream, 0);
-        } else {
-          alSourceStop(_alSource);
-          ov_raw_seek(&_oggStream, 0);
-          _state = kAudioStopped;
-        }
-        return kAudioStreamEOF;
-      } else if (result == OV_HOLE) {
-        // May return OV_HOLE after we rewind the stream, so we just re-loop.
-        continue;
-      } else if (result < 0) {
-        // Error
-        log.error(kModAudio, "%s: %s", kString16007, _resource.name.c_str());
-        _hasStreamingError = true;
-        return kAudioStreamError;
-      }
-    }
-    alBufferData(*buffer, _alFormat, data, size, _rate);
-    delete[] data;
-    return kAudioStreamOK;
-  } else {
+
+  if (_hasStreamingError) {
     return kAudioGenericError;
   }
+
+  auto asset = AssetManager::instance().asAudioAsset(_filename);
+  if (!asset->loaded()) {
+    log.error(kModAudio, "%s: %s", kString16011, _filename.c_str());
+    _hasStreamingError = true;
+    return kAudioGenericError;
+  }
+
+  // Prevent audio cuts if file size too small
+  int bufferSize = config.audioBuffer;
+  if (static_cast<int>(asset->size()) < bufferSize) {
+    //log.trace(kModAudio, "Buffer size: %d, file size: %d", bufferSize, _resource.dataSize);
+    bufferSize = static_cast<int>(asset->size());
+  }
+
+  char* data;
+  data = new char[bufferSize];
+  int size = 0;
+  while (size < bufferSize) {
+    int section;
+    long result = ov_read(&_oggStream, data + size, bufferSize - size,
+      0, 2, 1, &section);
+    if (result > 0) {
+      size += static_cast<int>(result);
+    }
+    else if (result == 0) {
+      // EOF
+      if (_isLoopable) {
+        ov_raw_seek(&_oggStream, 0);
+      }
+      else {
+        alSourceStop(_alSource);
+        ov_raw_seek(&_oggStream, 0);
+        _state = kAudioStopped;
+      }
+      return kAudioStreamEOF;
+    }
+    else if (result == OV_HOLE) {
+      // May return OV_HOLE after we rewind the stream, so we just re-loop.
+      continue;
+    }
+    else if (result < 0) {
+      // Error
+      log.error(kModAudio, "%s: %s", kString16007, _filename.c_str());
+      _hasStreamingError = true;
+      return kAudioStreamError;
+    }
+  }
+  alBufferData(*buffer, _alFormat, data, size, _rate);
+  delete[] data;
+  return kAudioStreamOK;
 }
 
 void Audio::_emptyBuffers() {
@@ -445,7 +452,7 @@ ALboolean Audio::_verifyError(const std::string &operation) {
   
   if (error != AL_NO_ERROR) {
     log.error(kModAudio, "%s: %s: %s (%d)", kString16006,
-              _resource.name.c_str(), operation.c_str(), error);
+              _filename.c_str(), operation.c_str(), error);
     return AL_FALSE;
   }
   return AL_TRUE;
@@ -456,30 +463,41 @@ ALboolean Audio::_verifyError(const std::string &operation) {
 std::size_t Audio::_oggRead(void* ptr, std::size_t size, std::size_t nmemb,
                             void* datasource) {
   Audio* audio = static_cast<Audio*>(datasource);
+  auto asset = AssetManager::instance().asAudioAsset(audio->_filename);
+  if (!asset->loaded()) {
+    Log::instance().error(kModAudio, "%s: %s", kString16011, audio->_filename.c_str());
+    return 0;
+  }
+
   std::size_t nSize = size * nmemb;
   
-  if ((audio->_resource.dataRead + nSize) > audio->_resource.dataSize)
-    nSize = audio->_resource.dataSize - audio->_resource.dataRead;
+  if ((audio->_dataRead + nSize) > asset->size())
+    nSize = asset->size() - audio->_dataRead;
   
-  std::memcpy(ptr, audio->_resource.data + audio->_resource.dataRead, nSize);
-  audio->_resource.dataRead += nSize;
+  std::memcpy(ptr, asset->data() + audio->_dataRead, nSize);
+  audio->_dataRead += nSize;
   return nSize;
 }
 
 int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
   Audio* audio = static_cast<Audio*>(datasource);
+  auto asset = AssetManager::instance().asAudioAsset(audio->_filename);
+  if (!asset->loaded()) {
+    Log::instance().error(kModAudio, "%s: %s", kString16011, audio->_filename.c_str());
+    return -1;
+  }
   
   switch (whence) {
     case SEEK_SET: {
-      audio->_resource.dataRead = offset;
+      audio->_dataRead = offset;
       break;
     }
     case SEEK_CUR: {
-      audio->_resource.dataRead += offset;
+      audio->_dataRead += offset;
       break;
     }
     case SEEK_END: {
-      audio->_resource.dataRead = audio->_resource.dataSize - offset;
+      audio->_dataRead = asset->size() - offset;
       break;
     }
     default: {
@@ -487,8 +505,8 @@ int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
     }
   }
   
-  if (audio->_resource.dataRead > audio->_resource.dataSize) {
-    audio->_resource.dataRead = 0;
+  if (audio->_dataRead > asset->size()) {
+    audio->_dataRead = 0;
     return -1;
   }
   
@@ -497,13 +515,13 @@ int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
 
 int Audio::_oggClose(void* datasource) {
   Audio* audio = static_cast<Audio*>(datasource);
-  audio->_resource.dataRead = 0;
+  audio->_dataRead = 0;
   return 0;
 }
 
 long Audio::_oggTell(void* datasource) {
   Audio* audio = static_cast<Audio*>(datasource);
-  return audio->_resource.dataRead;
+  return audio->_dataRead;
 }
   
 }

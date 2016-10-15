@@ -485,19 +485,14 @@ int Script::_globalLookAt(lua_State *L) {
 }
 
 int Script::_globalPlay(lua_State *L) {
-  Audio* audio = new Audio;
-  
-  audio->setResource(luaL_checkstring(L, 1));
-  audio->setStatic();
+  Audio* audio = new InternalAudio(luaL_checkstring(L, 1), true);
+  Control::instance().assetRoom()->claimAsset(audio);
   
   if (lua_isboolean(L, 2)) {
     audio->setVarying(lua_toboolean(L, 2));
   }
   
-  AudioManager::instance().registerAudio(audio);
-  AudioManager::instance().requestAudio(audio);
   audio->play();
-  
   return 0;
 }
 

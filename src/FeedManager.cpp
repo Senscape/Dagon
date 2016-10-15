@@ -15,10 +15,13 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include "AssetManager.h"
 #include "AudioManager.h"
 #include "Config.h"
+#include "Control.h"
 #include "FeedManager.h"
 #include "FontManager.h"
+#include "Room.h"
 #include "TimerManager.h"
 
 namespace dagon {
@@ -51,7 +54,10 @@ FeedManager::~FeedManager() {
 void FeedManager::cancel() {
   this->clear();
   
-  _feedAudio->stop();
+  if (_feedAudio != nullptr) {
+    _feedAudio->stop();
+  }
+
   _dim();
 }
 
@@ -60,10 +66,7 @@ void FeedManager::clear() {
 }
 
 void FeedManager::init() {
-  _feedAudio = new Audio;
-  _feedAudio->setStatic();
-  audioManager.registerAudio(_feedAudio);
-  
+  _feedAudio = nullptr;
   _feedFont = fontManager.loadDefault();
 }
 
@@ -72,10 +75,14 @@ bool FeedManager::hasQueued() {
 }
 
 bool FeedManager::isPlaying() {
-  return _feedAudio->isPlaying();
+  return _feedAudio == nullptr ? false : _feedAudio->isPlaying();
 }
 
 void FeedManager::queue(const char* text, const char* audio) {
+  if (_feedAudio == nullptr) {
+    return;
+  }
+
   if (_feedAudio->state() != kAudioPlaying) {
     this->showAndPlay(text, audio);
   }
@@ -137,13 +144,16 @@ void FeedManager::show(const char* text) {
 
 void FeedManager::showAndPlay(const char* text, const char* audio) {
   this->show(text);
-  
-  if (_feedAudio->isLoaded())
-    _feedAudio->unload();
-  
+
   if (!config.silentFeeds) {
-    _feedAudio->setResource(audio);
-    audioManager.requestAudio(_feedAudio);
+    if (_feedAudio != nullptr) {
+      if (audioManager.unregisterAudio(_feedAudio)) {
+        delete _feedAudio;
+      }
+    }
+
+    _feedAudio = new InternalAudio(audio, true);
+    _feedAudio->setAsset(AssetManager::instance().asAudioAsset(_feedAudio->filename()));
     _feedAudio->play();
   }
 }
@@ -203,7 +213,7 @@ void FeedManager::update() {
   }
   
   // Check for queued feeds
-  if (_feedAudio->state() != kAudioPlaying) {
+  if (_feedAudio != nullptr && _feedAudio->state() != kAudioPlaying) {
     if (!_arrayOfFeeds.empty()) {
       DGFeed feed = _arrayOfFeeds.front();
       
@@ -259,5 +269,5 @@ void FeedManager::_flush() {
     }
   }
 }
-  
+
 }

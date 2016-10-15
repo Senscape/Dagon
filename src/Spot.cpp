@@ -58,6 +58,9 @@ Spot::Spot(std::vector<int> withArrayOfCoordinates,
 Spot::~Spot() {
   if (_hasAction)
     delete _actionData;
+  if (_hasAudio && _attachedAudio->isType(kObjectInternalAudio)) {
+    delete _attachedAudio;
+  }
 }
 
 ////////////////////////////////////////////////////////////
@@ -216,7 +219,7 @@ void Spot::play() {
   _isPlaying = true;
   
   // FIXME: Should start playing only if in the current room
-  if (_hasAudio && _attachedAudio->isLoaded())
+  if (_hasAudio)
     _attachedAudio->play();
   
   if (_hasVideo && _attachedVideo->isLoaded())

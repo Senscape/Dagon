@@ -46,6 +46,9 @@ Node::Node() {
 ////////////////////////////////////////////////////////////
 
 Node::~Node() {
+  if (_hasFootstep && _footstep->isType(kObjectInternalAudio)) {
+    delete _footstep;
+  }
 }
 
 ////////////////////////////////////////////////////////////
@@ -155,6 +158,7 @@ void Node::setEnterEvent(int theLuaReference) {
 }
 
 void Node::setFootstep(Audio* theFootstep) {
+  theFootstep->setVarying(true);
   _footstep = theFootstep;
   _hasFootstep = true;
 }

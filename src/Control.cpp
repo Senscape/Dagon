@@ -21,10 +21,6 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <algorithm>
-#include <iterator>
-#include <set>
-
 #include "AudioManager.h"
 #include "CameraManager.h"
 #include "Config.h"
@@ -47,6 +43,10 @@
 #include "TextureManager.h"
 #include "TimerManager.h"
 #include "VideoManager.h"
+
+#include <algorithm>
+#include <iterator>
+#include <set>
 
 namespace dagon {
 
@@ -171,6 +171,9 @@ void Control::init(int argc, char* argv[]) {
     renderManager.fadeInNextUpdate();
   }
   else renderManager.resetFade();
+
+  // Create an empty Room for claiming assets that don't belong to other rooms.
+  _arrayOfRooms.insert(_arrayOfRooms.begin(), new Room);
   
   _directControlActive = true;
   _isInitialized = true;
@@ -195,6 +198,10 @@ Node* Control::currentNode() {
 
 Room* Control::currentRoom() {
   return _currentRoom;
+}
+
+Room* Control::assetRoom() const {
+  return _arrayOfRooms[0];
 }
 
 void Control::cutscene(const char* fileName) {
@@ -558,9 +565,6 @@ void Control::registerHotkey(int aKey, const char* luaCommandToExecute) {
 
 void Control::registerObject(Object* theTarget) {
   switch (theTarget->type()) {
-    case kObjectAudio:
-      audioManager.registerAudio((Audio*)theTarget);
-      break;
     case kObjectNode:
       textureManager.requestBundle((Node*)theTarget);
       break;
@@ -577,17 +581,6 @@ void Control::registerObject(Object* theTarget) {
   
   if (_isRunning && !_isShowingSplash)
     log.warning(kModControl, "%s: %s", kString12007, theTarget->name().c_str());
-}
-
-void Control::requestObject(Object* theTarget) {
-  switch (theTarget->type()) {
-    case kObjectAudio:
-      audioManager.requestAudio((Audio*)theTarget);
-      break;
-    case kObjectVideo:
-      videoManager.requestVideo((Video*)theTarget);
-      break;
-  }
 }
 
 void Control::reshape(int width, int height) {
@@ -673,29 +666,12 @@ void Control::switchTo(Object* theTarget) {
             cameraManager.unlock();
         }
 
-        std::set<Audio*> curRoomAudios;
+        static_cast<Room*>(theTarget)->claimAssets();
         if (_currentRoom) {
-          curRoomAudios = _currentRoom->allAudios();
+          _currentRoom->releaseAssets();
         }
 
         _currentRoom = (Room*)theTarget;
-        std::set<Audio*> nextRoomAudios = _currentRoom->allAudios();
-
-        std::vector<Audio*> audiosToBeUnloaded;
-        std::set_difference(curRoomAudios.begin(), curRoomAudios.end(), nextRoomAudios.begin(),
-                            nextRoomAudios.end(), std::back_inserter(audiosToBeUnloaded));
-        for (Audio *audio : audiosToBeUnloaded) {
-          if (audio->isPlaying()) {
-            audio->setFadeSpeed(kFadeSlow);
-            audio->fadeOut();
-            audioManager.pendingUnload(audio);
-          }
-          else {
-            audio->unload();
-            audioManager.deactivateAudio(audio);
-          }
-        }
-
         //log.trace(kModControl, "Set room and Lua objet");
         _scene->setRoom((Room*)theTarget);
         timerManager.setLuaObject(_currentRoom->luaObject());
@@ -706,22 +682,13 @@ void Control::switchTo(Object* theTarget) {
         }
 
         // This has to be done every time so that room audios keep playing
-        if (_currentRoom->hasAudios()) {
-          //log.trace(kModControl, "Managing environmental sounds...");
-          std::vector<Audio*>::iterator it;
-          std::vector<Audio*> arrayOfAudios = _currentRoom->arrayOfAudios();
+        for (auto audio : _currentRoom->arrayOfAudios()) {
+          if (!audio->isPlaying()) {
+            audio->fadeIn();
+          }
 
-          it = arrayOfAudios.begin();
-
-          while (it != arrayOfAudios.end()) {
-            if ((*it)->state() != kAudioPlaying)
-              (*it)->fadeIn();
-            audioManager.requestAudio((*it));
-            if ((*it)->doesAutoplay()) {
-              (*it)->play();
-            }
-
-            ++it;
+          if (audio->doesAutoplay()) {
+            audio->play();
           }
         }
         
@@ -780,8 +747,6 @@ void Control::switchTo(Object* theTarget) {
         //log.trace(kModControl, "Switching to node...");
         if (currentNode()->isSlide())
           cameraManager.unlock();
-
-        audioManager.unloadPending();
         
         //log.trace(kModControl, "Set parent room");
         Node* curNode = currentNode();
@@ -935,12 +900,11 @@ void Control::switchTo(Object* theTarget) {
             
             // Ignore handling fade if audio is set to 0 at this stage
             if (audio->fadeLevel() != 0.0f) {
-              if (!audio->isLoaded())
+              if (!audio->isPlaying())
                 audio->forceFadeLevel(0.0f);
               audio->setDefaultFadeLevel(spot->volume());
             }
-            // Request the audio
-            audioManager.requestAudio(audio);
+
             audio->setPosition(spot->face(), spot->origin());
           }
           
@@ -994,7 +958,6 @@ void Control::switchTo(Object* theTarget) {
   
   //log.trace(kModControl, "Flushing audio...");
   
-  audioManager.flush();
   cameraManager.stopPanning();
   
   //log.trace(kModControl, "Done!");
@@ -1008,18 +971,16 @@ void Control::walkTo(Object* theTarget) {
   
   // Finally, check if must play a single footstep
   if (current->hasFootstep()) {
-    current->footstep()->unload();
-    audioManager.requestAudio(current->footstep());
-    current->footstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
     current->footstep()->play();
+
+    Audio* footstep = new InternalAudio(current->footstep()->audioName(), true);
+    current->setFootstep(footstep);
   }
-  else {
-    if (_currentRoom->hasDefaultFootstep()) {
-      _currentRoom->defaultFootstep()->unload();
-      audioManager.requestAudio(_currentRoom->defaultFootstep());
-      _currentRoom->defaultFootstep()->setFadeLevel(1.0f); // FIXME: Shouldn't be necessary to do this
-      _currentRoom->defaultFootstep()->play();
-    }
+  else if (_currentRoom->hasDefaultFootstep()) {
+    _currentRoom->defaultFootstep()->play();
+
+    Audio* footstep = new InternalAudio(_currentRoom->defaultFootstep()->audioName(), true);
+    _currentRoom->setDefaultFootstep(footstep);
   }
 }
 
