@@ -206,16 +206,11 @@ void Room::claimAsset(Object* obj) {
 
 void Room::releaseAssets(Room* newRoom) {
   for (auto audio : _arrayOfAudios) {
-    if (!audio->isPlaying()) {
-      _claimedAssets.erase(AudioManager::instance().asAsset(audio->filename()));
-    }
-    else {
+    if (audio->isPlaying()) {
       audio->fadeOut();
       if (newRoom) {
         newRoom->claimAsset(audio);
       }
-
-      _claimedAssets.erase(AudioManager::instance().asAsset(audio->filename()));
     }
   }
 
@@ -226,16 +221,14 @@ void Room::releaseAssets(Room* newRoom) {
       do {
         Spot* spot = node->currentSpot();
 
-        if (spot->hasAudio()) {
-          if (spot->audio()->isPlaying()) {
-            spot->audio()->stop();
-          }
-          
-          _claimedAssets.erase(AudioManager::instance().asAsset(spot->audio()->filename()));
+        if (spot->hasAudio() && spot->audio()->isPlaying()) {
+          spot->audio()->stop();
         }
       } while (node->iterateSpots());
     }
   }
+
+  _claimedAssets.clear();
 }
 
 void Room::claimAudio() {
