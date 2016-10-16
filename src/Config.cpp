@@ -139,6 +139,37 @@ std::string Config::path(int ofType, const std::string &forFile,
           }
         }
       }
+      else {
+        switch (andObject) {
+        case kObjectAudio: {
+          fullPath += kDefAudioPath;
+          break;
+        }
+        case kObjectCursor: {
+          fullPath += kDefCursorPath;
+          break;
+        }
+        case kObjectFont: {
+          fullPath += kDefFontPath;
+          break;
+        }
+        case kObjectImage: {
+          fullPath += kDefImagePath;
+          break;
+        }
+        case kObjectNode: {
+          fullPath += kDefNodePath;
+          break;
+        }
+        case kObjectVideo: {
+          fullPath += kDefVideoPath;
+          break;
+        }
+        default: {
+          assert(false);
+        }
+        }
+      }
       break;
     }
     case kPathUserData: {

@@ -195,7 +195,18 @@ std::shared_ptr<AudioAsset> AudioManager::asAsset(const AssetID_t& id) {
     return std::shared_ptr<AudioAsset>();
   }
 
-  std::string fullId = config.path(kPathResources, id, kObjectAudio);
+  // We use a hack to work around a hack in the code that resolves paths. Don't ask.
+  // In case you do: Otherwise audio assets might resolve to different paths during runtime.
+  std::string fullId;
+  if (config.autopaths) {
+    config.autopaths = false;
+    fullId = config.path(kPathResources, id, kObjectAudio);
+    config.autopaths = true;
+  }
+  else {
+    fullId = config.path(kPathResources, id, kObjectAudio);
+  }
+
   auto it = _activeAssets.find(fullId);
   if (it != _activeAssets.end()) {
     if (!it->second.expired()) {
