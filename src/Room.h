@@ -78,7 +78,7 @@ class Room : public Object {
   bool switchTo(Node* theNode);
   void claimAssets();
   void claimAsset(Object* obj);
-  void releaseAssets();
+  void releaseAssets(Room* newRoom);
   
  private:
   SettingCollection _theEffects;

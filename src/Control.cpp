@@ -72,7 +72,6 @@ videoManager(VideoManager::instance())
 {
   
   _currentRoom = NULL;
-  _previousRoom = nullptr;
   
   _sleepTimer = 0;
   
@@ -668,10 +667,9 @@ void Control::switchTo(Object* theTarget) {
 
         static_cast<Room*>(theTarget)->claimAssets();
         if (_currentRoom) {
-          _currentRoom->releaseAssets();
+          _currentRoom->releaseAssets(static_cast<Room*>(theTarget));
         }
 
-        _previousRoom = _currentRoom;
         _currentRoom = (Room*)theTarget;
         //log.trace(kModControl, "Set room and Lua objet");
         _scene->setRoom((Room*)theTarget);
@@ -684,7 +682,7 @@ void Control::switchTo(Object* theTarget) {
 
         // This has to be done every time so that room audios keep playing
         for (auto audio : _currentRoom->arrayOfAudios()) {
-          if (!audio->isPlaying()) {
+          if (!audio->isPlaying() || audio->isFading()) {
             audio->fadeIn();
           }
 
@@ -746,10 +744,6 @@ void Control::switchTo(Object* theTarget) {
         break;
       case kObjectNode: {
         //log.trace(kModControl, "Switching to node...");
-        if (_previousRoom) {
-          _previousRoom->releaseAssets();
-        }
-
         if (currentNode()->isSlide())
           cameraManager.unlock();
         
@@ -1031,7 +1025,7 @@ void Control::terminate() {
   timerManager.terminate();
   videoManager.terminate();
 
-  assetRoom()->releaseAssets();
+  assetRoom()->releaseAssets(nullptr);
   
   int r = rand() % 8; // Double the replies, so that the default one appears often
   
