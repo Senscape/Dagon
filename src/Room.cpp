@@ -207,11 +207,13 @@ void Room::claimAsset(Object* obj) {
 void Room::releaseAssets(Room* newRoom) {
   for (auto audio : _arrayOfAudios) {
     if (audio->isPlaying()) {
-      auto it = std::find(newRoom->_arrayOfAudios.begin(),
-                          newRoom->_arrayOfAudios.end(),
-                          audio);
-      if (it != newRoom->_arrayOfAudios.end()) {
-        continue;
+      if (newRoom) {
+        auto it = std::find(newRoom->_arrayOfAudios.begin(),
+                            newRoom->_arrayOfAudios.end(),
+                            audio);
+        if (it != newRoom->_arrayOfAudios.end()) {
+          continue;
+        }
       }
 
       audio->fadeOut();
@@ -229,7 +231,10 @@ void Room::releaseAssets(Room* newRoom) {
         Spot* spot = node->currentSpot();
 
         if (spot->hasAudio() && spot->audio()->isPlaying()) {
-          spot->audio()->stop();
+          spot->audio()->fadeOut();
+          if (newRoom) {
+            newRoom->claimAsset(spot->audio());
+          }
         }
       } while (node->iterateSpots());
     }

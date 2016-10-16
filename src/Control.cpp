@@ -898,9 +898,7 @@ void Control::switchTo(Object* theTarget) {
             Audio* audio = spot->audio();
             
             // Ignore handling fade if audio is set to 0 at this stage
-            if (audio->fadeLevel() != 0.0f) {
-              if (!audio->isPlaying())
-                audio->forceFadeLevel(0.0f);
+            if (audio->fadeLevel() > 0) {
               audio->setDefaultFadeLevel(spot->volume());
             }
 
