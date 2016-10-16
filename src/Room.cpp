@@ -18,6 +18,7 @@
 #include <cassert>
 
 #include "Audio.h"
+#include "AudioManager.h"
 #include "Node.h"
 #include "Room.h"
 #include "Spot.h"
@@ -111,33 +112,6 @@ size_t Room::numNodes() {
   return _arrayOfNodes.size();
 }
 
-std::set<Audio*> Room::allAudios() {
-  std::set<Audio*> roomAudios;
-  roomAudios.insert(_arrayOfAudios.begin(), _arrayOfAudios.end());
-
-  if (hasNodes()) {
-    beginIteratingNodes();
-
-    do {
-      Node *curNode = iterator();
-
-      if (curNode->hasSpots()) {
-        curNode->beginIteratingSpots();
-
-        do {
-          Spot *curSpot = curNode->currentSpot();
-
-          if (curSpot->hasAudio()) {
-            roomAudios.insert(curSpot->audio());
-          }
-        } while (curNode->iterateSpots());
-      }
-    } while (iterateNodes());
-  }
-
-  return roomAudios;
-}
-
 Node* Room::iterator() {
   assert(_it != _arrayOfNodes.end());
   return *_it;
@@ -148,6 +122,7 @@ Node* Room::iterator() {
 ////////////////////////////////////////////////////////////
 
 void Room::setDefaultFootstep(Audio* theFootstep) {
+  theFootstep->setVarying(true);
   _defaultFootstep = theFootstep;
   _hasDefaultFootstep = true;
 }
@@ -213,6 +188,69 @@ bool Room::switchTo(Node* theNode) {
     }
   }
   return false;
+}
+
+void Room::claimAssets() {
+  claimAudio();
+}
+
+void Room::claimAsset(Object* obj) {
+  switch (obj->type()) {
+  case kObjectInternalAudio:
+  case kObjectAudio:
+    Audio* audio = static_cast<Audio*>(obj);
+    _claimedAssets.emplace(AudioManager::instance().asAsset(audio->filename()));
+    break;
+  }
+}
+
+void Room::releaseAssets() {
+  for (auto audio : _arrayOfAudios) {
+    if (!audio->isPlaying()) {
+      _claimedAssets.erase(AudioManager::instance().asAsset(audio->filename()));
+    }
+    else if (!audio->isFading()) {
+      audio->fadeOut();
+    }
+  }
+
+  for (auto node : _arrayOfNodes) {
+    if (node->hasSpots()) {
+      node->beginIteratingSpots();
+
+      do {
+        Spot* spot = node->currentSpot();
+
+        if (spot->hasAudio()) {
+          if (spot->audio()->isPlaying()) {
+            spot->audio()->stop();
+          }
+          
+          _claimedAssets.erase(AudioManager::instance().asAsset(spot->audio()->filename()));
+        }
+      } while (node->iterateSpots());
+    }
+  }
+}
+
+void Room::claimAudio() {
+  for (const auto audio : _arrayOfAudios) {
+    claimAsset(audio);
+  }
+
+  for (auto node : _arrayOfNodes) {
+    if (node->hasSpots()) {
+      node->beginIteratingSpots();
+
+      do {
+        Spot* spot = node->currentSpot();
+
+        if (spot->hasAudio()) {
+          claimAsset(spot->audio());
+        }
+      } while (node->iterateSpots());
+    }
+  }
 }
   
 }

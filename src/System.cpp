@@ -233,8 +233,6 @@ void System::terminate() {
     SDL_SetWindowFullscreen(_window, 0);
   SDL_DestroyWindow(_window);
   SDL_Quit();
-  
-  exit(0);
 }
 
 void System::toggleFullscreen() {

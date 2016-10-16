@@ -54,6 +54,7 @@ enum ObjectTypes {
   kObjectFont,
   kObjectGroup,
   kObjectImage,
+  kObjectInternalAudio,
   kObjectNode,
   kObjectOverlay,
   kObjectRoom,

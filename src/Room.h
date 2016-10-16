@@ -18,9 +18,12 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
-#include <set>
-#include <vector>
+#include "Asset.h"
 #include "Configurable.h"
+
+#include <memory>
+#include <unordered_set>
+#include <vector>
 
 namespace dagon {
 
@@ -57,7 +60,6 @@ class Room : public Object {
   int persistEvent();
   int unpersistEvent();
   size_t numNodes();
-  std::set<Audio*> allAudios();
 
   // Sets
   void setDefaultFootstep(Audio* theFootstep);
@@ -74,6 +76,9 @@ class Room : public Object {
   Node* iterator();
   void setEnterEvent(int luaReference);
   bool switchTo(Node* theNode);
+  void claimAssets();
+  void claimAsset(Object* obj);
+  void releaseAssets();
   
  private:
   SettingCollection _theEffects;
@@ -81,6 +86,8 @@ class Room : public Object {
   std::vector<Node*> _arrayOfNodes;
   std::vector<Node*>::iterator _it;
   Node* _currentNode;
+
+  std::unordered_set<std::shared_ptr<Asset>, AssetPtrHash> _claimedAssets;
   
   // TODO: When switching rooms, confirm if a given audio is already playing,
   // so that no unnecessary fade ins/outs are performed.
@@ -97,6 +104,8 @@ class Room : public Object {
   
   Room(const Room&);
   void operator=(const Room&);
+
+  void claimAudio();
 };
   
 }

@@ -36,6 +36,7 @@
 #include <vorbis/vorbisfile.h>
 #include <SDL2/SDL_mutex.h>
 
+#include "Asset.h"
 #include "Defines.h"
 #include "Object.h"
 #include "Geometry.h"
@@ -67,26 +68,19 @@ enum AudioStates {
   kAudioStopped
 };
 
-struct Resource {
-  int index;
-  std::string name;
-  char* data;
-  std::size_t dataRead;
-  std::size_t dataSize;
-};
-
 ////////////////////////////////////////////////////////////
 // Interface
 ////////////////////////////////////////////////////////////
 
 class Audio : public Object {
- public:
+  friend class AudioManager;
+
+public:
   Audio();
   ~Audio();
   
   // Checks
   bool doesAutoplay();
-  bool isLoaded();
   bool isLoopable();
   bool isPlaying();
   bool isVarying();
@@ -94,32 +88,33 @@ class Audio : public Object {
   // Gets
   double cursor(); // For match function
   int state();
+  AssetID_t filename() const;
+  std::string audioName() const;
   
   // Sets
   void setAutoplay(bool autoplay);
   void setLoopable(bool loopable);
   void setPosition(unsigned int face, Point origin);
-  void setResource(std::string fileName);
   void setVarying(bool varying);
+  void setAudioName(const std::string& audioName);
   
   // State changes
-  void load();
   void match(Audio* audioToMatch);
   void play();
   void pause();
   void stop();
-  void unload();
   void update();
   
- private:
+private:
   Config& config;
   Log& log;
   
   Audio* _matchedAudio;
   SDL_mutex* _mutex;
-  
-  // Eventually all file management will be handled by a separate class
-  Resource _resource;
+
+  std::string _audioName;
+  AssetID_t _filename;
+  size_t _dataRead;
   
   bool _doesAutoplay;
   bool _isLoaded;
@@ -129,7 +124,7 @@ class Audio : public Object {
   int _state;
   
   ALuint _alBuffers[kMaxAudioBuffers];
-	ALenum _alFormat;
+  ALenum _alFormat;
   ALuint _alSource;
   int _channels;
   ALsizei _rate;
@@ -138,6 +133,8 @@ class Audio : public Object {
   OggVorbis_File _oggStream;
   
   // Private methods
+  void _load();
+  void _unload();
   int _fillBuffer(ALuint* buffer);
   void _emptyBuffers();
   std::string _randomizeFile(const std::string &fileName);

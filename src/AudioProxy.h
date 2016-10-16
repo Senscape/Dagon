@@ -24,6 +24,8 @@
 ////////////////////////////////////////////////////////////
 
 #include "AudioManager.h"
+#include "Control.h"
+#include "Room.h"
 
 namespace dagon {
 
@@ -39,8 +41,8 @@ public:
   // Constructor
   AudioProxy(lua_State *L) {
     a = new Audio;
-    
-    a->setResource(luaL_checkstring(L, 1));
+    a->setAudioName(luaL_checkstring(L, 1));
+    Control::instance().assetRoom()->claimAsset(a);
     
     if (lua_istable(L, 2)) {
       lua_pushnil(L);
@@ -58,9 +60,6 @@ public:
         lua_pop(L, 1);
       }
     }
-    
-    // Register the new audio
-    AudioManager::instance().registerAudio(a);
     
     // Init the base class
     this->setObject(a);
@@ -85,10 +84,7 @@ public:
   
   // Play the audio
   int play(lua_State *L) {
-    // Request the audio
-    AudioManager::instance().requestAudio(a);
     a->play();
-    
     return 0;
   }
   

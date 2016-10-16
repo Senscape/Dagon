@@ -144,11 +144,8 @@ public:
           return 1;
         }
         else {
-          // If not, create and set (deleted by the Audio Manager)
-          audio = new Audio;
-          audio->setResource(luaL_checkstring(L, 2));
-          
-          AudioManager::instance().registerAudio(audio);
+          audio = new InternalAudio(false);
+          audio->setAudioName(luaL_checkstring(L, 2));
           
           if (s->hasFlag(kSpotLoop))
             audio->setLoopable(true);
@@ -275,10 +272,6 @@ public:
   int play(lua_State *L) {
     // WARNING: Potential thread conflict here! Let the manager decide when to pause
     // thread(s).
-    if (s->hasAudio()) {
-      AudioManager::instance().requestAudio(s->audio());
-    }
-    
     s->play();
     
     // Test for synced audio or video

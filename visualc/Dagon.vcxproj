@@ -102,7 +102,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Action.h" />
+    <ClInclude Include="..\src\Asset.h" />
     <ClInclude Include="..\src\Audio.h" />
+    <ClInclude Include="..\src\AudioAsset.h" />
     <ClInclude Include="..\src\AudioManager.h" />
     <ClInclude Include="..\src\AudioProxy.h" />
     <ClInclude Include="..\src\Button.h" />
@@ -131,6 +133,7 @@
     <ClInclude Include="..\src\Image.h" />
     <ClInclude Include="..\src\ImageProxy.h" />
     <ClInclude Include="..\src\Interface.h" />
+    <ClInclude Include="..\src\InternalAudio.h" />
     <ClInclude Include="..\src\Language.h" />
     <ClInclude Include="..\src\Locator.h" />
     <ClInclude Include="..\src\Log.h" />
@@ -184,6 +187,7 @@
     <ClCompile Include="..\src\Group.cpp" />
     <ClCompile Include="..\src\Image.cpp" />
     <ClCompile Include="..\src\Interface.cpp" />
+    <ClCompile Include="..\src\InternalAudio.cpp" />
     <ClCompile Include="..\src\Locator.cpp" />
     <ClCompile Include="..\src\Log.cpp" />
     <ClCompile Include="..\src\Node.cpp" />

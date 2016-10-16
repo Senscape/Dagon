@@ -19,6 +19,7 @@
 ////////////////////////////////////////////////////////////
 
 #include "Audio.h"
+#include "AudioAsset.h"
 #include "Platform.h"
 
 #ifdef DAGON_MAC
@@ -32,13 +33,14 @@
 #include <SDL2/SDL_mutex.h>
 #include <SDL2/SDL_thread.h>
 
+#include <set>
+#include <unordered_map>
+
 namespace dagon {
 
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
-
-#define kMaxNumberOfAudios 32
 
 class Config;
 class Log;
@@ -48,6 +50,8 @@ class Log;
 ////////////////////////////////////////////////////////////
 
 class AudioManager {
+  friend class FeedManager;
+
   Config& config;
   Log& log;
   
@@ -56,14 +60,15 @@ class AudioManager {
   SDL_mutex* _mutex;
   SDL_Thread* _thread;
   
-  std::vector<Audio*> _arrayOfAudios;
-  std::vector<Audio*> _arrayOfActiveAudios;
-  std::vector<Audio*> _pendingUnload;
+  std::set<Audio*> _activeAudios;
+  std::unordered_map<AssetID_t, std::weak_ptr<AudioAsset>> _activeAssets;
   
   bool _isInitialized;
   bool _isRunning;
   
+  bool _update();
   static int _runThread(void *ptr);
+  void _unregisterAudio(Audio* target);
   
   AudioManager();
   AudioManager(AudioManager const&);
@@ -76,22 +81,11 @@ public:
     return audioManager;
   }
   
-  // These two methods have similar purposes: clear() notifies the manager
-  // that the engine is about to load a new node, which prepares all
-  // active audios for release. flush() effectively unloads every audio
-  // that is no longer needed.
-  void clear();
-  void flush();
-  
   void init();
   void registerAudio(Audio* target);
-  void deactivateAudio(Audio* target);
-  void requestAudio(Audio* target);
   void setOrientation(float* orientation);
   void terminate();
-  void pendingUnload(Audio *target);
-  void unloadPending();
-  bool update();
+  std::shared_ptr<AudioAsset> asAsset(const AssetID_t& id);
 };
   
 }

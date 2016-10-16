@@ -17,8 +17,10 @@
 
 #include "AudioManager.h"
 #include "Config.h"
+#include "Control.h"
 #include "FeedManager.h"
 #include "FontManager.h"
+#include "Room.h"
 #include "TimerManager.h"
 
 namespace dagon {
@@ -41,7 +43,7 @@ timerManager(TimerManager::instance())
 ////////////////////////////////////////////////////////////
 
 FeedManager::~FeedManager() {
-  // Nothing to do here (manager destroys the audio)
+  delete _feedAudio;
 }
 
 ////////////////////////////////////////////////////////////
@@ -50,7 +52,6 @@ FeedManager::~FeedManager() {
 
 void FeedManager::cancel() {
   this->clear();
-  
   _feedAudio->stop();
   _dim();
 }
@@ -61,9 +62,6 @@ void FeedManager::clear() {
 
 void FeedManager::init() {
   _feedAudio = new Audio;
-  _feedAudio->setStatic();
-  audioManager.registerAudio(_feedAudio);
-  
   _feedFont = fontManager.loadDefault();
 }
 
@@ -137,13 +135,21 @@ void FeedManager::show(const char* text) {
 
 void FeedManager::showAndPlay(const char* text, const char* audio) {
   this->show(text);
-  
-  if (_feedAudio->isLoaded())
-    _feedAudio->unload();
-  
-  if (!config.silentFeeds) {
-    _feedAudio->setResource(audio);
-    audioManager.requestAudio(_feedAudio);
+
+  if (!config.silentFeeds && strlen(audio) > 0) {
+    audioManager._unregisterAudio(_feedAudio);
+    delete _feedAudio;
+
+    _feedAudio = new Audio;
+    _feedAudio->setAudioName(audio);
+
+    if (Control::instance().currentRoom()) {
+      Control::instance().currentRoom()->claimAsset(_feedAudio);
+    }
+    else {
+      Control::instance().assetRoom()->claimAsset(_feedAudio);
+    }
+
     _feedAudio->play();
   }
 }
@@ -259,5 +265,5 @@ void FeedManager::_flush() {
     }
   }
 }
-  
+
 }

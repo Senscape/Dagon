@@ -104,6 +104,7 @@ class Control {
   
   std::vector<Room*> _arrayOfRooms;
   Room* _currentRoom;
+  Room* _previousRoom;
   
   Console* _console;
   Interface* _interface;
@@ -143,6 +144,7 @@ public:
   void init(int argc, char* argv[]);
   Node* currentNode();
   Room* currentRoom();
+  Room* assetRoom() const;
   void cutscene(const char* fileName);
   bool isConsoleActive();
   bool isDirectControlActive();
@@ -153,7 +155,6 @@ public:
   void registerGlobalHandler(int forEvent, int handlerForLua);
   void registerHotkey(int aKey, const char* luaCommandToExecute);
   void registerObject(Object* theTarget);
-  void requestObject(Object* theTarget);
   void reshape(int width, int height);
   void sleep(int forSeconds);
   void syncSpot(Spot* spot);

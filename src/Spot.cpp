@@ -216,7 +216,7 @@ void Spot::play() {
   _isPlaying = true;
   
   // FIXME: Should start playing only if in the current room
-  if (_hasAudio && _attachedAudio->isLoaded())
+  if (_hasAudio)
     _attachedAudio->play();
   
   if (_hasVideo && _attachedVideo->isLoaded())
