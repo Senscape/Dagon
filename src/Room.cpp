@@ -204,13 +204,18 @@ void Room::claimAsset(Object* obj) {
   }
 }
 
-void Room::releaseAssets() {
+void Room::releaseAssets(Room* newRoom) {
   for (auto audio : _arrayOfAudios) {
     if (!audio->isPlaying()) {
       _claimedAssets.erase(AudioManager::instance().asAsset(audio->filename()));
     }
-    else if (!audio->isFading()) {
+    else {
       audio->fadeOut();
+      if (newRoom) {
+        newRoom->claimAsset(audio);
+      }
+
+      _claimedAssets.erase(AudioManager::instance().asAsset(audio->filename()));
     }
   }
 
