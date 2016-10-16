@@ -74,8 +74,16 @@ public:
       r->addAudio(a);
 
       a->setLoopable(true);
-      if (lua_isnumber(L, 2)) {
-        a->setDefaultFadeLevel((float)(lua_tonumber(L, 2) / 100));
+      if (lua_istable(L, 2)) {
+        lua_pushnil(L);
+        while (lua_next(L, 2) != 0) {
+          const char* key = lua_tostring(L, -2);
+
+          if (strcmp(key, "volume") == 0) a->setDefaultFadeLevel((float)(lua_tonumber(L, -1) / 100));
+          if (strcmp(key, "varying") == 0) a->setVarying(lua_toboolean(L, -1));
+
+          lua_pop(L, 1);
+        }
       }
 
       return 0;
