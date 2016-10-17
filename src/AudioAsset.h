@@ -15,6 +15,7 @@
 #define DAGON_AUDIO_ASSET_H_
 
 #include "Asset.h"
+#include "Config.h"
 
 #include <fstream>
 
@@ -43,16 +44,29 @@ protected:
   virtual bool _load() {
     std::ifstream file(id(), std::ifstream::binary | std::ifstream::ate);
     if (file.good()) {
-      _dataSize = file.tellg();
-      _data = new char[_dataSize];
+      goto READ_FILE;
+    }
+    else {
+      auto pos = id().find_last_of('/');
+      if (pos != std::string::npos) {
+        file = std::ifstream(Config::instance().defAssetPath(id().substr(pos), kObjectAudio),
+                             std::ifstream::binary | std::ifstream::ate);
+        if (file.good()) {
+          goto READ_FILE;
+        }
+      }
 
-      file.seekg(file.beg);
-      file.read(_data, _dataSize);
-      file.close();
-      return true;
+      return false;
     }
 
-    return false;
+  READ_FILE:
+    _dataSize = file.tellg();
+    _data = new char[_dataSize];
+
+    file.seekg(file.beg);
+    file.read(_data, _dataSize);
+    file.close();
+    return true;
   }
 };
 

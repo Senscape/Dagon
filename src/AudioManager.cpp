@@ -195,28 +195,26 @@ std::shared_ptr<AudioAsset> AudioManager::asAsset(const AssetID_t& id) {
     return std::shared_ptr<AudioAsset>();
   }
 
-  // We use a hack to work around a hack in the code that resolves paths. Don't ask.
-  // In case you do: Otherwise audio assets might resolve to different paths during runtime.
-  std::string fullId;
-  if (config.autopaths) {
-    config.autopaths = false;
-    fullId = config.path(kPathResources, id, kObjectAudio);
-    config.autopaths = true;
-  }
-  else {
-    fullId = config.path(kPathResources, id, kObjectAudio);
-  }
+  for (auto it = _activeAssets.begin(); it != _activeAssets.end();) {
+    if (it->first.length() >= id.length()) {
+      if (it->first.compare(it->first.length() - id.length(), id.length(), id) == 0) {
+        if (!it->second.expired()) {
+          SDL_UnlockMutex(_mutex);
+          return std::static_pointer_cast<AudioAsset>(it->second.lock());
+        }
 
-  auto it = _activeAssets.find(fullId);
-  if (it != _activeAssets.end()) {
-    if (!it->second.expired()) {
-      SDL_UnlockMutex(_mutex);
-      return std::static_pointer_cast<AudioAsset>(it->second.lock());
+        it = _activeAssets.erase(it);
+      }
+      else {
+        ++it;
+      }
     }
-
-    _activeAssets.erase(it);
+    else {
+      ++it;
+    }
   }
 
+  std::string fullId = config.path(kPathResources, id, kObjectAudio);
   auto assetPtr = std::make_shared<AudioAsset>(fullId);
   _activeAssets.emplace(fullId, assetPtr);
 

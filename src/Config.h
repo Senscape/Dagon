@@ -112,6 +112,7 @@ class Config {
   double framesPerSecond();
   float globalSpeed();
   std::string path(int ofType, const std::string &forFile, int andObject);
+  std::string defAssetPath(const std::string &forFile, int andObject);
   std::string script();
   std::string texExtension();
   
@@ -119,9 +120,6 @@ class Config {
   void setPath(int forType, std::string thePath);
   void setScript(std::string name);
   void setTexExtension(std::string ext);
-  
-  // TODO: Provide members to save/load configurations
-  // (also used by system to save them in the user's folder)
   
  private:
   std::string _appPath;
