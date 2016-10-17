@@ -687,6 +687,7 @@ void Control::switchTo(Object* theTarget) {
           }
 
           if (audio->doesAutoplay()) {
+            audioManager.registerAudio(audio);
             audio->play();
           }
         }
@@ -792,6 +793,7 @@ void Control::switchTo(Object* theTarget) {
 
         for (Audio *audio : audiosToPlay) {
           if (!audio->isPlaying()) {
+            audioManager.registerAudio(audio);
             audio->fadeIn();
             audio->play();
           }
@@ -969,6 +971,7 @@ void Control::walkTo(Object* theTarget) {
   // Finally, check if must play a single footstep
   if (current->hasFootstep()) {
     assetRoom()->claimAsset(current->footstep());
+    audioManager.registerAudio(current->footstep());
     current->footstep()->play();
 
     Audio* footstep = new InternalAudio(true);
@@ -977,6 +980,7 @@ void Control::walkTo(Object* theTarget) {
   }
   else if (_currentRoom->hasDefaultFootstep()) {
     assetRoom()->claimAsset(_currentRoom->defaultFootstep());
+    audioManager.registerAudio(_currentRoom->defaultFootstep());
     _currentRoom->defaultFootstep()->play();
 
     Audio* footstep = new InternalAudio(true);

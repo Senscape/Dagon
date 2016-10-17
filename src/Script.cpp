@@ -493,6 +493,7 @@ int Script::_globalPlay(lua_State *L) {
     audio->setVarying(lua_toboolean(L, 2));
   }
   
+  AudioManager::instance().registerAudio(audio);
   audio->play();
   return 0;
 }

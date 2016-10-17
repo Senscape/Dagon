@@ -155,6 +155,7 @@ void AudioManager::init() {
 void AudioManager::registerAudio(Audio* target) {
   if (SDL_LockMutex(_mutex) == 0) {
     _activeAudios.insert(target);
+    target->_asset = asAsset(target->filename());
     SDL_UnlockMutex(_mutex);
   }
   else {
@@ -244,6 +245,7 @@ bool AudioManager::_update() {
 
     for (auto it = _activeAudios.begin(); it != _activeAudios.end();) {
       if ((*it)->state() == kAudioStopped) {
+        (*it)->_asset.reset();
         (*it)->_unload();
 
         if ((*it)->isType(kObjectInternalAudio)) {

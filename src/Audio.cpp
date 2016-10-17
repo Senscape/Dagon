@@ -20,7 +20,6 @@
 #include <sstream>
 
 #include "Audio.h"
-#include "AudioManager.h"
 #include "Language.h"
 #include "Log.h"
 
@@ -181,9 +180,8 @@ void Audio::match(Audio* audioToMatch) {
 
 void Audio::play() {
   if (SDL_LockMutex(_mutex) == 0) {
-    auto asset = AudioManager::instance().asAsset(_filename);
-    asset->load();
-    if (!asset->loaded()) {
+    _asset->load();
+    if (!_asset->loaded()) {
       log.error(kModAudio, "%s: %s", kString16008, _filename.c_str());
       SDL_UnlockMutex(_mutex);
       return;
@@ -203,7 +201,6 @@ void Audio::play() {
       }
       alSourcePlay(_alSource);
       _state = kAudioPlaying;
-      AudioManager::instance().registerAudio(this);
       _verifyError("play");
     }
     SDL_UnlockMutex(_mutex);
@@ -360,8 +357,7 @@ int Audio::_fillBuffer(ALuint* buffer) {
     return kAudioGenericError;
   }
 
-  auto asset = AudioManager::instance().asAsset(_filename);
-  if (!asset->loaded()) {
+  if (!_asset->loaded()) {
     log.error(kModAudio, "%s: %s", kString16011, _filename.c_str());
     _hasStreamingError = true;
     return kAudioGenericError;
@@ -369,8 +365,8 @@ int Audio::_fillBuffer(ALuint* buffer) {
 
   // Prevent audio cuts if file size too small
   int bufferSize = config.audioBuffer;
-  if (static_cast<int>(asset->size()) < bufferSize) {
-    bufferSize = static_cast<int>(asset->size());
+  if (static_cast<int>(_asset->size()) < bufferSize) {
+    bufferSize = static_cast<int>(_asset->size());
   }
 
   char* data;
@@ -459,26 +455,24 @@ ALboolean Audio::_verifyError(const std::string &operation) {
 std::size_t Audio::_oggRead(void* ptr, std::size_t size, std::size_t nmemb,
                             void* datasource) {
   Audio* audio = static_cast<Audio*>(datasource);
-  auto asset = AudioManager::instance().asAsset(audio->_filename);
-  if (!asset->loaded()) {
+  if (!audio->_asset->loaded()) {
     Log::instance().error(kModAudio, "%s: %s", kString16011, audio->_filename.c_str());
     return 0;
   }
 
   std::size_t nSize = size * nmemb;
   
-  if ((audio->_dataRead + nSize) > asset->size())
-    nSize = asset->size() - audio->_dataRead;
+  if ((audio->_dataRead + nSize) > audio->_asset->size())
+    nSize = audio->_asset->size() - audio->_dataRead;
   
-  std::memcpy(ptr, asset->data() + audio->_dataRead, nSize);
+  std::memcpy(ptr, audio->_asset->data() + audio->_dataRead, nSize);
   audio->_dataRead += nSize;
   return nSize;
 }
 
 int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
   Audio* audio = static_cast<Audio*>(datasource);
-  auto asset = AudioManager::instance().asAsset(audio->_filename);
-  if (!asset->loaded()) {
+  if (!audio->_asset->loaded()) {
     Log::instance().error(kModAudio, "%s: %s", kString16011, audio->_filename.c_str());
     return -1;
   }
@@ -493,7 +487,7 @@ int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
       break;
     }
     case SEEK_END: {
-      audio->_dataRead = asset->size() - offset;
+      audio->_dataRead = audio->_asset->size() - offset;
       break;
     }
     default: {
@@ -501,7 +495,7 @@ int Audio::_oggSeek(void* datasource, ogg_int64_t offset, int whence) {
     }
   }
   
-  if (audio->_dataRead > asset->size()) {
+  if (audio->_dataRead > audio->_asset->size()) {
     audio->_dataRead = 0;
     return -1;
   }
