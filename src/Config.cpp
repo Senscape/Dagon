@@ -100,7 +100,6 @@ std::string Config::path(int ofType, const std::string &forFile,
     case kPathResources: {
       fullPath = _resPath;
       if (autopaths) {
-        // This is a temporary hack until the Resources manager is implemented
         if (Script::instance().isExecutingModule()) {
           std::string roomPath = Script::instance().module();
           fullPath += "rooms/";
@@ -108,67 +107,13 @@ std::string Config::path(int ofType, const std::string &forFile,
           fullPath += "/";
         }
         else {
-          switch (andObject) {
-            case kObjectAudio: {
-              fullPath += kDefAudioPath;
-              break;
-            }
-            case kObjectCursor: {
-              fullPath += kDefCursorPath;
-              break;
-            }
-            case kObjectFont: {
-              fullPath += kDefFontPath;
-              break;
-            }
-            case kObjectImage: {
-              fullPath += kDefImagePath;
-              break;
-            }
-            case kObjectNode: {
-              fullPath += kDefNodePath;
-              break;
-            }
-            case kObjectVideo: {
-              fullPath += kDefVideoPath;
-              break;
-            }
-            default: {
-              assert(false);
-            }
-          }
+          fullPath = defAssetPath(forFile, andObject);
+          return fullPath;
         }
       }
       else {
-        switch (andObject) {
-        case kObjectAudio: {
-          fullPath += kDefAudioPath;
-          break;
-        }
-        case kObjectCursor: {
-          fullPath += kDefCursorPath;
-          break;
-        }
-        case kObjectFont: {
-          fullPath += kDefFontPath;
-          break;
-        }
-        case kObjectImage: {
-          fullPath += kDefImagePath;
-          break;
-        }
-        case kObjectNode: {
-          fullPath += kDefNodePath;
-          break;
-        }
-        case kObjectVideo: {
-          fullPath += kDefVideoPath;
-          break;
-        }
-        default: {
-          assert(false);
-        }
-        }
+        fullPath = defAssetPath(forFile, andObject);
+        return fullPath;
       }
       break;
     }
@@ -185,6 +130,43 @@ std::string Config::path(int ofType, const std::string &forFile,
   
   fullPath += forFile;
   
+  return fullPath;
+}
+
+std::string Config::defAssetPath(const std::string &forFile, int andObject) {
+  std::string fullPath = _resPath;
+
+  switch (andObject) {
+  case kObjectAudio: {
+    fullPath += kDefAudioPath;
+    break;
+  }
+  case kObjectCursor: {
+    fullPath += kDefCursorPath;
+    break;
+  }
+  case kObjectFont: {
+    fullPath += kDefFontPath;
+    break;
+  }
+  case kObjectImage: {
+    fullPath += kDefImagePath;
+    break;
+  }
+  case kObjectNode: {
+    fullPath += kDefNodePath;
+    break;
+  }
+  case kObjectVideo: {
+    fullPath += kDefVideoPath;
+    break;
+  }
+  default: {
+    assert(false);
+  }
+  }
+
+  fullPath += forFile;
   return fullPath;
 }
 
