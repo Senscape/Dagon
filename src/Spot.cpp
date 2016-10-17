@@ -21,6 +21,7 @@
 #include <sstream>
 
 #include "Audio.h"
+#include "AudioManager.h"
 #include "Group.h"
 #include "Spot.h"
 #include "Texture.h"
@@ -216,8 +217,10 @@ void Spot::play() {
   _isPlaying = true;
   
   // FIXME: Should start playing only if in the current room
-  if (_hasAudio)
+  if (_hasAudio) {
+    AudioManager::instance().registerAudio(_attachedAudio);
     _attachedAudio->play();
+  }
   
   if (_hasVideo && _attachedVideo->isLoaded())
     _attachedVideo->play();

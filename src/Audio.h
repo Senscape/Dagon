@@ -36,7 +36,7 @@
 #include <vorbis/vorbisfile.h>
 #include <SDL2/SDL_mutex.h>
 
-#include "Asset.h"
+#include "AudioAsset.h"
 #include "Defines.h"
 #include "Object.h"
 #include "Geometry.h"
@@ -112,6 +112,7 @@ private:
   Audio* _matchedAudio;
   SDL_mutex* _mutex;
 
+  std::shared_ptr<AudioAsset> _asset;
   std::string _audioName;
   AssetID_t _filename;
   size_t _dataRead;

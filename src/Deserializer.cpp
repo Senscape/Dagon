@@ -17,6 +17,7 @@
 
 #include "Deserializer.h"
 #include "Audio.h"
+#include "AudioManager.h"
 #include "CameraManager.h"
 #include "Config.h"
 #include "Control.h"
@@ -283,8 +284,10 @@ void Deserializer::toggleAudio() {
       break;
     }
     case kAudioPlaying: {
-      if (!audio->isPlaying())
+      if (!audio->isPlaying()) {
+        AudioManager::instance().registerAudio(audio);
         audio->play();
+      }
       break;
     }
     case kAudioPaused: {

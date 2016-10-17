@@ -84,6 +84,7 @@ public:
   
   // Play the audio
   int play(lua_State *L) {
+    AudioManager::instance().registerAudio(a);
     a->play();
     return 0;
   }

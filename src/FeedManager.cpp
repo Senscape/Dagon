@@ -150,6 +150,7 @@ void FeedManager::showAndPlay(const char* text, const char* audio) {
       Control::instance().assetRoom()->claimAsset(_feedAudio);
     }
 
+    audioManager.registerAudio(_feedAudio);
     _feedAudio->play();
   }
 }
