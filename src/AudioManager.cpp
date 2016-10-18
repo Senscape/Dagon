@@ -154,8 +154,17 @@ void AudioManager::init() {
 
 void AudioManager::registerAudio(Audio* target) {
   if (SDL_LockMutex(_mutex) == 0) {
-    _activeAudios.insert(target);
     target->_asset = asAsset(target->filename());
+
+    if (SDL_LockMutex(target->_mutex) == 0) {
+      target->_state = kAudioInitial;
+      SDL_UnlockMutex(target->_mutex);
+    }
+    else {
+      log.error(kModAudio, "%s", kString18002);
+    }
+    
+    _activeAudios.insert(target);
     SDL_UnlockMutex(_mutex);
   }
   else {
