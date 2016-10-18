@@ -154,9 +154,8 @@ void AudioManager::init() {
 
 void AudioManager::registerAudio(Audio* target) {
   if (SDL_LockMutex(_mutex) == 0) {
-    target->_asset = asAsset(target->filename());
-
     if (SDL_LockMutex(target->_mutex) == 0) {
+      target->_asset = asAsset(target->filename());
       target->_state = kAudioInitial;
       SDL_UnlockMutex(target->_mutex);
     }
