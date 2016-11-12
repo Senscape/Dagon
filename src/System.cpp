@@ -87,7 +87,7 @@ bool System::init() {
   _window = SDL_CreateWindow("Dagon", SDL_WINDOWPOS_CENTERED,
                              SDL_WINDOWPOS_CENTERED,
                              config.displayWidth, config.displayHeight,
-                             videoFlags);
+                             videoFlags | SDL_WINDOW_ALLOW_HIGHDPI);
   _context = SDL_GL_CreateContext(_window);
   
   if (!_window) {
