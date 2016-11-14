@@ -122,6 +122,7 @@ class Control {
   bool _isShuttingDown;
   int _shutdownTimer;
   int _sleepTimer;
+  int _prevControlMode;
   
   void _processAction();
   void _updateView(int state, bool inBackground);

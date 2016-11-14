@@ -83,6 +83,11 @@ videoManager(VideoManager::instance())
   // This is used to randomize the color of certain spots,
   // should be called once during initialization.
   srand((unsigned)time(0));
+
+  // In case the game is loaded in a slide, this should have a sensible default value.
+  // Optionally this can be added to the saved state to preserve it between sessions.
+  // But for now, this simpler solution is adequate.
+  _prevControlMode = kControlFree;
   
   // For precaution, we set all these to false
   
@@ -720,6 +725,12 @@ void Control::switchTo(Object* theTarget) {
       case kObjectSlide:
         //log.trace(kModControl, "Switching to slide...");
         if (_currentRoom) {
+          if (currentNode() && !currentNode()->isSlide()) {
+            // We are switching to a slide from something that is not a slide.
+            // The control mode should be saved.
+            _prevControlMode = config.controlMode;
+          }
+
           Node* node = (Node*)theTarget;
           //log.trace(kModControl, "Set previous node");
           node->setPreviousNode(this->currentNode());
@@ -729,11 +740,7 @@ void Control::switchTo(Object* theTarget) {
             return;
           }
           
-          // This was commented out due to a game specific issue.
-          // "Seclusion: Islesbury" uses a custom behaviour for leaving Slides.
-          // As a result this change was an easy fix to the problem of the game
-          // being unable to use direct control mode after leaving a Slide.
-          // _directControlActive = false;
+          _directControlActive = false;
           
           cameraManager.lock();
         }
@@ -874,6 +881,7 @@ void Control::switchTo(Object* theTarget) {
       
       if (!previous->isSlide()) {
         //log.trace(kModControl, "Unlock camera and return to direct control");
+        config.controlMode = _prevControlMode;
         cameraManager.unlock();
         if (config.controlMode == kControlFixed)
           // FIXME: Forced, but it should return to the previous mode
