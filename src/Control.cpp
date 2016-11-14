@@ -740,10 +740,6 @@ void Control::switchTo(Object* theTarget) {
             return;
           }
           
-          // This was commented out due to a game specific issue.
-          // "Seclusion: Islesbury" uses a custom behaviour for leaving Slides.
-          // As a result this change was an easy fix to the problem of the game
-          // being unable to use direct control mode after leaving a Slide.
           _directControlActive = false;
           
           cameraManager.lock();
