@@ -882,6 +882,7 @@ void Control::switchTo(Object* theTarget) {
       if (!previous->isSlide()) {
         //log.trace(kModControl, "Unlock camera and return to direct control");
         config.controlMode = _prevControlMode;
+        cameraManager.setViewport(config.displayWidth, config.displayHeight);
         cameraManager.unlock();
         if (config.controlMode == kControlFixed)
           // FIXME: Forced, but it should return to the previous mode
