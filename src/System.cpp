@@ -83,19 +83,14 @@ bool System::init() {
   }
 
   if (config.fullscreen) {
-    int width = config.displayWidth;
-    int height = config.displayHeight;
-
     if (!forcedRes) {
-      SDL_DisplayMode desktopMode;
-      SDL_GetDesktopDisplayMode(0, &desktopMode);
-      width = desktopMode.w;
-      height = desktopMode.h;
+      SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     }
-
-    SDL_SetWindowPosition(_window, 0, 0);
-    SDL_SetWindowSize(_window, width, height);
-    SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
+    else {
+      SDL_SetWindowPosition(_window, 0, 0);
+      SDL_SetWindowSize(_window, config.displayWidth, config.displayHeight);
+      SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
+    }
   }
   
   // Set vertical sync according to our configuration
@@ -249,6 +244,9 @@ void System::toggleFullscreen() {
     SDL_GetDesktopDisplayMode(0, &desktopMode);
     SDL_SetWindowPosition(_window, 10, 10);
     SDL_SetWindowSize(_window, desktopMode.w, desktopMode.h);
+    // We force a reshape even though that should happen as a consequence of SDL window resize events.
+    // But that seems to work unreliably on some OS's, hence we explicitly force it.
+    Control::instance().reshape(desktopMode.w, desktopMode.h);
   }
 }
 
