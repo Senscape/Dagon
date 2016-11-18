@@ -59,40 +59,43 @@ bool System::init() {
            version.major, version.minor);
   
   SDL_Init(SDL_INIT_EVENTS | SDL_INIT_VIDEO | SDL_INIT_TIMER);
-  Uint32 videoFlags = SDL_WINDOW_OPENGL;
+  Uint32 videoFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+  bool forcedRes = true;
   
   if (!config.displayWidth || !config.displayHeight) {
-    if (config.fullscreen) {
-      SDL_DisplayMode displayMode;
-      SDL_GetCurrentDisplayMode(0, &displayMode);
-      config.displayWidth = displayMode.w;
-      config.displayHeight = displayMode.h;
-      videoFlags = videoFlags | SDL_WINDOW_FULLSCREEN;
-    } else {
-      // Use a third of the screen
-      SDL_DisplayMode desktopMode;
-      SDL_GetDesktopDisplayMode(0, &desktopMode);
-      config.displayWidth = static_cast<int>(desktopMode.w / 1.5f);
-      config.displayHeight = static_cast<int>(desktopMode.h / 1.5f);
-      videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
-    }
-  } else {
-    if (config.fullscreen) {
-      videoFlags = videoFlags | SDL_WINDOW_FULLSCREEN;
-    } else {
-      videoFlags = videoFlags | SDL_WINDOW_RESIZABLE;
-    }
+    // Use a third of the screen
+    SDL_DisplayMode desktopMode;
+    SDL_GetDesktopDisplayMode(0, &desktopMode);
+    config.displayWidth = static_cast<int>(desktopMode.w / 1.5f);
+    config.displayHeight = static_cast<int>(desktopMode.h / 1.5f);
+    forcedRes = false;
   }
   
   _window = SDL_CreateWindow("Dagon", SDL_WINDOWPOS_CENTERED,
                              SDL_WINDOWPOS_CENTERED,
                              config.displayWidth, config.displayHeight,
-                             videoFlags | SDL_WINDOW_ALLOW_HIGHDPI);
+                             videoFlags);
   _context = SDL_GL_CreateContext(_window);
   
   if (!_window) {
     log.error(kModSystem, "%s", kString13010);
     return false;
+  }
+
+  if (config.fullscreen) {
+    int width = config.displayWidth;
+    int height = config.displayHeight;
+
+    if (!forcedRes) {
+      SDL_DisplayMode desktopMode;
+      SDL_GetDesktopDisplayMode(0, &desktopMode);
+      width = desktopMode.w;
+      height = desktopMode.h;
+    }
+
+    SDL_SetWindowPosition(_window, 0, 0);
+    SDL_SetWindowSize(_window, width, height);
+    SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
   }
   
   // Set vertical sync according to our configuration
@@ -203,8 +206,9 @@ void System::update() {
                                              EventMouseMove);
             break;
           case SDL_WINDOWEVENT_RESIZED:
-            Control::instance().reshape(event.window.data1,
-                                        event.window.data2);
+            int w, h;
+            SDL_GetWindowSize(_window, &w, &h);
+            Control::instance().reshape(w, h);
             break;
           default:
             break;
@@ -238,14 +242,13 @@ void System::terminate() {
 void System::toggleFullscreen() {
   config.fullscreen = !config.fullscreen;
   if (config.fullscreen) {
-    SDL_DisplayMode desktopMode;
-    SDL_GetDesktopDisplayMode(0, &desktopMode);
-    SDL_SetWindowPosition(_window, 0, 0);
-    SDL_SetWindowSize(_window, desktopMode.w, desktopMode.h);
-    SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN);
-    SDL_ShowCursor(false);
+    SDL_SetWindowFullscreen(_window, SDL_WINDOW_FULLSCREEN_DESKTOP);
   } else {
     SDL_SetWindowFullscreen(_window, 0);
+    SDL_DisplayMode desktopMode;
+    SDL_GetDesktopDisplayMode(0, &desktopMode);
+    SDL_SetWindowPosition(_window, 10, 10);
+    SDL_SetWindowSize(_window, desktopMode.w, desktopMode.h);
   }
 }
 
