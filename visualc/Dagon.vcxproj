@@ -22,7 +22,7 @@
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='release native|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -59,7 +59,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>_DEBUG;DEBUG;GLEW_STATIC;OV_EXCLUDE_STATIC_CALLBACKS;KTX_OPENGL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\lua-5.1.5\include;..\extlibs\headers;..\extlibs\headers\libfreetype\windows;..\extlibs\headers\libfreetype\windows\freetype;..\extlibs\headers\libsdl2\windows;..\extlibs\headers\dirent;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\extlibs\headers;..\extlibs\headers\libfreetype\windows;..\extlibs\headers\libfreetype\windows\freetype;..\extlibs\headers\libsdl2\windows;..\extlibs\headers\dirent;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
