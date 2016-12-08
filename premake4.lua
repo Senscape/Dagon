@@ -127,6 +127,7 @@ solution "Dagon"
                     "/usr/local/include/freetype2" }
       libdirs { "/usr/lib", "/usr/local/lib" }
       links { libs_unix, "dl" }
+      buildoptions { "-std=c++11" }
       linkoptions { "-pthread" }
 
     configuration "bsd"
