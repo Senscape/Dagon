@@ -15,6 +15,7 @@
 // Headers
 ////////////////////////////////////////////////////////////
 
+#include <string.h>
 #include <fstream>
 //#include <ktx.h>
 
@@ -113,6 +114,10 @@ bool Texture::hasResource() {
 
 bool Texture::isLoaded() {
   return _isLoaded;
+}
+
+bool Texture::isBitmapLoaded() {
+  return _isBitmapLoaded;
 }
 
 ////////////////////////////////////////////////////////////
@@ -380,6 +385,13 @@ void Texture::loadBitmap() {
     _height = y;
     _depth = comp;
     _isBitmapLoaded = true;
+  }
+}
+
+void Texture::unloadBitmap() {
+  if (_isBitmapLoaded) {
+    free(_bitmap);
+    _isBitmapLoaded = false;
   }
 }
 

@@ -65,6 +65,7 @@ class Texture : public Object {
   // Checks
   bool hasResource();
   bool isLoaded();
+  bool isBitmapLoaded();
   
   // Gets
   int depth();
@@ -84,6 +85,7 @@ class Texture : public Object {
   void clear();
   void load();
   void loadBitmap(); // Temporary to test preloader
+  void unloadBitmap();
   
   // Textures loaded from memory are not managed
   void loadFromMemory(const unsigned char* dataToLoad, long size);

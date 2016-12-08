@@ -37,11 +37,12 @@ Image::Image(const std::string &fromFileName) :
 config(Config::instance())
 {
   this->setTexture(fromFileName);
-  if (_attachedTexture->isLoaded()) {
+  if (_attachedTexture->isBitmapLoaded()) {
     _rect.origin = ZeroPoint;
     _rect.size = MakeSize(_attachedTexture->width(),
                           _attachedTexture->height());
     _calculateCoordinates();
+    _attachedTexture->unloadBitmap();
   }
   this->setType(kObjectImage);
 }
@@ -71,6 +72,7 @@ Size Image::size() {
 }
 
 Texture* Image::texture() {
+  _attachedTexture->load();
   return _attachedTexture;
 }
 
@@ -97,7 +99,7 @@ void Image::setTexture(const std::string &fromFileName) {
   _attachedTexture = new Texture;
   _attachedTexture->setResource(config.path(kPathResources, fromFileName,
                                             kObjectImage).c_str());
-  _attachedTexture->load();
+  _attachedTexture->loadBitmap();
   _hasTexture = true;
 }
 
