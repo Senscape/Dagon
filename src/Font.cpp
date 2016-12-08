@@ -196,13 +196,13 @@ void Font::_loadFont(FT_Face &face) {
     FT_BitmapGlyph bitmapGlyph = (FT_BitmapGlyph)glyph;
     FT_Bitmap bitmap = bitmapGlyph->bitmap;
     
-    int width = _next(bitmap.width);
-    int height = _next(bitmap.rows);
+    uint width = _next(bitmap.width);
+    uint height = _next(bitmap.rows);
     GLubyte* expandedData;
     expandedData = new GLubyte[2 * width * height];
     
-    for (int j = 0; j < height; j++) {
-      for (int i = 0; i < width; i++) {
+    for (uint j = 0; j < height; j++) {
+      for (uint i = 0; i < width; i++) {
         expandedData[2 * (i + j * width)] =
         expandedData[2 * (i + j * width) + 1] =
         (i >= bitmap.width || j >= bitmap.rows) ?
