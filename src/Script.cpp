@@ -353,10 +353,10 @@ int Script::_globalNewIndex(lua_State *L) {
     uint8_t hashBuf[8]; // SipHash produces 64-bit outputs.
     siphash(hashBuf, reinterpret_cast<const uint8_t*>(varName), strlen(varName),
             reinterpret_cast<const uint8_t*>("0123456789ABCDEF"));
-    uint64_t hash = uint64_t(hashBuf[0] << 56) | uint64_t(hashBuf[1] << 48) |
-                    uint64_t(hashBuf[2] << 40) | uint64_t(hashBuf[3] << 32) |
-                    uint64_t(hashBuf[4] << 24) | uint64_t(hashBuf[5] << 16) |
-                    uint64_t(hashBuf[6] << 8)  | hashBuf[7];
+    uint64_t hash = (uint64_t)hashBuf[0] << 56 | (uint64_t)hashBuf[1] << 48 |
+                    (uint64_t)hashBuf[2] << 40 | (uint64_t)hashBuf[3] << 32 |
+                    (uint64_t)hashBuf[4] << 24 | (uint64_t)hashBuf[5] << 16 |
+                    (uint64_t)hashBuf[6] << 8  | hashBuf[7];
 
     auto objIter = Control::instance().invObjMap.find(hash);
     if (objIter != Control::instance().invObjMap.end()) {
