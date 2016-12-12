@@ -19,7 +19,12 @@
 #include "Image.h"
 #include "Texture.h"
 
+#include <cstring>
+#include <fstream>
+
 namespace dagon {
+
+static const unsigned char PNG_HEADER[8] = {137, 80, 78, 71, 13, 10, 26, 10};
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -37,11 +42,12 @@ Image::Image(const std::string &fromFileName) :
 config(Config::instance())
 {
   this->setTexture(fromFileName);
-  if (_attachedTexture->isLoaded()) {
+  if (_attachedTexture->isBitmapLoaded()) {
     _rect.origin = ZeroPoint;
     _rect.size = MakeSize(_attachedTexture->width(),
                           _attachedTexture->height());
     _calculateCoordinates();
+    _attachedTexture->unloadBitmap();
   }
   this->setType(kObjectImage);
 }
@@ -71,6 +77,7 @@ Size Image::size() {
 }
 
 Texture* Image::texture() {
+  _attachedTexture->load();
   return _attachedTexture;
 }
 
@@ -93,11 +100,42 @@ void Image::setTexture(const std::string &fromFileName) {
   // to avoid repeating resources. Eventually, this would be done via the
   // resource manager.
   // FIXME: These textures are immediately loaded which isn't very efficient.
-  
+
   _attachedTexture = new Texture;
   _attachedTexture->setResource(config.path(kPathResources, fromFileName,
                                             kObjectImage).c_str());
-  _attachedTexture->load();
+  std::ifstream bitmapFile(_attachedTexture->resource(), std::ios::in |
+                                                         std::ios::binary);
+  if (!bitmapFile.good()) {
+    _attachedTexture->loadBitmap();
+  }
+  else {
+    char header[8];
+    bitmapFile.read(header, 8);
+    if (std::memcmp(header, PNG_HEADER, 8) == 0) {
+      char buf[4]; // Width and height are stored as 32 bit words.
+      bitmapFile.seekg(16); // Skip header (8 bytes) and IHDR chunk header (8 bytes).
+
+      bitmapFile.read(buf, 4); // Read width (big endian integer).
+      int width = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
+
+      bitmapFile.read(buf, 4); // Read height (big endian integer).
+      int height = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
+
+      if (width <= 0 || height <= 0) { // In this case we should let STBI handle this file.
+        _attachedTexture->loadBitmap();
+      }
+      else {
+        _rect.origin = ZeroPoint;
+        _rect.size = MakeSize(width, height);
+        _calculateCoordinates();
+      }
+    }
+    else {
+      _attachedTexture->loadBitmap();
+    }
+  }
+
   _hasTexture = true;
 }
 
