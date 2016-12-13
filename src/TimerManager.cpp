@@ -175,6 +175,7 @@ void TimerManager::enable(int handle) {
 
 void TimerManager::process() {
   if (SDL_LockMutex(_mutex) == 0) {
+    bool mutexUnlocked = false;
     std::vector<DGTimer>::iterator it = _arrayOfTimers.begin();
     while (it != _arrayOfTimers.end()) {
       if ((*it).isEnabled && ((*it).type != DGTimerManual)) {
@@ -206,6 +207,7 @@ void TimerManager::process() {
               
               // Must unlock here for precaution
               SDL_UnlockMutex(_mutex);
+              mutexUnlocked = true;
               Script::instance().processCallback((*it).luaHandler, 0);
               keepProcessing = false;
               break;
@@ -217,7 +219,7 @@ void TimerManager::process() {
       }
       ++it;
     }
-    SDL_UnlockMutex(_mutex);
+    if (!mutexUnlocked) SDL_UnlockMutex(_mutex);
   }
 }
 
