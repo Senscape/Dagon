@@ -42,3 +42,8 @@ xcuserdata/
 *.vsscc
 *.vspscc
 ipch/
+
+# MinGW
+mingw/obj/
+mingw/debug/
+mingw/release/
