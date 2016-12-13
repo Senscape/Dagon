@@ -117,10 +117,10 @@ void Image::setTexture(const std::string &fromFileName) {
       bitmapFile.seekg(16); // Skip header (8 bytes) and IHDR chunk header (8 bytes).
 
       bitmapFile.read(buf, 4); // Read width (big endian integer).
-      int width = buf[0] << 24 + buf[1] << 16 + buf[2] << 8 + buf[3];
+      int width = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
 
       bitmapFile.read(buf, 4); // Read height (big endian integer).
-      int height = buf[0] << 24 + buf[1] << 16 + buf[2] << 8 + buf[3];
+      int height = (buf[0] << 24) + (buf[1] << 16) + (buf[2] << 8) + buf[3];
 
       if (width <= 0 || height <= 0) { // In this case we should let STBI handle this file.
         _attachedTexture->loadBitmap();
