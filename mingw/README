@@ -1,0 +1,8 @@
+The binaries in ../extlibs/mingw-libs/x86 and ../extlibs/bin/x86/mingw were built with MinGW-w64 using the following configuration:
+  - POSIX threads
+  - Dwarf exceptions
+  - i686 architecture
+  - GCC 5.4.0
+You build with
+  make [config=debug|release]
+and your builds should be distributed with the files in ../extlibs/bin/x86/mingw
