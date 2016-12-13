@@ -22,6 +22,9 @@
 #include "Log.h"
 #include "Video.h"
 
+#include <cstring>
+#include <cmath>
+
 // TODO: Use 1.1 API calls
 
 namespace dagon {
