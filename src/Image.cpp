@@ -24,7 +24,7 @@
 
 namespace dagon {
 
-static const PNG_HEADER[8] = {137, 80, 78, 71, 13, 10, 26, 10};
+static const unsigned char PNG_HEADER[8] = {137, 80, 78, 71, 13, 10, 26, 10};
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor

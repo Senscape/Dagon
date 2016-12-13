@@ -14,6 +14,7 @@
 #ifndef DAGON_ASSET_H_
 #define DAGON_ASSET_H_
 
+#include <memory>
 #include <mutex>
 #include <string>
 

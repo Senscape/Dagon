@@ -26,6 +26,7 @@
 #include "Spot.h"
 #include "TimerManager.h"
 
+#include <cstring>
 #include <vector>
 
 namespace dagon {
