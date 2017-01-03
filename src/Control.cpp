@@ -70,16 +70,16 @@ textureManager(TextureManager::instance()),
 timerManager(TimerManager::instance()),
 videoManager(VideoManager::instance())
 {
-  
+
   _currentRoom = NULL;
-  
+
   _sleepTimer = 0;
-  
+
   _isInitialized = false;
   _isShowingSplash = false;
   _isShuttingDown = false;
   _isRunning = false;
-  
+
   // This is used to randomize the color of certain spots,
   // should be called once during initialization.
   srand((unsigned)time(0));
@@ -88,9 +88,9 @@ videoManager(VideoManager::instance())
   // Optionally this can be added to the saved state to preserve it between sessions.
   // But for now, this simpler solution is adequate.
   _prevControlMode = kControlFree;
-  
+
   // For precaution, we set all these to false
-  
+
   _eventHandlers.hasEnterNode = false;
   _eventHandlers.hasLeaveNode = false;
   _eventHandlers.hasEnterRoom = false;
@@ -101,7 +101,7 @@ videoManager(VideoManager::instance())
   _eventHandlers.hasMouseRightButton = false;
   _eventHandlers.hasMouseMove = false;
   _eventHandlers.hasResize = false;
-  
+
   for (int i = 0; i < kMaxHotKeys; i++)
     _hotkeyData[i].enabled = false;
 }
@@ -128,46 +128,46 @@ void Control::init(int argc, char* argv[]) {
   // First thing we do to log properly
   system.findPaths();
 #endif
-  
+
   // FIXME: Solve problem when script not found (console isn't shown)
   script.init();
-  
+
   system.init();
-  
+
   renderManager.init();
   renderManager.resetView(); // Test for errors
-  
+
   cameraManager.init();
   cameraManager.setViewport(config.displayWidth, config.displayHeight);
-  
+
   // Init the audio manager
   audioManager.init();
-  
+
   // Init the font library
   fontManager.init();
-  
+
   // Init the texture manager
   //textureManager.init(); // Preloader thread not working yet
-  
+
   // Init the video manager
   videoManager.init();
-  
+
   feedManager.init();
-  
+
   _interface = new Interface;
   _scene = new Scene;
-  
+
   _state = new State;
-  
+
   timerManager.setSystem(&system);
-  
+
   _console = new Console;
   if (config.debugMode) {
     // Console must be initialized after the Font Manager
     _console->init();
     _console->enable();
   }
-  
+
   // If the splash screen is enabled, load its data and set the correct state
   if (config.showSplash) {
     _cancelSplash = false;
@@ -180,18 +180,18 @@ void Control::init(int argc, char* argv[]) {
 
   // Create an empty Room for claiming assets that don't belong to other rooms.
   _arrayOfRooms.insert(_arrayOfRooms.begin(), new Room);
-  
+
   _directControlActive = true;
   _isInitialized = true;
-  
+
   // Force a redraw to avoid an annoying blink
   this->reshape(config.displayWidth, config.displayHeight);
-  
+
   if (!config.showSplash)
     script.run();
   else
     _isShowingSplash = true;
-  
+
   log.trace(kModControl, "%s", kString13002);
 }
 
@@ -241,7 +241,7 @@ void Control::lookAt(float horizontal, float vertical, bool instant, bool adjust
 
 void Control::processFunctionKey(int aKey) {
   int idx = 0;
-  
+
   switch (aKey) {
     case kKeyF1: idx = 1; break;
     case kKeyF2: idx = 2; break;
@@ -256,7 +256,7 @@ void Control::processFunctionKey(int aKey) {
     case kKeyF11: idx = 11; break;
     case kKeyF12: idx = 12; break;
   }
-  
+
   if (idx) {
     if (_hotkeyData[idx].enabled)
       script.processCommand(_hotkeyData[idx].line);
@@ -338,7 +338,7 @@ void Control::processKey(int aKey, int eventFlags) {
           script.processCommand(_hotkeyData[idx].line);
         }
       }
-      
+
       // Process these keys only when the console is visible
       if (!_console->isHidden()) {
         switch (aKey) {
@@ -358,7 +358,7 @@ void Control::processKey(int aKey, int eventFlags) {
         }
       }
       break;
-      
+
     case EventKeyModified:
       switch (aKey) {
         case 'f':
@@ -368,7 +368,7 @@ void Control::processKey(int aKey, int eventFlags) {
           break;
       }
       break;
-      
+
     case EventKeyUp:
       if (_console->isHidden()) {
         switch (aKey) {
@@ -396,35 +396,35 @@ void Control::processKey(int aKey, int eventFlags) {
 
 void Control::processMouse(int x, int y, int eventFlags) {
   // TODO: Horrible nesting of IFs here... improve
-  
+
   if ((config.controlMode != kControlFixed) ||
       !_directControlActive) {
     cursorManager.updateCoords(x, y);
   }
-  
+
   if (!cursorManager.isEnabled() || cursorManager.isFading()) {
     // Ignore all the rest
     cursorManager.setCursor(kCursorNormal);
     cameraManager.stopPanning();
     return;
   }
-  
+
   if ((eventFlags == EventMouseMove) && (_eventHandlers.hasMouseMove))
     script.processCallback(_eventHandlers.mouseMove, 0);
-  
+
   if ((eventFlags == EventMouseUp) && _eventHandlers.hasMouseButton) {
     script.processCallback(_eventHandlers.mouseButton, 0);
   }
-  
+
   if ((eventFlags == EventMouseRightUp) && _eventHandlers.hasMouseRightButton) {
     script.processCallback(_eventHandlers.mouseRightButton, 0);
   }
-  
+
   // The overlay system is handled differently than the spots, so we
   // do everything here. Eventually, we should tide up things a little.
-  
+
   bool canProcess = false;
-  
+
   if (config.controlMode == kControlFixed) {
     if (!_directControlActive)
       canProcess = true;
@@ -433,54 +433,54 @@ void Control::processMouse(int x, int y, int eventFlags) {
     if (!cursorManager.isDragging())
       canProcess = true;
   }
-  
+
   // TODO: Use active overlays only
   if (canProcess) {
     if (_interface->scanOverlays()) {
       if ((eventFlags == EventMouseUp) && cursorManager.hasAction()) {
         _processAction();
-        
+
         // Repeat the scan in case the button is no longer visible
         _interface->scanOverlays();
-        
+
         // Stop processing spots
         return;
       }
     }
   }
-  
+
   switch (config.controlMode) {
     case kControlFree:
       if (eventFlags == EventMouseMove) {
         if (!cursorManager.onButton()) {
           cameraManager.pan(x, y);
-          
+
           // When in free mode, we first check if camera is panning because
           // we don't want the "not dragging" cursor
           if (cameraManager.isPanning() && !cursorManager.hasAction()) {
             cursorManager.setCursor(cameraManager.cursorWhenPanning());
           }
           else cursorManager.setCursor(kCursorNormal);
-          
+
         }
         else cameraManager.stopPanning();
       }
-      
+
       if (eventFlags == EventMouseUp) {
         if (cursorManager.hasAction())
           _processAction();
       }
       break;
-      
+
     case kControlFixed:
       if (_directControlActive) {
         cursorManager.updateCoords(config.displayWidth >> 1, config.displayHeight >> 1); // Forced
-        
+
         if (eventFlags == EventMouseMove) {
-          cameraManager.directPan(x, y);
+          cameraManager.setDirectPan(x, y);
         }
       }
-      
+
       if (eventFlags == EventMouseUp) {
         if (cursorManager.hasAction()) {
           _processAction();
@@ -537,7 +537,7 @@ void Control::registerGlobalHandler(int forEvent, int handlerForLua) {
 
 void Control::registerHotkey(int aKey, const char* luaCommandToExecute) {
   int idx = 0;
-  
+
   switch (aKey) {
     case kKeyF1: idx = 1; break;
     case kKeyF2: idx = 2; break;
@@ -559,7 +559,7 @@ void Control::registerHotkey(int aKey, const char* luaCommandToExecute) {
     case kKeyEscape: idx = 18; break;
     case kKeySpace: idx = 19; break;
   }
-  
+
   if (idx) {
     _hotkeyData[idx].enabled = true;
     _hotkeyData[idx].value = aKey;
@@ -582,7 +582,7 @@ void Control::registerObject(Object* theTarget) {
       videoManager.registerVideo((Video*)theTarget);
       break;
   }
-  
+
   if (_isRunning && !_isShowingSplash)
     log.warning(kModControl, "%s: %s", kString12007, theTarget->name().c_str());
 }
@@ -590,30 +590,30 @@ void Control::registerObject(Object* theTarget) {
 void Control::reshape(int width, int height) {
   // TODO: Must store the initial width value
   int size = (width * kDefCursorSize) / 1920;
-  
+
   if (size > kMaxCursorSize)
     size = kMaxCursorSize;
   else if (size < DGMinCursorSize)
     size = DGMinCursorSize;
-  
+
   config.displayWidth = width;
   config.displayHeight = height;
-  
+
   cameraManager.setViewport(width, height);
   cursorManager.setSize(size);
   feedManager.reshape();
   renderManager.reshape();
-  
+
   if (_eventHandlers.hasResize)
     script.processCallback(_eventHandlers.resize, 0);
 }
 
 void Control::run() {
   _isRunning = true;
-  
+
   double startTime = SDL_GetTicks();
   double updateInterval = (1.0 / (double)config.framerate) * 1000;
-   
+
   while (_isRunning) {
     if (config.frameLimiter) {
       while (startTime < SDL_GetTicks()) {
@@ -636,35 +636,35 @@ void Control::sleep(int forSeconds) {
 void Control::switchTo(Object* theTarget) {
   static bool firstSwitch = true;
   static SettingCollection previousEffects; // Temporary patch
-  
+
   //log.trace(kModControl, "Begin switching...");
-  
+
   _updateView(StateNode, true);
-  
+
   videoManager.flush();
-  
+
   if (firstSwitch) {
     firstSwitch = false;
   }
   else {
     renderManager.blendNextUpdate(true);
   }
-  
+
   cameraManager.setViewport(config.displayWidth, config.displayHeight);
-  
+
   if (currentNode()){
     if (currentNode()->hasLeaveEvent()) {
       //log.trace(kModControl, "Has node onLeave callback");
       script.processCallback(currentNode()->leaveEvent(), 0);
     }
   }
-  
+
   if (theTarget) {
     switch (theTarget->type()) {
       case kObjectRoom: {
         //log.trace(kModControl, "Switching to room...");
         feedManager.cancel();
-        
+
         if (currentNode()) {
           if (currentNode()->isSlide())
             cameraManager.unlock();
@@ -679,7 +679,7 @@ void Control::switchTo(Object* theTarget) {
         //log.trace(kModControl, "Set room and Lua objet");
         _scene->setRoom((Room*)theTarget);
         timerManager.setLuaObject(_currentRoom->luaObject());
-        
+
         if (!_currentRoom->hasNodes()) {
           log.warning(kModControl, "%s: %s", kString12005, _currentRoom->name().c_str());
           return;
@@ -696,19 +696,19 @@ void Control::switchTo(Object* theTarget) {
             audio->play();
           }
         }
-        
+
         textureManager.setRoomToPreload(_currentRoom);
-        
+
         if (_eventHandlers.hasEnterRoom) {
           //log.trace(kModControl, "Has global enter event");
           script.processCallback(_eventHandlers.enterRoom, 0);
         }
-        
+
         if (_currentRoom->hasEnterEvent()) {
           //log.trace(kModControl, "Has room enter event");
           script.processCallback(_currentRoom->enterEvent(), 0);
         }
-        
+
         EffectsManager& effectsManager = EffectsManager::instance();
         if (_currentRoom->hasEffects()) {
           //log.trace(kModControl, "Loading room effects");
@@ -734,27 +734,27 @@ void Control::switchTo(Object* theTarget) {
           Node* node = (Node*)theTarget;
           //log.trace(kModControl, "Set previous node");
           node->setPreviousNode(this->currentNode());
-          
+
           if (!_currentRoom->switchTo(node)) {
             log.error(kModControl, "%s: %s (%s)", kString12010, node->name().c_str(), _currentRoom->name().c_str()); // Bad slide
             return;
           }
-          
+
           _directControlActive = false;
-          
+
           cameraManager.lock();
         }
         else {
           log.error(kModControl, "%s", kString12009);
           return;
         }
-        
+
         break;
       case kObjectNode: {
         //log.trace(kModControl, "Switching to node...");
         if (currentNode()->isSlide())
           cameraManager.unlock();
-        
+
         //log.trace(kModControl, "Set parent room");
         Node* curNode = currentNode();
         std::set<Audio*> curNodeAudios;
@@ -807,7 +807,7 @@ void Control::switchTo(Object* theTarget) {
         }
 
         Room* room = node->parentRoom();
-        
+
         if (room) {
           if (room != _currentRoom) {
             //log.trace(kModControl, "New room, so cleaning up...");
@@ -816,17 +816,17 @@ void Control::switchTo(Object* theTarget) {
             _scene->setRoom(room);
             timerManager.setLuaObject(_currentRoom->luaObject());
             textureManager.setRoomToPreload(_currentRoom);
-            
+
             if (_eventHandlers.hasEnterRoom) {
               //log.trace(kModControl, "Has global room enter event");
               script.processCallback(_eventHandlers.enterRoom, 0);
             }
-            
+
             if (_currentRoom->hasEnterEvent()) {
               //log.trace(kModControl, "Has room enter event");
               script.processCallback(_currentRoom->enterEvent(), 0);
             }
-            
+
             EffectsManager& effectsManager = EffectsManager::instance();
             if (_currentRoom->hasEffects()) {
               //log.trace(kModControl, "Loading room effects");
@@ -844,22 +844,22 @@ void Control::switchTo(Object* theTarget) {
           log.error(kModControl, "%s", kString12009);
           return;
         }
-        
+
         if (!_currentRoom->switchTo(node)) {
           log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
           return;
         }
-        
+
         if (_eventHandlers.hasEnterNode) {
           //log.trace(kModControl, "Has global node enter event");
           script.processCallback(_eventHandlers.enterNode, 0);
         }
-        
+
         if (node->hasEnterEvent()) {
           //log.trace(kModControl, "Has node enter event");
           script.processCallback(node->enterEvent(), 0);
         }
-        
+
         break;
       }
     }
@@ -871,14 +871,14 @@ void Control::switchTo(Object* theTarget) {
       //log.trace(kModControl, "Returning from slide...");
       Node* current = this->currentNode();
       Node* previous = current->previousNode();
-      
+
       _currentRoom->switchTo(previous);
-      
+
       if (current->slideReturn()) {
         //log.trace(kModControl, "Has slide onLeave callback");
         script.processCallback(current->slideReturn(), current->luaObject());
       }
-      
+
       if (!previous->isSlide()) {
         //log.trace(kModControl, "Unlock camera and return to direct control");
         config.controlMode = _prevControlMode;
@@ -890,24 +890,24 @@ void Control::switchTo(Object* theTarget) {
       }
     }
   }
-  
+
   if (_currentRoom) {
     if (_currentRoom->hasNodes()) {
       // Now we proceed to load the textures of the current node
       Node* current = _currentRoom->currentNode();
       //log.trace(kModControl, "Flushing textures...");
       textureManager.flush();
-      
+
       if (current->hasSpots()) {
         current->beginIteratingSpots();
         //log.trace(kModControl, "Processing spots...");
         do {
           Spot* spot = current->currentSpot();
-          
+
           if (spot->hasAudio()) {
             //log.trace(kModControl, "Loading audio...");
             Audio* audio = spot->audio();
-            
+
             // Ignore handling fade if audio is set to 0 at this stage
             if (audio->fadeLevel() > 0) {
               audio->setDefaultFadeLevel(spot->volume());
@@ -915,38 +915,38 @@ void Control::switchTo(Object* theTarget) {
 
             audio->setPosition(spot->face(), spot->origin());
           }
-          
+
           // TODO: Merge the video autoplay with spot properties
           // TODO: Decide after video finishes playing if last frame is showed or removed
           if (spot->hasVideo()) {
             //log.trace(kModControl, "Loading video...");
             Video* video = spot->video();
             videoManager.requestVideo(video);
-            
+
             if (video->isLoaded()) {
               if (!spot->hasTexture()) {
                 Texture* texture = new Texture;
                 spot->setTexture(texture);
               }
-              
+
               video->play();
-              
+
               DGFrame* frame = video->currentFrame();
               spot->texture()->loadRawData(frame->data, frame->width, frame->height);
-              
+
               video->pause();
             }
           }
-          
+
           if (spot->hasTexture()) {
             //log.trace(kModControl, "Loading image...");
             textureManager.requestTexture(spot->texture());
-            
+
             // Only resize if nothing but origin
             if (spot->vertexCount() == 1)
               spot->resize(spot->texture()->width(), spot->texture()->height());
           }
-          
+
           if (spot->hasFlag(kSpotAuto) || spot->isPlaying())
             spot->play();
         } while (current->iterateSpots());
@@ -954,7 +954,7 @@ void Control::switchTo(Object* theTarget) {
       else {
         log.warning(kModControl, "%s", kString12006);
       }
-      
+
       // Prepare the name for the window
       char title[kMaxObjectName];
       snprintf(title, kMaxObjectName, "%s (%s, %s)", config.script().c_str(),
@@ -963,20 +963,20 @@ void Control::switchTo(Object* theTarget) {
       system.setTitle(title);
     }
   }
-  
+
   //log.trace(kModControl, "Flushing audio...");
-  
+
   cameraManager.stopPanning();
-  
+
   //log.trace(kModControl, "Done!");
 }
-  
+
 void Control::walkTo(Object* theTarget) {
   this->switchTo(theTarget);
-  
+
   cameraManager.simulateWalk();
   Node* current = this->currentNode();
-  
+
   // Finally, check if must play a single footstep
   if (current->hasFootstep()) {
     assetRoom()->claimAsset(current->footstep());
@@ -1007,39 +1007,39 @@ void Control::syncSpot(Spot* spot) {
 void Control::takeSnapshot() {
   bool previousTexCompression = config.texCompression;
   config.texCompression = false;
-  
+
   time_t rawtime;
   struct tm* timeinfo;
   char buffer[kMaxFileLength];
   Texture texture(0, 0, 0);
-  
+
   time(&rawtime);
   timeinfo = localtime (&rawtime);
-  
+
   strftime(buffer, kMaxFileLength, "snap-%Y-%m-%d-%Hh%Mm%Ss", timeinfo);
-  
+
   cameraManager.beginOrthoView();
   renderManager.drawPostprocessedView();
   texture.bind();
   renderManager.copyView();
   cameraManager.endOrthoView();
-  
+
   texture.saveToFile(buffer);
-  
+
   config.texCompression = previousTexCompression;
 }
 
 void Control::terminate() {
   _isRunning = false;
-  
+
   audioManager.terminate();
   timerManager.terminate();
   videoManager.terminate();
 
   assetRoom()->releaseAssets(nullptr);
-  
+
   int r = rand() % 8; // Double the replies, so that the default one appears often
-  
+
   switch (r) {
     default:
     case 0: log.trace(kModControl, "%s", kString12100); break;
@@ -1047,7 +1047,7 @@ void Control::terminate() {
     case 2: log.trace(kModControl, "%s", kString12102); break;
     case 3: log.trace(kModControl, "%s", kString12103); break;
   }
-  
+
   system.terminate();
 }
 
@@ -1056,7 +1056,7 @@ void Control::update() {
     case StateLookAt:
       cameraManager.panToTargetAngle();
       _updateView(_state->previous(), false);
-      
+
       if (!cameraManager.isPanning()) {
         _state->setPrevious();
         cursorManager.fadeIn();
@@ -1072,11 +1072,11 @@ void Control::update() {
       else {
         _updateView(_state->previous(), false);
       }
-      
+
       break;
     case StateVideoSync:
       _updateView(_state->previous(), false);
-      
+
       if (!_syncedSpot->video()->isPlaying()) {
         _state->setPrevious();
         cursorManager.fadeIn();
@@ -1087,7 +1087,7 @@ void Control::update() {
       _updateView(_state->current(), false);
       break;
   }
-  
+
   if (_isShuttingDown) {
     if (timerManager.checkManual(_shutdownTimer)) {
       this->terminate();
@@ -1105,7 +1105,7 @@ std::vector<Room*> Control::rooms() {
 
 void Control::_processAction() {
   Action* action = cursorManager.action();
-  
+
   switch (action->type) {
     case kActionFunction:
       script.processCallback(action->luaHandler, action->luaObject);
@@ -1135,17 +1135,17 @@ void Control::_updateView(int state, bool inBackground) {
   // TODO: Suspend all operations when doing a switch
   // FIXME: Add a render stack of Objects, especially for overlays
   // IMPORTANT: Ensure this function is thread-safe when switching rooms or nodes
-  
+
   if (!inBackground) {
     // User post-render operations, supporting textures
     if (_eventHandlers.hasPreRender)
       script.processCallback(_eventHandlers.preRender, 0);
   }
-  
+
   // Setup the scene
-  
+
   _scene->clear();
-  
+
   // Do this in a viewtimer for the frame limitter feature
   switch (state) {
     case StateCutscene:
@@ -1159,57 +1159,57 @@ void Control::_updateView(int state, bool inBackground) {
     case StateNode:
       _scene->scanSpots();
       _scene->drawSpots(inBackground);
-      
+
       if (!inBackground) {
         _interface->drawHelpers();
         _interface->drawOverlays();
         feedManager.update();
         _interface->drawCursor();
       }
-      
+
       break;
     case StateSplash:
       static int handlerIn = timerManager.createManual(4);
       static int handlerOut = timerManager.createManual(5);
-      
+
       _scene->drawSplash();
-      
+
       if (timerManager.checkManual(handlerIn)) {
         _scene->fadeOut();
       }
-      
+
       if (timerManager.checkManual(handlerOut) || _cancelSplash) {
         cursorManager.enable();
         renderManager.clearView();
         renderManager.resetFade();
         _state->set(StateNode);
         _scene->unloadSplash();
-        
+
         script.run();
-        
+
         _isShowingSplash = false;
       }
-      
+
       break;
   }
-  
+
   if (!inBackground) {
     // User post-render operations, supporting textures
     if (_eventHandlers.hasPostRender)
       script.processCallback(_eventHandlers.postRender, 0);
   }
-  
+
   // General fade, affects every graphic on screen
   renderManager.fadeView();
-  
+
   // Debug info (if enabled)
   if (_console->isEnabled() && !inBackground) {
     // BUG: This causes a crash sometimes. Why?
     _console->update();
-    
+
     // We do this here in case the command changes the viewport
     cameraManager.endOrthoView();
-    
+
     if (_console->isReadyToProcess()) {
       char command[kMaxLogLength];
       _console->getCommand(command);
@@ -1217,15 +1217,15 @@ void Control::_updateView(int state, bool inBackground) {
     }
   }
   else cameraManager.endOrthoView();
-  
+
   audioManager.setOrientation(cameraManager.orientation());
-  
+
   timerManager.process();
-  
+
   if (!inBackground) {
     // Flush the buffers
     system.update();
   }
 }
-  
+
 }
