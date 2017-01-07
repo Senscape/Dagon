@@ -282,13 +282,6 @@ void Control::processKey(int aKey, int eventFlags) {
             else if (_state->current() == StateCutscene) {
               _scene->cancelCutscene();
             }
-            else {
-              if (!_isShuttingDown) {
-                _scene->fadeOut();
-                _shutdownTimer = timerManager.createManual(1.0);
-                _isShuttingDown = true;
-              }
-            }
           }
           break;
         case kKeyTab:
@@ -1025,6 +1018,14 @@ void Control::takeSnapshot() {
   texture.saveToFile(buffer);
 
   config.texCompression = previousTexCompression;
+}
+
+void Control::initiateTerminate() {
+  if (!_isShuttingDown) {
+    _scene->fadeOut();
+    _shutdownTimer = timerManager.createManual(1.0);
+    _isShuttingDown = true;
+  }
 }
 
 void Control::terminate() {
