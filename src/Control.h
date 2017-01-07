@@ -162,6 +162,7 @@ public:
   void walkTo(Object* theTarget);
   void run();
   void takeSnapshot();
+  void initiateTerminate();
   void terminate();
   void update();
   std::vector<Room*> rooms();

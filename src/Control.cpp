@@ -282,24 +282,15 @@ void Control::processKey(int aKey, int eventFlags) {
             else if (_state->current() == StateCutscene) {
               _scene->cancelCutscene();
             }
-            else {
-              if (!_isShuttingDown) {
-                _scene->fadeOut();
-                _shutdownTimer = timerManager.createManual(1.0);
-                _isShuttingDown = true;
-              }
-            }
           }
           break;
         case kKeyTab:
-          _console->toggle();
+          if (config.debugMode) _console->toggle();
           break;
         case kKeySpace:
           if (_hotkeyData[19].enabled && _console->isHidden()) { // 19 is space's index. Is it assigned as a hotkey?
             script.processCommand(_hotkeyData[19].line);
           }
-          else if (_console->isHidden())
-            config.showHelpers = !config.showHelpers;
           break;
         case 'w':
         case 'W':
@@ -1027,6 +1018,14 @@ void Control::takeSnapshot() {
   texture.saveToFile(buffer);
 
   config.texCompression = previousTexCompression;
+}
+
+void Control::initiateTerminate() {
+  if (!_isShuttingDown) {
+    _scene->fadeOut();
+    _shutdownTimer = timerManager.createManual(1.0);
+    _isShuttingDown = true;
+  }
 }
 
 void Control::terminate() {

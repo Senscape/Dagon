@@ -57,8 +57,14 @@ static int SystemLibUpdate(lua_State *L) {
 }
 
 static int SystemLibTerminate(lua_State *L) {
-  Control::instance().terminate();
+  Control::instance().initiateTerminate();
   
+  return 0;
+}
+
+static int SystemShowHelpers(lua_State *L) {
+  Config::instance().showHelpers = !Config::instance().showHelpers;
+
   return 0;
 }
 
@@ -72,6 +78,7 @@ static const struct luaL_reg SystemLib [] = {
   {"run", SystemLibRun},
   {"update", SystemLibUpdate},
   {"terminate", SystemLibTerminate},
+  {"toggleHelpers", SystemShowHelpers},
   {NULL, NULL}
 };
 
