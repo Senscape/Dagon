@@ -292,7 +292,7 @@ void Control::processKey(int aKey, int eventFlags) {
           }
           break;
         case kKeyTab:
-          _console->toggle();
+          if (config.debugMode) _console->toggle();
           break;
         case kKeySpace:
           if (_hotkeyData[19].enabled && _console->isHidden()) { // 19 is space's index. Is it assigned as a hotkey?
