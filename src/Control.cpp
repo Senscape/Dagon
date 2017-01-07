@@ -298,8 +298,6 @@ void Control::processKey(int aKey, int eventFlags) {
           if (_hotkeyData[19].enabled && _console->isHidden()) { // 19 is space's index. Is it assigned as a hotkey?
             script.processCommand(_hotkeyData[19].line);
           }
-          else if (_console->isHidden())
-            config.showHelpers = !config.showHelpers;
           break;
         case 'w':
         case 'W':
