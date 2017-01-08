@@ -292,30 +292,6 @@ void Control::processKey(int aKey, int eventFlags) {
             script.processCommand(_hotkeyData[19].line);
           }
           break;
-        case 'w':
-        case 'W':
-          if (_console->isHidden()) {
-            cameraManager.pan(kCurrent, 0);
-          }
-          break;
-        case 'a':
-        case 'A':
-          if (_console->isHidden()) {
-            cameraManager.pan(0, kCurrent);
-          }
-          break;
-        case 's':
-        case 'S':
-          if (_console->isHidden()) {
-            cameraManager.pan(kCurrent, config.displayHeight);
-          }
-          break;
-        case 'd':
-        case 'D':
-          if (_console->isHidden()) {
-            cameraManager.pan(config.displayWidth, kCurrent);
-          }
-          break;
 
         case kKeyI: idx = 13; break;
         case kKeyJ: idx = 14; break;
@@ -357,29 +333,6 @@ void Control::processKey(int aKey, int eventFlags) {
           config.fullscreen = !config.fullscreen;
           system.toggleFullscreen();
           break;
-      }
-      break;
-
-    case EventKeyUp:
-      if (_console->isHidden()) {
-        switch (aKey) {
-          case 'w':
-          case 'W':
-            cameraManager.pan(kCurrent, config.displayHeight >> 1);
-            break;
-          case 'a':
-          case 'A':
-            cameraManager.pan(config.displayWidth >> 1, kCurrent);
-            break;
-          case 's':
-          case 'S':
-            cameraManager.pan(kCurrent, config.displayHeight >> 1);
-            break;
-          case 'd':
-          case 'D':
-            cameraManager.pan(config.displayWidth >> 1, kCurrent);
-            break;
-        }
       }
       break;
   }
