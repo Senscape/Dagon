@@ -17,7 +17,10 @@
 
 #include "Config.h"
 #include "CursorManager.h"
+#include "Image.h"
 #include "TextureManager.h"
+
+#include <cassert>
 
 namespace dagon {
 
@@ -28,6 +31,7 @@ namespace dagon {
 CursorManager::CursorManager() :
 config(Config::instance())
 {
+  _handCursor = nullptr;
   _hasAction = false;
   _hasImage = false;
   _isDragging = false;
@@ -63,8 +67,17 @@ Action* CursorManager::action() {
   return &_pointerToAction;
 }
 
+Image* CursorManager::handCursor() {
+  return _handCursor;
+}
+
 void CursorManager::bindImage() {
   (*_current).image->bind();
+}
+
+void CursorManager::bindHandCursor() {
+  assert(_handCursor != nullptr);
+  _handCursor->texture()->bind();
 }
 
 float* CursorManager::arrayOfCoords() {
@@ -77,6 +90,10 @@ bool CursorManager::hasAction() {
 
 bool CursorManager::hasImage() {
   return _hasImage;
+}
+
+bool CursorManager::hasHandCursor() {
+  return _handCursor != nullptr;
 }
 
 bool CursorManager::isDragging() {
@@ -108,6 +125,10 @@ void CursorManager::removeAction() {
   _hasAction = false;
 }
 
+void CursorManager::removeHandCursor() {
+  _handCursor = nullptr;
+}
+
 void CursorManager::setDragging(bool flag) {
   if (flag) {
     this->_set(kCursorDrag);
@@ -130,6 +151,14 @@ void CursorManager::setAction(Action theAction) {
 
 void CursorManager::setCursor(int typeOfCursor) {
   this->_set(typeOfCursor);
+}
+
+void CursorManager::setHandCursor(Image* img) {
+  _handCursor = img;
+
+  if (!_handCursor->texture()->isLoaded()) {
+    _handCursor->texture()->load();
+  }
 }
 
 void CursorManager::setSize(int size) {

@@ -33,6 +33,7 @@ namespace dagon {
 
 class Config;
 class Texture;
+class Image;
 
 typedef struct {
   int type;
@@ -50,6 +51,7 @@ class CursorManager : public Object {
   
   std::vector<DGCursorData> _arrayOfCursors;
   std::vector<DGCursorData>::iterator _current;
+  Image* _handCursor;
   float _arrayOfCoords[8];
   int _half;
   bool _hasAction;
@@ -76,19 +78,24 @@ public:
   }
   
   Action* action();
+  Image* handCursor();
   void bindImage();
+  void bindHandCursor();
   float* arrayOfCoords();
   bool hasAction();
   bool hasImage();
+  bool hasHandCursor();
   bool isDragging();
   void load(int typeOfCursor, const char* imageFromFile, int offsetX = 0, int offsetY = 0);
   bool onButton();
   Point position();
   void removeAction();
+  void removeHandCursor();
   void setDragging(bool flag);
   void setOnButton(bool flag);
   void setAction(Action theAction);
   void setCursor(int typeOfCursor);
+  void setHandCursor(Image* img);
   void setSize(int size);
   void updateCoords(int x, int y);
 };

@@ -1056,5 +1056,28 @@ void Script::_registerGlobals() {
   luaL_register(_L, NULL, globalLibs);
   lua_pop(_L, 1);
 }
+
+int CursorLibSetHandCursor(lua_State *L) {
+  if (lua_isnil(L, 1)) {
+    CursorManager::instance().removeHandCursor();
+  } else if (DGCheckProxy(L, 1) == kObjectImage) {
+    Image* cursor = ProxyToImage(L, 1);
+    CursorManager::instance().setHandCursor(cursor);
+  } else {
+    //TODO: error message
+  }
+  
+  return 0;
+}
+
+int CursorLibGetHandCursor(lua_State *L) {
+  if (CursorManager::instance().hasHandCursor()) {
+    lua_pushstring(L, CursorManager::instance().handCursor()->name().c_str());
+  } else {
+    lua_pushnil(L);
+  }
+  
+  return 1;
+}
   
 }

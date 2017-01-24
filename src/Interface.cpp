@@ -61,8 +61,17 @@ void Interface::drawCursor() {
   
   // Mouse cursor
   if (cursorManager.isEnabled()) {
-    if (cursorManager.hasImage()) { // A bitmap cursor is currently set
+    if (cursorManager.hasImage()) {
       cursorManager.updateFade(); // Process fade (supported only with bitmaps)
+    }
+
+    if (cursorManager.hasHandCursor()) {
+      cursorManager.bindHandCursor();
+      renderManager.setAlpha(cursorManager.fadeLevel());
+      renderManager.drawSlide(cursorManager.arrayOfCoords());
+    }
+
+    if (cursorManager.hasImage()) { // A bitmap cursor is currently set
       cursorManager.bindImage();
       renderManager.setAlpha(cursorManager.fadeLevel());
       renderManager.drawSlide(cursorManager.arrayOfCoords());
