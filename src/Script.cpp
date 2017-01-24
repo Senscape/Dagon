@@ -1064,7 +1064,7 @@ int CursorLibSetHandCursor(lua_State *L) {
     Image* cursor = ProxyToImage(L, 1);
     CursorManager::instance().setHandCursor(cursor);
   } else {
-    //TODO: error message
+    Log::instance().error(kModScript, "Image or nil parameter expected");
   }
   
   return 0;
