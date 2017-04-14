@@ -700,53 +700,74 @@ void Control::switchTo(Object* theTarget) {
           cameraManager.unlock();
 
         //log.trace(kModControl, "Set parent room");
+
         Node* curNode = currentNode();
-        std::set<Audio*> curNodeAudios;
-
-        if (curNode && curNode->hasSpots()) {
-          curNode->beginIteratingSpots();
-
-          do {
-            Spot *curSpot = curNode->currentSpot();
-            if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
-              curNodeAudios.insert(curSpot->audio());
-            }
-          } while (curNode->iterateSpots());
-        }
-
         Node* node = (Node*)theTarget;
-        std::set<Audio*> targetNodeAudios;
 
-        if (node->hasSpots()) {
-          node->beginIteratingSpots();
+        if (curNode == (Node*)theTarget) {
+          if (curNode && curNode->hasSpots()) {
+            curNode->beginIteratingSpots();
 
-          do {
-            Spot *targetspot = node->currentSpot();
-            if (targetspot->hasAudio() && targetspot->hasFlag(kSpotAuto)) {
-              targetNodeAudios.insert(targetspot->audio());
-            }
-          } while (node->iterateSpots());
-        }
-
-        std::vector<Audio*> audiosToStop;
-        std::set_difference(curNodeAudios.begin(), curNodeAudios.end(), targetNodeAudios.begin(),
-                            targetNodeAudios.end(), std::back_inserter(audiosToStop));
-
-        for (Audio *audio : audiosToStop) {
-          if (audio->isPlaying()) {
-            audio->fadeOut();
+            do {
+              Spot *curSpot = curNode->currentSpot();
+              if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
+                Audio *audio = curSpot->audio();
+                if (!audio->isPlaying()) {
+                  audioManager.registerAudio(audio);
+                  audio->fadeIn();
+                  audio->play();
+                }
+              }
+            } while (curNode->iterateSpots());
           }
         }
+        else {
+          std::set<Audio*> curNodeAudios;
 
-        std::vector<Audio*> audiosToPlay;
-        std::set_difference(targetNodeAudios.begin(), targetNodeAudios.end(), curNodeAudios.begin(),
-                            curNodeAudios.end(), std::back_inserter(audiosToPlay));
+          if (curNode && curNode->hasSpots()) {
+            curNode->beginIteratingSpots();
 
-        for (Audio *audio : audiosToPlay) {
-          if (!audio->isPlaying()) {
-            audioManager.registerAudio(audio);
-            audio->fadeIn();
-            audio->play();
+            do {
+              Spot *curSpot = curNode->currentSpot();
+              if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
+                curNodeAudios.insert(curSpot->audio());
+              }
+            } while (curNode->iterateSpots());
+          }
+
+          std::set<Audio*> targetNodeAudios;
+
+          if (node->hasSpots()) {
+            node->beginIteratingSpots();
+
+            do {
+              Spot *targetspot = node->currentSpot();
+              if (targetspot->hasAudio() && targetspot->hasFlag(kSpotAuto)) {
+                targetNodeAudios.insert(targetspot->audio());
+              }
+            } while (node->iterateSpots());
+          }
+
+          std::vector<Audio*> audiosToStop;
+          std::set_difference(curNodeAudios.begin(), curNodeAudios.end(), targetNodeAudios.begin(),
+                              targetNodeAudios.end(), std::back_inserter(audiosToStop));
+
+          for (Audio *audio : audiosToStop) {
+            if (audio->isPlaying()) {
+              audio->fadeOut();
+            }
+          }
+
+          std::vector<Audio*> audiosToPlay;
+          std::set_difference(targetNodeAudios.begin(), targetNodeAudios.end(), curNodeAudios.begin(),
+                              curNodeAudios.end(), std::back_inserter(audiosToPlay));
+
+          for (Audio *audio : audiosToPlay) {
+            if (!audio->isPlaying()) {
+              audioManager.registerAudio(audio);
+              audio->fadeIn();
+              audio->play();
+            }
           }
         }
 
