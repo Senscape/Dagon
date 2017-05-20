@@ -205,6 +205,10 @@ bool Scene::scanSpots() {
         }
         
         if (!foundAction) {
+          if (_lastHoveredSpot && _lastHoveredSpot->hasOnUnhoverCallback()) {
+            Script::instance().processCallback(_lastHoveredSpot->onUnhoverCallback(),
+                                               _lastHoveredSpot->luaObject());
+          }
           _lastHoveredSpot = nullptr;
           cursorManager.removeAction();
           

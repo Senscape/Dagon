@@ -51,6 +51,7 @@ Spot::Spot(std::vector<int> withArrayOfCoordinates,
   _yOrigin = 0;
   _zOrder = 0; // For future use
   _hasHoverCallback = false;
+  _hasUnhoverCallback = false;
   this->setType(kObjectSpot);
 }
 
@@ -101,6 +102,10 @@ bool Spot::isPlaying() {
 
 bool Spot::hasOnHoverCallback() const {
   return _hasHoverCallback;
+}
+
+bool Spot::hasOnUnhoverCallback() const {
+  return _hasUnhoverCallback;
 }
 
 ////////////////////////////////////////////////////////////
@@ -160,6 +165,11 @@ std::string Spot::stringifyCoords() const {
 int Spot::onHoverCallback() const {
   assert(_hasHoverCallback);
   return _luaHoverCallback;
+}
+
+int Spot::onUnhoverCallback() const {
+  assert(_hasUnhoverCallback);
+  return _luaUnhoverCallback;
 }
 
 ////////////////////////////////////////////////////////////
@@ -223,6 +233,11 @@ void Spot::setVolume(float theVolume) {
 void Spot::setOnHoverCallback(int luaRegRef) {
   _luaHoverCallback = luaRegRef;
   _hasHoverCallback = true;
+}
+
+void Spot::setOnUnhoverCallback(int luaRegRef) {
+  _luaUnhoverCallback = luaRegRef;
+  _hasUnhoverCallback = true;
 }
 
 ////////////////////////////////////////////////////////////
