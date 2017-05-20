@@ -61,6 +61,7 @@ class Spot : public Object {
   bool hasTexture();
   bool hasVideo();
   bool isPlaying();
+  bool hasOnHoverCallback() const;
   
   // Gets
   Action* action();
@@ -74,6 +75,7 @@ class Spot : public Object {
   Video* video();
   float volume();
   std::string stringifyCoords() const;
+  int onHoverCallback() const;
   
   // Sets
   void setAction(Action* anAction);
@@ -83,6 +85,7 @@ class Spot : public Object {
   void setTexture(Texture* aTexture);
   void setVideo(Video* aVideo);
   void setVolume(float theVolume);
+  void setOnHoverCallback(int luaRegRef);
   
   // State changes
   void play();
@@ -110,6 +113,8 @@ class Spot : public Object {
   int _xOrigin;
   int _yOrigin;
   int _zOrder; // For future use
+  bool _hasHoverCallback;
+  int _luaHoverCallback;
   
   Spot(const Spot&);
   void operator=(const Spot&);
