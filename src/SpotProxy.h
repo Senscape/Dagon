@@ -290,6 +290,38 @@ public:
     s->stop();
     return 0;
   }
+
+  int onHover(lua_State *L) {
+    if (!lua_isfunction(L, 1)) {
+      Log::instance().trace(kModScript, kString14016);
+      return 0;
+    }
+
+    if (s->hasOnHoverCallback())
+      luaL_unref(L, LUA_REGISTRYINDEX, s->onHoverCallback());
+
+    lua_pushvalue(L, 1); // push the callback on the stack
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop callback and return a registry reference to it
+    s->setOnHoverCallback(ref);
+
+    return 0;
+  }
+
+  int onUnhover(lua_State *L) {
+    if (!lua_isfunction(L, 1)) {
+      Log::instance().trace(kModScript, kString14016);
+      return 0;
+    }
+
+    if (s->hasOnUnhoverCallback())
+      luaL_unref(L, LUA_REGISTRYINDEX, s->onUnhoverCallback());
+
+    lua_pushvalue(L, 1); // push the callback on the stack
+    int ref = luaL_ref(L, LUA_REGISTRYINDEX); // pop callback and return a registry reference to it
+    s->setOnUnhoverCallback(ref);
+
+    return 0;
+  }
   
   // Destructor
   ~SpotProxy() { delete s; }
@@ -313,6 +345,8 @@ Luna<SpotProxy>::RegType SpotProxy::methods[] = {
   method(SpotProxy, isPlaying),
   method(SpotProxy, play),
   method(SpotProxy, stop),
+  method(SpotProxy, onHover),
+  method(SpotProxy, onUnhover),
   {0,0}
 };
   

@@ -16,6 +16,7 @@
 ////////////////////////////////////////////////////////////
 
 #include <algorithm>
+#include <cassert>
 #include <cstdlib>
 #include <iterator>
 #include <sstream>
@@ -49,6 +50,8 @@ Spot::Spot(std::vector<int> withArrayOfCoordinates,
   _xOrigin = 0;
   _yOrigin = 0;
   _zOrder = 0; // For future use
+  _hasHoverCallback = false;
+  _hasUnhoverCallback = false;
   this->setType(kObjectSpot);
 }
 
@@ -95,6 +98,14 @@ bool Spot::hasVideo() {
 
 bool Spot::isPlaying() {
   return _isPlaying;
+}
+
+bool Spot::hasOnHoverCallback() const {
+  return _hasHoverCallback;
+}
+
+bool Spot::hasOnUnhoverCallback() const {
+  return _hasUnhoverCallback;
 }
 
 ////////////////////////////////////////////////////////////
@@ -149,6 +160,16 @@ std::string Spot::stringifyCoords() const {
   std::copy(_arrayOfCoordinates.begin(), std::prev(_arrayOfCoordinates.end()),
             std::ostream_iterator<int>(coordStr, ", "));
   return coordStr.str() + std::to_string(_arrayOfCoordinates.back());
+}
+
+int Spot::onHoverCallback() const {
+  assert(_hasHoverCallback);
+  return _luaHoverCallback;
+}
+
+int Spot::onUnhoverCallback() const {
+  assert(_hasUnhoverCallback);
+  return _luaUnhoverCallback;
 }
 
 ////////////////////////////////////////////////////////////
@@ -207,6 +228,16 @@ void Spot::setVideo(Video* aVideo) {
 
 void Spot::setVolume(float theVolume) {
   _volume = theVolume;
+}
+
+void Spot::setOnHoverCallback(int luaRegRef) {
+  _luaHoverCallback = luaRegRef;
+  _hasHoverCallback = true;
+}
+
+void Spot::setOnUnhoverCallback(int luaRegRef) {
+  _luaUnhoverCallback = luaRegRef;
+  _hasUnhoverCallback = true;
 }
 
 ////////////////////////////////////////////////////////////

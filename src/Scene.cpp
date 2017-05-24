@@ -26,6 +26,7 @@
 #include "RenderManager.h"
 #include "Room.h"
 #include "Scene.h"
+#include "Script.h"
 #include "Spot.h"
 #include "Texture.h"
 #include "VideoManager.h"
@@ -51,6 +52,7 @@ videoManager(VideoManager::instance())
   _canDrawSpots = false;
   _isCutsceneLoaded = false;
   _isSplashLoaded = false;
+  _lastHoveredSpot = nullptr;
 }
 
 ////////////////////////////////////////////////////////////
@@ -193,13 +195,21 @@ bool Scene::scanSpots() {
             if (color == spot->color()) {
               cursorManager.setAction(*spot->action());
               foundAction = true;
-              
+              if (_lastHoveredSpot != spot && spot->hasOnHoverCallback()) {
+                Script::instance().processCallback(spot->onHoverCallback(), spot->luaObject());
+              }
+              _lastHoveredSpot = spot;
               break;
             }
           } while (currentNode->iterateSpots());
         }
         
         if (!foundAction) {
+          if (_lastHoveredSpot && _lastHoveredSpot->hasOnUnhoverCallback()) {
+            Script::instance().processCallback(_lastHoveredSpot->onUnhoverCallback(),
+                                               _lastHoveredSpot->luaObject());
+          }
+          _lastHoveredSpot = nullptr;
           cursorManager.removeAction();
           
           if (cameraManager.isPanning())

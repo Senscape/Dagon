@@ -99,6 +99,7 @@
 #define kString14013 "Syntax error"
 #define kString14014 "Function expected as second parameter in register()"
 #define kString14015 "Bad configuration file"
+#define kString14016 "Expected function parameter"
 
 // Font module
 #define kString15001 "Initializing font manager..."

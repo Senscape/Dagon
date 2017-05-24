@@ -31,6 +31,7 @@ class Config;
 class CursorManager;
 class RenderManager;
 class Room;
+class Spot;
 class State;
 class Texture;
 class VideoManager;
@@ -52,6 +53,8 @@ class Scene {
   Room* _currentRoom;
   Texture* _cutsceneTexture;
   Texture* _splashTexture;
+
+  Spot* _lastHoveredSpot;
   
   bool _canDrawSpots; // This bool is used to make checks faster
   bool _isCutsceneLoaded;
