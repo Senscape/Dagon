@@ -54,7 +54,7 @@ class Scene {
   Texture* _cutsceneTexture;
   Texture* _splashTexture;
 
-  Spot* _lastHoveredSpot;
+  Spot* _hoveredSpot;
   
   bool _canDrawSpots; // This bool is used to make checks faster
   bool _isCutsceneLoaded;
