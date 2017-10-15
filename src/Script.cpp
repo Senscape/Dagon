@@ -368,7 +368,11 @@ int Script::_globalNewIndex(lua_State *L) {
       return 0;
     }
 
-    Control::instance().objMap[obj] = hash;
+    if (Control::instance().objMap.find(obj) == Control::instance().objMap.end())
+      Control::instance().objMap[obj] = hash;
+    else
+      Log::instance().warning(kModScript, "Detected %s is an alias", varName);
+
     Control::instance().invObjMap[hash] = obj;
   }
 
