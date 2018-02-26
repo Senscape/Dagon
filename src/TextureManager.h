@@ -21,6 +21,9 @@
 #include "Platform.h"
 #include "Texture.h"
 
+#include <queue>
+#include <SDL2/SDL_thread.h>
+
 namespace dagon {
 
 ////////////////////////////////////////////////////////////
@@ -50,33 +53,35 @@ class Room;
 class TextureManager {
   Config& config;
   Log& log;
-  
-  std::vector<Texture*> _arrayOfActiveTextures;
+
   std::vector<Texture*> _arrayOfTextures;
-  
-  Room* _roomToPreload;
-  
+
+  std::vector<Node*> _preloadedNodes;
+  std::queue<std::pair<Texture*, Node*>> _texturesToPreload;
+  SDL_mutex* _queueLock;
+  SDL_cond* _newJobCond;
+  SDL_Thread* _preloaderThread;
+
   TextureManager();
   TextureManager(TextureManager const&);
   TextureManager& operator=(TextureManager const&);
   ~TextureManager();
-  
+
+  static int runPreloader(void* ptr);
+  void registerPreloadedNode(Node* theNode);
+
 public:
   static TextureManager& instance() {
     static TextureManager textureManager;
     return textureManager;
   }
   
-  void appendTextureToBundle(const char* nameOfBundle, Texture* textureToAppend);
-  void createBundle(const char* nameOfBundle);
-  int itemsInBundle(const char* nameOfBundle);
-  void flush();
   void init();
+  void terminate();
   void registerTexture(Texture* target);
   void requestBundle(Node* forNode);
-  void requestTexture(Texture* target);
-  void setRoomToPreload(Room* theRoom);
-  bool updatePreloader();
+  void setNodesToPreload(const std::vector<Node*>& theNodes);
+  void flushPreloader();
 };
   
 }

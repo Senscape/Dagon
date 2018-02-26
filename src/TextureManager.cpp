@@ -21,14 +21,11 @@
 #include "Room.h"
 #include "Spot.h"
 #include "TextureManager.h"
+#include "Control.h"
+
+#include <algorithm>
 
 namespace dagon {
-
-////////////////////////////////////////////////////////////
-// Definitions
-////////////////////////////////////////////////////////////
-
-bool TextureSort(Texture* t1, Texture* t2);
 
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
@@ -38,7 +35,10 @@ TextureManager::TextureManager() :
 config(Config::instance()),
 log(Log::instance())
 {
-  _roomToPreload = NULL;
+  _queueLock = SDL_CreateMutex();
+  if (!_queueLock)
+    log.error(kModTexture, "%s", kString18001);
+  _newJobCond = SDL_CreateCond();
 }
 
 ////////////////////////////////////////////////////////////
@@ -56,46 +56,36 @@ TextureManager::~TextureManager() {
       ++it;
     }
   }
+
+  SDL_DestroyCond(_newJobCond);
+  SDL_DestroyMutex(_queueLock);
 }
 
 ////////////////////////////////////////////////////////////
 // Implementation
 ////////////////////////////////////////////////////////////
 
-void TextureManager::appendTextureToBundle(const char* nameOfBundle, Texture* textureToAppend) {
-  // This function will store individual textures to a bundle
-}
-
-void TextureManager::createBundle(const char* nameOfBundle) {
-  // This function will create bundles to store textures
-}
-
-int TextureManager::itemsInBundle(const char* nameOfBundle) {
-  // This one should return the number of textures in a bundle
-  return 0;
-}
-
-void TextureManager::flush() {
-  // This function is called every time a switch is performed
-  // and unloads the least used textures when necessary
-  
-  long texturesToUnload = _arrayOfActiveTextures.size() - kMaxActiveTextures;
-  
-  while (texturesToUnload > 0) {
-    _arrayOfActiveTextures.front()->unload();
-    _arrayOfActiveTextures.erase(_arrayOfActiveTextures.begin());
-    
-    texturesToUnload--;
-  }
-}
-
 void TextureManager::init() {
-  /*_preloaderThread = thread([&](){
-   chrono::milliseconds dura(1);
-   while (TextureManager::instance().updatePreloader()) {
-   this_thread::sleep_for(dura);
-   }
-   });*/
+  _preloaderThread = SDL_CreateThread(runPreloader, "TexturePreloader", this);
+}
+
+void TextureManager::terminate() {
+  if (SDL_LockMutex(_queueLock) != 0) {
+    log.error(kModTexture, "%s", kString18002);
+    return;
+  }
+
+  { // Empty out the queue.
+    std::queue<std::pair<Texture*, Node*>> emptyQueue;
+    _texturesToPreload.swap(emptyQueue);
+  }
+
+  _texturesToPreload.push({NULL, NULL});
+  SDL_CondSignal(_newJobCond);
+  SDL_UnlockMutex(_queueLock);
+
+  int returnVal;
+  SDL_WaitThread(_preloaderThread, &returnVal);
 }
 
 void TextureManager::registerTexture(Texture* target) {
@@ -155,55 +145,149 @@ void TextureManager::requestBundle(Node* forNode) {
   // Possibly raise an error if this fails
 }
 
-void TextureManager::requestTexture(Texture* target) {
-  if (!target->isLoaded()) {
-    target->load();
-    
-    _arrayOfActiveTextures.push_back(target);
+void TextureManager::setNodesToPreload(const std::vector<Node*>& theNodes) {
+  if (SDL_LockMutex(_queueLock) != 0) {
+    log.error(kModTexture, "%s", kString18002);
+    return;
   }
-  
-  target->increaseUsageCount();
-  
-  sort(_arrayOfActiveTextures.begin(), _arrayOfActiveTextures.end(), TextureSort);
+
+  assert(_texturesToPreload.empty());
+
+  int numScheduledNodes = 0;
+  for (Node* node : theNodes) {
+    if (numScheduledNodes >= config.maxPreloadedNodes)
+      break;
+
+    auto it = std::find(_preloadedNodes.begin(), _preloadedNodes.end(), node);
+    if (it != _preloadedNodes.end())
+      continue;
+
+    if (!node->hasSpots())
+      continue;
+
+    bool shouldPreloadNode = false;
+
+    node->beginIteratingSpots();
+    do {
+      Spot* spot = node->currentSpot();
+
+      if (spot->hasTexture()) {
+	Texture *tex = spot->texture();
+	if (!tex->isLoaded() && !tex->isBitmapLoaded()) {
+	  log.info(kModTexture, "Scheduled preloading of %s", tex->resource().c_str());
+	  _texturesToPreload.push({tex, node});
+	  shouldPreloadNode = true;
+	}
+      }
+    } while (node->iterateSpots());
+
+    if (shouldPreloadNode)
+      ++numScheduledNodes;
+  }
+
+  SDL_CondSignal(_newJobCond);
+  SDL_UnlockMutex(_queueLock);
 }
 
-void TextureManager::setRoomToPreload(Room* theRoom) {
-  _roomToPreload = theRoom;
+void TextureManager::flushPreloader() {
+  log.info(kModTexture, "Flushing preloader...");
+
+  if (SDL_LockMutex(_queueLock) != 0) {
+    log.error(kModTexture, "%s", kString18002);
+    return;
+  }
+
+  // Empty the queue by swapping with an empty queue.
+  std::queue<std::pair<Texture*, Node*>> emptyQueue;
+  _texturesToPreload.swap(emptyQueue);
+
+  SDL_UnlockMutex(_queueLock);
 }
 
-bool TextureManager::updatePreloader() {
-  if (_roomToPreload) {
-    if (_roomToPreload->hasNodes()) {
-      _roomToPreload->beginIteratingNodes();
-      do {
-        Node* node = _roomToPreload->iterator();
-        if (node->hasSpots()) {
-          node->beginIteratingSpots();
-          do {
-            Spot* spot = node->currentSpot();
-            
-            if (spot->hasTexture()) {
-              if (!spot->texture()->isLoaded()) {
-                spot->texture()->loadBitmap();
-                
-                //_arrayOfActiveTextures.push_back(spot->texture());
-              }
-            }
-          } while (node->iterateSpots());
-        }
-      } while (_roomToPreload->iterateNodes());
+int TextureManager::runPreloader(void* ptr) {
+  TextureManager* _this = (TextureManager*)ptr;
+
+  Node* lastPreloadedNode = NULL;
+  while (true) {
+    if (SDL_LockMutex(_this->_queueLock) != 0) {
+      _this->log.error(kModTexture, "%s", kString18002);
+      continue;
+    }
+
+    while (_this->_texturesToPreload.empty()) {
+      if (lastPreloadedNode) {
+	_this->registerPreloadedNode(lastPreloadedNode);
+	lastPreloadedNode = NULL;
+      }
+
+      SDL_CondWait(_this->_newJobCond, _this->_queueLock);
+    }
+
+    std::pair<Texture*, Node*> job = std::move(_this->_texturesToPreload.front());
+    _this->_texturesToPreload.pop();
+    SDL_UnlockMutex(_this->_queueLock);
+
+    if (!job.first)
+      break;
+
+    if (lastPreloadedNode != job.second) {
+      if (lastPreloadedNode)
+	_this->registerPreloadedNode(lastPreloadedNode);
+
+      lastPreloadedNode = job.second;
+    }
+
+    _this->log.info(kModTexture, "Preloading %s", job.first->resource().c_str());
+    job.first->loadBitmap();
+  }
+
+  return 0;
+}
+
+void TextureManager::registerPreloadedNode(Node* theNode) {
+  log.info(kModTexture, "Done preloading %s", theNode->name().c_str());
+
+  auto it = std::find(_preloadedNodes.begin(), _preloadedNodes.end(), theNode);
+  if (it != _preloadedNodes.end()) {
+    return;
+  }
+
+  _preloadedNodes.push_back(theNode);
+  int nodesToUnload = _preloadedNodes.size() - config.maxPreloadedNodes;
+
+  while (nodesToUnload > 0) {
+    auto nodeToUnload = std::find_if_not(_preloadedNodes.begin(), _preloadedNodes.end(),
+					 [](Node* node) {
+					   return node == Control::instance().currentNode();
+					 });
+
+    if (nodeToUnload != _preloadedNodes.end()) {
+      Node* node = *nodeToUnload;
+
+      if (node->hasSpots()) {
+	node->beginIteratingSpots();
+
+	do {
+	  Spot* spot = node->currentSpot();
+
+	  if (spot->hasTexture()) {
+	    Texture* tex = spot->texture();
+
+	    if (tex->isLoaded())
+	      tex->unload();
+	    else if (tex->isBitmapLoaded())
+	      tex->unloadBitmap();
+	  }
+	} while (node->iterateSpots());
+      }
+
+      _preloadedNodes.erase(nodeToUnload);
+      nodesToUnload--;
+      log.info(kModTexture, "Unloaded node %s", node->name().c_str());
     }
   }
-  
-  return true;
-}
 
-////////////////////////////////////////////////////////////
-// Implementation - Private methods
-////////////////////////////////////////////////////////////
-
-bool TextureSort(Texture* t1, Texture* t2) {
-  return t1->usageCount() < t2->usageCount();
+  assert((int)_preloadedNodes.size() <= config.maxPreloadedNodes);
 }
   
 }

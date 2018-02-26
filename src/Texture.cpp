@@ -264,6 +264,7 @@ void Texture::load() {
           glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
           glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
           delete[] _bitmap;
+	  fclose(fh);
         } /*else if (memcmp(KTXIdent, &magic, sizeof(KTXIdent)) == 0) {
           GLenum target = 0;
           GLenum error = 0;
@@ -291,15 +292,9 @@ void Texture::load() {
             log.error(kModTexture, "KTX load error: %s", ktxerror);
           }
         }*/ else { // Let stb_image load the texture
+	  fclose(fh);
           if (!_isBitmapLoaded) {
-            fseek(fh, 0, SEEK_SET);
-            int x, y, comp;
-            _bitmap = static_cast<GLubyte*>(stbi_load_from_file(fh, &x, &y,
-                                                                &comp,
-                                                                STBI_default));
-            _width = x;
-            _height = y;
-            _depth = comp;
+	    loadBitmap();
           }
           if (_bitmap) {
             GLint format = 0, internalFormat = 0;
@@ -354,8 +349,7 @@ void Texture::load() {
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-            free(_bitmap);
-            _isBitmapLoaded = false;
+	    unloadBitmap();
             _isLoaded = true;
           } else {
             // Nothing loaded
@@ -363,7 +357,6 @@ void Texture::load() {
                       _resource.c_str(), stbi_failure_reason());
           }
         }
-        fclose(fh);
       } else {
         // File not found
         log.error(kModTexture, "%s: %s", kString10001, _resource.c_str());
@@ -376,7 +369,17 @@ void Texture::load() {
 }
 
 void Texture::loadBitmap() {
-  FILE* fh = fopen(_resource.c_str(), "rb");
+  if (SDL_LockMutex(_mutex) != 0) {
+    log.error(kModTexture, "%s", kString18002);
+    return;
+  }
+
+  FILE* fh = NULL;
+
+  if (_isBitmapLoaded)
+    goto EXIT;
+
+  fh = fopen(_resource.c_str(), "rb");
   if (fh != NULL) {
     int x, y, comp;
     _bitmap = static_cast<GLubyte*>(stbi_load_from_file(fh, &x, &y,
@@ -384,15 +387,26 @@ void Texture::loadBitmap() {
     _width = x;
     _height = y;
     _depth = comp;
-    _isBitmapLoaded = true;
+    _isBitmapLoaded = (_bitmap != NULL);
+    fclose(fh);
   }
+
+ EXIT:
+  SDL_UnlockMutex(_mutex);
 }
 
 void Texture::unloadBitmap() {
+  if (SDL_LockMutex(_mutex) != 0) {
+    log.error(kModTexture, "%s", kString18002);
+    return;
+  }
+
   if (_isBitmapLoaded) {
     free(_bitmap);
     _isBitmapLoaded = false;
   }
+
+  SDL_UnlockMutex(_mutex);
 }
 
 void Texture::loadFromMemory(const unsigned char* dataToLoad, long size) {

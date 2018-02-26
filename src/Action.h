@@ -45,6 +45,11 @@ struct Action {
   int luaObject;
   Object* target;
   int type;
+
+  Action() {
+    target = NULL;
+    hasFeedAudio = false;
+  }
 };
   
 }

@@ -21,6 +21,7 @@
 #include "Node.h"
 #include "Spot.h"
 #include "Texture.h"
+#include "Control.h"
 
 namespace dagon {
 
@@ -301,12 +302,15 @@ void Node::_link(unsigned int direction, Action* action) {
   newSpot->setAction(action);
   newSpot->setColor(0); // Color is set automatically
   _arrayOfSpots.push_back(newSpot);
-  
+
   if (auxSpot) {
     auxSpot->setAction(action);
     auxSpot->setColor(0);
     _arrayOfSpots.push_back(auxSpot);
   }
+
+  if (action->target && action->target->type() == kObjectNode)
+    Control::instance().addLinkFromTo(this, (Node*)action->target);
 }
-  
+
 }

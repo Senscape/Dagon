@@ -171,6 +171,11 @@ static int ConfigLibGet(lua_State *L) {
     lua_pushboolean(L, Config::instance().verticalSync);
     return 1;
   }
+
+  if (strcmp(key, "maxPreloadedNodes") == 0) {
+    lua_pushnumber(L, Config::instance().maxPreloadedNodes);
+    return 1;
+  }
   
   return 0;
 }
@@ -267,6 +272,9 @@ static int ConfigLibSet(lua_State *L) {
   
   if (strcmp(key, "verticalSync") == 0)
     Config::instance().verticalSync = (bool)lua_toboolean(L, 3);
+
+  if (strcmp(key, "maxPreloadedNodes") == 0)
+    Config::instance().maxPreloadedNodes = (int)luaL_checknumber(L, 3);
   
   return 0;
 }

@@ -94,7 +94,7 @@ solution "Dagon"
     
     -- Libraries required for Unix-based systems
     libs_unix = { "freetype", "GLEW", "GL", "GLU", "ogg", "openal", "vorbis",
-		  "vorbisfile", "theoradec", "SDL2", "m", "stdc++" }
+		  "vorbisfile", "theoradec", "SDL2", "m" }
   
     -- Search for libraries on Linux systems
     if os.get() == "linux" then

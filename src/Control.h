@@ -24,6 +24,7 @@
 #include "System.h"
 
 #include <unordered_map>
+#include <forward_list>
 
 namespace dagon {
 
@@ -83,6 +84,25 @@ typedef struct {
   char line[kMaxLogLength];
 } DGHotkeyData;
 
+struct GraphNode {
+  Node* node;
+  std::forward_list<GraphNode*> adj;
+
+  GraphNode() {
+    node = NULL;
+  }
+
+  void addEdgeTo(const GraphNode& to) {
+    GraphNode* needle = (GraphNode*)&to;
+    for (auto it = adj.begin(); it != adj.end(); ++it) {
+      if (*it == needle)
+	return;
+    }
+
+    adj.push_front(needle);
+  }
+};
+
 ////////////////////////////////////////////////////////////
 // Interface - Singleton class
 ////////////////////////////////////////////////////////////
@@ -140,6 +160,7 @@ public:
 
   std::unordered_map<Object*, uint64_t> objMap;
   std::unordered_map<uint64_t, Object*> invObjMap;
+  std::forward_list<GraphNode> controlGraph;
   
   void init(int argc, char* argv[]);
   Node* currentNode();
@@ -166,6 +187,7 @@ public:
   void terminate();
   void update();
   std::vector<Room*> rooms();
+  void addLinkFromTo(Node* from, Node* to);
 };
   
 }

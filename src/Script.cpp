@@ -927,7 +927,38 @@ int Script::_globalZoomOut(lua_State *L) {
   Control::instance().switchTo(NULL);
   return 0;
 }
-  
+
+static void visitGraphNode(const GraphNode& target, std::map<GraphNode*, int>& discoveredNodes) {
+  auto i = discoveredNodes.size();
+  printf("%d [label=\"%s\"];\n", (int)i, target.node->name().c_str());
+  discoveredNodes.insert({(GraphNode*)&target, (int)i});
+
+  for (auto it = target.adj.begin(); it != target.adj.end(); ++it) {
+    auto result = discoveredNodes.find(*it);
+
+    if (result == discoveredNodes.end())
+      visitGraphNode(**it, discoveredNodes);
+
+    result = discoveredNodes.find(*it);
+    printf("%d->%d;\n", (int)i, result->second);
+  }
+}
+
+int Script::_globalDumpGraph(lua_State *L) {
+  printf("digraph G {\n");
+
+  std::map<GraphNode*, int> discoveredNodes;
+  for (auto it = Control::instance().controlGraph.begin();
+       it != Control::instance().controlGraph.end(); ++it) {
+
+    if (discoveredNodes.find(&*it) == discoveredNodes.end())
+      visitGraphNode(*it, discoveredNodes);
+  }
+
+  printf("}\n");
+  return 0;
+}
+
 void Script::_registerEnums() {
   // Push all enum values
   DGLuaEnum(_L, AUDIO, kObjectAudio);
@@ -1053,6 +1084,7 @@ void Script::_registerGlobals() {
     {"walkTo", _globalWalkTo},
     {"whichRoom", _globalWhichRoom},
     {"zoomOut", _globalZoomOut},
+    {"dumpGraph", _globalDumpGraph},
     {NULL, NULL}
   };
   

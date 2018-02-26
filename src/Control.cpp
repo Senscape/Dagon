@@ -48,6 +48,7 @@
 #include <algorithm>
 #include <iterator>
 #include <set>
+#include <map>
 
 namespace dagon {
 
@@ -147,7 +148,7 @@ void Control::init(int argc, char* argv[]) {
   fontManager.init();
 
   // Init the texture manager
-  //textureManager.init(); // Preloader thread not working yet
+  textureManager.init();
 
   // Init the video manager
   videoManager.init();
@@ -586,6 +587,7 @@ void Control::switchTo(Object* theTarget) {
   _updateView(StateNode, true);
 
   videoManager.flush();
+  textureManager.flushPreloader();
 
   if (firstSwitch) {
     firstSwitch = false;
@@ -640,8 +642,6 @@ void Control::switchTo(Object* theTarget) {
             audio->play();
           }
         }
-
-        textureManager.setRoomToPreload(_currentRoom);
 
         if (_eventHandlers.hasEnterRoom) {
           //log.trace(kModControl, "Has global enter event");
@@ -780,7 +780,6 @@ void Control::switchTo(Object* theTarget) {
             _currentRoom = room;
             _scene->setRoom(room);
             timerManager.setLuaObject(_currentRoom->luaObject());
-            textureManager.setRoomToPreload(_currentRoom);
 
             if (_eventHandlers.hasEnterRoom) {
               //log.trace(kModControl, "Has global room enter event");
@@ -860,8 +859,6 @@ void Control::switchTo(Object* theTarget) {
     if (_currentRoom->hasNodes()) {
       // Now we proceed to load the textures of the current node
       Node* current = _currentRoom->currentNode();
-      //log.trace(kModControl, "Flushing textures...");
-      textureManager.flush();
 
       if (current->hasSpots()) {
         current->beginIteratingSpots();
@@ -905,7 +902,7 @@ void Control::switchTo(Object* theTarget) {
 
           if (spot->hasTexture()) {
             //log.trace(kModControl, "Loading image...");
-            textureManager.requestTexture(spot->texture());
+	    spot->texture()->load();
 
             // Only resize if nothing but origin
             if (spot->vertexCount() == 1)
@@ -919,6 +916,48 @@ void Control::switchTo(Object* theTarget) {
       else {
         log.warning(kModControl, "%s", kString12006);
       }
+
+      auto root = std::find_if(controlGraph.begin(), controlGraph.end(),
+			       [current](GraphNode& v){
+				 return v.node == current;
+			       });
+
+      std::vector<Node*> discoveredSet;
+      if (root != controlGraph.end()) {
+	std::vector<GraphNode*> workingSet;
+	workingSet.push_back(&*root);
+
+	while (!workingSet.empty()) {
+	  GraphNode* parent = workingSet.front();
+	  workingSet.erase(workingSet.begin());
+
+	  for (auto child = parent->adj.begin(); child != parent->adj.end(); ++child) {
+	    {
+	      auto it = std::find(discoveredSet.begin(), discoveredSet.end(), (*child)->node);
+	      if (it != discoveredSet.end())
+		continue;
+	    }
+
+	    auto it = std::find(workingSet.begin(), workingSet.end(), *child);
+	    if (it == workingSet.end())
+	      workingSet.push_back(*child);
+	  }
+
+	  if (parent->node != current)
+	    discoveredSet.push_back(parent->node);
+	}
+      }
+
+      _currentRoom->beginIteratingNodes();
+      do {
+	Node* node = _currentRoom->iterator();
+	auto it = std::find(discoveredSet.begin(), discoveredSet.end(), node);
+
+	if (it == discoveredSet.end() && node != current)
+	  discoveredSet.push_back(node);
+      } while (_currentRoom->iterateNodes());
+
+      textureManager.setNodesToPreload(discoveredSet);
 
       // Prepare the name for the window
       char title[kMaxObjectName];
@@ -1008,6 +1047,7 @@ void Control::terminate() {
   audioManager.terminate();
   timerManager.terminate();
   videoManager.terminate();
+  textureManager.terminate();
 
   assetRoom()->releaseAssets(nullptr);
 
@@ -1070,6 +1110,39 @@ void Control::update() {
 
 std::vector<Room*> Control::rooms() {
   return _arrayOfRooms;
+}
+
+void Control::addLinkFromTo(Node* from, Node* to) {
+  if (from == to)
+    return;
+
+  auto fromIt = controlGraph.end();
+  auto toIt = controlGraph.end();
+  for (auto it = controlGraph.begin(); it != controlGraph.end(); ++it) {
+    if (it->node == from)
+      fromIt = it;
+    else if (it->node == to)
+      toIt = it;
+
+    if (fromIt != controlGraph.end() && toIt != controlGraph.end())
+      break;
+  }
+
+  if (fromIt == controlGraph.end()) {
+    GraphNode newNode;
+    newNode.node = from;
+    controlGraph.push_front(newNode);
+    fromIt = controlGraph.begin();
+  }
+
+  if (toIt == controlGraph.end()) {
+    GraphNode newNode;
+    newNode.node = to;
+    controlGraph.push_front(newNode);
+    toIt = controlGraph.begin();
+  }
+
+  fromIt->addEdgeTo(*toIt);
 }
 
 ////////////////////////////////////////////////////////////
