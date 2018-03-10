@@ -48,7 +48,6 @@
 #include <algorithm>
 #include <iterator>
 #include <set>
-#include <map>
 
 namespace dagon {
 
@@ -902,8 +901,8 @@ void Control::switchTo(Object* theTarget) {
 
           if (spot->hasTexture()) {
             //log.trace(kModControl, "Loading image...");
-	    spot->texture()->load();
 
+            spot->texture()->load();
             // Only resize if nothing but origin
             if (spot->vertexCount() == 1)
               spot->resize(spot->texture()->width(), spot->texture()->height());
@@ -918,45 +917,49 @@ void Control::switchTo(Object* theTarget) {
       }
 
       auto root = std::find_if(controlGraph.begin(), controlGraph.end(),
-			       [current](GraphNode& v){
-				 return v.node == current;
-			       });
-
+                               [current](GraphNode& v){
+                                 return v.node == current;
+                               });
       std::vector<Node*> discoveredSet;
+
       if (root != controlGraph.end()) {
-	std::vector<GraphNode*> workingSet;
-	workingSet.push_back(&*root);
+        std::vector<std::pair<GraphNode*, int>> workingSet;
+        workingSet.push_back({&*root, 0});
 
-	while (!workingSet.empty()) {
-	  GraphNode* parent = workingSet.front();
-	  workingSet.erase(workingSet.begin());
+        auto cmp = [](std::pair<GraphNode*, int>& a, std::pair<GraphNode*, int>& b){
+                     return a.second > b.second;
+                   };
 
-	  for (auto child = parent->adj.begin(); child != parent->adj.end(); ++child) {
-	    {
-	      auto it = std::find(discoveredSet.begin(), discoveredSet.end(), (*child)->node);
-	      if (it != discoveredSet.end())
-		continue;
-	    }
+        while (!workingSet.empty()) {
+          std::pop_heap(workingSet.begin(), workingSet.end(), cmp);
+          std::pair<GraphNode*, int> head = workingSet.back();
+          workingSet.pop_back();
 
-	    auto it = std::find(workingSet.begin(), workingSet.end(), *child);
-	    if (it == workingSet.end())
-	      workingSet.push_back(*child);
-	  }
+          GraphNode* parent = head.first;
 
-	  if (parent->node != current)
-	    discoveredSet.push_back(parent->node);
-	}
+          for (auto child = parent->adj.begin(); child != parent->adj.end(); ++child) {
+            {
+              auto it = std::find(discoveredSet.begin(), discoveredSet.end(), (*child)->node);
+              if (it != discoveredSet.end()) continue;
+            }
+
+            auto it = std::find_if(workingSet.begin(), workingSet.end(),
+                                   [&child](std::pair<GraphNode*, int>& p){
+                                     return p.first == *child;
+                                   });
+            int distance = head.second + 1;
+
+            if (it == workingSet.end() && distance <= config.preloadDistance) {
+              workingSet.push_back({*child, distance});
+              std::push_heap(workingSet.begin(), workingSet.end(), cmp);
+            }
+          }
+
+          discoveredSet.push_back(parent->node);
+        }
       }
 
-      _currentRoom->beginIteratingNodes();
-      do {
-	Node* node = _currentRoom->iterator();
-	auto it = std::find(discoveredSet.begin(), discoveredSet.end(), node);
-
-	if (it == discoveredSet.end() && node != current)
-	  discoveredSet.push_back(node);
-      } while (_currentRoom->iterateNodes());
-
+      textureManager.flush(discoveredSet);
       textureManager.setNodesToPreload(discoveredSet);
 
       // Prepare the name for the window

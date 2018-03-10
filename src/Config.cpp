@@ -54,7 +54,7 @@ Config::Config() {
   subtitles = kDefSubtitles;
   texCompression = kDefTexCompression;
   verticalSync = kDefVerticalSync;
-  maxPreloadedNodes = kDefMaxPreloadedNodes;
+  preloadDistance = kDefPreloadDistance;
   _scriptName = kDefScriptFile;
   _resPath = kDefResourcePath;
   _texExtension = kDefTexExtension;

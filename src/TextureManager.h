@@ -22,6 +22,8 @@
 #include "Texture.h"
 
 #include <queue>
+#include <set>
+#include <vector>
 #include <SDL2/SDL_thread.h>
 
 namespace dagon {
@@ -29,13 +31,6 @@ namespace dagon {
 ////////////////////////////////////////////////////////////
 // Definitions
 ////////////////////////////////////////////////////////////
-
-// TODO: This class should be a singleton
-
-// This is temporary until we actually test how much memory is available.
-// NOT accurate! It's only a reference value since textures are flushed
-// before the next switch.
-#define kMaxActiveTextures 18
 
 class Config;
 class Log;
@@ -54,10 +49,10 @@ class TextureManager {
   Config& config;
   Log& log;
 
-  std::vector<Texture*> _arrayOfTextures;
+  std::set<Texture*> _managedTextures;
+  SDL_mutex* _setLock;
 
-  std::vector<Node*> _preloadedNodes;
-  std::queue<std::pair<Texture*, Node*>> _texturesToPreload;
+  std::queue<Texture*> _texturesToPreload;
   SDL_mutex* _queueLock;
   SDL_cond* _newJobCond;
   SDL_Thread* _preloaderThread;
@@ -68,8 +63,6 @@ class TextureManager {
   ~TextureManager();
 
   static int runPreloader(void* ptr);
-  void registerPreloadedNode(Node* theNode);
-
 public:
   static TextureManager& instance() {
     static TextureManager textureManager;
@@ -80,8 +73,9 @@ public:
   void terminate();
   void registerTexture(Texture* target);
   void requestBundle(Node* forNode);
-  void setNodesToPreload(const std::vector<Node*>& theNodes);
+  void setNodesToPreload(const std::vector<Node*>& reachableNodes);
   void flushPreloader();
+  void flush(const std::vector<Node*>& reachableNodes);
 };
   
 }

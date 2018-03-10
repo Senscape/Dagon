@@ -63,7 +63,7 @@ enum DefaultConfiguration {
   kDefSubtitles = true,
   kDefTexCompression = false,
   kDefVerticalSync = true,
-  kDefMaxPreloadedNodes = 3,
+  kDefPreloadDistance = 1,
 };
 
 enum SystemPaths {
@@ -109,7 +109,7 @@ class Config {
   bool subtitles;
   bool texCompression;
   bool verticalSync;
-  int maxPreloadedNodes;
+  int preloadDistance;
   
   double framesPerSecond();
   float globalSpeed();
