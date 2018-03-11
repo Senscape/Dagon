@@ -20,6 +20,7 @@
 #include <cstdio>
 #include <ctime>
 #include <iostream>
+#include <SDL2/SDL_thread.h>
 
 #include "Colors.h"
 #include "Config.h"
@@ -28,12 +29,16 @@
 
 namespace dagon {
 
+static SDL_mutex* _lock;
+
 ////////////////////////////////////////////////////////////
 // Implementation - Constructor
 ////////////////////////////////////////////////////////////
 
 Log::Log() :
 config(Config::instance()) {
+  _lock = SDL_CreateMutex();
+  assert(!!_lock);
 }
 
 ////////////////////////////////////////////////////////////
@@ -43,6 +48,7 @@ config(Config::instance()) {
 Log::~Log() {
   if (_filestr.is_open())
     _filestr.close();
+  SDL_DestroyMutex(_lock);
 }
 
 ////////////////////////////////////////////////////////////
@@ -119,28 +125,47 @@ void Log::warning(int forModule, const char* theString, ...) {
 ////////////////////////////////////////////////////////////
 
 bool Log::beginIteratingHistory() {
+  if (SDL_LockMutex(_lock) != 0) {
+    assert(false);
+    return false;
+  }
+
   if (!_history.empty()) {
     _it = _history.rbegin();
+    SDL_UnlockMutex(_lock);
     return true;
   }
+
+  SDL_UnlockMutex(_lock);
   return false;
 }
 
 bool Log::iterateHistory() {
+  if (SDL_LockMutex(_lock) != 0) {
+    assert(false);
+    return false;
+  }
+
   ++_it;
   if (_it == (_history.rend() - 1) || _history.empty()) {
+    SDL_UnlockMutex(_lock);
     return false; // Bypass the first line
   } else {
+    SDL_UnlockMutex(_lock);
     return true;
   }
 }
 
 void Log::getCurrentLine(LogData* pointerToLogData) {
+  if (SDL_LockMutex(_lock) != 0)
+    assert(false);
+
   assert(_it != _history.rend());
   pointerToLogData->line = _it->line;
   pointerToLogData->color = _it->color;
   pointerToLogData->module = _it->module;
   pointerToLogData->type = _it->type;
+  SDL_UnlockMutex(_lock);
 }
 
 ////////////////////////////////////////////////////////////
@@ -148,6 +173,9 @@ void Log::getCurrentLine(LogData* pointerToLogData) {
 ////////////////////////////////////////////////////////////
 
 void Log::_log(LogData* data) {
+  if (SDL_LockMutex(_lock) != 0)
+    assert(false);
+
   if (config.log) {
     if (!_filestr.is_open())
       _filestr.open(config.path(kPathUserData, kDefLogFile,
@@ -239,6 +267,8 @@ void Log::_log(LogData* data) {
   
   if (config.debugMode)
     std::cout << data->line.c_str() << std::endl; // Echo to console
+
+  SDL_UnlockMutex(_lock);
 }
   
 LogData Log::_makeLogData(int color, int module, int type) {
