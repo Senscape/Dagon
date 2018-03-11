@@ -131,8 +131,10 @@ bool Log::beginIteratingHistory() {
   }
 
   if (!_history.empty()) {
+    // NOTE: we don't unlock the mutex here
+    // We want to keep the lock until iteration is done..
+    // ... to avoid iterator invalidation.
     _it = _history.rbegin();
-    SDL_UnlockMutex(_lock);
     return true;
   }
 
@@ -141,17 +143,13 @@ bool Log::beginIteratingHistory() {
 }
 
 bool Log::iterateHistory() {
-  if (SDL_LockMutex(_lock) != 0) {
-    assert(false);
-    return false;
-  }
-
   ++_it;
-  if (_it == (_history.rend() - 1) || _history.empty()) {
-    SDL_UnlockMutex(_lock);
+
+  if (_history.empty() || _it == (_history.rend() - 1)) {
+    int result = SDL_UnlockMutex(_lock);
+    assert(result == 0); // The mutex must have been locked in the first place
     return false; // Bypass the first line
   } else {
-    SDL_UnlockMutex(_lock);
     return true;
   }
 }

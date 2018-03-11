@@ -23,6 +23,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <iterator>
 
 namespace dagon {
 
@@ -266,5 +267,5 @@ int TextureManager::runPreloader(void* ptr) {
 
   return 0;
 }
-  
+
 }
