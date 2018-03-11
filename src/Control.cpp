@@ -957,10 +957,10 @@ void Control::switchTo(Object* theTarget) {
 
           discoveredSet.push_back(parent->node);
         }
-      }
 
-      textureManager.flush(discoveredSet);
-      textureManager.setNodesToPreload(discoveredSet);
+        textureManager.flush(discoveredSet);
+        textureManager.setNodesToPreload(discoveredSet);
+      }
 
       // Prepare the name for the window
       char title[kMaxObjectName];
