@@ -605,228 +605,231 @@ void Control::switchTo(Object* theTarget) {
 
   if (theTarget) {
     switch (theTarget->type()) {
-      case kObjectRoom: {
-        //log.trace(kModControl, "Switching to room...");
-        feedManager.cancel();
+    case kObjectNode:
+    case kObjectSlide:
+    {
+      Node* curNode = currentNode();
+      Node* target = (Node*)theTarget;
 
-        if (currentNode()) {
-          if (currentNode()->isSlide())
-            cameraManager.unlock();
+      if (curNode == target) {
+        if (curNode->hasSpots()) {
+          curNode->beginIteratingSpots();
+
+          do {
+            Spot *curSpot = curNode->currentSpot();
+            if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
+              Audio *audio = curSpot->audio();
+              if (!audio->isPlaying()) {
+                audioManager.registerAudio(audio);
+                audio->fadeIn();
+                audio->play();
+              }
+            }
+          } while (curNode->iterateSpots());
+        }
+      }
+      else {
+        std::set<Audio*> curNodeAudios;
+
+        if (curNode && curNode->hasSpots()) {
+          curNode->beginIteratingSpots();
+
+          do {
+            Spot *curSpot = curNode->currentSpot();
+            if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
+              curNodeAudios.insert(curSpot->audio());
+            }
+          } while (curNode->iterateSpots());
         }
 
-        static_cast<Room*>(theTarget)->claimAssets();
-        if (_currentRoom) {
-          _currentRoom->releaseAssets(static_cast<Room*>(theTarget));
+        std::set<Audio*> targetNodeAudios;
+
+        if (target->hasSpots()) {
+          target->beginIteratingSpots();
+
+          do {
+            Spot *targetspot = target->currentSpot();
+            if (targetspot->hasAudio() && targetspot->hasFlag(kSpotAuto)) {
+              targetNodeAudios.insert(targetspot->audio());
+            }
+          } while (target->iterateSpots());
         }
 
-        _currentRoom = (Room*)theTarget;
-        //log.trace(kModControl, "Set room and Lua objet");
-        _scene->setRoom((Room*)theTarget);
-        timerManager.setLuaObject(_currentRoom->luaObject());
+        std::vector<Audio*> audiosToStop;
+        std::set_difference(curNodeAudios.begin(), curNodeAudios.end(), targetNodeAudios.begin(),
+          targetNodeAudios.end(), std::back_inserter(audiosToStop));
 
-        if (!_currentRoom->hasNodes()) {
-          log.warning(kModControl, "%s: %s", kString12005, _currentRoom->name().c_str());
-          return;
-        }
-
-        // This has to be done every time so that room audios keep playing
-        for (auto audio : _currentRoom->arrayOfAudios()) {
-          if (!audio->isPlaying() || audio->isFading()) {
-            audio->fadeIn();
+        for (Audio *audio : audiosToStop) {
+          if (audio->isPlaying()) {
+            audio->fadeOut();
           }
+        }
 
-          if (audio->doesAutoplay()) {
+        std::vector<Audio*> audiosToPlay;
+        std::set_difference(targetNodeAudios.begin(), targetNodeAudios.end(), curNodeAudios.begin(),
+          curNodeAudios.end(), std::back_inserter(audiosToPlay));
+
+        for (Audio *audio : audiosToPlay) {
+          if (!audio->isPlaying()) {
             audioManager.registerAudio(audio);
+            audio->fadeIn();
             audio->play();
           }
         }
-
-        textureManager.setRoomToPreload(_currentRoom);
-
-        if (_eventHandlers.hasEnterRoom) {
-          //log.trace(kModControl, "Has global enter event");
-          script.processCallback(_eventHandlers.enterRoom, 0);
-        }
-
-        if (_currentRoom->hasEnterEvent()) {
-          //log.trace(kModControl, "Has room enter event");
-          script.processCallback(_currentRoom->enterEvent(), 0);
-        }
-
-        EffectsManager& effectsManager = EffectsManager::instance();
-        if (_currentRoom->hasEffects()) {
-          //log.trace(kModControl, "Loading room effects");
-          effectsManager.saveSettings(&previousEffects);
-          effectsManager.loadSettings(_currentRoom->effects());
-        } else {
-          if (!previousEffects.empty()) {
-            //log.trace(kModControl, "Loading previous effects");
-            effectsManager.loadSettings(previousEffects);
-          }
-        }
-        break;
       }
-      case kObjectSlide:
-        //log.trace(kModControl, "Switching to slide...");
-        if (_currentRoom) {
-          if (currentNode() && !currentNode()->isSlide()) {
-            // We are switching to a slide from something that is not a slide.
-            // The control mode should be saved.
-            _prevControlMode = config.controlMode;
-          }
+    }
+    }
+    switch (theTarget->type()) {
+    case kObjectRoom: {
+      //log.trace(kModControl, "Switching to room...");
+      feedManager.cancel();
 
-          Node* node = (Node*)theTarget;
-          //log.trace(kModControl, "Set previous node");
-          node->setPreviousNode(this->currentNode());
-
-          if (!_currentRoom->switchTo(node)) {
-            log.error(kModControl, "%s: %s (%s)", kString12010, node->name().c_str(), _currentRoom->name().c_str()); // Bad slide
-            return;
-          }
-
-          _directControlActive = false;
-
-          cameraManager.lock();
-        }
-        else {
-          log.error(kModControl, "%s", kString12009);
-          return;
-        }
-
-        break;
-      case kObjectNode: {
-        //log.trace(kModControl, "Switching to node...");
+      if (currentNode()) {
         if (currentNode()->isSlide())
           cameraManager.unlock();
+      }
 
-        //log.trace(kModControl, "Set parent room");
+      static_cast<Room*>(theTarget)->claimAssets();
+      if (_currentRoom) {
+        _currentRoom->releaseAssets(static_cast<Room*>(theTarget));
+      }
 
-        Node* curNode = currentNode();
+      _currentRoom = (Room*)theTarget;
+      //log.trace(kModControl, "Set room and Lua objet");
+      _scene->setRoom((Room*)theTarget);
+      timerManager.setLuaObject(_currentRoom->luaObject());
+
+      if (!_currentRoom->hasNodes()) {
+        log.warning(kModControl, "%s: %s", kString12005, _currentRoom->name().c_str());
+        return;
+      }
+
+      // This has to be done every time so that room audios keep playing
+      for (auto audio : _currentRoom->arrayOfAudios()) {
+        if (!audio->isPlaying() || audio->isFading()) {
+          audio->fadeIn();
+        }
+
+        if (audio->doesAutoplay()) {
+          audioManager.registerAudio(audio);
+          audio->play();
+        }
+      }
+
+      if (_eventHandlers.hasEnterRoom) {
+        //log.trace(kModControl, "Has global enter event");
+        script.processCallback(_eventHandlers.enterRoom, 0);
+      }
+
+      if (_currentRoom->hasEnterEvent()) {
+        //log.trace(kModControl, "Has room enter event");
+        script.processCallback(_currentRoom->enterEvent(), 0);
+      }
+
+      EffectsManager& effectsManager = EffectsManager::instance();
+      if (_currentRoom->hasEffects()) {
+        //log.trace(kModControl, "Loading room effects");
+        effectsManager.saveSettings(&previousEffects);
+        effectsManager.loadSettings(_currentRoom->effects());
+      } else {
+        if (!previousEffects.empty()) {
+          //log.trace(kModControl, "Loading previous effects");
+          effectsManager.loadSettings(previousEffects);
+        }
+      }
+      break;
+    }
+    case kObjectSlide:
+      //log.trace(kModControl, "Switching to slide...");
+      if (_currentRoom) {
+        if (currentNode() && !currentNode()->isSlide()) {
+          // We are switching to a slide from something that is not a slide.
+          // The control mode should be saved.
+          _prevControlMode = config.controlMode;
+        }
+
         Node* node = (Node*)theTarget;
-
-        if (curNode == (Node*)theTarget) {
-          if (curNode && curNode->hasSpots()) {
-            curNode->beginIteratingSpots();
-
-            do {
-              Spot *curSpot = curNode->currentSpot();
-              if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
-                Audio *audio = curSpot->audio();
-                if (!audio->isPlaying()) {
-                  audioManager.registerAudio(audio);
-                  audio->fadeIn();
-                  audio->play();
-                }
-              }
-            } while (curNode->iterateSpots());
-          }
-        }
-        else {
-          std::set<Audio*> curNodeAudios;
-
-          if (curNode && curNode->hasSpots()) {
-            curNode->beginIteratingSpots();
-
-            do {
-              Spot *curSpot = curNode->currentSpot();
-              if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
-                curNodeAudios.insert(curSpot->audio());
-              }
-            } while (curNode->iterateSpots());
-          }
-
-          std::set<Audio*> targetNodeAudios;
-
-          if (node->hasSpots()) {
-            node->beginIteratingSpots();
-
-            do {
-              Spot *targetspot = node->currentSpot();
-              if (targetspot->hasAudio() && targetspot->hasFlag(kSpotAuto)) {
-                targetNodeAudios.insert(targetspot->audio());
-              }
-            } while (node->iterateSpots());
-          }
-
-          std::vector<Audio*> audiosToStop;
-          std::set_difference(curNodeAudios.begin(), curNodeAudios.end(), targetNodeAudios.begin(),
-                              targetNodeAudios.end(), std::back_inserter(audiosToStop));
-
-          for (Audio *audio : audiosToStop) {
-            if (audio->isPlaying()) {
-              audio->fadeOut();
-            }
-          }
-
-          std::vector<Audio*> audiosToPlay;
-          std::set_difference(targetNodeAudios.begin(), targetNodeAudios.end(), curNodeAudios.begin(),
-                              curNodeAudios.end(), std::back_inserter(audiosToPlay));
-
-          for (Audio *audio : audiosToPlay) {
-            if (!audio->isPlaying()) {
-              audioManager.registerAudio(audio);
-              audio->fadeIn();
-              audio->play();
-            }
-          }
-        }
-
-        Room* room = node->parentRoom();
-
-        if (room) {
-          if (room != _currentRoom) {
-            //log.trace(kModControl, "New room, so cleaning up...");
-            feedManager.cancel();
-            _currentRoom = room;
-            _scene->setRoom(room);
-            timerManager.setLuaObject(_currentRoom->luaObject());
-            textureManager.setRoomToPreload(_currentRoom);
-
-            if (_eventHandlers.hasEnterRoom) {
-              //log.trace(kModControl, "Has global room enter event");
-              script.processCallback(_eventHandlers.enterRoom, 0);
-            }
-
-            if (_currentRoom->hasEnterEvent()) {
-              //log.trace(kModControl, "Has room enter event");
-              script.processCallback(_currentRoom->enterEvent(), 0);
-            }
-
-            EffectsManager& effectsManager = EffectsManager::instance();
-            if (_currentRoom->hasEffects()) {
-              //log.trace(kModControl, "Loading room effects");
-              effectsManager.saveSettings(&previousEffects);
-              effectsManager.loadSettings(_currentRoom->effects());
-            } else {
-              if (!previousEffects.empty()) {
-                //log.trace(kModControl, "Loading previous effects");
-                effectsManager.loadSettings(previousEffects);
-              }
-            }
-          }
-        }
-        else {
-          log.error(kModControl, "%s", kString12009);
-          return;
-        }
+        //log.trace(kModControl, "Set previous node");
+        node->setPreviousNode(this->currentNode());
 
         if (!_currentRoom->switchTo(node)) {
-          log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
+          log.error(kModControl, "%s: %s (%s)", kString12010, node->name().c_str(), _currentRoom->name().c_str()); // Bad slide
           return;
         }
 
-        if (_eventHandlers.hasEnterNode) {
-          //log.trace(kModControl, "Has global node enter event");
-          script.processCallback(_eventHandlers.enterNode, 0);
-        }
+        _directControlActive = false;
 
-        if (node->hasEnterEvent()) {
-          //log.trace(kModControl, "Has node enter event");
-          script.processCallback(node->enterEvent(), 0);
-        }
-
-        break;
+        cameraManager.lock();
       }
+      else {
+        log.error(kModControl, "%s", kString12009);
+        return;
+      }
+
+      break;
+    case kObjectNode: {
+      //log.trace(kModControl, "Switching to node...");
+      if (currentNode()->isSlide())
+        cameraManager.unlock();
+
+      //log.trace(kModControl, "Set parent room");
+
+      Node* node = (Node*)theTarget;
+      Room* room = node->parentRoom();
+
+      if (room) {
+        if (room != _currentRoom) {
+          //log.trace(kModControl, "New room, so cleaning up...");
+          feedManager.cancel();
+          _currentRoom = room;
+          _scene->setRoom(room);
+          timerManager.setLuaObject(_currentRoom->luaObject());
+
+          if (_eventHandlers.hasEnterRoom) {
+            //log.trace(kModControl, "Has global room enter event");
+            script.processCallback(_eventHandlers.enterRoom, 0);
+          }
+
+          if (_currentRoom->hasEnterEvent()) {
+            //log.trace(kModControl, "Has room enter event");
+            script.processCallback(_currentRoom->enterEvent(), 0);
+          }
+
+          EffectsManager& effectsManager = EffectsManager::instance();
+          if (_currentRoom->hasEffects()) {
+            //log.trace(kModControl, "Loading room effects");
+            effectsManager.saveSettings(&previousEffects);
+            effectsManager.loadSettings(_currentRoom->effects());
+          } else {
+            if (!previousEffects.empty()) {
+              //log.trace(kModControl, "Loading previous effects");
+              effectsManager.loadSettings(previousEffects);
+            }
+          }
+        }
+      }
+      else {
+        log.error(kModControl, "%s", kString12009);
+        return;
+      }
+
+      if (!_currentRoom->switchTo(node)) {
+        log.error(kModControl, "%s: %s (%s)", kString12008, node->name().c_str(), _currentRoom->name().c_str()); // Bad node
+        return;
+      }
+
+      if (_eventHandlers.hasEnterNode) {
+        //log.trace(kModControl, "Has global node enter event");
+        script.processCallback(_eventHandlers.enterNode, 0);
+      }
+
+      if (node->hasEnterEvent()) {
+        //log.trace(kModControl, "Has node enter event");
+        script.processCallback(node->enterEvent(), 0);
+      }
+
+      break;
+    }
     }
   }
   else {
