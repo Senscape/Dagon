@@ -605,6 +605,81 @@ void Control::switchTo(Object* theTarget) {
 
   if (theTarget) {
     switch (theTarget->type()) {
+    case kObjectNode:
+    case kObjectSlide:
+    {
+      Node* curNode = currentNode();
+      Node* target = (Node*)theTarget;
+
+      if (curNode == target) {
+        if (curNode->hasSpots()) {
+          curNode->beginIteratingSpots();
+
+          do {
+            Spot *curSpot = curNode->currentSpot();
+            if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
+              Audio *audio = curSpot->audio();
+              if (!audio->isPlaying()) {
+                audioManager.registerAudio(audio);
+                audio->fadeIn();
+                audio->play();
+              }
+            }
+          } while (curNode->iterateSpots());
+        }
+      }
+      else {
+        std::set<Audio*> curNodeAudios;
+
+        if (curNode && curNode->hasSpots()) {
+          curNode->beginIteratingSpots();
+
+          do {
+            Spot *curSpot = curNode->currentSpot();
+            if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
+              curNodeAudios.insert(curSpot->audio());
+            }
+          } while (curNode->iterateSpots());
+        }
+
+        std::set<Audio*> targetNodeAudios;
+
+        if (target->hasSpots()) {
+          target->beginIteratingSpots();
+
+          do {
+            Spot *targetspot = target->currentSpot();
+            if (targetspot->hasAudio() && targetspot->hasFlag(kSpotAuto)) {
+              targetNodeAudios.insert(targetspot->audio());
+            }
+          } while (target->iterateSpots());
+        }
+
+        std::vector<Audio*> audiosToStop;
+        std::set_difference(curNodeAudios.begin(), curNodeAudios.end(), targetNodeAudios.begin(),
+          targetNodeAudios.end(), std::back_inserter(audiosToStop));
+
+        for (Audio *audio : audiosToStop) {
+          if (audio->isPlaying()) {
+            audio->fadeOut();
+          }
+        }
+
+        std::vector<Audio*> audiosToPlay;
+        std::set_difference(targetNodeAudios.begin(), targetNodeAudios.end(), curNodeAudios.begin(),
+          curNodeAudios.end(), std::back_inserter(audiosToPlay));
+
+        for (Audio *audio : audiosToPlay) {
+          if (!audio->isPlaying()) {
+            audioManager.registerAudio(audio);
+            audio->fadeIn();
+            audio->play();
+          }
+        }
+      }
+    }
+    }
+    switch (theTarget->type()) {
     case kObjectRoom: {
       //log.trace(kModControl, "Switching to room...");
       feedManager.cancel();
@@ -754,81 +829,6 @@ void Control::switchTo(Object* theTarget) {
       }
 
       break;
-    }
-    }
-    switch (theTarget->type()) {
-    case kObjectNode:
-    case kObjectSlide:
-    {
-      Node* curNode = currentNode();
-      Node* target = (Node*)theTarget;
-
-      if (curNode == target) {
-        if (curNode->hasSpots()) {
-          curNode->beginIteratingSpots();
-
-          do {
-            Spot *curSpot = curNode->currentSpot();
-            if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
-              Audio *audio = curSpot->audio();
-              if (!audio->isPlaying()) {
-                audioManager.registerAudio(audio);
-                audio->fadeIn();
-                audio->play();
-              }
-            }
-          } while (curNode->iterateSpots());
-        }
-      }
-      else {
-        std::set<Audio*> curNodeAudios;
-
-        if (curNode && curNode->hasSpots()) {
-          curNode->beginIteratingSpots();
-
-          do {
-            Spot *curSpot = curNode->currentSpot();
-            if (curSpot->hasAudio() && curSpot->hasFlag(kSpotAuto)) {
-              curNodeAudios.insert(curSpot->audio());
-            }
-          } while (curNode->iterateSpots());
-        }
-
-        std::set<Audio*> targetNodeAudios;
-
-        if (target->hasSpots()) {
-          target->beginIteratingSpots();
-
-          do {
-            Spot *targetspot = target->currentSpot();
-            if (targetspot->hasAudio() && targetspot->hasFlag(kSpotAuto)) {
-              targetNodeAudios.insert(targetspot->audio());
-            }
-          } while (target->iterateSpots());
-        }
-
-        std::vector<Audio*> audiosToStop;
-        std::set_difference(curNodeAudios.begin(), curNodeAudios.end(), targetNodeAudios.begin(),
-          targetNodeAudios.end(), std::back_inserter(audiosToStop));
-
-        for (Audio *audio : audiosToStop) {
-          if (audio->isPlaying()) {
-            audio->fadeOut();
-          }
-        }
-
-        std::vector<Audio*> audiosToPlay;
-        std::set_difference(targetNodeAudios.begin(), targetNodeAudios.end(), curNodeAudios.begin(),
-          curNodeAudios.end(), std::back_inserter(audiosToPlay));
-
-        for (Audio *audio : audiosToPlay) {
-          if (!audio->isPlaying()) {
-            audioManager.registerAudio(audio);
-            audio->fadeIn();
-            audio->play();
-          }
-        }
-      }
     }
     }
   }
