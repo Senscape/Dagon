@@ -411,8 +411,10 @@ void Control::processMouse(int x, int y, int eventFlags) {
       }
 
       if (eventFlags == EventMouseUp) {
-        if (cursorManager.hasAction())
+        if (cursorManager.hasAction()) {
           _processAction();
+          cursorManager.removeHandCursor();
+        }
       }
       break;
 
@@ -428,6 +430,7 @@ void Control::processMouse(int x, int y, int eventFlags) {
       if (eventFlags == EventMouseUp) {
         if (cursorManager.hasAction()) {
           _processAction();
+          cursorManager.removeHandCursor();
         }
       }
       break;
@@ -929,6 +932,7 @@ void Control::switchTo(Object* theTarget) {
                _currentRoom->name().c_str(), current->description().c_str());
       //log.trace(kModControl, "Set window title");
       system.setTitle(title);
+      cursorManager.removeHandCursor();
     }
   }
 

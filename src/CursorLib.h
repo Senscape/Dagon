@@ -67,6 +67,9 @@ static int CursorLibLoad(lua_State *L) {
   return 0;
 }
 
+extern int CursorLibSetHandCursor(lua_State *L);
+extern int CursorLibGetHandCursor(lua_State *L);
+
 ////////////////////////////////////////////////////////////
 // Static definitions
 ////////////////////////////////////////////////////////////
@@ -77,6 +80,8 @@ static const struct luaL_reg kCursorLib [] = {
   {"fadeIn", CursorLibFadeIn},
   {"fadeOut", CursorLibFadeOut},
   {"load", CursorLibLoad},
+  {"setHandCursor", CursorLibSetHandCursor},
+  {"getHandCursor", CursorLibGetHandCursor},
   {NULL, NULL}
 };
   
